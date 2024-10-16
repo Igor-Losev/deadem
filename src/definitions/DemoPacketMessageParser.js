@@ -45,8 +45,6 @@ class DemoPacketMessageParser {
                 messageSize = null;
             }
 
-            console.log(`Message Type: ${messageType}`, `Message Size: ${messageSize.value}`);
-
             if (messageSize === null || this._bitBufferReader.getUnreadCount() === 0) {
                 break;
             }
@@ -99,17 +97,13 @@ class DemoPacketMessageParser {
     }
 
     _readMessageSize() {
-        let buffer = new Buffer(0);
+        let buffer = Buffer.alloc(0);
         let parsed = null;
 
         for (let i = 0; i < VarInt32.MAXIMUM_SIZE_BYTES && parsed === null; i++) {
             const byte = this._bitBufferReader.read(BITS_PER_BYTE);
 
-            console.log(byte);
-
             buffer = Buffer.concat([ buffer, byte ]);
-
-            console.log(buffer);
 
             parsed = VarInt32.parse(buffer);
         }
