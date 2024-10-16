@@ -12,7 +12,7 @@ const PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
-class DemoStreamPacketExtractor extends Stream.Transform {
+class DemoStreamPacketParser extends Stream.Transform {
     constructor(protoPath) {
         super({ objectMode: true });
 
@@ -31,9 +31,6 @@ class DemoStreamPacketExtractor extends Stream.Transform {
      * @private
      */
     _transform(packet, encoding, callback) {
-        callback();
-        return;
-
         let payload;
 
         if (packet.getIsCompressed()) {
@@ -66,7 +63,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             case EDemoCommands.DEM_SignonPacket: {
                 const CDemoPacket = this._proto.lookupType('CDemoPacket');
 
-                PerformanceTracker.start(PerformanceTrackerCategory.DEMO_MESSAGES_PARSE);
+                PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
 
                 const { data } = CDemoPacket.decode(payload);
 
@@ -74,7 +71,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
 
                 const messages = parser.getMessages();
 
-                PerformanceTracker.end(PerformanceTrackerCategory.DEMO_MESSAGES_PARSE);
+                PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
 
                 break;
             }
@@ -87,4 +84,4 @@ class DemoStreamPacketExtractor extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamPacketExtractor;
+module.exports = DemoStreamPacketParser;
