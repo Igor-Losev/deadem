@@ -54,21 +54,15 @@ class PerformanceTracker {
     }
 
     print() {
-        const trackForScript = this._store.get(PerformanceTrackerCategory.SCRIPT);
-
-        const trackForExtractor = this._store.get(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
-        const trackForDecompressor = this._store.get(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
-        const trackForParser = this._store.get(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
-
         logger.info(`----- <PerformanceTracker> -----`);
 
         const log = (category, full = false) => {
             const track = this._store.get(category);
 
-            let message = `[ ${category.code} ]: total [ ${track.accumulator} ] ms`;
+            let message = `[ ${category.code} ]: total [ ${track.accumulator.toLocaleString('en-US')} ] ms`;
 
             if (full) {
-                message += `, [ ${track.count} ] runs with [ ${Math.round(track.average * 1000) / 1000} ] ms in average`;
+                message += `, [ ${track.count.toLocaleString('en-US')} ] runs with [ ${Math.round(track.average * 1000) / 1000} ] ms in average`;
             }
 
             logger.info(message);

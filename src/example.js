@@ -9,7 +9,8 @@ const DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
 
 const LoggerProvider = require('./providers/LoggerProvider.instance');
 
-const PerformanceTracker = require('./trackers/PerformanceTracker.instance');
+const DemoPacketTracker = require('./trackers/DemoPacketTracker.instance'),
+    PerformanceTracker = require('./trackers/PerformanceTracker.instance');
 
 const logger = LoggerProvider.getLogger();
 
@@ -18,7 +19,7 @@ const demoPath = path.resolve(__dirname, './../demos/discord.dem');
 const demoProtoPath = path.resolve(__dirname, './../proto/demo.proto');
 
 (async () => {
-    logger.debug(`Starting script [ example.js ]`);
+    logger.info(`Started script [ example.js ]`);
 
     PerformanceTracker.start(PerformanceTrackerCategory.SCRIPT);
 
@@ -41,9 +42,10 @@ const demoProtoPath = path.resolve(__dirname, './../proto/demo.proto');
 
             logger.debug(`Extracted [ ${extractor.counts.packets} ] packets within [ ${extractor.counts.chunks} ] chunks`);
 
-            logger.info('Finished script [ example.js ]');
-
+            DemoPacketTracker.print();
             PerformanceTracker.print();
+
+            logger.info('Finished script [ example.js ]');
         }
     );
 })();

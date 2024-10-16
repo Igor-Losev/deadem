@@ -8,7 +8,8 @@ const DemoPacketMessageParser = require('./../definitions/DemoPacketMessageParse
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
+const DemoPacketTracker = require('./../trackers/DemoPacketTracker.instance'),
+    PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
@@ -32,6 +33,8 @@ class DemoStreamPacketParser extends Stream.Transform {
      */
     _transform(packet, encoding, callback) {
         let payload;
+
+        DemoPacketTracker.trackPacket(packet);
 
         if (packet.getIsCompressed()) {
             PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
@@ -69,9 +72,13 @@ class DemoStreamPacketParser extends Stream.Transform {
 
                 const parser = new DemoPacketMessageParser(data);
 
-                const messages = parser.getMessages();
+                const messages = parser.parse();
 
                 PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
+
+                messages.forEach((message) => {
+                   DemoPacketTracker.trackPacketMessage(packet, message);
+                });
 
                 break;
             }

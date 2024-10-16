@@ -19,7 +19,7 @@ class DemoPacketMessageParser {
      *
      * @returns {Array<DemoPacketMessage>}
      */
-    getMessages() {
+    parse() {
         this._bitBufferReader.reset();
 
         const messages = [ ];
