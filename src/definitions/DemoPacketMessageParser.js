@@ -1,4 +1,4 @@
-const BitBufferReader = require('./BitBufferReader');
+const BitBufferReader = require('./BitBufferReaderOptimized');
 
 const DemoPacketMessage = require('./DemoPacketMessage');
 
@@ -83,7 +83,7 @@ class DemoPacketMessageParser {
                 break;
             }
             case 48: {
-                const number = this._bitBufferReader.read(28).readUInt32LE();
+                const number = this._bitBufferReader.read(28).readUInt32BE();
 
                 candidate = (candidate & 15) | (number << 4);
 

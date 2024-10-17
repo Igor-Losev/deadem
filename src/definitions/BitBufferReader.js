@@ -45,8 +45,14 @@ class BitBufferReader {
         let result = 0;
 
         for (let i = 0; i < numberOfBits; i++) {
-            const isLast = i === numberOfBits - 1;
             const isOverflow = i !== 0 && i % BITS_PER_BYTE === 0;
+
+            if (isOverflow) {
+                buffer.writeUInt8(result, numberOfBytes - (bufferOffset + 1));
+
+                bufferOffset += 1;
+                result = 0;
+            }
 
             const byte = this._buffer[this._pointers.byte];
 
@@ -59,7 +65,9 @@ class BitBufferReader {
                 this._pointers.bit = 0;
             }
 
-            if (isLast || isOverflow) {
+            const isLast = i === numberOfBits - 1;
+
+            if (isLast) {
                 buffer.writeUInt8(result, numberOfBytes - (bufferOffset + 1));
 
                 bufferOffset += 1;

@@ -4,9 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "private": "true",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "log4js": "^6.9.1",
     "protobufjs": "^7.4.0",
     "snappy": "^7.2.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
