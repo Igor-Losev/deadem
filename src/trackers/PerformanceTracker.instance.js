@@ -1,4 +1,4 @@
-const PerformanceTrackerCategory = require('./../definitions/PerformanceTrackerCategory');
+const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
@@ -71,7 +71,7 @@ class PerformanceTracker {
         log(PerformanceTrackerCategory.SCRIPT);
         log(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT, true);
         log(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS, true);
-        log(PerformanceTrackerCategory.DEMO_PACKETS_PARSE, true);
+        log(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT, true);
 
         logger.info(`----- </PerformanceTracker> -----`);
     }

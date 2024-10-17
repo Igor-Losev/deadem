@@ -1,0 +1,110 @@
+const BitBuffer = require('./buffer/BitBuffer');
+
+const MessagePacket = require('./MessagePacket'),
+    VarInt32 = require('./VarInt32');
+
+const BITS_PER_BYTE = 8;
+
+class MessagePacketExtractor {
+    /**
+     * @constructor
+     * @public
+     * @param {Buffer} buffer
+     */
+    constructor(buffer) {
+        this._bitBuffer = new BitBuffer(buffer);
+    }
+
+    *retrieve() {
+        this._bitBuffer.reset();
+
+        while (this._bitBuffer.getUnreadCount() > 0) {
+            let type;
+
+            try {
+                type = this._readMessageType();
+            } catch (error) {
+                type = null;
+            }
+
+            if (type === null || this._bitBuffer.getUnreadCount() === 0) {
+                return;
+            }
+
+            const size = this._readMessageSize();
+            const payload = this._readPayload(size.value);
+
+            const messagePacket = new MessagePacket(type, size, payload);
+
+            yield messagePacket;
+        }
+    }
+
+    /**
+     * @private
+     *
+     * @returns {Number}
+     */
+    _readMessageType() {
+        let candidate = this._bitBuffer.read(6).readUInt8();
+
+        switch (candidate & 48) {
+            case 16: {
+                const value = this._bitBuffer.read(4).readUInt8();
+
+                candidate = (candidate & 15) | (value << 4);
+
+                break;
+            }
+            case 32: {
+                const value = this._bitBuffer.read(8).readUInt8();
+
+                candidate = (candidate & 15) | (value << 4);
+
+                break;
+            }
+            case 48: {
+                const value = this._bitBuffer.read(28).readUInt32BE();
+
+                candidate = (candidate & 15) | (value << 4);
+
+                break;
+            }
+            default:
+                break;
+        }
+
+        return candidate;
+    }
+
+    /**
+     * @private
+     *
+     * @returns {VarInt32|null}
+     */
+    _readMessageSize() {
+        let buffer = Buffer.alloc(0);
+        let parsed = null;
+
+        for (let i = 0; i < VarInt32.MAXIMUM_SIZE_BYTES && parsed === null; i++) {
+            const byte = this._bitBuffer.read(BITS_PER_BYTE);
+
+            buffer = Buffer.concat([ buffer, byte ]);
+
+            parsed = VarInt32.parse(buffer);
+        }
+
+        return parsed;
+    }
+
+    /**
+     * @private
+     * @param {Number} size
+     * @returns {Buffer}
+     */
+    _readPayload(size) {
+        return this._bitBuffer.read(size * BITS_PER_BYTE);
+    }
+}
+
+module.exports = MessagePacketExtractor;

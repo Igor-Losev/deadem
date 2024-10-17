@@ -1,7 +1,7 @@
 const Stream = require('stream');
 
-const DemoPacket = require('./../definitions/DemoPacket'),
-    PerformanceTrackerCategory = require('./../definitions/PerformanceTrackerCategory');
+const DemoPacket = require('./../data/DemoPacket'),
+    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
 const PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
@@ -40,8 +40,6 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             this._chunk.pointer += DEMO_IGNORED_HEADER_LENGTH;
         }
 
-        const packets = [ ];
-
         const parseChunkRecursively = () => {
             const tail = this._chunk.buffer.subarray(this._chunk.pointer);
 
@@ -66,7 +64,9 @@ class DemoStreamPacketExtractor extends Stream.Transform {
 
                 this._chunk.pointer += packet.getSize();
 
-                packets.push(packet);
+                process.nextTick(() => {
+                    this.push(packet);
+                });
 
                 parseChunkRecursively();
             }
@@ -77,10 +77,6 @@ class DemoStreamPacketExtractor extends Stream.Transform {
         this._counts.chunks += 1;
 
         PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
-
-        packets.forEach((packet) => {
-            this.push(packet);
-        });
 
         callback();
     }

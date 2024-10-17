@@ -2,14 +2,14 @@ const fs = require('fs'),
     path = require('path'),
     Stream = require('stream');
 
-const PerformanceTrackerCategory = require('./definitions/PerformanceTrackerCategory');
+const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
 const DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
     DemoStreamPacketParser = require('./stream/DemoStreamPacketParser');
 
 const LoggerProvider = require('./providers/LoggerProvider.instance');
 
-const DemoPacketTracker = require('./trackers/DemoPacketTracker.instance'),
+const PacketTracker = require('./trackers/PacketTracker.instance'),
     PerformanceTracker = require('./trackers/PerformanceTracker.instance');
 
 const logger = LoggerProvider.getLogger();
@@ -42,7 +42,7 @@ const demoProtoPath = path.resolve(__dirname, './../proto/demo.proto');
 
             logger.debug(`Extracted [ ${extractor.counts.packets} ] packets within [ ${extractor.counts.chunks} ] chunks`);
 
-            DemoPacketTracker.print();
+            PacketTracker.print();
             PerformanceTracker.print();
 
             logger.info('Finished script [ example.js ]');

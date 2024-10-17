@@ -1,10 +1,10 @@
-class DemoPacketMessage {
+class MessagePacket {
     /**
      * @public
      * @constructor
      *
      * @param {Number} type
-     * @param {Number} size
+     * @param {VarInt32} size
      * @param {Buffer} payload
      */
     constructor(type, size, payload) {
@@ -26,4 +26,4 @@ class DemoPacketMessage {
     }
 }
 
-module.exports = DemoPacketMessage;
+module.exports = MessagePacket;

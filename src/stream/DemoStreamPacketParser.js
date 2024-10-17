@@ -3,12 +3,13 @@ const Stream = require('stream');
 const protobuf = require('protobufjs'),
     snappy = require('snappy');
 
-const DemoPacketMessageParser = require('./../definitions/DemoPacketMessageParser'),
-    PerformanceTrackerCategory = require('./../definitions/PerformanceTrackerCategory');
+const MessagePacketExtractor = require('./../data/MessagePacketExtractor');
+
+const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const DemoPacketTracker = require('./../trackers/DemoPacketTracker.instance'),
+const PacketTracker = require('./../trackers/PacketTracker.instance'),
     PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
@@ -26,33 +27,35 @@ class DemoStreamPacketParser extends Stream.Transform {
 
     /**
      *
-     * @param {DemoPacket} packet
+     * @param {DemoPacket} demoPacket
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
      * @private
      */
-    _transform(packet, encoding, callback) {
+    _transform(demoPacket, encoding, callback) {
+        this._counts.packets += 1;
+
         let payload;
 
-        DemoPacketTracker.trackPacket(packet);
+        PacketTracker.trackDemoPacket(demoPacket);
 
-        if (packet.getIsCompressed()) {
+        if (demoPacket.getIsCompressed()) {
             PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
 
-            payload = snappy.uncompressSync(packet.payload);
+            payload = snappy.uncompressSync(demoPacket.payload);
 
             PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
         } else {
-            payload = packet.payload;
+            payload = demoPacket.payload;
         }
 
-        const messageType = packet.getMessageType();
+        const commandType = demoPacket.getCommandType();
 
         const EDemoCommands = this._proto.getEnum('EDemoCommands');
 
-        logger.debug(`[ ${++this._counts.packets} ] - Tick: [ ${packet.tick.value} ], Command [ ${packet.command.value} ], MessageType: [ ${messageType} ], Size [ ${packet.payload.length} ], Compressed: [ ${packet.getIsCompressed()} ]`);
+        logger.debug(`[ ${this._counts.packets} ] - Tick: [ ${demoPacket.tick.value} ], Command Type [ ${commandType} ], Size [ ${demoPacket.payload.length} ], Compressed: [ ${demoPacket.getIsCompressed()} ]`);
 
-        switch (messageType) {
+        switch (commandType) {
             case EDemoCommands.DEM_FileHeader: {
                 const CDemoFileHeader = this._proto.lookupType('CDemoFileHeader');
 
@@ -66,19 +69,21 @@ class DemoStreamPacketParser extends Stream.Transform {
             case EDemoCommands.DEM_SignonPacket: {
                 const CDemoPacket = this._proto.lookupType('CDemoPacket');
 
-                PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
-
                 const { data } = CDemoPacket.decode(payload);
 
-                const parser = new DemoPacketMessageParser(data);
+                const extractor = new MessagePacketExtractor(data).retrieve();
 
-                const messages = parser.parse();
+                PerformanceTracker.start(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
 
-                PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_PARSE);
+                let messagePacket = extractor.next().value;
 
-                messages.forEach((message) => {
-                   DemoPacketTracker.trackPacketMessage(packet, message);
-                });
+                while (messagePacket) {
+                    PacketTracker.trackMessagePacket(demoPacket, messagePacket);
+
+                    messagePacket = extractor.next().value;
+                }
+
+                PerformanceTracker.end(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
 
                 break;
             }

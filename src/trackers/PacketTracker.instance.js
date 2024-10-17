@@ -2,44 +2,44 @@ const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
 const logger = LoggerProvider.getLogger('DemoPacketTracker');
 
-class DemoPacketTracker {
+class PacketTracker {
     constructor() {
         this._records = new Map();
     }
 
     /**
      * @public
-     * @param {DemoPacket} packet
+     * @param {DemoPacket} demoPacket
      */
-    trackPacket(packet) {
-        const type = packet.getMessageType();
+    trackDemoPacket(demoPacket) {
+        const commandType = demoPacket.getCommandType();
 
-        const record = this._records.get(type) || new TrackRecord(type);
+        const record = this._records.get(commandType) || new TrackRecord(commandType);
 
         record.increment();
 
-        this._records.set(type, record);
+        this._records.set(commandType, record);
     }
 
     /**
      * @public
-     * @param {DemoPacket} packet
-     * @param {DemoPacketMessage} packetMessage
+     * @param {DemoPacket} demoPacket
+     * @param {MessagePacket} messagePacket
      */
-    trackPacketMessage(packet, packetMessage) {
-        const type = packet.getMessageType();
+    trackMessagePacket(demoPacket, messagePacket) {
+        const commandType = demoPacket.getCommandType();
 
-        const record = this._records.get(type) || new TrackRecord(type);
+        const record = this._records.get(commandType) || new TrackRecord(commandType);
 
-        const subRecord = record.records.get(packetMessage.type) || new TrackRecord(packetMessage.type);
+        const subRecord = record.records.get(messagePacket.type) || new TrackRecord(messagePacket.type);
 
         subRecord.increment();
 
-        record.records.set(packetMessage.type, subRecord);
+        record.records.set(messagePacket.type, subRecord);
     }
 
     print() {
-        logger.info(`----- <DemoPacketTracker> -----`);
+        logger.info(`----- <PacketTracker> -----`);
 
         const keys = [ ];
 
@@ -71,10 +71,10 @@ class DemoPacketTracker {
             }
         });
 
-        logger.info(`----- </DemoPacketTracker> -----`);
+        logger.info(`----- </PacketTracker> -----`);
     }
 
-    static instance = new DemoPacketTracker();
+    static instance = new PacketTracker();
 }
 
 class TrackRecord {
@@ -102,4 +102,4 @@ class TrackRecord {
     }
 }
 
-module.exports = DemoPacketTracker.instance;
+module.exports = PacketTracker.instance;

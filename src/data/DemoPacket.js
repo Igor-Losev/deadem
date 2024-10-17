@@ -33,12 +33,12 @@ class DemoPacket {
         return this._payload;
     }
 
-    getIsCompressed() {
-        return (this._command.value & 64) === 64;
+    getCommandType() {
+        return this._command.value & ~64;
     }
 
-    getMessageType() {
-        return this._command.value & ~64;
+    getIsCompressed() {
+        return (this._command.value & 64) === 64;
     }
 
     getSize() {

@@ -10,7 +10,7 @@ const MASK = {
     [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
 };
 
-class BitBufferReader {
+class BitBuffer {
     /**
      * @public
      * @constructor
@@ -98,4 +98,4 @@ class BitBufferReader {
     }
 }
 
-module.exports = BitBufferReader;
+module.exports = BitBuffer;

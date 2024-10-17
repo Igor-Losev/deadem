@@ -1,6 +1,6 @@
 const BITS_PER_BYTE = 8;
 
-class BitBufferReader {
+class BitBuffer {
     /**
      * @public
      * @constructor
@@ -87,4 +87,4 @@ class BitBufferReader {
     }
 }
 
-module.exports = BitBufferReader;
+module.exports = BitBuffer;

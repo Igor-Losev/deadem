@@ -1,11 +1,11 @@
-const BitBufferReader = require('./BitBufferReaderOptimized');
+const BitBuffer = require('./../BitBuffer');
 
-describe('BitBufferReader', () => {
+describe('BitBuffer', () => {
     describe('When reading chunks [ 6, 4, 3, 1, 2 ] from [ 0x51, 0x85 ]', () => {
         test('It should return [ 17, 5, 1, 0, 2 ]', () => {
             const buffer = Buffer.from([ 0x51, 0x85 ]);
 
-            const reader = new BitBufferReader(buffer);
+            const reader = new BitBuffer(buffer);
 
             let result = reader.read(6);
 
@@ -33,7 +33,7 @@ describe('BitBufferReader', () => {
         test('It should return [ 337, 33 ]', () => {
             const buffer = Buffer.from([ 0x51, 0x85 ]);
 
-            const reader = new BitBufferReader(buffer);
+            const reader = new BitBuffer(buffer);
 
             let result = reader.read(10);
 
@@ -49,7 +49,7 @@ describe('BitBufferReader', () => {
         test('It should return [ 4, 442, 2 ]', () => {
             const buffer = Buffer.from([ 0xd4, 0x8d ]);
 
-            const reader = new BitBufferReader(buffer);
+            const reader = new BitBuffer(buffer);
 
             let result = reader.read(3);
 
