@@ -16,7 +16,6 @@ const logger = LoggerProvider.getLogger();
 
 const demoPath = path.resolve(__dirname, './../demos/discord.dem');
 // const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
-const demoProtoPath = path.resolve(__dirname, './../proto/demo.proto');
 
 (async () => {
     logger.info(`Started script [ example.js ]`);
@@ -27,7 +26,7 @@ const demoProtoPath = path.resolve(__dirname, './../proto/demo.proto');
 
     const extractor = new DemoStreamPacketExtractor();
 
-    const parser = new DemoStreamPacketParser(demoProtoPath);
+    const parser = new DemoStreamPacketParser(4);
 
     Stream.pipeline(
         reader,

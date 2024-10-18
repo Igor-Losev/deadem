@@ -37,7 +37,7 @@ describe('BitBuffer', () => {
 
             let result = reader.read(10);
 
-            expect(result.readUint16BE()).toBe(337);
+            expect(result.readUint16LE()).toBe(337);
 
             result = reader.read(6);
 
@@ -57,7 +57,7 @@ describe('BitBuffer', () => {
 
             result = reader.read(11);
 
-            expect(result.readUint16BE()).toBe(442);
+            expect(result.readUint16LE()).toBe(442);
 
             result = reader.read(2);
 

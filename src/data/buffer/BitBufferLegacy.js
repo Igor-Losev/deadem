@@ -48,7 +48,7 @@ class BitBuffer {
             const isOverflow = i !== 0 && i % BITS_PER_BYTE === 0;
 
             if (isOverflow) {
-                buffer.writeUInt8(result, numberOfBytes - (bufferOffset + 1));
+                buffer.writeUInt8(result, bufferOffset);
 
                 bufferOffset += 1;
                 result = 0;
@@ -68,7 +68,7 @@ class BitBuffer {
             const isLast = i === numberOfBits - 1;
 
             if (isLast) {
-                buffer.writeUInt8(result, numberOfBytes - (bufferOffset + 1));
+                buffer.writeUInt8(result, bufferOffset);
 
                 bufferOffset += 1;
                 result = 0;

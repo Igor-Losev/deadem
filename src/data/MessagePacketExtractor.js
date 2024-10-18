@@ -18,21 +18,12 @@ class MessagePacketExtractor {
     *retrieve() {
         this._bitBuffer.reset();
 
-        while (this._bitBuffer.getUnreadCount() > 0) {
-            let type;
-
-            try {
-                type = this._readMessageType();
-            } catch (error) {
-                type = null;
-            }
-
-            if (type === null || this._bitBuffer.getUnreadCount() === 0) {
-                return;
-            }
+        while (this._bitBuffer.getUnreadCount() >= BITS_PER_BYTE) {
+            const type = this._readMessageType();
 
             const size = this._readMessageSize();
-            const payload = this._readPayload(size.value);
+
+            const payload = this._readPayload(size.value * BITS_PER_BYTE);
 
             const messagePacket = new MessagePacket(type, size, payload);
 
@@ -64,7 +55,7 @@ class MessagePacketExtractor {
                 break;
             }
             case 48: {
-                const value = this._bitBuffer.read(28).readUInt32BE();
+                const value = this._bitBuffer.read(28).readUInt32LE();
 
                 candidate = (candidate & 15) | (value << 4);
 
@@ -99,11 +90,11 @@ class MessagePacketExtractor {
 
     /**
      * @private
-     * @param {Number} size
+     * @param {Number} bits
      * @returns {Buffer}
      */
-    _readPayload(size) {
-        return this._bitBuffer.read(size * BITS_PER_BYTE);
+    _readPayload(bits) {
+        return this._bitBuffer.read(bits);
     }
 }
 

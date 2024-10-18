@@ -76,13 +76,6 @@ class BitBuffer {
             buffer = buffer.subarray(0, buffer.length - 1);
         }
 
-        for (let i = 0; i < Math.floor(buffer.length / 2); i++) {
-            const swap = buffer[i];
-
-            buffer[i] = buffer[buffer.length - 1 - i];
-            buffer[buffer.length - 1 - i] = swap;
-        }
-
         this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
         this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
 

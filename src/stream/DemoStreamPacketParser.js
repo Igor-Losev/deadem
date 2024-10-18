@@ -1,28 +1,37 @@
 const Stream = require('stream');
 
-const protobuf = require('protobufjs'),
-    snappy = require('snappy');
+const snappy = require('snappy');
 
-const MessagePacketExtractor = require('./../data/MessagePacketExtractor');
+const MessagePacketExtractor = require('./../data/MessagePacketExtractor'),
+    MessagePacketParser = require('./../data/MessagePacketParser');
 
 const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
+const LoggerProvider = require('./../providers/LoggerProvider.instance'),
+    ProtoProvider = require('./../providers/ProtoProvider.instance');
 
 const PacketTracker = require('./../trackers/PacketTracker.instance'),
     PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
+const WorkerManager = require('./../workers/WorkerManager');
+
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
 class DemoStreamPacketParser extends Stream.Transform {
-    constructor(protoPath) {
+    /**
+     * @constructor
+     * @public
+     *
+     * @param {Number} concurrency
+     */
+    constructor(concurrency) {
         super({ objectMode: true });
 
         this._counts = {
             packets: 0
         };
 
-        this._proto = protobuf.loadSync(protoPath);
+        this._workerManager = new WorkerManager(concurrency);
     }
 
     /**
@@ -51,13 +60,13 @@ class DemoStreamPacketParser extends Stream.Transform {
 
         const commandType = demoPacket.getCommandType();
 
-        const EDemoCommands = this._proto.getEnum('EDemoCommands');
+        const EDemoCommands = ProtoProvider.DEMO.getEnum('EDemoCommands');
 
         logger.debug(`[ ${this._counts.packets} ] - Tick: [ ${demoPacket.tick.value} ], Command Type [ ${commandType} ], Size [ ${demoPacket.payload.length} ], Compressed: [ ${demoPacket.getIsCompressed()} ]`);
 
         switch (commandType) {
-            case EDemoCommands.DEM_FileHeader: {
-                const CDemoFileHeader = this._proto.lookupType('CDemoFileHeader');
+            case EDemoCommands.DEM_FileHeader: { // 1
+                const CDemoFileHeader = ProtoProvider.DEMO.lookupType('CDemoFileHeader');
 
                 const fileHeader = CDemoFileHeader.decode(payload);
 
@@ -65,22 +74,27 @@ class DemoStreamPacketParser extends Stream.Transform {
 
                 break;
             }
-            case EDemoCommands.DEM_Packet:
-            case EDemoCommands.DEM_SignonPacket: {
-                const CDemoPacket = this._proto.lookupType('CDemoPacket');
+            case EDemoCommands.DEM_Packet: // 7
+            case EDemoCommands.DEM_SignonPacket: { // 8
+                const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
 
                 const { data } = CDemoPacket.decode(payload);
+
+                console.log(demoPacket);
+                console.log(data.length);
 
                 const extractor = new MessagePacketExtractor(data).retrieve();
 
                 PerformanceTracker.start(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
 
-                let messagePacket = extractor.next().value;
+                for (const messagePacket of extractor) {
+                    console.log(messagePacket);
 
-                while (messagePacket) {
                     PacketTracker.trackMessagePacket(demoPacket, messagePacket);
 
-                    messagePacket = extractor.next().value;
+                    const messagePacketParser = new MessagePacketParser(messagePacket);
+
+                    messagePacketParser.parse();
                 }
 
                 PerformanceTracker.end(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
@@ -90,6 +104,10 @@ class DemoStreamPacketParser extends Stream.Transform {
             default: {
                 break;
             }
+        }
+
+        if (this._counts.packets === 4) {
+            throw new Error(123);
         }
 
         callback();
