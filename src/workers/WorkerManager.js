@@ -7,6 +7,8 @@ const logger = Logger.getLogger('WorkerManager');
 
 const WORKER_PATH = path.resolve(__dirname, './worker.js');
 
+const BATCH_SIZE = 20;
+
 class WorkerManager {
     constructor(concurrency) {
         this._concurrency = concurrency;
@@ -17,6 +19,8 @@ class WorkerManager {
         this._pending = [ ];
 
         this._workers = [ ];
+
+        this._batch = [ ];
 
         for (let i = 0; i < concurrency; i++) {
             const worker = new Worker(WORKER_PATH);
@@ -52,6 +56,12 @@ class WorkerManager {
      * @param {Buffer} buffer
      */
     async parse(buffer) {
+        this._batch.push(buffer);
+
+        if (this._batch.length < BATCH_SIZE) {
+            this._batch.push();
+        }
+
         const isBusy = this.getIsBusy();
 
         if (isBusy) {
