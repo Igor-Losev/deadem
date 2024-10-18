@@ -35,14 +35,14 @@ class MessagePacketParser {
                 break;
             }
             case SVC_Messages.svc_ServerInfo: { // 40
-                const data = CSVCMsg_ServerInfo.decode(this._packet.payload);
+                data = CSVCMsg_ServerInfo.decode(this._packet.payload);
 
                 // console.log(data);
 
                 break;
             }
             case SVC_Messages.svc_CreateStringTable: { // 44
-                const data = CSVCMsg_CreateStringTable.decode(this._packet.payload);
+                data = CSVCMsg_CreateStringTable.decode(this._packet.payload);
 
                 // console.log(data);
 
@@ -56,9 +56,9 @@ class MessagePacketParser {
                 break;
             }
             default: {
-                logger.error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
+                // logger.error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
 
-                throw new Error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
+                // throw new Error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
             }
         }
 

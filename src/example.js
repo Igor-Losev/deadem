@@ -14,8 +14,8 @@ const PacketTracker = require('./trackers/PacketTracker.instance'),
 
 const logger = LoggerProvider.getLogger();
 
-const demoPath = path.resolve(__dirname, './../demos/discord.dem');
-// const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
+// const demoPath = path.resolve(__dirname, './../demos/discord.dem');
+const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
 
 (async () => {
     logger.info(`Started script [ example.js ]`);
@@ -33,6 +33,8 @@ const demoPath = path.resolve(__dirname, './../demos/discord.dem');
         extractor,
         parser,
         (error) => {
+            parser.dispose();
+
             PerformanceTracker.end(PerformanceTrackerCategory.SCRIPT);
 
             if (error) {

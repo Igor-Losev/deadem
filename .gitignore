@@ -1,13 +1,9 @@
 .DS_Store
 .idea
-.webpack
-.serverless
 
-.awspublish-barchart-tools
 yarn-debug.log*
 yarn-error.log*
 
 node_modules
-logs
 
 *.dem

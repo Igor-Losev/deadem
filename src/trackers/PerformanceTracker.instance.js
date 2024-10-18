@@ -71,7 +71,7 @@ class PerformanceTracker {
         log(PerformanceTrackerCategory.SCRIPT);
         log(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT, true);
         log(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS, true);
-        log(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT, true);
+        // log(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT, true);
 
         logger.info(`----- </PerformanceTracker> -----`);
     }

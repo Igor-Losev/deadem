@@ -34,6 +34,10 @@ class DemoStreamPacketParser extends Stream.Transform {
         this._workerManager = new WorkerManager(concurrency);
     }
 
+    dispose() {
+        this._workerManager.terminate();
+    }
+
     /**
      *
      * @param {DemoPacket} demoPacket
@@ -41,7 +45,7 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @param {TransformCallback} callback
      * @private
      */
-    _transform(demoPacket, encoding, callback) {
+    async _transform(demoPacket, encoding, callback) {
         this._counts.packets += 1;
 
         let payload;
@@ -80,24 +84,35 @@ class DemoStreamPacketParser extends Stream.Transform {
 
                 const { data } = CDemoPacket.decode(payload);
 
-                console.log(demoPacket);
-                console.log(data.length);
+                await this._workerManager.ready();
 
-                const extractor = new MessagePacketExtractor(data).retrieve();
+                this._workerManager.parse(data)
+                    .then((messages) => {
+                        messages.forEach((message) => {
+                            PacketTracker.trackMessagePacket(demoPacket, { type: message._type });
+                        });
+                    });
 
-                PerformanceTracker.start(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
-
-                for (const messagePacket of extractor) {
-                    console.log(messagePacket);
-
-                    PacketTracker.trackMessagePacket(demoPacket, messagePacket);
-
-                    const messagePacketParser = new MessagePacketParser(messagePacket);
-
-                    messagePacketParser.parse();
-                }
-
-                PerformanceTracker.end(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
+                // console.log(messages);
+                //
+                // console.log(demoPacket);
+                // console.log(data.length);
+                //
+                // const extractor = new MessagePacketExtractor(data).retrieve();
+                //
+                // PerformanceTracker.start(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
+                //
+                // for (const messagePacket of extractor) {
+                //     console.log(messagePacket);
+                //
+                //     PacketTracker.trackMessagePacket(demoPacket, messagePacket);
+                //
+                //     const messagePacketParser = new MessagePacketParser(messagePacket);
+                //
+                //     messagePacketParser.parse();
+                // }
+                //
+                // PerformanceTracker.end(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
 
                 break;
             }
@@ -106,9 +121,9 @@ class DemoStreamPacketParser extends Stream.Transform {
             }
         }
 
-        if (this._counts.packets === 4) {
-            throw new Error(123);
-        }
+        // if (this._counts.packets === 4) {
+        //     throw new Error(123);
+        // }
 
         callback();
     }
