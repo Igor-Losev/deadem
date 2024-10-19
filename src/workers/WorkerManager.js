@@ -1,111 +1,119 @@
+'use strict';
+
 const { Worker } = require('node:worker_threads'),
     path = require('path');
 
-const Logger = require('./../providers/LoggerProvider.instance');
+const DeferredPromise = require('./../data/DeferredPromise');
 
-const logger = Logger.getLogger('WorkerManager');
+const WorkerParseTask = require('./WorkerParseTask'),
+    WorkerThread = require('./WorkerThread');
+
+const LoggerProvider = require('./../providers/LoggerProvider.instance');
+
+const logger = LoggerProvider.getLogger('WorkerManager');
 
 const WORKER_PATH = path.resolve(__dirname, './worker.js');
 
-const BATCH_SIZE = 20;
-
 class WorkerManager {
     constructor(concurrency) {
+        if (concurrency <= 0) {
+            throw new Error(`Invalid concurrency argument [ ${concurrency} ]`);
+        }
+
         this._concurrency = concurrency;
 
-        this._busy = new Set();
-        this._deferredPromises = new Map();
+        this._counts = {
+            tasks: 0,
+            completed: 0
+        };
 
         this._pending = [ ];
 
-        this._workers = [ ];
-
-        this._batch = [ ];
+        this._threads = [ ];
 
         for (let i = 0; i < concurrency; i++) {
             const worker = new Worker(WORKER_PATH);
 
-            worker.on('message', (message) => {
-                const { resolve, reject } = this._deferredPromises.get(worker.threadId);
+            const thread = new WorkerThread(worker);
 
-                this._busy.delete(worker.threadId);
-                this._deferredPromises.delete(worker.threadId);
+            this._threads.push(thread);
 
-                resolve(message);
-
-                if (this._pending.length > 0) {
-                    const { resolve } = this._pending.shift();
-
-                    resolve();
-                }
-            });
-
-            this._workers.push(worker);
-
-            logger.info(`Starting worker [ ${worker.threadId} ]`);
+            logger.debug(`Starting worker [ ${worker.threadId} ]`);
         }
-    }
-
-    getIsBusy() {
-        return this._busy.size === this._concurrency;
     }
 
     /**
      * @public
-     *
-     * @param {Buffer} buffer
-     */
-    async parse(buffer) {
-        this._batch.push(buffer);
-
-        if (this._batch.length < BATCH_SIZE) {
-            this._batch.push();
-        }
-
-        const isBusy = this.getIsBusy();
-
-        if (isBusy) {
-            throw new Error(`Unable to start parsing buffer. All threads are busy`);
-        }
-
-        const worker = this._workers.find(worker => !this._busy.has(worker.threadId)) || null;
-
-        if (worker === null) {
-            throw new Error('Unable to find available worker');
-        }
-
-        this._busy.add(worker.threadId);
-
-        const promise = new Promise((resolve, reject) => {
-            this._deferredPromises.set(worker.threadId, {resolve, reject});
-        });
-
-        worker.postMessage(buffer);
-
-        return promise;
-    }
-
-    /**
-     * @public
-     *
-     * @returns {Promise<void>}
+     * @returns {Promise<*>}
      */
     async ready() {
-        if (!this.getIsBusy()) {
+        if (this._getIsAvailable()) {
             return;
         }
 
-        const promise = new Promise((resolve) => {
-            this._pending.push({ resolve });
-        });
+        const deferred = new DeferredPromise();
 
-        return promise;
+        this._pending.push(deferred);
+
+        return deferred.promise;
     }
 
+    /**
+     * @public
+     * @param {WorkerParseTask} task
+     * @returns {Promise<void>}
+     */
+    async run(task) {
+        this._counts.tasks += 1;
+
+        if (!this._getIsAvailable()) {
+            throw new Error(`Unable to run task [ ${task.id} ]`);
+        }
+
+        const thread = this._threads.find(thread => !thread.busy);
+
+        return thread.run(task)
+            .then((result) => {
+                this._releasePendingOnce();
+
+                return result;
+            }).catch((error) => {
+                this._releasePendingOnce();
+
+                return Promise.reject(error);
+            });
+    }
+
+    /**
+     * @public
+     */
     terminate() {
-        this._workers.forEach((worker) => {
-            worker.terminate();
+        this._threads.forEach((thread) => {
+            thread.worker.terminate();
         });
+
+        this._threads = [ ];
+    }
+
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _getIsAvailable() {
+        return this._threads.some(thread => !thread.busy);
+    }
+
+    /**
+     * @private
+     */
+    _releasePendingOnce() {
+        if (this._pending.length === 0) {
+            return;
+        }
+
+        const deferred = this._pending.shift();
+
+        deferred.resolve();
     }
 }
 

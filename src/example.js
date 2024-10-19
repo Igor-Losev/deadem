@@ -1,10 +1,13 @@
+'use strict';
+
 const fs = require('fs'),
     path = require('path'),
     Stream = require('stream');
 
 const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
-const DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
+const DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
+    DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
     DemoStreamPacketParser = require('./stream/DemoStreamPacketParser');
 
 const LoggerProvider = require('./providers/LoggerProvider.instance');
@@ -26,11 +29,14 @@ const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
 
     const extractor = new DemoStreamPacketExtractor();
 
+    const batcher = new DemoStreamPacketBatcher(1024 * 1000 * 10, 50);
+
     const parser = new DemoStreamPacketParser(4);
 
     Stream.pipeline(
         reader,
         extractor,
+        batcher,
         parser,
         (error) => {
             parser.dispose();

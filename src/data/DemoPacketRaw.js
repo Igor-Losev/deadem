@@ -1,6 +1,10 @@
+'use strict';
+
+const snappy = require('snappy');
+
 const VarInt32 = require('./VarInt32');
 
-class DemoPacket {
+class DemoPacketRaw {
     /**
      * @public
      * @constructor
@@ -33,15 +37,35 @@ class DemoPacket {
         return this._payload;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
+    getActualSize() {
+        return this._command.size + this._tick.size + this._frame.size + this._payload.length;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
     getCommandType() {
         return this._command.value & ~64;
     }
 
+    /**
+     * @public
+     * @returns {boolean}
+     */
     getIsCompressed() {
-        return (this._command.value & 64) === 64;
+        return getIsCompressed(this._command);
     }
 
-    getSize() {
+    /**
+     * @public
+     * @returns {Number}
+     */
+    getOriginalSize() {
         return this._command.size + this._tick.size + this._frame.size + this._frame.value;
     }
 
@@ -51,7 +75,7 @@ class DemoPacket {
      * @public
      * @static
      * @param {Buffer} buffer
-     * @returns {DemoPacket|null}
+     * @returns {DemoPacketRaw|null}
      */
     static parse(buffer) {
         const command = VarInt32.parse(buffer);
@@ -78,8 +102,24 @@ class DemoPacket {
             return null;
         }
 
-        return new DemoPacket(command, tick, frame, payload);
+        let decompressed;
+
+        if (getIsCompressed(command)) {
+            decompressed = snappy.uncompressSync(payload);
+        } else {
+            decompressed = payload;
+        }
+
+        return new DemoPacketRaw(command, tick, frame, decompressed);
     }
 }
 
-module.exports = DemoPacket;
+/**
+ * @param {VarInt32} command
+ * @returns {boolean}
+ */
+function getIsCompressed(command) {
+    return (command.value & 64) === 64;
+}
+
+module.exports = DemoPacketRaw;

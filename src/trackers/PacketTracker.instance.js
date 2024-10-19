@@ -9,33 +9,29 @@ class PacketTracker {
 
     /**
      * @public
-     * @param {DemoPacket} demoPacket
+     * @param {number} command
      */
-    trackDemoPacket(demoPacket) {
-        const commandType = demoPacket.getCommandType();
-
-        const record = this._records.get(commandType) || new TrackRecord(commandType);
+    trackDemoPacket(command) {
+        const record = this._records.get(command) || new TrackRecord(command);
 
         record.increment();
 
-        this._records.set(commandType, record);
+        this._records.set(command, record);
     }
 
     /**
      * @public
-     * @param {DemoPacket} demoPacket
-     * @param {MessagePacket} messagePacket
+     * @param {number} command
+     * @param {number} type
      */
-    trackMessagePacket(demoPacket, messagePacket) {
-        const commandType = demoPacket.getCommandType();
+    trackMessagePacket(command, type) {
+        const record = this._records.get(command) || new TrackRecord(command);
 
-        const record = this._records.get(commandType) || new TrackRecord(commandType);
-
-        const subRecord = record.records.get(messagePacket.type) || new TrackRecord(messagePacket.type);
+        const subRecord = record.records.get(type) || new TrackRecord(type);
 
         subRecord.increment();
 
-        record.records.set(messagePacket.type, subRecord);
+        record.records.set(type, subRecord);
     }
 
     print() {

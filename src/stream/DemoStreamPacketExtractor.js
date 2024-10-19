@@ -1,6 +1,6 @@
 const Stream = require('stream');
 
-const DemoPacket = require('./../data/DemoPacket'),
+const DemoPacketRaw = require('./../data/DemoPacketRaw'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
 const PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
@@ -46,7 +46,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             let packet;
 
             try {
-                packet = DemoPacket.parse(tail);
+                packet = DemoPacketRaw.parse(tail);
 
                 this._retries = 0;
             } catch (error) {
@@ -62,7 +62,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             } else {
                 this._counts.packets += 1;
 
-                this._chunk.pointer += packet.getSize();
+                this._chunk.pointer += packet.getOriginalSize();
 
                 process.nextTick(() => {
                     this.push(packet);

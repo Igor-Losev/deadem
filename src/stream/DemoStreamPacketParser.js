@@ -13,7 +13,8 @@ const LoggerProvider = require('./../providers/LoggerProvider.instance'),
 const PacketTracker = require('./../trackers/PacketTracker.instance'),
     PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
 
-const WorkerManager = require('./../workers/WorkerManager');
+const WorkerManager = require('./../workers/WorkerManager'),
+    WorkerParseTask = require('./../workers/WorkerParseTask');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
@@ -28,102 +29,62 @@ class DemoStreamPacketParser extends Stream.Transform {
         super({ objectMode: true });
 
         this._counts = {
-            packets: 0
+            batches: 0
         };
 
         this._workerManager = new WorkerManager(concurrency);
+
+        this._pending = [ ];
     }
 
     dispose() {
         this._workerManager.terminate();
     }
 
+    async _flush(callback) {
+        await Promise.all(this._pending);
+
+        callback();
+    }
+
     /**
-     *
-     * @param {DemoPacket} demoPacket
+     * @param {Array<DemoPacketRaw>} batch
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
      * @private
      */
-    async _transform(demoPacket, encoding, callback) {
-        this._counts.packets += 1;
+    async _transform(batch, encoding, callback) {
+        this._counts.batches += 1;
 
-        let payload;
+        // console.log(batch.length);
 
-        PacketTracker.trackDemoPacket(demoPacket);
+        batch.forEach((demoPacket) => {
+            PacketTracker.trackDemoPacket(demoPacket.getCommandType());
+        });
 
-        if (demoPacket.getIsCompressed()) {
-            PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
+        await this._workerManager.ready();
 
-            payload = snappy.uncompressSync(demoPacket.payload);
+        const taskId = this._counts.batches;
+        const task = new WorkerParseTask(taskId, batch);
 
-            PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_DECOMPRESS);
-        } else {
-            payload = demoPacket.payload;
-        }
+        const promise = this._workerManager.run(task)
+            .then((result) => {
+                const index = this._pending.indexOf(promise);
 
-        const commandType = demoPacket.getCommandType();
+                if (index >= 0) {
+                    this._pending.splice(index, 1);
+                }
 
-        const EDemoCommands = ProtoProvider.DEMO.getEnum('EDemoCommands');
+                result.forEach((item) => {
+                    const { command, packets } = item;
 
-        logger.debug(`[ ${this._counts.packets} ] - Tick: [ ${demoPacket.tick.value} ], Command Type [ ${commandType} ], Size [ ${demoPacket.payload.length} ], Compressed: [ ${demoPacket.getIsCompressed()} ]`);
-
-        switch (commandType) {
-            case EDemoCommands.DEM_FileHeader: { // 1
-                const CDemoFileHeader = ProtoProvider.DEMO.lookupType('CDemoFileHeader');
-
-                const fileHeader = CDemoFileHeader.decode(payload);
-
-                logger.info(fileHeader);
-
-                break;
-            }
-            case EDemoCommands.DEM_Packet: // 7
-            case EDemoCommands.DEM_SignonPacket: { // 8
-                const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
-
-                const { data } = CDemoPacket.decode(payload);
-
-                await this._workerManager.ready();
-
-                this._workerManager.parse(data)
-                    .then((messages) => {
-                        messages.forEach((message) => {
-                            PacketTracker.trackMessagePacket(demoPacket, { type: message._type });
-                        });
+                    packets.forEach((type) => {
+                        PacketTracker.trackMessagePacket(command, type);
                     });
+                });
+            });
 
-                // console.log(messages);
-                //
-                // console.log(demoPacket);
-                // console.log(data.length);
-                //
-                // const extractor = new MessagePacketExtractor(data).retrieve();
-                //
-                // PerformanceTracker.start(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
-                //
-                // for (const messagePacket of extractor) {
-                //     console.log(messagePacket);
-                //
-                //     PacketTracker.trackMessagePacket(demoPacket, messagePacket);
-                //
-                //     const messagePacketParser = new MessagePacketParser(messagePacket);
-                //
-                //     messagePacketParser.parse();
-                // }
-                //
-                // PerformanceTracker.end(PerformanceTrackerCategory.MESSAGE_PACKETS_EXTRACT);
-
-                break;
-            }
-            default: {
-                break;
-            }
-        }
-
-        // if (this._counts.packets === 4) {
-        //     throw new Error(123);
-        // }
+        this._pending.push(promise);
 
         callback();
     }
