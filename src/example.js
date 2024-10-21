@@ -25,13 +25,13 @@ const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
 
     PerformanceTracker.start(PerformanceTrackerCategory.SCRIPT);
 
-    const reader = fs.createReadStream(demoPath, { highWaterMark: 65536 * 8 });
+    const reader = fs.createReadStream(demoPath, { highWaterMark: 65536 });
 
     const extractor = new DemoStreamPacketExtractor();
 
-    const batcher = new DemoStreamPacketBatcher(1024 * 1000 * 10, 50);
+    const batcher = new DemoStreamPacketBatcher(1024 * 100, 50);
 
-    const parser = new DemoStreamPacketParser(4);
+    const parser = new DemoStreamPacketParser(5);
 
     Stream.pipeline(
         reader,

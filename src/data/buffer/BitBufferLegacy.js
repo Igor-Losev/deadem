@@ -39,7 +39,7 @@ class BitBuffer {
         }
 
         const numberOfBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
-        const buffer = Buffer.alloc(numberOfBytes);
+        const buffer = Buffer.allocUnsafe(numberOfBytes);
 
         let bufferOffset = 0;
         let result = 0;

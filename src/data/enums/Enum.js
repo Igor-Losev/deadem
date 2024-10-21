@@ -1,5 +1,6 @@
 class Enum {
     /**
+     * @abstract
      * @public
      * @constructor
      * @param {String} code

@@ -46,7 +46,7 @@ class WorkerThread {
 
     /**
      * @public
-     * @param {WorkerParseTask} task
+     * @param {WorkerTask} task
      */
     run(task) {
         if (this.busy) {
@@ -57,7 +57,7 @@ class WorkerThread {
 
         this._deferred = new DeferredPromise();
 
-        this._worker.postMessage(task);
+        this._worker.postMessage(task.toObject(), task.transfers);
 
         return this._deferred.promise;
     }

@@ -31,8 +31,6 @@ class DemoStreamPacketExtractor extends Stream.Transform {
     }
 
     _transform(chunk, encoding, callback) {
-        PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
-
         this._chunk.buffer = Buffer.concat([ this._chunk.buffer, chunk ]);
         this._chunk.pointer = 0;
 
@@ -46,7 +44,11 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             let packet;
 
             try {
+                PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
+
                 packet = DemoPacketRaw.parse(tail);
+
+                PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
 
                 this._retries = 0;
             } catch (error) {
@@ -64,9 +66,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
 
                 this._chunk.pointer += packet.getOriginalSize();
 
-                process.nextTick(() => {
-                    this.push(packet);
-                });
+                this.push(packet);
 
                 parseChunkRecursively();
             }
@@ -75,8 +75,6 @@ class DemoStreamPacketExtractor extends Stream.Transform {
         parseChunkRecursively();
 
         this._counts.chunks += 1;
-
-        PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
 
         callback();
     }

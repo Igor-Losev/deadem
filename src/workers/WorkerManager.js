@@ -5,14 +5,13 @@ const { Worker } = require('node:worker_threads'),
 
 const DeferredPromise = require('./../data/DeferredPromise');
 
-const WorkerParseTask = require('./WorkerParseTask'),
-    WorkerThread = require('./WorkerThread');
+const WorkerThread = require('./WorkerThread');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
 const logger = LoggerProvider.getLogger('WorkerManager');
 
-const WORKER_PATH = path.resolve(__dirname, './worker.js');
+const WORKER_PATH = path.resolve(__dirname, './scripts/worker.js');
 
 class WorkerManager {
     constructor(concurrency) {
@@ -60,7 +59,7 @@ class WorkerManager {
 
     /**
      * @public
-     * @param {WorkerParseTask} task
+     * @param {WorkerTask} task
      * @returns {Promise<void>}
      */
     async run(task) {

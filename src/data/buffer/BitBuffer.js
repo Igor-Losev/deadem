@@ -50,7 +50,7 @@ class BitBuffer {
 
         const numberOfBytes = Math.ceil((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
 
-        let buffer = Buffer.alloc(numberOfBytes);
+        let buffer = Buffer.allocUnsafe(numberOfBytes);
 
         for (let i = 0; i < numberOfBytes; i++) {
             buffer[i] = this._buffer[this._pointers.byte + i];

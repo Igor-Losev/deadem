@@ -2,6 +2,9 @@
 
 const snappy = require('snappy');
 
+const PerformanceTracker = require('./../trackers/PerformanceTracker.instance'),
+    PerformanceTrackerCategory = require('./enums/PerformanceTrackerCategory');
+
 const VarInt32 = require('./VarInt32');
 
 class DemoPacketRaw {
