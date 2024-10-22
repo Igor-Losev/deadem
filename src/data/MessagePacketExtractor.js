@@ -1,6 +1,6 @@
 const BitBuffer = require('./buffer/BitBuffer');
 
-const MessagePacket = require('./MessagePacket'),
+const MessagePacketRaw = require('./MessagePacketRaw'),
     VarInt32 = require('./VarInt32');
 
 const BITS_PER_BYTE = 8;
@@ -25,9 +25,7 @@ class MessagePacketExtractor {
 
             const payload = this._readPayload(size.value * BITS_PER_BYTE);
 
-            const messagePacket = new MessagePacket(type, size, payload);
-
-            yield messagePacket;
+            yield new MessagePacketRaw(type, size, payload);
         }
     }
 

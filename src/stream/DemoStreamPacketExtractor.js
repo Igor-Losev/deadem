@@ -44,11 +44,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             let packet;
 
             try {
-                PerformanceTracker.start(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
-
                 packet = DemoPacketRaw.parse(tail);
-
-                PerformanceTracker.end(PerformanceTrackerCategory.DEMO_PACKETS_EXTRACT);
 
                 this._retries = 0;
             } catch (error) {

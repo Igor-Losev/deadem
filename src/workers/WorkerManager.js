@@ -41,13 +41,19 @@ class WorkerManager {
         }
     }
 
+    get concurrency() {
+        return this._concurrency;
+    }
+
     /**
      * @public
-     * @returns {Promise<*>}
+     * @returns {Promise<WorkerThread>}
      */
-    async ready() {
-        if (this._getIsAvailable()) {
-            return;
+    async requestThread() {
+        const thread = this._threads.find(thread => !thread.busy) || null;
+
+        if (thread !== null) {
+            return thread;
         }
 
         const deferred = new DeferredPromise();
@@ -59,17 +65,16 @@ class WorkerManager {
 
     /**
      * @public
+     * @param {WorkerThread} thread
      * @param {WorkerTask} task
      * @returns {Promise<void>}
      */
-    async run(task) {
+    async run(thread, task) {
         this._counts.tasks += 1;
 
         if (!this._getIsAvailable()) {
             throw new Error(`Unable to run task [ ${task.id} ]`);
         }
-
-        const thread = this._threads.find(thread => !thread.busy);
 
         return thread.run(task)
             .then((result) => {
@@ -112,7 +117,9 @@ class WorkerManager {
 
         const deferred = this._pending.shift();
 
-        deferred.resolve();
+        const thread = this._threads.find(thread => !thread.busy) || null;
+
+        deferred.resolve(thread);
     }
 }
 

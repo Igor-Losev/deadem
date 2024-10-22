@@ -9,7 +9,7 @@ class WorkerTaskType extends Enum {
         registry.set(code, this);
     }
 
-    static PACKET_PARSE = new WorkerTaskType('PACKET_PARSE', 'Packet Parse');
+    static DEMO_PACKET_PARSE = new WorkerTaskType('DEMO_PACKET_PARSE', 'Packet Parse');
 
     static parse(code) {
         return registry.get(code) || null;

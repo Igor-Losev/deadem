@@ -1,6 +1,8 @@
 const LoggerProvider = require('./../providers/LoggerProvider.instance'),
     ProtoProvider = require('./../providers/ProtoProvider.instance');
 
+const MessagePacket = require('./MessagePacket');
+
 const logger = LoggerProvider.getLogger('MessagePacketParser');
 
 const SVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages');
@@ -13,56 +15,38 @@ const CNETMsg_Tick = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_Tick')
 const CNETMsg_SignonState = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_SignonState');
 const CSVCMsgList_GameEvents = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CSVCMsgList_GameEvents');
 
+const parsers = new Map();
+
+/* 004 */ parsers.set(NET_Messages.net_Tick, p => CNETMsg_Tick.decode(p));
+/* 040 */ parsers.set(SVC_Messages.svc_ServerInfo, p => CSVCMsg_ServerInfo.decode(p));
+/* 044 */ parsers.set(SVC_Messages.svc_CreateStringTable, p => CSVCMsg_CreateStringTable.decode(p));
+/* 051 */ parsers.set(SVC_Messages.svc_ClearAllStringTables, p => CSVCMsg_ClearAllStringTables.decode(p));
+
 class MessagePacketParser {
     /**
      * @public
      * @constructor
-     * @param {MessagePacket} packet
      */
-    constructor(packet) {
-        this._packet = packet;
+    constructor() {
+
     }
 
-    parse() {
-        let data = null;
+    /**
+     * @public
+     * @param {number} type
+     * @param {Buffer|Uint8Array} payload
+     * @returns {MessagePacket|null}
+     */
+    parse(type, payload) {
+        const parser = parsers.get(type) || null;
 
-        switch (this._packet.type) {
-            case NET_Messages.net_Tick: { // 4
-                data = CNETMsg_Tick.decode(this._packet.payload);
-
-                // console.log(data);
-
-                break;
-            }
-            case SVC_Messages.svc_ServerInfo: { // 40
-                data = CSVCMsg_ServerInfo.decode(this._packet.payload);
-
-                // console.log(data);
-
-                break;
-            }
-            case SVC_Messages.svc_CreateStringTable: { // 44
-                data = CSVCMsg_CreateStringTable.decode(this._packet.payload);
-
-                // console.log(data);
-
-                break;
-            }
-            case SVC_Messages.svc_ClearAllStringTables: { // 51
-                data = CSVCMsg_ClearAllStringTables.decode(this._packet.payload);
-
-                // console.log(data);
-
-                break;
-            }
-            default: {
-                // logger.error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
-
-                // throw new Error(`Unhandled MessagePacket type [ ${this._packet.type} ]`);
-            }
+        if (parser === null) {
+            return null;
         }
 
-        return data;
+        const data = parser(payload);
+
+        return new MessagePacket(type, data);
     }
 }
 

@@ -105,15 +105,7 @@ class DemoPacketRaw {
             return null;
         }
 
-        let decompressed;
-
-        if (getIsCompressed(command)) {
-            decompressed = snappy.uncompressSync(payload);
-        } else {
-            decompressed = payload;
-        }
-
-        return new DemoPacketRaw(command, tick, frame, decompressed);
+        return new DemoPacketRaw(command, tick, frame, payload);
     }
 }
 

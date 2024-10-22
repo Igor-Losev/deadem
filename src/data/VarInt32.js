@@ -51,7 +51,7 @@ class VarInt32 {
             continuation = (byte & 128) === 128;
         }
 
-        return new VarInt32(value, offset);
+        return new VarInt32(value >>> 0, offset);
     }
 }
 

@@ -6,7 +6,8 @@ const fs = require('fs'),
 
 const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
-const DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
+const DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
+    DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
     DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
     DemoStreamPacketParser = require('./stream/DemoStreamPacketParser');
 
@@ -31,13 +32,16 @@ const demoPath = path.resolve(__dirname, './../demos/21438112.dem');
 
     const batcher = new DemoStreamPacketBatcher(1024 * 100, 50);
 
-    const parser = new DemoStreamPacketParser(5);
+    const parser = new DemoStreamPacketParser(1);
+
+    const analyzer = new DemoStreamPacketAnalyzer();
 
     Stream.pipeline(
         reader,
         extractor,
         batcher,
         parser,
+        analyzer,
         (error) => {
             parser.dispose();
 

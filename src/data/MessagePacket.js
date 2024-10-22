@@ -1,28 +1,24 @@
+'use strict';
+
 class MessagePacket {
     /**
      * @public
      * @constructor
      *
-     * @param {Number} type
-     * @param {VarInt32} size
-     * @param {Buffer} payload
+     * @param {number} type
+     * @param data
      */
-    constructor(type, size, payload) {
+    constructor(type, data) {
         this._type = type;
-        this._size = size;
-        this._payload = payload;
+        this._data = data;
     }
 
     get type() {
         return this._type;
     }
 
-    get size() {
-        return this._size;
-    }
-
-    get payload() {
-        return this._payload;
+    get data() {
+        return this._data;
     }
 }
 
