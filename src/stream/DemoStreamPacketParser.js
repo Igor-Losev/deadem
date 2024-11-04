@@ -2,10 +2,10 @@
 
 const Stream = require('stream');
 
-const snappy = require('snappy');
-
 const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory'),
     WorkerTaskType = require('./../data/enums/WorkerTaskType');
+
+const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
 
 const DemoPacket = require('./../data/DemoPacket'),
     MessagePacketParser = require('./../data/MessagePacketParser');
@@ -169,7 +169,7 @@ function decompress(demoPacket) {
     let decompressed;
 
     if (demoPacket.getIsCompressed()) {
-        decompressed = snappy.uncompressSync(demoPacket.payload);
+        decompressed = SnappyDecompressor.decompress(demoPacket.payload);
     } else {
         decompressed = demoPacket.payload;
     }
