@@ -2,9 +2,9 @@
 
 const { parentPort, threadId } = require('node:worker_threads');
 
-const snappy = require('snappy');
-
 const MessagePacketExtractor = require('./../../data/MessagePacketExtractor');
+
+const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.instance');
 
 const WorkerTaskType = require('./../../data/enums/WorkerTaskType');
 
@@ -37,7 +37,7 @@ const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
                     let decompressed;
 
                     if (compressed) {
-                        decompressed = snappy.uncompressSync(buffer);
+                        decompressed = SnappyDecompressor.decompress(buffer);
                     } else {
                         decompressed = buffer;
                     }
