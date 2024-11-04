@@ -1,7 +1,6 @@
-const BitBuffer = require('./buffer/BitBuffer');
+const BitBuffer = require('./buffer/BitBufferFast');
 
-const MessagePacketRaw = require('./MessagePacketRaw'),
-    VarInt32 = require('./VarInt32');
+const MessagePacketRaw = require('./MessagePacketRaw');
 
 const BITS_PER_BYTE = 8;
 
@@ -23,6 +22,10 @@ class MessagePacketExtractor {
 
             const size = this._readMessageSize();
 
+            if (size === null) {
+                break;
+            }
+
             const payload = this._readPayload(size.value * BITS_PER_BYTE);
 
             yield new MessagePacketRaw(type, size, payload);
@@ -35,55 +38,16 @@ class MessagePacketExtractor {
      * @returns {Number}
      */
     _readMessageType() {
-        let candidate = this._bitBuffer.read(6).readUInt8();
-
-        switch (candidate & 48) {
-            case 16: {
-                const value = this._bitBuffer.read(4).readUInt8();
-
-                candidate = (candidate & 15) | (value << 4);
-
-                break;
-            }
-            case 32: {
-                const value = this._bitBuffer.read(8).readUInt8();
-
-                candidate = (candidate & 15) | (value << 4);
-
-                break;
-            }
-            case 48: {
-                const value = this._bitBuffer.read(28).readUInt32LE();
-
-                candidate = (candidate & 15) | (value << 4);
-
-                break;
-            }
-            default:
-                break;
-        }
-
-        return candidate;
+        return this._bitBuffer.readUVarInt();
     }
 
     /**
      * @private
      *
-     * @returns {VarInt32|null}
+     * @returns {UVarInt32|null}
      */
     _readMessageSize() {
-        let buffer = Buffer.alloc(0);
-        let parsed = null;
-
-        for (let i = 0; i < VarInt32.MAXIMUM_SIZE_BYTES && parsed === null; i++) {
-            const byte = this._bitBuffer.read(BITS_PER_BYTE);
-
-            buffer = Buffer.concat([ buffer, byte ]);
-
-            parsed = VarInt32.parse(buffer);
-        }
-
-        return parsed;
+        return this._bitBuffer.readUVarInt32();
     }
 
     /**

@@ -1,20 +1,15 @@
 'use strict';
 
-const snappy = require('snappy');
-
-const PerformanceTracker = require('./../trackers/PerformanceTracker.instance'),
-    PerformanceTrackerCategory = require('./enums/PerformanceTrackerCategory');
-
-const VarInt32 = require('./VarInt32');
+const UVarInt32 = require('./UVarInt32');
 
 class DemoPacketRaw {
     /**
      * @public
      * @constructor
      *
-     * @param {VarInt32} command
-     * @param {VarInt32} tick
-     * @param {VarInt32} frame
+     * @param {UVarInt32} command
+     * @param {UVarInt32} tick
+     * @param {UVarInt32} frame
      * @param {Buffer} payload
      */
     constructor(command, tick, frame, payload) {
@@ -81,19 +76,19 @@ class DemoPacketRaw {
      * @returns {DemoPacketRaw|null}
      */
     static parse(buffer) {
-        const command = VarInt32.parse(buffer);
+        const command = UVarInt32.parse(buffer);
 
         if (command === null) {
             throw new Error('Unable to parse command');
         }
 
-        const tick = VarInt32.parse(buffer.subarray(command.size));
+        const tick = UVarInt32.parse(buffer.subarray(command.size));
 
         if (tick === null) {
             throw new Error('Unable to parse tick');
         }
 
-        const frame = VarInt32.parse(buffer.subarray(command.size + tick.size));
+        const frame = UVarInt32.parse(buffer.subarray(command.size + tick.size));
 
         if (frame === null) {
             throw new Error('Unable to parse frame');
@@ -110,7 +105,7 @@ class DemoPacketRaw {
 }
 
 /**
- * @param {VarInt32} command
+ * @param {UVarInt32} command
  * @returns {boolean}
  */
 function getIsCompressed(command) {
