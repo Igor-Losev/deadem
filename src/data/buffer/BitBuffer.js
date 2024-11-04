@@ -1,18 +1,12 @@
+'use strict';
+
+const UVarInt32 = require('./../UVarInt32');
+
 const BITS_PER_BYTE = 8;
-
-const MASK_DIRECTION = {
-    LEFT: 'left',
-    RIGHT: 'right'
-};
-
-const MASK = {
-    [MASK_DIRECTION.LEFT]: [ 255, 127, 63, 31, 15, 7, 3, 1 ],
-    [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
-};
 
 class BitBuffer {
     /**
-     * @public
+     * @abstract
      * @constructor
      *
      * @param {Buffer} buffer
@@ -24,6 +18,10 @@ class BitBuffer {
             byte: 0,
             bit: 0
         };
+    }
+
+    static get BITS_PER_BYTE() {
+        return BITS_PER_BYTE;
     }
 
     /**
@@ -42,44 +40,131 @@ class BitBuffer {
      * @returns {Buffer}
      */
     read(numberOfBits) {
-        const unread = this.getUnreadCount();
+        return this._read(numberOfBits);
+    }
 
-        if (numberOfBits > unread) {
-            throw new Error(`Unable to read [ ${numberOfBits} ] bits - only [ ${unread} ] bits left`);
+    /**
+     * @public
+     *
+     * @returns {number}
+     */
+    readBit() {
+        const buffer = this._read(1);
+
+        return buffer[0] >>> 0;
+    }
+
+    /**
+     * @public
+     *
+     * @param {number=} length
+     * @returns {string}
+     */
+    readString(length) {
+        let result = '';
+
+        while (true) {
+            if (Number.isInteger(length) && result.length >= length) {
+                break;
+            }
+
+            const buffer = this.read(BITS_PER_BYTE);
+
+            if (buffer[0] === 0) {
+                break;
+            }
+
+            result += buffer.toString();
         }
 
-        const numberOfBytes = Math.ceil((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
+        return result;
+    }
 
-        let buffer = Buffer.allocUnsafe(numberOfBytes);
+    /**
+     * @public
+     *
+     * @returns {number}
+     */
+    readUInt8() {
+        const buffer = this._read(BITS_PER_BYTE);
 
-        for (let i = 0; i < numberOfBytes; i++) {
-            buffer[i] = this._buffer[this._pointers.byte + i];
-        }
+        return buffer[0] >>> 0;
+    }
 
-        const zeroBitsOffset = this._pointers.bit;
-        const zeroBitsIgnored = numberOfBytes * BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
+    /**
+     * @public
+     *
+     * @returns {number}
+     */
+    readUVarInt() {
+        let result = this._read(6).readUInt8();
 
-        buffer[0] = buffer[0] & MASK[MASK_DIRECTION.RIGHT][zeroBitsOffset];
-        buffer[buffer.length - 1] = buffer[buffer.length - 1] & MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+        switch (result & 48) {
+            case 16: {
+                const value = this._read(4).readUInt8();
 
-        if (zeroBitsOffset > 0) {
-            buffer[0] = buffer[0] >>> zeroBitsOffset;
+                result = (result & 15) | (value << 4);
 
-            for (let i = 0; i < numberOfBytes - 1; i++) {
-                buffer[i] |= (buffer[i + 1] & MASK[MASK_DIRECTION.LEFT][BITS_PER_BYTE - zeroBitsOffset]) << (BITS_PER_BYTE - zeroBitsOffset);
+                break;
+            }
+            case 32: {
+                const value = this._read(8).readUInt8();
 
-                buffer[i + 1] = buffer[i + 1] >>> zeroBitsOffset;
+                result = (result & 15) | (value << 4);
+
+                break;
+            }
+            case 48: {
+                const value = this._read(28).readUInt32LE();
+
+                result = (result & 15) | (value << 4);
+
+                break;
+            }
+            default: {
+                break;
             }
         }
 
-        if (numberOfBytes > Math.ceil(numberOfBits / BITS_PER_BYTE)) {
-            buffer = buffer.subarray(0, buffer.length - 1);
+        return result >>> 0;
+    }
+
+    /**
+     * @public
+     *
+     * @returns {UVarInt32|null}
+     */
+    readUVarInt32() {
+        let bitsAvailable = this.getUnreadCount();
+        let valid = false;
+        let value = 0;
+        let offset = 0;
+
+        while (bitsAvailable >= BITS_PER_BYTE && offset < UVarInt32.MAXIMUM_SIZE_BYTES) {
+            const byte = this.readUInt8();
+
+            bitsAvailable -= BITS_PER_BYTE;
+
+            value |= (byte & 127) << (7 * offset);
+
+            offset += 1;
+
+            if ((byte & 128) !== 128) {
+                valid = true;
+
+                break;
+            }
         }
 
-        this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
-        this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
+        let parsed;
 
-        return buffer;
+        if (valid) {
+            parsed = new UVarInt32(value >>> 0, offset);
+        } else {
+            parsed = null;
+        }
+
+        return parsed;
     }
 
     /**
@@ -88,6 +173,16 @@ class BitBuffer {
     reset() {
         this._pointers.byte = 0;
         this._pointers.bit = 0;
+    }
+
+    /**
+     * @protected
+     * @param {Number} numberOfBits
+     *
+     * @returns {Buffer}
+     */
+    _read(numberOfBits) {
+        throw new Error('BitBuffer._read() is not implemented');
     }
 }
 

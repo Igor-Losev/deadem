@@ -1,6 +1,8 @@
-const BITS_PER_BYTE = 8;
+'use strict';
 
-class BitBuffer {
+const BitBuffer = require('./BitBuffer');
+
+class BitBufferSlow extends BitBuffer {
     /**
      * @public
      * @constructor
@@ -8,44 +10,30 @@ class BitBuffer {
      * @param {Buffer} buffer
      */
     constructor(buffer) {
-        this._buffer = buffer;
-
-        this._pointers = {
-            byte: 0,
-            bit: 0
-        };
+        super(buffer);
     }
 
     /**
-     * @public
-     *
-     * @returns {Number}
-     */
-    getUnreadCount() {
-        return this._buffer.length * BITS_PER_BYTE - (this._pointers.byte * BITS_PER_BYTE + this._pointers.bit);
-    }
-
-    /**
-     * @public
+     * @protected
      * @param {Number} numberOfBits
      *
      * @returns {Buffer}
      */
-    read(numberOfBits) {
+    _read(numberOfBits) {
         const unread = this.getUnreadCount();
 
         if (numberOfBits > unread) {
             throw new Error(`Unable to read [ ${numberOfBits} ] bits - only [ ${unread} ] bits left`);
         }
 
-        const numberOfBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
+        const numberOfBytes = Math.ceil(numberOfBits / BitBuffer.BITS_PER_BYTE);
         const buffer = Buffer.allocUnsafe(numberOfBytes);
 
         let bufferOffset = 0;
         let result = 0;
 
         for (let i = 0; i < numberOfBits; i++) {
-            const isOverflow = i !== 0 && i % BITS_PER_BYTE === 0;
+            const isOverflow = i !== 0 && i % BitBuffer.BITS_PER_BYTE === 0;
 
             if (isOverflow) {
                 buffer.writeUInt8(result, bufferOffset);
@@ -56,11 +44,11 @@ class BitBuffer {
 
             const byte = this._buffer[this._pointers.byte];
 
-            result |= ((byte >> this._pointers.bit) & 1) << (i % BITS_PER_BYTE);
+            result |= ((byte >> this._pointers.bit) & 1) << (i % BitBuffer.BITS_PER_BYTE);
 
             this._pointers.bit += 1;
 
-            if (this._pointers.bit === BITS_PER_BYTE) {
+            if (this._pointers.bit === BitBuffer.BITS_PER_BYTE) {
                 this._pointers.byte += 1;
                 this._pointers.bit = 0;
             }
@@ -77,14 +65,6 @@ class BitBuffer {
 
         return buffer;
     }
-
-    /**
-     * @public
-     */
-    reset() {
-        this._pointers.byte = 0;
-        this._pointers.bit = 0;
-    }
 }
 
-module.exports = BitBuffer;
+module.exports = BitBufferSlow;

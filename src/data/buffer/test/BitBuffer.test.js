@@ -1,6 +1,6 @@
-const BitBuffer = require('./../BitBuffer');
+const BitBuffer = require('./../BitBufferFast');
 
-describe('BitBuffer', () => {
+describe('BitBuffer.read()', () => {
     describe('When reading chunks [ 6, 4, 3, 1, 2 ] from [ 0x51, 0x85 ]', () => {
         test('It should return [ 17, 5, 1, 0, 2 ]', () => {
             const buffer = Buffer.from([ 0x51, 0x85 ]);
@@ -62,6 +62,24 @@ describe('BitBuffer', () => {
             result = reader.read(2);
 
             expect(result.readUInt8()).toBe(2);
+        });
+    });
+});
+
+describe('BitBuffer.readBit()', () => {
+    describe('When reading bits from 0x8b', () => {
+        test('It should return [ 1, 1, 0, 1, 0, 0, 0, 1 ]', () => {
+            const buffer = Buffer.from([ 0x8b ]);
+
+            const reader = new BitBuffer(buffer);
+
+            const expected = [ 1, 1, 0, 1, 0, 0, 0, 1 ];
+
+            expected.forEach((result) => {
+                const value = reader.readBit();
+
+                expect(value).toBe(result);
+            });
         });
     });
 });
