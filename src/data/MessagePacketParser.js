@@ -15,6 +15,7 @@ const CSVCMsg_ClassInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClassIn
 const CSVCMsg_ClearAllStringTables = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClearAllStringTables');
 const CSVCMsg_CreateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_CreateStringTable');
 const CSVCMsg_UpdateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UpdateStringTable');
+const CSVCMsg_PacketEntities = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_PacketEntities');
 const CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ServerInfo');
 
 // network base types
@@ -32,6 +33,7 @@ const parsers = new Map();
 /* 044 */ parsers.set(SVC_Messages.svc_CreateStringTable, p => CSVCMsg_CreateStringTable.decode(p));
 /* 045 */ parsers.set(SVC_Messages.svc_UpdateStringTable, p => CSVCMsg_UpdateStringTable.decode(p));
 /* 051 */ parsers.set(SVC_Messages.svc_ClearAllStringTables, p => CSVCMsg_ClearAllStringTables.decode(p));
+/* 055 */ parsers.set(SVC_Messages.svc_PacketEntities, p => CSVCMsg_PacketEntities.decode(p));
 
 /* 300 */ parsers.set(CitadelUserMessageIds.k_EUserMsg_Damage, p => CCitadelUserMessage_Damage.decode(p));
 
