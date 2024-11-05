@@ -67,7 +67,7 @@ describe('BitBuffer.read()', () => {
 });
 
 describe('BitBuffer.readBit()', () => {
-    describe('When reading bits from 0x8b', () => {
+    describe('When reading bits from [ 0x8b ]', () => {
         test('It should return [ 1, 1, 0, 1, 0, 0, 0, 1 ]', () => {
             const buffer = Buffer.from([ 0x8b ]);
 
