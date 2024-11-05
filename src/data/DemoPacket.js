@@ -1,17 +1,22 @@
 'use strict';
 
-const MAX_UInt32 = 4294967295;
+const assert = require('assert/strict');
+
+const DemoCommandType = require('./../data/enums/DemoCommandType');
 
 class DemoPacket {
     /**
      * @public
      * @constructor
      *
-     * @param {number} command
-     * @param {number} tick
+     * @param {DemoCommandType} command
+     * @param {Number} tick
      * @param {*} data
      */
     constructor(command, tick, data) {
+        assert(command instanceof DemoCommandType);
+        assert(Number.isInteger(tick));
+
         this._command = command;
         this._tick = tick;
         this._data = data;
@@ -27,27 +32,6 @@ class DemoPacket {
 
     get data() {
         return this._data;
-    }
-
-    /**
-     * @public
-     * @static
-     *
-     * @param {DemoPacketRaw} demoPacketRaw
-     * @param {*} data
-     */
-    static fromRaw(demoPacketRaw, data) {
-        const command = demoPacketRaw.getCommandType();
-
-        let tick;
-
-        if (demoPacketRaw.tick.value === MAX_UInt32) {
-            tick = 0;
-        } else {
-            tick = demoPacketRaw.tick.value;
-        }
-
-        return new DemoPacket(command, tick, data);
     }
 }
 
