@@ -206,6 +206,8 @@ class StringTableContainer {
                         value = CModifierTableEntry.decode(value);
 
                         break;
+                    case StringTableType.INSTANCE_BASE_LINE:
+                        break;
                     case StringTableType.USER_INFO:
                         value = CMsgPlayerInfo.decode(value);
 
