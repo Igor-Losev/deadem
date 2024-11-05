@@ -1,8 +1,11 @@
 'use strict';
 
-const LoggerProvider = require('../../../providers/LoggerProvider.instance');
+const LoggerProvider = require('./../../../providers/LoggerProvider.instance'),
+    ProtoProvider = require('./../../../providers/ProtoProvider.instance');
 
 const BitBuffer = require('../../buffer/BitBufferFast');
+
+const StringTableType = require('./../../enums/StringTableType');
 
 const StringTable = require('./StringTable'),
     StringTableEntry = require('./StringTableEntry');
@@ -12,6 +15,9 @@ const SnappyDecompressor = require('../../../decompressors/SnappyDecompressor.in
 const logger = LoggerProvider.getLogger('StringTableContainer');
 
 const MAX_HISTORY_ENTRIES = 32;
+
+const CMsgPlayerInfo = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
+const CModifierTableEntry = ProtoProvider.BASE_MODIFIER.lookupType('CModifierTableEntry');
 
 class StringTableContainer {
     /**
@@ -58,7 +64,15 @@ class StringTableContainer {
      * @param {*} createData
      */
     handleCreate(createData) {
-        const stringTable = new StringTable(createData.name, createData.flags, createData.userDataSizeBits, createData.userDataFixedSize, createData.usingVarintBitcounts);
+        const stringTableType = StringTableType.parseByName(createData.name);
+
+        if (stringTableType === null) {
+            logger.warn(`Unknown StringTableType [ ${createData.name} ]`);
+
+            return;
+        }
+
+        const stringTable = new StringTable(stringTableType, createData.flags, createData.userDataSizeBits, createData.userDataFixedSize, createData.usingVarintBitcounts);
 
         this._register(stringTable);
 
@@ -75,9 +89,6 @@ class StringTableContainer {
         entries.forEach((entry) => {
             stringTable.updateEntry(entry);
         });
-
-        console.log(createData);
-        // console.log(entries);
     }
 
     /**
@@ -89,10 +100,10 @@ class StringTableContainer {
         const stringTable = this._registry.tableById.get(updateData.tableId) || null;
 
         if (stringTable === null) {
-            throw new Error(`Unable to update StringTable [ ${updateData.tableId} ]`);
+            throw new Error(`Unknown StringTable [ ${updateData.tableId} ]`);
         }
 
-        logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.name} ] [ ${updateData.numChangedEntries} ]`);
+        logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
 
         const entries = this._parseStringData(stringTable, updateData.stringData, updateData.numChangedEntries);
 
@@ -189,6 +200,19 @@ class StringTableContainer {
                 if (isCompressed) {
                     value = SnappyDecompressor.decompress(value);
                 }
+
+                switch (table.type) {
+                    case StringTableType.ACTIVE_MODIFIERS:
+                        value = CModifierTableEntry.decode(value);
+
+                        break;
+                    case StringTableType.USER_INFO:
+                        value = CMsgPlayerInfo.decode(value);
+
+                        break;
+                    default:
+                        break;
+                }
             }
 
             const entry = new StringTableEntry(index, key, value);
@@ -206,9 +230,9 @@ class StringTableContainer {
     _register(stringTable) {
         const id = this._registry.tableById.size;
 
-        logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.name} ] [ ${stringTable.numEntries} ]`);
+        logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ] [ ${stringTable.numEntries} ]`);
 
-        this._registry.tableByName.set(stringTable.name, stringTable);
+        this._registry.tableByName.set(stringTable.type.name, stringTable);
         this._registry.tableById.set(id, stringTable);
     }
 }

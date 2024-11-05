@@ -5,14 +5,14 @@ class StringTable {
      * @public
      * @static
      *
-     * @param {String} name
+     * @param {StringTableType} type
      * @param {number} flags
      * @param {number} userDataSizeBits
      * @param {boolean} userDataFixedSize
      * @param {boolean} usingVarintBitcounts
      */
-    constructor(name, flags, userDataSizeBits, userDataFixedSize, usingVarintBitcounts) {
-        this._name = name;
+    constructor(type, flags, userDataSizeBits, userDataFixedSize, usingVarintBitcounts) {
+        this._type = type;
         this._flags = flags;
         this._userDataSizeBits = userDataSizeBits;
         this._userDataFixedSize = userDataFixedSize;
@@ -23,8 +23,8 @@ class StringTable {
         };
     }
 
-    get name() {
-        return this._name;
+    get type() {
+        return this._type;
     }
 
     get userDataFixedSize() {
