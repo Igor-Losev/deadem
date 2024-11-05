@@ -5,6 +5,9 @@ const assert = require('assert/strict'),
 
 const ProtoProvider = require('./../providers/ProtoProvider.instance');
 
+const DemoCommandType = require('./../data/enums/DemoCommandType'),
+    MessagePacketType = require('./../data/enums/MessagePacketType');
+
 const StringTable = require('../data/tables/string/StringTable'),
     StringTableContainer = require('../data/tables/string/StringTableContainer');
 
@@ -25,65 +28,120 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
     }
 
     /**
-     * @private
+     * @protected
      * @param {DemoPacket} demoPacket
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
+        switch (demoPacket.command) {
+            case DemoCommandType.DEM_ERROR:
+                break;
+            case DemoCommandType.DEM_STOP:
+                break;
+            case DemoCommandType.DEM_FILE_HEADER:
+                break;
+            case DemoCommandType.DEM_FILE_INFO:
+                break;
+            case DemoCommandType.DEM_SYNC_TICK:
+                break;
+            case DemoCommandType.DEM_SEND_TABLES:
+                this._handleDemSendTables(demoPacket.data);
 
-        if (!Array.isArray(demoPacket.data)) {
-            callback();
+                break;
+            case DemoCommandType.DEM_CLASS_INFO:
+                this._handleDemClassInfo(demoPacket.data);
 
-            return;
+                break;
+            case DemoCommandType.DEM_STRING_TABLES:
+
+                break;
+            case DemoCommandType.DEM_PACKET:
+                this._handleDemPacket(demoPacket.data);
+
+                break;
+            case DemoCommandType.DEM_SIGNON_PACKET:
+                this._handleDemPacket(demoPacket.data);
+
+                break;
+            case DemoCommandType.DEM_CONSOLE_CMD:
+                break;
+            case DemoCommandType.DEM_CUSTOM_DATA:
+                break;
+            case DemoCommandType.DEM_CUSTOM_DATA_CALLBACKS:
+                break;
+            case DemoCommandType.DEM_USER_CMD:
+                break;
+            case DemoCommandType.DEM_FULL_PACKET:
+                this._handleDemPacket(demoPacket.data);
+
+                break;
+            case DemoCommandType.DEM_SAVE_GAME:
+                break;
+            case DemoCommandType.DEM_SPAWN_GROUPS:
+                break;
+            case DemoCommandType.DEM_ANIMATION_DATA:
+                break;
+            case DemoCommandType.DEM_ANIMATION_HEADER:
+                break;
         }
 
-        demoPacket.data.forEach((messagePacket) => {
-            if (messagePacket === null) {
-                return;
-            }
+        callback();
+    }
 
+    /**
+     * @protected
+     * @param {Array<{}>} classes
+     */
+    _handleDemClassInfo(classes) {
+
+    }
+
+    /**
+     * @protected
+     * @param {Array<MessagePacket>} messagePackets
+     */
+    _handleDemPacket(messagePackets) {
+        messagePackets.forEach((messagePacket) => {
             switch (messagePacket.type) {
-                /** 004 */ case NET_Messages.net_Tick:
+                case MessagePacketType.NET_TICK:
                     break;
-                /** 040 */ case SVC_Messages.svc_ServerInfo:
+                case MessagePacketType.SVC_SERVER_INFO:
                     this._handleMessageServerInfo(messagePacket.data);
 
                     break;
-                /** 042 */ case SVC_Messages.svc_ClassInfo:
+                case MessagePacketType.SVC_CLASS_INFO:
                     this._handleMessageClassInfo(messagePacket.data);
 
                     break;
-                /** 044 */ case SVC_Messages.svc_CreateStringTable:
+                case MessagePacketType.SVC_CREATE_STRING_TABLE:
                     this._stringTableContainer.handleCreate(messagePacket.data);
 
                     break;
-                /** 045 */ case SVC_Messages.svc_UpdateStringTable:
+                case MessagePacketType.SVC_UPDATE_STRING_TABLE:
                     this._stringTableContainer.handleUpdate(messagePacket.data);
 
                     break;
-                /** 051 */ case SVC_Messages.svc_ClearAllStringTables:
+                case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
                     this._stringTableContainer.handleClear();
 
                     break;
-                /** 055 */ case SVC_Messages.svc_PacketEntities:
-                    // console.log(messagePacket.data);
-
-                    // throw new Error(123);
-
+                case MessagePacketType.SVC_PACKET_ENTITIES:
                     break;
-                /** 300 */ case CitadelUserMessageIds.k_EUserMsg_Damage:
+                case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
                     break;
                 default:
                     break;
             }
         });
+    }
 
-        callback();
+    _handleDemSendTables(data) {
+
     }
 
     _handleMessageClassInfo(message) {
-        console.log(message);
+
     }
 
     _handleMessageServerInfo(message) {

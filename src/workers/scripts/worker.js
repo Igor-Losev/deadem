@@ -47,10 +47,6 @@ const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
                     const extractor = new MessagePacketExtractor(decoded.data).retrieve();
 
                     for (const messagePacket of extractor) {
-                        if (messagePacket.type === 42) {
-                            console.log(messagePacket.payload);
-                        }
-
                         messages.push([ messagePacket.type, messagePacket.payload ]);
                     }
 

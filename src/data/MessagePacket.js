@@ -5,8 +5,8 @@ class MessagePacket {
      * @public
      * @constructor
      *
-     * @param {number} type
-     * @param data
+     * @param {MessagePacketType} type
+     * @param {*} data
      */
     constructor(type, data) {
         this._type = type;
