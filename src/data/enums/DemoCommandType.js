@@ -164,7 +164,7 @@ const demCustomDataCallbacks = new DemoCommandType('DEM_CustomDataCallbacks', 11
 const demUserCmd = new DemoCommandType('DEM_UserCmd', 12, CDemoUserCmd);
 const demFullPacket = new DemoCommandType('DEM_FullPacket', 13, CDemoPacket);
 const demSaveGame = new DemoCommandType('DEM_SaveGame', 14, CDemoSaveGame);
-const demSpawnGroups = new DemoCommandType('DEM_SpawnGroups', 15, CDemoSaveGame);
+const demSpawnGroups = new DemoCommandType('DEM_SpawnGroups', 15, CDemoSpawnGroups);
 const demAnimationData = new DemoCommandType('DEM_AnimationData', 16, CDemoAnimationData);
 const demAnimationHeader = new DemoCommandType('DEM_AnimationHeader', 17, CDemoAnimationHeader);
 
