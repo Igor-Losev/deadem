@@ -31,6 +31,10 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             }
 
             switch (messagePacket.type) {
+                case 4:
+                    break;
+                case 40:
+                    break;
                 case 42:
                     break;
                 case 44:
@@ -44,6 +48,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 case 51:
                     this._stringTableContainer.handleClear();
 
+                    break;
+                case 55:
                     break;
                 case 300:
                     break;
