@@ -3,21 +3,25 @@
 const assert = require('assert/strict'),
     Stream = require('stream');
 
-const ProtoProvider = require('./../providers/ProtoProvider.instance');
+const BitBuffer = require('./../data/buffer/BitBufferFast');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
     MessagePacketType = require('./../data/enums/MessagePacketType');
 
-const StringTable = require('../data/tables/string/StringTable'),
-    StringTableContainer = require('../data/tables/string/StringTableContainer');
+const Field = require('./../data/fields/Field'),
+    Serializer = require('./../data/fields/Serializer');
 
-const CitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
-    NET_Messages = ProtoProvider.NETWORK_BASE_TYPES.getEnum('NET_Messages'),
-    SVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages');
+const StringTableContainer = require('../data/tables/string/StringTableContainer');
+
+const ProtoProvider = require('./../providers/ProtoProvider.instance');
+
+const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
 
 class DemoStreamPacketAnalyzer extends Stream.Transform {
     constructor() {
         super({ objectMode: true });
+
+        this._serializers = new Map();
 
         this._server = { };
         this._server.classIdBitSize = null;
@@ -136,8 +140,38 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         });
     }
 
-    _handleDemSendTables(data) {
+    _handleDemSendTables(messageData) {
+        const bitBuffer = new BitBuffer(messageData.data);
 
+        const size = bitBuffer.readUVarInt32();
+        const payload = bitBuffer.read(size.value * BitBuffer.BITS_PER_BYTE);
+
+        const decoded = CSVCMsg_FlattenedSerializer.decode(payload);
+
+        const fields = [ ];
+
+        decoded.fields.forEach((fieldRaw) => {
+            const field = Field.parse(fieldRaw, decoded.symbols);
+
+            fields.push(field);
+        });
+
+        decoded.serializers.forEach((serializerRaw) => {
+            const serializerFields = serializerRaw.fieldsIndex.reduce((accumulator, fieldIndex) => {
+                accumulator.push(fields[fieldIndex]);
+
+                return accumulator;
+            }, [ ]);
+
+            const name = decoded.symbols[serializerRaw.serializerNameSym];
+            const version = serializerRaw.serializerVersion;
+
+            const serializer = new Serializer(name, version, serializerFields);
+
+            const key = getSerializerKey(serializer);
+
+            this._serializers.set(key, serializer);
+        });
     }
 
     _handleMessageClassInfo(message) {
@@ -153,6 +187,10 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._server.classIdBitSize = Math.log2(message.maxClasses) + 1;
     }
+}
+
+function getSerializerKey(serializer) {
+    return `${serializer.name}|${serializer.version}`;
 }
 
 module.exports = DemoStreamPacketAnalyzer;
