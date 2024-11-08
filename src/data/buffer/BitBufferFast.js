@@ -17,7 +17,7 @@ class BitBufferFast extends BitBuffer {
      * @constructor
      * @public
      *
-     * @param {Buffer} buffer
+     * @param {Buffer|Uint8Array} buffer
      */
     constructor(buffer) {
         super(buffer);

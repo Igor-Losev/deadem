@@ -9,7 +9,7 @@ class BitBuffer {
      * @abstract
      * @constructor
      *
-     * @param {Buffer} buffer
+     * @param {Buffer|Uint8Array} buffer
      */
     constructor(buffer) {
         this._buffer = buffer;

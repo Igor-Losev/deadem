@@ -7,7 +7,7 @@ class BitBufferSlow extends BitBuffer {
      * @public
      * @constructor
      *
-     * @param {Buffer} buffer
+     * @param {Buffer|Uint8Array} buffer
      */
     constructor(buffer) {
         super(buffer);
