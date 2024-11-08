@@ -61,7 +61,7 @@ class StringTableContainer {
     /**
      * @public
      *
-     * @param {*} createData
+     * @param {CSVCMsg_CreateStringTable} createData
      */
     handleCreate(createData) {
         const stringTableType = StringTableType.parseByName(createData.name);
@@ -94,7 +94,7 @@ class StringTableContainer {
     /**
      * @public
      *
-     * @param {*} updateData
+     * @param {CSVCMsg_UpdateStringTable} updateData
      */
     handleUpdate(updateData) {
         const stringTable = this._registry.tableById.get(updateData.tableId) || null;
@@ -232,7 +232,7 @@ class StringTableContainer {
     _register(stringTable) {
         const id = this._registry.tableById.size;
 
-        logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ] [ ${stringTable.numEntries} ]`);
+        logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
 
         this._registry.tableByName.set(stringTable.type.name, stringTable);
         this._registry.tableById.set(id, stringTable);
