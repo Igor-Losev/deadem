@@ -70,8 +70,6 @@ class Field {
         const varName = symbols[fieldRaw.varNameSym];
         const varSerializer = get(symbols[fieldRaw.varSerializerSym], v => has('varSerializerSym') && typeof v === 'string', null);
 
-        const varType = symbols[fieldRaw.varTypeSym];
-
         const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s);
 
         const fieldSerializerName = get(symbols[fieldRaw.fieldSerializerNameSym], v => has('fieldSerializerNameSym') && typeof v === 'string', null);
