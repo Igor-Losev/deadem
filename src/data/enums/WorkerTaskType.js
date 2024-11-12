@@ -32,7 +32,7 @@ class WorkerTaskType {
     static DEMO_PACKET_PARSE = new WorkerTaskType('DEMO_PACKET_PARSE', 'Packet Parse');
 
     static parse(code) {
-        return registry.get(code) || null;
+        return registry.byCode.get(code) || null;
     }
 }
 
