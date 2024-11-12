@@ -1,18 +1,27 @@
 'use strict';
 
-const ProtoProvider = require('./../../providers/ProtoProvider.instance');
+const assert = require('node:assert/strict');
 
-const Enum = require('./Enum');
+const ProtoProvider = require('./../../providers/ProtoProvider.instance');
 
 const registry = {
     byCode: new Map(),
     byId: new Map()
 };
 
-class MessagePacketType extends Enum {
+class MessagePacketType {
+    /**
+     * @private
+     * @constructor
+     * @param {String} code
+     * @param {Number} id
+     * @param {*} proto
+     */
     constructor(code, id, proto) {
-        super(code, code);
+        assert(typeof code === 'string' && code.length > 0);
+        assert(Number.isInteger(id));
 
+        this._code = code;
         this._id = id;
         this._proto = proto;
 
@@ -38,6 +47,10 @@ class MessagePacketType extends Enum {
      */
     static parseById(id) {
         return registry.byId.get(id) || null;
+    }
+
+    get code() {
+        return this._code;
     }
 
     get id() {

@@ -1,27 +1,32 @@
 'use strict';
 
-const Enum = require('./Enum');
+const assert = require('node:assert/strict');
 
 const registry = {
     byCode: new Map(),
     byName: new Map()
 }
 
-class StringTableType extends Enum {
+class StringTableType {
     /**
      * @private
      * @constructor
-     *
      * @param {String} code
      * @param {String} name
      */
     constructor(code, name) {
-        super(code, code);
+        assert(typeof code === 'string' && code.length > 0);
+        assert(typeof name === 'string' && name.length > 0);
 
+        this._code = code;
         this._name = name;
 
         registry.byCode.set(code, this);
         registry.byName.set(name, this);
+    }
+
+    get code() {
+        return this._code;
     }
 
     get name() {

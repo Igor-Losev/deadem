@@ -1,29 +1,36 @@
 'use strict';
 
-const ProtoProvider = require('./../../providers/ProtoProvider.instance');
+const assert = require('node:assert/strict');
 
-const Enum = require('./Enum');
+const ProtoProvider = require('./../../providers/ProtoProvider.instance');
 
 const registry = {
     byCode: new Map(),
     byId: new Map()
 };
 
-class DemoCommandType extends Enum {
+class DemoCommandType {
     /**
+     * @private
      * @constructor
      * @param {String} code
      * @param {Number} id
      * @param {*|null} proto
      */
     constructor(code, id, proto) {
-        super(code, code);
+        assert(typeof code === 'string' && code.length > 0);
+        assert(Number.isInteger(id));
 
+        this._code = code;
         this._id = id;
         this._proto = proto;
 
         registry.byCode.set(code, this);
         registry.byId.set(id, this);
+    }
+
+    get code() {
+        return this._code;
     }
 
     get id() {

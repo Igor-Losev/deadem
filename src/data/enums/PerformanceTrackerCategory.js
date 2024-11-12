@@ -1,8 +1,18 @@
-const Enum = require('./Enum');
+const assert = require('node:assert/strict');
 
-class PerformanceTrackerCategory extends Enum {
+class PerformanceTrackerCategory {
+    /**
+     * @private
+     * @constructor
+     * @param {String} code
+     * @param {String} description
+     */
     constructor(code, description) {
-        super(code, description);
+        assert(typeof code === 'string' && code.length > 0);
+        assert(typeof description === 'string' && description.length > 0);
+
+        this._code = code;
+        this._description = description;
     }
 
     static DEMO_PACKETS_EXTRACT = new PerformanceTrackerCategory('DEMO_PACKETS_EXTRACT', 'Demo packets extraction');

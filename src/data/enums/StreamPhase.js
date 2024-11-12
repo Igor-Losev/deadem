@@ -7,6 +7,12 @@ const registry = {
 };
 
 class StreamPhase {
+    /**
+     * @private
+     * @constructor
+     * @param {String} code
+     * @param {Number} order
+     */
     constructor(code, order) {
         assert(typeof code === 'string' && code.length > 0);
         assert(Number.isInteger(order) && order >= 0);
