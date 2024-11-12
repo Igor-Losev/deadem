@@ -18,7 +18,7 @@ class WorkerTaskType {
         this._code = code;
         this._description = description;
 
-        registry.set(code, this);
+        registry.byCode.set(code, this);
     }
 
     get code() {
