@@ -1,0 +1,130 @@
+'use strict';
+
+const assert = require('node:assert/strict');
+
+const BitBuffer = require('./../data/buffer/BitBufferFast');
+
+const StringTable = require('./../data/tables/string/StringTable'),
+    StringTableEntry = require('./../data/tables/string/StringTableEntry');
+
+const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
+
+const MAX_HISTORY_ENTRIES = 32;
+
+// const CMsgPlayerInfo = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
+// const CModifierTableEntry = ProtoProvider.BASE_MODIFIER.lookupType('CModifierTableEntry');
+
+class StringTableEntryExtractor {
+    /**
+     * @public
+     * @constructor
+     * @param {Buffer|Uint8Array} buffer
+     * @param {StringTable} table
+     * @param {Number} entriesCount
+     */
+    constructor(buffer, table, entriesCount) {
+        assert(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array);
+        assert(table instanceof StringTable);
+        assert(Number.isInteger(entriesCount));
+
+        this._bitBuffer = new BitBuffer(buffer);
+        this._table = table;
+        this._entriesCount = entriesCount;
+    }
+
+    *retrieve() {
+        this._bitBuffer.reset();
+
+        const history = [ ];
+
+        let index = -1;
+
+        for (let i = 0; i < this._entriesCount; i++) {
+            let key = '';
+            let value = null;
+
+            const increment = this._bitBuffer.readBit() === 1;
+
+            if (increment) {
+                index += 1;
+            } else {
+                index += this._bitBuffer.readUVarInt32().value + 2;
+            }
+
+            const hasKey = this._bitBuffer.readBit() === 1;
+
+            if (hasKey) {
+                const useHistory = this._bitBuffer.readBit() === 1;
+
+                if (useHistory) {
+                    const offset = this._bitBuffer.read(5).readUInt8();
+                    const size = this._bitBuffer.read(5).readUInt8();
+
+                    const historicalKey = history[i < MAX_HISTORY_ENTRIES ? offset : i - (MAX_HISTORY_ENTRIES - offset)];
+
+                    const portion = this._bitBuffer.readString();
+
+                    if (size > historicalKey.length) {
+                        key = historicalKey + portion;
+                    } else {
+                        key = historicalKey.slice(0, size) + portion;
+                    }
+                } else {
+                    key = this._bitBuffer.readString();
+                }
+            } // if there is no key?
+
+            history[i] = key;
+
+            const hasValue = this._bitBuffer.readBit() === 1;
+
+            if (hasValue) {
+                let bitSize = 0;
+                let isCompressed = false;
+
+                if (this._table.instructions.userDataFixedSize) {
+                    bitSize = this._table.instructions.userDataSizeBits;
+                } else {
+                    if (this._table.getIsValueCompressionSupported()) {
+                        isCompressed = this._bitBuffer.readBit() === 1;
+                    }
+
+                    if (this._table.instructions.usingVarintBitcounts) {
+                        bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
+                    } else {
+                        const buffer = Buffer.concat([ this._bitBuffer.read(17), Buffer.alloc(1) ]);
+
+                        bitSize = buffer.readUint32LE() * BitBuffer.BITS_PER_BYTE;
+                    }
+                }
+
+                value = this._bitBuffer.read(bitSize);
+
+                if (isCompressed) {
+                    value = SnappyDecompressor.decompress(value);
+                }
+
+                // switch (this._table.type) {
+                //     case StringTableType.ACTIVE_MODIFIERS:
+                //         value = CModifierTableEntry.decode(value);
+                //
+                //         break;
+                //     case StringTableType.INSTANCE_BASE_LINE:
+                //         break;
+                //     case StringTableType.USER_INFO:
+                //         value = CMsgPlayerInfo.decode(value);
+                //
+                //         break;
+                //     default:
+                //         break;
+                // }
+            }
+
+            const entry = new StringTableEntry(index, key, value);
+
+            yield entry;
+        }
+    }
+}
+
+module.exports = StringTableEntryExtractor;
