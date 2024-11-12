@@ -34,6 +34,15 @@ class StreamPhase {
     /**
      * @public
      * @static
+     * @returns {Array<StreamPhase>}
+     */
+    static getAll() {
+        return Array.from(registry.byCode.values());
+    }
+
+    /**
+     * @public
+     * @static
      * @returns {StreamPhase}
      */
     static get ANALYZE() {
