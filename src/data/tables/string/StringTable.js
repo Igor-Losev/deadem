@@ -1,22 +1,30 @@
 'use strict';
 
+const assert = require('node:assert/strict');
+
+const StringTableType = require('./../../enums/StringTableType');
+
+const StringTableEntry = require('./StringTableEntry'),
+    StringTableInstructions = require('./StringTableInstructions');
+
 class StringTable {
     /**
      * @public
-     * @static
-     *
      * @param {StringTableType} type
      * @param {number} flags
-     * @param {number} userDataSizeBits
-     * @param {boolean} userDataFixedSize
-     * @param {boolean} usingVarintBitcounts
+     * @param {Array<StringTableEntry>=} entries
+     * @param {StringTableInstructions=} instructions
      */
-    constructor(type, flags, userDataSizeBits, userDataFixedSize, usingVarintBitcounts) {
+    constructor(type, flags, entries, instructions) {
+        assert(type instanceof StringTableType);
+        assert(Number.isInteger(flags));
+        assert(!entries || (Array.isArray(entries) && entries.every(e => e instanceof StringTableEntry)));
+        assert(!instructions || instructions instanceof StringTableInstructions);
+
         this._type = type;
         this._flags = flags;
-        this._userDataSizeBits = userDataSizeBits;
-        this._userDataFixedSize = userDataFixedSize;
-        this._usingVarintBitcounts = usingVarintBitcounts;
+        this._entries = entries || [ ];
+        this._instructions = instructions || null;
 
         this._registry = {
             entryById: new Map()
@@ -27,16 +35,16 @@ class StringTable {
         return this._type;
     }
 
-    get userDataFixedSize() {
-        return this._userDataFixedSize;
+    get flags() {
+        return this._flags;
     }
 
-    get userDataSizeBits() {
-        return this._userDataSizeBits;
+    get entries() {
+        return this._entries;
     }
 
-    get usingVarintBitcounts() {
-        return this._usingVarintBitcounts;
+    get instructions() {
+        return this._instructions;
     }
 
     /**
@@ -74,4 +82,4 @@ class StringTable {
     }
 }
 
-module.exports = StringTable;
+module.exports = StringTable

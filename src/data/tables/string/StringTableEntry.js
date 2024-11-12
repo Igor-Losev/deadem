@@ -1,5 +1,7 @@
 'use strict';
 
+const assert = require('assert/strict');
+
 class StringTableEntry {
     /**
      * @public
@@ -10,8 +12,12 @@ class StringTableEntry {
      * @param {Buffer|null|*} value
      */
     constructor(id, key, value) {
+        assert(Number.isInteger(id));
+        assert(typeof key === 'string');
+
         this._id = id;
         this._key = key;
+
         this._value = value;
     }
 
