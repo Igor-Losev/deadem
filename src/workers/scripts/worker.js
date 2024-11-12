@@ -2,9 +2,9 @@
 
 const { parentPort, threadId } = require('node:worker_threads');
 
-const MessagePacketExtractor = require('./../../data/MessagePacketExtractor');
-
 const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.instance');
+
+const MessagePacketExtractor = require('./../../extractors/MessagePacketExtractor');
 
 const WorkerTaskType = require('./../../data/enums/WorkerTaskType');
 
