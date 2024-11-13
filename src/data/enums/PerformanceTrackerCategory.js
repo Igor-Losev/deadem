@@ -77,6 +77,6 @@ const demoBufferSplitter = new PerformanceTrackerCategory('DEMO_BUFFER_SPLITTER'
 const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ ]);
 const demoPacketExtractor = new PerformanceTrackerCategory('DEMO_PACKET_EXTRACTOR', 'Extraction of top-level demo packets', [ ]);
 
-const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ demoPacketAnalyzer, demoPacketExtractor ]);
+const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ demoPacketAnalyzer, demoPacketExtractor, demoBufferSplitter ]);
 
 module.exports = PerformanceTrackerCategory;
