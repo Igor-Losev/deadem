@@ -25,7 +25,7 @@ const logger = LoggerProvider.getLogger('Parser');
 class Parser {
     constructor(
         parserThreads = 1,
-        splitterChunkSize = 1024 * 1024,
+        splitterChunkSize = 200 * 1024,
         batcherChunkSize = 100 * 1024,
         batcherThresholdMilliseconds = 50
     ) {
