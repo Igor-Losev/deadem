@@ -52,7 +52,7 @@ class PacketTracker {
     print() {
         const format = n => n.toLocaleString('en-US');
         const highlight = s => `----- ${s} -----`;
-        const log = (type, count, depth = 0) => logger.info(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${format(count)} ] message(s)`);
+        const log = (type, count, depth = 0) => logger.info(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${format(count)} ] packet(s)`);
 
         logger.info(highlight('<PacketTracker>'));
 
