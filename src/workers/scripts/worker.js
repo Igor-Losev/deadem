@@ -4,7 +4,7 @@ const { parentPort, threadId } = require('node:worker_threads');
 
 const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.instance');
 
-const MessagePacketExtractor = require('./../../extractors/MessagePacketExtractor');
+const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawExtractor');
 
 const WorkerTaskType = require('./../../data/enums/WorkerTaskType');
 
@@ -44,7 +44,7 @@ const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
 
                     const decoded = CDemoPacket.decode(decompressed);
 
-                    const extractor = new MessagePacketExtractor(decoded.data).retrieve();
+                    const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
 
                     for (const messagePacket of extractor) {
                         messages.push([ messagePacket.type, messagePacket.payload ]);

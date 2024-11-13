@@ -1,4 +1,5 @@
-const Stream = require('node:stream');
+const assert = require('assert/strict'),
+    Stream = require('node:stream');
 
 class DemoStreamPacketBatcher extends Stream.Transform {
     /**
@@ -11,6 +12,9 @@ class DemoStreamPacketBatcher extends Stream.Transform {
      */
     constructor(parser, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });
+
+        assert(Number.isInteger(thresholdSizeBytes));
+        assert(Number.isInteger(thresholdWaitMilliseconds));
 
         this._parser = parser;
 

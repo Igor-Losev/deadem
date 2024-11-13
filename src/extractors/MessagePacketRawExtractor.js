@@ -1,8 +1,10 @@
+'use strict';
+
 const BitBuffer = require('../data/buffer/BitBufferFast');
 
 const MessagePacketRaw = require('../data/MessagePacketRaw');
 
-class MessagePacketExtractor {
+class MessagePacketRawExtractor {
     /**
      * @constructor
      * @public
@@ -31,4 +33,4 @@ class MessagePacketExtractor {
     }
 }
 
-module.exports = MessagePacketExtractor;
+module.exports = MessagePacketRawExtractor;

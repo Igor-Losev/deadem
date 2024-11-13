@@ -1,10 +1,14 @@
 const Stream = require('stream');
 
-const DemoPacketRaw = require('./../data/DemoPacketRaw'),
-    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
+const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const DEMO_CHUNK_PARSE_RETRIES = 3;
-const DEMO_IGNORED_HEADER_LENGTH = 16;
+const DemoPacketRawExtractor = require('./../extractors/DemoPacketRawExtractor');
+
+const LoggerProvider = require('./../providers/LoggerProvider.instance');
+
+const logger = LoggerProvider.getLogger('DemoStreamPacketExtractor');
+
+const DEMO_HEADER_SIZE_BYTES = 16;
 
 class DemoStreamPacketExtractor extends Stream.Transform {
     /**
@@ -17,67 +21,62 @@ class DemoStreamPacketExtractor extends Stream.Transform {
 
         this._parser = parser;
 
-        this._chunk = {
-            buffer: Buffer.alloc(0),
-            pointer: 0
-        };
-
         this._counts = {
             bytes: 0,
             chunks: 0,
             packets: 0
         };
 
-        this._retries = 0;
+        this._tail = Buffer.alloc(0);
     }
 
     get counts() {
         return this._counts;
     }
 
-    _transform(chunk, encoding, callback) {
-        this._chunk.buffer = Buffer.concat([ this._chunk.buffer, chunk ]);
-        this._chunk.pointer = 0;
-
-        if (this._counts.chunks === 0) {
-            this._chunk.pointer += DEMO_IGNORED_HEADER_LENGTH;
+    /**
+     * @protected
+     * @param {TransformCallback} callback
+     */
+    _flush(callback) {
+        if (this._tail.length !== 0) {
+            logger.warn(`DemoStreamPacketExtractor._flush() is called. However, the are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
         }
 
-        const parseChunkRecursively = () => {
-            this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+        callback()
+    }
 
-            const tail = this._chunk.buffer.subarray(this._chunk.pointer);
+    /**
+     * @protected
+     * @param {Buffer} chunk
+     * @param {BufferEncoding} encoding
+     * @param {TransformCallback} callback
+     */
+    _transform(chunk, encoding, callback) {
+        let buffer = chunk;
 
-            let packet;
+        if (this._counts.chunks === 0) {
+            buffer = chunk.subarray(DEMO_HEADER_SIZE_BYTES);
+        }
 
-            try {
-                packet = DemoPacketRaw.parse(tail);
+        if (this._tail.length !== 0) {
+            buffer = Buffer.concat([ this._tail, buffer ]);
 
-                this._retries = 0;
-            } catch (error) {
-                if (this._retries >= DEMO_CHUNK_PARSE_RETRIES) {
-                    throw error;
-                } else {
-                    this._retries += 1;
-                }
-            }
+            this._tail = Buffer.alloc(0);
+        }
 
-            this._parser.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+        const extractor = new DemoPacketRawExtractor(buffer);
+        const generator = extractor.retrieve();
 
-            if (packet === null || this._retries > 0) {
-                this._chunk.buffer = this._chunk.buffer.subarray(this._chunk.pointer);
-            } else {
+        for (const packet of generator) {
+            if (packet !== null) {
                 this._counts.packets += 1;
 
-                this._chunk.pointer += packet.getOriginalSize();
-
                 this.push(packet);
-
-                parseChunkRecursively();
+            } else if (extractor.tail.length > 0) {
+                this._tail = extractor.tail;
             }
-        };
-
-        parseChunkRecursively();
+        }
 
         this._counts.chunks += 1;
 

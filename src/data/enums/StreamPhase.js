@@ -93,13 +93,23 @@ class StreamPhase {
     static get READ() {
         return read;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {StreamPhase}
+     */
+    static get SPLIT() {
+        return split;
+    }
 }
 
-const analyze = new StreamPhase('ANALYZE', 5);
-const batch = new StreamPhase('BATCH', 2);
-const coordinate = new StreamPhase('COORDINATE', 4);
-const extract = new StreamPhase('EXTRACT', 1);
-const parse = new StreamPhase('PARSE', 3);
+const analyze = new StreamPhase('ANALYZE', 6);
+const batch = new StreamPhase('BATCH', 3);
+const coordinate = new StreamPhase('COORDINATE', 5);
+const extract = new StreamPhase('EXTRACT', 2);
+const parse = new StreamPhase('PARSE', 4);
 const read = new StreamPhase('READ', 0);
+const split = new StreamPhase('SPLIT', 1);
 
 module.exports = StreamPhase;

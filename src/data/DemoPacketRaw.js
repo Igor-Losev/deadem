@@ -1,7 +1,5 @@
 'use strict';
 
-const UVarInt32 = require('./UVarInt32');
-
 class DemoPacketRaw {
     /**
      * @public
@@ -65,42 +63,6 @@ class DemoPacketRaw {
      */
     getOriginalSize() {
         return this._command.size + this._tick.size + this._frame.size + this._frame.value;
-    }
-
-    /**
-     * Parses first packet from the given buffer.
-     *
-     * @public
-     * @static
-     * @param {Buffer} buffer
-     * @returns {DemoPacketRaw|null}
-     */
-    static parse(buffer) {
-        const command = UVarInt32.parse(buffer);
-
-        if (command === null) {
-            throw new Error('Unable to parse command');
-        }
-
-        const tick = UVarInt32.parse(buffer.subarray(command.size));
-
-        if (tick === null) {
-            throw new Error('Unable to parse tick');
-        }
-
-        const frame = UVarInt32.parse(buffer.subarray(command.size + tick.size));
-
-        if (frame === null) {
-            throw new Error('Unable to parse frame');
-        }
-
-        const payload = buffer.subarray(command.size + tick.size + frame.size, command.size + tick.size + frame.size + frame.value);
-
-        if (payload.length < frame.value) {
-            return null;
-        }
-
-        return new DemoPacketRaw(command, tick, frame, payload);
     }
 }
 

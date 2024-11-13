@@ -1,6 +1,7 @@
 'use strict';
 
-const Stream = require('stream');
+const assert = require('node:assert/strict'),
+    Stream = require('node:stream');
 
 const DemoPacket = require('./../data/DemoPacket'),
     MessagePacket = require('./../data/MessagePacket');
@@ -27,6 +28,8 @@ class DemoStreamPacketParser extends Stream.Transform {
      */
     constructor(parser, concurrency) {
         super({ objectMode: true });
+
+        assert(Number.isInteger(concurrency));
 
         this._parser = parser;
 

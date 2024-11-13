@@ -8,7 +8,8 @@ const Demo = require('./data/Demo');
 const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory'),
     StreamPhase = require('./data/enums/StreamPhase');
 
-const DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
+const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
+    DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
     DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
     DemoStreamPacketCoordinator = require('./stream/DemoStreamPacketCoordinator'),
     DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
@@ -23,18 +24,20 @@ const logger = LoggerProvider.getLogger('Parser');
 
 class Parser {
     constructor(
-        threads = 1,
-        parseBatchSize = 100 * 1024,
-        parseBatchThresholdMilliseconds = 50
+        parserThreads = 1,
+        splitterChunkSize = 1024 * 1024,
+        batcherChunkSize = 100 * 1024,
+        batcherThresholdMilliseconds = 50
     ) {
-        assert(Number.isInteger(threads));
-        assert(Number.isInteger(parseBatchSize));
-        assert(Number.isInteger(parseBatchThresholdMilliseconds));
+        assert(Number.isInteger(parserThreads));
+        assert(Number.isInteger(splitterChunkSize));
+        assert(Number.isInteger(batcherChunkSize));
+        assert(Number.isInteger(batcherThresholdMilliseconds));
 
-        this._threads = threads;
-
-        this._parseBatchSize = parseBatchSize;
-        this._parseBatchThresholdMilliseconds = parseBatchThresholdMilliseconds;
+        this._parserThreads = parserThreads;
+        this._splitterChunkSize = splitterChunkSize;
+        this._batcherChunkSize = batcherChunkSize;
+        this._batcherThresholdMilliseconds = batcherThresholdMilliseconds;
 
         this._demo = new Demo();
         this._chain = getChain.call(this);
@@ -175,7 +178,7 @@ function getChain() {
 
                 break;
             case StreamPhase.BATCH:
-                part = new DemoStreamPacketBatcher(this, this._parseBatchSize, this._parseBatchThresholdMilliseconds);
+                part = new DemoStreamPacketBatcher(this, this._batcherChunkSize, this._batcherThresholdMilliseconds);
 
                 break;
             case StreamPhase.COORDINATE:
@@ -187,10 +190,14 @@ function getChain() {
 
                 break;
             case StreamPhase.PARSE:
-                part = new DemoStreamPacketParser(this, this._threads);
+                part = new DemoStreamPacketParser(this, this._parserThreads);
 
                 break;
             case StreamPhase.READ:
+                break;
+            case StreamPhase.SPLIT:
+                part = new DemoStreamBufferSplitter(this, this._splitterChunkSize);
+
                 break;
             default:
                 break;
