@@ -6,9 +6,11 @@ const assert = require('assert/strict'),
 const BitBuffer = require('./../data/buffer/BitBufferFast');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
-    MessagePacketType = require('./../data/enums/MessagePacketType');
+    MessagePacketType = require('./../data/enums/MessagePacketType'),
+    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const Field = require('./../data/fields/Field'),
+const Class = require('./../data/fields/Class'),
+    Field = require('./../data/fields/Field'),
     Serializer = require('./../data/fields/Serializer');
 
 const StringTableContainer = require('../data/tables/string/StringTableContainer');
@@ -18,8 +20,22 @@ const ProtoProvider = require('./../providers/ProtoProvider.instance');
 const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
 
 class DemoStreamPacketAnalyzer extends Stream.Transform {
-    constructor() {
+    /**
+     * @public
+     * @constructor
+     * @param {Parser} parser
+     */
+    constructor(parser) {
         super({ objectMode: true });
+
+        this._parser = parser;
+
+        this._classBaselines = new Map();
+
+        this._classes = {
+            byId: new Map(),
+            byName: new Map()
+        };
 
         this._serializers = new Map();
 
@@ -38,6 +54,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
+        this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+
         switch (demoPacket.command) {
             case DemoCommandType.DEM_ERROR:
                 break;
@@ -58,6 +76,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             case DemoCommandType.DEM_STRING_TABLES:
+                this._stringTableContainer.handleInstantiate(demoPacket.data);
 
                 break;
             case DemoCommandType.DEM_PACKET:
@@ -90,15 +109,26 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 break;
         }
 
+        this._parser.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+
         callback();
     }
 
     /**
      * @protected
-     * @param {Array<{}>} classes
+     * @param {CDemoClassInfo} classInfo
      */
-    _handleDemClassInfo(classes) {
+    _handleDemClassInfo(classInfo) {
+        classInfo.classes.forEach((data) => {
+            const key = getSerializerKey(data.networkName, 0);
 
+            const serializer = this._serializers.get(key) || null;
+
+            const clazz = new Class(data.classId, data.networkName, serializer);
+
+            this._classes.byId.set(clazz.id, clazz);
+            this._classes.byName.set(clazz.name, clazz);
+        });
     }
 
     /**
@@ -131,6 +161,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     break;
                 case MessagePacketType.SVC_PACKET_ENTITIES:
+                    // this._handleMessagePacketEntities(messagePacket.data);
+
                     break;
                 case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
                     break;
@@ -168,7 +200,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
             const serializer = new Serializer(name, version, serializerFields);
 
-            const key = getSerializerKey(serializer);
+            const key = getSerializerKey(serializer.name, serializer.version);
 
             this._serializers.set(key, serializer);
         });
@@ -178,6 +210,68 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
     }
 
+    /**
+     * @protected
+     * @param {CSVCMsg_PacketEntities} message
+     */
+    _handleMessagePacketEntities(message) {
+        const bitBuffer = new BitBuffer(message.entityData);
+
+        if (message.legacyIsDelta) {
+            //
+        }
+
+        let index = -1;
+
+        // console.log(message);
+
+        for (let i = 0; i < message.updatedEntries; i++) {
+            index += bitBuffer.readUVarInt() + 1;
+
+            const command = bitBuffer.read(2)[0];
+
+            switch (command) {
+                case 0: { // Update
+                    break;
+                }
+                case 1: { // Leave
+                    break;
+                }
+                case 2: { // Create
+                    const bufferForClassId = bitBuffer.read(this._server.classIdBitSize);
+                    const bufferForSerial = bitBuffer.read(17);
+
+                    const tailForClassId = Buffer.alloc(Math.floor((BitBuffer.BITS_PER_BYTE * 4 - this._server.classIdBitSize) / BitBuffer.BITS_PER_BYTE));
+                    const tailForSerial = Buffer.alloc(1);
+
+                    const ignored = bitBuffer.readUVarInt32();
+
+                    const classId = Buffer.concat([ bufferForClassId, tailForClassId ]).readUInt32LE();
+                    const serial = Buffer.concat([ bufferForSerial, tailForSerial ]).readUInt32LE();
+
+                    const clazz = this._classes.byId.get(classId) || null
+
+                    console.log(clazz);
+                    console.log(serial);
+
+                    throw new Error(123);
+
+                    break;
+                }
+                case 3: { // Delete
+                    break;
+                }
+            }
+        }
+
+        // throw new Error(1);
+
+    }
+
+    /**
+     * @protected
+     * @param {CSVCMsg_ServerInfo} message
+     */
     _handleMessageServerInfo(message) {
         assert(Number.isInteger(message.maxClasses));
         assert(Number.isInteger(message.maxClients));
@@ -185,12 +279,12 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         this._server.maxClasses = message.maxClasses;
         this._server.maxClients = message.maxClients;
 
-        this._server.classIdBitSize = Math.log2(message.maxClasses) + 1;
+        this._server.classIdBitSize = Math.floor(Math.log2(message.maxClasses)) + 1;
     }
 }
 
-function getSerializerKey(serializer) {
-    return `${serializer.name}|${serializer.version}`;
+function getSerializerKey(name, version) {
+    return `${name}|${version}`;
 }
 
 module.exports = DemoStreamPacketAnalyzer;

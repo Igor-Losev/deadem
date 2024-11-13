@@ -37,7 +37,7 @@ class WorkerManager {
 
             this._threads.push(thread);
 
-            logger.debug(`Starting worker [ ${worker.threadId} ]`);
+            logger.debug(`Starting worker #${worker.threadId}`);
         }
     }
 
@@ -92,8 +92,10 @@ class WorkerManager {
      * @public
      */
     terminate() {
-        this._threads.forEach((thread) => {
+        this._threads.forEach((thread, index) => {
             thread.worker.terminate();
+
+            logger.debug(`Terminating worker #${thread.worker.threadId}`);
         });
 
         this._threads = [ ];

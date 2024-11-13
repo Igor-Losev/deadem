@@ -24,11 +24,13 @@ class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @constructor
      * @public
-     *
+     * @param {Parser} parser
      * @param {Number} concurrency
      */
-    constructor(concurrency) {
+    constructor(parser, concurrency) {
         super({ objectMode: true });
+
+        this._parser = parser;
 
         this._counts = {
             batches: 0,

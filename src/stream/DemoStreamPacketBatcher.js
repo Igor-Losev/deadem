@@ -1,15 +1,18 @@
-const Stream = require('stream');
+const Stream = require('node:stream');
 
 class DemoStreamPacketBatcher extends Stream.Transform {
     /**
      * @public
      * @constructor
      *
+     * @param {Parser} parser
      * @param {Number} thresholdSizeBytes
      * @param {Number} thresholdWaitMilliseconds
      */
-    constructor(thresholdSizeBytes, thresholdWaitMilliseconds) {
+    constructor(parser, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });
+
+        this._parser = parser;
 
         this._thresholdSizeBytes = thresholdSizeBytes;
         this._thresholdWaitMilliseconds = thresholdWaitMilliseconds;

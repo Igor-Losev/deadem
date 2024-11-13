@@ -3,17 +3,22 @@ const Stream = require('stream');
 const DemoPacketRaw = require('./../data/DemoPacketRaw'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const PerformanceTracker = require('./../trackers/PerformanceTracker.instance');
-
 const DEMO_CHUNK_PARSE_RETRIES = 3;
 const DEMO_IGNORED_HEADER_LENGTH = 16;
 
 class DemoStreamPacketExtractor extends Stream.Transform {
-    constructor() {
+    /**
+     * @public
+     * @constructor
+     * @param {Parser} parser
+     */
+    constructor(parser) {
         super({ objectMode: true });
 
+        this._parser = parser;
+
         this._chunk = {
-            buffer: new Buffer.alloc(0),
+            buffer: Buffer.alloc(0),
             pointer: 0
         };
 
@@ -39,6 +44,8 @@ class DemoStreamPacketExtractor extends Stream.Transform {
         }
 
         const parseChunkRecursively = () => {
+            this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+
             const tail = this._chunk.buffer.subarray(this._chunk.pointer);
 
             let packet;
@@ -54,6 +61,8 @@ class DemoStreamPacketExtractor extends Stream.Transform {
                     this._retries += 1;
                 }
             }
+
+            this._parser.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
 
             if (packet === null || this._retries > 0) {
                 this._chunk.buffer = this._chunk.buffer.subarray(this._chunk.pointer);
