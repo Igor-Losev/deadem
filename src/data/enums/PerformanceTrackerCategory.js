@@ -64,7 +64,7 @@ class PerformanceTrackerCategory {
     }
 }
 
-const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packet and inner messages', [ ]);
+const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ ]);
 const demoPacketExtractor = new PerformanceTrackerCategory('DEMO_PACKET_EXTRACTOR', 'Extraction of top-level demo packets', [ ]);
 
 const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ demoPacketAnalyzer, demoPacketExtractor ]);
