@@ -13,6 +13,9 @@ class MessagePacket {
         this._data = data;
     }
 
+    /**
+     * @returns {MessagePacketType}
+     */
     get type() {
         return this._type;
     }

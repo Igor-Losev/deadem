@@ -55,6 +55,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      */
     _transform(demoPacket, encoding, callback) {
         this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+        this._parser.getPacketTracker().handleDemoPacket(demoPacket);
 
         switch (demoPacket.command) {
             case DemoCommandType.DEM_ERROR:
@@ -80,11 +81,11 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             case DemoCommandType.DEM_PACKET:
-                this._handleDemPacket(demoPacket.data);
+                this._handleDemPacket(demoPacket);
 
                 break;
             case DemoCommandType.DEM_SIGNON_PACKET:
-                this._handleDemPacket(demoPacket.data);
+                this._handleDemPacket(demoPacket);
 
                 break;
             case DemoCommandType.DEM_CONSOLE_CMD:
@@ -96,7 +97,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             case DemoCommandType.DEM_USER_CMD:
                 break;
             case DemoCommandType.DEM_FULL_PACKET:
-                this._handleDemPacket(demoPacket.data);
+                this._handleDemPacket(demoPacket);
 
                 break;
             case DemoCommandType.DEM_SAVE_GAME:
@@ -133,10 +134,14 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
     /**
      * @protected
-     * @param {Array<MessagePacket>} messagePackets
+     * @param {DemoPacket} demoPacket
      */
-    _handleDemPacket(messagePackets) {
+    _handleDemPacket(demoPacket) {
+        const messagePackets = demoPacket.data;
+
         messagePackets.forEach((messagePacket) => {
+            this._parser.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
+
             switch (messagePacket.type) {
                 case MessagePacketType.NET_TICK:
                     break;

@@ -55,9 +55,9 @@ class PerformanceTracker {
             const record = this._registry.get(category) || null;
 
             if (record !== null) {
-                const prefix = `${'-'.repeat(depth * 2)}`;
+                const prefix = `${'\t'.repeat(depth)}`;
 
-                logger.info(`${prefix.length > 0 ? `${prefix}> ` : ''}[ ${category.code} ]: total [ ${format(record.accumulator)} ] ms, [ ${format(record.count)} ] run(s) with [ ${format(Math.round(record.average * 1000) / 1000)} ] ms in average`);
+                logger.info(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${format(record.accumulator)} ] ms, [ ${format(record.count)} ] run(s) with [ ${format(Math.round(record.average * 1000) / 1000)} ] ms in average`);
             }
 
             category.categories.forEach((subcategory) => {

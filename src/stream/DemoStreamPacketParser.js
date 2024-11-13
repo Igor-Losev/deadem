@@ -13,8 +13,6 @@ const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instan
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const PacketTracker = require('./../trackers/PacketTracker.instance');
-
 const WorkerManager = require('./../workers/WorkerManager'),
     WorkerTask = require('./../workers/WorkerTask');
 
@@ -62,10 +60,6 @@ class DemoStreamPacketParser extends Stream.Transform {
      */
     async _transform(batch, encoding, callback) {
         this._counts.batches += 1;
-
-        batch.forEach((demoPacketRaw) => {
-            PacketTracker.trackDemoPacket(demoPacketRaw.getCommandType());
-        });
 
         const getIsHeavy = demoPacketRaw => this._workerTargets.includes(DemoCommandType.parseById(demoPacketRaw.getCommandType()));
         const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
@@ -134,8 +128,6 @@ class DemoStreamPacketParser extends Stream.Transform {
                     const messagePackets = [ ];
 
                     messageBatch.forEach(([ messageType, payload ]) => {
-                        PacketTracker.trackMessagePacket(batch[batchIndex].getCommandType(), messageType);
-
                         const messagePacketType = MessagePacketType.parseById(messageType) || null;
 
                         if (messagePacketType === null) {

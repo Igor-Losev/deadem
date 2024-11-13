@@ -126,6 +126,7 @@ class Parser {
 
         this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
 
+        this._trackers.packet.print();
         this._trackers.performance.print();
     }
 
