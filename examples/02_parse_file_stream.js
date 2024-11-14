@@ -7,7 +7,7 @@ const Parser = require('./../src/Parser');
 
 (async () => {
     const DEMO_PATH = path.resolve(__dirname, './../demos/21438112.dem');
-    const PARSER_THREADS = 1;
+    const PARSER_THREADS = 4;
 
     const parser = new Parser(PARSER_THREADS);
 

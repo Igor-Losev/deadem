@@ -2,6 +2,12 @@
 
 const Stream = require('stream');
 
+const BinaryHeap = require('./../data/structures/BinaryHeap');
+
+const LoggerProvider = require('./../providers/LoggerProvider.instance');
+
+const logger = LoggerProvider.getLogger('DemoStreamPacketCoordinator');
+
 class DemoStreamPacketCoordinator extends Stream.Transform {
     /**
      * @public
@@ -12,6 +18,21 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
         super({ objectMode: true });
 
         this._parser = parser;
+
+        this._heap = new BinaryHeap(demoPacket => demoPacket.sequence);
+        this._sequence = 0;
+    }
+
+    /**
+     * @protected
+     * @param {TransformCallback} callback
+     */
+    _flush(callback) {
+        if (this._heap.length > 0) {
+            logger.warn(`DemoStreamPacketCoordinator._flush() is called. However, heap has [ ${this._heap.length} ] packets. This should never happen`);
+        }
+
+        callback();
     }
 
     /**
@@ -21,7 +42,23 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
+        if (demoPacket.sequence !== this._sequence) {
+            this._heap.insert(demoPacket);
+
+            callback();
+
+            return;
+        }
+
         this.push(demoPacket);
+
+        this._sequence += 1;
+
+        while (this._heap.length > 0 && this._heap.root.sequence === this._sequence) {
+            this.push(this._heap.extract());
+
+            this._sequence += 1;
+        }
 
         callback();
     }

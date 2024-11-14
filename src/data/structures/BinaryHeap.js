@@ -47,6 +47,14 @@ class BinaryHeap {
 
     /**
      * @public
+     * @returns {*}
+     */
+    get root() {
+        return this._heap[0];
+    }
+
+    /**
+     * @public
      * @param {*} element
      */
     insert(element) {
