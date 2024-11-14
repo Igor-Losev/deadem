@@ -5,7 +5,7 @@ describe('BinaryHeap', () => {
 
     describe('When using max heap', () => {
         const data = getSourceData();
-        const heap = new BinaryHeap((i => i), BinaryHeap.MAX_HEAP_COMPARATOR);
+        const heap = new BinaryHeap(i => i, BinaryHeap.MAX_HEAP_COMPARATOR);
 
         test('It should insert values', () => {
             data.forEach((value) => {
@@ -28,7 +28,7 @@ describe('BinaryHeap', () => {
 
     describe('When using min heap', () => {
         const data = getSourceData();
-        const heap = new BinaryHeap((i => i), BinaryHeap.MIN_HEAP_COMPARATOR);
+        const heap = new BinaryHeap(i => i, BinaryHeap.MIN_HEAP_COMPARATOR);
 
         test('It should insert values', () => {
             data.forEach((value) => {
