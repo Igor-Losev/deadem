@@ -9,17 +9,23 @@ class DemoPacket {
      * @public
      * @constructor
      *
+     * @param {Number} sequence
      * @param {DemoCommandType} command
      * @param {Number} tick
      * @param {*} data
      */
-    constructor(command, tick, data) {
+    constructor(sequence, command, tick, data) {
         assert(command instanceof DemoCommandType);
         assert(Number.isInteger(tick));
 
+        this._sequence = sequence;
         this._command = command;
         this._tick = tick;
         this._data = data;
+    }
+
+    get sequence() {
+        return this._sequence;
     }
 
     get command() {

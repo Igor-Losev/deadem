@@ -5,16 +5,22 @@ class DemoPacketRaw {
      * @public
      * @constructor
      *
+     * @param {Number} sequence
      * @param {UVarInt32} command
      * @param {UVarInt32} tick
      * @param {UVarInt32} frame
      * @param {Buffer} payload
      */
-    constructor(command, tick, frame, payload) {
+    constructor(sequence, command, tick, frame, payload) {
+        this._sequence = sequence;
         this._command = command;
         this._tick = tick;
         this._frame = frame;
         this._payload = payload;
+    }
+
+    get sequence() {
+        return this._sequence;
     }
 
     get command() {
@@ -46,7 +52,7 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsCompressed() {
-        return getIsCompressed(this._command);
+        return (this._command.value & 64) === 64;
     }
 
     /**
@@ -56,14 +62,6 @@ class DemoPacketRaw {
     getSize() {
         return this._command.size + this._tick.size + this._frame.size + this._payload.length;
     }
-}
-
-/**
- * @param {UVarInt32} command
- * @returns {boolean}
- */
-function getIsCompressed(command) {
-    return (command.value & 64) === 64;
 }
 
 module.exports = DemoPacketRaw;

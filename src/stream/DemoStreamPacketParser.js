@@ -91,7 +91,7 @@ class DemoStreamPacketParser extends Stream.Transform {
             const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
             const demoTick = demoPacketRaw.tick.value;
 
-            const demoPacket = new DemoPacket(demoCommandType, demoTick, demoCommandType.proto.decode(data));
+            const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, demoCommandType.proto.decode(data));
 
             this.push(demoPacket);
         });
@@ -156,7 +156,7 @@ class DemoStreamPacketParser extends Stream.Transform {
                     const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
                     const demoTick = demoPacketRaw.tick.value;
 
-                    const demoPacket = new DemoPacket(demoCommandType, demoTick, messagePackets);
+                    const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, messagePackets);
 
                     demoPackets.push(demoPacket);
                 });

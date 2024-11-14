@@ -1,5 +1,7 @@
 'use strict';
 
+const assert = require('node:assert/strict');
+
 const DemoPacketRaw = require('./../data/DemoPacketRaw'),
     UVarInt32 = require('./../data/UVarInt32');
 
@@ -11,6 +13,7 @@ class DemoPacketRawExtractor {
      */
     constructor(buffer) {
         this._buffer = buffer;
+
         this._tail = buffer;
     }
 
@@ -18,10 +21,12 @@ class DemoPacketRawExtractor {
         return this._tail;
     }
 
-    *retrieve() {
+    *retrieve(sequenceStart) {
+        assert(Number.isInteger(sequenceStart));
+
         this._tail = this._buffer;
 
-        while (true) {
+        for (let sequence = sequenceStart; true; sequence++) {
             let offset = 0;
 
             const command = UVarInt32.parse(this._tail.subarray(offset));
@@ -55,7 +60,7 @@ class DemoPacketRawExtractor {
             offset += frame.size;
 
             if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(command, tick, frame, this._tail.subarray(offset, offset + frame.value));
+                yield new DemoPacketRaw(sequence, command, tick, frame, this._tail.subarray(offset, offset + frame.value));
 
                 offset += frame.value;
 
