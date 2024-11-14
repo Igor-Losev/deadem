@@ -40,10 +40,10 @@ class DemoStreamPacketExtractor extends Stream.Transform {
      */
     _flush(callback) {
         if (this._tail.length !== 0) {
-            logger.warn(`DemoStreamPacketExtractor._flush() is called. However, the are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
+            logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
         }
 
-        callback()
+        callback();
     }
 
     /**

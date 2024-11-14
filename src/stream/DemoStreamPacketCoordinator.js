@@ -14,6 +14,12 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
         this._parser = parser;
     }
 
+    /**
+     * @protected
+     * @param {DemoPacket} demoPacket
+     * @param {BufferEncoding} encoding
+     * @param {TransformCallback} callback
+     */
     _transform(demoPacket, encoding, callback) {
         this.push(demoPacket);
 

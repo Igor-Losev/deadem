@@ -69,6 +69,8 @@ class Parser {
      */
     pause() {
         this._onPause();
+
+        throw new Error('Not implemented');
     }
 
     /**
@@ -76,6 +78,8 @@ class Parser {
      */
     resume() {
         this._onResume();
+
+        throw new Error('Not implemented');
     }
 
     /**
@@ -111,6 +115,8 @@ class Parser {
      */
     stop() {
         this._onStop();
+
+        throw new Error('Not implemented');
     }
 
     /**

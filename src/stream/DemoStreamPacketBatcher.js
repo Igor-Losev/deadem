@@ -29,21 +29,31 @@ class DemoStreamPacketBatcher extends Stream.Transform {
         };
     }
 
+    /**
+     * @protected
+     * @param {TransformCallback} callback
+     */
     _flush(callback) {
         this._send();
 
         callback();
     }
 
-    _transform(demoPacket, encoding, callback) {
+    /**
+     * @protected
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @param {BufferEncoding} encoding
+     * @param {TransformCallback} callback
+     */
+    _transform(demoPacketRaw, encoding, callback) {
         if (this._timeoutId !== null) {
             clearTimeout(this._timeoutId);
 
             this._timeoutId = null;
         }
 
-        this._batch.packets.push(demoPacket);
-        this._batch.size += demoPacket.getActualSize();
+        this._batch.packets.push(demoPacketRaw);
+        this._batch.size += demoPacketRaw.getSize();
 
         if (this._batch.size >= this._thresholdSizeBytes) {
             this._send();
@@ -56,6 +66,9 @@ class DemoStreamPacketBatcher extends Stream.Transform {
         callback();
     }
 
+    /**
+     * @protected
+     */
     _send() {
         if (this._timeoutId !== null) {
             clearTimeout(this._timeoutId);

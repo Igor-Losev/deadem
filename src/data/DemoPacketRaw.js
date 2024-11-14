@@ -37,14 +37,6 @@ class DemoPacketRaw {
      * @public
      * @returns {number}
      */
-    getActualSize() {
-        return this._command.size + this._tick.size + this._frame.size + this._payload.length;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
     getCommandType() {
         return this._command.value & ~64;
     }
@@ -59,10 +51,10 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
-    getOriginalSize() {
-        return this._command.size + this._tick.size + this._frame.size + this._frame.value;
+    getSize() {
+        return this._command.size + this._tick.size + this._frame.size + this._payload.length;
     }
 }
 

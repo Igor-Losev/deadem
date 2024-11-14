@@ -44,10 +44,19 @@ class DemoStreamPacketParser extends Stream.Transform {
         this._pendingTasks = [ ];
     }
 
+    /**
+     * @public
+     */
     dispose() {
         this._workerManager.terminate();
     }
 
+    /**
+     * @protected
+     * @async
+     * @param {TransformCallback} callback
+     * @returns {Promise<void>}
+     */
     async _flush(callback) {
         await Promise.all(this._pendingTasks.map(t => t.promise));
 
