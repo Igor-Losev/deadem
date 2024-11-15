@@ -5,8 +5,7 @@ const assert = require('node:assert/strict'),
 
 const Demo = require('./data/Demo');
 
-const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory'),
-    StreamPhase = require('./data/enums/StreamPhase');
+const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
 const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
     DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
@@ -36,20 +35,23 @@ class Parser {
         assert(Number.isInteger(batcherChunkSize));
         assert(Number.isInteger(batcherThresholdMilliseconds));
 
-        this._splitterChunkSize = splitterChunkSize;
-        this._batcherChunkSize = batcherChunkSize;
-        this._batcherThresholdMilliseconds = batcherThresholdMilliseconds;
+        this._workerManager = new WorkerManager(parserThreads);
 
-        this._demo = new Demo();
-
-        this._chain = getChain.call(this);
+        this._chain = [
+            new DemoStreamBufferSplitter(this, splitterChunkSize),
+            new DemoStreamPacketExtractor(this),
+            new DemoStreamPacketBatcher(this, batcherChunkSize, batcherThresholdMilliseconds),
+            new DemoStreamPacketParser(this),
+            new DemoStreamPacketCoordinator(this),
+            new DemoStreamPacketAnalyzer(this)
+        ];
 
         this._trackers = {
             packet: new PacketTracker(),
             performance: new PerformanceTracker()
         };
 
-        this._workerManager = new WorkerManager(parserThreads);
+        this._demo = new Demo();
     }
 
     /**
@@ -176,53 +178,6 @@ class Parser {
     _onStop() {
         logger.info(`Parse stopped`);
     }
-}
-
-function getChain() {
-    const phases = StreamPhase.getAll();
-
-    phases.sort((a, b) => a.order - b.order);
-
-    return phases.reduce((accumulator, phase) => {
-        let part = null;
-
-        switch (phase) {
-            case StreamPhase.ANALYZE:
-                part = new DemoStreamPacketAnalyzer(this);
-
-                break;
-            case StreamPhase.BATCH:
-                part = new DemoStreamPacketBatcher(this, this._batcherChunkSize, this._batcherThresholdMilliseconds);
-
-                break;
-            case StreamPhase.COORDINATE:
-                part = new DemoStreamPacketCoordinator(this);
-
-                break;
-            case StreamPhase.EXTRACT:
-                part = new DemoStreamPacketExtractor(this);
-
-                break;
-            case StreamPhase.PARSE:
-                part = new DemoStreamPacketParser(this);
-
-                break;
-            case StreamPhase.READ:
-                break;
-            case StreamPhase.SPLIT:
-                part = new DemoStreamBufferSplitter(this, this._splitterChunkSize);
-
-                break;
-            default:
-                break;
-        }
-
-        if (part !== null) {
-            accumulator.push(part);
-        }
-
-        return accumulator;
-    }, [ ]);
 }
 
 module.exports = Parser;
