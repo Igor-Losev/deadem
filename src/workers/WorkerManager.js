@@ -95,7 +95,7 @@ class WorkerManager {
         this._threads.forEach((thread, index) => {
             thread.worker.terminate();
 
-            logger.debug(`Terminating worker #${thread.worker.threadId}`);
+            logger.info(`Terminating Worker #${thread.worker.threadId}`);
         });
 
         this._threads = [ ];

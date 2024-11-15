@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('node:assert/strict'),
-    Stream = require('node:stream');
+const Stream = require('node:stream');
 
 const DemoPacket = require('./../data/DemoPacket'),
     MessagePacket = require('./../data/MessagePacket');
@@ -14,8 +13,7 @@ const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instan
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const WorkerManager = require('./../workers/WorkerManager'),
-    WorkerTask = require('./../workers/WorkerTask');
+const WorkerTask = require('./../workers/WorkerTask');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
@@ -24,12 +22,9 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @constructor
      * @public
      * @param {Parser} parser
-     * @param {Number} concurrency
      */
-    constructor(parser, concurrency) {
+    constructor(parser) {
         super({ objectMode: true });
-
-        assert(Number.isInteger(concurrency));
 
         this._parser = parser;
 
@@ -38,17 +33,9 @@ class DemoStreamPacketParser extends Stream.Transform {
             tasks: 0
         };
 
-        this._workerManager = new WorkerManager(concurrency);
         this._workerTargets = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
 
         this._pendingTasks = [ ];
-    }
-
-    /**
-     * @public
-     */
-    dispose() {
-        this._workerManager.terminate();
     }
 
     /**
@@ -97,7 +84,7 @@ class DemoStreamPacketParser extends Stream.Transform {
         });
 
         if (heavy.length > 0) {
-            const thread = await this._workerManager.requestThread();
+            const thread = await this._parser.workerManager.requestThread();
 
             this._processAsync(thread, heavy)
                 .then((demoPackets) => {
@@ -120,7 +107,7 @@ class DemoStreamPacketParser extends Stream.Transform {
         const taskId = ++this._counts.tasks;
         const task = new WorkerTask(WorkerTaskType.DEMO_PACKET_PARSE, taskId, batch.map(p => [ p.getIsCompressed(), p.payload ]));
 
-        const promise = this._workerManager.run(thread, task);
+        const promise = this._parser.workerManager.run(thread, task);
 
         this._pendingTasks.push({ task, promise });
 

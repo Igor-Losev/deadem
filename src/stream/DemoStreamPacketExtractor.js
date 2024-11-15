@@ -69,11 +69,11 @@ class DemoStreamPacketExtractor extends Stream.Transform {
         const generator = extractor.retrieve(this._counts.packets);
 
         while (true) {
-            this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+            this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
 
             const next = generator.next();
 
-            this._parser.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+            this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
 
             if (next.done) {
                 break;

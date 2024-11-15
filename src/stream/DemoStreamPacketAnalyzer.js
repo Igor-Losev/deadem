@@ -54,8 +54,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
-        this._parser.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
-        this._parser.getPacketTracker().handleDemoPacket(demoPacket);
+        this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+        this._parser.packetTracker.handleDemoPacket(demoPacket);
 
         switch (demoPacket.command) {
             case DemoCommandType.DEM_ERROR:
@@ -110,7 +110,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 break;
         }
 
-        this._parser.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+        this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
         callback();
     }
@@ -140,7 +140,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         const messagePackets = demoPacket.data;
 
         messagePackets.forEach((messagePacket) => {
-            this._parser.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
+            this._parser.packetTracker.handleMessagePacket(demoPacket, messagePacket);
 
             switch (messagePacket.type) {
                 case MessagePacketType.NET_TICK:

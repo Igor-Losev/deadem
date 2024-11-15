@@ -20,6 +20,8 @@ const LoggerProvider = require('./providers/LoggerProvider.instance');
 const PacketTracker = require('./trackers/PacketTracker'),
     PerformanceTracker = require('./trackers/PerformanceTracker');
 
+const WorkerManager = require('./workers/WorkerManager');
+
 const logger = LoggerProvider.getLogger('Parser');
 
 class Parser {
@@ -34,25 +36,27 @@ class Parser {
         assert(Number.isInteger(batcherChunkSize));
         assert(Number.isInteger(batcherThresholdMilliseconds));
 
-        this._parserThreads = parserThreads;
         this._splitterChunkSize = splitterChunkSize;
         this._batcherChunkSize = batcherChunkSize;
         this._batcherThresholdMilliseconds = batcherThresholdMilliseconds;
 
         this._demo = new Demo();
+
         this._chain = getChain.call(this);
 
         this._trackers = {
             packet: new PacketTracker(),
             performance: new PerformanceTracker()
         };
+
+        this._workerManager = new WorkerManager(parserThreads);
     }
 
     /**
      * @public
      * @returns {PacketTracker}
      */
-    getPacketTracker() {
+    get packetTracker() {
         return this._trackers.packet;
     }
 
@@ -60,8 +64,16 @@ class Parser {
      * @public
      * @returns {PerformanceTracker}
      */
-    getPerformanceTracker() {
+    get performanceTracker() {
         return this._trackers.performance;
+    }
+
+    /**
+     * @public
+     * @returns {WorkerManager}
+     */
+    get workerManager() {
+        return this._workerManager;
     }
 
     /**
@@ -95,12 +107,6 @@ class Parser {
             reader,
             ...this._chain,
             (error) => {
-                const parser = this._chain.find(i => i instanceof DemoStreamPacketParser) || null;
-
-                if (parser !== null) {
-                    parser.dispose();
-                }
-
                 if (error) {
                     this._onError(error);
                 }
@@ -137,6 +143,8 @@ class Parser {
 
         this._trackers.packet.print();
         this._trackers.performance.print();
+
+        this._workerManager.terminate();
     }
 
     /**
@@ -196,7 +204,7 @@ function getChain() {
 
                 break;
             case StreamPhase.PARSE:
-                part = new DemoStreamPacketParser(this, this._parserThreads);
+                part = new DemoStreamPacketParser(this);
 
                 break;
             case StreamPhase.READ:

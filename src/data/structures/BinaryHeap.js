@@ -55,16 +55,6 @@ class BinaryHeap {
 
     /**
      * @public
-     * @param {*} element
-     */
-    insert(element) {
-        const length = this._heap.push(element);
-
-        this._siftUp(length - 1);
-    }
-
-    /**
-     * @public
      * @returns {*}
      */
     extract() {
@@ -83,6 +73,16 @@ class BinaryHeap {
         }
 
         return element;
+    }
+
+    /**
+     * @public
+     * @param {*} element
+     */
+    insert(element) {
+        const length = this._heap.push(element);
+
+        this._siftUp(length - 1);
     }
 
     /**
