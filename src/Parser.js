@@ -56,6 +56,14 @@ class Parser {
 
     /**
      * @public
+     * @returns {Demo}
+     */
+    get demo() {
+        return this._demo;
+    }
+
+    /**
+     * @public
      * @returns {PacketTracker}
      */
     get packetTracker() {

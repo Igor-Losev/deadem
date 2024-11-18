@@ -1,6 +1,10 @@
 'use strict';
 
-const StringTableType = require('./../../enums/StringTableType');
+const assert = require('node:assert/strict'),
+    EventEmitter = require('node:events');
+
+const StringTableEvent = require('./../../enums/StringTableEvent'),
+    StringTableType = require('./../../enums/StringTableType');
 
 const StringTable = require('./StringTable'),
     StringTableEntry = require('./StringTableEntry'),
@@ -20,6 +24,8 @@ class StringTableContainer {
      * @constructor
      */
     constructor() {
+        this._eventEmitter = new EventEmitter();
+
         this._registry = {
             tableById: new Map(),
             tableByName: new Map()
@@ -82,7 +88,7 @@ class StringTableContainer {
             payload = createData.stringData;
         }
 
-        const stringTable = new StringTable(stringTableType, createData.flags, [ ], instructions);
+        const stringTable = new StringTable(stringTableType, createData.flags, instructions);
 
         this._register(stringTable);
 
@@ -93,6 +99,9 @@ class StringTableContainer {
         for (const entry of extractor) {
             stringTable.updateEntry(entry);
         }
+
+        this._eventEmitter.emit(StringTableEvent.TABLE_CREATED.name, stringTable);
+        this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
     }
 
     /**
@@ -109,17 +118,18 @@ class StringTableContainer {
                 return;
             }
 
-            const entries = [ ];
+            const stringTable = new StringTable(type, tableData.tableFlags, null);
 
             tableData.items.forEach((entryData, index) => {
-                const entry = new StringTableEntry(index, entryData.str, entryData.data);
+                const entry = StringTableEntry.fromBuffer(entryData.data, stringTable.type, index, entryData.str);
 
-                entries.push(entry);
+                stringTable.updateEntry(entry);
             });
 
-            const stringTable = new StringTable(type, tableData.tableFlags, entries, null);
-
             this._register(stringTable);
+
+            this._eventEmitter.emit(StringTableEvent.TABLE_CREATED.name, stringTable);
+            this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
         });
     }
 
@@ -143,6 +153,33 @@ class StringTableContainer {
         for (const entry of extractor) {
             stringTable.updateEntry(entry);
         }
+
+        this._eventEmitter.emit(StringTableEvent.TABLE_UPDATED.name, stringTable);
+        this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
+    }
+
+    /**
+     * @public
+     * @param {StringTableEvent} event
+     * @param {Function} callback
+     */
+    subscribe(event, callback) {
+        assert(event instanceof StringTableEvent);
+        assert(typeof callback === 'function');
+
+        this._eventEmitter.addListener(event.name, callback);
+    }
+
+    /**
+     * @public
+     * @param {StringTableEvent} event
+     * @param {Function} callback
+     */
+    unsubscribe(event, callback) {
+        assert(event instanceof StringTableEvent);
+        assert(typeof callback === 'function');
+
+        this._eventEmitter.removeListener(event.name, callback);
     }
 
     /**
@@ -150,6 +187,10 @@ class StringTableContainer {
      */
     _clear() {
         logger.debug(`Clearing StringTable registry`);
+
+        this._registry.tableById.forEach((stringTable) => {
+            this._eventEmitter.emit(StringTableEvent.TABLE_REMOVED, stringTable);
+        });
 
         this._registry.tableByName.clear();
         this._registry.tableById.clear();

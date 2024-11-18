@@ -22,6 +22,13 @@ class Serializer {
         this._fields = fields;
     }
 
+    static GET_KEY(name, version) {
+        assert(typeof name === 'string' && name.length > 0);
+        assert(Number.isInteger(version));
+
+        return `${name}|${version}`;
+    }
+
     get name() {
         return this._name;
     }

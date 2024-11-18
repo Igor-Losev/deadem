@@ -11,9 +11,6 @@ const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instan
 
 const MAX_HISTORY_ENTRIES = 32;
 
-// const CMsgPlayerInfo = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
-// const CModifierTableEntry = ProtoProvider.BASE_MODIFIER.lookupType('CModifierTableEntry');
-
 class StringTableEntryExtractor {
     /**
      * @public
@@ -103,24 +100,9 @@ class StringTableEntryExtractor {
                 if (isCompressed) {
                     value = SnappyDecompressor.decompress(value);
                 }
-
-                // switch (this._table.type) {
-                //     case StringTableType.ACTIVE_MODIFIERS:
-                //         value = CModifierTableEntry.decode(value);
-                //
-                //         break;
-                //     case StringTableType.INSTANCE_BASE_LINE:
-                //         break;
-                //     case StringTableType.USER_INFO:
-                //         value = CMsgPlayerInfo.decode(value);
-                //
-                //         break;
-                //     default:
-                //         break;
-                // }
             }
 
-            const entry = new StringTableEntry(index, key, value);
+            const entry = StringTableEntry.fromBuffer(value, this._table.type, index, key);
 
             yield entry;
         }

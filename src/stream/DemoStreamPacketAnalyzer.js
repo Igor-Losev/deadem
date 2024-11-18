@@ -13,7 +13,7 @@ const Class = require('./../data/fields/Class'),
     Field = require('./../data/fields/Field'),
     Serializer = require('./../data/fields/Serializer');
 
-const StringTableContainer = require('../data/tables/string/StringTableContainer');
+const Server = require('./../data/Server');
 
 const ProtoProvider = require('./../providers/ProtoProvider.instance');
 
@@ -29,22 +29,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         super({ objectMode: true });
 
         this._parser = parser;
-
-        this._classBaselines = new Map();
-
-        this._classes = {
-            byId: new Map(),
-            byName: new Map()
-        };
-
-        this._serializers = new Map();
-
-        this._server = { };
-        this._server.classIdBitSize = null;
-        this._server.maxClasses = null;
-        this._server.maxClients = null;
-
-        this._stringTableContainer = new StringTableContainer();
     }
 
     /**
@@ -77,7 +61,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             case DemoCommandType.DEM_STRING_TABLES:
-                this._stringTableContainer.handleInstantiate(demoPacket.data);
+                this._parser.demo.stringTableContainer.handleInstantiate(demoPacket.data);
 
                 break;
             case DemoCommandType.DEM_PACKET:
@@ -121,14 +105,17 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      */
     _handleDemClassInfo(classInfo) {
         classInfo.classes.forEach((data) => {
-            const key = getSerializerKey(data.networkName, 0);
+            const key = Serializer.GET_KEY(data.networkName, 0);
 
-            const serializer = this._serializers.get(key) || null;
+            const serializer = this._parser.demo.getSerializerByKey(key);
+
+            if (serializer === null) {
+                throw new Error(`Serializer not found [ ${key} ]`);
+            }
 
             const clazz = new Class(data.classId, data.networkName, serializer);
 
-            this._classes.byId.set(clazz.id, clazz);
-            this._classes.byName.set(clazz.name, clazz);
+            this._parser.demo.registerClass(clazz);
         });
     }
 
@@ -154,19 +141,19 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     break;
                 case MessagePacketType.SVC_CREATE_STRING_TABLE:
-                    this._stringTableContainer.handleCreate(messagePacket.data);
+                    this._parser.demo.stringTableContainer.handleCreate(messagePacket.data);
 
                     break;
                 case MessagePacketType.SVC_UPDATE_STRING_TABLE:
-                    this._stringTableContainer.handleUpdate(messagePacket.data);
+                    this._parser.demo.stringTableContainer.handleUpdate(messagePacket.data);
 
                     break;
                 case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
-                    this._stringTableContainer.handleClear();
+                    this._parser.demo.stringTableContainer.handleClear();
 
                     break;
                 case MessagePacketType.SVC_PACKET_ENTITIES:
-                    // this._handleMessagePacketEntities(messagePacket.data);
+                    this._handleMessagePacketEntities(messagePacket.data);
 
                     break;
                 case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
@@ -205,9 +192,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
             const serializer = new Serializer(name, version, serializerFields);
 
-            const key = getSerializerKey(serializer.name, serializer.version);
-
-            this._serializers.set(key, serializer);
+            this._parser.demo.registerSerializer(serializer);
         });
     }
 
@@ -243,10 +228,16 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                     break;
                 }
                 case 2: { // Create
-                    const bufferForClassId = bitBuffer.read(this._server.classIdBitSize);
+                    if (this._parser.demo.server === null) {
+                        throw new Error(`Server info not found`);
+                    }
+
+                    const classIdSizeBits = this._parser.demo.server.classIdSizeBits;
+
+                    const bufferForClassId = bitBuffer.read(classIdSizeBits);
                     const bufferForSerial = bitBuffer.read(17);
 
-                    const tailForClassId = Buffer.alloc(Math.floor((BitBuffer.BITS_PER_BYTE * 4 - this._server.classIdBitSize) / BitBuffer.BITS_PER_BYTE));
+                    const tailForClassId = Buffer.alloc(Math.floor((BitBuffer.BITS_PER_BYTE * 4 - classIdSizeBits) / BitBuffer.BITS_PER_BYTE));
                     const tailForSerial = Buffer.alloc(1);
 
                     const ignored = bitBuffer.readUVarInt32();
@@ -254,12 +245,16 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                     const classId = Buffer.concat([ bufferForClassId, tailForClassId ]).readUInt32LE();
                     const serial = Buffer.concat([ bufferForSerial, tailForSerial ]).readUInt32LE();
 
-                    const clazz = this._classes.byId.get(classId) || null
+                    const clazz = this._parser.demo.getClassById(classId);
 
-                    console.log(clazz);
-                    console.log(serial);
+                    if (clazz === null) {
+                        throw new Error(`Class not found [ ${classId} ]`);
+                    }
 
-                    throw new Error(123);
+                    // console.log(clazz);
+                    // console.log(serial);
+
+                    // throw new Error(123);
 
                     break;
                 }
@@ -278,18 +273,10 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {CSVCMsg_ServerInfo} message
      */
     _handleMessageServerInfo(message) {
-        assert(Number.isInteger(message.maxClasses));
-        assert(Number.isInteger(message.maxClients));
+        const server = new Server(message.maxClasses, message.maxClients);
 
-        this._server.maxClasses = message.maxClasses;
-        this._server.maxClients = message.maxClients;
-
-        this._server.classIdBitSize = Math.floor(Math.log2(message.maxClasses)) + 1;
+        this._parser.demo.registerServer(server);
     }
-}
-
-function getSerializerKey(name, version) {
-    return `${name}|${version}`;
 }
 
 module.exports = DemoStreamPacketAnalyzer;

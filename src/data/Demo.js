@@ -1,8 +1,159 @@
 'use strict';
 
+const assert = require('node:assert/strict');
+
+const Server = require('./Server');
+
+const Class = require('./fields/Class'),
+    Serializer = require('./fields/Serializer');
+
+const StringTableEvent = require('./enums/StringTableEvent'),
+    StringTableType = require('./enums/StringTableType');
+
+const StringTableContainer = require('./tables/string/StringTableContainer');
+
 class Demo {
     constructor() {
+        this._classBaselines = new Map();
 
+        this._classes = {
+            byId: new Map(),
+            byName: new Map()
+        };
+
+        this._serializers = new Map();
+        this._server = null;
+
+        this._stringTableContainer = new StringTableContainer();
+
+        this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
+        this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
+    }
+
+    /**
+     * @public
+     * @returns {Server|null}
+     */
+    get server() {
+        return this._server;
+    }
+
+    /**
+     * @public
+     * @returns {StringTableContainer}
+     */
+    get stringTableContainer() {
+        return this._stringTableContainer;
+    }
+
+    /**
+     * @public
+     * @param {Number} id
+     * @returns {Class|null}
+     */
+    getClassById(id) {
+        assert(Number.isInteger(id));
+
+        return this._classes.byId.get(id) || null;
+    }
+
+    /**
+     * @public
+     * @param {String} name
+     * @returns {Class|null}
+     */
+    getClassByName(name) {
+        assert(typeof name === 'string' && name.length > 0);
+
+        return this._classes.byName.get(name) || null;
+    }
+
+    /**
+     * @public
+     * @param {String} key
+     * @returns {Serializer|null}
+     */
+    getSerializerByKey(key) {
+        assert(typeof key === 'string' && key.length > 0);
+
+        return this._serializers.get(key) || null;
+    }
+
+    /**
+     * @public
+     * @param {Class} clazz
+     */
+    registerClass(clazz) {
+        assert(clazz instanceof Class);
+
+        this._classes.byId.set(clazz.id, clazz);
+        this._classes.byName.set(clazz.name, clazz);
+    }
+
+    /**
+     * @public
+     * @param {Serializer} serializer
+     */
+    registerSerializer(serializer) {
+        assert(serializer instanceof Serializer);
+
+        const key = Serializer.GET_KEY(serializer.name, serializer.version);
+
+        this._serializers.set(key, serializer);
+    }
+
+    /**
+     * @public
+     * @param {Server} server
+     */
+    registerServer(server) {
+        assert(server instanceof Server);
+
+        this._server = server;
+    }
+
+    /**
+     * @protected
+     * @param {StringTable} stringTable
+     */
+    _handleTableChanged(stringTable) {
+        switch (stringTable.type) {
+            case StringTableType.INSTANCE_BASE_LINE: {
+                const entries = stringTable.getEntries();
+
+                entries.forEach((entry) => {
+                    const key = parseInt(entry.key);
+
+                    if (Number.isNaN(key)) {
+                        throw new Error(`Unexpected key [ ${entry.key} ] for table [ ${stringTable.type.code} ]`)
+                    }
+
+                    this._classBaselines.set(key, entry.value);
+                });
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    /**
+     * @protected
+     * @param {StringTable} stringTable
+     */
+    _handleTableRemoved(stringTable) {
+        switch (stringTable.type) {
+            case StringTableType.INSTANCE_BASE_LINE: {
+                this._classBaselines.clear();
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
     }
 }
 
