@@ -64,6 +64,14 @@ class HuffmanTree {
     get rightChild() {
         return this._rightChild;
     }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    getIsLeaf() {
+        return this._leftChild === null && this._rightChild === null;
+    }
 }
 
 const root = build();
