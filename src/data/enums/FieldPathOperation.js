@@ -34,6 +34,15 @@ class FieldPathOperation {
         registry.byCode.set(code, this);
     }
 
+    /**
+     * @public
+     * @static
+     * @returns {Array<FieldPathOperation>}
+     */
+    static getAll() {
+        return Array.from(registry.byCode.values());
+    }
+
     get code() {
         return this._code
     }
@@ -52,15 +61,6 @@ class FieldPathOperation {
 
     get mutator() {
         return this._mutator;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {Array<FieldPathOperation>}
-     */
-    static getAll() {
-        return Array.from(registry.byCode.values());
     }
 }
 
