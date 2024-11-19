@@ -88,6 +88,44 @@ class BinaryHeap {
     /**
      * @protected
      * @param {Number} i
+     * @returns {Number}
+     */
+    _getIChildLeft(i) {
+        return i * 2 + 1;
+    }
+
+    /**
+     * @protected
+     * @param {Number} i
+     * @returns {Number}
+     */
+    _getIChildRight(i) {
+        return i * 2 + 2;
+    }
+
+    /**
+     * @protected
+     * @param {Number} i
+     * @returns {Number}
+     */
+    _getIParent(i) {
+        return Math.floor((i - 1) / 2);
+    }
+
+    /**
+     * @protected
+     * @param {Number} i
+     * @returns {*}
+     */
+    _getValue(i) {
+        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
+
+        return this._extractor(this._heap[i]);
+    }
+
+    /**
+     * @protected
+     * @param {Number} i
      */
     _siftUp(i) {
         assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
@@ -130,44 +168,6 @@ class BinaryHeap {
 
             iTarget = iCandidate;
         }
-    }
-
-    /**
-     * @protected
-     * @param {Number} i
-     * @returns {Number}
-     */
-    _getIChildLeft(i) {
-        return i * 2 + 1;
-    }
-
-    /**
-     * @protected
-     * @param {Number} i
-     * @returns {Number}
-     */
-    _getIChildRight(i) {
-        return i * 2 + 2;
-    }
-
-    /**
-     * @protected
-     * @param {Number} i
-     * @returns {Number}
-     */
-    _getIParent(i) {
-        return Math.floor((i - 1) / 2);
-    }
-
-    /**
-     * @protected
-     * @param {Number} i
-     * @returns {*}
-     */
-    _getValue(i) {
-        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
-
-        return this._extractor(this._heap[i]);
     }
 
     /**
