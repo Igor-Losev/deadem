@@ -33,7 +33,7 @@ class BitBufferFast extends BitBuffer {
         const unread = this.getUnreadCount();
 
         if (numberOfBits > unread) {
-            throw new Error(`Unable to read [ ${numberOfBits} ] bits - only [ ${unread} ] bits left`);
+            throw new Error(`Unable to read [ ${numberOfBits} ] bit(s) - only [ ${unread} ] bit(s) left`);
         }
 
         const numberOfBytes = Math.ceil((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
