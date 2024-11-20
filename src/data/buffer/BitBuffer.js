@@ -132,6 +132,41 @@ class BitBuffer {
     /**
      * @public
      *
+     * @returns {Number}
+     */
+    readUVarIntFieldPath() {
+        let flag;
+
+        flag = this.readBit();
+
+        if (flag) {
+            return this._read(2).readUInt8();
+        }
+
+        flag = this.readBit();
+
+        if (flag) {
+            return this._read(4).readUInt8();
+        }
+
+        flag = this.readBit();
+
+        if (flag) {
+            return this._read(10).readUInt16LE() >>> 0;
+        }
+
+        flag = this.readBit();
+
+        if (flag) {
+            return Buffer.concat([ this._read(17), Buffer.alloc(1) ]).readUInt32LE() >>> 0;
+        }
+
+        return this._read(31).readUInt32LE() >>> 0;
+    }
+
+    /**
+     * @public
+     *
      * @returns {UVarInt32|null}
      */
     readUVarInt32() {
