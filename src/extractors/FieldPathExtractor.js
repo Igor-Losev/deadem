@@ -57,6 +57,8 @@ class FieldPathExtractor {
                 }
 
                 if (operation === FieldPathOperation.FINISH) {
+                    logger.debug(`Found operation [ ${FieldPathOperation.FINISH.code} ]. Finishing`);
+
                     break;
                 }
 
@@ -65,6 +67,8 @@ class FieldPathExtractor {
                 operation.executor(this._bitBuffer, fieldPath);
 
                 yield fieldPath.clone();
+
+                node = HuffmanTree.ROOT;
             } else {
                 node = next;
             }
