@@ -2,7 +2,8 @@
 
 const assert = require('node:assert/strict');
 
-const Server = require('./Server');
+const Entity = require('./Entity'),
+    Server = require('./Server');
 
 const Class = require('./fields/Class'),
     Serializer = require('./fields/Serializer');
@@ -20,6 +21,8 @@ class Demo {
             byId: new Map(),
             byName: new Map()
         };
+
+        this._entities = new Map();
 
         this._serializers = new Map();
         this._server = null;
@@ -44,6 +47,17 @@ class Demo {
      */
     get stringTableContainer() {
         return this._stringTableContainer;
+    }
+
+    /**
+     * @public
+     * @param {Number} id
+     * @returns {Buffer|null}
+     */
+    getClassBaselineById(id) {
+        assert(Number.isInteger(id));
+
+        return this._classBaselines.get(id) || null;
     }
 
     /**
@@ -88,6 +102,16 @@ class Demo {
 
         this._classes.byId.set(clazz.id, clazz);
         this._classes.byName.set(clazz.name, clazz);
+    }
+
+    /**
+     * @public
+     * @param {Entity} entity
+     */
+    registerEntity(entity) {
+        assert(entity instanceof Entity);
+
+        this._entities.set(entity.index, entity);
     }
 
     /**
