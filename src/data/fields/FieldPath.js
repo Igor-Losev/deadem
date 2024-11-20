@@ -9,13 +9,18 @@ class FieldPath {
      * @param {Array<Number>=} path
      * @param {Number=} length
      */
-    constructor(path = new Array(MAX_LENGTH), length = 0) {
-        this._path = path.fill(0, Math.max(0, length - 1), MAX_LENGTH);
-        this._length = length;
-    }
+    constructor(path, length) {
+        if (Array.isArray(path)) {
+            this._path = path;
+        } else {
+            this._path = getDefaultPath();
+        }
 
-    static get MAX_LENGTH() {
-        return MAX_LENGTH;
+        if (Number.isInteger(length)) {
+            this._length = length;
+        } else {
+            this._length = getDefaultLength();
+        }
     }
 
     get path() {
@@ -62,6 +67,18 @@ class FieldPath {
 
         return this._length;
     }
+}
+
+function getDefaultPath() {
+    const path = new Array(MAX_LENGTH).fill(0);
+
+    path[0] = -1;
+
+    return path;
+}
+
+function getDefaultLength() {
+    return 1;
 }
 
 module.exports = FieldPath;
