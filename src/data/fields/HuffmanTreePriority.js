@@ -34,7 +34,7 @@ class HuffmanTreePriority {
         assert(other instanceof HuffmanTreePriority);
 
         if (this._weight === other._weight) {
-            return this._sequence > other._sequence;
+            return this._sequence < other._sequence;
         }
 
         return this._weight > other._weight;
