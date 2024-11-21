@@ -6,7 +6,7 @@ const BitBuffer = require('./../data/buffer/BitBufferFast');
 
 const FieldPathOperation = require('./../data/enums/FieldPathOperation');
 
-const FieldPath = require('./../data/fields/FieldPath'),
+const FieldPathBuilder = require('./../data/fields/FieldPathBuilder'),
     HuffmanTree = require('./../data/fields/HuffmanTree');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
@@ -36,7 +36,7 @@ class FieldPathExtractor {
     *retrieve() {
         let node = HuffmanTree.ROOT;
 
-        let fieldPath = new FieldPath();
+        const fieldPathBuilder = new FieldPathBuilder();
 
         while (true) {
             let next;
@@ -64,9 +64,11 @@ class FieldPathExtractor {
 
                 logger.debug(`Executing operation [ ${operation.code} ]`);
 
-                operation.executor(this._bitBuffer, fieldPath);
+                operation.executor(this._bitBuffer, fieldPathBuilder);
 
-                yield fieldPath.clone();
+                const fieldPath = fieldPathBuilder.build();
+
+                yield fieldPath;
 
                 node = HuffmanTree.ROOT;
             } else {
