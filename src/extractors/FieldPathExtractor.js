@@ -6,7 +6,7 @@ const BitBuffer = require('./../data/buffer/BitBufferFast');
 
 const FieldPathOperation = require('./../data/enums/FieldPathOperation');
 
-const FieldPathBuilder = require('./../data/fields/FieldPathBuilder'),
+const FieldPathBuilder = require('../data/fields/path/FieldPathBuilder'),
     HuffmanTree = require('./../data/fields/HuffmanTree');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');

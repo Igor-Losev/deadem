@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 
 const BitBuffer = require('./../buffer/BitBufferFast');
 
-const FieldPathBuilder = require('./../fields/FieldPathBuilder');
+const FieldPathBuilder = require('../fields/path/FieldPathBuilder');
 
 const registry = {
     byCode: new Map()

@@ -24,6 +24,19 @@ class FieldPath {
     get length() {
         return this._length;
     }
+
+    /**
+     * @public
+     * @param {Number} index
+     * @returns {Number}
+     */
+    get(index) {
+        if (index >= this._length) {
+            throw new Error(`Unable to get path - index [ ${index} ] is out of bounds [ ${this._length} ]`);
+        }
+
+        return this._path[index];
+    }
 }
 
 module.exports = FieldPath;
