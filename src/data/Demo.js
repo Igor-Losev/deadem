@@ -6,7 +6,8 @@ const Class = require('./Class'),
     Entity = require('./Entity'),
     Server = require('./Server');
 
-const Serializer = require('./fields/Serializer');
+const Serializer = require('./fields/Serializer'),
+    SerializerKey = require('./fields/SerializerKey');
 
 const StringTableEvent = require('./enums/StringTableEvent'),
     StringTableType = require('./enums/StringTableType');
@@ -84,13 +85,13 @@ class Demo {
 
     /**
      * @public
-     * @param {String} key
+     * @param {SerializerKey} key
      * @returns {Serializer|null}
      */
     getSerializerByKey(key) {
-        assert(typeof key === 'string' && key.length > 0);
+        assert(key instanceof SerializerKey);
 
-        return this._serializers.get(key) || null;
+        return this._serializers.get(key.toString()) || null;
     }
 
     /**
@@ -121,9 +122,7 @@ class Demo {
     registerSerializer(serializer) {
         assert(serializer instanceof Serializer);
 
-        const key = Serializer.GET_KEY(serializer.name, serializer.version);
-
-        this._serializers.set(key, serializer);
+        this._serializers.set(serializer.key.toString(), serializer);
     }
 
     /**
