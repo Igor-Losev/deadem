@@ -2,11 +2,11 @@
 
 const assert = require('node:assert/strict');
 
-const Entity = require('./Entity'),
+const Class = require('./Class'),
+    Entity = require('./Entity'),
     Server = require('./Server');
 
-const Class = require('./fields/Class'),
-    Serializer = require('./fields/Serializer');
+const Serializer = require('./fields/Serializer');
 
 const StringTableEvent = require('./enums/StringTableEvent'),
     StringTableType = require('./enums/StringTableType');

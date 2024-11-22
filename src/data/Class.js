@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 
-const Serializer = require('./Serializer');
+const Serializer = require('./fields/Serializer');
 
 class Class {
     constructor(id, name, serializer) {
@@ -15,14 +15,26 @@ class Class {
         this._serializer = serializer;
     }
 
+    /**
+     * @public
+     * @returns {Number}
+     */
     get id() {
         return this._id;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get name() {
         return this._name;
     }
 
+    /**
+     * @public
+     * @returns {Serializer}
+     */
     get serializer() {
         return this._serializer;
     }

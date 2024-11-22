@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 
-const Class = require('./fields/Class');
+const Class = require('./Class');
 
 class Entity {
     constructor(index, serial, clazz) {
