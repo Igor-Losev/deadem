@@ -2,59 +2,62 @@
 
 const assert = require('node:assert/strict');
 
-const FieldType = require('./FieldType');
+const FieldPath = require('./path/FieldPath');
+
+const FieldDecoderInstructions = require('./FieldDecoderInstructions'),
+    FieldType = require('./FieldType');
 
 class Field {
+    /**
+     * @public
+     * @constructor
+     * @param {String} name
+     * @param {FieldType} type
+     * @param {String|null} serializer
+     * @param {String|null} serializerName
+     * @param {Number|null} serializerVersion
+     * @param {Array<String>} sendNode
+     * @param {FieldDecoderInstructions} decoderInstructions
+     */
     constructor(
-        varName,
-        varSerializer,
+        name,
+        type,
+        serializer,
+        serializerName,
+        serializerVersion,
         sendNode,
-        fieldSerializerName,
-        fieldSerializerVersion,
-        fieldType,
-        bitCount,
-        encoder,
-        encoderFlags,
-        valueLow,
-        valueHigh
+        decoderInstructions
     ) {
-        assert(typeof varName === 'string');
-        assert(typeof varSerializer === 'string' || varSerializer === null);
+        assert(typeof name === 'string');
+        assert(type instanceof FieldType);
+
+        assert(serializer === null || typeof serializer === 'string');
+        assert(serializerName === null || typeof serializerName === 'string');
+        assert(serializerVersion === null || Number.isInteger(serializerVersion));
 
         assert(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
 
-        assert(typeof fieldSerializerName === 'string' || fieldSerializerName === null);
-        assert(Number.isInteger(fieldSerializerVersion) || fieldSerializerVersion === null);
-        assert(fieldType instanceof FieldType);
+        assert(decoderInstructions instanceof FieldDecoderInstructions);
 
-        assert(Number.isInteger(bitCount) || bitCount === null);
+        this._name = name;
+        this._type = type;
 
-        assert(typeof encoder === 'string' || encoder === null);
-        assert(Number.isInteger(encoderFlags) || encoderFlags === null);
-
-        assert(Number.isInteger(valueLow) || valueLow === null);
-        assert(Number.isInteger(valueHigh) || valueHigh === null);
-
-        this._varName = varName;
-        this._varSerializer = varSerializer;
+        this._serializer = serializer;
+        this._serializerName = serializerName;
+        this._serializerVersion = serializerVersion;
 
         this._sendNode = sendNode;
 
-        this._fieldSerializerName = fieldSerializerVersion;
-        this._fieldSerializerVersion = fieldSerializerVersion;
-        this._fieldType = fieldType;
-
-        this._bitCount = bitCount;
-
-        this._encoder = encoder;
-        this._encoderFlags = encoderFlags;
-
-        this._valueLow = valueLow;
-        this._valueHigh = valueHigh;
+        this._decoderInstructions = decoderInstructions;
     }
 
-    get fieldType() {
-        return this._fieldType;
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {Number} index
+     */
+    getDecoder(fieldPath, index = 0) {
+
     }
 
     /**
@@ -67,42 +70,35 @@ class Field {
         const has = key => Object.hasOwn(fieldRaw, key);
         const get = (value, predicate, fallback) => predicate(value) ? value : fallback;
 
-        const varName = symbols[fieldRaw.varNameSym];
-        const varSerializer = get(symbols[fieldRaw.varSerializerSym], v => has('varSerializerSym') && typeof v === 'string', null);
+        const name = symbols[fieldRaw.varNameSym];
+        const type = FieldType.parse(symbols[fieldRaw.varTypeSym]);
 
-        const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s);
+        const serializer = get(symbols[fieldRaw.varSerializerSym], v => has('varSerializerSym') && typeof v === 'string', null);
+        const serializerName = get(symbols[fieldRaw.fieldSerializerNameSym], v => has('fieldSerializerNameSym') && typeof v === 'string', null);
+        const serializerVersion = get(fieldRaw.fieldSerializerVersion, v => has('fieldSerializerVersion') && Number.isInteger(v), null);
 
-        const fieldSerializerName = get(symbols[fieldRaw.fieldSerializerNameSym], v => has('fieldSerializerNameSym') && typeof v === 'string', null);
-        const fieldSerializerVersion = get(fieldRaw.fieldSerializerVersion, v => has('fieldSerializerVersion') && Number.isInteger(v), null);
-        const fieldType = FieldType.parse(symbols[fieldRaw.varTypeSym]);
+        const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s.length > 0);
 
         const bitCount = get(fieldRaw.bitCount, v => has('bitCount') && Number.isInteger(v), null);
 
         const encoder = get(symbols[fieldRaw.varEncoderSym], v => has('varEncoderSym') && typeof v === 'string', null);
         const encoderFlags = get(fieldRaw.encodeFlags, v => has('encodeFlags') && Number.isInteger(v), null);
 
-        const valueLow = get(fieldRaw.lowValue, v => has('lowValue') && Number.isInteger(v), null);
-        const valueHigh = get(fieldRaw.highValue, v => has('highValue') && Number.isInteger(v), null);
+        const valueLow = get(fieldRaw.lowValue, v => has('lowValue') && typeof v === 'number', null);
+        const valueHigh = get(fieldRaw.highValue, v => has('highValue') && typeof v === 'number', null);
+
+        const instructions = new FieldDecoderInstructions(encoder, encoderFlags, bitCount, valueLow, valueHigh);
 
         // TODO: polymorphic types
 
         return new Field(
-            varName,
-            varSerializer,
-
+            name,
+            type,
+            serializer,
+            serializerName,
+            serializerVersion,
             sendNode,
-
-            fieldSerializerName,
-            fieldSerializerVersion,
-            fieldType,
-
-            bitCount,
-
-            encoder,
-            encoderFlags,
-
-            valueLow,
-            valueHigh
+            instructions
         );
     }
 }
