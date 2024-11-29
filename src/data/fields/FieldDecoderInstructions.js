@@ -6,11 +6,11 @@ class FieldDecoderInstructions {
     /**
      * @public
      * @constructor
-     * @param {String=} encoder
-     * @param {Number=} encoderFlags
-     * @param {Number=} bitCount
-     * @param {Number=} valueLow
-     * @param {Number=} valueHigh
+     * @param {String|null} encoder
+     * @param {Number|null} encoderFlags
+     * @param {Number|null} bitCount
+     * @param {Number|null} valueLow
+     * @param {Number|null} valueHigh
      */
     constructor(encoder, encoderFlags, bitCount, valueLow, valueHigh) {
         assert(encoder === null || typeof encoder === 'string');
