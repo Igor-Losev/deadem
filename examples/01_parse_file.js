@@ -7,7 +7,7 @@ const fs = require('node:fs'),
 const Parser = require('./../src/Parser');
 
 (async () => {
-    const DEMO_PATH = path.resolve(__dirname, './../demos/21438112.dem');
+    const DEMO_PATH = path.resolve(__dirname, './../demos/35244871.dem');
     const PARSER_THREADS = 4;
 
     const buffer = fs.readFileSync(DEMO_PATH);
