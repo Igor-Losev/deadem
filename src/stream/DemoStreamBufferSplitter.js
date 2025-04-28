@@ -7,12 +7,15 @@ const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCa
 
 const MEGABYTE = 1024 * 1024;
 
+/**
+ * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).
+ */
 class DemoStreamBufferSplitter extends Stream.Transform {
     /**
      * @public
      * @constructor
      * @param {Parser} parser
-     * @param {Number} maxChunkSize
+     * @param {Number} maxChunkSize - The maximum size of each chunk in bytes.
      */
     constructor(parser, maxChunkSize = MEGABYTE) {
         super();

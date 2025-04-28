@@ -8,6 +8,10 @@ const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketCoordinator');
 
+/**
+ * Given a stream of {@link DemoPacket}, ensures that they are passed
+ * through in the correct sequence order.
+ */
 class DemoStreamPacketCoordinator extends Stream.Transform {
     /**
      * @public

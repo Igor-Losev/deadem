@@ -17,6 +17,14 @@ const WorkerTask = require('./../workers/WorkerTask');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
+/**
+ * Given a stream of {@link DemoPacketRaw}, parses its payload and
+ * passes through instances of {@link DemoPacket}. Packets that
+ * may hypothetically include large amounts of data (e.g. DEM_PACKET,
+ * DEM_SIGNON_PACKET, DEM_FULL_PACKET) are processed through
+ * asynchronous worker threads. As a result, the order of the {@link DemoPacket}
+ * instances is not guaranteed.
+ */
 class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @constructor

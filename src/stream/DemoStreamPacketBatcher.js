@@ -1,14 +1,20 @@
 const assert = require('assert/strict'),
     Stream = require('node:stream');
 
+/**
+ * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.
+ * The batching strategy is based on two factors:
+ *  1. The total byte size of the included messages. If it exceeds a threshold, the batch is passed through.
+ *  2. The amount of time (in milliseconds) pending. If it exceeds a threshold, the batch is passed through.
+ */
 class DemoStreamPacketBatcher extends Stream.Transform {
     /**
      * @public
      * @constructor
      *
      * @param {Parser} parser
-     * @param {Number} thresholdSizeBytes
-     * @param {Number} thresholdWaitMilliseconds
+     * @param {Number} thresholdSizeBytes - The threshold for the total byte size of the messages in the batch.
+     * @param {Number} thresholdWaitMilliseconds - The threshold for the amount of time (in milliseconds) that the batch has been pending.
      */
     constructor(parser, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });

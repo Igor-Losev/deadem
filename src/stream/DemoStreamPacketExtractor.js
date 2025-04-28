@@ -10,6 +10,12 @@ const logger = LoggerProvider.getLogger('DemoStreamPacketExtractor');
 
 const DEMO_HEADER_SIZE_BYTES = 16;
 
+/**
+ * Extracts one or more {@link DemoPacketRaw} from a given buffer.
+ * Packets may vary in size, so if a chunk doesn't contain the complete data,
+ * the {@link DemoStreamPacketExtractor} will wait for subsequent chunks to complete
+ * the extraction of the {@link DemoPacketRaw}.
+ */
 class DemoStreamPacketExtractor extends Stream.Transform {
     /**
      * @public
