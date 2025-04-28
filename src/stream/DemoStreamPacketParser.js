@@ -78,6 +78,10 @@ class DemoStreamPacketParser extends Stream.Transform {
             const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
             const demoTick = demoPacketRaw.tick.value;
 
+            if (demoCommandType === null) {
+                throw new Error(`Unable to parse DemoCommandType [ ${demoPacketRaw.getCommandType()} ]`);
+            }
+
             const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, demoCommandType.proto.decode(data));
 
             this.push(demoPacket);
