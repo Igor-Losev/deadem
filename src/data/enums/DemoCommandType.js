@@ -136,6 +136,10 @@ class DemoCommandType {
     static get DEM_ANIMATION_HEADER() {
         return demAnimationHeader;
     }
+
+    static get DEM_RECOVERY() {
+        return demRecovery;
+    }
 }
 
 const CDemoAnimationData = ProtoProvider.DEMO.lookupType('CDemoAnimationData');
@@ -147,6 +151,7 @@ const CDemoCustomDataCallbacks = ProtoProvider.DEMO.lookupType('CDemoCustomDataC
 const CDemoFileHeader = ProtoProvider.DEMO.lookupType('CDemoFileHeader');
 const CDemoFileInfo = ProtoProvider.DEMO.lookupType('CDemoFileInfo');
 const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
+const CDemoRecovery = ProtoProvider.DEMO.lookupType('CDemoRecovery');
 const CDemoSaveGame = ProtoProvider.DEMO.lookupType('CDemoSaveGame');
 const CDemoSendTables = ProtoProvider.DEMO.lookupType('CDemoSendTables');
 const CDemoSpawnGroups = ProtoProvider.DEMO.lookupType('CDemoSpawnGroups');
@@ -174,5 +179,6 @@ const demSaveGame = new DemoCommandType('DEM_SaveGame', 14, CDemoSaveGame);
 const demSpawnGroups = new DemoCommandType('DEM_SpawnGroups', 15, CDemoSpawnGroups);
 const demAnimationData = new DemoCommandType('DEM_AnimationData', 16, CDemoAnimationData);
 const demAnimationHeader = new DemoCommandType('DEM_AnimationHeader', 17, CDemoAnimationHeader);
+const demRecovery = new DemoCommandType('DEM_Recovery', 18, CDemoRecovery);
 
 module.exports = DemoCommandType;
