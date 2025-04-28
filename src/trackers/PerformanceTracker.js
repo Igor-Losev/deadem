@@ -3,12 +3,16 @@
 const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory'),
     PerformanceTrackRecord = require('./../data/trackers/PerformanceTrackRecord');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
+const Tracker = require('./Tracker');
 
-const logger = LoggerProvider.getLogger('PerformanceTracker');
+class PerformanceTracker extends Tracker {
+    /**
+     * @constructor
+     * @param {Logger} logger
+     */
+    constructor(logger) {
+        super(logger);
 
-class PerformanceTracker {
-    constructor() {
         this._registry = new Map();
     }
 
@@ -17,7 +21,7 @@ class PerformanceTracker {
      * @param {PerformanceTrackerCategory} category
      */
     start(category) {
-        logger.debug(`Starting tracking of the category [ ${category.code} ]`);
+        this._logger.trace(`Starting tracking of the category [ ${category.code} ]`);
 
         const record = this._registry.get(category) || new PerformanceTrackRecord(category);
 
@@ -31,7 +35,7 @@ class PerformanceTracker {
      * @param {PerformanceTrackerCategory} category
      */
     end(category) {
-        logger.debug(`Finishing tracking of the category [ ${category.code} ]`);
+        this._logger.trace(`Finishing tracking of the category [ ${category.code} ]`);
 
         const record = this._registry.get(category);
 
@@ -46,10 +50,10 @@ class PerformanceTracker {
      * @public
      */
     print() {
-        const format = n => n.toLocaleString('en-US');
-        const highlight = s => `----- ${s} -----`;
+        const open = this._highlight('<PerformanceTracker>');
+        const close = this._highlight('</PerformanceTracker>');
 
-        logger.info(highlight('<PerformanceTracker>'));
+        this._logger.debug(open);
 
         const walk = (category, depth = 0) => {
             const record = this._registry.get(category) || null;
@@ -57,7 +61,7 @@ class PerformanceTracker {
             if (record !== null) {
                 const prefix = `${'\t'.repeat(depth)}`;
 
-                logger.info(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${format(record.accumulator)} ] ms, [ ${format(record.count)} ] run(s) with [ ${format(Math.round(record.average * 1000) / 1000)} ] ms in average`);
+                this._logger.debug(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${this._formatNumber(record.accumulator)} ] ms, [ ${this._formatNumber(record.count)} ] run(s) with [ ${this._formatNumber(Math.round(record.average * 1000) / 1000)} ] ms in average`);
             }
 
             category.categories.forEach((subcategory) => {
@@ -67,7 +71,7 @@ class PerformanceTracker {
 
         walk(PerformanceTrackerCategory.PARSER);
 
-        logger.info(highlight('</PerformanceTracker>'));
+        this._logger.debug(close);
     }
 }
 

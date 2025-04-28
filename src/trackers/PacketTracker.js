@@ -2,16 +2,16 @@
 
 const PacketTrackRecord = require('./../data/trackers/PacketTrackRecord');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
+const Tracker = require('./Tracker');
 
-const logger = LoggerProvider.getLogger('PacketTracker');
-
-class PacketTracker {
+class PacketTracker extends Tracker {
     /**
-     * @public
      * @constructor
+     * @param {Logger} logger
      */
-    constructor() {
+    constructor(logger) {
+        super(logger);
+
         this._registry = new Map();
     }
 
@@ -50,11 +50,12 @@ class PacketTracker {
      * @public
      */
     print() {
-        const format = n => n.toLocaleString('en-US');
-        const highlight = s => `----- ${s} -----`;
-        const log = (type, count, depth = 0) => logger.info(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${format(count)} ] packet(s)`);
+        const open = this._highlight('<PacketTracker>');
+        const close = this._highlight('</PacketTracker>');
 
-        logger.info(highlight('<PacketTracker>'));
+        const log = (type, count, depth = 0) => this._logger.debug(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${this._formatNumber(count)} ] packet(s)`);
+
+        this._logger.debug(open);
 
         const keys = Array.from(this._registry.keys());
 
@@ -78,7 +79,7 @@ class PacketTracker {
             }
         });
 
-        logger.info(highlight('</PacketTracker>'));
+        this._logger.debug(close);
     }
 }
 

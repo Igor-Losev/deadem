@@ -16,10 +16,15 @@ const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
 
 const LoggerProvider = require('./providers/LoggerProvider.instance');
 
-const PacketTracker = require('./trackers/PacketTracker'),
+const MemoryTracker = require('./trackers/MemoryTracker'),
+    PacketTracker = require('./trackers/PacketTracker'),
     PerformanceTracker = require('./trackers/PerformanceTracker');
 
 const WorkerManager = require('./workers/WorkerManager');
+
+const loggerForMemory = LoggerProvider.getLogger('Tracker/Memory');
+const loggerForPacket = LoggerProvider.getLogger('Tracker/Packet');
+const loggerForPerformance = LoggerProvider.getLogger('Tracker/Performance');
 
 const logger = LoggerProvider.getLogger('Parser');
 
@@ -47,8 +52,9 @@ class Parser {
         ];
 
         this._trackers = {
-            packet: new PacketTracker(),
-            performance: new PerformanceTracker()
+            memory: new MemoryTracker(loggerForMemory),
+            packet: new PacketTracker(loggerForPacket),
+            performance: new PerformanceTracker(loggerForPerformance)
         };
 
         this._demo = new Demo();
@@ -151,8 +157,13 @@ class Parser {
 
         this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
 
+        this._trackers.memory.print();
         this._trackers.packet.print();
         this._trackers.performance.print();
+
+        this._trackers.memory.dispose();
+        this._trackers.packet.dispose();
+        this._trackers.performance.dispose();
 
         this._workerManager.terminate();
     }
