@@ -169,6 +169,24 @@ class BitBuffer {
     }
 
     /**
+     * Reads a signed variable-length 64-bit integer from the buffer.
+     *
+     * @public
+     * @returns {BigInt}
+     */
+    readVarInt64() {
+        const unsigned = this.readUVarInt64();
+
+        let value = unsigned >> 1n;
+
+        if (value & 1n) {
+            value = ~value;
+        }
+
+        return value;
+    }
+
+    /**
      * Reads an unsigned variable-length integer from the buffer.
      * Each byte contributes 7 bits to the result; the highest bit indicates continuation.
      *
@@ -195,6 +213,42 @@ class BitBuffer {
         }
 
         return value >>> 0;
+    }
+
+    /**
+     * Reads an unsigned variable-length 64-bit integer from the buffer.
+     * Each byte contributes 7 bits to the result; the highest bit indicates continuation.
+     *
+     * The maximum amount of bytes possible here is 10. Here is why:
+     *      1) 64-bit integer itself takes 8 bytes;
+     *      2) Each byte includes a continuation bit (the highest bit). Therefore,
+     *         a 9th byte is required. Since the 9th byte also has a continuation bit,
+     *         it adds up to 9 bytes + 1 continuation bit, resulting in a total of 10 bytes
+     *         to represent the maximum possible 64-bit integer.
+     *
+     * @public
+     * @returns {BigInt}
+     */
+    readUVarInt64() {
+        let continuation = true;
+        let iterations = 0n;
+        let value = 0n;
+
+        while (continuation) {
+            const byte = BigInt(this.readUInt8());
+
+            if (iterations > 9n || (iterations === 9n && byte > 1n)) {
+                throw new Error('Overflow');
+            }
+
+            value |= (byte & 127n) << (7n * iterations);
+
+            continuation = (byte & 128n) === 128n;
+
+            iterations++;
+        }
+
+        return value;
     }
 
     /**

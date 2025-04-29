@@ -145,7 +145,7 @@ describe('BitBuffer.readVarInt32()', () => {
     const buffer = Buffer.from([
         0x7f,
         0x81, 0x7f,
-        0xff, 0xff, 0x6f, 0xff, 0x7f
+        0xf0, 0xf0, 0xf0, 0xf0, 0x7f
     ]);
 
     const reader = new BitBuffer(buffer);
@@ -166,11 +166,36 @@ describe('BitBuffer.readVarInt32()', () => {
         });
     });
 
-    describe('When reading Int32 from [ 0xff, 0xff, 0x6f, 0xff, 0x7f ]', () => {
-        test('It should return -917504', () => {
+    describe('When reading Int32 from [ 0xf0, 0xf0, 0xf0, 0xf0, 0x7f ]', () => {
+        test('It should return -15852488', () => {
             const value = reader.readVarInt32();
 
-            expect(value).toBe(-917504);
+            expect(value).toBe(-15852488);
+        });
+    });
+});
+
+describe('BitBuffer.readVarInt64()', () => {
+    const buffer = Buffer.from([
+        0x7f,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01
+    ]);
+
+    const reader = new BitBuffer(buffer);
+
+    describe('When reading Int64 from [ 0x7f ]', () => {
+        test('It should return -64n', () => {
+            const value = reader.readVarInt64();
+
+            expect(value).toBe(-64n);
+        });
+    });
+
+    describe('When reading Int64 from [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01 ]', () => {
+        test('It should return 4607430648700738616n', () => {
+            const value = reader.readVarInt64();
+
+            expect(value).toBe(-9223372036854775808n);
         });
     });
 });
@@ -205,6 +230,31 @@ describe('BitBuffer.readUVarInt32()', () => {
             const value = reader.readUVarInt32();
 
             expect(value).toBe(4294967295);
+        });
+    });
+});
+
+describe('BitBuffer.readUVarInt64()', () => {
+    const buffer = Buffer.from([
+        0x7f,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01
+    ]);
+
+    const reader = new BitBuffer(buffer);
+
+    describe('When reading UInt64 from [ 0x7f ]', () => {
+        test('It should return 127n', () => {
+            const value = reader.readUVarInt64();
+
+            expect(value).toBe(127n);
+        });
+    });
+
+    describe('When reading UInt64 from [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01 ]', () => {
+        test('It should return 9223372036854775807n', () => {
+            const value = reader.readUVarInt64();
+
+            expect(value).toBe(18446744073709551615n);
         });
     });
 });
