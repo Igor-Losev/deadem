@@ -59,6 +59,18 @@ class BitBuffer {
     }
 
     /**
+     * Reads 32 bits from the buffer and converts them to a float using little-endian format.
+     *
+     * @public
+     * @returns {number} The float value interpreted from the 32-bit buffer.
+     */
+    readFloat() {
+        const buffer = this._read(32);
+
+        return buffer.readFloatLE();
+    }
+
+    /**
      * Reads a null-terminated string from the buffer, byte by byte,
      * until a zero byte is found or the optional length limit is reached.
      *
