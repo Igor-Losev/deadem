@@ -8,7 +8,6 @@ class BitBuffer {
     /**
      * @abstract
      * @constructor
-     *
      * @param {Buffer|Uint8Array} buffer
      */
     constructor(buffer) {
@@ -25,8 +24,9 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Returns the number of remaining bits available to read in the buffer.
      *
+     * @public
      * @returns {Number}
      */
     getUnreadCount() {
@@ -34,19 +34,23 @@ class BitBuffer {
     }
 
     /**
-     * @public
-     * @param {Number} numberOfBits
+     * Reads the specified number of bits from the buffer.
+     * Returns a Buffer with a length of Math.ceil(numberOfBits / 8).
      *
-     * @returns {Buffer}
+     * @public
+     * @param {number} numberOfBits - The number of bits to read.
+     * @returns {Buffer} A buffer containing the read bits.
      */
     read(numberOfBits) {
         return this._read(numberOfBits);
     }
 
     /**
-     * @public
+     * Reads a single bit from the buffer.
+     * Returns either 0 or 1.
      *
-     * @returns {number}
+     * @public
+     * @returns {number} The bit value (0 or 1).
      */
     readBit() {
         const buffer = this._read(1);
@@ -55,10 +59,12 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Reads a null-terminated string from the buffer, byte by byte,
+     * until a zero byte is found or the optional length limit is reached.
      *
-     * @param {number=} length
-     * @returns {string}
+     * @public
+     * @param {number=} length - Maximum number of bytes to read.
+     * @returns {string} The decoded string.
      */
     readString(length) {
         let result = '';
@@ -81,9 +87,10 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Reads an unsigned 8-bit integer (1 byte) from the buffer.
      *
-     * @returns {number}
+     * @public
+     * @returns {number} The read unsigned integer (0–255).
      */
     readUInt8() {
         const buffer = this._read(BITS_PER_BYTE);
@@ -92,9 +99,11 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Reads an unsigned variable-length integer encoded in Source 2's custom bit-packed format.
+     * The initial 6 bits determine how many additional bits to read.
      *
-     * @returns {number}
+     * @public
+     * @returns {number} The decoded unsigned integer.
      */
     readUVarInt() {
         let result = this._read(6).readUInt8();
@@ -130,8 +139,39 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Reads an unsigned variable-length integer from the buffer.
+     * Each byte contributes 7 bits to the result; the highest bit indicates continuation.
      *
+     * @public
+     * @returns {number} The decoded unsigned integer.
+     */
+    readUVarInt32() {
+        let bitsAvailable = this.getUnreadCount();
+        let value = 0;
+        let offset = 0;
+
+        while (bitsAvailable >= BITS_PER_BYTE && offset < UVarInt32.MAXIMUM_SIZE_BYTES) {
+            const byte = this.readUInt8();
+
+            bitsAvailable -= BITS_PER_BYTE;
+
+            value |= (byte & 127) << (7 * offset);
+
+            offset += 1;
+
+            if ((byte & 128) !== 128) {
+                break;
+            }
+        }
+
+        return value >>> 0;
+    }
+
+    /**
+     * Reads a variable-length unsigned integer representing a part of {@link FieldPath}.
+     * The number of bits read depends on a series of flags (prefix bits).
+     *
+     * @public
      * @returns {Number}
      */
     readUVarIntFieldPath() {
@@ -140,13 +180,13 @@ class BitBuffer {
         flag = this.readBit();
 
         if (flag) {
-            return this._read(2).readUInt8();
+            return this._read(2).readUInt8() >>> 0;
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return this._read(4).readUInt8();
+            return this._read(4).readUInt8() >>> 0;
         }
 
         flag = this.readBit();
@@ -165,44 +205,8 @@ class BitBuffer {
     }
 
     /**
-     * @public
+     * Resets internal byte and bit pointers to the beginning of the buffer.
      *
-     * @returns {UVarInt32|null}
-     */
-    readUVarInt32() {
-        let bitsAvailable = this.getUnreadCount();
-        let valid = false;
-        let value = 0;
-        let offset = 0;
-
-        while (bitsAvailable >= BITS_PER_BYTE && offset < UVarInt32.MAXIMUM_SIZE_BYTES) {
-            const byte = this.readUInt8();
-
-            bitsAvailable -= BITS_PER_BYTE;
-
-            value |= (byte & 127) << (7 * offset);
-
-            offset += 1;
-
-            if ((byte & 128) !== 128) {
-                valid = true;
-
-                break;
-            }
-        }
-
-        let parsed;
-
-        if (valid) {
-            parsed = new UVarInt32(value >>> 0, offset);
-        } else {
-            parsed = null;
-        }
-
-        return parsed;
-    }
-
-    /**
      * @public
      */
     reset() {
@@ -213,7 +217,6 @@ class BitBuffer {
     /**
      * @protected
      * @param {Number} numberOfBits
-     *
      * @returns {Buffer}
      */
     _read(numberOfBits) {
