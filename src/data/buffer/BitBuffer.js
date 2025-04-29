@@ -168,7 +168,7 @@ class BitBuffer {
     }
 
     /**
-     * Reads a variable-length unsigned integer representing a part of {@link FieldPath}.
+     * Reads a variable-length unsigned integer representing a part of the {@link FieldPath}.
      * The number of bits read depends on a series of flags (prefix bits).
      *
      * @public
