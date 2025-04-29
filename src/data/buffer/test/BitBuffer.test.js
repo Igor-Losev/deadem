@@ -140,3 +140,71 @@ describe('BitBuffer.readFloat()', () => {
         });
     });
 });
+
+describe('BitBuffer.readVarInt32()', () => {
+    const buffer = Buffer.from([
+        0x7f,
+        0x81, 0x7f,
+        0xff, 0xff, 0x6f, 0xff, 0x7f
+    ]);
+
+    const reader = new BitBuffer(buffer);
+
+    describe('When reading Int32 from [ 0x7f ]', () => {
+        test('It should return -64', () => {
+            const value = reader.readVarInt32();
+
+            expect(value).toBe(-64);
+        });
+    });
+
+    describe('When reading Int32 from [ 0x81, 0x7f ]', () => {
+        test('It should return 8128', () => {
+            const value = reader.readVarInt32();
+
+            expect(value).toBe(8128);
+        });
+    });
+
+    describe('When reading Int32 from [ 0xff, 0xff, 0x6f, 0xff, 0x7f ]', () => {
+        test('It should return -917504', () => {
+            const value = reader.readVarInt32();
+
+            expect(value).toBe(-917504);
+        });
+    });
+});
+
+describe('BitBuffer.readUVarInt32()', () => {
+    const buffer = Buffer.from([
+        0x7f,
+        0x81, 0x7f,
+        0xff, 0xff, 0xff, 0xff, 0x7f
+    ]);
+
+    const reader = new BitBuffer(buffer);
+
+    describe('When reading UInt32 from [ 0x7f ]', () => {
+        test('It should return 127', () => {
+            const value = reader.readUVarInt32();
+
+            expect(value).toBe(127);
+        });
+    });
+
+    describe('When reading UInt32 from [ 0x81, 0x7f ]', () => {
+        test('It should return 16257', () => {
+            const value = reader.readUVarInt32();
+
+            expect(value).toBe(16257);
+        });
+    });
+
+    describe('When reading UInt32 from [ 0xff, 0xff, 0xff, 0xff, 0x7f ]', () => {
+        test('It should return 4294967295', () => {
+            const value = reader.readUVarInt32();
+
+            expect(value).toBe(4294967295);
+        });
+    });
+});

@@ -151,6 +151,24 @@ class BitBuffer {
     }
 
     /**
+     * Reads a signed variable-length integer from the buffer.
+     *
+     * @public
+     * @returns {number} The decoded signed integer.
+     */
+    readVarInt32() {
+        const unsigned = this.readUVarInt32();
+
+        let value = unsigned >> 1;
+
+        if (value & 1) {
+            value = ~value;
+        }
+
+        return value;
+    }
+
+    /**
      * Reads an unsigned variable-length integer from the buffer.
      * Each byte contributes 7 bits to the result; the highest bit indicates continuation.
      *
