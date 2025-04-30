@@ -142,6 +142,8 @@ class DemoStreamPacketParser extends Stream.Transform {
                         const messagePacketType = MessagePacketType.parseById(messageType) || null;
 
                         if (messagePacketType === null) {
+                            this._parser.packetTracker.handleUnknownMessagePacket(messageType);
+
                             return;
                         }
 
