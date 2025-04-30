@@ -1,12 +1,15 @@
 const MAXIMUM_SIZE_BYTES = 5;
 
+/**
+ * Represents an unsigned variable-length 32-bit integer
+ * and tracks how many bytes were used to encode it.
+ */
 class UVarInt32 {
     /**
      * @public
      * @constructor
-     *
-     * @param {Number} value
-     * @param {Number} size
+     * @param {Number} value - The decoded unsigned integer value.
+     * @param {Number} size - The number of bytes consumed during decoding.
      */
     constructor(value, size) {
         this._value = value;
@@ -26,11 +29,12 @@ class UVarInt32 {
     }
 
     /**
+     * Parses a UVarInt32 from the provided buffer.
+     *
      * @public
      * @static
-     * @param {Buffer} buffer
-     *
-     * @returns {UVarInt32|null}
+     * @param {Buffer} buffer - The buffer from which to parse the value.
+     * @returns {UVarInt32|null} - The parsed UVarInt32 or null if parsing failed.
      */
     static parse(buffer) {
         let continuation = true;
