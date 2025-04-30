@@ -45,7 +45,7 @@ class StringTableEntryExtractor {
             if (increment) {
                 index += 1;
             } else {
-                index += this._bitBuffer.readUVarInt32().value + 2;
+                index += this._bitBuffer.readUVarInt32() + 2;
             }
 
             const hasKey = this._bitBuffer.readBit() === 1;

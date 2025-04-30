@@ -19,14 +19,8 @@ class MessagePacketRawExtractor {
 
         while (this._bitBuffer.getUnreadCount() >= BitBuffer.BITS_PER_BYTE) {
             const type = this._bitBuffer.readUVarInt();
-
             const size = this._bitBuffer.readUVarInt32();
-
-            if (size === null) {
-                break;
-            }
-
-            const payload = this._bitBuffer.read(size.value * BitBuffer.BITS_PER_BYTE);
+            const payload = this._bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
 
             yield new MessagePacketRaw(type, size, payload);
         }
