@@ -4,7 +4,7 @@ class MessagePacketRaw {
      * @constructor
      *
      * @param {Number} type
-     * @param {UVarInt32} size
+     * @param {Number} size
      * @param {Buffer} payload
      */
     constructor(type, size, payload) {
