@@ -44,7 +44,7 @@ class BitBuffer {
 
         switch (buffer.byteLength) {
             case 1:
-                return buffer.readFloatLE();
+                return buffer.readUInt8();
             case 2:
                 return buffer.readUInt16LE();
             case 3:
