@@ -1,5 +1,7 @@
 'use strict';
 
+const assert = require('assert');
+
 const UVarInt32 = require('./../UVarInt32');
 
 const BITS_PER_BYTE = 8;
@@ -21,6 +23,37 @@ class BitBuffer {
 
     static get BITS_PER_BYTE() {
         return BITS_PER_BYTE;
+    }
+
+    /**
+     * Reads an unsigned 32-bit integer from the given buffer, supporting buffers of length 1 to 4 bytes.
+     * Automatically uses the appropriate method based on buffer size:
+     * - 1 byte: reads as UInt8
+     * - 2 bytes: reads as UInt16LE
+     * - 3 bytes: pads to 4 bytes and reads as UInt32LE
+     * - 4 bytes: reads as UInt32LE
+     *
+     * @public
+     * @static
+     * @param {Buffer} buffer - The buffer to read from. Must be between 1 and 4 bytes long.
+     * @returns {number} - The unsigned integer read from the buffer.
+     * @throws {Error} If the buffer size is not between 1 and 4 bytes.
+     */
+    static readUInt32LE(buffer) {
+        assert(buffer instanceof Buffer);
+
+        switch (buffer.byteLength) {
+            case 1:
+                return buffer.readFloatLE();
+            case 2:
+                return buffer.readUInt16LE();
+            case 3:
+                return Buffer.concat([ buffer, Buffer.alloc(1) ]).readUInt32LE();
+            case 4:
+                return buffer.readUInt32LE();
+            default:
+                throw new Error(`Unexpected buffer size [ ${buffer.byteLength} ]`);
+        }
     }
 
     /**
@@ -46,6 +79,20 @@ class BitBuffer {
     }
 
     /**
+     * Reads an angle encoded in `n` bits from the buffer.
+     *
+     * @param {number} n - The number of bits.
+     * @returns {number} - The angle.
+     */
+    readAngle(n) {
+        const buffer = this._read(n);
+
+        const value = BitBuffer.readUInt32LE(buffer);
+
+        return (value * 360) / (1 << n);
+    }
+
+    /**
      * Reads a single bit from the buffer.
      * Returns either 0 or 1.
      *
@@ -59,6 +106,47 @@ class BitBuffer {
     }
 
     /**
+     * Reads a coordinate.
+     *
+     * @public
+     * @returns {number}
+     */
+    readCoord() {
+        let value = 0;
+
+        const hasInteger = this.readBit() === 1;
+        const hasFractional = this.readBit() === 1;
+
+        if (hasInteger || hasFractional) {
+            const sign = this.readBit() === 1;
+
+            let integer = 0;
+
+            if (hasInteger) {
+                const buffer = this.read(14);
+
+                integer = buffer.readUInt16LE() + 1;
+            }
+
+            let fractional = 0;
+
+            if (hasFractional) {
+                const buffer = this.read(5);
+
+                fractional = buffer.readUInt8();
+            }
+
+            value = integer + fractional * (1 / (1 << 5));
+
+            if (sign) {
+                value = -value;
+            }
+        }
+
+        return value;
+    }
+
+    /**
      * Reads 32 bits from the buffer and converts them to a float using little-endian format.
      *
      * @public
@@ -68,6 +156,66 @@ class BitBuffer {
         const buffer = this._read(32);
 
         return buffer.readFloatLE();
+    }
+
+    /**
+     * Reads a normal value (normalized float in the range [-1.0, 1.0]) from the buffer.
+     * The value is encoded using 11 bits, where the first bit indicates the sign
+     * and the remaining 10 bits represent the magnitude.
+     *
+     * The returned value is scaled to fit the range from -1.0 to 1.0 based on the
+     * bits read, and the sign is applied if necessary.
+     *
+     * @public
+     * @returns {number} The normalized value in the range [-1.0, 1.0].
+     */
+    readNormal() {
+        const sign = this.readBit() === 1;
+        const length = this.read(11);
+
+        const value = length * (1 / ((1 << 11) - 1));
+
+        if (sign) {
+            return -value;
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     * Reads a 3-bit normal vector from the buffer.
+     *
+     * @public
+     * @returns {number[]} An array containing the X, Y, and Z components of the normal vector.
+     */
+    readNormal3Bit() {
+        const vector = [ 0, 0, 0 ];
+
+        const hasX = this.readBit() === 1;
+        const hasY = this.readBit() === 1;
+
+        if (hasX) {
+            vector[0] = this.readNormal();
+        }
+
+        if (hasY) {
+            vector[1] = this.readNormal();
+        }
+
+        const negativeZ = this.readBit() === 1;
+        const sum = Math.pow(vector[0], 2) + Math.pow(vector[1], 2);
+
+        if (sum < 1) {
+            vector[2] = Math.sqrt(1 - sum);
+        } else {
+            vector[2] = 0;
+        }
+
+        if (negativeZ) {
+            vector[2] = -vector[2];
+        }
+
+        return vector;
     }
 
     /**
@@ -219,7 +367,7 @@ class BitBuffer {
      * Reads an unsigned variable-length 64-bit integer from the buffer.
      * Each byte contributes 7 bits to the result; the highest bit indicates continuation.
      *
-     * The maximum amount of bytes possible here is 10. Here is why:
+     * The maximum amount of bytes read possible here is 10. Here is why:
      *      1) 64-bit integer itself takes 8 bytes;
      *      2) Each byte includes a continuation bit (the highest bit). Therefore,
      *         a 9th byte is required. Since the 9th byte also has a continuation bit,
