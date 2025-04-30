@@ -52,12 +52,12 @@ class FieldDefinition {
 
         const groups = REGEX.exec(varType).groups;
 
-        const base = groups.base;
+        const baseType = groups.base;
         const generic = groups.generic ? FieldDefinition.parse(groups.generic) : null;
         const count = groups.count ? parseInt(groups.count) : null;
         const pointer = groups.pointer === '*';
 
-        return new FieldDefinition(base, generic, count, pointer);
+        return new FieldDefinition(baseType, generic, count, pointer);
     }
 }
 
