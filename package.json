@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": "true",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "dependencies": {
     "log4js": "^6.9.1",
