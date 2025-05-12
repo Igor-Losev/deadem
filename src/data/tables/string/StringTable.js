@@ -27,14 +27,23 @@ class StringTable {
         };
     }
 
+    /**
+     * @returns {StringTableType}
+     */
     get type() {
         return this._type;
     }
 
+    /**
+     * @returns {number}
+     */
     get flags() {
         return this._flags;
     }
 
+    /**
+     * @returns {StringTableInstructions|null}
+     */
     get instructions() {
         return this._instructions;
     }
