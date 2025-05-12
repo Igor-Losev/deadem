@@ -69,9 +69,9 @@ class StringTableEntryExtractor {
                 } else {
                     key = this._bitBuffer.readString();
                 }
-            } // if there is no key?
 
-            history[i] = key;
+                history[i] = key;
+            }
 
             const hasValue = this._bitBuffer.readBit() === 1;
 
@@ -89,9 +89,9 @@ class StringTableEntryExtractor {
                     if (this._table.instructions.usingVarintBitcounts) {
                         bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
                     } else {
-                        const buffer = Buffer.concat([ this._bitBuffer.read(17), Buffer.alloc(1) ]);
+                        const bitSizeBuffer = this._bitBuffer.read(17);
 
-                        bitSize = buffer.readUint32LE() * BitBuffer.BITS_PER_BYTE;
+                        bitSize = BitBuffer.readUInt32LE(bitSizeBuffer) * BitBuffer.BITS_PER_BYTE;
                     }
                 }
 
