@@ -329,13 +329,7 @@ class BitBuffer {
     readVarInt32() {
         const unsigned = this.readUVarInt32();
 
-        let value = unsigned >> 1;
-
-        if (value & 1) {
-            value = ~value;
-        }
-
-        return value;
+        return (unsigned >> 1) ^ -(unsigned & 1);
     }
 
     /**
@@ -347,13 +341,7 @@ class BitBuffer {
     readVarInt64() {
         const unsigned = this.readUVarInt64();
 
-        let value = unsigned >> 1n;
-
-        if (value & 1n) {
-            value = ~value;
-        }
-
-        return value;
+        return (unsigned >> 1n) ^ -(unsigned & 1n);
     }
 
     /**
