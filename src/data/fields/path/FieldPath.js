@@ -21,6 +21,9 @@ class FieldPath {
         return this._path;
     }
 
+    /**
+     * @returns {Number}
+     */
     get length() {
         return this._length;
     }
@@ -36,6 +39,14 @@ class FieldPath {
         }
 
         return this._path[index];
+    }
+
+    /**
+     * @public
+     * @returns {string}
+     */
+    toString() {
+        return this._path.slice(0, this._length).join('|');
     }
 }
 
