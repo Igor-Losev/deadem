@@ -57,6 +57,16 @@ class BitBuffer {
     }
 
     /**
+     * Returns the number of read bits.
+     *
+     * @public
+     * @returns {number}
+     */
+    getReadCount() {
+        return this._pointers.byte * BITS_PER_BYTE + this._pointers.bit;
+    }
+
+    /**
      * Returns the number of remaining bits available to read in the buffer.
      *
      * @public
@@ -147,6 +157,18 @@ class BitBuffer {
     }
 
     /**
+     * Reads a precise coordinate encoded in 20 bits.
+     *
+     * @public
+     * @returns {number}
+     */
+    readCoordPrecise() {
+        const value = BitBuffer.readUInt32LE(this._read(20));
+
+        return value * (360 / (1 << 20)) - 180;
+    }
+
+    /**
      * Reads 32 bits from the buffer and converts them to a float using little-endian format.
      *
      * @public
@@ -171,7 +193,7 @@ class BitBuffer {
      */
     readNormal() {
         const sign = this.readBit() === 1;
-        const length = this.read(11);
+        const length = this.read(11).readUInt16LE();
 
         const value = length * (1 / ((1 << 11) - 1));
 
@@ -430,7 +452,7 @@ class BitBuffer {
         flag = this.readBit();
 
         if (flag) {
-            return Buffer.concat([ this._read(17), Buffer.alloc(1) ]).readUInt32LE() >>> 0;
+            return BitBuffer.readUInt32LE(this._read(17)) >>> 0;
         }
 
         return this._read(31).readUInt32LE() >>> 0;
