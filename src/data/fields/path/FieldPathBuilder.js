@@ -35,7 +35,7 @@ class FieldPathBuilder {
             throw new Error(`Unable to add value [ ${value} ] - index [ ${index} ] is bigger than path length [ ${this._length} ]`);
         }
 
-        this._path[this._pointer] += value;
+        this._path[index] += value;
     }
 
     /**
@@ -56,7 +56,7 @@ class FieldPathBuilder {
         }
 
         for (let i = 0; i < count; i++) {
-            this._path[this._pointer - i] = 0;
+            this._path[this._pointer] = 0;
 
             this._length -= 1;
             this._pointer -= 1;
