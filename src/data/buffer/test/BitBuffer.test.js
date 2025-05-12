@@ -159,10 +159,10 @@ describe('BitBuffer.readVarInt32()', () => {
     });
 
     describe('When reading Int32 from [ 0x81, 0x7f ]', () => {
-        test('It should return 8128', () => {
+        test('It should return -8129', () => {
             const value = reader.readVarInt32();
 
-            expect(value).toBe(8128);
+            expect(value).toBe(-8129);
         });
     });
 
