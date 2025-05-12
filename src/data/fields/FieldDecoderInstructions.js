@@ -26,22 +26,44 @@ class FieldDecoderInstructions {
         this._valueHigh = valueHigh;
     }
 
+    /**
+     * @returns {String|null}
+     */
     get encoder() {
         return this._encoder;
     }
 
+    /**
+     * @param {String|null} value
+     */
+    set encoder(value) {
+        return this._encoder = value;
+    }
+
+    /**
+     * @returns {Number|null}
+     */
     get encoderFlags() {
         return this._encoderFlags;
     }
 
+    /**
+     * @returns {Number|null}
+     */
     get bitCount() {
         return this._bitCount;
     }
 
+    /**
+     * @returns {Number|null}
+     */
     get valueLow() {
         return this._valueLow;
     }
 
+    /**
+     * @returns {Number|null}
+     */
     get valueHigh() {
         return this._valueHigh;
     }
