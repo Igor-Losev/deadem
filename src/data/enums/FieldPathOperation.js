@@ -152,7 +152,7 @@ const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDel
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
 }));
-const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D0', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitBuffer, fieldPathBuilder) => {
+const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D1', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
     fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
     fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
@@ -257,8 +257,6 @@ const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTo
             fieldPathBuilder.add(bitBuffer.readUVarInt32());
         }
     }
-
-    fieldPathBuilder.add(bitBuffer.readUVarInt32());
 }));
 
 const nonTopoComplex = new FieldPathOperation('NON_TOPO_COMPLEX', 'NonTopoComplex', 76, 36, executor((bitBuffer, fieldPathBuilder) => {
