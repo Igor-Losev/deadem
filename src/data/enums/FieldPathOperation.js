@@ -204,7 +204,7 @@ const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitBuff
 const pushNAndNonTopological = new FieldPathOperation('PUSH_N_!N', 'PushNAndNonTopological', 310, 26, executor((bitBuffer, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
         if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readUVarInt32() + 1, i);
+            fieldPathBuilder.add(bitBuffer.readVarInt32() + 1, i);
         }
     }
 
@@ -247,22 +247,22 @@ const popNPlusOne = new FieldPathOperation('POP_N_PLUS_1', 'PopNPlusOne', 0, 33,
 }));
 const popNPlusN = new FieldPathOperation('POP_N_PLUS_N', 'PopNPlusN', 0, 34, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.drop(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.add(bitBuffer.readUVarInt32());
+    fieldPathBuilder.add(bitBuffer.readVarInt32());
 }));
 const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTopographical', 1, 35, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.drop(bitBuffer.readUVarIntFieldPath());
 
     for (let i = 0; i < fieldPathBuilder.length; i++) {
         if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readUVarInt32());
+            fieldPathBuilder.add(bitBuffer.readVarInt32(), i);
         }
     }
 }));
 
 const nonTopoComplex = new FieldPathOperation('NON_TOPO_COMPLEX', 'NonTopoComplex', 76, 36, executor((bitBuffer, fieldPathBuilder) => {
-    for (let i = 0; i < fieldPathBuilder.length; i++) { // ? CHANGED
+    for (let i = 0; i < fieldPathBuilder.length; i++) {
         if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readUVarInt32(), i);
+            fieldPathBuilder.add(bitBuffer.readVarInt32(), i);
         }
     }
 }));
@@ -272,7 +272,7 @@ const nonTopoPenultimatePlusOne = new FieldPathOperation('NON_TOPO_PEN_PLUS_1', 
 const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', 'NonTopoComplexPack4Bits', 99, 38, executor((bitBuffer, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
         if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.read(4).readUInt8() - 7);
+            fieldPathBuilder.add(bitBuffer.read(4).readUInt8() - 7, i);
         }
     }
 }));
