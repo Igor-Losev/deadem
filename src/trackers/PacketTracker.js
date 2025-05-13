@@ -1,5 +1,7 @@
 'use strict';
 
+const MessagePacketType = require('./../data/enums/MessagePacketType');
+
 const PacketTrackRecord = require('./../data/trackers/PacketTrackRecord');
 
 const Tracker = require('./Tracker');
@@ -89,7 +91,11 @@ class PacketTracker extends Tracker {
                 subKeys.forEach((subKey) => {
                     const subRecord = record.records.get(subKey);
 
-                    log(`${key}|${subKey}`, subRecord.count, 1);
+                    const packetType = MessagePacketType.parseById(subKey);
+
+                    const suffix = packetType ? `${packetType.code}` : '';
+
+                    log(`${key}|${subKey} ] - [ ${suffix}`, subRecord.count, 1);
                 });
             }
         });
