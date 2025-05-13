@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('assert/strict'),
-    Stream = require('stream');
+const Stream = require('stream');
 
 const BitBuffer = require('./../data/buffer/BitBufferFast');
 
@@ -9,16 +8,26 @@ const DemoCommandType = require('./../data/enums/DemoCommandType'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const Class = require('./../data/fields/Class'),
-    Field = require('./../data/fields/Field'),
-    Serializer = require('./../data/fields/Serializer');
+const Field = require('./../data/fields/Field'),
+    FieldDecoderInstructions = require('./../data/fields/FieldDecoderInstructions'),
+    FieldDefinition = require('../data/fields/FieldDefinition'),
+    Serializer = require('./../data/fields/Serializer'),
+    SerializerKey = require('./../data/fields/SerializerKey');
 
-const Server = require('./../data/Server');
+const FieldPathExtractor = require('./../extractors/FieldPathExtractor');
+
+const Class = require('../data/Class'),
+    Entity = require('./../data/Entity'),
+    Server = require('./../data/Server');
 
 const ProtoProvider = require('./../providers/ProtoProvider.instance');
 
 const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
 
+/**
+ * Given a stream of {@link DemoPacket}, processes them sequentially,
+ * updating the state of the {@link Parser} accordingly.
+ */
 class DemoStreamPacketAnalyzer extends Stream.Transform {
     /**
      * @public
@@ -92,6 +101,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 break;
             case DemoCommandType.DEM_ANIMATION_HEADER:
                 break;
+            case DemoCommandType.DEM_RECOVERY:
+                break;
         }
 
         this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
@@ -105,8 +116,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      */
     _handleDemClassInfo(classInfo) {
         classInfo.classes.forEach((data) => {
-            const key = Serializer.GET_KEY(data.networkName, 0);
-
+            const key = new SerializerKey(data.networkName, 0);
             const serializer = this._parser.demo.getSerializerByKey(key);
 
             if (serializer === null) {
@@ -164,35 +174,99 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         });
     }
 
+    /**
+     * @protected
+     * @param {CDemoSendTables} messageData
+     */
     _handleDemSendTables(messageData) {
         const bitBuffer = new BitBuffer(messageData.data);
 
         const size = bitBuffer.readUVarInt32();
-        const payload = bitBuffer.read(size.value * BitBuffer.BITS_PER_BYTE);
+        const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
 
         const decoded = CSVCMsg_FlattenedSerializer.decode(payload);
 
-        const fields = [ ];
+        const fields = new Map();
+        const symbols = decoded.symbols;
 
-        decoded.fields.forEach((fieldRaw) => {
-            const field = Field.parse(fieldRaw, decoded.symbols);
+        const has = (target, key) => Object.hasOwn(target, key);
+        const get = (value, predicate, fallback) => predicate(value) ? value : fallback;
 
-            fields.push(field);
-        });
-
+        // Step 1: initialize serializers
         decoded.serializers.forEach((serializerRaw) => {
-            const serializerFields = serializerRaw.fieldsIndex.reduce((accumulator, fieldIndex) => {
-                accumulator.push(fields[fieldIndex]);
-
-                return accumulator;
-            }, [ ]);
-
             const name = decoded.symbols[serializerRaw.serializerNameSym];
             const version = serializerRaw.serializerVersion;
 
-            const serializer = new Serializer(name, version, serializerFields);
+            const serializer = new Serializer(name, version, [ ]);
 
             this._parser.demo.registerSerializer(serializer);
+        });
+
+        // Step 1: adding fields
+        decoded.serializers.forEach((serializerRaw) => {
+            const name = decoded.symbols[serializerRaw.serializerNameSym];
+            const version = serializerRaw.serializerVersion;
+
+            const serializerKey = new SerializerKey(name, version);
+
+            const serializer = this._parser.demo.getSerializerByKey(serializerKey);
+
+            serializerRaw.fieldsIndex.forEach((fieldIndex) => {
+                let field = fields.get(fieldIndex) || null;
+
+                if (field === null) {
+                    const fieldRaw = decoded.fields[fieldIndex] || null;
+
+                    if (fieldRaw === null) {
+                        throw new Error(`fieldRaw with index [ ${fieldIndex} ] doesn't exist`);
+                    }
+
+                    let fieldSerializer = null;
+
+                    if (has(fieldRaw, 'fieldSerializerNameSym') && has(fieldRaw, 'fieldSerializerVersion')) {
+                        const serializerName = symbols[fieldRaw.fieldSerializerNameSym];
+                        const serializerVersion = fieldRaw.fieldSerializerVersion;
+
+                        const serializerKey = new SerializerKey(serializerName, serializerVersion);
+
+                        const existing = this._parser.demo.getSerializerByKey(serializerKey);
+
+                        if (existing === null) {
+                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${serializerKey.toString()} ] is not registered`);
+                        }
+
+                        fieldSerializer = existing;
+                    }
+
+                    const name = symbols[fieldRaw.varNameSym];
+                    const definition = FieldDefinition.parse(symbols[fieldRaw.varTypeSym]);
+
+                    const decoderInstructions = new FieldDecoderInstructions(
+                        get(symbols[fieldRaw.varEncoderSym], v => has(fieldRaw, 'varEncoderSym') && typeof v === 'string', null),
+                        get(fieldRaw.encodeFlags, v => has(fieldRaw, 'encodeFlags') && Number.isInteger(v), null),
+                        get(fieldRaw.bitCount, v => has(fieldRaw, 'bitCount') && Number.isInteger(v), null),
+                        get(fieldRaw.lowValue, v => has(fieldRaw, 'lowValue') && typeof v === 'number', null),
+                        get(fieldRaw.highValue, v => has(fieldRaw, 'highValue') && typeof v === 'number', null)
+                    );
+
+                    const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s.length > 0);
+
+                    // TODO: polymorphic types
+
+                    // patch
+                    if ([
+                        'm_flSimulationTime'
+                    ].includes(name)) {
+                        decoderInstructions.encoder = 'simtime';
+                    }
+
+                    field = new Field(name, definition, sendNode, decoderInstructions, fieldSerializer);
+                }
+
+                serializer.push(field);
+
+                fields.set(fieldIndex, field);
+            });
         });
     }
 
@@ -208,12 +282,18 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         const bitBuffer = new BitBuffer(message.entityData);
 
         if (message.legacyIsDelta) {
-            //
+            // throw new Error(`Unhandled CSVCMsg_PacketEntities.legacyIsDelta === true`);
+        }
+
+        if (message.updateBaseline) {
+            throw new Error('Unhandled CSVCMsg_PacketEntities.updateBaseline === true');
+        }
+
+        if (this._parser.demo.server === null) {
+            throw new Error('CSVCMsg_PacketEntities found, but server data is missing');
         }
 
         let index = -1;
-
-        // console.log(message);
 
         for (let i = 0; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
@@ -222,28 +302,37 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
             switch (command) {
                 case 0: { // Update
+                    const entity = this._parser.demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    readFields(bitBuffer, entity.class.serializer);
+
                     break;
                 }
                 case 1: { // Leave
+                    const entity = this._parser.demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    // TODO: entity.active ?
+
                     break;
                 }
                 case 2: { // Create
-                    if (this._parser.demo.server === null) {
-                        throw new Error(`Server info not found`);
-                    }
-
                     const classIdSizeBits = this._parser.demo.server.classIdSizeBits;
 
                     const bufferForClassId = bitBuffer.read(classIdSizeBits);
                     const bufferForSerial = bitBuffer.read(17);
 
-                    const tailForClassId = Buffer.alloc(Math.floor((BitBuffer.BITS_PER_BYTE * 4 - classIdSizeBits) / BitBuffer.BITS_PER_BYTE));
-                    const tailForSerial = Buffer.alloc(1);
-
                     const ignored = bitBuffer.readUVarInt32();
 
-                    const classId = Buffer.concat([ bufferForClassId, tailForClassId ]).readUInt32LE();
-                    const serial = Buffer.concat([ bufferForSerial, tailForSerial ]).readUInt32LE();
+                    const classId = BitBuffer.readUInt32LE(bufferForClassId);
+                    const serial = BitBuffer.readUInt32LE(bufferForSerial);
 
                     const clazz = this._parser.demo.getClassById(classId);
 
@@ -251,21 +340,42 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         throw new Error(`Class not found [ ${classId} ]`);
                     }
 
-                    // console.log(clazz);
-                    // console.log(serial);
+                    const baseline = this._parser.demo.getClassBaselineById(classId);
 
-                    // throw new Error(123);
+                    if (baseline === null) {
+                        throw new Error(`Baseline not found [ ${classId} ]`);
+                    }
+
+                    const entity = new Entity(index, serial, clazz);
+
+                    this._parser.demo.registerEntity(entity);
+
+                    readFields(new BitBuffer(baseline), clazz.serializer);
+                    readFields(bitBuffer, clazz.serializer);
+
+                    // ---- TODO: Update entity state
 
                     break;
                 }
                 case 3: { // Delete
+                    const entity = this._parser.demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    // TODO: entity.active ?
+
+                    const deleted = this._parser.demo.deleteEntity(index);
+
+                    if (deleted === null) {
+                        throw new Error(`Received delete entity command. However, entity with index [ ${index} ] doesn't exist`);
+                    }
+
                     break;
                 }
             }
         }
-
-        // throw new Error(1);
-
     }
 
     /**
@@ -277,6 +387,23 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._parser.demo.registerServer(server);
     }
+}
+
+function readFields(bitBuffer, serializer) {
+    const extractor = new FieldPathExtractor(bitBuffer);
+    const generator = extractor.retrieve();
+
+    const fieldPaths = [ ];
+
+    for (const fieldPath of generator) {
+        fieldPaths.push(fieldPath);
+    }
+
+    fieldPaths.forEach((fieldPath) => {
+        const decoder = serializer.getDecoderForFieldPath(fieldPath);
+
+        const value = decoder.decode(bitBuffer);
+    });
 }
 
 module.exports = DemoStreamPacketAnalyzer;
