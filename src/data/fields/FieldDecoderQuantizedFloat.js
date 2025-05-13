@@ -30,20 +30,20 @@ class FieldDecoderQuantizedFloat {
         assert(typeof high === 'number' && !Number.isNaN(high));
         assert(Number.isInteger(flags));
 
+        this._low = low;
+        this._high = high;
+
+        this._quantizationMultiplier = 0;
+        this._dequantizationStep = 0;
+
         if (bitCount === 0 || bitCount >= 32) {
             this._bitCount = 32;
-            this._low = low;
-            this._high = high;
             this._flags = flags;
 
             return;
         }
 
         this._bitCount = bitCount;
-
-        this._low = low;
-        this._high = high;
-
         this._flags = getFlags.call(this, flags);
 
         let steps = (1 << bitCount) >>> 0;
@@ -64,28 +64,13 @@ class FieldDecoderQuantizedFloat {
 
             range = (1 << deltaLog2) >>> 0;
 
-            let bitCount = this._bitCount;
-
-            // Find the minimum number of bits needed to represent a new range
-            while (((1 << bitCount) >>> 0) > range) {
-                bitCount += 1;
-            }
-
-            // Update bitCount and steps if needed
-            if (bitCount > this._bitCount) {
-                this._bitCount = bitCount;
-
-                steps = (1 << bitCount) >>> 0;
-            }
-
+            this._bitCount = Math.max(bitCount, deltaLog2);
+            steps = (1 << bitCount) >>> 0;
             offset = range / steps;
 
             // Adjust the high value to prevent overflow during decoding
             this._high = this._low + range - offset;
         }
-
-        this._quantizationMultiplier = 0;
-        this._dequantizationStep = 0;
 
         assignMultipliers.call(this, steps);
 
