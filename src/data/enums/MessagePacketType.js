@@ -62,6 +62,11 @@ class MessagePacketType {
     }
 
     static get NET_TICK() { return netTick; }
+    static get NET_SET_CON_VAR() { return netSetConVar; }
+    static get NET_SIGNON_STATE() { return netSignonState; }
+    static get NET_SPAWN_GROUP_LOAD() { return netSpawnGroupLoad; }
+    static get NET_SPAWN_GROUP_SET_CREATION_TICK() { return netSpawnGroupSetCreationTick; }
+
     static get SVC_SERVER_INFO() { return svcServerInfo; }
     static get SVC_CLASS_INFO() { return svcClassInfo; }
     static get SVC_CREATE_STRING_TABLE() { return svcCreateStringTable; }
@@ -69,6 +74,7 @@ class MessagePacketType {
     static get SVC_CLEAR_ALL_STRING_TABLES() { return svcClearAllStringTables; }
     static get SVC_PACKET_ENTITIES() { return svcPacketEntities; }
     static get SVC_USER_COMMANDS() { return svcUserCommands; }
+
     static get CITADEL_USER_MESSAGE_DAMAGE() { return citadelUserMessageDamage; }
 }
 
@@ -91,10 +97,17 @@ const CSVCMsg_ClassInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClassIn
 
 // Network Base Types
 const CNETMsg_Tick = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_Tick'),
+    CNETMsg_SetConVar = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_SetConVar'),
     CNETMsg_SignonState = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_SignonState'),
+    CNETMsg_SpawnGroupLoad = ProtoProvider.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_Load'),
+    CNETMsg_SpawnGroupSetCreationTick = ProtoProvider.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_SetCreationTick'),
     CSVCMsgList_GameEvents = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CSVCMsgList_GameEvents');
 
-const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMsg_Tick); // 4
+const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMsg_Tick), // 4
+    netSetConVar = new MessagePacketType('net_SetConVar', ENET_Messages.net_SetConVar, CNETMsg_SetConVar), // 6
+    netSignonState = new MessagePacketType('net_SignonState', ENET_Messages.net_SignonState, CNETMsg_SignonState), // 7
+    netSpawnGroupLoad = new MessagePacketType('net_SpawnGroup_Load', ENET_Messages.net_SpawnGroup_Load, CNETMsg_SpawnGroupLoad), // 8
+    netSpawnGroupSetCreationTick = new MessagePacketType('net_SpawnGroup_SetCreationTick', ENET_Messages.net_SpawnGroup_SetCreationTick, CNETMsg_SpawnGroupSetCreationTick) // 11
 
 const svcServerInfo = new MessagePacketType('svc_ServerInfo', ESVC_Messages.svc_ServerInfo, CSVCMsg_ServerInfo), // 40
     svcClassInfo = new MessagePacketType('svc_ClassInfo', ESVC_Messages.svc_ClassInfo, CSVCMsg_ClassInfo), // 42
