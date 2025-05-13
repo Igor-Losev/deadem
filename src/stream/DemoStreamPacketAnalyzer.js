@@ -141,7 +141,12 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
             switch (messagePacket.type) {
                 case MessagePacketType.NET_TICK:
+                case MessagePacketType.NET_SET_CON_VAR:
+                case MessagePacketType.NET_SIGNON_STATE:
+                case MessagePacketType.NET_SPAWN_GROUP_LOAD:
+                case MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK:
                     break;
+
                 case MessagePacketType.SVC_SERVER_INFO:
                     this._handleMessageServerInfo(messagePacket.data);
 
@@ -158,6 +163,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                     this._parser.demo.stringTableContainer.handleUpdate(messagePacket.data);
 
                     break;
+                case MessagePacketType.SVC_VOICE_INIT:
+                    break;
                 case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
                     this._parser.demo.stringTableContainer.handleClear();
 
@@ -166,6 +173,22 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                     this._handleMessagePacketEntities(messagePacket.data);
 
                     break;
+                case MessagePacketType.SVC_HLTV_STATUS:
+                    break;
+                case MessagePacketType.SVC_USER_COMMANDS:
+                    break;
+
+                case MessagePacketType.USER_MESSAGE_PARTICLE_MANAGER:
+                case MessagePacketType.USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL:
+                    break;
+
+                case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST:
+                case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT:
+                case MessagePacketType.GE_SOS_START_SOUND_EVENT:
+                case MessagePacketType.GE_SOS_STOP_SOUND_EVENT:
+                case MessagePacketType.GE_SOS_SET_SOUND_EVENT_PARAMS:
+                    break;
+
                 case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
                     break;
                 default:
