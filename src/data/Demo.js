@@ -52,6 +52,23 @@ class Demo {
 
     /**
      * @public
+     * @param {Number} index
+     * @returns {Entity|null}
+     */
+    deleteEntity(index) {
+        assert(Number.isInteger(index));
+
+        const entity = this._entities.get(index) || null;
+
+        if (entity !== null) {
+            this._entities.delete(index);
+        }
+
+        return entity;
+    }
+
+    /**
+     * @public
      * @param {Number} id
      * @returns {Buffer|null}
      */
@@ -81,6 +98,16 @@ class Demo {
         assert(typeof name === 'string' && name.length > 0);
 
         return this._classes.byName.get(name) || null;
+    }
+
+    /**
+     * @public
+     * @param {Number} index
+     */
+    getEntity(index) {
+        assert(Number.isInteger(index));
+
+        return this._entities.get(index) || null;
     }
 
     /**
