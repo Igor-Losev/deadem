@@ -68,13 +68,14 @@ class MessagePacketType {
     static get SVC_UPDATE_STRING_TABLE() { return svcUpdateStringTable; }
     static get SVC_CLEAR_ALL_STRING_TABLES() { return svcClearAllStringTables; }
     static get SVC_PACKET_ENTITIES() { return svcPacketEntities; }
+    static get SVC_USER_COMMANDS() { return svcUserCommands; }
     static get CITADEL_USER_MESSAGE_DAMAGE() { return citadelUserMessageDamage; }
 }
 
 // Enums
-const CitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
-    NET_Messages = ProtoProvider.NETWORK_BASE_TYPES.getEnum('NET_Messages'),
-    SVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages');
+const ECitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
+    ENET_Messages = ProtoProvider.NETWORK_BASE_TYPES.getEnum('NET_Messages'),
+    ESVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages');
 
 // Citadel User Messages
 const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_Damage');
@@ -83,22 +84,26 @@ const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupTyp
 const CSVCMsg_ClassInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClassInfo'),
     CSVCMsg_ClearAllStringTables = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClearAllStringTables'),
     CSVCMsg_CreateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_CreateStringTable'),
-    CSVCMsg_UpdateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UpdateStringTable'),
     CSVCMsg_PacketEntities = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_PacketEntities'),
-    CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ServerInfo');
+    CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ServerInfo'),
+    CSVCMsg_UpdateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UpdateStringTable'),
+    CSVCMsg_UserCommands = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UserCommands');
 
 // Network Base Types
 const CNETMsg_Tick = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_Tick'),
     CNETMsg_SignonState = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_SignonState'),
     CSVCMsgList_GameEvents = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CSVCMsgList_GameEvents');
 
-const netTick = new MessagePacketType('net_Tick', 4, CNETMsg_Tick),
-    svcServerInfo = new MessagePacketType('svc_ServerInfo', 40, CSVCMsg_ServerInfo),
-    svcClassInfo = new MessagePacketType('svc_ClassInfo', 42, CSVCMsg_ClassInfo),
-    svcCreateStringTable = new MessagePacketType('svc_CreateStringTable', 44, CSVCMsg_CreateStringTable),
-    svcUpdateStringTable = new MessagePacketType('svc_UpdateStringTable', 45, CSVCMsg_UpdateStringTable),
-    svcClearAllStringTables = new MessagePacketType('svc_ClearAllStringTables', 51, CSVCMsg_ClearAllStringTables),
-    svcPacketEntities = new MessagePacketType('svc_PacketEntities', 55, CSVCMsg_PacketEntities),
-    citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', 300, CCitadelUserMessage_Damage);
+const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMsg_Tick); // 4
+
+const svcServerInfo = new MessagePacketType('svc_ServerInfo', ESVC_Messages.svc_ServerInfo, CSVCMsg_ServerInfo), // 40
+    svcClassInfo = new MessagePacketType('svc_ClassInfo', ESVC_Messages.svc_ClassInfo, CSVCMsg_ClassInfo), // 42
+    svcCreateStringTable = new MessagePacketType('svc_CreateStringTable', ESVC_Messages.svc_CreateStringTable, CSVCMsg_CreateStringTable), // 44
+    svcUpdateStringTable = new MessagePacketType('svc_UpdateStringTable', ESVC_Messages.svc_UpdateStringTable, CSVCMsg_UpdateStringTable), // 45
+    svcClearAllStringTables = new MessagePacketType('svc_ClearAllStringTables', ESVC_Messages.svc_ClearAllStringTables, CSVCMsg_ClearAllStringTables), // 51
+    svcPacketEntities = new MessagePacketType('svc_PacketEntities', ESVC_Messages.svc_PacketEntities, CSVCMsg_PacketEntities), // 55
+    svcUserCommands = new MessagePacketType('svc_UserCmds', ESVC_Messages.svc_UserCmds, CSVCMsg_UserCommands); // 76
+
+const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECitadelUserMessageIds.k_EUserMsg_Damage, CCitadelUserMessage_Damage); // 300
 
 module.exports = MessagePacketType;
