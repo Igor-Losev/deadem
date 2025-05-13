@@ -15,14 +15,23 @@ class Entity {
         this._class = clazz;
     }
 
+    /**
+     * @returns {Number}
+     */
     get index() {
         return this._index;
     }
 
+    /**
+     * @returns {Number}
+     */
     get serial() {
         return this._serial;
     }
 
+    /**
+     * @returns {Class}
+     */
     get class() {
         return this._class;
     }
