@@ -130,17 +130,17 @@ const pushOneLeftDeltaNRightNonZeroPack8Bits = new FieldPathOperation('PUSH_1L_D
 }));
 
 const pushTwoLeftDeltaZero = new FieldPathOperation('PUSH_2L_D0', 'PushTwoLeftDeltaZero', 0, 13, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushTwoPack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_2P5BL_D0', 'PushTwoPack5BitsLeftDeltaZero', 0, 14, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
     fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
 }));
 const pushThreeLeftDeltaZero = new FieldPathOperation('PUSH_3L_D0', 'PushThreeLeftDeltaZero', 0, 15, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushThreePack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_3P5BL_D0', 'PushThreePack5BitsLeftDeltaZero', 0, 16, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
@@ -149,47 +149,47 @@ const pushThreePack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_3P5BL_D0', 
 }));
 const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDeltaOne', 0, 17, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D1', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
 }));
 const pushThreeLeftDeltaOne = new FieldPathOperation('PUSH_3L_D1', 'PushThreeLeftDeltaOne', 0, 19, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushThreePack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_3P5BL_D1', 'PushThreePack5BitsLeftDeltaOne', 0, 20, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
 }));
 const pushTwoLeftDeltaN = new FieldPathOperation('PUSH_2L_DN', 'PushTwoLeftDeltaN', 0, 21, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()) // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()) // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushTwoPack5BitsLeftDeltaN = new FieldPathOperation('PUSH_2P5BL_DN', 'PushTwoPack5BitsLeftDeltaN', 0, 22, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
 }));
 const pushThreeLeftDeltaN = new FieldPathOperation('PUSH_3L_DN', 'PushThreeLeftDeltaN', 0, 23, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()) // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()) // ? +=
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()) // ? +=
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushThreePack5BitsLeftDeltaN = new FieldPathOperation('PUSH_3P5BL_DN', 'PushThreePack5BitsLeftDeltaN', 0, 24, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8()); // ? +=
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
 }));
 
 const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitBuffer, fieldPathBuilder) => {
@@ -198,7 +198,7 @@ const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitBuff
     fieldPathBuilder.add(bitBuffer.readUVarInt());
 
     for (let i = 0; i < count; i++) {
-        fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath()); // ? +=
+        fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
     }
 }));
 const pushNAndNonTopological = new FieldPathOperation('PUSH_N_!N', 'PushNAndNonTopological', 310, 26, executor((bitBuffer, fieldPathBuilder) => {

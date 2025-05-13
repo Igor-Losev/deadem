@@ -147,16 +147,6 @@ const uint16 = new FieldDecoderStrategy('uint16', f => FieldDecoder.UINT_32);
 const uint32 = new FieldDecoderStrategy('uint32', f => FieldDecoder.UINT_32);
 const uint64 = new FieldDecoderStrategy('uint64', getDecoderForUnsignedInt64());
 
-// default
-const AnimLoopMode_t = new FieldDecoderStrategy('AnimLoopMode_t', f => FieldDecoder.UINT_32);
-const EAbilityBucketType = new FieldDecoderStrategy('EAbilityBucketType', f => FieldDecoder.UINT_32);
-const EAbilitySlots_t = new FieldDecoderStrategy('EAbilitySlots_t', f => FieldDecoder.UINT_32);
-const EntityPlatformTypes_t = new FieldDecoderStrategy('EntityPlatformTypes_t', f => FieldDecoder.UINT_32);
-const MoveCollide_t = new FieldDecoderStrategy('MoveCollide_t', f => FieldDecoder.UINT_32);
-const MoveType_t = new FieldDecoderStrategy('MoveType_t', f => FieldDecoder.UINT_32);
-const RenderMode_t = new FieldDecoderStrategy('RenderMode_t', f => FieldDecoder.UINT_32);
-const RenderFx_t = new FieldDecoderStrategy('RenderFx_t', f => FieldDecoder.UINT_32);
-
 /**
  * @param {number} dimension
  * @returns {function(Field): FieldDecoder}
