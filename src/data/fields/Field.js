@@ -2,105 +2,175 @@
 
 const assert = require('node:assert/strict');
 
-const FieldPath = require('./path/FieldPath');
+const FieldModel = require('./../enums/FieldModel');
 
-const FieldDecoderInstructions = require('./FieldDecoderInstructions'),
-    FieldType = require('./FieldType');
+const FieldDecoder = require('./FieldDecoder'),
+    FieldDecoderInstructions = require('./FieldDecoderInstructions'),
+    FieldDecoderStrategy = require('./FieldDecoderStrategy'),
+    FieldDefinition = require('./FieldDefinition');
 
 class Field {
     /**
      * @public
      * @constructor
      * @param {String} name
-     * @param {FieldType} type
-     * @param {String|null} serializer
-     * @param {String|null} serializerName
-     * @param {Number|null} serializerVersion
+     * @param {FieldDefinition} definition
      * @param {Array<String>} sendNode
      * @param {FieldDecoderInstructions} decoderInstructions
+     * @param {Serializer|null} serializer
      */
     constructor(
         name,
-        type,
-        serializer,
-        serializerName,
-        serializerVersion,
+        definition,
         sendNode,
-        decoderInstructions
+        decoderInstructions,
+        serializer
     ) {
         assert(typeof name === 'string');
-        assert(type instanceof FieldType);
-
-        assert(serializer === null || typeof serializer === 'string');
-        assert(serializerName === null || typeof serializerName === 'string');
-        assert(serializerVersion === null || Number.isInteger(serializerVersion));
-
+        assert(definition instanceof FieldDefinition);
         assert(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
-
         assert(decoderInstructions instanceof FieldDecoderInstructions);
 
         this._name = name;
-        this._type = type;
-
-        this._serializer = serializer;
-        this._serializerName = serializerName;
-        this._serializerVersion = serializerVersion;
-
+        this._definition = definition;
         this._sendNode = sendNode;
-
         this._decoderInstructions = decoderInstructions;
+        this._serializer = serializer || null;
+
+        this._decoder = null;
+        this._decoderBase = null;
+        this._decoderChild = null;
+
+        const model = classify.call(this);
+
+        this._changeModel(model);
+    }
+
+    /**
+     * @returns {FieldDecoderInstructions}
+     */
+    get decoderInstructions() {
+        return this._decoderInstructions;
     }
 
     /**
      * @public
      * @param {FieldPath} fieldPath
      * @param {Number} index
+     * @returns {FieldDecoder}
      */
-    getDecoder(fieldPath, index = 0) {
+    getDecoderForFieldPath(fieldPath, index = 0) {
+        switch (this._model) {
+            case FieldModel.ARRAY_FIXED:
+                return this._decoder;
+            case FieldModel.ARRAY_VARIABLE:
+                if (fieldPath.length - 1 === index) {
+                    return this._decoderChild;
+                }
 
+                return this._decoderBase;
+            case FieldModel.SIMPLE:
+                return this._decoder;
+            case FieldModel.TABLE_FIXED:
+                if (fieldPath.length === index) {
+                    return this._decoderBase;
+                }
+
+                return this._serializer.getDecoderForFieldPath(fieldPath, index);
+            case FieldModel.TABLE_VARIABLE:
+                if (fieldPath.length - 1 >= index + 1) {
+                    return this._serializer.getDecoderForFieldPath(fieldPath, index + 1);
+                }
+
+                return this._decoderBase;
+            default:
+                throw new Error(`Unhandled model [ ${this._model} ]`);
+        }
     }
 
     /**
-     * @public
-     * @static
-     * @param {ProtoFlattenedSerializerField_t} fieldRaw
-     * @param {Array<String>} symbols
+     * @protected
+     * @param {FieldModel} model
      */
-    static parse(fieldRaw, symbols) {
-        const has = key => Object.hasOwn(fieldRaw, key);
-        const get = (value, predicate, fallback) => predicate(value) ? value : fallback;
+    _changeModel(model) {
+        assert(model instanceof FieldModel);
 
-        const name = symbols[fieldRaw.varNameSym];
-        const type = FieldType.parse(symbols[fieldRaw.varTypeSym]);
+        switch (model) {
+            case FieldModel.ARRAY_FIXED:
+                this._decoder = getDecoder.call(this);
 
-        const serializer = get(symbols[fieldRaw.varSerializerSym], v => has('varSerializerSym') && typeof v === 'string', null);
-        const serializerName = get(symbols[fieldRaw.fieldSerializerNameSym], v => has('fieldSerializerNameSym') && typeof v === 'string', null);
-        const serializerVersion = get(fieldRaw.fieldSerializerVersion, v => has('fieldSerializerVersion') && Number.isInteger(v), null);
+                break;
+            case FieldModel.ARRAY_VARIABLE:
+                if (this._definition.generic === null) {
+                    throw new Error(`Field with a model of ARRAY_VARIABLE doesn't have a generic. This should never happen`);
+                }
 
-        const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s.length > 0);
+                this._decoderBase = FieldDecoder.UINT_32;
+                this._decoderChild = getDecoder.call(this, true);
 
-        const bitCount = get(fieldRaw.bitCount, v => has('bitCount') && Number.isInteger(v), null);
+                break;
+            case FieldModel.SIMPLE:
+                this._decoder = getDecoder.call(this);
 
-        const encoder = get(symbols[fieldRaw.varEncoderSym], v => has('varEncoderSym') && typeof v === 'string', null);
-        const encoderFlags = get(fieldRaw.encodeFlags, v => has('encodeFlags') && Number.isInteger(v), null);
+                break;
+            case FieldModel.TABLE_FIXED:
+                this._decoderBase = FieldDecoder.BOOLEAN;
 
-        const valueLow = get(fieldRaw.lowValue, v => has('lowValue') && typeof v === 'number', null);
-        const valueHigh = get(fieldRaw.highValue, v => has('highValue') && typeof v === 'number', null);
+                break;
+            case FieldModel.TABLE_VARIABLE:
+                this._decoderBase = FieldDecoder.UINT_32;
 
-        const instructions = new FieldDecoderInstructions(encoder, encoderFlags, bitCount, valueLow, valueHigh);
+                break;
+        }
 
-        // TODO: polymorphic types
-
-        return new Field(
-            name,
-            type,
-            serializer,
-            serializerName,
-            serializerVersion,
-            sendNode,
-            instructions
-        );
+        this._model = model;
     }
+}
+
+function classify() {
+    let model;
+
+    if (this._serializer !== null) {
+        if (this._definition.pointer || [
+            'CBodyComponent',
+            'CEntityComponent',
+            'CEntityIdentity',
+            'CEntityInstance',
+            'CPhysicsComponent',
+            'CRenderComponent',
+            'CScriptComponent'
+        ].includes(this._definition.baseType)) {
+            model = FieldModel.TABLE_FIXED;
+        } else {
+            model = FieldModel.TABLE_VARIABLE;
+        }
+    } else if (this._definition.count > 0 && this._definition.baseType !== 'char') {
+        model = FieldModel.ARRAY_FIXED;
+    } else if ([ 'CUtlVector', 'CUtlVectorEmbeddedNetworkVar', 'CNetworkUtlVectorBase' ].includes(this._definition.baseType)) {
+        model = FieldModel.ARRAY_VARIABLE;
+    } else {
+        model = FieldModel.SIMPLE;
+    }
+
+    return model;
+}
+
+function getDecoder(generic = false) {
+    let baseType;
+
+    if (generic) {
+        baseType = this._definition.generic.baseType;
+    } else {
+        baseType = this._definition.baseType;
+    }
+
+    const strategy = FieldDecoderStrategy.parse(baseType);
+
+    if (strategy === null) {
+        throw new Error(`Couldn't recognize FieldDecoderStrategy for type [ ${baseType} ]`);
+    }
+
+    return strategy.pick(this);
 }
 
 module.exports = Field;

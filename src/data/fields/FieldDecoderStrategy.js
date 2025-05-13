@@ -59,7 +59,9 @@ const Color = new FieldDecoderStrategy('Color', f => FieldDecoder.UINT_32);
 const CPhysicsComponent = new FieldDecoderStrategy('CPhysicsComponent', f => FieldDecoder.COMPONENT);
 const CRenderComponent = new FieldDecoderStrategy('CRenderComponent', f => FieldDecoder.COMPONENT);
 const CStrongHandle = new FieldDecoderStrategy('CStrongHandle', getDecoderForUnsignedInt64());
+const CUtlString = new FieldDecoderStrategy('CUtlString', f => FieldDecoder.STRING);
 const CUtlStringToken = new FieldDecoderStrategy('CUtlStringToken', f => FieldDecoder.UINT_32);
+const CUtlSymbolLarge = new FieldDecoderStrategy('CUtlSymbolLarge', f => FieldDecoder.STRING);
 const GameTime_t = new FieldDecoderStrategy('GameTime_t', f => FieldDecoder.NOSCALE);
 const HSequence = new FieldDecoderStrategy('HSequence', f => FieldDecoder.UINT_32);
 const QAngle = new FieldDecoderStrategy('QAngle', f => {
@@ -109,9 +111,7 @@ const Vector = new FieldDecoderStrategy('Vector', getDecoderPickerForVector(3));
 const Vector4D = new FieldDecoderStrategy('Vector4D', getDecoderPickerForVector(4));
 
 const bool = new FieldDecoderStrategy('bool', f => FieldDecoder.BOOLEAN);
-
 const char = new FieldDecoderStrategy('char', f => FieldDecoder.STRING);
-
 const float32 = new FieldDecoderStrategy('float32', (f) => {
     switch (f.decoderInstructions.encoder) {
         case 'coord':
@@ -133,6 +133,9 @@ const float32 = new FieldDecoderStrategy('float32', (f) => {
     return FieldDecoder.delegate('QuantizedFloat', (bitBuffer) => {
         return decoder.decode(bitBuffer);
     });
+});
+const float64 = new FieldDecoderStrategy('float64', f => {
+    throw new Error('Unable to decode float64');
 });
 
 const int8 = new FieldDecoderStrategy('int8', f => FieldDecoder.INT_32);
