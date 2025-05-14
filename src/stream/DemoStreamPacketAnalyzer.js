@@ -331,7 +331,11 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
+                    this._parser.performanceTracker.start(PerformanceTrackerCategory.ENTITY_UPDATE_READS);
+
                     readFields(bitBuffer, entity.class.serializer);
+
+                    this._parser.performanceTracker.end(PerformanceTrackerCategory.ENTITY_UPDATE_READS);
 
                     break;
                 }
@@ -373,8 +377,12 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     this._parser.demo.registerEntity(entity);
 
+                    this._parser.performanceTracker.start(PerformanceTrackerCategory.ENTITY_CREATE_READS);
+
                     readFields(new BitBuffer(baseline), clazz.serializer);
                     readFields(bitBuffer, clazz.serializer);
+
+                    this._parser.performanceTracker.end(PerformanceTrackerCategory.ENTITY_CREATE_READS);
 
                     // ---- TODO: Update entity state
 

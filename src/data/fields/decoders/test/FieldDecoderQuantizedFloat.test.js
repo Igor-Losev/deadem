@@ -1,4 +1,4 @@
-const FieldDecoderQuantizedFloat = require('./../../FieldDecoderQuantizedFloat');
+const FieldDecoderQuantizedFloat = require('./../FieldDecoderQuantizedFloat');
 
 describe('FieldDecoderQuantizedFloat.quantize()', () => {
     describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, 0 ]', () => {
@@ -24,12 +24,4 @@ describe('FieldDecoderQuantizedFloat.quantize()', () => {
             expect(() => decoder.quantize(-0.1)).toThrowError();
         });
     })
-
-    describe.skip('When [ bitCount, low, high, flags ] set to [ 8, 0.2, 1, FLAG_ROUND_UP ]', () => {
-        const decoder = new FieldDecoderQuantizedFloat(8, 0.2, 1, FieldDecoderQuantizedFloat.FLAG_ROUND_UP);
-
-        it('It should round up to low for 0.1', () => {
-            expect(decoder.quantize(0.1)).toBe(0.2);
-        });
-    });
 });

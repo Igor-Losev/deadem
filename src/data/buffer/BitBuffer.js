@@ -107,7 +107,7 @@ class BitBuffer {
      * Returns either 0 or 1.
      *
      * @public
-     * @returns {number} The bit value (0 or 1).
+     * @returns {0|1} The bit value (0 or 1).
      */
     readBit() {
         const buffer = this._read(1);
@@ -121,7 +121,7 @@ class BitBuffer {
      * @public
      * @returns {number}
      */
-    readCoord() {
+    readCoordinate() {
         let value = 0;
 
         const hasInteger = this.readBit() === 1;
@@ -162,7 +162,7 @@ class BitBuffer {
      * @public
      * @returns {number}
      */
-    readCoordPrecise() {
+    readCoordinatePrecise() {
         const value = BitBuffer.readUInt32LE(this._read(20));
 
         return value * (360 / (1 << 20)) - 180;
@@ -205,12 +205,12 @@ class BitBuffer {
     }
 
     /**
-     * Reads a 3-bit normal vector from the buffer.
+     * Reads a normal vector from the buffer.
      *
      * @public
      * @returns {number[]} An array containing the X, Y, and Z components of the normal vector.
      */
-    readNormal3Bit() {
+    readNormalVector() {
         const vector = [ 0, 0, 0 ];
 
         const hasX = this.readBit() === 1;

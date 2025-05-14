@@ -2,9 +2,10 @@
 
 const assert = require('assert/strict');
 
-const BitBuffer = require('./../buffer/BitBuffer');
+const BitBuffer = require('./../../buffer/BitBuffer');
 
-const FieldDecoderInstructions = require('./FieldDecoderInstructions');
+const FieldDecoder = require('./FieldDecoder'),
+    FieldDecoderInstructions = require('./../FieldDecoderInstructions');
 
 const DEFAULT_BIT_COUNT = 0;
 const DEFAULT_VALUE_LOW = 0;
@@ -16,25 +17,24 @@ const FLAG_ROUND_UP = 1 << 1;
 const FLAG_ENCODE_ZERO = 1 << 2;
 const FLAG_ENCODE_INTEGERS = 1 << 3;
 
-class FieldDecoderQuantizedFloat {
+class FieldDecoderQuantizedFloat extends FieldDecoder {
     /**
      * @constructor
-     * @param {Number} bitCount
-     * @param {Number} low
-     * @param {Number} high
-     * @param {Number} flags
+     * @param {FieldDecoderInstructions} instructions
      */
-    constructor(bitCount, low, high, flags) {
-        assert(Number.isInteger(bitCount));
-        assert(typeof low === 'number' && !Number.isNaN(low));
-        assert(typeof high === 'number' && !Number.isNaN(high));
-        assert(Number.isInteger(flags));
+    constructor(instructions) {
+        super();
 
-        this._low = low;
-        this._high = high;
+        assert(instructions instanceof FieldDecoderInstructions);
+
+        this._low = typeof instructions.valueLow === 'number' ? instructions.valueLow : DEFAULT_VALUE_LOW;
+        this._high = typeof instructions.valueHigh === 'number' ? instructions.valueHigh : DEFAULT_VALUE_HIGH;
 
         this._quantizationMultiplier = 0;
         this._dequantizationStep = 0;
+
+        const bitCount = typeof instructions.bitCount === 'number' ? instructions.bitCount : DEFAULT_BIT_COUNT;
+        const flags = typeof instructions.encoderFlags === 'number' ? instructions.encoderFlags : DEFAULT_FLAG;
 
         if (bitCount === 0 || bitCount >= 32) {
             this._bitCount = 32;
@@ -65,6 +65,7 @@ class FieldDecoderQuantizedFloat {
             range = (1 << deltaLog2) >>> 0;
 
             this._bitCount = Math.max(bitCount, deltaLog2);
+
             steps = (1 << bitCount) >>> 0;
             offset = range / steps;
 
@@ -91,54 +92,6 @@ class FieldDecoderQuantizedFloat {
                 this._flags &= ~FLAG_ENCODE_ZERO;
             }
         }
-    }
-
-    /**
-     * @static
-     * @returns {Number}
-     */
-    static get FLAG_ROUND_DOWN() {
-        return FLAG_ROUND_DOWN;
-    }
-
-    /**
-     * @static
-     * @returns {Number}
-     */
-    static get FLAG_ROUND_UP() {
-        return FLAG_ROUND_UP;
-    }
-
-    /**
-     * @static
-     * @returns {Number}
-     */
-    static get FLAG_ENCODE_ZERO() {
-        return FLAG_ENCODE_ZERO;
-    }
-
-    /**
-     * @static
-     * @returns {Number}
-     */
-    static get FLAG_ENCODE_INTEGERS() {
-        return FLAG_ENCODE_INTEGERS;
-    }
-
-    /**
-     * @static
-     * @param {FieldDecoderInstructions} fieldDecoderInstructions
-     * @returns {FieldDecoderQuantizedFloat}
-     */
-    static fromInstructions(fieldDecoderInstructions) {
-        assert(fieldDecoderInstructions instanceof FieldDecoderInstructions);
-
-        return new FieldDecoderQuantizedFloat(
-            fieldDecoderInstructions.bitCount || DEFAULT_BIT_COUNT,
-            typeof fieldDecoderInstructions.valueLow === 'number' ? fieldDecoderInstructions.valueLow : DEFAULT_VALUE_LOW,
-            typeof fieldDecoderInstructions.valueHigh === 'number' ? fieldDecoderInstructions.valueHigh : DEFAULT_VALUE_HIGH,
-            typeof fieldDecoderInstructions.encoderFlags === 'number' ? fieldDecoderInstructions.encoderFlags : DEFAULT_FLAG
-        );
     }
 
     /**

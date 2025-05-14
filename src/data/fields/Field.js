@@ -4,9 +4,8 @@ const assert = require('node:assert/strict');
 
 const FieldModel = require('./../enums/FieldModel');
 
-const FieldDecoder = require('./FieldDecoder'),
-    FieldDecoderInstructions = require('./FieldDecoderInstructions'),
-    FieldDecoderStrategy = require('./FieldDecoderStrategy'),
+const FieldDecoderInstructions = require('./FieldDecoderInstructions'),
+    FieldDecoderPicker = require('./FieldDecoderPicker.instance'),
     FieldDefinition = require('./FieldDefinition');
 
 class Field {
@@ -105,7 +104,7 @@ class Field {
                     throw new Error(`Field with a model of ARRAY_VARIABLE doesn't have a generic. This should never happen`);
                 }
 
-                this._decoderBase = FieldDecoder.UINT_32;
+                this._decoderBase = FieldDecoderPicker.getUVarInt32();
                 this._decoderChild = getDecoder.call(this, true);
 
                 break;
@@ -114,11 +113,11 @@ class Field {
 
                 break;
             case FieldModel.TABLE_FIXED:
-                this._decoderBase = FieldDecoder.BOOLEAN;
+                this._decoderBase = FieldDecoderPicker.getBoolean();
 
                 break;
             case FieldModel.TABLE_VARIABLE:
-                this._decoderBase = FieldDecoder.UINT_32;
+                this._decoderBase = FieldDecoderPicker.getUVarInt32();
 
                 break;
         }
@@ -164,13 +163,7 @@ function getDecoder(generic = false) {
         baseType = this._definition.baseType;
     }
 
-    const strategy = FieldDecoderStrategy.parse(baseType);
-
-    if (strategy === null) {
-        throw new Error(`Couldn't recognize FieldDecoderStrategy for type [ ${baseType} ]`);
-    }
-
-    return strategy.pick(this);
+    return FieldDecoderPicker.pick(baseType, this);
 }
 
 module.exports = Field;
