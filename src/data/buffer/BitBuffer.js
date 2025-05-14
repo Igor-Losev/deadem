@@ -182,11 +182,8 @@ class BitBuffer {
 
     /**
      * Reads a normal value (normalized float in the range [-1.0, 1.0]) from the buffer.
-     * The value is encoded using 11 bits, where the first bit indicates the sign
-     * and the remaining 10 bits represent the magnitude.
-     *
-     * The returned value is scaled to fit the range from -1.0 to 1.0 based on the
-     * bits read, and the sign is applied if necessary.
+     * The value is encoded using 12 bits, where the first bit indicates the sign
+     * and the remaining 11 bits represent the magnitude.
      *
      * @public
      * @returns {number} The normalized value in the range [-1.0, 1.0].
