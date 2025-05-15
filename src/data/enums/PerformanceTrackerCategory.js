@@ -36,10 +36,20 @@ class PerformanceTrackerCategory {
         return this._categories;
     }
 
+    /**
+     * @public
+     * @static
+     * @returns {PerformanceTrackerCategory}
+     */
     static get ENTITY_CREATE_READS() {
         return entityCreateReads;
     }
 
+    /**
+     * @public
+     * @static
+     * @returns {PerformanceTrackerCategory}
+     */
     static get ENTITY_UPDATE_READS() {
         return entityUpdateReads;
     }
@@ -76,6 +86,15 @@ class PerformanceTrackerCategory {
      * @static
      * @returns {PerformanceTrackerCategory}
      */
+    static get DEMO_PACKET_PRIORITIZER() {
+        return demoPacketPrioritizer;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {PerformanceTrackerCategory}
+     */
     static get PARSER() {
         return parser;
     }
@@ -85,9 +104,10 @@ const entityCreateReads = new PerformanceTrackerCategory('ENTITY_CREATE_READS', 
 const entityUpdateReads = new PerformanceTrackerCategory('ENTITY_UPDATE_READS', 'Entity reads on update', [ ]);
 
 const demoBufferSplitter = new PerformanceTrackerCategory('DEMO_BUFFER_SPLITTER', 'Splitting of big chunks into smaller parts', [ ]);
-const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ ]);
+const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ entityCreateReads, entityUpdateReads ]);
 const demoPacketExtractor = new PerformanceTrackerCategory('DEMO_PACKET_EXTRACTOR', 'Extraction of top-level demo packets', [ ]);
+const demoPacketPrioritizer = new PerformanceTrackerCategory('DEMO_PACKET_PRIORITIZER', 'Prioritization of message packets', [ ]);
 
-const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ entityCreateReads, entityUpdateReads, demoPacketAnalyzer, demoPacketExtractor, demoBufferSplitter ]);
+const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ demoPacketAnalyzer, demoPacketExtractor, demoPacketPrioritizer, demoBufferSplitter ]);
 
 module.exports = PerformanceTrackerCategory;

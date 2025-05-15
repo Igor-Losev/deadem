@@ -12,7 +12,8 @@ const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
     DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
     DemoStreamPacketCoordinator = require('./stream/DemoStreamPacketCoordinator'),
     DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
-    DemoStreamPacketParser = require('./stream/DemoStreamPacketParser');
+    DemoStreamPacketParser = require('./stream/DemoStreamPacketParser'),
+    DemoStreamPacketPrioritizer = require('./stream/DemoStreamPacketPrioritizer');
 
 const LoggerProvider = require('./providers/LoggerProvider.instance');
 
@@ -48,6 +49,7 @@ class Parser {
             new DemoStreamPacketBatcher(this, batcherChunkSize, batcherThresholdMilliseconds),
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
+            new DemoStreamPacketPrioritizer(this),
             new DemoStreamPacketAnalyzer(this)
         ];
 
