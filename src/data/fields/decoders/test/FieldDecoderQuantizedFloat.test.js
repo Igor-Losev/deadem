@@ -1,8 +1,11 @@
+const FieldDecoderInstructions = require('./../../FieldDecoderInstructions');
 const FieldDecoderQuantizedFloat = require('./../FieldDecoderQuantizedFloat');
 
 describe('FieldDecoderQuantizedFloat.quantize()', () => {
     describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, 0 ]', () => {
-        const decoder = new FieldDecoderQuantizedFloat(8, 0, 1, 0);
+        const instructions = new FieldDecoderInstructions(null, 0, 8, 0, 1);
+
+        const decoder = new FieldDecoderQuantizedFloat(instructions);
 
         it('It should return ~0.5 for 0.5', () => {
             expect(decoder.quantize(0.5)).toBeCloseTo(0.5, 2);
