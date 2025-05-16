@@ -9,10 +9,14 @@ const WorkerRequestSerializer = require('./../workers/serializers/WorkerRequestS
 
 const logger = LoggerProvider.getLogger('WorkerThread');
 
+/**
+ * Represents a single worker thread with request serialization,
+ * response deserialization, and promise-based communication.
+ */
 class WorkerThread {
     /**
      * @constructor
-     * @param {Worker} worker
+     * @param {Worker} worker - The worker instance to wrap.
      */
     constructor(worker) {
         this._worker = worker;
@@ -20,19 +24,23 @@ class WorkerThread {
         this._worker.on('message', (responseRaw) => {
             const response = WorkerResponseSerializer.deserialize(responseRaw);
 
-            this._deferred.resolve(response);
+            const deferred = this._deferred;
 
-            this._deferred = null;
             this._busy = false;
+            this._deferred = null;
+
+            deferred.resolve(response);
         });
 
         this._worker.on('error', (error) => {
-            logger.error(`Thread [ ${this._worker.threadId} ]: `, error);
+            logger.error(`Thread [ ${this.getId()} ]: `, error);
 
-            this._deferred.reject(error);
+            const deferred = this._deferred;
 
             this._deferred = null;
             this._busy = false;
+
+            deferred.reject(error);
         });
 
         this._deferred = null;
@@ -40,6 +48,8 @@ class WorkerThread {
     }
 
     /**
+     * The underlying worker instance.
+     *
      * @returns {Worker}
      */
     get worker() {
@@ -47,6 +57,8 @@ class WorkerThread {
     }
 
     /**
+     * Indicates whether the worker is currently busy processing a request.
+     *
      * @returns {boolean}
      */
     get busy() {
@@ -54,13 +66,25 @@ class WorkerThread {
     }
 
     /**
+     * Gets the unique thread ID of the worker.
+     *
      * @public
-     * @param {WorkerRequest} request
-     * @returns {Promise<*>}
+     * @returns {Number}
+     */
+    getId() {
+        return this._worker.threadId;
+    }
+
+    /**
+     * Sends a request to the worker and returns a promise that resolves with the response.
+     *
+     * @public
+     * @param {WorkerRequest} request - The request instance.
+     * @returns {Promise<*>} - A promise that resolves with the response.
      */
     send(request) {
         if (this._busy) {
-            throw new Error(`Unable to send a message [ ${request.type.code} ], thread [ ${this._worker.threadId} ] is busy`);
+            throw new Error(`Unable to send a request [ ${request.type.code} ], thread [ ${this.getId()} ] is busy`);
         }
 
         this._busy = true;

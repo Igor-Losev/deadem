@@ -83,10 +83,12 @@ class DemoStreamPacketParser extends Stream.Transform {
             this._processSync(other);
 
             if (heavy.length > 0) {
-                const thread = await this._parser.workerManager.requestThread();
+                const thread = await this._parser.workerManager.allocate();
 
                 this._processAsync(thread, heavy)
                     .then((demoPackets) => {
+                        this._parser.workerManager.free(thread);
+
                         demoPackets.forEach((demoPacket) => {
                             this.push(demoPacket);
                         });
@@ -120,7 +122,7 @@ class DemoStreamPacketParser extends Stream.Transform {
 
         const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
 
-        const promise = this._parser.workerManager.process(thread, request);
+        const promise = thread.send(request);
 
         this._pendingRequests.push({ request, promise });
 
