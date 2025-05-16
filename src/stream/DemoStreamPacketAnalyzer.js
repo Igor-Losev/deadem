@@ -18,6 +18,7 @@ const FieldPathExtractor = require('./../extractors/FieldPathExtractor');
 
 const Class = require('../data/Class'),
     Entity = require('./../data/Entity'),
+    EntityState = require('./../data/EntityState'),
     Server = require('./../data/Server');
 
 const ProtoProvider = require('./../providers/ProtoProvider.instance');
@@ -141,6 +142,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
             switch (messagePacket.type) {
                 case MessagePacketType.NET_TICK:
+                    break;
                 case MessagePacketType.NET_SET_CON_VAR:
                 case MessagePacketType.NET_SIGNON_STATE:
                 case MessagePacketType.NET_SPAWN_GROUP_LOAD:
@@ -333,7 +335,9 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     this._parser.performanceTracker.start(PerformanceTrackerCategory.ENTITY_UPDATE_READS);
 
-                    readFields(bitBuffer, entity.class.serializer);
+                    const state = new EntityState();
+
+                    readFields(bitBuffer, entity.class.serializer, state);
 
                     this._parser.performanceTracker.end(PerformanceTrackerCategory.ENTITY_UPDATE_READS);
 
@@ -379,8 +383,10 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     this._parser.performanceTracker.start(PerformanceTrackerCategory.ENTITY_CREATE_READS);
 
-                    readFields(new BitBuffer(baseline), clazz.serializer);
-                    readFields(bitBuffer, clazz.serializer);
+                    const state = new EntityState();
+
+                    readFields(new BitBuffer(baseline), clazz.serializer, state);
+                    readFields(bitBuffer, clazz.serializer, state);
 
                     this._parser.performanceTracker.end(PerformanceTrackerCategory.ENTITY_CREATE_READS);
 
@@ -420,7 +426,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
     }
 }
 
-function readFields(bitBuffer, serializer) {
+function readFields(bitBuffer, serializer, state) {
     const extractor = new FieldPathExtractor(bitBuffer);
     const generator = extractor.retrieve();
 
@@ -434,6 +440,8 @@ function readFields(bitBuffer, serializer) {
         const decoder = serializer.getDecoderForFieldPath(fieldPath);
 
         const value = decoder.decode(bitBuffer);
+
+        state.setValue(fieldPath, value);
     });
 }
 
