@@ -31,7 +31,7 @@ const logger = LoggerProvider.getLogger('Parser');
 
 class Parser {
     constructor(
-        parserThreads = 1,
+        parserThreads = 0,
         splitterChunkSize = 200 * 1024,
         batcherChunkSize = 100 * 1024,
         batcherThresholdMilliseconds = 50
@@ -41,7 +41,11 @@ class Parser {
         assert(Number.isInteger(batcherChunkSize));
         assert(Number.isInteger(batcherThresholdMilliseconds));
 
-        this._workerManager = new WorkerManager(parserThreads);
+        if (parserThreads === 0) {
+            this._workerManager = null;
+        } else {
+            this._workerManager = new WorkerManager(parserThreads);
+        }
 
         this._chain = [
             new DemoStreamBufferSplitter(this, splitterChunkSize),
@@ -167,7 +171,9 @@ class Parser {
         this._trackers.packet.dispose();
         this._trackers.performance.dispose();
 
-        this._workerManager.terminate();
+        if (this._workerManager !== null) {
+            this._workerManager.terminate();
+        }
     }
 
     /**

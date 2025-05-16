@@ -10,11 +10,15 @@ const DemoCommandType = require('./../data/enums/DemoCommandType'),
 
 const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
 
+const MessagePacketRawExtractor = require('./../extractors/MessagePacketRawExtractor');
+
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
 const WorkerRequestDHPParse = require('./../workers/requests/WorkerRequestDHPParse');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
+
+const HEAVY_PACKETS = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload and
@@ -37,10 +41,8 @@ class DemoStreamPacketParser extends Stream.Transform {
 
         this._counts = {
             batches: 0,
-            messages: 0
+            requests: 0
         };
-
-        this._workerTargets = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
 
         this._pendingRequests = [ ];
     }
@@ -67,45 +69,44 @@ class DemoStreamPacketParser extends Stream.Transform {
     async _transform(batch, encoding, callback) {
         this._counts.batches += 1;
 
-        const getIsHeavy = demoPacketRaw => this._workerTargets.includes(DemoCommandType.parseById(demoPacketRaw.getCommandType()));
-        const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
+        if (this._parser.workerManager === null) {
+            this._processSync(batch);
 
-        const heavy = batch.filter(getIsHeavy);
-        const other = batch.filter(getIsOther);
+            callback();
+        } else {
+            const getIsHeavy = demoPacketRaw => HEAVY_PACKETS.includes(DemoCommandType.parseById(demoPacketRaw.getCommandType()));
+            const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
 
-        other.forEach((demoPacketRaw) => {
-            let data;
+            const heavy = batch.filter(getIsHeavy);
+            const other = batch.filter(getIsOther);
 
-            if (demoPacketRaw.getIsCompressed()) {
-                data = SnappyDecompressor.decompress(demoPacketRaw.payload);
-            } else {
-                data = demoPacketRaw.payload;
+            this._processSync(other);
+
+            if (heavy.length > 0) {
+                const thread = await this._parser.workerManager.requestThread();
+
+                this._processAsync(thread, heavy)
+                    .then((demoPackets) => {
+                        demoPackets.forEach((demoPacket) => {
+                            this.push(demoPacket);
+                        });
+                    });
             }
 
-            const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
-            const demoTick = demoPacketRaw.tick.value;
+            callback();
+        }
+    }
 
-            if (demoCommandType === null) {
-                throw new Error(`Unable to parse DemoCommandType [ ${demoPacketRaw.getCommandType()} ]`);
-            }
-
-            const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, demoCommandType.proto.decode(data));
+    /**
+     * @protected
+     * @param {Array<DemoPacketRaw>} packets
+     */
+    _processSync(packets) {
+        packets.forEach((demoPacketRaw) => {
+            const demoPacket = parseDemoPacket.call(this, demoPacketRaw);
 
             this.push(demoPacket);
         });
-
-        if (heavy.length > 0) {
-            const thread = await this._parser.workerManager.requestThread();
-
-            this._processAsync(thread, heavy)
-                .then((demoPackets) => {
-                    demoPackets.forEach((demoPacket) => {
-                        this.push(demoPacket);
-                    });
-                });
-        }
-
-        callback();
     }
 
     /**
@@ -115,7 +116,7 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @returns {Promise<Array<DemoPacket>>}
      */
     _processAsync(thread, packets) {
-        this._counts.messages += 1;
+        this._counts.requests += 1;
 
         const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
 
@@ -139,19 +140,11 @@ class DemoStreamPacketParser extends Stream.Transform {
                     const messagePackets = [ ];
 
                     batch.forEach((messagePacketRaw) => {
-                        const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
+                        const messagePacket = parseMessagePacket.call(this, messagePacketRaw);
 
-                        if (messagePacketType === null) {
-                            this._parser.packetTracker.handleUnknownMessagePacket(messagePacketRaw.type);
-
-                            return;
+                        if (messagePacket !== null) {
+                            messagePackets.push(messagePacket);
                         }
-
-                        const data = messagePacketType.proto.decode(messagePacketRaw.payload);
-
-                        const messagePacket = new MessagePacket(messagePacketType, data);
-
-                        messagePackets.push(messagePacket);
                     });
 
                     const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
@@ -165,6 +158,69 @@ class DemoStreamPacketParser extends Stream.Transform {
                 return demoPackets;
             });
     }
+}
+
+/**
+ * @param {DemoPacketRaw} demoPacketRaw
+ * @returns {DemoPacket}
+ */
+function parseDemoPacket(demoPacketRaw) {
+    let data;
+
+    if (demoPacketRaw.getIsCompressed()) {
+        data = SnappyDecompressor.decompress(demoPacketRaw.payload);
+    } else {
+        data = demoPacketRaw.payload;
+    }
+
+    const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
+    const demoTick = demoPacketRaw.tick.value;
+
+    if (demoCommandType === null) {
+        throw new Error(`Unable to parse DemoCommandType [ ${demoPacketRaw.getCommandType()} ]`);
+    }
+
+    const decoded = demoCommandType.proto.decode(data);
+
+    let demoPacket;
+
+    if (HEAVY_PACKETS.includes(demoCommandType)) {
+        const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
+
+        const messagePackets = [ ];
+
+        for (const messagePacketRaw of extractor) {
+            const messagePacket = parseMessagePacket.call(this, messagePacketRaw);
+
+            if (messagePacket !== null) {
+                messagePackets.push(messagePacket);
+            }
+        }
+
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, messagePackets);
+    } else {
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, decoded);
+    }
+
+    return demoPacket;
+}
+
+/**
+ * @param {MessagePacketRaw} messagePacketRaw
+ * @returns {MessagePacket|null}
+ */
+function parseMessagePacket(messagePacketRaw) {
+    const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
+
+    if (messagePacketType === null) {
+        this._parser.packetTracker.handleUnknownMessagePacket(messagePacketRaw.type);
+
+        return null;
+    }
+
+    const data = messagePacketType.proto.decode(messagePacketRaw.payload);
+
+    return new MessagePacket(messagePacketType, data);
 }
 
 module.exports = DemoStreamPacketParser;

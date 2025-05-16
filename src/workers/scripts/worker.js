@@ -6,7 +6,8 @@ const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.ins
 
 const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawExtractor');
 
-const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
+const DemoCommandType = require('./../../data/enums/DemoCommandType'),
+    WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
 const LoggerProvider = require('./../../providers/LoggerProvider.instance'),
     ProtoProvider = require('./../../providers/ProtoProvider.instance');
@@ -17,8 +18,6 @@ const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerialize
 const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse');
 
 const logger = LoggerProvider.getLogger('Worker');
-
-const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
 
 const LOGGER_PREFIX = `Worker #${threadId}`;
 
@@ -56,7 +55,7 @@ function handleHeavyPacketParse(request) {
             decompressed = buffer;
         }
 
-        const decoded = CDemoPacket.decode(decompressed);
+        const decoded = DemoCommandType.DEM_PACKET.proto.decode(decompressed);
 
         const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
 
