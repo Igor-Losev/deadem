@@ -1,6 +1,6 @@
 'use strict';
 
-const { Worker } = require('node:worker_threads'),
+const { Worker } = require('worker_threads'),
     path = require('path');
 
 const DeferredPromise = require('./../data/DeferredPromise');
@@ -22,8 +22,8 @@ class WorkerManager {
         this._concurrency = concurrency;
 
         this._counts = {
-            tasks: 0,
-            completed: 0
+            completed: 0,
+            request: 0
         };
 
         this._pending = [ ];
@@ -66,17 +66,17 @@ class WorkerManager {
     /**
      * @public
      * @param {WorkerThread} thread
-     * @param {WorkerTask} task
-     * @returns {Promise<void>}
+     * @param {WorkerRequest} request
+     * @returns {Promise<*>}
      */
-    async run(thread, task) {
-        this._counts.tasks += 1;
+    async process(thread, request) {
+        this._counts.request += 1;
 
         if (!this._getIsAvailable()) {
-            throw new Error(`Unable to run task [ ${task.id} ]`);
+            throw new Error(`Unable to send request [ ${request.type.code} ]. All threads are busy`);
         }
 
-        return thread.run(task)
+        return thread.send(request)
             .then((result) => {
                 this._releasePendingOnce();
 
@@ -84,7 +84,7 @@ class WorkerManager {
             }).catch((error) => {
                 this._releasePendingOnce();
 
-                return Promise.reject(error);
+                throw error;
             });
     }
 
@@ -102,7 +102,7 @@ class WorkerManager {
     }
 
     /**
-     * @private
+     * @protected
      * @returns {boolean}
      */
     _getIsAvailable() {

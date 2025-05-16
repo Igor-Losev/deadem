@@ -1,23 +1,26 @@
 'use strict';
 
+const DeferredPromise = require('./../data/DeferredPromise');
+
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const DeferredPromise = require('./../data/DeferredPromise');
+const WorkerRequestSerializer = require('./../workers/serializers/WorkerRequestSerializer.instance'),
+    WorkerResponseSerializer = require('./../workers/serializers/WorkerResponseSerializer.instance');
 
 const logger = LoggerProvider.getLogger('WorkerThread');
 
 class WorkerThread {
     /**
-     * @public
      * @constructor
-     *
      * @param {Worker} worker
      */
     constructor(worker) {
         this._worker = worker;
 
-        this._worker.on('message', (result) => {
-            this._deferred.resolve(result);
+        this._worker.on('message', (responseRaw) => {
+            const response = WorkerResponseSerializer.deserialize(responseRaw);
+
+            this._deferred.resolve(response);
 
             this._deferred = null;
             this._busy = false;
@@ -36,28 +39,35 @@ class WorkerThread {
         this._busy = false;
     }
 
+    /**
+     * @returns {Worker}
+     */
     get worker() {
         return this._worker;
     }
 
+    /**
+     * @returns {boolean}
+     */
     get busy() {
         return this._busy;
     }
 
     /**
      * @public
-     * @param {WorkerTask} task
+     * @param {WorkerRequest} request
+     * @returns {Promise<*>}
      */
-    run(task) {
-        if (this.busy) {
-            throw new Error(`Unable to start task, thread [ ${this._worker.threadId} ] is busy`);
+    send(request) {
+        if (this._busy) {
+            throw new Error(`Unable to send a message [ ${request.type.code} ], thread [ ${this._worker.threadId} ] is busy`);
         }
 
         this._busy = true;
 
         this._deferred = new DeferredPromise();
 
-        this._worker.postMessage(task.toObject(), task.transfers);
+        this._worker.postMessage(WorkerRequestSerializer.serialize(request), request.transfers);
 
         return this._deferred.promise;
     }

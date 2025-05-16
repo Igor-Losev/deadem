@@ -6,14 +6,13 @@ const DemoPacket = require('./../data/DemoPacket'),
     MessagePacket = require('./../data/MessagePacket');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
-    MessagePacketType = require('./../data/enums/MessagePacketType'),
-    WorkerTaskType = require('./../data/enums/WorkerTaskType');
+    MessagePacketType = require('./../data/enums/MessagePacketType');
 
 const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
 
 const LoggerProvider = require('./../providers/LoggerProvider.instance');
 
-const WorkerTask = require('./../workers/WorkerTask');
+const WorkerRequestDHPParse = require('./../workers/requests/WorkerRequestDHPParse');
 
 const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
@@ -38,12 +37,12 @@ class DemoStreamPacketParser extends Stream.Transform {
 
         this._counts = {
             batches: 0,
-            tasks: 0
+            messages: 0
         };
 
         this._workerTargets = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
 
-        this._pendingTasks = [ ];
+        this._pendingRequests = [ ];
     }
 
     /**
@@ -53,7 +52,7 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @returns {Promise<void>}
      */
     async _flush(callback) {
-        await Promise.all(this._pendingTasks.map(t => t.promise));
+        await Promise.all(this._pendingRequests.map(m => m.promise));
 
         callback();
     }
@@ -112,42 +111,43 @@ class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @protected
      * @param {WorkerThread} thread
-     * @param {Array<DemoPacketRaw>} batch
+     * @param {Array<DemoPacketRaw>} packets
      * @returns {Promise<Array<DemoPacket>>}
      */
-    _processAsync(thread, batch) {
-        const taskId = ++this._counts.tasks;
-        const task = new WorkerTask(WorkerTaskType.DEMO_PACKET_PARSE, taskId, batch.map(p => [ p.getIsCompressed(), p.payload ]));
+    _processAsync(thread, packets) {
+        this._counts.messages += 1;
 
-        const promise = this._parser.workerManager.run(thread, task);
+        const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
 
-        this._pendingTasks.push({ task, promise });
+        const promise = this._parser.workerManager.process(thread, request);
+
+        this._pendingRequests.push({ request, promise });
 
         return promise
-            .then((messageBatches) => {
-                const taskIndex = this._pendingTasks.findIndex(({ task: t }) => t === task);
+            .then((response) => {
+                const taskIndex = this._pendingRequests.findIndex(({ request: r }) => r === request);
 
                 if (taskIndex >= 0) {
-                    this._pendingTasks.splice(taskIndex, 1);
+                    this._pendingRequests.splice(taskIndex, 1);
                 }
 
                 const demoPackets = [ ];
 
-                messageBatches.forEach((messageBatch, batchIndex) => {
-                    const demoPacketRaw = batch[batchIndex];
+                response.payload.forEach((batch, batchIndex) => {
+                    const demoPacketRaw = packets[batchIndex];
 
                     const messagePackets = [ ];
 
-                    messageBatch.forEach(([ messageType, payload ]) => {
-                        const messagePacketType = MessagePacketType.parseById(messageType) || null;
+                    batch.forEach((messagePacketRaw) => {
+                        const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
 
                         if (messagePacketType === null) {
-                            this._parser.packetTracker.handleUnknownMessagePacket(messageType);
+                            this._parser.packetTracker.handleUnknownMessagePacket(messagePacketRaw.type);
 
                             return;
                         }
 
-                        const data = messagePacketType.proto.decode(payload);
+                        const data = messagePacketType.proto.decode(messagePacketRaw.payload);
 
                         const messagePacket = new MessagePacket(messagePacketType, data);
 

@@ -6,60 +6,68 @@ const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.ins
 
 const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawExtractor');
 
-const WorkerTaskType = require('./../../data/enums/WorkerTaskType');
-
-const WorkerTask = require('../WorkerTask');
+const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
 const LoggerProvider = require('./../../providers/LoggerProvider.instance'),
     ProtoProvider = require('./../../providers/ProtoProvider.instance');
 
+const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerializer.instance'),
+    WorkerResponseSerializer = require('./../serializers/WorkerResponseSerializer.instance');
+
+const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse');
+
 const logger = LoggerProvider.getLogger('Worker');
 
-const LOGGER_PREFIX = `Worker #${threadId}`;
-
 const CDemoPacket = ProtoProvider.DEMO.lookupType('CDemoPacket');
+
+const LOGGER_PREFIX = `Worker #${threadId}`;
 
 (() => {
     logger.info(`${LOGGER_PREFIX}: Started Worker [ ${threadId} ]`);
 
-    parentPort.on('message', (taskPlain) => {
-        const task = WorkerTask.fromObject(taskPlain);
+    parentPort.on('message', (requestRaw) => {
+        const request = WorkerRequestSerializer.deserialize(requestRaw);
 
-        let result;
-
-        switch (task.type) {
-            case WorkerTaskType.DEMO_PACKET_PARSE: {
-                result = [ ];
-
-                task.data.forEach(([ compressed, buffer ]) => {
-                    const messages = [ ];
-
-                    let decompressed;
-
-                    if (compressed) {
-                        decompressed = SnappyDecompressor.decompress(buffer);
-                    } else {
-                        decompressed = buffer;
-                    }
-
-                    const decoded = CDemoPacket.decode(decompressed);
-
-                    const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
-
-                    for (const messagePacket of extractor) {
-                        messages.push([ messagePacket.type, messagePacket.payload ]);
-                    }
-
-                    result.push(messages);
-                });
-
-                parentPort.postMessage(result);
+        switch (request.type) {
+            case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE:
+                handleHeavyPacketParse(request);
 
                 break;
-            }
-            default: {
-                throw new Error(`Unhandled task [ ${task.type.code} ]`);
-            }
+            default:
+                throw new Error(`Unhandled request [ ${request.type.code} ]`);
         }
     });
 })();
+
+/**
+ * @param {WorkerRequestDHPParse} request
+ */
+function handleHeavyPacketParse(request) {
+    const batches = [ ];
+
+    request.payload.forEach((buffer) => {
+        const batch = [ ];
+
+        let decompressed;
+
+        try {
+            decompressed = SnappyDecompressor.decompress(buffer);
+        } catch (e) {
+            decompressed = buffer;
+        }
+
+        const decoded = CDemoPacket.decode(decompressed);
+
+        const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
+
+        for (const messagePacketRaw of extractor) {
+            batch.push(messagePacketRaw);
+        }
+
+        batches.push(batch);
+    });
+
+    const response = new WorkerResponseDHPParse(batches);
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}

@@ -4,9 +4,8 @@ const registry = {
     byCode: new Map()
 };
 
-class WorkerTaskType {
+class WorkerMessageType {
     /**
-     * @private
      * @constructor
      * @param {String} code
      * @param {String} description
@@ -21,19 +20,39 @@ class WorkerTaskType {
         registry.byCode.set(code, this);
     }
 
+    /**
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @returns {String}
+     */
     get description() {
         return this._description;
     }
 
-    static DEMO_PACKET_PARSE = new WorkerTaskType('DEMO_PACKET_PARSE', 'Packet Parse');
-
+    /**
+     * @static
+     * @param {String} code
+     * @returns {WorkerMessageType|null}
+     */
     static parse(code) {
         return registry.byCode.get(code) || null;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get DEMO_HEAVY_PACKET_PARSE() {
+        return demoHeavyPacketParse;
+    }
 }
 
-module.exports = WorkerTaskType;
+const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
+
+module.exports = WorkerMessageType;
