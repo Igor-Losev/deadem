@@ -102,6 +102,14 @@ class Demo {
 
     /**
      * @public
+     * @returns {Array<Class>}
+     */
+    getClasses() {
+        return Array.from(this._classes.byId.values());
+    }
+
+    /**
+     * @public
      * @param {Number} index
      */
     getEntity(index) {

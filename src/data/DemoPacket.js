@@ -39,6 +39,38 @@ class DemoPacket {
     get data() {
         return this._data;
     }
+
+    /**
+     * @static
+     * @public
+     * @param {DemoPacketObject} object
+     * @returns {DemoPacket}
+     */
+    static fromObject(object) {
+        return new DemoPacket(
+            object.sequence,
+            DemoCommandType.parse(object.command),
+            object.tick,
+            object.data
+        );
+    }
+
+    /**
+     * @public
+     * @returns {DemoPacketObject}
+     */
+    toObject() {
+        return {
+            sequence: this._sequence,
+            command: this._command.code,
+            tick: this._tick,
+            data: this._data
+        };
+    }
 }
+
+/**
+ * @typedef {{sequence: Number, command: String, tick: Number, data: *}} DemoPacketObject
+ */
 
 module.exports = DemoPacket;

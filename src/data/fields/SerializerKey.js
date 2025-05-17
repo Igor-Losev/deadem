@@ -19,6 +19,10 @@ class SerializerKey {
         return this._version;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     toString() {
         return `${this._name}|${this._version}`;
     }
