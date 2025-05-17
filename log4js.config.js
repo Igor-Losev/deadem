@@ -15,6 +15,7 @@ module.exports = {
         'Tracker/Packet': { appenders: [ 'console' ], level: 'debug' },
         'Tracker/Performance': { appenders: [ 'console' ], level: 'debug' },
 
-        WorkerManager: { appenders: [ 'console' ], level: 'info' }
+        WorkerManager: { appenders: [ 'console' ], level: 'info' },
+        WorkerThread: { appenders: [ 'console' ], level: 'info' }
     }
 };
