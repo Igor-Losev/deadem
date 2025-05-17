@@ -6,20 +6,27 @@ const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.ins
 
 const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawExtractor');
 
+const Demo = require('./../../data/Demo');
+
 const DemoCommandType = require('./../../data/enums/DemoCommandType'),
     WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-const LoggerProvider = require('./../../providers/LoggerProvider.instance'),
-    ProtoProvider = require('./../../providers/ProtoProvider.instance');
+const DemoPacketHandler = require('./../../handlers/DemoPacketHandler');
+
+const LoggerProvider = require('./../../providers/LoggerProvider.instance');
 
 const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerializer.instance'),
     WorkerResponseSerializer = require('./../serializers/WorkerResponseSerializer.instance');
 
-const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse');
+const WorkerResponseDClassInfo = require('./../responses/WorkerResponseDClassInfo'),
+    WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
+    WorkerResponseDSendTables = require('./../responses/WorkerResponseDSendTables');
 
 const logger = LoggerProvider.getLogger('Worker');
 
 const LOGGER_PREFIX = `Worker #${threadId}`;
+
+const state = getInitialState();
 
 (() => {
     logger.info(`${LOGGER_PREFIX}: Started Worker [ ${threadId} ]`);
@@ -28,6 +35,14 @@ const LOGGER_PREFIX = `Worker #${threadId}`;
         const request = WorkerRequestSerializer.deserialize(requestRaw);
 
         switch (request.type) {
+            case WorkerMessageType.DEMO_CLASS_INFO:
+                handleClassInfo(request);
+
+                break;
+            case WorkerMessageType.DEMO_SEND_TABLES:
+                handleSendTables(request);
+
+                break;
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE:
                 handleHeavyPacketParse(request);
 
@@ -37,6 +52,17 @@ const LOGGER_PREFIX = `Worker #${threadId}`;
         }
     });
 })();
+
+function getInitialState() {
+    const demo = new Demo();
+
+    const demoPacketHandler = new DemoPacketHandler(demo);
+
+    return {
+        demo,
+        demoPacketHandler
+    };
+}
 
 /**
  * @param {WorkerRequestDHPParse} request
@@ -67,6 +93,32 @@ function handleHeavyPacketParse(request) {
     });
 
     const response = new WorkerResponseDHPParse(batches);
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerResponseDClassInfo} request
+ */
+function handleClassInfo(request) {
+    const response = new WorkerResponseDClassInfo();
+
+    const demoPacket = request.payload;
+
+    state.demoPacketHandler.handleDemClassInfo(demoPacket);
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerResponseDSendTables} request
+ */
+function handleSendTables(request) {
+    const response = new WorkerResponseDSendTables();
+
+    const demoPacket = request.payload;
+
+    state.demoPacketHandler.handleDemSendTables(demoPacket);
 
     parentPort.postMessage(WorkerResponseSerializer.serialize(response));
 }

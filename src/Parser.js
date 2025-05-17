@@ -41,11 +41,15 @@ class Parser {
         assert(Number.isInteger(batcherChunkSize));
         assert(Number.isInteger(batcherThresholdMilliseconds));
 
-        if (parserThreads === 0) {
+        this._isMultiThreaded = parserThreads > 0;
+
+        if (!this._isMultiThreaded) {
             this._workerManager = null;
         } else {
             this._workerManager = new WorkerManager(parserThreads);
         }
+
+        this._demo = new Demo();
 
         this._chain = [
             new DemoStreamBufferSplitter(this, splitterChunkSize),
@@ -62,8 +66,6 @@ class Parser {
             packet: new PacketTracker(loggerForPacket),
             performance: new PerformanceTracker(loggerForPerformance)
         };
-
-        this._demo = new Demo();
     }
 
     /**
@@ -72,6 +74,14 @@ class Parser {
      */
     get demo() {
         return this._demo;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get isMultiThreaded() {
+        return this._isMultiThreaded;
     }
 
     /**
@@ -92,7 +102,7 @@ class Parser {
 
     /**
      * @public
-     * @returns {WorkerManager}
+     * @returns {WorkerManager|null}
      */
     get workerManager() {
         return this._workerManager;

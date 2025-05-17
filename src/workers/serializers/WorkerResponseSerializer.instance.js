@@ -4,7 +4,9 @@ const MessagePacketRaw = require('./../../data/MessagePacketRaw');
 
 const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-const WorkerResponseDHPParse = require('./../../workers/responses/WorkerResponseDHPParse');
+const WorkerResponseDClassInfo = require('./../responses/WorkerResponseDClassInfo'),
+    WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
+    WorkerResponseDSendTables = require('./../responses/WorkerResponseDSendTables');
 
 class WorkerResponseSerializer {
     constructor() {
@@ -19,7 +21,15 @@ class WorkerResponseSerializer {
      * @returns {Object}
      */
     serialize(instance) {
-        if (instance instanceof WorkerResponseDHPParse) {
+        if (instance instanceof WorkerResponseDClassInfo) {
+            return {
+                type: instance.type.code
+            };
+        } else if (instance instanceof WorkerResponseDSendTables) {
+            return {
+                type: instance.type.code
+            };
+        } else if (instance instanceof WorkerResponseDHPParse) {
             return {
                 type: instance.type.code,
                 payload: instance.payload.map((batch) => {
@@ -46,6 +56,12 @@ class WorkerResponseSerializer {
         }
 
         switch (type) {
+            case WorkerMessageType.DEMO_CLASS_INFO: {
+                return new WorkerResponseDClassInfo();
+            }
+            case WorkerMessageType.DEMO_SEND_TABLES: {
+                return new WorkerResponseDSendTables();
+            }
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
                 const batches = object.payload.map((batch) => {
                    return batch.map((values) => {

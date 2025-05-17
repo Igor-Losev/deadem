@@ -8,22 +8,16 @@ const DemoCommandType = require('./../data/enums/DemoCommandType'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
-const Field = require('./../data/fields/Field'),
-    FieldDecoderInstructions = require('./../data/fields/FieldDecoderInstructions'),
-    FieldDefinition = require('../data/fields/FieldDefinition'),
-    Serializer = require('./../data/fields/Serializer'),
-    SerializerKey = require('./../data/fields/SerializerKey');
-
 const FieldPathExtractor = require('./../extractors/FieldPathExtractor');
 
-const Class = require('../data/Class'),
-    Entity = require('./../data/Entity'),
+const DemoPacketHandler = require('./../handlers/DemoPacketHandler');
+
+const Entity = require('./../data/Entity'),
     EntityState = require('./../data/EntityState'),
     Server = require('./../data/Server');
 
-const ProtoProvider = require('./../providers/ProtoProvider.instance');
-
-const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
+const WorkerRequestDClassInfo = require('./../workers/requests/WorkerRequestDClassInfo'),
+    WorkerRequestDSendTables = require('./../workers/requests/WorkerRequestDSendTables');
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
@@ -39,6 +33,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         super({ objectMode: true });
 
         this._parser = parser;
+
+        this._demoPacketHandler = new DemoPacketHandler(parser.demo);
     }
 
     /**
@@ -47,7 +43,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
      */
-    _transform(demoPacket, encoding, callback) {
+    async _transform(demoPacket, encoding, callback) {
         this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
         this._parser.packetTracker.handleDemoPacket(demoPacket);
 
@@ -62,14 +58,28 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 break;
             case DemoCommandType.DEM_SYNC_TICK:
                 break;
-            case DemoCommandType.DEM_SEND_TABLES:
-                this._handleDemSendTables(demoPacket.data);
+            case DemoCommandType.DEM_SEND_TABLES: {
+                this._demoPacketHandler.handleDemSendTables(demoPacket);
+
+                if (this._parser.isMultiThreaded) {
+                    const request = new WorkerRequestDSendTables(demoPacket);
+
+                    await this._parser.workerManager.broadcast(request);
+                }
 
                 break;
-            case DemoCommandType.DEM_CLASS_INFO:
-                this._handleDemClassInfo(demoPacket.data);
+            }
+            case DemoCommandType.DEM_CLASS_INFO: {
+                this._demoPacketHandler.handleDemClassInfo(demoPacket);
+
+                if (this._parser.isMultiThreaded) {
+                    const request = new WorkerRequestDClassInfo(demoPacket);
+
+                    await this._parser.workerManager.broadcast(request);
+                }
 
                 break;
+            }
             case DemoCommandType.DEM_STRING_TABLES:
                 this._parser.demo.stringTableContainer.handleInstantiate(demoPacket.data);
 
@@ -109,25 +119,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
         callback();
-    }
-
-    /**
-     * @protected
-     * @param {CDemoClassInfo} classInfo
-     */
-    _handleDemClassInfo(classInfo) {
-        classInfo.classes.forEach((data) => {
-            const key = new SerializerKey(data.networkName, 0);
-            const serializer = this._parser.demo.getSerializerByKey(key);
-
-            if (serializer === null) {
-                throw new Error(`Serializer not found [ ${key} ]`);
-            }
-
-            const clazz = new Class(data.classId, data.networkName, serializer);
-
-            this._parser.demo.registerClass(clazz);
-        });
     }
 
     /**
@@ -196,102 +187,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 default:
                     break;
             }
-        });
-    }
-
-    /**
-     * @protected
-     * @param {CDemoSendTables} messageData
-     */
-    _handleDemSendTables(messageData) {
-        const bitBuffer = new BitBuffer(messageData.data);
-
-        const size = bitBuffer.readUVarInt32();
-        const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
-
-        const decoded = CSVCMsg_FlattenedSerializer.decode(payload);
-
-        const fields = new Map();
-        const symbols = decoded.symbols;
-
-        const has = (target, key) => Object.hasOwn(target, key);
-        const get = (value, predicate, fallback) => predicate(value) ? value : fallback;
-
-        // Step 1: initialize serializers
-        decoded.serializers.forEach((serializerRaw) => {
-            const name = decoded.symbols[serializerRaw.serializerNameSym];
-            const version = serializerRaw.serializerVersion;
-
-            const serializer = new Serializer(name, version, [ ]);
-
-            this._parser.demo.registerSerializer(serializer);
-        });
-
-        // Step 1: adding fields
-        decoded.serializers.forEach((serializerRaw) => {
-            const name = decoded.symbols[serializerRaw.serializerNameSym];
-            const version = serializerRaw.serializerVersion;
-
-            const serializerKey = new SerializerKey(name, version);
-
-            const serializer = this._parser.demo.getSerializerByKey(serializerKey);
-
-            serializerRaw.fieldsIndex.forEach((fieldIndex) => {
-                let field = fields.get(fieldIndex) || null;
-
-                if (field === null) {
-                    const fieldRaw = decoded.fields[fieldIndex] || null;
-
-                    if (fieldRaw === null) {
-                        throw new Error(`fieldRaw with index [ ${fieldIndex} ] doesn't exist`);
-                    }
-
-                    let fieldSerializer = null;
-
-                    if (has(fieldRaw, 'fieldSerializerNameSym') && has(fieldRaw, 'fieldSerializerVersion')) {
-                        const serializerName = symbols[fieldRaw.fieldSerializerNameSym];
-                        const serializerVersion = fieldRaw.fieldSerializerVersion;
-
-                        const serializerKey = new SerializerKey(serializerName, serializerVersion);
-
-                        const existing = this._parser.demo.getSerializerByKey(serializerKey);
-
-                        if (existing === null) {
-                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${serializerKey.toString()} ] is not registered`);
-                        }
-
-                        fieldSerializer = existing;
-                    }
-
-                    const name = symbols[fieldRaw.varNameSym];
-                    const definition = FieldDefinition.parse(symbols[fieldRaw.varTypeSym]);
-
-                    const decoderInstructions = new FieldDecoderInstructions(
-                        get(symbols[fieldRaw.varEncoderSym], v => has(fieldRaw, 'varEncoderSym') && typeof v === 'string', null),
-                        get(fieldRaw.encodeFlags, v => has(fieldRaw, 'encodeFlags') && Number.isInteger(v), null),
-                        get(fieldRaw.bitCount, v => has(fieldRaw, 'bitCount') && Number.isInteger(v), null),
-                        get(fieldRaw.lowValue, v => has(fieldRaw, 'lowValue') && typeof v === 'number', null),
-                        get(fieldRaw.highValue, v => has(fieldRaw, 'highValue') && typeof v === 'number', null)
-                    );
-
-                    const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s.length > 0);
-
-                    // TODO: polymorphic types
-
-                    // patch
-                    if ([
-                        'm_flSimulationTime'
-                    ].includes(name)) {
-                        decoderInstructions.encoder = 'simtime';
-                    }
-
-                    field = new Field(name, definition, sendNode, decoderInstructions, fieldSerializer);
-                }
-
-                serializer.push(field);
-
-                fields.set(fieldIndex, field);
-            });
         });
     }
 

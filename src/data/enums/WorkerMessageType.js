@@ -48,11 +48,31 @@ class WorkerMessageType {
      * @static
      * @returns {WorkerMessageType}
      */
+    static get DEMO_SEND_TABLES() {
+        return demoSendTables;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get DEMO_CLASS_INFO() {
+        return demoClassInfo;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
     static get DEMO_HEAVY_PACKET_PARSE() {
         return demoHeavyPacketParse;
     }
 }
 
 const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
+const demoSendTables = new WorkerMessageType('DEMO_SEND_TABLES', 'Parsing DEM_SendTables packet');
+const demoClassInfo = new WorkerMessageType('DEMO_CLASS_INFO', 'Parsing DEM_ClassInfo packet');
 
 module.exports = WorkerMessageType;

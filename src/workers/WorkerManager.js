@@ -134,10 +134,6 @@ class WorkerManager {
     free(thread) {
         assert(thread instanceof WorkerThread);
 
-        if (!this._allocated.has(thread)) {
-            throw new Error(123);
-        }
-
         if (thread.busy) {
             throw new Error(`Unable to free a busy thread [ ${thread.getId()} ]`);
         }
