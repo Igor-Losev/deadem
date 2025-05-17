@@ -24,6 +24,8 @@ class WorkerThread {
         this._worker.on('message', (responseRaw) => {
             const response = WorkerResponseSerializer.deserialize(responseRaw);
 
+            logger.debug(`Response received [ ${response.type.code} ] from thread [ ${this.getId()} ]`);
+
             const deferred = this._deferred;
 
             this._busy = false;
@@ -83,6 +85,8 @@ class WorkerThread {
      * @returns {Promise<*>} - A promise that resolves with the response.
      */
     send(request) {
+        logger.debug(`Sending a request [ ${request.type.code} ] to thread [ ${this.getId()} ]`);
+
         if (this._busy) {
             throw new Error(`Unable to send a request [ ${request.type.code} ], thread [ ${this.getId()} ] is busy`);
         }

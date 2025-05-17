@@ -67,6 +67,8 @@ class WorkerManager {
         if (thread !== null) {
             this._allocated.add(thread);
 
+            logger.debug(`Allocated a thread [ ${thread.getId()} ]`);
+
             return thread;
         } else {
             const deferred = new DeferredPromise();
@@ -75,7 +77,7 @@ class WorkerManager {
 
             return deferred.promise
                 .then((thread) => {
-                    this._allocated.add(thread);
+                    logger.debug(`Allocated a thread [ ${thread.getId()} ] after waiting`);
 
                     return thread;
                 })
@@ -88,7 +90,7 @@ class WorkerManager {
      * @public
      * @returns {Array<Promise<WorkerThread>>} - An array of promises, each resolving to an allocated WorkerThread.
      */
-    async allocateAll() {
+    allocateAll() {
         const promises = [ ];
 
         for (let i = 0; i < this._concurrency; i++) {
@@ -101,23 +103,53 @@ class WorkerManager {
     }
 
     /**
+     * Broadcasts a {@link WorkerRequest} to all threads.
+     *
+     * @param {WorkerRequest} request - The request.
+     * @returns {Promise<Array<*>>} - An array of length = concurrency, where each element is a result promise.
+     */
+    async broadcast(request) {
+        const allocations = this.allocateAll();
+
+        const requests = allocations.map((promise) => {
+            return promise
+                .then(async (thread) => {
+                    const response = await thread.send(request);
+
+                    this.free(thread);
+
+                    return response;
+                });
+        });
+
+        return Promise.all(requests);
+    }
+
+    /**
      * Frees a previously allocated thread and resolves the next waiting promise if any.
      *
      * @public
      * @param {WorkerThread} thread - The thread to free.
-     * @returns {Promise<void>}
      */
-    async free(thread) {
+    free(thread) {
         assert(thread instanceof WorkerThread);
+
+        if (!this._allocated.has(thread)) {
+            throw new Error(123);
+        }
 
         if (thread.busy) {
             throw new Error(`Unable to free a busy thread [ ${thread.getId()} ]`);
         }
 
+        logger.debug(`Freeing a thread [ ${thread.getId()} ]`);
+
         this._allocated.delete(thread);
 
         if (this._queue.length > 0) {
             const promise = this._queue.shift();
+
+            this._allocated.add(thread);
 
             promise.resolve(thread);
         }
