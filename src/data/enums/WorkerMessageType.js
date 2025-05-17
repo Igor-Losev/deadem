@@ -48,31 +48,43 @@ class WorkerMessageType {
      * @static
      * @returns {WorkerMessageType}
      */
-    static get DEMO_SEND_TABLES() {
-        return demoSendTables;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {WorkerMessageType}
-     */
-    static get DEMO_CLASS_INFO() {
-        return demoClassInfo;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {WorkerMessageType}
-     */
     static get DEMO_HEAVY_PACKET_PARSE() {
         return demoHeavyPacketParse;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get DEMO_PACKET_SYNC() {
+        return demoPacketSync;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get MESSAGE_PACKET_SYNC() {
+        return messagePacketSync;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get SVC_PACKET_ENTITIES() {
+        return svcPacketEntities;
     }
 }
 
 const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
-const demoSendTables = new WorkerMessageType('DEMO_SEND_TABLES', 'Parsing DEM_SendTables packet');
-const demoClassInfo = new WorkerMessageType('DEMO_CLASS_INFO', 'Parsing DEM_ClassInfo packet');
+const demoPacketSync = new WorkerMessageType('DEMO_PACKET_SYNC', 'Synchronize demo packet');
+
+const messagePacketSync = new WorkerMessageType('MESSAGE_PACKET_SYNC', 'Synchronize message packet');
+
+const svcPacketEntities = new WorkerMessageType('SVC_PACKET_ENTITIES', 'Parsing SVC_PACKET_ENTITIES message');
 
 module.exports = WorkerMessageType;

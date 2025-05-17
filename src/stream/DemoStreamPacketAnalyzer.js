@@ -9,8 +9,9 @@ const DemoCommandType = require('./../data/enums/DemoCommandType'),
 const DemoPacketHandler = require('./../handlers/DemoPacketHandler'),
     DemoMessageHandler = require('./../handlers/DemoMessageHandler');
 
-const WorkerRequestDClassInfo = require('./../workers/requests/WorkerRequestDClassInfo'),
-    WorkerRequestDSendTables = require('./../workers/requests/WorkerRequestDSendTables');
+const WorkerRequestDPacketSync = require('./../workers/requests/WorkerRequestDPacketSync'),
+    WorkerRequestMPacketSync = require('./../workers/requests/WorkerRequestMPacketSync'),
+    WorkerRequestSvcPacketEntities = require('./../workers/requests/WorkerRequestSvcPacketEntities');
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
@@ -56,7 +57,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 this._demoPacketHandler.handleDemSendTables(demoPacket);
 
                 if (this._parser.isMultiThreaded) {
-                    const request = new WorkerRequestDSendTables(demoPacket);
+                    const request = new WorkerRequestDPacketSync(demoPacket);
 
                     await this._parser.workerManager.broadcast(request);
                 }
@@ -67,7 +68,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
                 if (this._parser.isMultiThreaded) {
-                    const request = new WorkerRequestDClassInfo(demoPacket);
+                    const request = new WorkerRequestDPacketSync(demoPacket);
 
                     await this._parser.workerManager.broadcast(request);
                 }
@@ -75,7 +76,13 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 break;
             }
             case DemoCommandType.DEM_STRING_TABLES:
-                this._parser.demo.stringTableContainer.handleInstantiate(demoPacket.data);
+                this._demoPacketHandler.handleDemStringTables(demoPacket);
+
+                if (this._parser.isMultiThreaded) {
+                    const request = new WorkerRequestDPacketSync(demoPacket);
+
+                    await this._parser.workerManager.broadcast(request);
+                }
 
                 break;
             case DemoCommandType.DEM_CONSOLE_CMD:
@@ -102,7 +109,9 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             case DemoCommandType.DEM_FULL_PACKET: {
                 const messagePackets = demoPacket.data;
 
-                messagePackets.forEach((messagePacket) => {
+                for (let i = 0; i < messagePackets.length; i++) {
+                    const messagePacket = messagePackets[i];
+
                     this._parser.packetTracker.handleMessagePacket(demoPacket, messagePacket);
 
                     switch (messagePacket.type) {
@@ -114,30 +123,70 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK:
                             break;
 
-                        case MessagePacketType.SVC_SERVER_INFO:
+                        case MessagePacketType.SVC_SERVER_INFO: {
                             this._demoMessageHandler.handleSvcServerInfo(messagePacket);
 
+                            if (this._parser.isMultiThreaded) {
+                                const request = new WorkerRequestMPacketSync(messagePacket);
+
+                                await this._parser.workerManager.broadcast(request);
+                            }
+
                             break;
+                        }
                         case MessagePacketType.SVC_CLASS_INFO:
                             break;
-                        case MessagePacketType.SVC_CREATE_STRING_TABLE:
+                        case MessagePacketType.SVC_CREATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
 
+                            if (this._parser.isMultiThreaded) {
+                                const request = new WorkerRequestMPacketSync(messagePacket);
+
+                                await this._parser.workerManager.broadcast(request);
+                            }
+
                             break;
-                        case MessagePacketType.SVC_UPDATE_STRING_TABLE:
+                        }
+                        case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
 
+                            if (this._parser.isMultiThreaded) {
+                                const request = new WorkerRequestMPacketSync(messagePacket);
+
+                                await this._parser.workerManager.broadcast(request);
+                            }
+
                             break;
+                        }
                         case MessagePacketType.SVC_VOICE_INIT:
                             break;
-                        case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
+                        case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
                             this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
 
-                            break;
-                        case MessagePacketType.SVC_PACKET_ENTITIES:
-                            this._demoMessageHandler.handleMessagePacketEntities(messagePacket);
+                            if (this._parser.isMultiThreaded) {
+                                const request = new WorkerRequestMPacketSync(messagePacket);
+
+                                await this._parser.workerManager.broadcast(request);
+                            }
 
                             break;
+                        }
+                        case MessagePacketType.SVC_PACKET_ENTITIES: {
+                            if (this._parser.isMultiThreaded) {
+                                const thread = await this._parser.workerManager.allocate();
+
+                                const request = new WorkerRequestSvcPacketEntities(messagePacket);
+
+                                thread.send(request)
+                                    .then((response) => {
+                                        this._parser.workerManager.free(thread);
+                                    });
+                            } else {
+                                this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+                            }
+
+                            break;
+                        }
                         case MessagePacketType.SVC_HLTV_STATUS:
                             break;
                         case MessagePacketType.SVC_USER_COMMANDS:
@@ -159,7 +208,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         default:
                             break;
                     }
-                });
+                }
 
                 break;
             }

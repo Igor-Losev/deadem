@@ -1,5 +1,7 @@
 'use strict';
 
+const MessagePacketType = require('./enums/MessagePacketType');
+
 class MessagePacket {
     /**
      * @public
@@ -20,9 +22,37 @@ class MessagePacket {
         return this._type;
     }
 
+    /**
+     * @returns {*}
+     */
     get data() {
         return this._data;
     }
+
+    /**
+     * @static
+     * @public
+     * @param {MessagePacketObject} object
+     * @returns {MessagePacket}
+     */
+    static fromObject(object) {
+        return new MessagePacket(MessagePacketType.parse(object.type), object.data);
+    }
+
+    /**
+     * @public
+     * @returns {MessagePacketObject}
+     */
+    toObject() {
+        return {
+            type: this._type.code,
+            data: this._data
+        };
+    }
 }
+
+/**
+ * @typedef {{type: String, data: *}} MessagePacketObject
+ */
 
 module.exports = MessagePacket;

@@ -4,14 +4,14 @@ const WorkerRequest = require('./WorkerRequest');
 
 const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-class WorkerRequestDSendTables extends WorkerRequest {
+class WorkerRequestDPacketSync extends WorkerRequest {
     /**
      * @constructor
      * @param {DemoPacket} demoPacket
      */
     constructor(demoPacket) {
-        super(WorkerMessageType.DEMO_SEND_TABLES, demoPacket, [ ]);
+        super(WorkerMessageType.DEMO_PACKET_SYNC, demoPacket, [ ]);
     }
 }
 
-module.exports = WorkerRequestDSendTables;
+module.exports = WorkerRequestDPacketSync;

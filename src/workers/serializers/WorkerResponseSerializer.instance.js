@@ -4,9 +4,10 @@ const MessagePacketRaw = require('./../../data/MessagePacketRaw');
 
 const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-const WorkerResponseDClassInfo = require('./../responses/WorkerResponseDClassInfo'),
-    WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
-    WorkerResponseDSendTables = require('./../responses/WorkerResponseDSendTables');
+const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
+    WorkerResponseDPacketSync = require('./../responses/WorkerResponseDPacketSync'),
+    WorkerResponseMPacketSync = require('./../responses/WorkerResponseMPacketSync'),
+    WorkerResponseSvcPacketEntities = require('./../responses/WorkerResponseSvcPacketEntities');
 
 class WorkerResponseSerializer {
     constructor() {
@@ -21,15 +22,7 @@ class WorkerResponseSerializer {
      * @returns {Object}
      */
     serialize(instance) {
-        if (instance instanceof WorkerResponseDClassInfo) {
-            return {
-                type: instance.type.code
-            };
-        } else if (instance instanceof WorkerResponseDSendTables) {
-            return {
-                type: instance.type.code
-            };
-        } else if (instance instanceof WorkerResponseDHPParse) {
+        if (instance instanceof WorkerResponseDHPParse) {
             return {
                 type: instance.type.code,
                 payload: instance.payload.map((batch) => {
@@ -37,6 +30,18 @@ class WorkerResponseSerializer {
                         return [ messagePacketRaw.type, messagePacketRaw.size, messagePacketRaw.payload ];
                     });
                 })
+            };
+        } else if (instance instanceof WorkerResponseDPacketSync) {
+            return {
+                type: instance.type.code
+            };
+        } else if (instance instanceof WorkerResponseMPacketSync) {
+            return {
+                type: instance.type.code
+            };
+        } else if (instance instanceof WorkerResponseSvcPacketEntities) {
+            return {
+                type: instance.type.code
             };
         } else {
             throw new Error(`Unable to serialize instance [ ${instance} ]`);
@@ -56,12 +61,6 @@ class WorkerResponseSerializer {
         }
 
         switch (type) {
-            case WorkerMessageType.DEMO_CLASS_INFO: {
-                return new WorkerResponseDClassInfo();
-            }
-            case WorkerMessageType.DEMO_SEND_TABLES: {
-                return new WorkerResponseDSendTables();
-            }
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
                 const batches = object.payload.map((batch) => {
                    return batch.map((values) => {
@@ -73,7 +72,15 @@ class WorkerResponseSerializer {
 
                 return new WorkerResponseDHPParse(batches);
             }
-
+            case WorkerMessageType.DEMO_PACKET_SYNC: {
+                return new WorkerResponseDPacketSync();
+            }
+            case WorkerMessageType.MESSAGE_PACKET_SYNC: {
+                return new WorkerResponseMPacketSync();
+            }
+            case WorkerMessageType.SVC_PACKET_ENTITIES: {
+                return new WorkerResponseSvcPacketEntities();
+            }
             default:
                 throw new Error(`Unable to deserialize object [ ${object.type} ]`);
         }

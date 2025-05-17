@@ -9,18 +9,21 @@ const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawEx
 const Demo = require('./../../data/Demo');
 
 const DemoCommandType = require('./../../data/enums/DemoCommandType'),
+    MessagePacketType = require('./../../data/enums/MessagePacketType'),
     WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-const DemoPacketHandler = require('./../../handlers/DemoPacketHandler');
+const DemoMessageHandler = require('./../../handlers/DemoMessageHandler'),
+    DemoPacketHandler = require('./../../handlers/DemoPacketHandler');
 
 const LoggerProvider = require('./../../providers/LoggerProvider.instance');
 
 const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerializer.instance'),
     WorkerResponseSerializer = require('./../serializers/WorkerResponseSerializer.instance');
 
-const WorkerResponseDClassInfo = require('./../responses/WorkerResponseDClassInfo'),
-    WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
-    WorkerResponseDSendTables = require('./../responses/WorkerResponseDSendTables');
+const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
+    WorkerResponseDPacketSync = require('./../responses/WorkerResponseDPacketSync'),
+    WorkerResponseMPacketSync = require('./../responses/WorkerResponseMPacketSync'),
+    WorkerResponseSvcPacketEntities = require('./../responses/WorkerResponseSvcPacketEntities');
 
 const logger = LoggerProvider.getLogger('Worker');
 
@@ -35,18 +38,64 @@ const state = getInitialState();
         const request = WorkerRequestSerializer.deserialize(requestRaw);
 
         switch (request.type) {
-            case WorkerMessageType.DEMO_CLASS_INFO:
-                handleClassInfo(request);
-
-                break;
-            case WorkerMessageType.DEMO_SEND_TABLES:
-                handleSendTables(request);
-
-                break;
-            case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE:
+            case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
                 handleHeavyPacketParse(request);
 
                 break;
+            }
+            case WorkerMessageType.DEMO_PACKET_SYNC: {
+                const demoPacket = request.payload;
+
+                switch (demoPacket.command) {
+                    case DemoCommandType.DEM_CLASS_INFO:
+                        handleClassInfo(request);
+
+                        break;
+                    case DemoCommandType.DEM_SEND_TABLES:
+                        handleSendTables(request);
+
+                        break;
+                    case DemoCommandType.DEM_STRING_TABLES:
+                        handleStringTables(request);
+
+                        break;
+                    default:
+                        throw new Error(`Unhandled message [ ${WorkerMessageType.DEMO_PACKET_SYNC.code} ] [ ${demoPacket.command.code} ]`);
+                }
+
+                break;
+            }
+            case WorkerMessageType.MESSAGE_PACKET_SYNC: {
+                const messagePacket = request.payload;
+
+                switch (messagePacket.type) {
+                    case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
+                        handleSvcClearAllStringTables(request);
+
+                        break;
+                    case MessagePacketType.SVC_CREATE_STRING_TABLE:
+                        handleSvcCreateStringTable(request);
+
+                        break;
+                    case MessagePacketType.SVC_UPDATE_STRING_TABLE:
+                        handleSvcUpdateStringTable(request);
+
+                        break;
+                    case MessagePacketType.SVC_SERVER_INFO:
+                        handleSvcServerInfo(request);
+
+                        break;
+                    default:
+                        throw new Error(`Unhandled message [ ${WorkerMessageType.MESSAGE_PACKET_SYNC.code} ] [ ${messagePacket.type.code} ]`);
+                }
+
+                break;
+            }
+            case WorkerMessageType.SVC_PACKET_ENTITIES: {
+                handleSvcPacketEntities(request);
+
+                break;
+            }
             default:
                 throw new Error(`Unhandled request [ ${request.type.code} ]`);
         }
@@ -57,9 +106,11 @@ function getInitialState() {
     const demo = new Demo();
 
     const demoPacketHandler = new DemoPacketHandler(demo);
+    const demoMessageHandler = new DemoMessageHandler(demo);
 
     return {
         demo,
+        demoMessageHandler,
         demoPacketHandler
     };
 }
@@ -98,10 +149,10 @@ function handleHeavyPacketParse(request) {
 }
 
 /**
- * @param {WorkerResponseDClassInfo} request
+ * @param {WorkerRequestDPacketSync} request
  */
 function handleClassInfo(request) {
-    const response = new WorkerResponseDClassInfo();
+    const response = new WorkerResponseDPacketSync();
 
     const demoPacket = request.payload;
 
@@ -111,14 +162,92 @@ function handleClassInfo(request) {
 }
 
 /**
- * @param {WorkerResponseDSendTables} request
+ * @param {WorkerRequestDPacketSync} request
  */
 function handleSendTables(request) {
-    const response = new WorkerResponseDSendTables();
+    const response = new WorkerResponseDPacketSync();
 
     const demoPacket = request.payload;
 
     state.demoPacketHandler.handleDemSendTables(demoPacket);
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestDPacketSync} request
+ */
+function handleStringTables(request) {
+    const response = new WorkerResponseDPacketSync();
+
+    const demoPacket = request.payload;
+
+    state.demoPacketHandler.handleDemStringTables(demoPacket);
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestMPacketSync} request
+ */
+function handleSvcClearAllStringTables(request) {
+    const messagePacket = request.payload;
+
+    state.demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
+
+    const response = new WorkerResponseMPacketSync();
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestMPacketSync} request
+ */
+function handleSvcCreateStringTable(request) {
+    const messagePacket = request.payload;
+
+    state.demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+
+    const response = new WorkerResponseMPacketSync();
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestMPacketSync} request
+ */
+function handleSvcUpdateStringTable(request) {
+    const messagePacket = request.payload;
+
+    state.demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+
+    const response = new WorkerResponseMPacketSync();
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestSvcPacketEntities} request
+ */
+function handleSvcPacketEntities(request) {
+    const messagePacket = request.payload;
+
+    state.demoMessageHandler.handleSvcPacketEntities(messagePacket);
+
+    const response = new WorkerResponseSvcPacketEntities();
+
+    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+}
+
+/**
+ * @param {WorkerRequestMPacketSync} request
+ */
+function handleSvcServerInfo(request) {
+    const messagePacket = request.payload;
+
+    state.demoMessageHandler.handleSvcServerInfo(messagePacket);
+
+    const response = new WorkerResponseMPacketSync();
 
     parentPort.postMessage(WorkerResponseSerializer.serialize(response));
 }

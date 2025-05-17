@@ -150,6 +150,16 @@ class DemoPacketHandler {
             this._demo.registerClass(clazz);
         });
     }
+
+    /**
+     * Handles a {@link DemoCommandType.DEM_STRING_TABLES} (ID = 6).
+     *
+     * @public
+     * @param {DemoPacket} demoPacket
+     */
+    handleDemStringTables(demoPacket) {
+        this._demo.stringTableContainer.handleInstantiate(demoPacket.data);
+    }
 }
 
 module.exports = DemoPacketHandler;

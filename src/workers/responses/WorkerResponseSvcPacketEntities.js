@@ -4,13 +4,13 @@ const WorkerResponse = require('./WorkerResponse');
 
 const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-class WorkerResponseDSendTables extends WorkerResponse {
+class WorkerResponseSvcPacketEntities extends WorkerResponse {
     /**
      * @constructor
      */
     constructor() {
-        super(WorkerMessageType.DEMO_SEND_TABLES, null, [ ]);
+        super(WorkerMessageType.SVC_PACKET_ENTITIES, null, [ ]);
     }
 }
 
-module.exports = WorkerResponseDSendTables;
+module.exports = WorkerResponseSvcPacketEntities;

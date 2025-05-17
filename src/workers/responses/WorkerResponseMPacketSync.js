@@ -4,13 +4,13 @@ const WorkerResponse = require('./WorkerResponse');
 
 const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
-class WorkerResponseDClassInfo extends WorkerResponse {
+class WorkerResponseMPacketSync extends WorkerResponse {
     /**
      * @constructor
      */
     constructor() {
-        super(WorkerMessageType.DEMO_CLASS_INFO, null, [ ]);
+        super(WorkerMessageType.MESSAGE_PACKET_SYNC, null, [ ]);
     }
 }
 
-module.exports = WorkerResponseDClassInfo;
+module.exports = WorkerResponseMPacketSync;

@@ -70,7 +70,7 @@ class DemoMessageHandler {
      * @public
      * @param {MessagePacket} messagePacket
      */
-    handleMessagePacketEntities(messagePacket) {
+    handleSvcPacketEntities(messagePacket) {
         const message = messagePacket.data;
 
         const bitBuffer = new BitBuffer(message.entityData);
