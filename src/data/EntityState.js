@@ -1,5 +1,7 @@
 'use strict';
 
+const FieldPathExtractor = require('./../extractors/FieldPathExtractor');
+
 class EntityState extends Array {
     constructor(...args) {
         super(...args);
@@ -7,6 +9,30 @@ class EntityState extends Array {
 
     getValue() {
 
+    }
+
+    /**
+     * @public
+     * @param {BitBuffer} bitBuffer
+     * @param {Serializer} serializer
+     */
+    read(bitBuffer, serializer) {
+        const extractor = new FieldPathExtractor(bitBuffer);
+        const generator = extractor.retrieve();
+
+        const fieldPaths = [ ];
+
+        for (const fieldPath of generator) {
+            fieldPaths.push(fieldPath);
+        }
+
+        fieldPaths.forEach((fieldPath) => {
+            const decoder = serializer.getDecoderForFieldPath(fieldPath);
+
+            const value = decoder.decode(bitBuffer);
+
+            this.setValue(fieldPath, value);
+        });
     }
 
     /**
