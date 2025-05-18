@@ -111,6 +111,7 @@ class Demo {
     /**
      * @public
      * @param {Number} index
+     * @returns {Entity|null}
      */
     getEntity(index) {
         assert(Number.isInteger(index));
