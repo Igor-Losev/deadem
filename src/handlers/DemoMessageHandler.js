@@ -9,6 +9,8 @@ const Demo = require('./../data/Demo'),
 
 const BitBuffer = require('./../data/buffer/BitBufferFast');
 
+const EntityOperation = require('./../data/enums/EntityOperation');
+
 class DemoMessageHandler {
     /**
      * @constructor
@@ -91,20 +93,18 @@ class DemoMessageHandler {
             const command = bitBuffer.read(2)[0];
 
             switch (command) {
-                case 0: { // Update
+                case EntityOperation.UPDATE.id: {
                     const entity = this._demo.getEntity(index);
 
                     if (entity === null) {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
-                    const state = new EntityState();
-
-                    state.read(bitBuffer, entity.class.serializer);
+                    entity.updateFromBitBuffer(bitBuffer);
 
                     break;
                 }
-                case 1: { // Leave
+                case EntityOperation.LEAVE.id: {
                     const entity = this._demo.getEntity(index);
 
                     if (entity === null) {
@@ -115,7 +115,7 @@ class DemoMessageHandler {
 
                     break;
                 }
-                case 2: { // Create
+                case EntityOperation.CREATE.id: {
                     const classIdSizeBits = this._demo.server.classIdSizeBits;
 
                     const bufferForClassId = bitBuffer.read(classIdSizeBits);
@@ -142,16 +142,12 @@ class DemoMessageHandler {
 
                     this._demo.registerEntity(entity);
 
-                    const state = new EntityState();
-
-                    state.read(new BitBuffer(baseline), clazz.serializer);
-                    state.read(bitBuffer, clazz.serializer);
-
-                    // ---- TODO: Update entity state
+                    entity.updateFromBitBuffer(new BitBuffer(baseline));
+                    entity.updateFromBitBuffer(bitBuffer);
 
                     break;
                 }
-                case 3: { // Delete
+                case EntityOperation.DELETE.id: {
                     const entity = this._demo.getEntity(index);
 
                     if (entity === null) {

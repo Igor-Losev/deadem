@@ -7,16 +7,12 @@ class EntityState extends Array {
         super(...args);
     }
 
-    getValue() {
-
-    }
-
     /**
      * @public
      * @param {BitBuffer} bitBuffer
      * @param {Serializer} serializer
      */
-    read(bitBuffer, serializer) {
+    updateFromBitBuffer(bitBuffer, serializer) {
         const extractor = new FieldPathExtractor(bitBuffer);
         const generator = extractor.retrieve();
 
@@ -31,7 +27,7 @@ class EntityState extends Array {
 
             const value = decoder.decode(bitBuffer);
 
-            this.setValue(fieldPath, value);
+            this.updateByFieldPath(fieldPath, value);
         });
     }
 
@@ -40,7 +36,7 @@ class EntityState extends Array {
      * @param {FieldPath} fieldPath
      * @param {*} value
      */
-    setValue(fieldPath, value) {
+    updateByFieldPath(fieldPath, value) {
         let state = this;
 
         for (let i = 0; i < fieldPath.length; i++) {

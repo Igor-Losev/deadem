@@ -2,7 +2,8 @@
 
 const assert = require('node:assert/strict');
 
-const Class = require('./Class');
+const Class = require('./Class'),
+    EntityState = require('./EntityState');
 
 class Entity {
     constructor(index, serial, clazz) {
@@ -13,6 +14,8 @@ class Entity {
         this._index = index;
         this._serial = serial;
         this._class = clazz;
+
+        this._state = new EntityState();
     }
 
     /**
@@ -34,6 +37,30 @@ class Entity {
      */
     get class() {
         return this._class;
+    }
+
+    /**
+     * @returns {EntityState}
+     */
+    get state() {
+        return this._state;
+    }
+
+    /**
+     * @public
+     * @param {BitBuffer} bitBuffer
+     */
+    updateFromBitBuffer(bitBuffer) {
+        this._state.updateFromBitBuffer(bitBuffer, this._class.serializer);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {*} value
+     */
+    updateByFieldPath(fieldPath, value) {
+        this._state.updateByFieldPath(fieldPath, value);
     }
 }
 
