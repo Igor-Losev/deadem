@@ -29,17 +29,33 @@ const loggerForPerformance = LoggerProvider.getLogger('Tracker/Performance');
 
 const logger = LoggerProvider.getLogger('Parser');
 
+const OPTIONS = {
+    BATCHER_CHUNK_SIZE: 'batcherChunkSize',
+    BATCHER_THRESHOLD_MILLISECONDS: 'batcherThresholdMilliseconds',
+    PARSER_THREADS: 'parserThreads',
+    SPLITTER_CHUNK_SIZE: 'splitterChunkSize'
+};
+
+const DEFAULTS = {
+    [OPTIONS.BATCHER_CHUNK_SIZE]: 100 * 1024,
+    [OPTIONS.BATCHER_THRESHOLD_MILLISECONDS]: 50,
+    [OPTIONS.PARSER_THREADS]: 0,
+    [OPTIONS.SPLITTER_CHUNK_SIZE]: 200 * 1024
+};
+
 class Parser {
-    constructor(
-        parserThreads = 0,
-        splitterChunkSize = 200 * 1024,
-        batcherChunkSize = 100 * 1024,
-        batcherThresholdMilliseconds = 50
-    ) {
-        assert(Number.isInteger(parserThreads));
-        assert(Number.isInteger(splitterChunkSize));
+    constructor(options) {
+        const getOption = key => options && options[key] ? options[key] : DEFAULTS[key];
+
+        const batcherChunkSize = getOption(OPTIONS.BATCHER_CHUNK_SIZE)
+        const batcherThresholdMilliseconds = getOption(OPTIONS.BATCHER_THRESHOLD_MILLISECONDS);
+        const parserThreads = getOption(OPTIONS.PARSER_THREADS);
+        const splitterChunkSize = getOption(OPTIONS.SPLITTER_CHUNK_SIZE);
+
         assert(Number.isInteger(batcherChunkSize));
         assert(Number.isInteger(batcherThresholdMilliseconds));
+        assert(Number.isInteger(parserThreads));
+        assert(Number.isInteger(splitterChunkSize));
 
         this._isMultiThreaded = parserThreads > 0;
 

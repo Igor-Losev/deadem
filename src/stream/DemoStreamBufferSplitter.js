@@ -33,10 +33,10 @@ class DemoStreamBufferSplitter extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(chunk, encoding, callback) {
-        if (chunk.length <= this._maxChunkSize) {
+        if (chunk.byteLength <= this._maxChunkSize) {
             this.push(chunk);
         } else {
-            for (let i = 0; i < Math.ceil(chunk.length / this._maxChunkSize); i++) {
+            for (let i = 0; i < Math.ceil(chunk.byteLength / this._maxChunkSize); i++) {
                 this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
 
                 const slice = chunk.subarray(i * this._maxChunkSize, (i + 1) * this._maxChunkSize);

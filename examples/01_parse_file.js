@@ -6,13 +6,14 @@ const fs = require('node:fs'),
 
 const Parser = require('./../src/Parser');
 
+const CONFIG = {
+    path: path.resolve(__dirname, './../demos/35244871.dem')
+};
+
 (async () => {
-    const DEMO_PATH = path.resolve(__dirname, './../demos/35244871.dem');
-    const PARSER_THREADS = 4;
+    const buffer = fs.readFileSync(CONFIG.path);
 
-    const buffer = fs.readFileSync(DEMO_PATH);
-
-    const parser = new Parser(PARSER_THREADS);
+    const parser = new Parser();
 
     const reader = Stream.Readable.from(buffer);
 
