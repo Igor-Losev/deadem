@@ -2,8 +2,7 @@
 
 const assert = require('node:assert/strict');
 
-const Field = require('./Field'),
-    FieldPath = require('./path/FieldPath');
+const Field = require('./Field');
 
 const SerializerKey = require('./SerializerKey');
 
@@ -44,9 +43,6 @@ class Serializer {
      * @param {Number=} fieldPathIndex
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
-        assert(fieldPath instanceof FieldPath);
-        assert(Number.isInteger(fieldPathIndex));
-
         const fieldIndex = fieldPath.get(fieldPathIndex);
 
         if (!Number.isInteger(fieldIndex) || fieldIndex >= this._fields.length) {
