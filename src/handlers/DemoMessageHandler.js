@@ -118,13 +118,10 @@ class DemoMessageHandler {
                 case EntityOperation.CREATE.id: {
                     const classIdSizeBits = this._demo.server.classIdSizeBits;
 
-                    const bufferForClassId = bitBuffer.read(classIdSizeBits);
-                    const bufferForSerial = bitBuffer.read(17);
+                    const classId = BitBuffer.readUInt32LE(bitBuffer.read(classIdSizeBits));
+                    const serial = BitBuffer.readUInt32LE(bitBuffer.read(17));
 
                     const ignored = bitBuffer.readUVarInt32();
-
-                    const classId = BitBuffer.readUInt32LE(bufferForClassId);
-                    const serial = BitBuffer.readUInt32LE(bufferForSerial);
 
                     const clazz = this._demo.getClassById(classId);
 

@@ -139,7 +139,7 @@ class BitBuffer {
      * @param {boolean} allocateNew
      * @returns {Buffer}
      */
-    read(numberOfBits, allocateNew = true) {
+    read(numberOfBits, allocateNew = false) {
         return this._read(numberOfBits, allocateNew);
     }
 
