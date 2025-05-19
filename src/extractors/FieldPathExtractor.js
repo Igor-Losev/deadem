@@ -17,64 +17,73 @@ class FieldPathExtractor {
     /**
      * @public
      * @constructor
-     * @param {Buffer|BitBuffer} buffer
+     * @param {BitBuffer} bitBuffer
      */
-    constructor(buffer) {
-        assert(Buffer.isBuffer(buffer) || buffer instanceof BitBuffer);
-
-        let bitBuffer;
-
-        if (Buffer.isBuffer(buffer)) {
-            bitBuffer = new BitBuffer(buffer);
-        } else {
-            bitBuffer = buffer;
-        }
+    constructor(bitBuffer) {
+        assert(bitBuffer instanceof BitBuffer);
 
         this._bitBuffer = bitBuffer;
+
+        this._fieldPathBuilder = new FieldPathBuilder();
     }
 
-    *retrieve() {
-        let node = HuffmanTree.ROOT;
+    /**
+     * @public
+     * @returns {Array<FieldPath>}
+     */
+    all() {
+        const fieldPaths = [ ];
 
-        const fieldPathBuilder = new FieldPathBuilder();
-
-        while (true) {
-            let next;
-
-            const right = this._bitBuffer.readBit();
-
-            if (right) {
-                next = node.rightChild;
-            } else {
-                next = node.leftChild;
-            }
-
-            if (next.getIsLeaf()) {
-                const operation = next.operation;
-
-                if (operation === null) {
-                    throw new Error(`HuffmanTree leaf doesn't have an operation set. This should never happen`);
-                }
-
-                if (operation === FieldPathOperation.FINISH) {
-                    logger.debug(`Found operation [ ${FieldPathOperation.FINISH.code} ]. Finishing`);
-
-                    break;
-                }
-
-                logger.debug(`Executing operation [ ${operation.code} ]`);
-
-                operation.executor(this._bitBuffer, fieldPathBuilder);
-
-                const fieldPath = fieldPathBuilder.build();
-
-                yield fieldPath;
-
-                node = HuffmanTree.ROOT;
-            } else {
-                node = next;
-            }
+        for (let fieldPath = this._extractOnce(); fieldPath !== null; fieldPath = this._extractOnce()) {
+            fieldPaths.push(fieldPath);
         }
+
+        return fieldPaths;
+    }
+
+    /**
+     * @generator
+     * @yields {FieldPath}
+     * @returns {void}
+     */
+    *retrieve() {
+        for (let fieldPath = this._extractOnce(); fieldPath !== null; fieldPath = this._extractOnce()) {
+            yield fieldPath;
+        }
+    }
+
+    /**
+     * @public
+     */
+    reset() {
+        this._bitBuffer.reset();
+        this._fieldPathBuilder = new FieldPathBuilder();
+    }
+
+    /**
+     * @protected
+     * @returns {FieldPath}
+     */
+    _extractOnce() {
+        const bits = Math.min(this._bitBuffer.getUnreadCount(), HuffmanTree.DEPTH);
+
+        const value = BitBuffer.readUInt32LE(this._bitBuffer.read(bits));
+
+        const { bitsUsed, operation } = HuffmanTree.get(value);
+
+        this._bitBuffer.move(-(bits - bitsUsed));
+
+        if (operation === FieldPathOperation.FINISH) {
+            logger.debug(`Found operation [ ${FieldPathOperation.FINISH.code} ]. Finishing`);
+
+            return null;
+        }
+
+        logger.debug(`Executing operation [ ${operation.code} ]`);
+
+        operation.executor(this._bitBuffer, this._fieldPathBuilder);
+
+        return this._fieldPathBuilder.build();
     }
 }
 

@@ -14,13 +14,8 @@ class EntityState extends Array {
      */
     updateFromBitBuffer(bitBuffer, serializer) {
         const extractor = new FieldPathExtractor(bitBuffer);
-        const generator = extractor.retrieve();
 
-        const fieldPaths = [ ];
-
-        for (const fieldPath of generator) {
-            fieldPaths.push(fieldPath);
-        }
+        const fieldPaths = extractor.all();
 
         fieldPaths.forEach((fieldPath) => {
             const decoder = serializer.getDecoderForFieldPath(fieldPath);
