@@ -59,32 +59,46 @@ class Field {
      * @returns {FieldDecoder}
      */
     getDecoderForFieldPath(fieldPath, index = 0) {
+        let decoder;
+
         switch (this._model) {
             case FieldModel.ARRAY_FIXED:
-                return this._decoder;
+                decoder = this._decoder;
+
+                break;
             case FieldModel.ARRAY_VARIABLE:
                 if (fieldPath.length - 1 === index) {
-                    return this._decoderChild;
+                    decoder = this._decoderChild;
+                } else {
+                    decoder = this._decoderBase;
                 }
 
-                return this._decoderBase;
+                break;
             case FieldModel.SIMPLE:
-                return this._decoder;
+                decoder = this._decoder;
+
+                break;
             case FieldModel.TABLE_FIXED:
                 if (fieldPath.length === index) {
-                    return this._decoderBase;
+                    decoder = this._decoderBase;
+                } else {
+                    decoder = this._serializer.getDecoderForFieldPath(fieldPath, index);
                 }
 
-                return this._serializer.getDecoderForFieldPath(fieldPath, index);
+                break;
             case FieldModel.TABLE_VARIABLE:
                 if (fieldPath.length - 1 >= index + 1) {
-                    return this._serializer.getDecoderForFieldPath(fieldPath, index + 1);
+                    decoder = this._serializer.getDecoderForFieldPath(fieldPath, index + 1);
+                } else {
+                    decoder = this._decoderBase;
                 }
 
-                return this._decoderBase;
+                break;
             default:
                 throw new Error(`Unhandled model [ ${this._model} ]`);
         }
+
+        return decoder;
     }
 
     /**
