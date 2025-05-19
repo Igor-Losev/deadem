@@ -1,6 +1,6 @@
 'use strict';
 
-const BitBuffer = require('../data/buffer/BitBufferFast');
+const BitBuffer = require('../data/buffer/BitBuffer');
 
 const MessagePacketRaw = require('../data/MessagePacketRaw');
 

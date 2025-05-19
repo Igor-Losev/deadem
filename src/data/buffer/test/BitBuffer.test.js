@@ -1,4 +1,4 @@
-const BitBuffer = require('./../BitBufferFast');
+const BitBuffer = require('./../BitBuffer');
 
 describe('BitBuffer.read()', () => {
     describe('When reading chunks [ 6, 4, 3, 1, 2 ] from [ 0x51, 0x85 ]', () => {

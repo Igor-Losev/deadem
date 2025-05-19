@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 
-const BitBuffer = require('./../data/buffer/BitBufferFast');
+const BitBuffer = require('./../data/buffer/BitBuffer');
 
 const FieldPathOperation = require('./../data/enums/FieldPathOperation');
 

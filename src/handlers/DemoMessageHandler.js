@@ -7,7 +7,7 @@ const Demo = require('./../data/Demo'),
     EntityState = require('./../data/EntityState'),
     Server = require('./../data/Server');
 
-const BitBuffer = require('./../data/buffer/BitBufferFast');
+const BitBuffer = require('./../data/buffer/BitBuffer');
 
 const EntityOperation = require('./../data/enums/EntityOperation');
 

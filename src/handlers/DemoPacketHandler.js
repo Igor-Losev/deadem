@@ -5,7 +5,7 @@ const assert = require('assert/strict');
 const Class = require('./../data/Class'),
     Demo = require('./../data/Demo');
 
-const BitBuffer = require('./../data/buffer/BitBufferFast');
+const BitBuffer = require('./../data/buffer/BitBuffer');
 
 const Field = require('./../data/fields/Field'),
     FieldDecoderInstructions = require('./../data/fields/FieldDecoderInstructions'),
