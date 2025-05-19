@@ -122,8 +122,6 @@ function handleHeavyPacketParse(request) {
     const batches = [ ];
 
     request.payload.forEach((buffer) => {
-        const batch = [ ];
-
         let decompressed;
 
         try {
@@ -134,11 +132,9 @@ function handleHeavyPacketParse(request) {
 
         const decoded = DemoCommandType.DEM_PACKET.proto.decode(decompressed);
 
-        const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
+        const extractor = new MessagePacketRawExtractor(decoded.data);
 
-        for (const messagePacketRaw of extractor) {
-            batch.push(messagePacketRaw);
-        }
+        const batch = extractor.all();
 
         batches.push(batch);
     });

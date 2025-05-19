@@ -187,17 +187,18 @@ function parseDemoPacket(demoPacketRaw) {
     let demoPacket;
 
     if (HEAVY_PACKETS.includes(demoCommandType)) {
-        const extractor = new MessagePacketRawExtractor(decoded.data).retrieve();
+        const extractor = new MessagePacketRawExtractor(decoded.data);
 
+        const messagePacketsRaw = extractor.all();
         const messagePackets = [ ];
 
-        for (const messagePacketRaw of extractor) {
+        messagePacketsRaw.forEach((messagePacketRaw) => {
             const messagePacket = parseMessagePacket.call(this, messagePacketRaw);
 
             if (messagePacket !== null) {
                 messagePackets.push(messagePacket);
             }
-        }
+        });
 
         demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, messagePackets);
     } else {
