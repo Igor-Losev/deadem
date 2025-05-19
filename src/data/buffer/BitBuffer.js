@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('assert');
-
 const UVarInt32 = require('./../UVarInt32');
 
 const BITS_PER_BYTE = 8;
@@ -40,17 +38,15 @@ class BitBuffer {
      * @throws {Error} If the buffer size is not between 1 and 4 bytes.
      */
     static readUInt32LE(buffer) {
-        assert(buffer instanceof Buffer);
-
         switch (buffer.byteLength) {
             case 1:
-                return buffer.readUInt8();
+                return buffer[0] >>> 0;
             case 2:
-                return buffer.readUInt16LE();
+                return (buffer[0] | (buffer[1] << 8)) >>> 0;
             case 3:
-                return Buffer.concat([ buffer, Buffer.alloc(1) ]).readUInt32LE();
+                return (buffer[0] | (buffer[1] << 8) | (buffer[2] << 16)) >>> 0;
             case 4:
-                return buffer.readUInt32LE();
+                return (buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24)) >>> 0;
             default:
                 throw new Error(`Unexpected buffer size [ ${buffer.byteLength} ]`);
         }
@@ -77,15 +73,63 @@ class BitBuffer {
     }
 
     /**
+     * Moves the internal read pointer forward or backward by a given number of bits.
+     *
+     * @public
+     * @param {Number} bits - Number of bits to move.
+     */
+    move(bits) {
+        const abs = Math.abs(bits);
+
+        if (abs === 0) {
+            return;
+        }
+
+        if (bits > 0 && bits > this.getUnreadCount()) {
+            throw new Error(`Cannot move pointer forward by ${bits} bits: only [ ${this.getUnreadCount()} ] bits unread`);
+        }
+
+        if (bits < 0 && abs > this.getReadCount()) {
+            throw new Error(`Cannot move pointer backward by ${abs} bits: only [ ${this.getReadCount()} ] bits read`);
+        }
+
+        const numberOfBytes = Math.floor(abs / BitBuffer.BITS_PER_BYTE);
+        const numberOfBits = abs % BitBuffer.BITS_PER_BYTE;
+
+        if (bits > 0) {
+            this._pointers.byte += numberOfBytes;
+
+            if (this._pointers.bit + numberOfBits < BitBuffer.BITS_PER_BYTE) {
+                this._pointers.bit += numberOfBits;
+            } else {
+                this._pointers.byte += 1;
+                this._pointers.bit = (this._pointers.bit + numberOfBits) % BitBuffer.BITS_PER_BYTE;
+            }
+        }
+
+        if (bits < 0) {
+            this._pointers.byte -= numberOfBytes;
+
+            if (this._pointers.bit - numberOfBits >= 0) {
+                this._pointers.bit -= numberOfBits;
+            } else {
+                this._pointers.byte -= 1;
+                this._pointers.bit = BitBuffer.BITS_PER_BYTE - Math.abs(this._pointers.bit - numberOfBits);
+            }
+        }
+    }
+
+    /**
      * Reads the specified number of bits from the buffer.
      * Returns a Buffer with a length of Math.ceil(numberOfBits / 8).
      *
      * @public
      * @param {number} numberOfBits - The number of bits to read.
+     * @param {boolean} allocateNew
      * @returns {Buffer} A buffer containing the read bits.
      */
-    read(numberOfBits) {
-        return this._read(numberOfBits);
+    read(numberOfBits, allocateNew = true) {
+        return this._read(numberOfBits, allocateNew);
     }
 
     /**
@@ -110,9 +154,11 @@ class BitBuffer {
      * @returns {0|1} The bit value (0 or 1).
      */
     readBit() {
-        const buffer = this._read(1);
+        const value = (this._buffer[this._pointers.byte] >> this._pointers.bit) & 1;
 
-        return buffer[0] >>> 0;
+        this.move(1);
+
+        return value;
     }
 
     /**
@@ -133,7 +179,7 @@ class BitBuffer {
             let integer = 0;
 
             if (hasInteger) {
-                const buffer = this.read(14);
+                const buffer = this._read(14);
 
                 integer = buffer.readUInt16LE() + 1;
             }
@@ -141,7 +187,7 @@ class BitBuffer {
             let fractional = 0;
 
             if (hasFractional) {
-                const buffer = this.read(5);
+                const buffer = this._read(5);
 
                 fractional = buffer.readUInt8();
             }
@@ -190,7 +236,7 @@ class BitBuffer {
      */
     readNormal() {
         const sign = this.readBit() === 1;
-        const length = this.read(11).readUInt16LE();
+        const length = this._read(11).readUInt16LE();
 
         const value = length * (1 / ((1 << 11) - 1));
 
@@ -253,7 +299,7 @@ class BitBuffer {
                 break;
             }
 
-            const buffer = this.read(BITS_PER_BYTE);
+            const buffer = this._read(BITS_PER_BYTE);
 
             if (buffer[0] === 0) {
                 break;
@@ -455,10 +501,13 @@ class BitBuffer {
 
     /**
      * @protected
-     * @param {Number} numberOfBits
-     * @returns {Buffer}
+     * @param {Number} numberOfBits - The number of beats to read.
+     * @param {boolean=} allocateNew - Whether to allocate a new memory buffer.
+     * If `true`, a new buffer is allocated.
+     * If `false` (default), a reusable buffer may be returned, which can be overwritten in subsequent operations.
+     * @returns {Buffer} - A buffer containing the read data.
      */
-    _read(numberOfBits) {
+    _read(numberOfBits, allocateNew = false) {
         throw new Error('BitBuffer._read() is not implemented');
     }
 }

@@ -95,7 +95,7 @@ class StringTableEntryExtractor {
                     }
                 }
 
-                value = this._bitBuffer.read(bitSize);
+                value = this._bitBuffer.read(bitSize, true);
 
                 if (isCompressed) {
                     value = SnappyDecompressor.decompress(value);

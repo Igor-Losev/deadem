@@ -12,6 +12,8 @@ const MASK = {
     [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
 };
 
+const REUSABLE_BUFFER_SIZE = 4;
+
 class BitBufferFast extends BitBuffer {
     /**
      * @constructor
@@ -26,42 +28,68 @@ class BitBufferFast extends BitBuffer {
     /**
      * @protected
      * @param {Number} numberOfBits
-     *
+     * @param {boolean} allocateNew
      * @returns {Buffer}
      */
-    _read(numberOfBits) {
+    _read(numberOfBits, allocateNew = false) {
         const unread = this.getUnreadCount();
 
         if (numberOfBits > unread) {
             throw new Error(`Unable to read [ ${numberOfBits} ] bit(s) - only [ ${unread} ] bit(s) left`);
         }
 
-        const numberOfBytes = Math.ceil((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
+        const numberOfRequestedBytes = Math.ceil(numberOfBits / BitBuffer.BITS_PER_BYTE);
+        const numberOfAffectedBytes = Math.ceil((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
 
-        let buffer = Buffer.allocUnsafe(numberOfBytes);
+        let extraByte;
 
-        for (let i = 0; i < numberOfBytes; i++) {
+        if (numberOfAffectedBytes > numberOfRequestedBytes) {
+            extraByte = this._buffer[this._pointers.byte + numberOfAffectedBytes - 1];
+        } else {
+            extraByte = 0;
+        }
+
+        let buffer;
+
+        if (!allocateNew && numberOfRequestedBytes <= REUSABLE_BUFFER_SIZE) {
+            buffer = pool[numberOfRequestedBytes - 1];
+        } else {
+            buffer = Buffer.allocUnsafe(numberOfRequestedBytes);
+        }
+
+        for (let i = 0; i < numberOfRequestedBytes; i++) {
             buffer[i] = this._buffer[this._pointers.byte + i];
         }
 
         const zeroBitsOffset = this._pointers.bit;
-        const zeroBitsIgnored = numberOfBytes * BitBuffer.BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
+        const zeroBitsIgnored = numberOfAffectedBytes * BitBuffer.BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
 
-        buffer[0] = buffer[0] & MASK[MASK_DIRECTION.RIGHT][zeroBitsOffset];
-        buffer[buffer.length - 1] = buffer[buffer.length - 1] & MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+        buffer[0] &= MASK[MASK_DIRECTION.RIGHT][zeroBitsOffset];
+
+        if (numberOfAffectedBytes > numberOfRequestedBytes) {
+            extraByte &= MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+        } else {
+            buffer[buffer.length - 1] &= MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+        }
 
         if (zeroBitsOffset > 0) {
             buffer[0] = buffer[0] >>> zeroBitsOffset;
 
-            for (let i = 0; i < numberOfBytes - 1; i++) {
-                buffer[i] |= (buffer[i + 1] & MASK[MASK_DIRECTION.LEFT][BitBuffer.BITS_PER_BYTE - zeroBitsOffset]) << (BitBuffer.BITS_PER_BYTE - zeroBitsOffset);
+            for (let i = 0; i < numberOfRequestedBytes; i++) {
+                let next;
 
-                buffer[i + 1] = buffer[i + 1] >>> zeroBitsOffset;
+                if (i < numberOfRequestedBytes - 1) {
+                    next = buffer[i + 1];
+                } else {
+                    next = extraByte;
+                }
+
+                buffer[i] |= (next & MASK[MASK_DIRECTION.LEFT][BitBuffer.BITS_PER_BYTE - zeroBitsOffset]) << (BitBuffer.BITS_PER_BYTE - zeroBitsOffset);
+
+                if (i < numberOfRequestedBytes) {
+                    buffer[i + 1] = buffer[i + 1] >>> zeroBitsOffset;
+                }
             }
-        }
-
-        if (numberOfBytes > Math.ceil(numberOfBits / BitBuffer.BITS_PER_BYTE)) {
-            buffer = buffer.subarray(0, buffer.length - 1);
         }
 
         this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
@@ -69,6 +97,14 @@ class BitBufferFast extends BitBuffer {
 
         return buffer;
     }
+}
+
+const reusable = Buffer.allocUnsafe(REUSABLE_BUFFER_SIZE);
+
+const pool = [ ];
+
+for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {
+    pool.push(reusable.subarray(0, i + 1));
 }
 
 module.exports = BitBufferFast;
