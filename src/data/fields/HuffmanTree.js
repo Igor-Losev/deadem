@@ -8,6 +8,10 @@ const FieldPathOperation = require('../enums/FieldPathOperation');
 
 const HuffmanTreePriority = require('./HuffmanTreePriority');
 
+const HUFFMAN_TREE_DEPTH = 17;
+const MAX_CODE = (1 << HUFFMAN_TREE_DEPTH) - 1;
+const OPERATIONS = FieldPathOperation.getAll();
+
 class HuffmanTree {
     /**
      * @public
@@ -29,8 +33,28 @@ class HuffmanTree {
         this._rightChild = rightChild || null;
     }
 
-    static get ROOT() {
-        return root;
+    /**
+     * The depth of the HuffmanTree.
+     *
+     * @static
+     * @returns {Number}
+     */
+    static get DEPTH() {
+        return HUFFMAN_TREE_DEPTH;
+    }
+
+    /**
+     * @static
+     * @param {Number} code - The code.
+     * @returns {{bitsUsed: Number, operation: FieldPathOperation}}
+     */
+    static getOperationByCode(code) {
+        assert(code < MAX_CODE);
+
+        const bitsUsed = PRECALCULATED_TABLE.bits[code];
+        const operationIndex = PRECALCULATED_TABLE.operations[code];
+
+        return { bitsUsed, operation: OPERATIONS[operationIndex] };
     }
 
     /**
@@ -74,16 +98,45 @@ class HuffmanTree {
     }
 }
 
-const root = build();
+const TREE = {
+    codeTable: new Map(),
+    depth: 0,
+    root: build()
+};
 
+let PRECALCULATED_TABLE;
+
+(() => {
+    dfs(TREE.root);
+
+    if (TREE.depth !== HUFFMAN_TREE_DEPTH) {
+        throw new Error(`Unexpected HuffmanTree depth [ ${TREE.depth} ]`);
+    }
+
+    PRECALCULATED_TABLE = {
+        bits: Buffer.allocUnsafe(MAX_CODE),
+        operations: Buffer.allocUnsafe(MAX_CODE),
+    };
+
+    for (let code = 0; code < MAX_CODE; code++) {
+        const { bits, node } = getNodeByCode(code);
+
+        PRECALCULATED_TABLE.bits[code] = bits;
+        PRECALCULATED_TABLE.operations[code] = node.operation.sequence;
+    }
+})();
+
+/**
+ * Builds a {@link HuffmanTree}
+ *
+ * @returns {HuffmanTree} - The root.
+ */
 function build() {
     const weigh = operation => Math.max(operation.weight, 1);
 
-    const operations = FieldPathOperation.getAll();
-
     const heap = new BinaryHeap(huffmanTree => huffmanTree.priority, (priorityA, priorityB) => priorityA.compare(priorityB));
 
-    operations.forEach((operation) => {
+    OPERATIONS.forEach((operation) => {
         const weight = weigh(operation);
 
         const huffmanTreePriority = new HuffmanTreePriority(weight, operation.sequence);
@@ -107,6 +160,64 @@ function build() {
     }
 
     return heap.extract();
+}
+
+/**
+ * Traverses a {@link HuffmanTree} according to the binary path,
+ * mapping the path to the corresponding node in the TREE.codeTable.
+ * Updates the maximum depth of the tree.
+ *
+ * @param {HuffmanTree} node
+ * @param {String} path
+ * @param {Number} depth
+ */
+function dfs(node, path = '', depth = 0) {
+    if (TREE.depth < depth) {
+        TREE.depth = depth;
+    }
+
+    if (node.leftChild) {
+        dfs(node.leftChild, path + '0', depth + 1);
+    }
+
+    if (node.rightChild) {
+        dfs(node.rightChild, path + '1', depth + 1);
+    }
+
+    if (node.getIsLeaf()) {
+        const code = parseInt(path, 2);
+
+        TREE.codeTable.set(code, node);
+    }
+}
+
+/**
+ * Given a code, searches for the shortest prefix that matches a key in the TREE.codeTable.
+ *
+ * @param {Number} code - A decimal number whose binary form (or form of its prefix) determines the traversal path.
+ * @returns {{bits: Number, node: HuffmanTree}}
+ */
+function getNodeByCode(code) {
+    let bits = 0;
+    let prefix = 0;
+
+    for (let i = 0; i < TREE.depth; i++) {
+        const iBit = (code >> i) & 1;
+
+        prefix = prefix << 1;
+
+        if (iBit) {
+            prefix |= iBit;
+        }
+
+        bits += 1;
+
+        if (TREE.codeTable.has(prefix)) {
+            return { bits, node: TREE.codeTable.get(prefix) };
+        }
+    }
+
+    throw new Error(`Unable to find a node for code [ ${code} ]. This should never happen. Verify the depth of the tree`);
 }
 
 module.exports = HuffmanTree;

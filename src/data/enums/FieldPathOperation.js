@@ -42,7 +42,11 @@ class FieldPathOperation {
      * @returns {Array<FieldPathOperation>}
      */
     static getAll() {
-        return Array.from(registry.byCode.values());
+        const operations = Array.from(registry.byCode.values());
+
+        operations.sort((a, b) => a.sequence - b.sequence);
+
+        return operations;
     }
 
     get code() {

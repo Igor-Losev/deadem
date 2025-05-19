@@ -67,9 +67,9 @@ class FieldPathExtractor {
     _extractOnce() {
         const bits = Math.min(this._bitBuffer.getUnreadCount(), HuffmanTree.DEPTH);
 
-        const value = BitBuffer.readUInt32LE(this._bitBuffer.read(bits));
+        const code = BitBuffer.readUInt32LE(this._bitBuffer.read(bits));
 
-        const { bitsUsed, operation } = HuffmanTree.get(value);
+        const { bitsUsed, operation } = HuffmanTree.getOperationByCode(code);
 
         this._bitBuffer.move(-(bits - bitsUsed));
 
