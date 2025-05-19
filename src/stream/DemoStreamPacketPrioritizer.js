@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('assert/strict'),
-    Stream = require('stream');
+const Stream = require('stream');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
