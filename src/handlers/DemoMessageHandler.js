@@ -4,7 +4,6 @@ const assert = require('assert/strict');
 
 const Demo = require('./../data/Demo'),
     Entity = require('./../data/Entity'),
-    EntityState = require('./../data/EntityState'),
     Server = require('./../data/Server');
 
 const BitBuffer = require('./../data/buffer/BitBuffer');
@@ -31,7 +30,7 @@ class DemoMessageHandler {
     handleSvcServerInfo(messagePacket) {
         const message = messagePacket.data;
 
-        const server = new Server(message.maxClasses, message.maxClients);
+        const server = new Server(message.maxClasses, message.maxClients, message.tickInterval);
 
         this._demo.registerServer(server);
     }
