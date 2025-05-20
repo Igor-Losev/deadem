@@ -25,6 +25,7 @@ class FieldPathExtractor {
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
+        this._isDebug = logger.isDebugEnabled();
     }
 
     /**
@@ -73,13 +74,13 @@ class FieldPathExtractor {
 
         this._bitBuffer.move(-(bits - bitsUsed));
 
-        if (operation === FieldPathOperation.FINISH) {
-            logger.debug(`Found operation [ ${FieldPathOperation.FINISH.code} ]. Finishing`);
-
-            return null;
+        if (this._isDebug) {
+            logger.debug(`Executing operation [ ${operation.code} ]`);
         }
 
-        logger.debug(`Executing operation [ ${operation.code} ]`);
+        if (operation === FieldPathOperation.FINISH) {
+            return null;
+        }
 
         operation.executor(this._bitBuffer, this._fieldPathBuilder);
 

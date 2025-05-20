@@ -30,6 +30,8 @@ class StringTableContainer {
             tableById: new Map(),
             tableByName: new Map()
         };
+
+        this._isDebug = logger.isDebugEnabled();
     }
 
     /**
@@ -144,7 +146,9 @@ class StringTableContainer {
             throw new Error(`Unknown StringTable [ ${updateData.tableId} ]`);
         }
 
-        logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
+        if (this._isDebug) {
+            logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
+        }
 
         const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries);
 
@@ -186,7 +190,9 @@ class StringTableContainer {
      * @private
      */
     _clear() {
-        logger.debug(`Clearing StringTable registry`);
+        if (this._isDebug) {
+            logger.debug(`Clearing StringTable registry`);
+        }
 
         this._registry.tableById.forEach((stringTable) => {
             this._eventEmitter.emit(StringTableEvent.TABLE_REMOVED, stringTable);
@@ -203,7 +209,9 @@ class StringTableContainer {
     _register(stringTable) {
         const id = this._registry.tableById.size;
 
-        logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
+        if (this._isDebug) {
+            logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
+        }
 
         this._registry.tableByName.set(stringTable.type.name, stringTable);
         this._registry.tableById.set(id, stringTable);

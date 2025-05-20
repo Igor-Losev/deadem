@@ -30,6 +30,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._demoPacketHandler = new DemoPacketHandler(engine.demo);
         this._demoMessageHandler = new DemoMessageHandler(engine.demo);
+
+        this._multiThreaded = this._engine.getIsMultiThreaded();
     }
 
     /**
@@ -57,7 +59,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             case DemoCommandType.DEM_SEND_TABLES: {
                 this._demoPacketHandler.handleDemSendTables(demoPacket);
 
-                if (this._engine.getIsMultiThreaded()) {
+                if (this._multiThreaded) {
                     const request = new WorkerRequestDPacketSync(demoPacket);
 
                     await this._engine.workerManager.broadcast(request);
@@ -68,7 +70,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             case DemoCommandType.DEM_CLASS_INFO: {
                 this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
-                if (this._engine.getIsMultiThreaded()) {
+                if (this._multiThreaded) {
                     const request = new WorkerRequestDPacketSync(demoPacket);
 
                     await this._engine.workerManager.broadcast(request);
@@ -79,7 +81,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
             case DemoCommandType.DEM_STRING_TABLES:
                 this._demoPacketHandler.handleDemStringTables(demoPacket);
 
-                if (this._engine.getIsMultiThreaded()) {
+                if (this._multiThreaded) {
                     const request = new WorkerRequestDPacketSync(demoPacket);
 
                     await this._engine.workerManager.broadcast(request);
@@ -127,7 +129,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.SVC_SERVER_INFO: {
                             this._demoMessageHandler.handleSvcServerInfo(messagePacket);
 
-                            if (this._engine.getIsMultiThreaded()) {
+                            if (this._multiThreaded) {
                                 const request = new WorkerRequestMPacketSync(messagePacket);
 
                                 await this._engine.workerManager.broadcast(request);
@@ -140,7 +142,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.SVC_CREATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
 
-                            if (this._engine.getIsMultiThreaded()) {
+                            if (this._multiThreaded) {
                                 const request = new WorkerRequestMPacketSync(messagePacket);
 
                                 await this._engine.workerManager.broadcast(request);
@@ -151,7 +153,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
 
-                            if (this._engine.getIsMultiThreaded()) {
+                            if (this._multiThreaded) {
                                 const request = new WorkerRequestMPacketSync(messagePacket);
 
                                 await this._engine.workerManager.broadcast(request);
@@ -164,7 +166,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
                             this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
 
-                            if (this._engine.getIsMultiThreaded()) {
+                            if (this._multiThreaded) {
                                 const request = new WorkerRequestMPacketSync(messagePacket);
 
                                 await this._engine.workerManager.broadcast(request);
@@ -173,7 +175,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                             break;
                         }
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
-                            if (this._engine.getIsMultiThreaded()) {
+                            if (this._multiThreaded) {
                                 const thread = await this._engine.workerManager.allocate();
 
                                 const request = new WorkerRequestSvcPacketEntities(messagePacket);
