@@ -135,8 +135,6 @@ class ParserEngine {
                     logger.error(`Parse failed`, error);
                 }
 
-                logger.info('Parse finished');
-
                 this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
 
                 this._trackers.memory.print();
@@ -150,6 +148,8 @@ class ParserEngine {
                 if (this._workerManager !== null) {
                     this._workerManager.terminate();
                 }
+
+                logger.info('Parse finished');
             }
         );
     }
