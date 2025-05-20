@@ -9,6 +9,7 @@ module.exports = {
 
         FieldPathExtractor: { appenders: [ 'console' ], level: 'info' },
         Parser: { appenders: [ 'console' ], level: 'info' },
+        ParserEngine: { appenders: [ 'console' ], level: 'info' },
         StringTableContainer: { appenders: [ 'console' ], level: 'info' },
 
         'Tracker/Memory': { appenders: [ 'console' ], level: 'debug' },

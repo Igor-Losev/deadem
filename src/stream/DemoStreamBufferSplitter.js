@@ -14,15 +14,15 @@ class DemoStreamBufferSplitter extends Stream.Transform {
     /**
      * @public
      * @constructor
-     * @param {Parser} parser
+     * @param {ParserEngine} engine
      * @param {number} maxChunkSize - The maximum size of each chunk in bytes.
      */
-    constructor(parser, maxChunkSize = MEGABYTE) {
+    constructor(engine, maxChunkSize = MEGABYTE) {
         super();
 
         assert(Number.isInteger(maxChunkSize));
 
-        this._parser = parser;
+        this._engine = engine;
         this._maxChunkSize = maxChunkSize;
     }
 
@@ -37,11 +37,11 @@ class DemoStreamBufferSplitter extends Stream.Transform {
             this.push(chunk);
         } else {
             for (let i = 0; i < Math.ceil(chunk.byteLength / this._maxChunkSize); i++) {
-                this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
+                this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
 
                 const slice = chunk.subarray(i * this._maxChunkSize, (i + 1) * this._maxChunkSize);
 
-                this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
+                this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
 
                 this.push(slice);
             }

@@ -16,12 +16,12 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
     /**
      * @public
      * @constructor
-     * @param {Parser} parser
+     * @param {ParserEngine} engine
      */
-    constructor(parser) {
+    constructor(engine) {
         super({ objectMode: true });
 
-        this._parser = parser;
+        this._engine = engine;
 
         this._heap = new BinaryHeap(demoPacket => demoPacket.sequence);
         this._sequence = 0;

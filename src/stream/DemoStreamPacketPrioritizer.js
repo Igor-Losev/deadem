@@ -21,12 +21,12 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
     /**
      * @public
      * @constructor
-     * @param {Parser} parser
+     * @param {ParserEngine} engine
      */
-    constructor(parser) {
+    constructor(engine) {
         super({ objectMode: true });
 
-        this._parser = parser;
+        this._engine = engine;
 
         this._packets = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_FULL_PACKET, DemoCommandType.DEM_SIGNON_PACKET ];
     }
@@ -46,7 +46,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
             return;
         }
 
-        this._parser.performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
+        this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
         demoPacket.data.sort((a, b) => {
             const priorityA = getPacketPriority(a.type);
@@ -55,7 +55,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
             return priorityB - priorityA;
         });
 
-        this._parser.performanceTracker.end(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
+        this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
         this.push(demoPacket);
 

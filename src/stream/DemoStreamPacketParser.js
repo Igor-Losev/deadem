@@ -32,12 +32,12 @@ class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @constructor
      * @public
-     * @param {Parser} parser
+     * @param {ParserEngine} engine
      */
-    constructor(parser) {
+    constructor(engine) {
         super({ objectMode: true });
 
-        this._parser = parser;
+        this._engine = engine;
 
         this._counts = {
             batches: 0,
@@ -69,7 +69,7 @@ class DemoStreamPacketParser extends Stream.Transform {
     async _transform(batch, encoding, callback) {
         this._counts.batches += 1;
 
-        if (this._parser.workerManager === null) {
+        if (!this._engine.getIsMultiThreaded()) {
             this._processSync(batch);
 
             callback();
@@ -83,11 +83,11 @@ class DemoStreamPacketParser extends Stream.Transform {
             this._processSync(other);
 
             if (heavy.length > 0) {
-                const thread = await this._parser.workerManager.allocate();
+                const thread = await this._engine.workerManager.allocate();
 
                 this._processAsync(thread, heavy)
                     .then((demoPackets) => {
-                        this._parser.workerManager.free(thread);
+                        this._engine.workerManager.free(thread);
 
                         demoPackets.forEach((demoPacket) => {
                             this.push(demoPacket);
@@ -216,7 +216,7 @@ function parseMessagePacket(messagePacketRaw) {
     const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
 
     if (messagePacketType === null) {
-        this._parser.packetTracker.handleUnknownMessagePacket(messagePacketRaw.type);
+        this._engine.getPacketTracker().handleUnknownMessagePacket(messagePacketRaw.type);
 
         return null;
     }
