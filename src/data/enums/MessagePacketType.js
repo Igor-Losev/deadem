@@ -14,7 +14,7 @@ class MessagePacketType {
      * @private
      * @constructor
      * @param {String} code
-     * @param {Number} id
+     * @param {number} id
      * @param {*} proto
      */
     constructor(code, id, proto) {
@@ -42,7 +42,7 @@ class MessagePacketType {
     /**
      * @public
      * @static
-     * @param {Number} id
+     * @param {number} id
      * @returns {MessagePacketType|null}
      */
     static parseById(id) {

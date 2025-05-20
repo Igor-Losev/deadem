@@ -3,8 +3,8 @@ class MessagePacketRaw {
      * @public
      * @constructor
      *
-     * @param {Number} type
-     * @param {Number} size
+     * @param {number} type
+     * @param {number} size
      * @param {Buffer} payload
      */
     constructor(type, size, payload) {

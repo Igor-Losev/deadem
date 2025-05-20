@@ -9,9 +9,9 @@ class DemoPacket {
      * @public
      * @constructor
      *
-     * @param {Number} sequence
+     * @param {number} sequence
      * @param {DemoCommandType} command
-     * @param {Number} tick
+     * @param {number} tick
      * @param {*} data
      */
     constructor(sequence, command, tick, data) {
@@ -70,7 +70,7 @@ class DemoPacket {
 }
 
 /**
- * @typedef {{sequence: Number, command: String, tick: Number, data: *}} DemoPacketObject
+ * @typedef {{sequence: number, command: String, tick: number, data: *}} DemoPacketObject
  */
 
 module.exports = DemoPacket;

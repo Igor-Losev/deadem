@@ -14,7 +14,7 @@ class StringTableEntry {
      * @public
      * @constructor
      * @param {StringTableType} type
-     * @param {Number} id
+     * @param {number} id
      * @param {String} key
      * @param {Buffer|null|*} value
      */
@@ -50,7 +50,7 @@ class StringTableEntry {
      * @static
      * @param {Buffer|Uint8Array|null} buffer
      * @param {StringTableType} type
-     * @param {Number} id
+     * @param {number} id
      * @param {String} key
      */
     static fromBuffer(buffer, type, id, key) {

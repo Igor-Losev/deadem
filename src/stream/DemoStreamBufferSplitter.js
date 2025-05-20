@@ -15,7 +15,7 @@ class DemoStreamBufferSplitter extends Stream.Transform {
      * @public
      * @constructor
      * @param {Parser} parser
-     * @param {Number} maxChunkSize - The maximum size of each chunk in bytes.
+     * @param {number} maxChunkSize - The maximum size of each chunk in bytes.
      */
     constructor(parser, maxChunkSize = MEGABYTE) {
         super();

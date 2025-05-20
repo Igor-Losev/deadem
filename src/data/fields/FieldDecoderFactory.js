@@ -83,7 +83,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @param {FieldDecoderInstructions} instructions
-     * @param {Number} dimension
+     * @param {number} dimension
      * @returns {FieldDecoderVectorN|FieldDecoderVectorNormal}
      */
     createVector(instructions, dimension) {

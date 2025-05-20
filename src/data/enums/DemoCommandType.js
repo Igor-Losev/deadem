@@ -14,7 +14,7 @@ class DemoCommandType {
      * @private
      * @constructor
      * @param {String} code
-     * @param {Number} id
+     * @param {number} id
      * @param {*|null} proto
      */
     constructor(code, id, proto) {
@@ -54,7 +54,7 @@ class DemoCommandType {
     /**
      * @public
      * @static
-     * @param {Number} id
+     * @param {number} id
      * @returns {DemoCommandType|null}
      */
     static parseById(id) {

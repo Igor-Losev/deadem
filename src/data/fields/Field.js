@@ -55,7 +55,7 @@ class Field {
     /**
      * @public
      * @param {FieldPath} fieldPath
-     * @param {Number} index
+     * @param {number} index
      * @returns {FieldDecoder}
      */
     getDecoderForFieldPath(fieldPath, index = 0) {

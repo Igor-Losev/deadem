@@ -78,7 +78,7 @@ class BitBuffer {
      * Returns the number of remaining bits available to read in the buffer.
      *
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
     getUnreadCount() {
         return this._buffer.length * BITS_PER_BYTE - (this._pointers.byte * BITS_PER_BYTE + this._pointers.bit);
@@ -88,7 +88,7 @@ class BitBuffer {
      * Moves the internal read pointer forward or backward by a given number of bits.
      *
      * @public
-     * @param {Number} bits - Number of bits to move.
+     * @param {number} bits - Number of bits to move.
      */
     move(bits) {
         const abs = Math.abs(bits);
@@ -468,7 +468,7 @@ class BitBuffer {
      * The number of bits read depends on a series of flags (prefix bits).
      *
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
     readUVarIntFieldPath() {
         let flag;
@@ -515,7 +515,7 @@ class BitBuffer {
      * Returns a Buffer with a length of Math.ceil(numberOfBits / 8).
      *
      * @protected
-     * @param {Number} numberOfBits - The number of beats to read.
+     * @param {number} numberOfBits - The number of beats to read.
      * @param {boolean=} allocateNew - Whether to allocate a new memory for returning buffer.
      * If `true`, a new buffer is allocated.
      * If `false` (default), a reusable buffer may be returned, which can be overwritten in subsequent operations.

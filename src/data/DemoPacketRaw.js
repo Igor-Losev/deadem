@@ -5,7 +5,7 @@ class DemoPacketRaw {
      * @public
      * @constructor
      *
-     * @param {Number} sequence
+     * @param {number} sequence
      * @param {UVarInt32} command
      * @param {UVarInt32} tick
      * @param {UVarInt32} frame

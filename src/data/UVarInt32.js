@@ -8,8 +8,8 @@ class UVarInt32 {
     /**
      * @public
      * @constructor
-     * @param {Number} value - The decoded unsigned integer value.
-     * @param {Number} size - The number of bytes consumed during decoding.
+     * @param {number} value - The decoded unsigned integer value.
+     * @param {number} size - The number of bytes consumed during decoding.
      */
     constructor(value, size) {
         this._value = value;

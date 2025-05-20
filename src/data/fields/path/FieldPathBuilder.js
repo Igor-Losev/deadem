@@ -23,8 +23,8 @@ class FieldPathBuilder {
 
     /**
      * @public
-     * @param {Number} value
-     * @param {Number=} index
+     * @param {number} value
+     * @param {number=} index
      */
     add(value, index = this._pointer) {
         if (this._length === 0) {
@@ -48,7 +48,7 @@ class FieldPathBuilder {
 
     /**
      * @public
-     * @param {Number} count
+     * @param {number} count
      */
     drop(count) {
         if (count > this._length) {
@@ -65,7 +65,7 @@ class FieldPathBuilder {
 
     /**
      * @public
-     * @param {Number} value
+     * @param {number} value
      */
     push(value) {
         if (this._length >= MAX_LENGTH) {
@@ -80,7 +80,7 @@ class FieldPathBuilder {
 
     /**
      * @public
-     * @param {Number} value
+     * @param {number} value
      */
     set(value) {
         this._path[this._pointer] = value;

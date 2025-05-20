@@ -27,7 +27,7 @@ class EntityOperation {
     }
 
     /**
-     * @returns {Number}
+     * @returns {number}
      */
     get id() {
         return this._id;

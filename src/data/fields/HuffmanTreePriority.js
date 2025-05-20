@@ -6,8 +6,8 @@ class HuffmanTreePriority {
     /**
      * @public
      * @constructor
-     * @param {Number} weight
-     * @param {Number} sequence
+     * @param {number} weight
+     * @param {number} sequence
      */
     constructor(weight, sequence) {
         assert(Number.isInteger(weight));

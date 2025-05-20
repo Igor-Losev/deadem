@@ -7,10 +7,10 @@ class FieldDecoderInstructions {
      * @public
      * @constructor
      * @param {String|null} encoder
-     * @param {Number|null} encoderFlags
-     * @param {Number|null} bitCount
-     * @param {Number|null} valueLow
-     * @param {Number|null} valueHigh
+     * @param {number|null} encoderFlags
+     * @param {number|null} bitCount
+     * @param {number|null} valueLow
+     * @param {number|null} valueHigh
      */
     constructor(encoder, encoderFlags, bitCount, valueLow, valueHigh) {
         assert(encoder === null || typeof encoder === 'string');
@@ -41,28 +41,28 @@ class FieldDecoderInstructions {
     }
 
     /**
-     * @returns {Number|null}
+     * @returns {number|null}
      */
     get encoderFlags() {
         return this._encoderFlags;
     }
 
     /**
-     * @returns {Number|null}
+     * @returns {number|null}
      */
     get bitCount() {
         return this._bitCount;
     }
 
     /**
-     * @returns {Number|null}
+     * @returns {number|null}
      */
     get valueLow() {
         return this._valueLow;
     }
 
     /**
-     * @returns {Number|null}
+     * @returns {number|null}
      */
     get valueHigh() {
         return this._valueHigh;

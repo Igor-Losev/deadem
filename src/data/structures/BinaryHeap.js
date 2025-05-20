@@ -22,7 +22,7 @@ class BinaryHeap {
     /**
      * @public
      * @static
-     * @returns {function(Number, Number): boolean}
+     * @returns {function(number, number): boolean}
      */
     static get MAX_HEAP_COMPARATOR() {
         return (a, b) => a < b;
@@ -31,7 +31,7 @@ class BinaryHeap {
     /**
      * @public
      * @static
-     * @returns {function(Number, Number): boolean}
+     * @returns {function(number, number): boolean}
      */
     static get MIN_HEAP_COMPARATOR() {
         return (a, b) => a > b;
@@ -87,8 +87,8 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
-     * @returns {Number}
+     * @param {number} i
+     * @returns {number}
      */
     _getIChildLeft(i) {
         return i * 2 + 1;
@@ -96,8 +96,8 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
-     * @returns {Number}
+     * @param {number} i
+     * @returns {number}
      */
     _getIChildRight(i) {
         return i * 2 + 2;
@@ -105,8 +105,8 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
-     * @returns {Number}
+     * @param {number} i
+     * @returns {number}
      */
     _getIParent(i) {
         return Math.floor((i - 1) / 2);
@@ -114,7 +114,7 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
+     * @param {number} i
      * @returns {*}
      */
     _getValue(i) {
@@ -125,7 +125,7 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
+     * @param {number} i
      */
     _siftUp(i) {
         assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
@@ -141,7 +141,7 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
+     * @param {number} i
      */
     _siftDown(i) {
         assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
@@ -172,8 +172,8 @@ class BinaryHeap {
 
     /**
      * @protected
-     * @param {Number} i
-     * @param {Number} j
+     * @param {number} i
+     * @param {number} j
      */
     _swap(i, j) {
         assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);

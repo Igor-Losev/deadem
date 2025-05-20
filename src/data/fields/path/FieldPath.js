@@ -7,7 +7,7 @@ class FieldPath {
      * @public
      * @constructor
      * @param {Array<Number>} path
-     * @param {Number} length
+     * @param {number} length
      */
     constructor(path, length) {
         assert(Array.isArray(path));
@@ -22,7 +22,7 @@ class FieldPath {
     }
 
     /**
-     * @returns {Number}
+     * @returns {number}
      */
     get length() {
         return this._length;
@@ -30,8 +30,8 @@ class FieldPath {
 
     /**
      * @public
-     * @param {Number} index
-     * @returns {Number}
+     * @param {number} index
+     * @returns {number}
      */
     get(index) {
         if (index >= this._length) {

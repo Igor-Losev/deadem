@@ -11,7 +11,7 @@ class Serializer {
      * @public
      * @constructor
      * @param {String} name
-     * @param {Number} version
+     * @param {number} version
      * @param {Array<Field>} fields
      */
     constructor(name, version, fields) {
@@ -40,7 +40,7 @@ class Serializer {
     /**
      * @public
      * @param {FieldPath} fieldPath
-     * @param {Number=} fieldPathIndex
+     * @param {number=} fieldPathIndex
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
         const fieldIndex = fieldPath.get(fieldPathIndex);

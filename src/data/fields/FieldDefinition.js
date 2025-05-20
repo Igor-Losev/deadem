@@ -10,7 +10,7 @@ class FieldDefinition {
      * @constructor
      * @param {String} baseType
      * @param {FieldDefinition|null} generic
-     * @param {Number|null} count
+     * @param {number|null} count
      * @param {boolean} pointer
      */
     constructor(baseType, generic, count, pointer) {

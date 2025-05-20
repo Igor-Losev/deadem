@@ -49,7 +49,7 @@ class WorkerManager {
     /**
      * The number of threads managed by this instance.
      *
-     * @returns {Number}
+     * @returns {number}
      */
     get concurrency() {
         return this._concurrency;

@@ -5,7 +5,7 @@ const assert = require('assert/strict');
 class StringTableInstructions {
     /**
      * @public
-     * @param {Number} userDataSizeBits
+     * @param {number} userDataSizeBits
      * @param {boolean} userDataFixedSize
      * @param {boolean} usingVarintBitcounts
      */

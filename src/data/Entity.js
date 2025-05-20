@@ -19,14 +19,14 @@ class Entity {
     }
 
     /**
-     * @returns {Number}
+     * @returns {number}
      */
     get index() {
         return this._index;
     }
 
     /**
-     * @returns {Number}
+     * @returns {number}
      */
     get serial() {
         return this._serial;

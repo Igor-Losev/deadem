@@ -13,8 +13,8 @@ class DemoStreamPacketBatcher extends Stream.Transform {
      * @constructor
      *
      * @param {Parser} parser
-     * @param {Number} thresholdSizeBytes - The threshold for the total byte size of the messages in the batch.
-     * @param {Number} thresholdWaitMilliseconds - The threshold for the amount of time (in milliseconds) that the batch has been pending.
+     * @param {number} thresholdSizeBytes - The threshold for the total byte size of the messages in the batch.
+     * @param {number} thresholdWaitMilliseconds - The threshold for the amount of time (in milliseconds) that the batch has been pending.
      */
     constructor(parser, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });

@@ -6,9 +6,9 @@ class Server {
     /**
      * @public
      * @constructor
-     * @param {Number} maxClasses
-     * @param {Number} maxClients
-     * @param {Number} tickInterval
+     * @param {number} maxClasses
+     * @param {number} maxClients
+     * @param {number} tickInterval
      */
     constructor(maxClasses, maxClients, tickInterval) {
         assert(Number.isInteger(maxClasses));

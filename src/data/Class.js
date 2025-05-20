@@ -17,7 +17,7 @@ class Class {
 
     /**
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
     get id() {
         return this._id;

@@ -8,7 +8,7 @@ class FieldDecoderVectorN extends FieldDecoder {
     /**
      * @constructor
      * @param {FieldDecoder} decoder - Value decoder.
-     * @param {Number} n - Number of dimensions of the vector.
+     * @param {number} n - Number of dimensions of the vector.
      */
     constructor(decoder, n) {
         super();

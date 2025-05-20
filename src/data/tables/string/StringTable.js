@@ -58,7 +58,7 @@ class StringTable {
 
     /**
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
     getEntriesCount() {
         return this._registry.entryById.size;
@@ -66,7 +66,7 @@ class StringTable {
 
     /**
      * @public
-     * @param {Number} id
+     * @param {number} id
      * @returns {StringTableEntry|null}
      */
     getEntryById(id) {

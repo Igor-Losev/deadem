@@ -35,7 +35,7 @@ class StringTableContainer {
     /**
      * @public
      *
-     * @param {Number} id
+     * @param {number} id
      * @returns {StringTable}
      */
     getById(id) {

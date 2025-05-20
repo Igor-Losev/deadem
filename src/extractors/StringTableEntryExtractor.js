@@ -17,7 +17,7 @@ class StringTableEntryExtractor {
      * @constructor
      * @param {Buffer|Uint8Array} buffer
      * @param {StringTable} table
-     * @param {Number} entriesCount
+     * @param {number} entriesCount
      */
     constructor(buffer, table, entriesCount) {
         assert(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array);

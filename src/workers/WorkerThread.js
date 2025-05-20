@@ -71,7 +71,7 @@ class WorkerThread {
      * Gets the unique thread ID of the worker.
      *
      * @public
-     * @returns {Number}
+     * @returns {number}
      */
     getId() {
         return this._worker.threadId;

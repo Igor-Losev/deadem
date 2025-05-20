@@ -16,8 +16,8 @@ class FieldPathOperation {
      * @constructor
      * @param {String} code
      * @param {String} name
-     * @param {Number} weight
-     * @param {Number} sequence
+     * @param {number} weight
+     * @param {number} sequence
      * @param {Function|null} executor
      */
     constructor(code, name, weight, sequence, executor) {

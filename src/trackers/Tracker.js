@@ -30,7 +30,7 @@ class Tracker {
 
     /**
      * @protected
-     * @param {Number} n
+     * @param {number} n
      * @returns {String}
      */
     _formatNumber(n) {

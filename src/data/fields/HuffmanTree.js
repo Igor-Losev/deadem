@@ -37,7 +37,7 @@ class HuffmanTree {
      * The depth of the HuffmanTree.
      *
      * @static
-     * @returns {Number}
+     * @returns {number}
      */
     static get DEPTH() {
         return HUFFMAN_TREE_DEPTH;
@@ -45,8 +45,8 @@ class HuffmanTree {
 
     /**
      * @static
-     * @param {Number} code - The code.
-     * @returns {{bitsUsed: Number, operation: FieldPathOperation}}
+     * @param {number} code - The code.
+     * @returns {{bitsUsed: number, operation: FieldPathOperation}}
      */
     static getOperationByCode(code) {
         assert(code < MAX_CODE);
@@ -169,7 +169,7 @@ function build() {
  *
  * @param {HuffmanTree} node
  * @param {String} path
- * @param {Number} depth
+ * @param {number} depth
  */
 function dfs(node, path = '', depth = 0) {
     if (TREE.depth < depth) {
@@ -194,8 +194,8 @@ function dfs(node, path = '', depth = 0) {
 /**
  * Given a code, searches for the shortest prefix that matches a key in the TREE.codeTable.
  *
- * @param {Number} code - A decimal number whose binary form (or form of its prefix) determines the traversal path.
- * @returns {{bits: Number, node: HuffmanTree}}
+ * @param {number} code - A decimal number whose binary form (or form of its prefix) determines the traversal path.
+ * @returns {{bits: number, node: HuffmanTree}}
  */
 function getNodeByCode(code) {
     let bits = 0;

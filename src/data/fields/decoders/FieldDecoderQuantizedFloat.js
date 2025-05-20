@@ -97,7 +97,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
     /**
      * @public
      * @param {BitBuffer} bitBuffer
-     * @returns {Number}
+     * @returns {number}
      */
     decode(bitBuffer) {
         if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit() === 1) {
@@ -121,8 +121,8 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
      * Maps a float value within the [low, high] range to a discrete quantized value.
      *
      * @public
-     * @param {Number} number
-     * @returns {Number}
+     * @param {number} number
+     * @returns {number}
      */
     quantize(number) {
         if (number < this._low) {
@@ -146,8 +146,8 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
 }
 
 /**
- * @param {Number} steps
- * @returns {Number}
+ * @param {number} steps
+ * @returns {number}
  */
 function assignMultipliers(steps) {
     assert(Number.isInteger(steps));
@@ -193,8 +193,8 @@ function assignMultipliers(steps) {
 /**
  * Validates and recalculates decoder flags for quantized float decoding.
  *
- * @param {Number} candidate
- * @returns {Number}
+ * @param {number} candidate
+ * @returns {number}
  */
 function getFlags(candidate) {
     assert(Number.isInteger(candidate));

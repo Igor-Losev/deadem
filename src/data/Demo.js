@@ -52,7 +52,7 @@ class Demo {
 
     /**
      * @public
-     * @param {Number} index
+     * @param {number} index
      * @returns {Entity|null}
      */
     deleteEntity(index) {
@@ -69,7 +69,7 @@ class Demo {
 
     /**
      * @public
-     * @param {Number} id
+     * @param {number} id
      * @returns {Buffer|null}
      */
     getClassBaselineById(id) {
@@ -80,7 +80,7 @@ class Demo {
 
     /**
      * @public
-     * @param {Number} id
+     * @param {number} id
      * @returns {Class|null}
      */
     getClassById(id) {
@@ -110,7 +110,7 @@ class Demo {
 
     /**
      * @public
-     * @param {Number} index
+     * @param {number} index
      * @returns {Entity|null}
      */
     getEntity(index) {
