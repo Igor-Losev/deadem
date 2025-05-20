@@ -39,8 +39,9 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     async _transform(demoPacket, encoding, callback) {
-        this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
+
+        this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
         switch (demoPacket.command) {
             case DemoCommandType.DEM_ERROR:
