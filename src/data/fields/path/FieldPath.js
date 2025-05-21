@@ -17,11 +17,16 @@ class FieldPath {
         this._length = length;
     }
 
+    /**
+     * @public
+     * @returns {Array<Number>}
+     */
     get path() {
         return this._path;
     }
 
     /**
+     * @public
      * @returns {number}
      */
     get length() {
@@ -46,7 +51,7 @@ class FieldPath {
      * @returns {string}
      */
     toString() {
-        return this._path.slice(0, this._length).join('|');
+        return this._path.join('|');
     }
 }
 

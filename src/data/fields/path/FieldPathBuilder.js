@@ -81,9 +81,10 @@ class FieldPathBuilder {
     /**
      * @public
      * @param {number} value
+     * @param {number} index
      */
-    set(value) {
-        this._path[this._pointer] = value;
+    set(value, index = this._pointer) {
+        this._path[index] = value;
     }
 }
 
