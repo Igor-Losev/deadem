@@ -86,6 +86,15 @@ class PerformanceTrackerCategory {
      * @static
      * @returns {PerformanceTrackerCategory}
      */
+    static get DEMO_PACKET_PARSER() {
+        return demoPacketParser;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {PerformanceTrackerCategory}
+     */
     static get DEMO_PACKET_PRIORITIZER() {
         return demoPacketPrioritizer;
     }
@@ -106,8 +115,15 @@ const entityUpdateReads = new PerformanceTrackerCategory('ENTITY_UPDATE_READS', 
 const demoBufferSplitter = new PerformanceTrackerCategory('DEMO_BUFFER_SPLITTER', 'Splitting of big chunks into smaller parts', [ ]);
 const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ entityCreateReads, entityUpdateReads ]);
 const demoPacketExtractor = new PerformanceTrackerCategory('DEMO_PACKET_EXTRACTOR', 'Extraction of top-level demo packets', [ ]);
+const demoPacketParser = new PerformanceTrackerCategory('DEMO_PACKET_PARSER', 'Parsing DemoPacketRaw packets into DemoPacket', [ ]);
 const demoPacketPrioritizer = new PerformanceTrackerCategory('DEMO_PACKET_PRIORITIZER', 'Prioritization of message packets', [ ]);
 
-const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [ demoPacketAnalyzer, demoPacketExtractor, demoPacketPrioritizer, demoBufferSplitter ]);
+const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', [
+    demoBufferSplitter,
+    demoPacketAnalyzer,
+    demoPacketExtractor,
+    demoPacketParser,
+    demoPacketPrioritizer
+]);
 
 module.exports = PerformanceTrackerCategory;

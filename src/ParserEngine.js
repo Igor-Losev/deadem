@@ -7,7 +7,8 @@ const Demo = require('./data/Demo');
 
 const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
-const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
+const DemoStreamBalancer = require('./stream/DemoStreamBalancer'),
+    DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
     DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
     DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
     DemoStreamPacketCoordinator = require('./stream/DemoStreamPacketCoordinator'),
@@ -54,12 +55,18 @@ class ParserEngine {
         this._chain = [
             new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
             new DemoStreamPacketExtractor(this),
+            new DemoStreamBalancer(),
             new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
             new DemoStreamPacketPrioritizer(this),
             new DemoStreamPacketAnalyzer(this)
         ];
+
+        this._interceptors = {
+            pre: [ ],
+            post: [ ]
+        };
 
         this._trackers = {
             memory: new MemoryTracker(loggerForMemory),
@@ -74,6 +81,14 @@ class ParserEngine {
      */
     get demo() {
         return this._demo;
+    }
+
+    /**
+     * @public
+     * @returns {{pre: *[], post: *[]}}
+     */
+    get interceptors() {
+        return this._interceptors;
     }
 
     /**

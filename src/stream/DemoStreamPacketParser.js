@@ -6,7 +6,8 @@ const DemoPacket = require('./../data/DemoPacket'),
     MessagePacket = require('./../data/MessagePacket');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
-    MessagePacketType = require('./../data/enums/MessagePacketType');
+    MessagePacketType = require('./../data/enums/MessagePacketType'),
+    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
 const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
 
@@ -70,7 +71,15 @@ class DemoStreamPacketParser extends Stream.Transform {
         this._counts.batches += 1;
 
         if (!this._engine.getIsMultiThreaded()) {
-            this._processSync(batch);
+            this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
+
+            const demoPackets = this._processSync(batch);
+
+            this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
+
+            demoPackets.forEach((demoPacket) => {
+                this.push(demoPacket);
+            });
 
             callback();
         } else {
@@ -80,7 +89,11 @@ class DemoStreamPacketParser extends Stream.Transform {
             const heavy = batch.filter(getIsHeavy);
             const other = batch.filter(getIsOther);
 
-            this._processSync(other);
+            const demoPackets = this._processSync(other);
+
+            demoPackets.forEach((demoPacket) => {
+                this.push(demoPacket);
+            });
 
             if (heavy.length > 0) {
                 const thread = await this._engine.workerManager.allocate();
@@ -102,13 +115,10 @@ class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @protected
      * @param {Array<DemoPacketRaw>} packets
+     * @returns {Array<DemoPacket>}
      */
     _processSync(packets) {
-        packets.forEach((demoPacketRaw) => {
-            const demoPacket = parseDemoPacket.call(this, demoPacketRaw);
-
-            this.push(demoPacket);
-        });
+        return packets.map(demoPacketRaw => parseDemoPacket.call(this, demoPacketRaw));
     }
 
     /**
@@ -117,7 +127,7 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @param {Array<DemoPacketRaw>} packets
      * @returns {Promise<Array<DemoPacket>>}
      */
-    _processAsync(thread, packets) {
+    async _processAsync(thread, packets) {
         this._counts.requests += 1;
 
         const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
