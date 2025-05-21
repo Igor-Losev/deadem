@@ -17,6 +17,10 @@ class FieldPathBuilder {
         this._pointer = 0;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get length() {
         return this._length;
     }
@@ -43,7 +47,7 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     build() {
-        return new FieldPath(this._path.slice(), this._length);
+        return new FieldPath(this._path.slice(0, this._length));
     }
 
     /**

@@ -7,14 +7,11 @@ class FieldPath {
      * @public
      * @constructor
      * @param {Array<Number>} path
-     * @param {number} length
      */
-    constructor(path, length) {
+    constructor(path) {
         assert(Array.isArray(path));
-        assert(Number.isInteger(length));
 
         this._path = path;
-        this._length = length;
     }
 
     /**
@@ -30,7 +27,7 @@ class FieldPath {
      * @returns {number}
      */
     get length() {
-        return this._length;
+        return this._path.length;
     }
 
     /**
@@ -39,8 +36,8 @@ class FieldPath {
      * @returns {number}
      */
     get(index) {
-        if (index >= this._length) {
-            throw new Error(`Unable to get path - index [ ${index} ] is out of bounds [ ${this._length} ]`);
+        if (index >= this._path.length) {
+            throw new Error(`Unable to get path - index [ ${index} ] is out of bounds [ ${this._path.length} ]`);
         }
 
         return this._path[index];
