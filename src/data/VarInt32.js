@@ -1,10 +1,10 @@
 const MAXIMUM_SIZE_BYTES = 5;
 
 /**
- * Represents an unsigned variable-length 32-bit integer
+ * Represents a variable-length 32-bit integer
  * and tracks how many bytes were used to encode it.
  */
-class UVarInt32 {
+class VarInt32 {
     /**
      * @public
      * @constructor
@@ -29,12 +29,12 @@ class UVarInt32 {
     }
 
     /**
-     * Parses a UVarInt32 from the provided buffer.
+     * Parses a {@link VarInt32} from the provided buffer.
      *
      * @public
      * @static
      * @param {Buffer} buffer - The buffer from which to parse the value.
-     * @returns {UVarInt32|null} - The parsed UVarInt32 or null if parsing failed.
+     * @returns {VarInt32|null} - The parsed {@link VarInt32} or null if parsing failed.
      */
     static parse(buffer) {
         let continuation = true;
@@ -55,8 +55,8 @@ class UVarInt32 {
             continuation = (byte & 128) === 128;
         }
 
-        return new UVarInt32(value >>> 0, offset);
+        return new VarInt32(value, offset);
     }
 }
 
-module.exports = UVarInt32;
+module.exports = VarInt32;

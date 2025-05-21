@@ -24,18 +24,34 @@ class DemoPacket {
         this._data = data;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get sequence() {
         return this._sequence;
     }
 
+    /**
+     * @public
+     * @returns {DemoCommandType}
+     */
     get command() {
         return this._command;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get tick() {
         return this._tick;
     }
 
+    /**
+     * @public
+     * @returns {*}
+     */
     get data() {
         return this._data;
     }
@@ -53,6 +69,14 @@ class DemoPacket {
             object.tick,
             object.data
         );
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    getIsInitial() {
+        return this._tick === -1;
     }
 
     /**

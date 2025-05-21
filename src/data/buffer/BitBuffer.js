@@ -1,6 +1,6 @@
 'use strict';
 
-const UVarInt32 = require('./../UVarInt32');
+const VarInt32 = require('./../VarInt32');
 
 const BITS_PER_BYTE = 8;
 
@@ -410,7 +410,7 @@ class BitBuffer {
         let value = 0;
         let offset = 0;
 
-        while (bitsAvailable >= BITS_PER_BYTE && offset < UVarInt32.MAXIMUM_SIZE_BYTES) {
+        while (bitsAvailable >= BITS_PER_BYTE && offset < VarInt32.MAXIMUM_SIZE_BYTES) {
             const byte = this.readUInt8();
 
             bitsAvailable -= BITS_PER_BYTE;

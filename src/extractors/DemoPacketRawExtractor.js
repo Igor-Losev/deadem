@@ -3,7 +3,7 @@
 const assert = require('node:assert/strict');
 
 const DemoPacketRaw = require('./../data/DemoPacketRaw'),
-    UVarInt32 = require('./../data/UVarInt32');
+    VarInt32 = require('../data/VarInt32');
 
 class DemoPacketRawExtractor {
     /**
@@ -29,7 +29,7 @@ class DemoPacketRawExtractor {
         for (let sequence = sequenceStart; true; sequence++) {
             let offset = 0;
 
-            const command = UVarInt32.parse(this._tail.subarray(offset));
+            const command = VarInt32.parse(this._tail.subarray(offset));
 
             if (command === null) {
                 yield null;
@@ -39,7 +39,7 @@ class DemoPacketRawExtractor {
 
             offset += command.size;
 
-            const tick = UVarInt32.parse(this._tail.subarray(offset));
+            const tick = VarInt32.parse(this._tail.subarray(offset));
 
             if (tick === null) {
                 yield null;
@@ -49,7 +49,7 @@ class DemoPacketRawExtractor {
 
             offset += tick.size;
 
-            const frame = UVarInt32.parse(this._tail.subarray(offset));
+            const frame = VarInt32.parse(this._tail.subarray(offset));
 
             if (frame === null) {
                 yield null;
