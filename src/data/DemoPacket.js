@@ -72,8 +72,13 @@ class DemoPacket {
     }
 
     /**
+     * Determines whether this is the initial packet at the start of the demo.
+     *
+     * In Source 2 demos, the initial packet typically contains the baseline state
+     * of the world or entities before any updates occur.
+     *
      * @public
-     * @returns {boolean}
+     * @returns {boolean} `true` if this is the initial demo packet (tick === -1).
      */
     getIsInitial() {
         return this._tick === -1;
