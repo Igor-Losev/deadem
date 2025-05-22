@@ -102,6 +102,59 @@ class Field {
     }
 
     /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {string}
+     */
+    getNameForFieldPath(fieldPath, index = 0) {
+        const parts = [ this._name ];
+
+        switch (this._model) {
+            case FieldModel.ARRAY_FIXED:
+                if (fieldPath.length - 1 === index) {
+                    const arrayIndex = fieldPath.get(index);
+
+                    parts.push(String(arrayIndex).padStart(4, '0'));
+                }
+
+                break;
+            case FieldModel.ARRAY_VARIABLE:
+                if (fieldPath.length - 1 === index) {
+                    const arrayIndex = fieldPath.get(index);
+
+                    parts.push(String(arrayIndex).padStart(4, '0'));
+                }
+
+                break;
+            case FieldModel.SIMPLE:
+                break;
+            case FieldModel.TABLE_FIXED:
+                if (fieldPath.length - 1 >= index) {
+                    parts.push(this._serializer.getNameForFieldPath(fieldPath, index));
+                }
+
+                break;
+            case FieldModel.TABLE_VARIABLE:
+                if (fieldPath.length - 1 !== index - 1) {
+                    const tableIndex = fieldPath.get(index);
+
+                    parts.push(String(tableIndex).padStart(4, '0'));
+
+                    if (fieldPath.length - 1 !== index) {
+                        parts.push(this._serializer.getNameForFieldPath(fieldPath, index + 1));
+                    }
+                }
+
+                break;
+            default:
+                throw new Error(`Unhandled model [ ${this._model} ]`);
+        }
+
+        return parts.join('.');
+    }
+
+    /**
      * @protected
      * @param {FieldModel} model
      */

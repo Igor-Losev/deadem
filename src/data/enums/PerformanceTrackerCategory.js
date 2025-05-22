@@ -24,14 +24,26 @@ class PerformanceTrackerCategory {
         registry.byCode.set(code, this);
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get description() {
         return this._description;
     }
 
+    /**
+     * @public
+     * @returns {Array<PerformanceTrackerCategory>}
+     */
     get categories() {
         return this._categories;
     }
@@ -41,17 +53,8 @@ class PerformanceTrackerCategory {
      * @static
      * @returns {PerformanceTrackerCategory}
      */
-    static get ENTITY_CREATE_READS() {
-        return entityCreateReads;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {PerformanceTrackerCategory}
-     */
-    static get ENTITY_UPDATE_READS() {
-        return entityUpdateReads;
+    static get ENTITY_READS() {
+        return entityReads;
     }
 
     /**
@@ -109,11 +112,10 @@ class PerformanceTrackerCategory {
     }
 }
 
-const entityCreateReads = new PerformanceTrackerCategory('ENTITY_CREATE_READS', 'Entity reads on create', [ ]);
-const entityUpdateReads = new PerformanceTrackerCategory('ENTITY_UPDATE_READS', 'Entity reads on update', [ ]);
+const entityReads = new PerformanceTrackerCategory('ENTITY_READS', 'Entity reads', [ ]);
 
 const demoBufferSplitter = new PerformanceTrackerCategory('DEMO_BUFFER_SPLITTER', 'Splitting of big chunks into smaller parts', [ ]);
-const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ entityCreateReads, entityUpdateReads ]);
+const demoPacketAnalyzer = new PerformanceTrackerCategory('DEMO_PACKET_ANALYZER', 'Analyzing of all demo packets and inner messages', [ entityReads ]);
 const demoPacketExtractor = new PerformanceTrackerCategory('DEMO_PACKET_EXTRACTOR', 'Extraction of top-level demo packets', [ ]);
 const demoPacketParser = new PerformanceTrackerCategory('DEMO_PACKET_PARSER', 'Parsing DemoPacketRaw packets into DemoPacket', [ ]);
 const demoPacketPrioritizer = new PerformanceTrackerCategory('DEMO_PACKET_PRIORITIZER', 'Prioritization of message packets', [ ]);

@@ -2,9 +2,8 @@
 
 const assert = require('node:assert/strict');
 
-const Field = require('./Field');
-
-const SerializerKey = require('./SerializerKey');
+const Field = require('./Field'),
+    SerializerKey = require('./SerializerKey');
 
 class Serializer {
     /**
@@ -24,6 +23,7 @@ class Serializer {
     }
 
     /**
+     * @public
      * @returns {SerializerKey}
      */
     get key() {
@@ -31,6 +31,7 @@ class Serializer {
     }
 
     /**
+     * @public
      * @returns {Array<Field>}
      */
     get fields() {
@@ -41,6 +42,7 @@ class Serializer {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number=} fieldPathIndex
+     * @returns {FieldDecoder}
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
         const fieldIndex = fieldPath.get(fieldPathIndex);
@@ -52,6 +54,16 @@ class Serializer {
         const field = this._fields[fieldIndex];
 
         return field.getDecoderForFieldPath(fieldPath, fieldPathIndex + 1);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} fieldPathIndex
+     * @returns {string}
+     */
+    getNameForFieldPath(fieldPath, fieldPathIndex = 0) {
+        return this._fields[fieldPath.get(fieldPathIndex)].getNameForFieldPath(fieldPath, fieldPathIndex + 1);
     }
 
     /**

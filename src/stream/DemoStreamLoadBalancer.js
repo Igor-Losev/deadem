@@ -3,13 +3,20 @@
 const Stream = require('stream');
 
 /**
- * A helper class that periodically yields control to the event loop
- * to avoid long-running tasks blocking asynchronous operations and
- * to allow the garbage collector to proceed smoothly.
+ * Balances the load: periodically yields control to the event loop
+ * to avoid blocking asynchronous operations and the garbage collector
+ * to proceed smoothly.
  */
-class DemoStreamBalancer extends Stream.Transform {
-    constructor() {
+class DemoStreamLoadBalancer extends Stream.Transform {
+    /**
+     * @public
+     * @constructor
+     * @param {ParserEngine} engine
+     */
+    constructor(engine) {
         super({ objectMode: true });
+
+        this._engine = engine;
 
         this._counter = 0;
     }
@@ -49,4 +56,4 @@ function pauseTimeout(ms) {
     });
 }
 
-module.exports = DemoStreamBalancer;
+module.exports = DemoStreamLoadBalancer;

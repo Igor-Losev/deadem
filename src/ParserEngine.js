@@ -5,10 +5,11 @@ const assert = require('node:assert/strict'),
 
 const Demo = require('./data/Demo');
 
-const PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
+const InterceptorStage = require('./data/enums/InterceptorStage'),
+    PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
 
-const DemoStreamBalancer = require('./stream/DemoStreamBalancer'),
-    DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
+const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
+    DemoStreamLoadBalancer = require('./stream/DemoStreamLoadBalancer'),
     DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
     DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
     DemoStreamPacketCoordinator = require('./stream/DemoStreamPacketCoordinator'),
@@ -42,6 +43,8 @@ class ParserEngine {
             throw new Error('Invalid configuration: expected an instance of ParserConfiguration');
         }
 
+        this._demo = new Demo();
+
         if (configuration.parserThreads === 0) {
             this._workerManager = null;
         } else {
@@ -50,12 +53,10 @@ class ParserEngine {
 
         this._configuration = configuration;
 
-        this._demo = new Demo();
-
         this._chain = [
             new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
             new DemoStreamPacketExtractor(this),
-            new DemoStreamBalancer(),
+            new DemoStreamLoadBalancer(),
             new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
@@ -64,8 +65,16 @@ class ParserEngine {
         ];
 
         this._interceptors = {
-            pre: [ ],
-            post: [ ]
+            pre: {
+                [InterceptorStage.DEMO_PACKET.code]: [ ],
+                [InterceptorStage.ENTITY_PACKET.code]: [ ],
+                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
+            },
+            post: {
+                [InterceptorStage.DEMO_PACKET.code]: [ ],
+                [InterceptorStage.ENTITY_PACKET.code]: [ ],
+                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
+            }
         };
 
         this._trackers = {

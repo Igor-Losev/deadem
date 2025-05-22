@@ -3,6 +3,7 @@
 const Stream = require('stream');
 
 const DemoCommandType = require('./../data/enums/DemoCommandType'),
+    InterceptorStage = require('./../data/enums/InterceptorStage'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
@@ -15,7 +16,7 @@ const WorkerRequestDPacketSync = require('./../workers/requests/WorkerRequestDPa
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
- * updating the state of the {@link Parser} accordingly.
+ * updating the state of the {@link Demo} accordingly.
  */
 class DemoStreamPacketAnalyzer extends Stream.Transform {
     /**
@@ -42,6 +43,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      */
     async _transform(demoPacket, encoding, callback) {
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
+
+        await this._interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
@@ -117,6 +120,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                     this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
 
+                    await this._interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+
                     switch (messagePacket.type) {
                         case MessagePacketType.NET_TICK:
                             break;
@@ -185,7 +190,19 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                                         this._engine.workerManager.free(thread);
                                     });
                             } else {
-                                this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+                                const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+
+                                await this._interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+
+                                events.forEach((event) => {
+                                    const entity = event.entity;
+
+                                    event.mutations.forEach((mutation) => {
+                                        entity.updateByFieldPath(mutation.fieldPath, mutation.value);
+                                    });
+                                });
+
+                                await this._interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
                             }
 
                             break;
@@ -211,6 +228,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         default:
                             break;
                     }
+
+                    await this._interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
                 }
 
                 break;
@@ -219,7 +238,35 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
+        await this._interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
+
         callback();
+    }
+
+    /**
+     * @protected
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async _interceptPost(stage, ...args) {
+        for (let i = 0; i < this._engine.interceptors.post[stage.code].length; i++) {
+            const interceptor = this._engine.interceptors.post[stage.code][i];
+
+            await interceptor(...args);
+        }
+    }
+
+    /**
+     * @protected
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async _interceptPre(stage, ...args) {
+        for (let i = 0; i < this._engine.interceptors.pre[stage.code].length; i++) {
+            const interceptor = this._engine.interceptors.pre[stage.code][i];
+
+            await interceptor(...args);
+        }
     }
 }
 

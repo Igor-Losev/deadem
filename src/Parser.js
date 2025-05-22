@@ -3,6 +3,8 @@
 const assert = require('node:assert/strict'),
     Stream = require('node:stream');
 
+const InterceptorStage = require('./data/enums/InterceptorStage');
+
 const LoggerProvider = require('./providers/LoggerProvider.instance');
 
 const ParserConfiguration = require('./ParserConfiguration'),
@@ -33,12 +35,72 @@ class Parser {
 
     /**
      * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     */
+    registerPostInterceptor(stage, interceptor) {
+        assert(stage instanceof InterceptorStage);
+        assert(typeof interceptor === 'function');
+
+        this._engine.interceptors.post[stage.code].push(interceptor);
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     */
+    registerPreInterceptor(stage, interceptor) {
+        assert(stage instanceof InterceptorStage);
+        assert(typeof interceptor === 'function');
+
+        this._engine.interceptors.pre[stage.code].push(interceptor);
+    }
+
+    /**
+     * @public
      * @param {Stream.Readable} reader
      */
     start(reader) {
         assert(reader instanceof Stream.Readable);
 
         this._engine.start(reader);
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     * @returns {boolean}
+     */
+    unregisterPostInterceptor(stage, interceptor) {
+        const index = this._engine.interceptors.post[stage.code].findIndex(i => i === interceptor);
+
+        if (index === -1) {
+            return false;
+        }
+
+        this._engine.interceptors.post[stage.code].splice(index, 1);
+
+        return true;
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     * @returns {boolean}
+     */
+    unregisterPreInterceptor(stage, interceptor) {
+        const index = this._engine.interceptors.pre[stage.code].findIndex(i => i === interceptor);
+
+        if (index === -1) {
+            return false;
+        }
+
+        this._engine.interceptors.pre[stage.code].splice(index, 1);
+
+        return true;
     }
 }
 
