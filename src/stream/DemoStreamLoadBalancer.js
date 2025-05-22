@@ -3,9 +3,9 @@
 const Stream = require('stream');
 
 /**
- * Balances the load: periodically yields control to the event loop
- * to avoid blocking asynchronous operations. Lets the garbage collector
- * to proceed smoothly.
+ * Balances stream processing load by periodically yielding control back to
+ * the Node.js event loop, preventing long blocking operations and allowing
+ * garbage collection to proceed smoothly.
  */
 class DemoStreamLoadBalancer extends Stream.Transform {
     /**
