@@ -140,10 +140,25 @@ class MessagePacketType {
     static get CITADEL_USER_MESSAGE_STAMINA_DRAINED() { return citadelUserMessageStaminaDrained; }
     static get CITADEL_USER_MESSAGE_ABILITY_NOTIFY() { return citadelUserMessageAbilityNotify; }
     static get CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE() { return citadelUserMessageGetDamageStatsResponse; }
+
+    static get GE_FIRE_BULLETS() { return GE_FireBullets; }
+    static get GE_PLAYER_ANIM_EVENT() { return GE_PlayerAnimEvent; }
+    static get GE_PARTICLE_SYSTEM_MANAGER() { return GE_ParticleSystemManager; }
+    static get GE_SCREEN_TEXT_PRETTY() { return GE_ScreenTextPretty; }
+    static get GE_SERVER_REQUESTED_TRACER() { return GE_ServerRequestedTracer; }
+    static get GE_BULLET_IMPACT() { return GE_BulletImpact; }
+    static get GE_ENABLE_SAT_VOLUMES_EVENT() { return GE_EnableSatVolumesEvent; }
+    static get GE_PLACE_SAT_VOLUME_EVENT() { return GE_PlaceSatVolumeEvent; }
+    static get GE_DISABLE_SAT_VOLUME_EVENT() { return GE_DisableSatVolumesEvent; }
+    static get GE_REMOVE_SAT_VOLUME_EVENT() { return GE_RemoveSatVolumeEvent; }
+
+    static get CITADEL_ENTITY_MESSAGE_BREAKABLE_PROP_SPAWN_DEBRIS() { return citadelEntityMessageBreakablePropSpawnDebris; }
 }
 
 // Enums
-const ECitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
+const ECitadelGameEvents = ProtoProvider.CITADEL_GAME_EVENTS.getEnum('ECitadelGameEvents'),
+    ECitadelEntityMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelEntityMessageIds'),
+    ECitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
     EGameEvents = ProtoProvider.GAME_EVENTS.getEnum('EBaseGameEvents'),
     ENET_Messages = ProtoProvider.NETWORK_BASE_TYPES.getEnum('NET_Messages'),
     ESVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages'),
@@ -155,6 +170,18 @@ const CNETMsg_Tick = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_Tick')
     CNETMsg_SignonState = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_SignonState'),
     CNETMsg_SpawnGroupLoad = ProtoProvider.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_Load'),
     CNETMsg_SpawnGroupSetCreationTick = ProtoProvider.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_SetCreationTick');
+
+// Citadel Game Events
+const CMsgFireBullets = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgFireBullets'),
+    CMsgPlayerAnimEvent = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgPlayerAnimEvent'),
+    CMsgParticleSystemManager = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgParticleSystemManager'),
+    CMsgScreenTextPretty = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgScreenTextPretty'),
+    CMsgServerRequestedTracer = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgServerRequestedTracer'),
+    CMsgBulletImpact = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgBulletImpact'),
+    CMsgEnableSatVolumesEvent = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgEnableSatVolumesEvent'),
+    CMsgPlaceSatVolumeEvent = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgPlaceSatVolumeEvent'),
+    CMsgDisableSatVolumesEvent = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgDisableSatVolumesEvent'),
+    CMsgRemoveSatVolumeEvent = ProtoProvider.CITADEL_GAME_EVENTS.lookupType('CMsgRemoveSatVolumeEvent');
 
 // Citadel User Messages
 const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_Damage'),
@@ -213,6 +240,8 @@ const CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_Server
     CSVCMsg_PacketEntities = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_PacketEntities'),
     CSVCMsg_HltvStatus = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus'),
     CSVCMsg_UserCommands = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UserCommands');
+
+const CCitadelEntityMsg_BreakablePropSpawnDebris = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelEntityMsg_BreakablePropSpawnDebris');
 
 const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMsg_Tick), // 4
     netSetConVar = new MessagePacketType('net_SetConVar', ENET_Messages.net_SetConVar, CNETMsg_SetConVar), // 6
@@ -273,5 +302,18 @@ const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECit
     citadelUserMessageStaminaDrained = new MessagePacketType('k_EUserMsg_StaminaDrained', ECitadelUserMessageIds.k_EUserMsg_StaminaDrained, CCitadelUserMsg_StaminaDrained), // 337
     citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', ECitadelUserMessageIds.k_EUserMsg_AbilityNotify, CCitadelUserMessage_AbilityNotify), // 338
     citadelUserMessageGetDamageStatsResponse = new MessagePacketType('k_EUserMsg_GetDamageStatsResponse', ECitadelUserMessageIds.k_EUserMsg_GetDamageStatsResponse, CCitadelUserMsg_GetDamageStatsResponse); // 339
+
+const GE_FireBullets = new MessagePacketType('GE_FireBullets', ECitadelGameEvents.GE_FireBullets, CMsgFireBullets), // 450
+    GE_PlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEvent', ECitadelGameEvents.GE_PlayerAnimEvent, CMsgPlayerAnimEvent), // 451
+    GE_ParticleSystemManager = new MessagePacketType('GE_ParticleSystemManager', ECitadelGameEvents.GE_ParticleSystemManager, CMsgParticleSystemManager), // 458
+    GE_ScreenTextPretty = new MessagePacketType('GE_ScreenTextPretty', ECitadelGameEvents.GE_ScreenTextPretty, CMsgScreenTextPretty), // 459
+    GE_ServerRequestedTracer = new MessagePacketType('GE_ServerRequestedTracer', ECitadelGameEvents.GE_ServerRequestedTracer, CMsgServerRequestedTracer), // 460
+    GE_BulletImpact = new MessagePacketType('GE_BulletImpact', ECitadelGameEvents.GE_BulletImpact, CMsgBulletImpact), // 461
+    GE_EnableSatVolumesEvent = new MessagePacketType('GE_EnableSatVolumesEvent', ECitadelGameEvents.GE_EnableSatVolumesEvent, CMsgEnableSatVolumesEvent), // 462
+    GE_PlaceSatVolumeEvent = new MessagePacketType('GE_PlaceSatVolumeEvent', ECitadelGameEvents.GE_PlaceSatVolumeEvent, CMsgPlaceSatVolumeEvent), // 463
+    GE_DisableSatVolumesEvent = new MessagePacketType('GE_DisableSatVolumesEvent', ECitadelGameEvents.GE_DisableSatVolumesEvent, CMsgDisableSatVolumesEvent), // 464
+    GE_RemoveSatVolumeEvent = new MessagePacketType('GE_RemoveSatVolumeEvent', ECitadelGameEvents.GE_RemoveSatVolumeEvent, CMsgRemoveSatVolumeEvent); // 465
+
+const citadelEntityMessageBreakablePropSpawnDebris = new MessagePacketType('k_EEntityMsg_BreakablePropSpawnDebris', ECitadelEntityMessageIds.k_EEntityMsg_BreakablePropSpawnDebris, CCitadelEntityMsg_BreakablePropSpawnDebris); // 500
 
 module.exports = MessagePacketType;

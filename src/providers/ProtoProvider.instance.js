@@ -5,6 +5,7 @@ const path = require('path');
 const protobuf = require('protobufjs');
 
 const baseModifier = protobuf.loadSync(path.resolve(__dirname, './../../proto/base_modifier.proto'));
+const citadelGameEvents = protobuf.loadSync(path.resolve(__dirname, './../../proto/citadel_gameevents.proto'));
 const citadelUserMessages = protobuf.loadSync(path.resolve(__dirname, './../../proto/citadel_usermessages.proto'));
 const demo = protobuf.loadSync(path.resolve(__dirname, './../../proto/demo.proto'));
 const gameEvents = protobuf.loadSync(path.resolve(__dirname, './../../proto/gameevents.proto'));
@@ -23,6 +24,14 @@ class ProtoProvider {
      */
     get BASE_MODIFIER() {
         return baseModifier;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
+    get CITADEL_GAME_EVENTS() {
+        return citadelGameEvents;
     }
 
     /**

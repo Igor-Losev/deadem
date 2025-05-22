@@ -258,6 +258,21 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE:
                             break;
 
+                        case MessagePacketType.GE_FIRE_BULLETS:
+                        case MessagePacketType.GE_PLAYER_ANIM_EVENT:
+                        case MessagePacketType.GE_PARTICLE_SYSTEM_MANAGER:
+                        case MessagePacketType.GE_SCREEN_TEXT_PRETTY:
+                        case MessagePacketType.GE_SERVER_REQUESTED_TRACER:
+                        case MessagePacketType.GE_BULLET_IMPACT:
+                        case MessagePacketType.GE_ENABLE_SAT_VOLUMES_EVENT:
+                        case MessagePacketType.GE_PLACE_SAT_VOLUME_EVENT:
+                        case MessagePacketType.GE_DISABLE_SAT_VOLUME_EVENT:
+                        case MessagePacketType.GE_REMOVE_SAT_VOLUME_EVENT:
+                            break;
+
+                        case MessagePacketType.CITADEL_ENTITY_MESSAGE_BREAKABLE_PROP_SPAWN_DEBRIS:
+                            break;
+
                         default:
                             break;
                     }
