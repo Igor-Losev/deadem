@@ -24,3 +24,6 @@ jobs:
 
       - name: Run tests
         run: yarn test
+
+      - name: Run parser for multiple demo files
+        run: node ./examples/02_parse_multiple.js --matches=35244871,36126255,36127043
