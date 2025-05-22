@@ -1,3 +1,5 @@
+'use strict';
+
 const log4js = require('log4js');
 
 const log4jsConfiguration = require('./../../log4js.config');
@@ -11,7 +13,6 @@ class LoggerProvider {
 
     /**
      * @public
-     *
      * @param {String=} category
      * @returns {log4js.Logger}
      */

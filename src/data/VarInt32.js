@@ -1,3 +1,5 @@
+'use strict';
+
 const MAXIMUM_SIZE_BYTES = 5;
 
 /**
@@ -16,14 +18,27 @@ class VarInt32 {
         this._size = size;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get value() {
         return this._value;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get size() {
         return this._size;
     }
 
+    /**
+     * @public
+     * @static
+     * @returns {number}
+     */
     static get MAXIMUM_SIZE_BYTES() {
         return MAXIMUM_SIZE_BYTES;
     }

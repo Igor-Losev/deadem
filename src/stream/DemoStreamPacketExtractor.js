@@ -1,3 +1,5 @@
+'use strict';
+
 const Stream = require('stream');
 
 const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');

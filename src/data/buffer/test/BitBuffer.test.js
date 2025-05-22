@@ -1,3 +1,5 @@
+'use strict';
+
 const BitBuffer = require('./../BitBuffer');
 
 describe('BitBuffer.read()', () => {

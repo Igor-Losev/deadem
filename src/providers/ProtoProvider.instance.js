@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 
 const protobuf = require('protobufjs');
@@ -15,30 +17,58 @@ class ProtoProvider {
 
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get BASE_MODIFIER() {
         return baseModifier;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get CITADEL_USER_MESSAGES() {
         return citadelUserMessages;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get DEMO() {
         return demo;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get GAME_EVENTS() {
         return gameEvents;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get NET_MESSAGES() {
         return netMessages;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get NETWORK_BASE_TYPES() {
         return networkBaseTypes;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get USER_MESSAGES() {
         return userMessages;
     }
