@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('node:assert/strict');
-
 class FieldPath {
     /**
      * @public
@@ -9,8 +7,6 @@ class FieldPath {
      * @param {Array<Number>} path
      */
     constructor(path) {
-        assert(Array.isArray(path));
-
         this._path = path;
     }
 

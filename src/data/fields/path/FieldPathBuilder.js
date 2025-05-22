@@ -1,20 +1,24 @@
 'use strict';
 
-const MAX_LENGTH = 7;
-
 const FieldPath = require('./FieldPath');
 
+const MAX_LENGTH = 7;
+
+const registry = new Map();
+
+/**
+ * Constructs and caches unique {@link FieldPath} instances.
+ * Ensures that no two FieldPath instances with identical
+ * paths are duplicated. If a {@link FieldPath} with the same
+ * values has already been created, it returns the existing instance.
+ */
 class FieldPathBuilder {
     /**
      * @public
      * @constructor
      */
     constructor() {
-        this._path = new Array(MAX_LENGTH).fill(0);
-        this._path[0] = -1;
-
-        this._length = 1;
-        this._pointer = 0;
+        this._path = [ -1 ];
     }
 
     /**
@@ -22,7 +26,7 @@ class FieldPathBuilder {
      * @returns {number}
      */
     get length() {
-        return this._length;
+        return this._path.length;
     }
 
     /**
@@ -30,13 +34,13 @@ class FieldPathBuilder {
      * @param {number} value
      * @param {number=} index
      */
-    add(value, index = this._pointer) {
-        if (this._length === 0) {
+    add(value, index = this._path.length - 1) {
+        if (this._path.length === 0) {
             throw new Error(`Unable to add value [ ${value} ] - path is empty`);
         }
 
-        if (index >= this._length) {
-            throw new Error(`Unable to add value [ ${value} ] - index [ ${index} ] is bigger than path length [ ${this._length} ]`);
+        if (index >= this._path.length) {
+            throw new Error(`Unable to add value [ ${value} ] - index [ ${index} ] is bigger than path length [ ${this._path.length} ]`);
         }
 
         this._path[index] += value;
@@ -47,7 +51,19 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     build() {
-        return new FieldPath(this._path.slice(0, this._length));
+        const cacheKey = getCacheKey(this._path);
+
+        const existing = registry.get(cacheKey);
+
+        if (existing) {
+            return existing;
+        }
+
+        const fieldPath = new FieldPath(this._path.slice());
+
+        registry.set(cacheKey, fieldPath);
+
+        return fieldPath;
     }
 
     /**
@@ -55,16 +71,11 @@ class FieldPathBuilder {
      * @param {number} count
      */
     drop(count) {
-        if (count > this._length) {
-            throw new Error(`Unable to drop [ ${count} ] items - path has only [ ${this._length} ] items`);
+        if (count > this._path.length) {
+            throw new Error(`Unable to drop [ ${count} ] items - path has only [ ${this._path.length} ] items`);
         }
 
-        for (let i = 0; i < count; i++) {
-            this._path[this._pointer] = 0;
-
-            this._length -= 1;
-            this._pointer -= 1;
-        }
+        this._path.length -= count;
     }
 
     /**
@@ -72,14 +83,11 @@ class FieldPathBuilder {
      * @param {number} value
      */
     push(value) {
-        if (this._length >= MAX_LENGTH) {
+        if (this.length >= MAX_LENGTH) {
             throw new Error(`Unable to push value [ ${value} ] - path is full`);
         }
 
-        this._length += 1;
-        this._pointer += 1;
-
-        this._path[this._pointer] = value;
+        this._path.push(value);
     }
 
     /**
@@ -87,9 +95,19 @@ class FieldPathBuilder {
      * @param {number} value
      * @param {number} index
      */
-    set(value, index = this._pointer) {
+    set(value, index = this._path.length - 1) {
         this._path[index] = value;
     }
+}
+
+function getCacheKey(path) {
+    let key = BigInt(path.length) << 16n;
+
+    for (let i = 0; i < path.length; i++) {
+        key = (key << 16n) | BigInt(path[i]);
+    }
+
+    return key;
 }
 
 module.exports = FieldPathBuilder;

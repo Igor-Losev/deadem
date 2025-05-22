@@ -3,12 +3,16 @@
 const assert = require('assert/strict');
 
 const Demo = require('./../data/Demo'),
-    Entity = require('./../data/Entity'),
     Server = require('./../data/Server');
 
 const BitBuffer = require('./../data/buffer/BitBuffer');
 
+const Entity = require('./../data/entity/Entity'),
+    EntityMutationEvent = require('./../data/entity/EntityMutationEvent');
+
 const EntityOperation = require('./../data/enums/EntityOperation');
+
+const EntityMutationExtractor = require('./../extractors/EntityMutationExtractor');
 
 class DemoMessageHandler {
     /**
@@ -70,6 +74,7 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @returns {Array<EntityMutationEvent>}
      */
     handleSvcPacketEntities(messagePacket) {
         const message = messagePacket.data;
@@ -83,6 +88,8 @@ class DemoMessageHandler {
         if (this._demo.server === null) {
             throw new Error('CSVCMsg_PacketEntities found, but server data is missing');
         }
+
+        const events = [ ];
 
         let index = -1;
 
@@ -99,7 +106,13 @@ class DemoMessageHandler {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
-                    entity.updateFromBitBuffer(bitBuffer);
+                    const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                    const mutations = extractor.all();
+
+                    const event = new EntityMutationEvent(EntityOperation.UPDATE, entity, mutations);
+
+                    events.push(event);
 
                     break;
                 }
@@ -110,7 +123,9 @@ class DemoMessageHandler {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
-                    // TODO: entity.active ?
+                    const event = new EntityMutationEvent(EntityOperation.LEAVE, entity, [ ]);
+
+                    events.push(event);
 
                     break;
                 }
@@ -138,8 +153,15 @@ class DemoMessageHandler {
 
                     this._demo.registerEntity(entity);
 
-                    entity.updateFromBitBuffer(new BitBuffer(baseline));
-                    entity.updateFromBitBuffer(bitBuffer);
+                    const extractorForBaseline = new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer);
+                    const extractorForPacket = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                    const mutationsFromBaseline = extractorForBaseline.all();
+                    const mutationsFromPacket = extractorForPacket.all();
+
+                    const event = new EntityMutationEvent(EntityOperation.CREATE, entity, mutationsFromBaseline.concat(mutationsFromPacket));
+
+                    events.push(event);
 
                     break;
                 }
@@ -150,18 +172,22 @@ class DemoMessageHandler {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
-                    // TODO: entity.active ?
-
                     const deleted = this._demo.deleteEntity(index);
 
                     if (deleted === null) {
                         throw new Error(`Received delete entity command. However, entity with index [ ${index} ] doesn't exist`);
                     }
 
+                    const event = new EntityMutationEvent(EntityOperation.DELETE, entity, [ ]);
+
+                    events.push(event);
+
                     break;
                 }
             }
         }
+
+        return events;
     }
 }
 

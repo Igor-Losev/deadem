@@ -2,10 +2,15 @@
 
 const assert = require('node:assert/strict');
 
-const Class = require('./Class'),
-    EntityState = require('./EntityState');
+const Class = require('./../Class');
 
 class Entity {
+    /**
+     * @constructor
+     * @param {number} index
+     * @param {number} serial
+     * @param {Class} clazz
+     */
     constructor(index, serial, clazz) {
         assert(Number.isInteger(index));
         assert(Number.isInteger(serial));
@@ -15,7 +20,7 @@ class Entity {
         this._serial = serial;
         this._class = clazz;
 
-        this._state = new EntityState();
+        this._state = new Map();
     }
 
     /**
@@ -40,7 +45,7 @@ class Entity {
     }
 
     /**
-     * @returns {EntityState}
+     * @returns {Map<FieldPath, *>}
      */
     get state() {
         return this._state;
@@ -48,10 +53,18 @@ class Entity {
 
     /**
      * @public
-     * @param {BitBuffer} bitBuffer
+     * @returns {*}
      */
-    updateFromBitBuffer(bitBuffer) {
-        this._state.updateFromBitBuffer(bitBuffer, this._class.serializer);
+    unpack() {
+        const unpacked = { };
+
+        this._state.forEach((value, fieldPath) => {
+            const name = this._class.serializer.getNameForFieldPath(fieldPath);
+
+            unpacked[name] = value;
+        });
+
+        return unpacked;
     }
 
     /**
@@ -60,7 +73,7 @@ class Entity {
      * @param {*} value
      */
     updateByFieldPath(fieldPath, value) {
-        this._state.updateByFieldPath(fieldPath, value);
+        this._state.set(fieldPath, value);
     }
 }
 

@@ -3,14 +3,15 @@
 const assert = require('node:assert/strict');
 
 const Class = require('./Class'),
-    Entity = require('./Entity'),
     Server = require('./Server');
 
-const Serializer = require('./fields/Serializer'),
-    SerializerKey = require('./fields/SerializerKey');
+const Entity = require('./entity/Entity');
 
 const StringTableEvent = require('./enums/StringTableEvent'),
     StringTableType = require('./enums/StringTableType');
+
+const Serializer = require('./fields/Serializer'),
+    SerializerKey = require('./fields/SerializerKey');
 
 const StringTableContainer = require('./tables/string/StringTableContainer');
 
