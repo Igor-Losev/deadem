@@ -25,6 +25,14 @@ class MessagePacketType {
         this._id = id;
         this._proto = proto;
 
+        if (registry.byCode.has(code)) {
+            throw new Error(`MessagePacketType with code [ ${code} ] already exist`);
+        }
+
+        if (registry.byId.has(id)) {
+            throw new Error(`MessagePacketType with id [ ${id} ] already exist`);
+        }
+
         registry.byCode.set(code, this);
         registry.byId.set(id, this);
     }
@@ -49,14 +57,26 @@ class MessagePacketType {
         return registry.byId.get(id) || null;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get id() {
         return this._id;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get proto() {
         return this._proto;
     }
@@ -85,8 +105,41 @@ class MessagePacketType {
     static get GE_SOS_START_SOUND_EVENT() { return GE_SosStartSoundEvent; }
     static get GE_SOS_STOP_SOUND_EVENT() { return GE_SosStopSoundEvent; }
     static get GE_SOS_SET_SOUND_EVENT_PARAMS() { return GE_SosSetSoundEventParams; }
+    static get GE_SOS_STOP_SOUND_EVENT_HASH() { return GE_SosStopSoundEventHash; }
 
     static get CITADEL_USER_MESSAGE_DAMAGE() { return citadelUserMessageDamage; }
+    static get CITADEL_USER_MESSAGE_MAP_PING() { return citadelUserMessageMapPing; }
+    static get CITADEL_USER_MESSAGE_TEAM_REWARDS() { return citadelUserMessageTeamRewards; }
+    static get CITADEL_USER_MESSAGE_TRIGGER_DAMAGE_FLASH() { return citadelUserMessageTriggerDamageFlash; }
+    static get CITADEL_USER_MESSAGE_ABILITY_CHANGED() { return citadelUserMessageAbilitiesChanged; }
+    static get CITADEL_USER_MESSAGE_RECENT_DAMAGE_SUMMARY() { return citadelUserMessageRecentDamageSummary; }
+    static get CITADEL_USER_MESSAGE_SPECTATOR_TEAM_CHANGED() { return citadelUserMessageSpectatorTeamChanged; }
+    static get CITADEL_USER_MESSAGE_CHAT_WHEEL() { return citadelUserMessageChatWheel; }
+    static get CITADEL_USER_MESSAGE_GOLD_HISTORY() { return citadelUserMessageGoldHistory; }
+    static get CITADEL_USER_MESSAGE_CHAT_MESSAGE() { return citadelUserMessageChatMessage; }
+    static get CITADEL_USER_MESSAGE_QUICK_RESPONSE() { return citadelUserMessageQuickResponse; }
+    static get CITADEL_USER_MESSAGE_POST_MATCH_DETAILS() { return citadelUserMessagePostMatchDetails; }
+    static get CITADEL_USER_MESSAGE_CHAT_EVENT() { return citadelUserMessageChatEvent; }
+    static get CITADEL_USER_MESSAGE_ABILITY_INTERRUPTED() { return citadelUserMessageAbilityInterrupted; }
+    static get CITADEL_USER_MESSAGE_HERO_KILLED() { return citadelUserMessageHeroKilled; }
+    static get CITADEL_USER_MESSAGE_RETURN_IDOL() { return citadelUserMessageReturnIdol; }
+    static get CITADEL_USER_MESSAGE_SET_CLIENT_CAMERA_ANGLES() { return citadelUserMessageSetClientCameraAngles; }
+    static get CITADEL_USER_MESSAGE_MAP_LINE() { return citadelUserMessageMapLine; }
+    static get CITADEL_USER_MESSAGE_BULLET_HIT() { return citadelUserMessageBulletHit; }
+    static get CITADEL_USER_MESSAGE_OBJECTIVE_MASK() { return citadelUserMessageObjectiveMask; }
+    static get CITADEL_USER_MESSAGE_MODIFIER_APPLIED() { return citadelUserMessageModifierApplied; }
+    static get CITADEL_USER_MESSAGE_CAMERA_CONTROLLER() { return citadelUserMessageCameraController; }
+    static get CITADEL_USER_MESSAGE_AURA_MODIFIER_APPLIED() { return citadelUserMessageAuraModifierApplied; }
+    static get CITADEL_USER_MESSAGE_OBSTRUCTED_SHOT_FIRED() { return citadelUserMessageObstructedShotFired; }
+    static get CITADEL_USER_MESSAGE_ABILITY_LATE_FAILURE() { return citadelUserMessageAbilityLateFailure; }
+    static get CITADEL_USER_MESSAGE_ABILITY_PING() { return citadelUserMessageAbilityPing; }
+    static get CITADEL_USER_MESSAGE_POST_PROCESSING_ANIM() { return citadelUserMessagePostProcessingAnim; }
+    static get CITADEL_USER_MESSAGE_DEATH_REPLAY_DATA() { return citadelUserMessageDeathReplayData; }
+    static get CITADEL_USER_MESSAGE_PLAYER_LIFETIME_STAT_INFO() { return citadelUserMessagePlayerLifetimeStatInfo; }
+    static get CITADEL_USER_MESSAGE_FORCE_SHOP_CLOSED() { return citadelUserMessageForceShopClosed; }
+    static get CITADEL_USER_MESSAGE_STAMINA_DRAINED() { return citadelUserMessageStaminaDrained; }
+    static get CITADEL_USER_MESSAGE_ABILITY_NOTIFY() { return citadelUserMessageAbilityNotify; }
+    static get CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE() { return citadelUserMessageGetDamageStatsResponse; }
 }
 
 // Enums
@@ -104,7 +157,39 @@ const CNETMsg_Tick = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CNETMsg_Tick')
     CNETMsg_SpawnGroupSetCreationTick = ProtoProvider.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_SetCreationTick');
 
 // Citadel User Messages
-const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_Damage');
+const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_Damage'),
+    CCitadelUserMsg_MapPing = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_MapPing'),
+    CCitadelUserMsg_TeamRewards = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_TeamRewards'),
+    CCitadelUserMsg_TriggerDamageFlash = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_TriggerDamageFlash'),
+    CCitadelUserMsg_AbilitiesChanged = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_AbilitiesChanged'),
+    CCitadelUserMsg_RecentDamageSummary = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_RecentDamageSummary'),
+    CCitadelUserMsg_SpectatorTeamChanged = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_SpectatorTeamChanged'),
+    CCitadelUserMsg_ChatWheel = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ChatWheel'),
+    CCitadelUserMsg_GoldHistory = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_GoldHistory'),
+    CCitadelUserMsg_ChatMsg = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ChatMsg'),
+    CCitadelUserMsg_QuickResponse = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_QuickResponse'),
+    CCitadelUserMsg_PostMatchDetails = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_PostMatchDetails'),
+    CCitadelUserMsg_ChatEvent = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ChatEvent'),
+    CCitadelUserMsg_AbilityInterrupted = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_AbilityInterrupted'),
+    CCitadelUserMsg_HeroKilled = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_HeroKilled'),
+    CCitadelUserMsg_ReturnIdol = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ReturnIdol'),
+    CCitadelUserMsg_SetClientCameraAngles = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_SetClientCameraAngles'),
+    CCitadelUserMsg_MapLine = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_MapLine'),
+    CCitadelUserMessage_BulletHit = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_BulletHit'),
+    CCitadelUserMessage_ObjectiveMask = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ObjectiveMask'),
+    CCitadelUserMessage_ModifierApplied = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ModifierApplied'),
+    CCitadelUserMsg_CameraController = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_CameraController'),
+    CCitadelUserMessage_AuraModifierApplied = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_AuraModifierApplied'),
+    CCitadelUserMsg_ObstructedShotFired = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ObstructedShotFired'),
+    CCitadelUserMsg_AbilityLateFailure = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_AbilityLateFailure'),
+    CCitadelUserMsg_AbilityPing = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_AbilityPing'),
+    CCitadelUserMsg_PostProcessingAnim = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_PostProcessingAnim'),
+    CCitadelUserMsg_DeathReplayData = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_DeathReplayData'),
+    CCitadelUserMsg_PlayerLifetimeStatInfo = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_PlayerLifetimeStatInfo'),
+    CCitadelUserMsg_ForceShopClosed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ForceShopClosed'),
+    CCitadelUserMsg_StaminaDrained = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_StaminaDrained'),
+    CCitadelUserMessage_AbilityNotify = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_AbilityNotify'),
+    CCitadelUserMsg_GetDamageStatsResponse = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_GetDamageStatsResponse');
 
 // Game Events
 const CMsgSource1LegacyGameEventList = ProtoProvider.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEventList'),
@@ -155,6 +240,38 @@ const GESource1LegacyGameEventList = new MessagePacketType('GE_Source1LegacyGame
     GE_SosSetSoundEventParams = new MessagePacketType('GE_SosSetSoundEventParams', EGameEvents.GE_SosSetSoundEventParams, CMsgSosSetSoundEventParams), // 210
     GE_SosStopSoundEventHash = new MessagePacketType('GE_SosStopSoundEventHash', EGameEvents.GE_SosStopSoundEventHash, CMsgSosStopSoundEventHash); // 212
 
-const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECitadelUserMessageIds.k_EUserMsg_Damage, CCitadelUserMessage_Damage); // 300
+const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECitadelUserMessageIds.k_EUserMsg_Damage, CCitadelUserMessage_Damage), // 300
+    citadelUserMessageMapPing = new MessagePacketType('k_EUserMsg_MapPing', ECitadelUserMessageIds.k_EUserMsg_MapPing, CCitadelUserMsg_MapPing), // 303
+    citadelUserMessageTeamRewards = new MessagePacketType('k_EUserMsg_TeamRewards', ECitadelUserMessageIds.k_EUserMsg_TeamRewards, CCitadelUserMsg_TeamRewards), // 304
+    citadelUserMessageTriggerDamageFlash = new MessagePacketType('k_EUserMsg_TriggerDamageFlash', ECitadelUserMessageIds.k_EUserMsg_TriggerDamageFlash, CCitadelUserMsg_TriggerDamageFlash), // 308
+    citadelUserMessageAbilitiesChanged = new MessagePacketType('k_EUserMsg_AbilitiesChanged', ECitadelUserMessageIds.k_EUserMsg_AbilitiesChanged, CCitadelUserMsg_AbilitiesChanged), // 309
+    citadelUserMessageRecentDamageSummary = new MessagePacketType('k_EUserMsg_RecentDamageSummary', ECitadelUserMessageIds.k_EUserMsg_RecentDamageSummary, CCitadelUserMsg_RecentDamageSummary), // 310
+    citadelUserMessageSpectatorTeamChanged = new MessagePacketType('k_EUserMsg_SpectatorTeamChanged', ECitadelUserMessageIds.k_EUserMsg_SpectatorTeamChanged, CCitadelUserMsg_SpectatorTeamChanged), // 311
+    citadelUserMessageChatWheel = new MessagePacketType('k_EUserMsg_ChatWheel', ECitadelUserMessageIds.k_EUserMsg_ChatWheel, CCitadelUserMsg_ChatWheel), // 312
+    citadelUserMessageGoldHistory = new MessagePacketType('k_EUserMsg_GoldHistory', ECitadelUserMessageIds.k_EUserMsg_GoldHistory, CCitadelUserMsg_GoldHistory), // 313
+    citadelUserMessageChatMessage = new MessagePacketType('k_EUserMsg_ChatMsg', ECitadelUserMessageIds.k_EUserMsg_ChatMsg, CCitadelUserMsg_ChatMsg), // 314
+    citadelUserMessageQuickResponse = new MessagePacketType('k_EUserMsg_QuickResponse', ECitadelUserMessageIds.k_EUserMsg_QuickResponse, CCitadelUserMsg_QuickResponse), // 315
+    citadelUserMessagePostMatchDetails = new MessagePacketType('k_EUserMsg_PostMatchDetails', ECitadelUserMessageIds.k_EUserMsg_PostMatchDetails, CCitadelUserMsg_PostMatchDetails), // 316
+    citadelUserMessageChatEvent = new MessagePacketType('k_EUserMsg_ChatEvent', ECitadelUserMessageIds.k_EUserMsg_ChatEvent, CCitadelUserMsg_ChatEvent), // 317
+    citadelUserMessageAbilityInterrupted = new MessagePacketType('k_EUserMsg_AbilityInterrupted', ECitadelUserMessageIds.k_EUserMsg_AbilityInterrupted, CCitadelUserMsg_AbilityInterrupted), // 318
+    citadelUserMessageHeroKilled = new MessagePacketType('k_EUserMsg_HeroKilled', ECitadelUserMessageIds.k_EUserMsg_HeroKilled, CCitadelUserMsg_HeroKilled), // 319
+    citadelUserMessageReturnIdol = new MessagePacketType('k_EUserMsg_ReturnIdol', ECitadelUserMessageIds.k_EUserMsg_ReturnIdol, CCitadelUserMsg_ReturnIdol), // 320
+    citadelUserMessageSetClientCameraAngles = new MessagePacketType('k_EUserMsg_SetClientCameraAngles', ECitadelUserMessageIds.k_EUserMsg_SetClientCameraAngles, CCitadelUserMsg_SetClientCameraAngles), // 321
+    citadelUserMessageMapLine = new MessagePacketType('k_EUserMsg_MapLine', ECitadelUserMessageIds.k_EUserMsg_MapLine, CCitadelUserMsg_MapLine), // 322
+    citadelUserMessageBulletHit = new MessagePacketType('k_EUserMsg_BulletHit', ECitadelUserMessageIds.k_EUserMsg_BulletHit, CCitadelUserMessage_BulletHit), // 323
+    citadelUserMessageObjectiveMask = new MessagePacketType('k_EUserMsg_ObjectiveMask', ECitadelUserMessageIds.k_EUserMsg_ObjectiveMask, CCitadelUserMessage_ObjectiveMask), // 324
+    citadelUserMessageModifierApplied = new MessagePacketType('k_EUserMsg_ModifierApplied', ECitadelUserMessageIds.k_EUserMsg_ModifierApplied, CCitadelUserMessage_ModifierApplied), // 325
+    citadelUserMessageCameraController = new MessagePacketType('k_EUserMsg_CameraController', ECitadelUserMessageIds.k_EUserMsg_CameraController, CCitadelUserMsg_CameraController), // 326
+    citadelUserMessageAuraModifierApplied = new MessagePacketType('k_EUserMsg_AuraModifierApplied', ECitadelUserMessageIds.k_EUserMsg_AuraModifierApplied, CCitadelUserMessage_AuraModifierApplied), // 327
+    citadelUserMessageObstructedShotFired = new MessagePacketType('k_EUserMsg_ObstructedShotFired', ECitadelUserMessageIds.k_EUserMsg_ObstructedShotFired, CCitadelUserMsg_ObstructedShotFired), // 329
+    citadelUserMessageAbilityLateFailure = new MessagePacketType('k_EUserMsg_AbilityLateFailure', ECitadelUserMessageIds.k_EUserMsg_AbilityLateFailure, CCitadelUserMsg_AbilityLateFailure), // 330
+    citadelUserMessageAbilityPing = new MessagePacketType('k_EUserMsg_AbilityPing', ECitadelUserMessageIds.k_EUserMsg_AbilityPing, CCitadelUserMsg_AbilityPing), // 331
+    citadelUserMessagePostProcessingAnim = new MessagePacketType('k_EUserMsg_PostProcessingAnim', ECitadelUserMessageIds.k_EUserMsg_PostProcessingAnim, CCitadelUserMsg_PostProcessingAnim), // 332
+    citadelUserMessageDeathReplayData = new MessagePacketType('k_EUserMsg_DeathReplayData', ECitadelUserMessageIds.k_EUserMsg_DeathReplayData, CCitadelUserMsg_DeathReplayData), // 333
+    citadelUserMessagePlayerLifetimeStatInfo = new MessagePacketType('k_EUserMsg_PlayerLifetimeStatInfo', ECitadelUserMessageIds.k_EUserMsg_PlayerLifetimeStatInfo, CCitadelUserMsg_PlayerLifetimeStatInfo), // 334
+    citadelUserMessageForceShopClosed = new MessagePacketType('k_EUserMsg_ForceShopClosed', ECitadelUserMessageIds.k_EUserMsg_ForceShopClosed, CCitadelUserMsg_ForceShopClosed), // 336
+    citadelUserMessageStaminaDrained = new MessagePacketType('k_EUserMsg_StaminaDrained', ECitadelUserMessageIds.k_EUserMsg_StaminaDrained, CCitadelUserMsg_StaminaDrained), // 337
+    citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', ECitadelUserMessageIds.k_EUserMsg_AbilityNotify, CCitadelUserMessage_AbilityNotify), // 338
+    citadelUserMessageGetDamageStatsResponse = new MessagePacketType('k_EUserMsg_GetDamageStatsResponse', ECitadelUserMessageIds.k_EUserMsg_GetDamageStatsResponse, CCitadelUserMsg_GetDamageStatsResponse); // 339
 
 module.exports = MessagePacketType;

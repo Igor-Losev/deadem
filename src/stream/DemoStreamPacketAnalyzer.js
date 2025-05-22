@@ -208,7 +208,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                             break;
                         }
                         case MessagePacketType.SVC_HLTV_STATUS:
-                            break;
                         case MessagePacketType.SVC_USER_COMMANDS:
                             break;
 
@@ -221,10 +220,44 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.GE_SOS_START_SOUND_EVENT:
                         case MessagePacketType.GE_SOS_STOP_SOUND_EVENT:
                         case MessagePacketType.GE_SOS_SET_SOUND_EVENT_PARAMS:
+                        case MessagePacketType.GE_SOS_STOP_SOUND_EVENT_HASH:
                             break;
 
                         case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_MAP_PING:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_TEAM_REWARDS:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_TRIGGER_DAMAGE_FLASH:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_CHANGED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_RECENT_DAMAGE_SUMMARY:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_SPECTATOR_TEAM_CHANGED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_GOLD_HISTORY:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_QUICK_RESPONSE:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_POST_MATCH_DETAILS:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_EVENT:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_INTERRUPTED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_RETURN_IDOL:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_SET_CLIENT_CAMERA_ANGLES:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_MAP_LINE:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_BULLET_HIT:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_OBJECTIVE_MASK:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_MODIFIER_APPLIED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_CAMERA_CONTROLLER:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_AURA_MODIFIER_APPLIED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_OBSTRUCTED_SHOT_FIRED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_LATE_FAILURE:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_PING:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_POST_PROCESSING_ANIM:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_DEATH_REPLAY_DATA:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_PLAYER_LIFETIME_STAT_INFO:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_FORCE_SHOP_CLOSED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_STAMINA_DRAINED:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_NOTIFY:
+                        case MessagePacketType.CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE:
                             break;
+
                         default:
                             break;
                     }
