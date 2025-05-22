@@ -4,7 +4,7 @@ const Stream = require('stream');
 
 /**
  * Balances the load: periodically yields control to the event loop
- * to avoid blocking asynchronous operations and the garbage collector
+ * to avoid blocking asynchronous operations. Lets the garbage collector
  * to proceed smoothly.
  */
 class DemoStreamLoadBalancer extends Stream.Transform {
