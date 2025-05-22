@@ -15,22 +15,30 @@ const DemoFile = require('./helpers/DemoFile'),
         process.exit(1);
     }
 
-    let delimiter;
+    const [ _, value ] = matchesArgument.split('=');
 
-    if (matchesArgument.includes(' ')) {
-        delimiter = ' ';
+    let demos;
+
+    if (value.toLowerCase() === 'all') {
+        demos = DemoFile.getAll();
     } else {
-        delimiter = ',';
-    }
+        let delimiter;
 
-    const demos = matchesArgument.split('=')[1]
-        .split(delimiter)
-        .map(m => m.replace(/(\d{1,})(-\d{1,})/, (match, g1) => g1))
-        .map(m => parseInt(m))
-        .map(id => DemoFile.parse(id));
+        if (matchesArgument.includes(' ')) {
+            delimiter = ' ';
+        } else {
+            delimiter = ',';
+        }
 
-    if (demos.some(d => d === null)) {
-        throw new Error(`Argument --matches contains unknown matchId`);
+        const demos = matchesArgument.split('=')[1]
+            .split(delimiter)
+            .map(m => m.replace(/(\d{1,})(-\d{1,})/, (match, g1) => g1))
+            .map(m => parseInt(m))
+            .map(id => DemoFile.parse(id));
+
+        if (demos.some(d => d === null)) {
+            throw new Error(`Argument --matches contains unknown matchId`);
+        }
     }
 
     for (let i = 0; i < demos.length; i++) {
