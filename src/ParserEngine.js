@@ -143,39 +143,46 @@ class ParserEngine {
     /**
      * @public
      * @param {Stream.Readable} reader
+     * @returns {Promise<void>}
      */
-    start(reader) {
+    async parse(reader) {
         assert(reader instanceof Stream.Readable);
 
-        logger.info('Parse started');
+        return new Promise((resolve, reject) => {
+            logger.info('Parse started');
 
-        this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
+            this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-        Stream.pipeline(
-            reader,
-            ...this._chain,
-            (error) => {
-                if (error) {
-                    logger.error(`Parse failed`, error);
+            Stream.pipeline(
+                reader,
+                ...this._chain,
+                (error) => {
+                    if (error) {
+                        logger.error(`Parse failed`, error);
+
+                        reject();
+                    }
+
+                    this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
+
+                    this._trackers.memory.print();
+                    this._trackers.packet.print();
+                    this._trackers.performance.print();
+
+                    this._trackers.memory.dispose();
+                    this._trackers.packet.dispose();
+                    this._trackers.performance.dispose();
+
+                    if (this._workerManager !== null) {
+                        this._workerManager.terminate();
+                    }
+
+                    logger.info('Parse finished');
+
+                    resolve();
                 }
-
-                this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
-
-                this._trackers.memory.print();
-                this._trackers.packet.print();
-                this._trackers.performance.print();
-
-                this._trackers.memory.dispose();
-                this._trackers.packet.dispose();
-                this._trackers.performance.dispose();
-
-                if (this._workerManager !== null) {
-                    this._workerManager.terminate();
-                }
-
-                logger.info('Parse finished');
-            }
-        );
+            );
+        });
     }
 }
 

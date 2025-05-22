@@ -4,6 +4,7 @@
 yarn-debug.log*
 yarn-error.log*
 
+demos
 node_modules
 
 *.dem

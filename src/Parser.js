@@ -35,6 +35,17 @@ class Parser {
 
     /**
      * @public
+     * @param {Stream.Readable} reader
+     * @returns {Promise<void>}
+     */
+    async parse(reader) {
+        assert(reader instanceof Stream.Readable);
+
+        return this._engine.parse(reader);
+    }
+
+    /**
+     * @public
      * @param {InterceptorStage} stage
      * @param {Function} interceptor
      */
@@ -55,16 +66,6 @@ class Parser {
         assert(typeof interceptor === 'function');
 
         this._engine.interceptors.pre[stage.code].push(interceptor);
-    }
-
-    /**
-     * @public
-     * @param {Stream.Readable} reader
-     */
-    start(reader) {
-        assert(reader instanceof Stream.Readable);
-
-        this._engine.start(reader);
     }
 
     /**
