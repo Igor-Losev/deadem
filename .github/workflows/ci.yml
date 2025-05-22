@@ -10,6 +10,9 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
+    env:
+      FILES: "35244871 36126255-5637 36127043-5637"
+
     steps:
       - uses: actions/checkout@v4
 
@@ -22,8 +25,40 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Generate cache key
+        id: hash
+        run: |
+          echo "key=$(echo $FILES | sha256sum | cut -c1-16)" >> $GITHUB_OUTPUT
+
+      - name: Restore cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: demos
+          key: s3-demos-${{ steps.hash.outputs.key }}
+
+      - name: Download demos from S3
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p demos
+          for file in $FILES; do
+            echo "Downloading $file.dem"
+            curl -L -o demos/$file.dem https://parser-demofiles.s3.us-east-1.amazonaws.com/$file.dem
+            echo "Downloaded $file.dem"
+          done
+
+      - name: List demo files
+        run: ls -lh demos
+
+      - name: Save cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: demos
+          key: s3-demos-${{ steps.hash.outputs.key }}
+
       - name: Run tests
         run: yarn test
 
       - name: Run parser for multiple demo files
-        run: node ./examples/02_parse_multiple.js --matches=35244871,36126255,36127043
+        run: node ./examples/02_parse_multiple.js --matches="$FILES"

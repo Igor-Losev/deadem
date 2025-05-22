@@ -73,7 +73,7 @@ class DemoFile {
         let filename = this._id.toString();
 
         if (this._gameBuild !== null) {
-            filename = `${filename}[${this._gameBuild}]`;
+            filename = `${filename}-${this._gameBuild}`;
         }
 
         filename = `${filename}${EXTENSION}`;

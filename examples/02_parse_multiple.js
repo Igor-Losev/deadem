@@ -15,8 +15,17 @@ const DemoFile = require('./helpers/DemoFile'),
         process.exit(1);
     }
 
+    let delimiter;
+
+    if (matchesArgument.includes(' ')) {
+        delimiter = ' ';
+    } else {
+        delimiter = ',';
+    }
+
     const demos = matchesArgument.split('=')[1]
-        .split(',')
+        .split(delimiter)
+        .map(m => m.replace(/(\d{1,})(-\d{1,})/, (match, g1) => g1))
         .map(m => parseInt(m))
         .map(id => DemoFile.parse(id));
 
