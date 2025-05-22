@@ -254,7 +254,6 @@ message CCitadelUserMsg_ChatWheel {
 	optional uint32 account_id = 4;
 	optional uint32 hero_id = 5;
 	optional string param_1 = 6;
-	optional .CMsgLaneColor lane_color = 7 [default = k_ELaneColor_Invalid];
 }
 
 message CCitadelUserMsg_ChatMsg {
