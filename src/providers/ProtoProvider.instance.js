@@ -4,14 +4,7 @@ const path = require('path');
 
 const protobuf = require('protobufjs');
 
-const baseModifier = protobuf.loadSync(path.resolve(__dirname, './../../proto/base_modifier.proto'));
-const citadelGameEvents = protobuf.loadSync(path.resolve(__dirname, './../../proto/citadel_gameevents.proto'));
-const citadelUserMessages = protobuf.loadSync(path.resolve(__dirname, './../../proto/citadel_usermessages.proto'));
-const demo = protobuf.loadSync(path.resolve(__dirname, './../../proto/demo.proto'));
-const gameEvents = protobuf.loadSync(path.resolve(__dirname, './../../proto/gameevents.proto'));
-const netMessages = protobuf.loadSync(path.resolve(__dirname, './../../proto/netmessages.proto'))
-const networkBaseTypes = protobuf.loadSync(path.resolve(__dirname, './../../proto/networkbasetypes.proto'));
-const userMessages = protobuf.loadSync(path.resolve(__dirname, './../../proto/usermessages.proto'));
+const Root = protobuf.loadSync(path.resolve(__dirname, './../../proto/compiled/proto.json'));
 
 class ProtoProvider {
     constructor() {
@@ -23,7 +16,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get BASE_MODIFIER() {
-        return baseModifier;
+        return Root;
     }
 
     /**
@@ -31,7 +24,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get CITADEL_GAME_EVENTS() {
-        return citadelGameEvents;
+        return Root;
     }
 
     /**
@@ -39,7 +32,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get CITADEL_USER_MESSAGES() {
-        return citadelUserMessages;
+        return Root;
     }
 
     /**
@@ -47,7 +40,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get DEMO() {
-        return demo;
+        return Root;
     }
 
     /**
@@ -55,7 +48,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get GAME_EVENTS() {
-        return gameEvents;
+        return Root;
     }
 
     /**
@@ -63,7 +56,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get NET_MESSAGES() {
-        return netMessages;
+        return Root;
     }
 
     /**
@@ -71,7 +64,15 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get NETWORK_BASE_TYPES() {
-        return networkBaseTypes;
+        return Root;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
+    get TEMPORARY_ENTITIES() {
+        return Root;
     }
 
     /**
@@ -79,7 +80,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get USER_MESSAGES() {
-        return userMessages;
+        return Root;
     }
 
     static instance = new ProtoProvider();
