@@ -9,10 +9,6 @@ const FieldPathOperation = require('./../data/enums/FieldPathOperation');
 const FieldPathBuilder = require('../data/fields/path/FieldPathBuilder'),
     HuffmanTree = require('./../data/fields/HuffmanTree');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
-const logger = LoggerProvider.getLogger('FieldPathExtractor');
-
 class FieldPathExtractor {
     /**
      * @public
@@ -25,7 +21,6 @@ class FieldPathExtractor {
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
-        this._isDebug = logger.isDebugEnabled();
     }
 
     /**
@@ -73,10 +68,6 @@ class FieldPathExtractor {
         const { bitsUsed, operation } = HuffmanTree.getOperationByCode(code);
 
         this._bitBuffer.move(-(bits - bitsUsed));
-
-        if (this._isDebug) {
-            logger.debug(`Executing operation [ ${operation.code} ]`);
-        }
 
         if (operation === FieldPathOperation.FINISH) {
             return null;

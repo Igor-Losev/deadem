@@ -15,8 +15,17 @@ const Serializer = require('./fields/Serializer'),
 
 const StringTableContainer = require('./tables/string/StringTableContainer');
 
+const Logger = require('./../Logger');
+
 class Demo {
-    constructor() {
+    /**
+     * @public
+     * @constructor
+     * @param {Logger} logger
+     */
+    constructor(logger = Logger.CONSOLE_INFO) {
+        assert(logger instanceof Logger);
+
         this._classBaselines = new Map();
 
         this._classes = {
@@ -29,7 +38,7 @@ class Demo {
         this._serializers = new Map();
         this._server = null;
 
-        this._stringTableContainer = new StringTableContainer();
+        this._stringTableContainer = new StringTableContainer(logger);
 
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));

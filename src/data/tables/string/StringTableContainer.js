@@ -14,16 +14,17 @@ const SnappyDecompressor = require('../../../decompressors/SnappyDecompressor.in
 
 const StringTableEntryExtractor = require('./../../../extractors/StringTableEntryExtractor');
 
-const LoggerProvider = require('./../../../providers/LoggerProvider.instance');
-
-const logger = LoggerProvider.getLogger('StringTableContainer');
+const Logger = require('./../../../Logger');
 
 class StringTableContainer {
     /**
      * @public
      * @constructor
+     * @param {Logger} logger
      */
-    constructor() {
+    constructor(logger) {
+        assert(logger instanceof Logger)
+
         this._eventEmitter = new EventEmitter();
 
         this._registry = {
@@ -31,7 +32,7 @@ class StringTableContainer {
             tableByName: new Map()
         };
 
-        this._isDebug = logger.isDebugEnabled();
+        this._logger = logger;
     }
 
     /**
@@ -69,7 +70,7 @@ class StringTableContainer {
         const stringTableType = StringTableType.parseByName(createData.name);
 
         if (stringTableType === null) {
-            logger.warn(`Unable to identify table [ ${createData.name} ]`);
+            this._logger.warn(`Unable to identify table [ ${createData.name} ]`);
 
             return;
         }
@@ -77,7 +78,7 @@ class StringTableContainer {
         const existing = this.getByName(stringTableType.name);
 
         if (existing !== null) {
-            logger.warn(`StringTable [ ${stringTableType.name} ] exists in the registry. Overwriting`);
+            this._logger.warn(`StringTable [ ${stringTableType.name} ] exists in the registry. Overwriting`);
         }
 
         const instructions = new StringTableInstructions(createData.userDataSizeBits, createData.userDataFixedSize, createData.usingVarintBitcounts);
@@ -115,7 +116,7 @@ class StringTableContainer {
             const type = StringTableType.parseByName(tableData.tableName);
 
             if (type === null) {
-                logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
+                this._logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
 
                 return;
             }
@@ -146,9 +147,7 @@ class StringTableContainer {
             throw new Error(`Unknown StringTable [ ${updateData.tableId} ]`);
         }
 
-        if (this._isDebug) {
-            logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
-        }
+        this._logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
 
         const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries);
 
@@ -190,9 +189,7 @@ class StringTableContainer {
      * @private
      */
     _clear() {
-        if (this._isDebug) {
-            logger.debug(`Clearing StringTable registry`);
-        }
+        this._logger.debug(`Clearing StringTable registry`);
 
         this._registry.tableById.forEach((stringTable) => {
             this._eventEmitter.emit(StringTableEvent.TABLE_REMOVED, stringTable);
@@ -209,9 +206,7 @@ class StringTableContainer {
     _register(stringTable) {
         const id = this._registry.tableById.size;
 
-        if (this._isDebug) {
-            logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
-        }
+        this._logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
 
         this._registry.tableByName.set(stringTable.type.name, stringTable);
         this._registry.tableById.set(id, stringTable);

@@ -40,11 +40,11 @@ class MemoryTracker extends Tracker {
         const open = this._highlight('<MemoryTracker>');
         const close = this._highlight('</MemoryTracker>');
 
-        this._logger.debug(open);
+        this._logger.info(open);
 
-        this._logger.debug(`Max Memory Usage: [ ${this._formatNumber(this._statistics.maxMemoryUsage / MEGABYTE)} ] MB`);
+        this._logger.info(`Max Memory Usage: [ ${this._formatNumber(this._statistics.maxMemoryUsage / MEGABYTE)} ] MB`);
 
-        this._logger.debug(close);
+        this._logger.info(close);
     }
 }
 

@@ -2,6 +2,8 @@
 
 const assert = require('assert');
 
+const Logger = require('./../Logger');
+
 class Tracker {
     /**
      * @abstract
@@ -9,7 +11,7 @@ class Tracker {
      * @param {Logger} logger
      */
     constructor(logger) {
-        assert(logger instanceof Object);
+        assert(logger instanceof Logger);
 
         this._logger = logger;
     }

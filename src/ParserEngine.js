@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('node:assert/strict'),
-    Stream = require('node:stream');
+const Stream = require('node:stream');
 
 const Demo = require('./data/Demo');
 
@@ -17,46 +16,45 @@ const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
     DemoStreamPacketParser = require('./stream/DemoStreamPacketParser'),
     DemoStreamPacketPrioritizer = require('./stream/DemoStreamPacketPrioritizer');
 
-const LoggerProvider = require('./providers/LoggerProvider.instance');
-
 const MemoryTracker = require('./trackers/MemoryTracker'),
     PacketTracker = require('./trackers/PacketTracker'),
     PerformanceTracker = require('./trackers/PerformanceTracker');
 
 const WorkerManager = require('./workers/WorkerManager');
 
-const ParserConfiguration = require('./ParserConfiguration');
-
-const loggerForMemory = LoggerProvider.getLogger('Tracker/Memory');
-const loggerForPacket = LoggerProvider.getLogger('Tracker/Packet');
-const loggerForPerformance = LoggerProvider.getLogger('Tracker/Performance');
-
-const logger = LoggerProvider.getLogger('ParserEngine');
+const Logger = require('./Logger'),
+    ParserConfiguration = require('./ParserConfiguration');
 
 class ParserEngine {
     /**
      * @public
      * @param {ParserConfiguration} configuration
+     * @param {Logger} logger
      */
-    constructor(configuration) {
+    constructor(configuration, logger) {
         if (!(configuration instanceof ParserConfiguration)) {
             throw new Error('Invalid configuration: expected an instance of ParserConfiguration');
         }
 
-        this._demo = new Demo();
+        if (!(logger instanceof Logger)) {
+            throw new Error('Invalid logger: expected an instance of Logger');
+        }
+
+        this._configuration = configuration;
+        this._logger = logger;
+
+        this._demo = new Demo(logger);
 
         if (configuration.parserThreads === 0) {
             this._workerManager = null;
         } else {
-            this._workerManager = new WorkerManager(configuration.parserThreads);
+            this._workerManager = new WorkerManager(configuration.parserThreads, logger);
         }
-
-        this._configuration = configuration;
 
         this._chain = [
             new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
             new DemoStreamPacketExtractor(this),
-            new DemoStreamLoadBalancer(),
+            new DemoStreamLoadBalancer(this),
             new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
@@ -78,9 +76,9 @@ class ParserEngine {
         };
 
         this._trackers = {
-            memory: new MemoryTracker(loggerForMemory),
-            packet: new PacketTracker(loggerForPacket),
-            performance: new PerformanceTracker(loggerForPerformance)
+            memory: new MemoryTracker(logger),
+            packet: new PacketTracker(logger),
+            performance: new PerformanceTracker(logger)
         };
     }
 
@@ -98,6 +96,14 @@ class ParserEngine {
      */
     get interceptors() {
         return this._interceptors;
+    }
+
+    /**
+     * @public
+     * @returns {Logger}
+     */
+    get logger() {
+        return this._logger;
     }
 
     /**
@@ -146,10 +152,8 @@ class ParserEngine {
      * @returns {Promise<void>}
      */
     async parse(reader) {
-        assert(reader instanceof Stream.Readable);
-
         return new Promise((resolve, reject) => {
-            logger.info('Parse started');
+            this._logger.info('Parse started');
 
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
@@ -158,7 +162,7 @@ class ParserEngine {
                 ...this._chain,
                 (error) => {
                     if (error) {
-                        logger.error(`Parse failed`, error);
+                        this._logger.error(`Parse failed`, error);
 
                         reject();
                     }
@@ -177,7 +181,7 @@ class ParserEngine {
                         this._workerManager.terminate();
                     }
 
-                    logger.info('Parse finished');
+                    this._logger.info('Parse finished');
 
                     resolve();
                 }

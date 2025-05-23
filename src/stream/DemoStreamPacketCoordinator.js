@@ -4,10 +4,6 @@ const Stream = require('stream');
 
 const BinaryHeap = require('./../data/structures/BinaryHeap');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
-const logger = LoggerProvider.getLogger('DemoStreamPacketCoordinator');
-
 /**
  * Given a stream of {@link DemoPacket}, ensures that they are passed
  * through in the correct sequence order.
@@ -33,7 +29,7 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
      */
     _flush(callback) {
         if (this._heap.length > 0) {
-            logger.warn(`DemoStreamPacketCoordinator._flush() is called. However, heap has [ ${this._heap.length} ] packets. This should never happen`);
+            this._engine.logger.warn(`DemoStreamPacketCoordinator._flush() is called. However, heap has [ ${this._heap.length} ] packets. This should never happen`);
         }
 
         callback();

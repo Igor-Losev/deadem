@@ -2,12 +2,8 @@
 
 const DeferredPromise = require('./../data/DeferredPromise');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
 const WorkerRequestSerializer = require('./../workers/serializers/WorkerRequestSerializer.instance'),
     WorkerResponseSerializer = require('./../workers/serializers/WorkerResponseSerializer.instance');
-
-const logger = LoggerProvider.getLogger('WorkerThread');
 
 /**
  * Represents a single worker thread with request serialization,
@@ -17,14 +13,16 @@ class WorkerThread {
     /**
      * @constructor
      * @param {Worker} worker - The worker instance to wrap.
+     * @param {Logger} logger - Logger.
      */
-    constructor(worker) {
+    constructor(worker, logger) {
         this._worker = worker;
+        this._logger = logger;
 
         this._worker.on('message', (responseRaw) => {
             const response = WorkerResponseSerializer.deserialize(responseRaw);
 
-            logger.debug(`Response received [ ${response.type.code} ] from thread [ ${this.getId()} ]`);
+            this._logger.trace(`Response received [ ${response.type.code} ] from thread [ ${this.getId()} ]`);
 
             const deferred = this._deferred;
 
@@ -35,7 +33,7 @@ class WorkerThread {
         });
 
         this._worker.on('error', (error) => {
-            logger.error(`Thread [ ${this.getId()} ]: `, error);
+            this._logger.error(`Thread [ ${this.getId()} ]: `, error);
 
             const deferred = this._deferred;
 
@@ -85,7 +83,7 @@ class WorkerThread {
      * @returns {Promise<*>} - A promise that resolves with the response.
      */
     send(request) {
-        logger.debug(`Sending a request [ ${request.type.code} ] to thread [ ${this.getId()} ]`);
+        this._logger.trace(`Sending a request [ ${request.type.code} ] to thread [ ${this.getId()} ]`);
 
         if (this._busy) {
             throw new Error(`Unable to send a request [ ${request.type.code} ], thread [ ${this.getId()} ] is busy`);

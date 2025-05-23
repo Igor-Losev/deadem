@@ -15,8 +15,6 @@ const DemoCommandType = require('./../../data/enums/DemoCommandType'),
 const DemoMessageHandler = require('./../../handlers/DemoMessageHandler'),
     DemoPacketHandler = require('./../../handlers/DemoPacketHandler');
 
-const LoggerProvider = require('./../../providers/LoggerProvider.instance');
-
 const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerializer.instance'),
     WorkerResponseSerializer = require('./../serializers/WorkerResponseSerializer.instance');
 
@@ -25,15 +23,9 @@ const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
     WorkerResponseMPacketSync = require('./../responses/WorkerResponseMPacketSync'),
     WorkerResponseSvcPacketEntities = require('./../responses/WorkerResponseSvcPacketEntities');
 
-const logger = LoggerProvider.getLogger('Worker');
-
-const LOGGER_PREFIX = `Worker #${threadId}`;
-
 const state = getInitialState();
 
 (() => {
-    logger.info(`${LOGGER_PREFIX}: Started Worker [ ${threadId} ]`);
-
     parentPort.on('message', (requestRaw) => {
         const request = WorkerRequestSerializer.deserialize(requestRaw);
 

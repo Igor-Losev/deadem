@@ -10,7 +10,6 @@
     "test": "jest --verbose"
   },
   "dependencies": {
-    "log4js": "^6.9.1",
     "protobufjs": "^7.4.0",
     "snappy": "^7.2.2"
   },

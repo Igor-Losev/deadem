@@ -25,8 +25,6 @@ class PacketTracker extends Tracker {
     handleDemoPacket(demoPacket) {
         const identifier = demoPacket.command.id;
 
-        this._logger.trace(`${demoPacket.sequence} ${demoPacket.command.code}`);
-
         const record = this._registry.get(identifier) || new PacketTrackRecord(identifier);
 
         record.touch();
@@ -41,8 +39,6 @@ class PacketTracker extends Tracker {
      */
     handleMessagePacket(demoPacket, messagePacket) {
         const identifier = demoPacket.command.id;
-
-        this._logger.trace(`\t ${messagePacket.type.code}`);
 
         const record = this._registry.get(identifier) || null;
 
@@ -70,9 +66,9 @@ class PacketTracker extends Tracker {
         const open = this._highlight('<PacketTracker>');
         const close = this._highlight('</PacketTracker>');
 
-        const log = (type, count, depth = 0) => this._logger.debug(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${this._formatNumber(count)} ] packet(s)`);
+        const log = (type, count, depth = 0) => this._logger.info(`${'\t'.repeat(depth)}[ ${type} ] type: [ ${this._formatNumber(count)} ] packet(s)`);
 
-        this._logger.debug(open);
+        this._logger.info(open);
 
         const keys = Array.from(this._registry.keys());
 
@@ -104,7 +100,7 @@ class PacketTracker extends Tracker {
 
         unknownKeys.sort((a, b) => a - b);
 
-        this._logger.debug(this._highlight('Unhandled Messages'));
+        this._logger.info(this._highlight('Unhandled Messages'));
 
         unknownKeys.forEach((key) => {
             const count = this._unknown.get(key);
@@ -112,7 +108,7 @@ class PacketTracker extends Tracker {
             log(key.toString(), count);
         });
 
-        this._logger.debug(close);
+        this._logger.info(close);
     }
 }
 

@@ -21,8 +21,6 @@ class PerformanceTracker extends Tracker {
      * @param {PerformanceTrackerCategory} category
      */
     start(category) {
-        this._logger.trace(`Starting tracking of the category [ ${category.code} ]`);
-
         const record = this._registry.get(category) || new PerformanceTrackRecord(category);
 
         record.touch();
@@ -35,8 +33,6 @@ class PerformanceTracker extends Tracker {
      * @param {PerformanceTrackerCategory} category
      */
     end(category) {
-        this._logger.trace(`Finishing tracking of the category [ ${category.code} ]`);
-
         const record = this._registry.get(category);
 
         if (record === null) {
@@ -53,7 +49,7 @@ class PerformanceTracker extends Tracker {
         const open = this._highlight('<PerformanceTracker>');
         const close = this._highlight('</PerformanceTracker>');
 
-        this._logger.debug(open);
+        this._logger.info(open);
 
         const walk = (category, depth = 0) => {
             const record = this._registry.get(category) || null;
@@ -61,7 +57,7 @@ class PerformanceTracker extends Tracker {
             if (record !== null) {
                 const prefix = `${'\t'.repeat(depth)}`;
 
-                this._logger.debug(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${this._formatNumber(record.accumulator)} ] ms, [ ${this._formatNumber(record.count)} ] run(s) with [ ${this._formatNumber(Math.round(record.average * 1000) / 1000)} ] ms in average`);
+                this._logger.info(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${this._formatNumber(record.accumulator)} ] ms, [ ${this._formatNumber(record.count)} ] run(s) with [ ${this._formatNumber(Math.round(record.average * 1000) / 1000)} ] ms in average`);
             }
 
             category.categories.forEach((subcategory) => {
@@ -71,7 +67,7 @@ class PerformanceTracker extends Tracker {
 
         walk(PerformanceTrackerCategory.PARSER);
 
-        this._logger.debug(close);
+        this._logger.info(close);
     }
 }
 

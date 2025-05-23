@@ -6,10 +6,6 @@ const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCa
 
 const DemoPacketRawExtractor = require('./../extractors/DemoPacketRawExtractor');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
-const logger = LoggerProvider.getLogger('DemoStreamPacketExtractor');
-
 const DEMO_HEADER_SIZE_BYTES = 16;
 
 /**
@@ -48,7 +44,7 @@ class DemoStreamPacketExtractor extends Stream.Transform {
      */
     _flush(callback) {
         if (this._tail.length !== 0) {
-            logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
+            this._engine.logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
         }
 
         callback();

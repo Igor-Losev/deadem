@@ -6,11 +6,9 @@ const assert = require('assert/strict'),
 
 const DeferredPromise = require('./../data/DeferredPromise');
 
+const Logger = require('./../Logger');
+
 const WorkerThread = require('./WorkerThread');
-
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
-const logger = LoggerProvider.getLogger('WorkerManager');
 
 const WORKER_PATH = path.resolve(__dirname, './scripts/worker.js');
 
@@ -21,28 +19,30 @@ class WorkerManager {
     /**
      * @constructor
      * @param {number} concurrency - Number of worker threads to manage.
+     * @param {Logger} logger - Logger.
      */
-    constructor(concurrency) {
-        if (concurrency <= 0) {
+    constructor(concurrency, logger) {
+        if (concurrency <= 0 || !Number.isInteger(concurrency)) {
             throw new Error(`Invalid concurrency argument [ ${concurrency} ]`);
         }
 
-        this._allocated = new Set();
+        assert(logger instanceof Logger);
 
         this._concurrency = concurrency;
+        this._logger = logger;
 
+        this._allocated = new Set();
         this._queue = [ ];
-
         this._threads = [ ];
 
         for (let i = 0; i < concurrency; i++) {
             const worker = new Worker(WORKER_PATH);
 
-            const thread = new WorkerThread(worker);
+            const thread = new WorkerThread(worker, logger);
 
             this._threads.push(thread);
 
-            logger.info(`Starting worker [ ${thread.getId()} ]`);
+            this._logger.info(`Starting worker [ ${thread.getId()} ]`);
         }
     }
 
@@ -67,7 +67,7 @@ class WorkerManager {
         if (thread !== null) {
             this._allocated.add(thread);
 
-            logger.debug(`Allocated a thread [ ${thread.getId()} ]`);
+            this._logger.trace(`Allocated a thread [ ${thread.getId()} ]`);
 
             return thread;
         } else {
@@ -77,7 +77,7 @@ class WorkerManager {
 
             return deferred.promise
                 .then((thread) => {
-                    logger.debug(`Allocated a thread [ ${thread.getId()} ] after waiting`);
+                    this._logger.trace(`Allocated a thread [ ${thread.getId()} ] after waiting`);
 
                     return thread;
                 })
@@ -138,7 +138,7 @@ class WorkerManager {
             throw new Error(`Unable to free a busy thread [ ${thread.getId()} ]`);
         }
 
-        logger.debug(`Freeing a thread [ ${thread.getId()} ]`);
+        this._logger.trace(`Freeing a thread [ ${thread.getId()} ]`);
 
         this._allocated.delete(thread);
 
@@ -170,7 +170,7 @@ class WorkerManager {
         this._threads.forEach((thread) => {
             thread.worker.terminate();
 
-            logger.info(`Terminated Worker [ ${thread.getId()} ]`);
+            this._logger.info(`Terminated Worker [ ${thread.getId()} ]`);
         });
 
         this._threads = [ ];

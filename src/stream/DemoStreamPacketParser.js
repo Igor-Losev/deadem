@@ -13,11 +13,7 @@ const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instan
 
 const MessagePacketRawExtractor = require('./../extractors/MessagePacketRawExtractor');
 
-const LoggerProvider = require('./../providers/LoggerProvider.instance');
-
 const WorkerRequestDHPParse = require('./../workers/requests/WorkerRequestDHPParse');
-
-const logger = LoggerProvider.getLogger('DemoStreamPacketParser');
 
 const HEAVY_PACKETS = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
 
@@ -236,7 +232,7 @@ function parseMessagePacket(messagePacketRaw) {
     try {
         data = messagePacketType.proto.decode(messagePacketRaw.payload);
     } catch (error) {
-        logger.warn(`Unable to decode protobuf message for [ ${messagePacketType.code} ]`);
+        this._engine.logger.warn(`Unable to decode protobuf message for [ ${messagePacketType.code} ]`);
 
         return null;
     }
