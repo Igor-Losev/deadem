@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Node.js parser for Deadlock (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
@@ -45,5 +45,8 @@
     "proto/compiled/**",
     "src/**"
   ],
-  "private": "true"
+  "private": "false",
+  "publishConfig": {
+    "access": "restricted"
+  }
 }
