@@ -29,14 +29,26 @@ class DemoCommandType {
         registry.byId.set(id, this);
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get id() {
         return this._id;
     }
 
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get proto() {
         return this._proto;
     }
@@ -61,85 +73,26 @@ class DemoCommandType {
         return registry.byId.get(id) || null;
     }
 
-    static get DEM_ERROR() {
-        return demError;
-    }
-
-    static get DEM_STOP() {
-        return demStop;
-    }
-
-    static get DEM_FILE_HEADER() {
-        return demFileHeader;
-    }
-
-    static get DEM_FILE_INFO() {
-        return demFileInfo;
-    }
-
-    static get DEM_SYNC_TICK() {
-        return demSyncTick;
-    }
-
-    static get DEM_SEND_TABLES() {
-        return demSendTables;
-    }
-
-    static get DEM_CLASS_INFO() {
-        return demClassInfo;
-    }
-
-    static get DEM_STRING_TABLES() {
-        return demStringTables;
-    }
-
-    static get DEM_PACKET() {
-        return demPacket;
-    }
-
-    static get DEM_SIGNON_PACKET() {
-        return demSignonPacket;
-    }
-
-    static get DEM_CONSOLE_CMD() {
-        return demConsoleCmd;
-    }
-
-    static get DEM_CUSTOM_DATA() {
-        return demCustomData;
-    }
-
-    static get DEM_CUSTOM_DATA_CALLBACKS() {
-        return demCustomDataCallbacks;
-    }
-
-    static get DEM_USER_CMD() {
-        return demUserCmd;
-    }
-
-    static get DEM_FULL_PACKET() {
-        return demFullPacket;
-    }
-
-    static get DEM_SAVE_GAME() {
-        return demSaveGame;
-    }
-
-    static get DEM_SPAWN_GROUPS() {
-        return demSpawnGroups;
-    }
-
-    static get DEM_ANIMATION_DATA() {
-        return demAnimationData;
-    }
-
-    static get DEM_ANIMATION_HEADER() {
-        return demAnimationHeader;
-    }
-
-    static get DEM_RECOVERY() {
-        return demRecovery;
-    }
+    static get DEM_ERROR() { return demError; }
+    static get DEM_STOP() { return demStop; }
+    static get DEM_FILE_HEADER() { return demFileHeader; }
+    static get DEM_FILE_INFO() { return demFileInfo; }
+    static get DEM_SYNC_TICK() { return demSyncTick; }
+    static get DEM_SEND_TABLES() { return demSendTables; }
+    static get DEM_CLASS_INFO() { return demClassInfo; }
+    static get DEM_STRING_TABLES() { return demStringTables; }
+    static get DEM_PACKET() { return demPacket; }
+    static get DEM_SIGNON_PACKET() { return demSignonPacket; }
+    static get DEM_CONSOLE_CMD() { return demConsoleCmd; }
+    static get DEM_CUSTOM_DATA() { return demCustomData; }
+    static get DEM_CUSTOM_DATA_CALLBACKS() { return demCustomDataCallbacks; }
+    static get DEM_USER_CMD() { return demUserCmd; }
+    static get DEM_FULL_PACKET() { return demFullPacket; }
+    static get DEM_SAVE_GAME() { return demSaveGame; }
+    static get DEM_SPAWN_GROUPS() { return demSpawnGroups; }
+    static get DEM_ANIMATION_DATA() { return demAnimationData; }
+    static get DEM_ANIMATION_HEADER() { return demAnimationHeader; }
+    static get DEM_RECOVERY() { return demRecovery; }
 }
 
 const CDemoAnimationData = ProtoProvider.DEMO.lookupType('CDemoAnimationData');

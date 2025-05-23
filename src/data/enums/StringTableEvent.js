@@ -12,10 +12,18 @@ class StringTableEvent {
         this._name = name;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get name() {
         return this._name;
     }

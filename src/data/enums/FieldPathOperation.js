@@ -49,22 +49,42 @@ class FieldPathOperation {
         return operations;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get name() {
         return this._name;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get weight() {
         return this._weight;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get sequence() {
         return this._sequence;
     }
 
+    /**
+     * @public
+     * @returns {Function|null}
+     */
     get executor() {
         return this._executor;
     }

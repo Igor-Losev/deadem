@@ -37,11 +37,6 @@ class BitBuffer {
 
     /**
      * Reads an unsigned 32-bit integer from the given buffer, supporting buffers of length 1 to 4 bytes.
-     * Automatically uses the appropriate method based on buffer size:
-     * - 1 byte: reads as UInt8
-     * - 2 bytes: reads as UInt16LE
-     * - 3 bytes: pads to 4 bytes and reads as UInt32LE
-     * - 4 bytes: reads as UInt32LE
      *
      * @public
      * @static

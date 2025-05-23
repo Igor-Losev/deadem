@@ -25,10 +25,18 @@ class StringTableType {
         registry.byName.set(name, this);
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get code() {
         return this._code;
     }
 
+    /**
+     * @public
+     * @returns {String}
+     */
     get name() {
         return this._name;
     }

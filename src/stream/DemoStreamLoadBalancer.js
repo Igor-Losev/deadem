@@ -4,7 +4,7 @@ const Stream = require('stream');
 
 /**
  * Balances stream processing load by periodically yielding control back to
- * the Node.js event loop, preventing long blocking operations and allowing
+ * the event loop, preventing long blocking operations and allowing
  * garbage collection to proceed smoothly.
  */
 class DemoStreamLoadBalancer extends Stream.Transform {
