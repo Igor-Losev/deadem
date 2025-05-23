@@ -1,10 +1,11 @@
 {
-  "name": "deadlock",
+  "name": "deadem",
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
   "private": "true",
   "scripts": {
+    "proto:js": "pbjs --path ./proto/source -t static-module -w commonjs --no-create --no-verify --no-delimited --no-convert -o ./proto/compiled/proto.js ./proto/source/**/*.proto",
     "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto",
     "test": "jest --verbose"
   },

@@ -19,11 +19,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'yarn'
+          node-version: 22
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Generate cache key
         id: hash
@@ -58,7 +57,7 @@ jobs:
           key: s3-demos-${{ steps.hash.outputs.key }}
 
       - name: Run tests
-        run: yarn test
+        run: npm run test
 
       - name: Run parser for multiple demo files
         run: node ./examples/02_parse_multiple.js --matches="$FILES"
