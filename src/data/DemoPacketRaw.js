@@ -6,9 +6,9 @@ class DemoPacketRaw {
      * @constructor
      *
      * @param {number} sequence
-     * @param {UVarInt32} command
-     * @param {UVarInt32} tick
-     * @param {UVarInt32} frame
+     * @param {VarInt32} command
+     * @param {VarInt32} tick
+     * @param {VarInt32} frame
      * @param {Buffer} payload
      */
     constructor(sequence, command, tick, frame, payload) {
