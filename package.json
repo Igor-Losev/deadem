@@ -44,9 +44,5 @@
     "index.js",
     "proto/compiled/**",
     "src/**"
-  ],
-  "private": "false",
-  "publishConfig": {
-    "access": "restricted"
-  }
+  ]
 }
