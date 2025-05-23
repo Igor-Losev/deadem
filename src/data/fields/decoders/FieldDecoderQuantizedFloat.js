@@ -183,7 +183,7 @@ function assignMultipliers(steps) {
     }
 
     if (multiplier === 0) {
-        throw new Error(`Multiplier is zero. This should never happen`);
+        throw new Error('Multiplier is zero. This should never happen');
     }
 
     this._quantizationMultiplier = multiplier;
@@ -244,7 +244,7 @@ function getFlags(candidate) {
 
     // RoundUp and RoundDown cannot be set together
     if ((flags & (FLAG_ROUND_UP | FLAG_ROUND_DOWN)) === (FLAG_ROUND_UP | FLAG_ROUND_DOWN)) {
-        throw new Error(`Both flags FLAG_ROUND_UP and FLAG_ROUND_DOWN are set. This should never happen`);
+        throw new Error('Both flags FLAG_ROUND_UP and FLAG_ROUND_DOWN are set. This should never happen');
     }
 
     return flags;

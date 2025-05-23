@@ -231,7 +231,7 @@ function parseMessagePacket(messagePacketRaw) {
 
     try {
         data = messagePacketType.proto.decode(messagePacketRaw.payload);
-    } catch (error) {
+    } catch {
         this._engine.logger.warn(`Unable to decode protobuf message for [ ${messagePacketType.code} ]`);
 
         return null;

@@ -194,7 +194,7 @@ class Demo {
                     const key = parseInt(entry.key);
 
                     if (Number.isNaN(key)) {
-                        throw new Error(`Unexpected key [ ${entry.key} ] for table [ ${stringTable.type.code} ]`)
+                        throw new Error(`Unexpected key [ ${entry.key} ] for table [ ${stringTable.type.code} ]`);
                     }
 
                     this._classBaselines.set(key, entry.value);

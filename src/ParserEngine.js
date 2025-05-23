@@ -162,7 +162,7 @@ class ParserEngine {
                 ...this._chain,
                 (error) => {
                     if (error) {
-                        this._logger.error(`Parse failed`, error);
+                        this._logger.error('Parse failed', error);
 
                         reject();
                     }

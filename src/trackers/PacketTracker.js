@@ -43,7 +43,7 @@ class PacketTracker extends Tracker {
         const record = this._registry.get(identifier) || null;
 
         if (record === null) {
-            throw new Error(`Unable to track message packet: demo packet doesn't exist`);
+            throw new Error('Unable to track message packet: demo packet doesn\'t exist');
         }
 
         record.track(messagePacket.type.id);

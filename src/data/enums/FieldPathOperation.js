@@ -54,7 +54,7 @@ class FieldPathOperation {
      * @returns {String}
      */
     get code() {
-        return this._code
+        return this._code;
     }
 
     /**
@@ -105,6 +105,8 @@ const executor = (callback) => (bitBuffer, fieldPathBuilder) => {
 
     callback(bitBuffer, fieldPathBuilder);
 };
+
+/* eslint-disable no-unused-vars */
 
 const plusOne = new FieldPathOperation('PLUS_1', 'PlusOne', 36271, 0, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);

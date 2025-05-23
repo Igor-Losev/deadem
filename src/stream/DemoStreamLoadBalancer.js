@@ -40,14 +40,6 @@ class DemoStreamLoadBalancer extends Stream.Transform {
     }
 }
 
-function pauseImmediate() {
-    return new Promise((resolve) => {
-        setImmediate(() => {
-            resolve();
-        });
-    });
-}
-
 function pauseTimeout(ms) {
     return new Promise((resolve) => {
         setTimeout(() => {

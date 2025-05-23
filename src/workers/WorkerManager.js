@@ -80,7 +80,7 @@ class WorkerManager {
                     this._logger.trace(`Allocated a thread [ ${thread.getId()} ] after waiting`);
 
                     return thread;
-                })
+                });
         }
     }
 

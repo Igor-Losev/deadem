@@ -168,7 +168,7 @@ class Field {
                 break;
             case FieldModel.ARRAY_VARIABLE:
                 if (this._definition.generic === null) {
-                    throw new Error(`Field with a model of ARRAY_VARIABLE doesn't have a generic. This should never happen`);
+                    throw new Error('Field with a model of ARRAY_VARIABLE doesn\'t have a generic. This should never happen');
                 }
 
                 this._decoderBase = FieldDecoderPicker.getUVarInt32();

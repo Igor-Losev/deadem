@@ -30,19 +30,19 @@ class ParserConfiguration {
         const splitterChunkSize = getOption(OPTIONS.SPLITTER_CHUNK_SIZE);
 
         if (!Number.isInteger(batcherChunkSize) || batcherChunkSize <= 0) {
-            throw new Error(`options.batcherChunkSize must be a positive integer`);
+            throw new Error('options.batcherChunkSize must be a positive integer');
         }
 
         if (!Number.isInteger(batcherThresholdMilliseconds) || batcherThresholdMilliseconds <= 0) {
-            throw new Error(`options.batcherThresholdMilliseconds must be a positive integer`);
+            throw new Error('options.batcherThresholdMilliseconds must be a positive integer');
         }
 
         if (!Number.isInteger(parserThreads) || parserThreads < 0) {
-            throw new Error(`options.parserThreads must be a not negative integer`);
+            throw new Error('options.parserThreads must be a not negative integer');
         }
 
         if (!Number.isInteger(splitterChunkSize) || splitterChunkSize <= 0) {
-            throw new Error(`options.splitterChunkSize must be a positive integer`);
+            throw new Error('options.splitterChunkSize must be a positive integer');
         }
 
         if (Number.isInteger(parserThreads) && parserThreads > 0) {

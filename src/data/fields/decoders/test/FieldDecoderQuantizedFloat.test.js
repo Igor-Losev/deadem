@@ -26,5 +26,5 @@ describe('FieldDecoderQuantizedFloat.quantize()', () => {
         it('It should throw for -0.1 (low value reached)', () => {
             expect(() => decoder.quantize(-0.1)).toThrowError();
         });
-    })
+    });
 });

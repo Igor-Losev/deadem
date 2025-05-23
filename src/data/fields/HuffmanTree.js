@@ -115,7 +115,7 @@ let PRECALCULATED_TABLE;
 
     PRECALCULATED_TABLE = {
         bits: Buffer.allocUnsafe(MAX_CODE),
-        operations: Buffer.allocUnsafe(MAX_CODE),
+        operations: Buffer.allocUnsafe(MAX_CODE)
     };
 
     for (let code = 0; code < MAX_CODE; code++) {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { parentPort, threadId } = require('node:worker_threads');
+const { parentPort } = require('node:worker_threads');
 
 const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.instance');
 
@@ -118,7 +118,7 @@ function handleHeavyPacketParse(request) {
 
         try {
             decompressed = SnappyDecompressor.decompress(buffer);
-        } catch (e) {
+        } catch {
             decompressed = buffer;
         }
 

@@ -186,7 +186,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                                 const request = new WorkerRequestSvcPacketEntities(messagePacket);
 
                                 thread.send(request)
-                                    .then((response) => {
+                                    .then(() => {
                                         this._engine.workerManager.free(thread);
                                     });
                             } else {

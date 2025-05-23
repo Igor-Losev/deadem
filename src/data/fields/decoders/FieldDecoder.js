@@ -20,10 +20,9 @@ class FieldDecoder {
 
     /**
      * @protected
-     * @param {BitBuffer} bitBuffer
      * @returns {*}
      */
-    _decode(bitBuffer) {
+    _decode() {
         throw new Error('decode is not implemented');
     }
 }

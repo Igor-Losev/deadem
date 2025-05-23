@@ -91,4 +91,4 @@ class StringTable {
     }
 }
 
-module.exports = StringTable
+module.exports = StringTable;

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const registry = {
     byCode: new Map(),
     byName: new Map()
-}
+};
 
 class StringTableType {
     /**

@@ -56,6 +56,9 @@ jobs:
           path: demos
           key: s3-demos-${{ steps.hash.outputs.key }}
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Run tests
         run: npm run test
 

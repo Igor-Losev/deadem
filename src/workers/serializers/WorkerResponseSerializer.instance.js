@@ -63,11 +63,11 @@ class WorkerResponseSerializer {
         switch (type) {
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
                 const batches = object.payload.map((batch) => {
-                   return batch.map((values) => {
-                       const [ type, size, payload ] = values;
+                    return batch.map((values) => {
+                        const [ type, size, payload ] = values;
 
-                       return new MessagePacketRaw(type, size, payload);
-                   });
+                        return new MessagePacketRaw(type, size, payload);
+                    });
                 });
 
                 return new WorkerResponseDHPParse(batches);

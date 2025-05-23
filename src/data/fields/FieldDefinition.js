@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 
-const REGEX = /(?<base>[^*< >\n\[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?\])?(?<pointer>\*)?/;
+const REGEX = /(?<base>[^*< >\n[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?])?(?<pointer>\*)?/;
 
 class FieldDefinition {
     /**

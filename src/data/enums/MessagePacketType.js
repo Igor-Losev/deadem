@@ -253,7 +253,7 @@ const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMs
     netSetConVar = new MessagePacketType('net_SetConVar', ENET_Messages.net_SetConVar, CNETMsg_SetConVar), // 6
     netSignonState = new MessagePacketType('net_SignonState', ENET_Messages.net_SignonState, CNETMsg_SignonState), // 7
     netSpawnGroupLoad = new MessagePacketType('net_SpawnGroup_Load', ENET_Messages.net_SpawnGroup_Load, CNETMsg_SpawnGroupLoad), // 8
-    netSpawnGroupSetCreationTick = new MessagePacketType('net_SpawnGroup_SetCreationTick', ENET_Messages.net_SpawnGroup_SetCreationTick, CNETMsg_SpawnGroupSetCreationTick) // 11
+    netSpawnGroupSetCreationTick = new MessagePacketType('net_SpawnGroup_SetCreationTick', ENET_Messages.net_SpawnGroup_SetCreationTick, CNETMsg_SpawnGroupSetCreationTick); // 11
 
 const svcServerInfo = new MessagePacketType('svc_ServerInfo', ESVC_Messages.svc_ServerInfo, CSVCMsg_ServerInfo), // 40
     svcClassInfo = new MessagePacketType('svc_ClassInfo', ESVC_Messages.svc_ClassInfo, CSVCMsg_ClassInfo), // 42

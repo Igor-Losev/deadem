@@ -1,7 +1,6 @@
 'use strict';
 
-const Parser = require('./../src/Parser'),
-    ParserConfiguration = require('./../src/ParserConfiguration');
+const Parser = require('./../src/Parser');
 
 const DemoFile = require('./helpers/DemoFile'),
     DemoProvider = require('./helpers/DemoProvider');

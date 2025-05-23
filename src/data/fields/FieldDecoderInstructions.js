@@ -37,7 +37,7 @@ class FieldDecoderInstructions {
      * @param {String|null} value
      */
     set encoder(value) {
-        return this._encoder = value;
+        this._encoder = value;
     }
 
     /**

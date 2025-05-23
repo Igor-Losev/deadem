@@ -5,6 +5,7 @@
   "license": "MIT",
   "private": "true",
   "scripts": {
+    "lint": "eslint ./",
     "proto:js": "pbjs --path ./proto/source -t static-module -w commonjs --no-create --no-verify --no-delimited --no-convert -o ./proto/compiled/proto.js ./proto/source/**/*.proto",
     "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto",
     "test": "jest --verbose"
@@ -14,6 +15,10 @@
     "snappy": "^7.2.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.1.0",
     "jest": "^29.7.0",
     "protobufjs-cli": "^1.1.3"
   }

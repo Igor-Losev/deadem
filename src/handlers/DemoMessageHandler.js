@@ -65,7 +65,7 @@ class DemoMessageHandler {
      * @public
      * @param {MessagePacket} messagePacket
      */
-    handleSvcClearAllStringTables(messagePacket) {
+    handleSvcClearAllStringTables() {
         this._demo.stringTableContainer.handleClear();
     }
 
@@ -135,7 +135,7 @@ class DemoMessageHandler {
                     const classId = BitBuffer.readUInt32LE(bitBuffer.read(classIdSizeBits));
                     const serial = BitBuffer.readUInt32LE(bitBuffer.read(17));
 
-                    const ignored = bitBuffer.readUVarInt32();
+                    bitBuffer.readUVarInt32();
 
                     const clazz = this._demo.getClassById(classId);
 

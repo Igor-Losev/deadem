@@ -1,7 +1,5 @@
 'use strict';
 
-const process = require('process');
-
 const Tracker = require('./Tracker');
 
 const INTERVAL_MILLISECONDS = 10;

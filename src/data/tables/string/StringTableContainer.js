@@ -23,7 +23,7 @@ class StringTableContainer {
      * @param {Logger} logger
      */
     constructor(logger) {
-        assert(logger instanceof Logger)
+        assert(logger instanceof Logger);
 
         this._eventEmitter = new EventEmitter();
 
@@ -189,7 +189,7 @@ class StringTableContainer {
      * @private
      */
     _clear() {
-        this._logger.debug(`Clearing StringTable registry`);
+        this._logger.debug('Clearing StringTable registry');
 
         this._registry.tableById.forEach((stringTable) => {
             this._eventEmitter.emit(StringTableEvent.TABLE_REMOVED, stringTable);

@@ -1,7 +1,6 @@
 'use strict';
 
-const Parser = require('./../src/Parser'),
-    ParserConfiguration = require('./../src/ParserConfiguration');
+const Parser = require('./../src/Parser');
 
 const DemoFile = require('./helpers/DemoFile'),
     DemoProvider = require('./helpers/DemoProvider');
@@ -15,7 +14,7 @@ const DemoFile = require('./helpers/DemoFile'),
         process.exit(1);
     }
 
-    const [ _, value ] = matchesArgument.split('=');
+    const value = matchesArgument.split('=')[1];
 
     let demos;
 
@@ -37,7 +36,7 @@ const DemoFile = require('./helpers/DemoFile'),
             .map(id => DemoFile.parse(id));
 
         if (demos.some(d => d === null)) {
-            throw new Error(`Argument --matches contains unknown matchId`);
+            throw new Error('Argument --matches contains unknown matchId');
         }
     }
 

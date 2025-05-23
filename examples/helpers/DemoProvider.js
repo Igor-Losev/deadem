@@ -43,7 +43,7 @@ class DemoProvider {
             const stat = fs.statSync(path);
 
             exists = stat.isFile();
-        } catch (error) {
+        } catch {
             exists = false;
         }
 
