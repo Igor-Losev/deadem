@@ -19,22 +19,42 @@ class DemoPacketRaw {
         this._payload = payload;
     }
 
+    /**
+     * @public
+     * @returns {number}
+     */
     get sequence() {
         return this._sequence;
     }
 
+    /**
+     * @public
+     * @returns {VarInt32}
+     */
     get command() {
         return this._command;
     }
 
+    /**
+     * @public
+     * @returns {VarInt32}
+     */
     get tick() {
         return this._tick;
     }
 
+    /**
+     * @public
+     * @returns {VarInt32}
+     */
     get frame() {
         return this._frame;
     }
 
+    /**
+     * @public
+     * @returns {Buffer}
+     */
     get payload() {
         return this._payload;
     }
