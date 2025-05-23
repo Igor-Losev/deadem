@@ -231,7 +231,15 @@ function parseMessagePacket(messagePacketRaw) {
         return null;
     }
 
-    const data = messagePacketType.proto.decode(messagePacketRaw.payload);
+    let data;
+
+    try {
+        data = messagePacketType.proto.decode(messagePacketRaw.payload);
+    } catch (error) {
+        logger.warn(`Unable to decode protobuf message for [ ${messagePacketType.code} ]`);
+
+        return null;
+    }
 
     return new MessagePacket(messagePacketType, data);
 }
