@@ -5,7 +5,7 @@ const Stream = require('node:stream');
 const DemoPacket = require('./../data/DemoPacket'),
     MessagePacket = require('./../data/MessagePacket');
 
-const DemoCommandType = require('./../data/enums/DemoCommandType'),
+const DemoPacketType = require('../data/enums/DemoPacketType'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
@@ -15,7 +15,7 @@ const MessagePacketRawExtractor = require('./../extractors/MessagePacketRawExtra
 
 const WorkerRequestDHPParse = require('./../workers/requests/WorkerRequestDHPParse');
 
-const HEAVY_PACKETS = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_SIGNON_PACKET, DemoCommandType.DEM_FULL_PACKET ];
+const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PACKET, DemoPacketType.DEM_FULL_PACKET ];
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload and
@@ -79,7 +79,7 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             callback();
         } else {
-            const getIsHeavy = demoPacketRaw => HEAVY_PACKETS.includes(DemoCommandType.parseById(demoPacketRaw.getCommandType()));
+            const getIsHeavy = demoPacketRaw => HEAVY_PACKETS.includes(DemoPacketType.parseById(demoPacketRaw.getTypeId()));
             const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
 
             const heavy = batch.filter(getIsHeavy);
@@ -155,10 +155,10 @@ class DemoStreamPacketParser extends Stream.Transform {
                         }
                     });
 
-                    const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
+                    const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
                     const demoTick = demoPacketRaw.tick.value;
 
-                    const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, messagePackets);
+                    const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, messagePackets);
 
                     demoPackets.push(demoPacket);
                 });
@@ -181,18 +181,18 @@ function parseDemoPacket(demoPacketRaw) {
         data = demoPacketRaw.payload;
     }
 
-    const demoCommandType = DemoCommandType.parseById(demoPacketRaw.getCommandType());
+    const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
     const demoTick = demoPacketRaw.tick.value;
 
-    if (demoCommandType === null) {
-        throw new Error(`Unable to parse DemoCommandType [ ${demoPacketRaw.getCommandType()} ]`);
+    if (demoPacketType === null) {
+        throw new Error(`Unable to parse DemoPacketType [ ${demoPacketRaw.getTypeId()} ]`);
     }
 
-    const decoded = demoCommandType.proto.decode(data);
+    const decoded = demoPacketType.proto.decode(data);
 
     let demoPacket;
 
-    if (HEAVY_PACKETS.includes(demoCommandType)) {
+    if (HEAVY_PACKETS.includes(demoPacketType)) {
         const extractor = new MessagePacketRawExtractor(decoded.data);
 
         const messagePacketsRaw = extractor.all();
@@ -206,9 +206,9 @@ function parseDemoPacket(demoPacketRaw) {
             }
         });
 
-        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, messagePackets);
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, messagePackets);
     } else {
-        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoCommandType, demoTick, decoded);
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, decoded);
     }
 
     return demoPacket;

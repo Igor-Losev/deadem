@@ -2,7 +2,7 @@
 
 const assert = require('assert/strict');
 
-const DemoCommandType = require('./../data/enums/DemoCommandType');
+const DemoPacketType = require('./enums/DemoPacketType');
 
 class DemoPacket {
     /**
@@ -10,16 +10,16 @@ class DemoPacket {
      * @constructor
      *
      * @param {number} sequence
-     * @param {DemoCommandType} command
+     * @param {DemoPacketType} type
      * @param {number} tick
      * @param {*} data
      */
-    constructor(sequence, command, tick, data) {
-        assert(command instanceof DemoCommandType);
+    constructor(sequence, type, tick, data) {
+        assert(type instanceof DemoPacketType);
         assert(Number.isInteger(tick));
 
         this._sequence = sequence;
-        this._command = command;
+        this._type = type;
         this._tick = tick;
         this._data = data;
     }
@@ -34,10 +34,10 @@ class DemoPacket {
 
     /**
      * @public
-     * @returns {DemoCommandType}
+     * @returns {DemoPacketType}
      */
-    get command() {
-        return this._command;
+    get type() {
+        return this._type;
     }
 
     /**
@@ -65,7 +65,7 @@ class DemoPacket {
     static fromObject(object) {
         return new DemoPacket(
             object.sequence,
-            DemoCommandType.parse(object.command),
+            DemoPacketType.parse(object.type),
             object.tick,
             object.data
         );
@@ -91,7 +91,7 @@ class DemoPacket {
     toObject() {
         return {
             sequence: this._sequence,
-            command: this._command.code,
+            type: this._type.code,
             tick: this._tick,
             data: this._data
         };
@@ -99,7 +99,7 @@ class DemoPacket {
 }
 
 /**
- * @typedef {{sequence: number, command: String, tick: number, data: *}} DemoPacketObject
+ * @typedef {{sequence: number, type: String, tick: number, data: *}} DemoPacketObject
  */
 
 module.exports = DemoPacket;

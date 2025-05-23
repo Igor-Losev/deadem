@@ -9,7 +9,7 @@ const registry = {
     byId: new Map()
 };
 
-class DemoCommandType {
+class DemoPacketType {
     /**
      * @private
      * @constructor
@@ -57,7 +57,7 @@ class DemoCommandType {
      * @public
      * @static
      * @param {String} code
-     * @returns {DemoCommandType|null}
+     * @returns {DemoPacketType|null}
      */
     static parse(code) {
         return registry.byCode.get(code) || null;
@@ -67,7 +67,7 @@ class DemoCommandType {
      * @public
      * @static
      * @param {number} id
-     * @returns {DemoCommandType|null}
+     * @returns {DemoPacketType|null}
      */
     static parseById(id) {
         return registry.byId.get(id) || null;
@@ -113,25 +113,25 @@ const CDemoStringTables = ProtoProvider.DEMO.lookupType('CDemoStringTables');
 const CDemoSyncTick = ProtoProvider.DEMO.lookupType('CDemoSyncTick');
 const CDemoUserCmd = ProtoProvider.DEMO.lookupType('CDemoUserCmd');
 
-const demError = new DemoCommandType('DEM_Error', -1, null);
-const demStop = new DemoCommandType('DEM_Stop', 0, CDemoStop);
-const demFileHeader = new DemoCommandType('DEM_FileHeader', 1, CDemoFileHeader);
-const demFileInfo = new DemoCommandType('DEM_FileInfo', 2, CDemoFileInfo);
-const demSyncTick = new DemoCommandType('DEM_SyncTick', 3, CDemoSyncTick);
-const demSendTables = new DemoCommandType('DEM_SendTables', 4, CDemoSendTables);
-const demClassInfo = new DemoCommandType('DEM_ClassInfo', 5, CDemoClassInfo);
-const demStringTables = new DemoCommandType('DEM_StringTables', 6, CDemoStringTables);
-const demPacket = new DemoCommandType('DEM_Packet', 7, CDemoPacket);
-const demSignonPacket = new DemoCommandType('DEM_SignonPacket', 8, CDemoPacket);
-const demConsoleCmd = new DemoCommandType('DEM_ConsoleCmd', 9, CDemoConsoleCmd);
-const demCustomData = new DemoCommandType('DEM_CustomData', 10, CDemoCustomData);
-const demCustomDataCallbacks = new DemoCommandType('DEM_CustomDataCallbacks', 11, CDemoCustomDataCallbacks);
-const demUserCmd = new DemoCommandType('DEM_UserCmd', 12, CDemoUserCmd);
-const demFullPacket = new DemoCommandType('DEM_FullPacket', 13, CDemoPacket);
-const demSaveGame = new DemoCommandType('DEM_SaveGame', 14, CDemoSaveGame);
-const demSpawnGroups = new DemoCommandType('DEM_SpawnGroups', 15, CDemoSpawnGroups);
-const demAnimationData = new DemoCommandType('DEM_AnimationData', 16, CDemoAnimationData);
-const demAnimationHeader = new DemoCommandType('DEM_AnimationHeader', 17, CDemoAnimationHeader);
-const demRecovery = new DemoCommandType('DEM_Recovery', 18, CDemoRecovery);
+const demError = new DemoPacketType('DEM_Error', -1, null);
+const demStop = new DemoPacketType('DEM_Stop', 0, CDemoStop);
+const demFileHeader = new DemoPacketType('DEM_FileHeader', 1, CDemoFileHeader);
+const demFileInfo = new DemoPacketType('DEM_FileInfo', 2, CDemoFileInfo);
+const demSyncTick = new DemoPacketType('DEM_SyncTick', 3, CDemoSyncTick);
+const demSendTables = new DemoPacketType('DEM_SendTables', 4, CDemoSendTables);
+const demClassInfo = new DemoPacketType('DEM_ClassInfo', 5, CDemoClassInfo);
+const demStringTables = new DemoPacketType('DEM_StringTables', 6, CDemoStringTables);
+const demPacket = new DemoPacketType('DEM_Packet', 7, CDemoPacket);
+const demSignonPacket = new DemoPacketType('DEM_SignonPacket', 8, CDemoPacket);
+const demConsoleCmd = new DemoPacketType('DEM_ConsoleCmd', 9, CDemoConsoleCmd);
+const demCustomData = new DemoPacketType('DEM_CustomData', 10, CDemoCustomData);
+const demCustomDataCallbacks = new DemoPacketType('DEM_CustomDataCallbacks', 11, CDemoCustomDataCallbacks);
+const demUserCmd = new DemoPacketType('DEM_UserCmd', 12, CDemoUserCmd);
+const demFullPacket = new DemoPacketType('DEM_FullPacket', 13, CDemoPacket);
+const demSaveGame = new DemoPacketType('DEM_SaveGame', 14, CDemoSaveGame);
+const demSpawnGroups = new DemoPacketType('DEM_SpawnGroups', 15, CDemoSpawnGroups);
+const demAnimationData = new DemoPacketType('DEM_AnimationData', 16, CDemoAnimationData);
+const demAnimationHeader = new DemoPacketType('DEM_AnimationHeader', 17, CDemoAnimationHeader);
+const demRecovery = new DemoPacketType('DEM_Recovery', 18, CDemoRecovery);
 
-module.exports = DemoCommandType;
+module.exports = DemoPacketType;

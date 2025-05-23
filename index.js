@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    DemoCommandType: require('./src/data/enums/DemoCommandType'),
+    DemoPacketType: require('./src/data/enums/DemoPacketType'),
     EntityOperation: require('./src/data/enums/EntityOperation'),
     InterceptorStage: require('./src/data/enums/InterceptorStage'),
     Logger: require('./src/Logger'),

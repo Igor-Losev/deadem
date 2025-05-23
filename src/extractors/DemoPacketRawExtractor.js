@@ -29,15 +29,15 @@ class DemoPacketRawExtractor {
         for (let sequence = sequenceStart; true; sequence++) {
             let offset = 0;
 
-            const command = VarInt32.parse(this._tail.subarray(offset));
+            const type = VarInt32.parse(this._tail.subarray(offset));
 
-            if (command === null) {
+            if (type === null) {
                 yield null;
 
                 break;
             }
 
-            offset += command.size;
+            offset += type.size;
 
             const tick = VarInt32.parse(this._tail.subarray(offset));
 
@@ -60,7 +60,7 @@ class DemoPacketRawExtractor {
             offset += frame.size;
 
             if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, command, tick, frame, this._tail.subarray(offset, offset + frame.value));
+                yield new DemoPacketRaw(sequence, type, tick, frame, this._tail.subarray(offset, offset + frame.value));
 
                 offset += frame.value;
 

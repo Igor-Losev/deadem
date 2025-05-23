@@ -2,7 +2,7 @@
 
 const Stream = require('stream');
 
-const DemoCommandType = require('./../data/enums/DemoCommandType'),
+const DemoPacketType = require('../data/enums/DemoPacketType'),
     InterceptorStage = require('./../data/enums/InterceptorStage'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
@@ -48,18 +48,18 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
-        switch (demoPacket.command) {
-            case DemoCommandType.DEM_ERROR:
+        switch (demoPacket.type) {
+            case DemoPacketType.DEM_ERROR:
                 break;
-            case DemoCommandType.DEM_STOP:
+            case DemoPacketType.DEM_STOP:
                 break;
-            case DemoCommandType.DEM_FILE_HEADER:
+            case DemoPacketType.DEM_FILE_HEADER:
                 break;
-            case DemoCommandType.DEM_FILE_INFO:
+            case DemoPacketType.DEM_FILE_INFO:
                 break;
-            case DemoCommandType.DEM_SYNC_TICK:
+            case DemoPacketType.DEM_SYNC_TICK:
                 break;
-            case DemoCommandType.DEM_SEND_TABLES: {
+            case DemoPacketType.DEM_SEND_TABLES: {
                 this._demoPacketHandler.handleDemSendTables(demoPacket);
 
                 if (this._multiThreaded) {
@@ -70,7 +70,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             }
-            case DemoCommandType.DEM_CLASS_INFO: {
+            case DemoPacketType.DEM_CLASS_INFO: {
                 this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
                 if (this._multiThreaded) {
@@ -81,7 +81,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             }
-            case DemoCommandType.DEM_STRING_TABLES:
+            case DemoPacketType.DEM_STRING_TABLES:
                 this._demoPacketHandler.handleDemStringTables(demoPacket);
 
                 if (this._multiThreaded) {
@@ -91,28 +91,28 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 }
 
                 break;
-            case DemoCommandType.DEM_CONSOLE_CMD:
+            case DemoPacketType.DEM_CONSOLE_CMD:
                 break;
-            case DemoCommandType.DEM_CUSTOM_DATA:
+            case DemoPacketType.DEM_CUSTOM_DATA:
                 break;
-            case DemoCommandType.DEM_CUSTOM_DATA_CALLBACKS:
+            case DemoPacketType.DEM_CUSTOM_DATA_CALLBACKS:
                 break;
-            case DemoCommandType.DEM_USER_CMD:
+            case DemoPacketType.DEM_USER_CMD:
                 break;
-            case DemoCommandType.DEM_SAVE_GAME:
+            case DemoPacketType.DEM_SAVE_GAME:
                 break;
-            case DemoCommandType.DEM_SPAWN_GROUPS:
+            case DemoPacketType.DEM_SPAWN_GROUPS:
                 break;
-            case DemoCommandType.DEM_ANIMATION_DATA:
+            case DemoPacketType.DEM_ANIMATION_DATA:
                 break;
-            case DemoCommandType.DEM_ANIMATION_HEADER:
+            case DemoPacketType.DEM_ANIMATION_HEADER:
                 break;
-            case DemoCommandType.DEM_RECOVERY:
+            case DemoPacketType.DEM_RECOVERY:
                 break;
 
-            case DemoCommandType.DEM_PACKET:
-            case DemoCommandType.DEM_SIGNON_PACKET:
-            case DemoCommandType.DEM_FULL_PACKET: {
+            case DemoPacketType.DEM_PACKET:
+            case DemoPacketType.DEM_SIGNON_PACKET:
+            case DemoPacketType.DEM_FULL_PACKET: {
                 const messagePackets = demoPacket.data;
 
                 for (let i = 0; i < messagePackets.length; i++) {

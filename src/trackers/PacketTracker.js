@@ -23,7 +23,7 @@ class PacketTracker extends Tracker {
      * @param {DemoPacket} demoPacket
      */
     handleDemoPacket(demoPacket) {
-        const identifier = demoPacket.command.id;
+        const identifier = demoPacket.type.id;
 
         const record = this._registry.get(identifier) || new PacketTrackRecord(identifier);
 
@@ -38,7 +38,7 @@ class PacketTracker extends Tracker {
      * @param {MessagePacket} messagePacket
      */
     handleMessagePacket(demoPacket, messagePacket) {
-        const identifier = demoPacket.command.id;
+        const identifier = demoPacket.type.id;
 
         const record = this._registry.get(identifier) || null;
 

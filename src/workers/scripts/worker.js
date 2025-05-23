@@ -8,7 +8,7 @@ const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawEx
 
 const Demo = require('./../../data/Demo');
 
-const DemoCommandType = require('./../../data/enums/DemoCommandType'),
+const DemoPacketType = require('../../data/enums/DemoPacketType'),
     MessagePacketType = require('./../../data/enums/MessagePacketType'),
     WorkerMessageType = require('./../../data/enums/WorkerMessageType');
 
@@ -38,21 +38,21 @@ const state = getInitialState();
             case WorkerMessageType.DEMO_PACKET_SYNC: {
                 const demoPacket = request.payload;
 
-                switch (demoPacket.command) {
-                    case DemoCommandType.DEM_CLASS_INFO:
+                switch (demoPacket.type) {
+                    case DemoPacketType.DEM_CLASS_INFO:
                         handleClassInfo(request);
 
                         break;
-                    case DemoCommandType.DEM_SEND_TABLES:
+                    case DemoPacketType.DEM_SEND_TABLES:
                         handleSendTables(request);
 
                         break;
-                    case DemoCommandType.DEM_STRING_TABLES:
+                    case DemoPacketType.DEM_STRING_TABLES:
                         handleStringTables(request);
 
                         break;
                     default:
-                        throw new Error(`Unhandled message [ ${WorkerMessageType.DEMO_PACKET_SYNC.code} ] [ ${demoPacket.command.code} ]`);
+                        throw new Error(`Unhandled message [ ${WorkerMessageType.DEMO_PACKET_SYNC.code} ] [ ${demoPacket.type.code} ]`);
                 }
 
                 break;
@@ -122,7 +122,7 @@ function handleHeavyPacketParse(request) {
             decompressed = buffer;
         }
 
-        const decoded = DemoCommandType.DEM_PACKET.proto.decode(decompressed);
+        const decoded = DemoPacketType.DEM_PACKET.proto.decode(decompressed);
 
         const extractor = new MessagePacketRawExtractor(decoded.data);
 

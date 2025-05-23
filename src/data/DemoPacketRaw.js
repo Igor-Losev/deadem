@@ -6,14 +6,14 @@ class DemoPacketRaw {
      * @constructor
      *
      * @param {number} sequence
-     * @param {VarInt32} command
+     * @param {VarInt32} type
      * @param {VarInt32} tick
      * @param {VarInt32} frame
      * @param {Buffer} payload
      */
-    constructor(sequence, command, tick, frame, payload) {
+    constructor(sequence, type, tick, frame, payload) {
         this._sequence = sequence;
-        this._command = command;
+        this._type = type;
         this._tick = tick;
         this._frame = frame;
         this._payload = payload;
@@ -31,8 +31,8 @@ class DemoPacketRaw {
      * @public
      * @returns {VarInt32}
      */
-    get command() {
-        return this._command;
+    get type() {
+        return this._type;
     }
 
     /**
@@ -61,18 +61,10 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {number}
-     */
-    getCommandType() {
-        return this._command.value & ~64;
-    }
-
-    /**
-     * @public
      * @returns {boolean}
      */
     getIsCompressed() {
-        return (this._command.value & 64) === 64;
+        return (this._type.value & 64) === 64;
     }
 
     /**
@@ -80,7 +72,15 @@ class DemoPacketRaw {
      * @returns {number}
      */
     getSize() {
-        return this._command.size + this._tick.size + this._frame.size + this._payload.length;
+        return this._type.size + this._tick.size + this._frame.size + this._payload.length;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getTypeId() {
+        return this._type.value & ~64;
     }
 }
 

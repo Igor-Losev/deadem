@@ -2,7 +2,7 @@
 
 const Stream = require('stream');
 
-const DemoCommandType = require('./../data/enums/DemoCommandType'),
+const DemoPacketType = require('../data/enums/DemoPacketType'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
 
@@ -10,9 +10,9 @@ const DemoCommandType = require('./../data/enums/DemoCommandType'),
  * Handles prioritization of internal messages within demo packets.
  *
  * For packets of the following types:
- * - {@link DemoCommandType.DEM_PACKET}
- * - {@link DemoCommandType.DEM_FULL_PACKET}
- * - {@link DemoCommandType.DEM_SIGNON_PACKET}
+ * - {@link DemoPacketType.DEM_PACKET}
+ * - {@link DemoPacketType.DEM_FULL_PACKET}
+ * - {@link DemoPacketType.DEM_SIGNON_PACKET}
  *
  * This class prioritizes internal messages and forwards them in the desired order.
  * All other packet types are passed through unchanged.
@@ -28,7 +28,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
 
         this._engine = engine;
 
-        this._packets = [ DemoCommandType.DEM_PACKET, DemoCommandType.DEM_FULL_PACKET, DemoCommandType.DEM_SIGNON_PACKET ];
+        this._packets = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_FULL_PACKET, DemoPacketType.DEM_SIGNON_PACKET ];
     }
 
     /**
@@ -38,7 +38,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
-        if (!this._packets.includes(demoPacket.command)) {
+        if (!this._packets.includes(demoPacket.type)) {
             this.push(demoPacket);
 
             callback();

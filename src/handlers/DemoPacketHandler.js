@@ -29,7 +29,7 @@ class DemoPacketHandler {
     }
 
     /**
-     * Handles a {@link DemoCommandType.DEM_SEND_TABLES} (ID = 4).
+     * Handles a {@link DemoPacketType.DEM_SEND_TABLES} (ID = 4).
      *
      * @public
      * @param {DemoPacket} demoPacket
@@ -129,7 +129,7 @@ class DemoPacketHandler {
     }
 
     /**
-     * Handles a {@link DemoCommandType.DEM_CLASS_INFO} (ID = 5).
+     * Handles a {@link DemoPacketType.DEM_CLASS_INFO} (ID = 5).
      *
      * @public
      * @param {DemoPacket} demoPacket
@@ -152,7 +152,7 @@ class DemoPacketHandler {
     }
 
     /**
-     * Handles a {@link DemoCommandType.DEM_STRING_TABLES} (ID = 6).
+     * Handles a {@link DemoPacketType.DEM_STRING_TABLES} (ID = 6).
      *
      * @public
      * @param {DemoPacket} demoPacket
