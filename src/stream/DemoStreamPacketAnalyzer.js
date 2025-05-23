@@ -223,6 +223,9 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                         case MessagePacketType.GE_SOS_STOP_SOUND_EVENT_HASH:
                             break;
 
+                        case MessagePacketType.TE_EFFECT_DISPATCH:
+                            break;
+
                         case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
                         case MessagePacketType.CITADEL_USER_MESSAGE_MAP_PING:
                         case MessagePacketType.CITADEL_USER_MESSAGE_TEAM_REWARDS:

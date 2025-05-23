@@ -141,6 +141,8 @@ class MessagePacketType {
     static get CITADEL_USER_MESSAGE_ABILITY_NOTIFY() { return citadelUserMessageAbilityNotify; }
     static get CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE() { return citadelUserMessageGetDamageStatsResponse; }
 
+    static get TE_EFFECT_DISPATCH() { return TE_EffectDispatch; }
+
     static get GE_FIRE_BULLETS() { return GE_FireBullets; }
     static get GE_PLAYER_ANIM_EVENT() { return GE_PlayerAnimEvent; }
     static get GE_PARTICLE_SYSTEM_MANAGER() { return GE_ParticleSystemManager; }
@@ -161,6 +163,7 @@ const ECitadelGameEvents = ProtoProvider.CITADEL_GAME_EVENTS.getEnum('ECitadelGa
     ECitadelUserMessageIds = ProtoProvider.CITADEL_USER_MESSAGES.getEnum('CitadelUserMessageIds'),
     EGameEvents = ProtoProvider.GAME_EVENTS.getEnum('EBaseGameEvents'),
     ENET_Messages = ProtoProvider.NETWORK_BASE_TYPES.getEnum('NET_Messages'),
+    ETemporaryEntityIds = ProtoProvider.TEMPORARY_ENTITIES.getEnum('ETEProtobufIds'),
     ESVC_Messages = ProtoProvider.NET_MESSAGES.getEnum('SVC_Messages'),
     EUserMessages = ProtoProvider.USER_MESSAGES.getEnum('EBaseUserMessages');
 
@@ -241,6 +244,9 @@ const CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_Server
     CSVCMsg_HltvStatus = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus'),
     CSVCMsg_UserCommands = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UserCommands');
 
+// Temporary Entities
+const CMsgTEEffectDispatch = ProtoProvider.TEMPORARY_ENTITIES.lookupType('CMsgTEEffectDispatch');
+
 const CCitadelEntityMsg_BreakablePropSpawnDebris = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelEntityMsg_BreakablePropSpawnDebris');
 
 const netTick = new MessagePacketType('net_Tick', ENET_Messages.net_Tick, CNETMsg_Tick), // 4
@@ -302,6 +308,8 @@ const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECit
     citadelUserMessageStaminaDrained = new MessagePacketType('k_EUserMsg_StaminaDrained', ECitadelUserMessageIds.k_EUserMsg_StaminaDrained, CCitadelUserMsg_StaminaDrained), // 337
     citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', ECitadelUserMessageIds.k_EUserMsg_AbilityNotify, CCitadelUserMessage_AbilityNotify), // 338
     citadelUserMessageGetDamageStatsResponse = new MessagePacketType('k_EUserMsg_GetDamageStatsResponse', ECitadelUserMessageIds.k_EUserMsg_GetDamageStatsResponse, CCitadelUserMsg_GetDamageStatsResponse); // 339
+
+const TE_EffectDispatch = new MessagePacketType('TE_EffectDispatch', ETemporaryEntityIds.TE_EffectDispatchId, CMsgTEEffectDispatch); // 400
 
 const GE_FireBullets = new MessagePacketType('GE_FireBullets', ECitadelGameEvents.GE_FireBullets, CMsgFireBullets), // 450
     GE_PlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEvent', ECitadelGameEvents.GE_PlayerAnimEvent, CMsgPlayerAnimEvent), // 451
