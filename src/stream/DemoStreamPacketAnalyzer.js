@@ -3,6 +3,7 @@
 const Stream = require('stream');
 
 const DemoPacketType = require('../data/enums/DemoPacketType'),
+    EntityOperation = require('./../data/enums/EntityOperation'),
     InterceptorStage = require('./../data/enums/InterceptorStage'),
     MessagePacketType = require('./../data/enums/MessagePacketType'),
     PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
@@ -197,9 +198,27 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                                 events.forEach((event) => {
                                     const entity = event.entity;
 
-                                    event.mutations.forEach((mutation) => {
-                                        entity.updateByFieldPath(mutation.fieldPath, mutation.value);
-                                    });
+                                    switch (event.operation) {
+                                        case EntityOperation.CREATE:
+                                        case EntityOperation.UPDATE:
+                                            if (!entity.active) {
+                                                entity.activate();
+                                            }
+
+                                            event.mutations.forEach((mutation) => {
+                                                entity.updateByFieldPath(mutation.fieldPath, mutation.value);
+                                            });
+
+                                            break;
+                                        case EntityOperation.DELETE:
+                                            this._engine.demo.deleteEntity(entity.index);
+
+                                            break;
+                                        case EntityOperation.LEAVE:
+                                            entity.deactivate();
+
+                                            break;
+                                    }
                                 });
 
                                 await this._interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);

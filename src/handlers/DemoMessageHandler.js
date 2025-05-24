@@ -123,6 +123,10 @@ class DemoMessageHandler {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
+                    if (!entity.active) {
+                        throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
+                    }
+
                     const event = new EntityMutationEvent(EntityOperation.LEAVE, entity, [ ]);
 
                     events.push(event);
@@ -170,6 +174,10 @@ class DemoMessageHandler {
 
                     if (entity === null) {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    if (!entity.active) {
+                        throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
                     const deleted = this._demo.deleteEntity(index);

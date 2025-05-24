@@ -20,6 +20,8 @@ class Entity {
         this._serial = serial;
         this._class = clazz;
 
+        this._active = true;
+
         this._state = new Map();
     }
 
@@ -45,10 +47,31 @@ class Entity {
     }
 
     /**
+     * @returns {boolean}
+     */
+    get active() {
+        return this._active;
+    }
+
+    /**
      * @returns {Map<FieldPath, *>}
      */
     get state() {
         return this._state;
+    }
+
+    /**
+     * @public
+     */
+    activate() {
+        this._active = true;
+    }
+
+    /**
+     * @public
+     */
+    deactivate() {
+        this._active = false;
     }
 
     /**
