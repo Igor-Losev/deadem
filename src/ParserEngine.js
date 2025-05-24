@@ -80,6 +80,9 @@ class ParserEngine {
             packet: new PacketTracker(logger),
             performance: new PerformanceTracker(logger)
         };
+
+        this._finished = false;
+        this._started = false;
     }
 
     /**
@@ -88,6 +91,14 @@ class ParserEngine {
      */
     get demo() {
         return this._demo;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get finished() {
+        return this._finished;
     }
 
     /**
@@ -104,6 +115,14 @@ class ParserEngine {
      */
     get logger() {
         return this._logger;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get started() {
+        return this._started;
     }
 
     /**
@@ -152,6 +171,12 @@ class ParserEngine {
      * @returns {Promise<void>}
      */
     async parse(reader) {
+        if (this._started) {
+            throw new Error('Unable to parse: parser instance has already been used. Create a new instance to parse another demo');
+        }
+
+        this._started = true;
+
         return new Promise((resolve, reject) => {
             this._logger.info('Parse started');
 
@@ -161,10 +186,12 @@ class ParserEngine {
                 reader,
                 ...this._chain,
                 (error) => {
+                    this._finished = true;
+
                     if (error) {
                         this._logger.error('Parse failed', error);
 
-                        reject();
+                        reject(error);
                     }
 
                     this._trackers.performance.end(PerformanceTrackerCategory.PARSER);

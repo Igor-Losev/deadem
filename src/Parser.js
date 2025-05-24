@@ -28,6 +28,22 @@ class Parser {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    getIsFinished() {
+        return this._engine.finished;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    getIsStarted() {
+        return this._engine.started;
+    }
+
+    /**
+     * @public
      * @param {Stream.Readable} reader
      * @returns {Promise<void>}
      */
