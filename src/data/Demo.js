@@ -120,6 +120,14 @@ class Demo {
 
     /**
      * @public
+     * @returns {Array<Entity>}
+     */
+    getEntities() {
+        return Array.from(this._entities.values());
+    }
+
+    /**
+     * @public
      * @param {number} index
      * @returns {Entity|null}
      */
