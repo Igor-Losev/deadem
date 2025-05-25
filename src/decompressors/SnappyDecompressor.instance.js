@@ -1,6 +1,6 @@
 'use strict';
 
-const snappy = require('snappy');
+const snappy = require('snappyjs');
 
 class SnappyDecompressor {
     constructor() {
@@ -13,7 +13,7 @@ class SnappyDecompressor {
      * @returns {Buffer}
      */
     decompress(buffer) {
-        return snappy.uncompressSync(buffer);
+        return snappy.uncompress(buffer);
     }
 
     static instance = new SnappyDecompressor();
