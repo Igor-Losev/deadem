@@ -41,6 +41,7 @@
     "#extractors/*.js": "./src/extractors/*.js",
     "#handlers/*.js": "./src/handlers/*.js",
     "#providers/*.js": "./src/providers/*.js",
+    "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
 
     "#providers/ProtoProvider.instance.js": {

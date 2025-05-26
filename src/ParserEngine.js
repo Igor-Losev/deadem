@@ -7,14 +7,14 @@ import Demo from './data/Demo.js';
 import InterceptorStage from './data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
-import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
-import DemoStreamLoadBalancer from './stream/DemoStreamLoadBalancer.js';
-import DemoStreamPacketAnalyzer from './stream/DemoStreamPacketAnalyzer.js';
-import DemoStreamPacketBatcher from './stream/DemoStreamPacketBatcher.js';
-import DemoStreamPacketCoordinator from './stream/DemoStreamPacketCoordinator.js';
-import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
-import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
-import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
+import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
+import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';
+import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
+import DemoStreamPacketCoordinator from '#stream/DemoStreamPacketCoordinator.js';
+import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
+import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
+import DemoStreamPacketPrioritizer from '#stream/DemoStreamPacketPrioritizer.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
 import PacketTracker from '#trackers/PacketTracker.js';
