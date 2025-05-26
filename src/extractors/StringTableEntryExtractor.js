@@ -1,5 +1,5 @@
-import Assert from './../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import Assert from '#core/Assert.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 import StringTable from './../data/tables/string/StringTable.js';
 import StringTableEntry from './../data/tables/string/StringTableEntry.js';

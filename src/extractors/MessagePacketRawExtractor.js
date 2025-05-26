@@ -1,4 +1,4 @@
-import BitBuffer from '../core/BitBuffer.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 import MessagePacketRaw from '../data/MessagePacketRaw.js';
 

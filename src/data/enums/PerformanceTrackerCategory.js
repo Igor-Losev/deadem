@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 const registry = {
     byCode: new Map()

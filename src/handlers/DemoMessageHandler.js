@@ -1,5 +1,5 @@
-import Assert from './../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import Assert from '#core/Assert.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 import Demo from './../data/Demo.js';
 import Server from './../data/Server.js';

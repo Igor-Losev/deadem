@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 import Field from './Field.js';
 import SerializerKey from './SerializerKey.js';

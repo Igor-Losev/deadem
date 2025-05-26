@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import Assert from './../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 

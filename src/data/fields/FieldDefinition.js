@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 const REGEX = /(?<base>[^*< >\n[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?])?(?<pointer>\*)?/;
 

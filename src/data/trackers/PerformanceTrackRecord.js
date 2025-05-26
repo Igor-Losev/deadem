@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 import PerformanceTrackerCategory from './../enums/PerformanceTrackerCategory.js';
 

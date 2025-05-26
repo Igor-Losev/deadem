@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import BinaryHeap from '../core/BinaryHeap.js';
+import BinaryHeap from '#core/BinaryHeap.js';
 
 /**
  * Given a stream of {@link DemoPacket}, ensures that they are passed

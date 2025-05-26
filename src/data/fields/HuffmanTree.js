@@ -1,5 +1,5 @@
-import Assert from './../../core/Assert.js';
-import BinaryHeap from '../../core/BinaryHeap.js';
+import Assert from '#core/Assert.js';
+import BinaryHeap from '#core/BinaryHeap.js';
 
 import FieldPathOperation from '../enums/FieldPathOperation.js';
 

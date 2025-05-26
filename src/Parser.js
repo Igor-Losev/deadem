@@ -1,7 +1,7 @@
 import InterceptorStage from './data/enums/InterceptorStage.js';
 
-import Assert from './core/Assert.js';
-import Logger from './core/Logger.js';
+import Assert from '#core/Assert.js';
+import Logger from '#core/Logger.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';

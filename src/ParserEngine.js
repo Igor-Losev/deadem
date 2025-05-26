@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import Logger from './core/Logger.js';
+import Logger from '#core/Logger.js';
 
 import Demo from './data/Demo.js';
 

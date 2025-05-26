@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 import FieldModel from './../enums/FieldModel.js';
 

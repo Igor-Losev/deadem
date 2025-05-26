@@ -1,5 +1,5 @@
-import Assert from './../core/Assert.js';
-import Logger from './../core/Logger.js';
+import Assert from '#core/Assert.js';
+import Logger from '#core/Logger.js';
 
 class Tracker {
     /**

@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import Assert from './../core/Assert.js';
+import Assert from '#core/Assert.js';
 
 /**
  * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.

@@ -1,6 +1,6 @@
 import protobuf from 'protobufjs';
 
-import FileSystem from '../core/FileSystem.js';
+import FileSystem from '#core/FileSystem.js';
 
 import ProtoProvider from './ProtoProvider.js';
 
