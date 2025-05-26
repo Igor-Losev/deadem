@@ -1,6 +1,9 @@
 import https from 'node:https';
 
 import FileSystem from '#core/FileSystem.js';
+import Logger from '#core/Logger.js';
+
+const logger = Logger.CONSOLE_DEBUG;
 
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../demos');
 const S3_BUCKET_URL = 'https://parser-demofiles.s3.us-east-1.amazonaws.com';
@@ -17,33 +20,19 @@ class DemoProvider {
      * @returns {Promise<ReadableStream>}
      */
     static async read(demoFile) {
-        const exists = DemoProvider.checkFile(demoFile);
+        const path = getLocalPath(demoFile);
+
+        const exists = FileSystem.isFile(path);
 
         if (exists) {
+            logger.debug(`Reading file [ ${path} ] from the file system...`);
+
             return DemoProvider.readFile(demoFile);
         } else {
+            logger.debug(`Couldn't find a file [ ${path} ]. Reading demo [ ${demoFile.getFileName()} ] from S3...`);
+
             return DemoProvider.readS3(demoFile);
         }
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {DemoFile} demoFile
-     * @returns {boolean}
-     */
-    static checkFile(demoFile) {
-        let exists;
-
-        try {
-            const path = getLocalPath(demoFile);
-
-            exists = FileSystem.isFile(path);
-        } catch {
-            exists = false;
-        }
-
-        return exists;
     }
 
     /**

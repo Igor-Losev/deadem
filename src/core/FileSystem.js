@@ -29,9 +29,17 @@ class FileSystem {
      * @returns {boolean}
      */
     static isFile(path) {
-        const stat = fs.statSync(path);
+        let isFile;
 
-        return stat.isFile();
+        try {
+            const stat = fs.statSync(path);
+
+            isFile = stat.isFile();
+        } catch {
+            isFile = false;
+        }
+
+        return isFile;
     }
 
     /**
