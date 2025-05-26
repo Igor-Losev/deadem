@@ -7,7 +7,7 @@
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
   "homepage": "https://github.com/Igor-Losev/deadem",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16.17.0"
   },
   "repository": {
     "type": "git",
