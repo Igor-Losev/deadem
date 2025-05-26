@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 import Class from './Class.js';
 import Server from './Server.js';
@@ -13,7 +13,7 @@ import SerializerKey from './fields/SerializerKey.js';
 
 import StringTableContainer from './tables/string/StringTableContainer.js';
 
-import Logger from './../Logger.js';
+import Logger from '../core/Logger.js';
 
 class Demo {
     /**
@@ -22,7 +22,7 @@ class Demo {
      * @param {Logger} logger
      */
     constructor(logger = Logger.CONSOLE_INFO) {
-        assert(logger instanceof Logger);
+        Assert.isTrue(logger instanceof Logger)
 
         this._classBaselines = new Map();
 
@@ -64,7 +64,7 @@ class Demo {
      * @returns {Entity|null}
      */
     deleteEntity(index) {
-        assert(Number.isInteger(index));
+        Assert.isTrue(Number.isInteger(index))
 
         const entity = this._entities.get(index) || null;
 
@@ -81,7 +81,7 @@ class Demo {
      * @returns {Buffer|null}
      */
     getClassBaselineById(id) {
-        assert(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id))
 
         return this._classBaselines.get(id) || null;
     }
@@ -92,7 +92,7 @@ class Demo {
      * @returns {Class|null}
      */
     getClassById(id) {
-        assert(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id))
 
         return this._classes.byId.get(id) || null;
     }
@@ -103,7 +103,7 @@ class Demo {
      * @returns {Class|null}
      */
     getClassByName(name) {
-        assert(typeof name === 'string' && name.length > 0);
+        Assert.isTrue(typeof name === 'string' && name.length > 0)
 
         return this._classes.byName.get(name) || null;
     }
@@ -130,7 +130,7 @@ class Demo {
      * @returns {Entity|null}
      */
     getEntity(index) {
-        assert(Number.isInteger(index));
+        Assert.isTrue(Number.isInteger(index))
 
         return this._entities.get(index) || null;
     }
@@ -141,7 +141,7 @@ class Demo {
      * @returns {Serializer|null}
      */
     getSerializerByKey(key) {
-        assert(key instanceof SerializerKey);
+        Assert.isTrue(key instanceof SerializerKey)
 
         return this._serializers.get(key.toString()) || null;
     }
@@ -151,7 +151,7 @@ class Demo {
      * @param {Class} clazz
      */
     registerClass(clazz) {
-        assert(clazz instanceof Class);
+        Assert.isTrue(clazz instanceof Class)
 
         this._classes.byId.set(clazz.id, clazz);
         this._classes.byName.set(clazz.name, clazz);
@@ -162,7 +162,7 @@ class Demo {
      * @param {Entity} entity
      */
     registerEntity(entity) {
-        assert(entity instanceof Entity);
+        Assert.isTrue(entity instanceof Entity)
 
         this._entities.set(entity.index, entity);
     }
@@ -172,7 +172,7 @@ class Demo {
      * @param {Serializer} serializer
      */
     registerSerializer(serializer) {
-        assert(serializer instanceof Serializer);
+        Assert.isTrue(serializer instanceof Serializer)
 
         this._serializers.set(serializer.key.toString(), serializer);
     }
@@ -182,7 +182,7 @@ class Demo {
      * @param {Server} server
      */
     registerServer(server) {
-        assert(server instanceof Server);
+        Assert.isTrue(server instanceof Server)
 
         this._server = server;
     }

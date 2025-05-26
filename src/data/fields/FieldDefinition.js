@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 const REGEX = /(?<base>[^*< >\n[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?])?(?<pointer>\*)?/;
 
@@ -12,10 +12,10 @@ class FieldDefinition {
      * @param {boolean} pointer
      */
     constructor(baseType, generic, count, pointer) {
-        assert(typeof baseType === 'string' && baseType.length > 0);
-        assert(generic === null || generic instanceof FieldDefinition);
-        assert(count === null || Number.isInteger(count));
-        assert(typeof pointer === 'boolean');
+        Assert.isTrue(typeof baseType === 'string' && baseType.length > 0)
+        Assert.isTrue(generic === null || generic instanceof FieldDefinition)
+        Assert.isTrue(count === null || Number.isInteger(count))
+        Assert.isTrue(typeof pointer === 'boolean')
 
         this._baseType = baseType;
         this._generic = generic;
@@ -46,7 +46,7 @@ class FieldDefinition {
      * @returns {FieldDefinition}
      */
     static parse(varType) {
-        assert(typeof varType === 'string');
+        Assert.isTrue(typeof varType === 'string')
 
         const groups = REGEX.exec(varType).groups;
 

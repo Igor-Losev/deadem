@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../core/Assert.js';
 
 import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
@@ -11,7 +11,7 @@ class WorkerRequest {
      * @param {Transferable[]} transfers
      */
     constructor(type, payload, transfers) {
-        assert(type instanceof WorkerMessageType);
+        Assert.isTrue(type instanceof WorkerMessageType)
 
         this._type = type;
         this._payload = payload;

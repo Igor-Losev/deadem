@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 class BinaryHeap {
     /**
@@ -8,8 +8,8 @@ class BinaryHeap {
      * @param {Function=} comparator
      */
     constructor(extractor, comparator) {
-        assert(!extractor || typeof extractor === 'function');
-        assert(!comparator || typeof comparator === 'function');
+        Assert.isTrue(!extractor || typeof extractor === 'function')
+        Assert.isTrue(!comparator || typeof comparator === 'function')
 
         this._extractor = extractor || (i => i);
         this._comparator = comparator || BinaryHeap.MIN_HEAP_COMPARATOR;
@@ -116,7 +116,7 @@ class BinaryHeap {
      * @returns {*}
      */
     _getValue(i) {
-        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
+        Assert.isTrue(Number.isInteger(i) && i >= 0 && i < this._heap.length)
 
         return this._extractor(this._heap[i]);
     }
@@ -126,7 +126,7 @@ class BinaryHeap {
      * @param {number} i
      */
     _siftUp(i) {
-        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
+        Assert.isTrue(Number.isInteger(i) && i >= 0 && i < this._heap.length)
 
         let index = i;
 
@@ -142,7 +142,7 @@ class BinaryHeap {
      * @param {number} i
      */
     _siftDown(i) {
-        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
+        Assert.isTrue(Number.isInteger(i) && i >= 0 && i < this._heap.length)
 
         let iTarget = i;
 
@@ -174,8 +174,8 @@ class BinaryHeap {
      * @param {number} j
      */
     _swap(i, j) {
-        assert(Number.isInteger(i) && i >= 0 && i < this._heap.length);
-        assert(Number.isInteger(j) && j >= 0 && j < this._heap.length);
+        Assert.isTrue(Number.isInteger(i) && i >= 0 && i < this._heap.length)
+        Assert.isTrue(Number.isInteger(j) && j >= 0 && j < this._heap.length)
 
         const reference = this._heap[i];
 

@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../../core/Assert.js';
 
 class StringTableInstructions {
     /**
@@ -8,9 +8,9 @@ class StringTableInstructions {
      * @param {boolean} usingVarintBitcounts
      */
     constructor(userDataSizeBits, userDataFixedSize, usingVarintBitcounts) {
-        assert(Number.isInteger(userDataSizeBits));
-        assert(typeof userDataFixedSize === 'boolean');
-        assert(typeof  usingVarintBitcounts === 'boolean');
+        Assert.isTrue(Number.isInteger(userDataSizeBits))
+        Assert.isTrue(typeof userDataFixedSize === 'boolean')
+        Assert.isTrue(typeof  usingVarintBitcounts === 'boolean')
 
         this._userDataSizeBits = userDataSizeBits;
         this._userDataFixedSize = userDataFixedSize;

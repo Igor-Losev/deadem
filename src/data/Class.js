@@ -1,12 +1,12 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 import Serializer from './fields/Serializer.js';
 
 class Class {
     constructor(id, name, serializer) {
-        assert(Number.isInteger(id));
-        assert(typeof name === 'string' && name.length > 0);
-        assert(serializer instanceof Serializer);
+        Assert.isTrue(Number.isInteger(id))
+        Assert.isTrue(typeof name === 'string' && name.length > 0)
+        Assert.isTrue(serializer instanceof Serializer)
 
         this._id = id;
         this._name = name;

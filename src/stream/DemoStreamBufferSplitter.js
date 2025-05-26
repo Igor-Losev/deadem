@@ -1,5 +1,6 @@
-import assert from 'assert/strict';
 import Stream from 'node:stream';
+
+import Assert from './../core/Assert.js';
 
 import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
@@ -18,7 +19,7 @@ class DemoStreamBufferSplitter extends Stream.Transform {
     constructor(engine, maxChunkSize = MEGABYTE) {
         super({ objectMode: true });
 
-        assert(Number.isInteger(maxChunkSize));
+        Assert.isTrue(Number.isInteger(maxChunkSize))
 
         this._engine = engine;
         this._maxChunkSize = maxChunkSize;

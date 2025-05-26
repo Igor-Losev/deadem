@@ -1,5 +1,6 @@
-import assert from 'assert/strict';
 import Stream from 'node:stream';
+
+import Assert from './../core/Assert.js';
 
 /**
  * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.
@@ -19,8 +20,8 @@ class DemoStreamPacketBatcher extends Stream.Transform {
     constructor(engine, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });
 
-        assert(Number.isInteger(thresholdSizeBytes));
-        assert(Number.isInteger(thresholdWaitMilliseconds));
+        Assert.isTrue(Number.isInteger(thresholdSizeBytes))
+        Assert.isTrue(Number.isInteger(thresholdWaitMilliseconds))
 
         this._engine = engine;
 

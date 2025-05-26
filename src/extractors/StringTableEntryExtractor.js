@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 import BitBuffer from './../data/buffer/BitBuffer.js';
 
@@ -18,9 +18,9 @@ class StringTableEntryExtractor {
      * @param {number} entriesCount
      */
     constructor(buffer, table, entriesCount) {
-        assert(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array);
-        assert(table instanceof StringTable);
-        assert(Number.isInteger(entriesCount));
+        Assert.isTrue(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array)
+        Assert.isTrue(table instanceof StringTable)
+        Assert.isTrue(Number.isInteger(entriesCount))
 
         this._bitBuffer = new BitBuffer(buffer);
         this._table = table;

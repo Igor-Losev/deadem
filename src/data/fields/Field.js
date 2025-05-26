@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import FieldModel from './../enums/FieldModel.js';
 
@@ -23,10 +23,10 @@ class Field {
         decoderInstructions,
         serializer
     ) {
-        assert(typeof name === 'string');
-        assert(definition instanceof FieldDefinition);
-        assert(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
-        assert(decoderInstructions instanceof FieldDecoderInstructions);
+        Assert.isTrue(typeof name === 'string')
+        Assert.isTrue(definition instanceof FieldDefinition)
+        Assert.isTrue(Array.isArray(sendNode) && sendNode.every(s => s.length > 0))
+        Assert.isTrue(decoderInstructions instanceof FieldDecoderInstructions)
 
         this._name = name;
         this._definition = definition;
@@ -157,7 +157,7 @@ class Field {
      * @param {FieldModel} model
      */
     _changeModel(model) {
-        assert(model instanceof FieldModel);
+        Assert.isTrue(model instanceof FieldModel)
 
         switch (model) {
             case FieldModel.ARRAY_FIXED:

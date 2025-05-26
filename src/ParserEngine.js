@@ -1,5 +1,7 @@
 import Stream from 'node:stream';
 
+import Logger from './core/Logger.js';
+
 import Demo from './data/Demo.js';
 
 import InterceptorStage from './data/enums/InterceptorStage.js';
@@ -20,7 +22,6 @@ import PerformanceTracker from './trackers/PerformanceTracker.js';
 
 import WorkerManager from './workers/WorkerManager.js';
 
-import Logger from './Logger.js';
 import ParserConfiguration from './ParserConfiguration.js';
 
 class ParserEngine {

@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../../core/Assert.js';
 
 import BitBuffer from './../../buffer/BitBuffer.js';
 
@@ -23,7 +23,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
     constructor(instructions) {
         super();
 
-        assert(instructions instanceof FieldDecoderInstructions);
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
 
         this._low = typeof instructions.valueLow === 'number' ? instructions.valueLow : DEFAULT_VALUE_LOW;
         this._high = typeof instructions.valueHigh === 'number' ? instructions.valueHigh : DEFAULT_VALUE_HIGH;
@@ -148,7 +148,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
  * @returns {number}
  */
 function assignMultipliers(steps) {
-    assert(Number.isInteger(steps));
+    Assert.isTrue(Number.isInteger(steps))
 
     const range = this._high - this._low;
 
@@ -195,7 +195,7 @@ function assignMultipliers(steps) {
  * @returns {number}
  */
 function getFlags(candidate) {
-    assert(Number.isInteger(candidate));
+    Assert.isTrue(Number.isInteger(candidate))
 
     let flags = candidate;
 

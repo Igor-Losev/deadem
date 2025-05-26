@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 class Server {
     /**
@@ -9,9 +9,9 @@ class Server {
      * @param {number} tickInterval
      */
     constructor(maxClasses, maxClients, tickInterval) {
-        assert(Number.isInteger(maxClasses));
-        assert(Number.isInteger(maxClients));
-        assert(typeof tickInterval === 'number');
+        Assert.isTrue(Number.isInteger(maxClasses))
+        Assert.isTrue(Number.isInteger(maxClients))
+        Assert.isTrue(typeof tickInterval === 'number')
 
         this._maxClasses = maxClasses;
         this._maxClients = maxClients;

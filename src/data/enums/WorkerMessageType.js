@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 const registry = {
     byCode: new Map()
@@ -11,8 +11,8 @@ class WorkerMessageType {
      * @param {String} description
      */
     constructor(code, description) {
-        assert(typeof code === 'string' && code.length > 0);
-        assert(typeof description === 'string' && description.length > 0);
+        Assert.isTrue(typeof code === 'string' && code.length > 0)
+        Assert.isTrue(typeof description === 'string' && description.length > 0)
 
         this._code = code;
         this._description = description;

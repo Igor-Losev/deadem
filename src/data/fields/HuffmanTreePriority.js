@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 class HuffmanTreePriority {
     /**
@@ -8,8 +8,8 @@ class HuffmanTreePriority {
      * @param {number} sequence
      */
     constructor(weight, sequence) {
-        assert(Number.isInteger(weight));
-        assert(Number.isInteger(sequence));
+        Assert.isTrue(Number.isInteger(weight))
+        Assert.isTrue(Number.isInteger(sequence))
 
         this._weight = weight;
         this._sequence = sequence;
@@ -29,7 +29,7 @@ class HuffmanTreePriority {
      * @returns {boolean}
      */
     compare(other) {
-        assert(other instanceof HuffmanTreePriority);
+        Assert.isTrue(other instanceof HuffmanTreePriority)
 
         if (this._weight === other._weight) {
             return this._sequence < other._sequence;

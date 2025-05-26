@@ -1,8 +1,8 @@
-import assert from 'assert/strict';
+import Assert from './../../core/Assert.js';
 
 class PacketTrackRecord {
     constructor(id) {
-        assert(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id))
 
         this._id = id;
         this._count = 0;
@@ -33,7 +33,7 @@ class PacketTrackRecord {
      * @public
      */
     track(id) {
-        assert(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id))
 
         const record = this._records.get(id) || new PacketTrackRecord(id);
 

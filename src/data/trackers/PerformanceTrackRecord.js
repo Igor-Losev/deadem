@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import PerformanceTrackerCategory from './../enums/PerformanceTrackerCategory.js';
 
@@ -9,7 +9,7 @@ class PerformanceTrackRecord {
      * @param {PerformanceTrackerCategory} category
      */
     constructor(category) {
-        assert(category instanceof PerformanceTrackerCategory);
+        Assert.isTrue(category instanceof PerformanceTrackerCategory)
 
         this._category = category;
 

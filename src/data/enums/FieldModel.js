@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 class FieldModel {
     /**
@@ -7,7 +7,7 @@ class FieldModel {
      * @param {String} code
      */
     constructor(code) {
-        assert(typeof code === 'string');
+        Assert.isTrue(typeof code === 'string')
 
         this._code = code;
     }

@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import ProtoProvider from '../../providers/ProtoProvider.instance.js';
 
@@ -16,8 +16,8 @@ class MessagePacketType {
      * @param {*} proto
      */
     constructor(code, id, proto) {
-        assert(typeof code === 'string' && code.length > 0);
-        assert(Number.isInteger(id));
+        Assert.isTrue(typeof code === 'string' && code.length > 0)
+        Assert.isTrue(Number.isInteger(id))
 
         this._code = code;
         this._id = id;

@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../../core/Assert.js';
 
 import FieldDecoder from './FieldDecoder.js';
 
@@ -11,8 +11,8 @@ class FieldDecoderVectorN extends FieldDecoder {
     constructor(decoder, n) {
         super();
 
-        assert(decoder instanceof FieldDecoder);
-        assert(Number.isInteger(n) && n >= 2 && n <= 4);
+        Assert.isTrue(decoder instanceof FieldDecoder)
+        Assert.isTrue(Number.isInteger(n) && n >= 2 && n <= 4)
 
         this._decoder = decoder;
         this._n = n;

@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../core/Assert.js';
 
 import DemoPacketType from './enums/DemoPacketType.js';
 
@@ -13,8 +13,8 @@ class DemoPacket {
      * @param {*} data
      */
     constructor(sequence, type, tick, data) {
-        assert(type instanceof DemoPacketType);
-        assert(Number.isInteger(tick));
+        Assert.isTrue(type instanceof DemoPacketType)
+        Assert.isTrue(Number.isInteger(tick))
 
         this._sequence = sequence;
         this._type = type;

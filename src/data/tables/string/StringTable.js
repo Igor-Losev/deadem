@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../../core/Assert.js';
 
 import StringTableType from './../../enums/StringTableType.js';
 
@@ -12,9 +12,9 @@ class StringTable {
      * @param {StringTableInstructions=} instructions
      */
     constructor(type, flags, instructions) {
-        assert(type instanceof StringTableType);
-        assert(Number.isInteger(flags));
-        assert(!instructions || instructions instanceof StringTableInstructions);
+        Assert.isTrue(type instanceof StringTableType)
+        Assert.isTrue(Number.isInteger(flags))
+        Assert.isTrue(!instructions || instructions instanceof StringTableInstructions)
 
         this._type = type;
         this._flags = flags;

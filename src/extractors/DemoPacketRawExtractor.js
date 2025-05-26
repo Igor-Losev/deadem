@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 import DemoPacketRaw from './../data/DemoPacketRaw.js';
 import VarInt32 from '../data/VarInt32.js';
@@ -20,7 +20,7 @@ class DemoPacketRawExtractor {
     }
 
     *retrieve(sequenceStart) {
-        assert(Number.isInteger(sequenceStart));
+        Assert.isTrue(Number.isInteger(sequenceStart))
 
         this._tail = this._buffer;
 

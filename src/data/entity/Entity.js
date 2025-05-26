@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import Class from './../Class.js';
 
@@ -10,9 +10,9 @@ class Entity {
      * @param {Class} clazz
      */
     constructor(index, serial, clazz) {
-        assert(Number.isInteger(index));
-        assert(Number.isInteger(serial));
-        assert(clazz instanceof Class);
+        Assert.isTrue(Number.isInteger(index))
+        Assert.isTrue(Number.isInteger(serial))
+        Assert.isTrue(clazz instanceof Class)
 
         this._index = index;
         this._serial = serial;

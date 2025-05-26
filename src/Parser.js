@@ -1,8 +1,8 @@
-import assert from 'node:assert/strict';
-
 import InterceptorStage from './data/enums/InterceptorStage.js';
 
-import Logger from './Logger.js';
+import Assert from './core/Assert.js';
+import Logger from './core/Logger.js';
+
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
 
@@ -55,8 +55,8 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        assert(stage instanceof InterceptorStage);
-        assert(typeof interceptor === 'function');
+        Assert.isTrue(stage instanceof InterceptorStage)
+        Assert.isTrue(typeof interceptor === 'function')
 
         this._engine.interceptors.post[stage.code].push(interceptor);
     }
@@ -67,8 +67,8 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        assert(stage instanceof InterceptorStage);
-        assert(typeof interceptor === 'function');
+        Assert.isTrue(stage instanceof InterceptorStage)
+        Assert.isTrue(typeof interceptor === 'function')
 
         this._engine.interceptors.pre[stage.code].push(interceptor);
     }

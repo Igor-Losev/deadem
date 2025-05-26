@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../core/Assert.js';
 
 import Demo from './../data/Demo.js';
 import Server from './../data/Server.js';
@@ -18,7 +18,7 @@ class DemoMessageHandler {
      * @param {Demo} demo
      */
     constructor(demo) {
-        assert(demo instanceof Demo);
+        Assert.isTrue(demo instanceof Demo)
 
         this._demo = demo;
     }

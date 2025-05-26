@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 const registry = {
     byCode: new Map(),
@@ -13,8 +13,8 @@ class StringTableType {
      * @param {String} name
      */
     constructor(code, name) {
-        assert(typeof code === 'string' && code.length > 0);
-        assert(typeof name === 'string' && name.length > 0);
+        Assert.isTrue(typeof code === 'string' && code.length > 0)
+        Assert.isTrue(typeof name === 'string' && name.length > 0)
 
         this._code = code;
         this._name = name;

@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import BitBuffer from './../buffer/BitBuffer.js';
 
@@ -19,11 +19,11 @@ class FieldPathOperation {
      * @param {Function|null} executor
      */
     constructor(code, name, weight, sequence, executor) {
-        assert(typeof code === 'string' && code.length > 0);
-        assert(typeof name === 'string' && name.length > 0);
-        assert(Number.isInteger(weight));
-        assert(Number.isInteger(sequence));
-        assert(executor === null || typeof executor === 'function');
+        Assert.isTrue(typeof code === 'string' && code.length > 0)
+        Assert.isTrue(typeof name === 'string' && name.length > 0)
+        Assert.isTrue(Number.isInteger(weight))
+        Assert.isTrue(Number.isInteger(sequence))
+        Assert.isTrue(executor === null || typeof executor === 'function')
 
         this._code = code;
         this._name = name;
@@ -98,8 +98,8 @@ class FieldPathOperation {
 }
 
 const executor = (callback) => (bitBuffer, fieldPathBuilder) => {
-    assert(bitBuffer instanceof BitBuffer);
-    assert(fieldPathBuilder instanceof FieldPathBuilder);
+    Assert.isTrue(bitBuffer instanceof BitBuffer)
+    Assert.isTrue(fieldPathBuilder instanceof FieldPathBuilder)
 
     callback(bitBuffer, fieldPathBuilder);
 };

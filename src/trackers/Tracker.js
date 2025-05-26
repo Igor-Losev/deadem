@@ -1,6 +1,5 @@
-import assert from 'assert';
-
-import Logger from './../Logger.js';
+import Assert from './../core/Assert.js';
+import Logger from './../core/Logger.js';
 
 class Tracker {
     /**
@@ -9,7 +8,7 @@ class Tracker {
      * @param {Logger} logger
      */
     constructor(logger) {
-        assert(logger instanceof Logger);
+        Assert.isTrue(logger instanceof Logger)
 
         this._logger = logger;
     }
@@ -43,7 +42,7 @@ class Tracker {
      * @returns {String}
      */
     _highlight(text) {
-        assert(typeof text === 'string');
+        Assert.isTrue(typeof text === 'string')
 
         return `----- ${text} -----`;
     }

@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../core/Assert.js';
 
 import FieldDecoderFactory from './FieldDecoderFactory.js';
 
@@ -84,7 +84,7 @@ class FieldDecoderPicker {
      * @returns {FieldDecoder}
      */
     pick(code, field) {
-        assert(typeof code === 'string');
+        Assert.isTrue(typeof code === 'string')
 
         let decoder;
 

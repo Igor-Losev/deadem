@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../../core/Assert.js';
 
 import ProtoProvider from '../../../providers/ProtoProvider.instance.js';
 
@@ -17,9 +17,9 @@ class StringTableEntry {
      * @param {Buffer|null|*} value
      */
     constructor(type, id, key, value) {
-        assert(type instanceof StringTableType);
-        assert(Number.isInteger(id));
-        assert(typeof key === 'string');
+        Assert.isTrue(type instanceof StringTableType)
+        Assert.isTrue(Number.isInteger(id))
+        Assert.isTrue(typeof key === 'string')
 
         this._type = type;
         this._id = id;

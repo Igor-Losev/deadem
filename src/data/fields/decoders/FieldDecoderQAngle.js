@@ -1,4 +1,4 @@
-import assert from 'assert/strict';
+import Assert from './../../../core/Assert.js';
 
 import FieldDecoder from './FieldDecoder.js';
 import FieldDecoderInstructions from './../FieldDecoderInstructions.js';
@@ -11,7 +11,7 @@ class FieldDecoderQAngle extends FieldDecoder {
     constructor(instructions) {
         super();
 
-        assert(instructions instanceof FieldDecoderInstructions);
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
 
         this._instructions = instructions;
     }

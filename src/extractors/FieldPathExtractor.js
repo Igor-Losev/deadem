@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../core/Assert.js';
 
 import BitBuffer from './../data/buffer/BitBuffer.js';
 
@@ -14,7 +14,7 @@ class FieldPathExtractor {
      * @param {BitBuffer} bitBuffer
      */
     constructor(bitBuffer) {
-        assert(bitBuffer instanceof BitBuffer);
+        Assert.isTrue(bitBuffer instanceof BitBuffer)
 
         this._bitBuffer = bitBuffer;
 

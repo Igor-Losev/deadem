@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import Field from './Field.js';
 import SerializerKey from './SerializerKey.js';
@@ -12,9 +12,9 @@ class Serializer {
      * @param {Array<Field>} fields
      */
     constructor(name, version, fields) {
-        assert(typeof name === 'string');
-        assert(Number.isInteger(version));
-        assert(Array.isArray(fields) && fields.every(f => f instanceof Field));
+        Assert.isTrue(typeof name === 'string')
+        Assert.isTrue(Number.isInteger(version))
+        Assert.isTrue(Array.isArray(fields) && fields.every(f => f instanceof Field))
 
         this._key = new SerializerKey(name, version);
         this._fields = fields;

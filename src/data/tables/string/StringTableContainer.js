@@ -1,5 +1,6 @@
-import assert from 'node:assert/strict';
 import EventEmitter from 'node:events';
+
+import Assert from './../../../core/Assert.js';
 
 import StringTableEvent from './../../enums/StringTableEvent.js';
 import StringTableType from './../../enums/StringTableType.js';
@@ -12,7 +13,7 @@ import SnappyDecompressor from '../../../decompressors/SnappyDecompressor.instan
 
 import StringTableEntryExtractor from './../../../extractors/StringTableEntryExtractor.js';
 
-import Logger from './../../../Logger.js';
+import Logger from '../../../core/Logger.js';
 
 class StringTableContainer {
     /**
@@ -21,7 +22,7 @@ class StringTableContainer {
      * @param {Logger} logger
      */
     constructor(logger) {
-        assert(logger instanceof Logger);
+        Assert.isTrue(logger instanceof Logger)
 
         this._eventEmitter = new EventEmitter();
 
@@ -165,8 +166,8 @@ class StringTableContainer {
      * @param {Function} callback
      */
     subscribe(event, callback) {
-        assert(event instanceof StringTableEvent);
-        assert(typeof callback === 'function');
+        Assert.isTrue(event instanceof StringTableEvent)
+        Assert.isTrue(typeof callback === 'function')
 
         this._eventEmitter.addListener(event.name, callback);
     }
@@ -177,8 +178,8 @@ class StringTableContainer {
      * @param {Function} callback
      */
     unsubscribe(event, callback) {
-        assert(event instanceof StringTableEvent);
-        assert(typeof callback === 'function');
+        Assert.isTrue(event instanceof StringTableEvent)
+        Assert.isTrue(typeof callback === 'function')
 
         this._eventEmitter.removeListener(event.name, callback);
     }

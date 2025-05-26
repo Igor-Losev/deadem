@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+import Assert from './../../core/Assert.js';
 
 import BinaryHeap from './../../data/structures/BinaryHeap.js';
 
@@ -20,10 +20,10 @@ class HuffmanTree {
      * @param {HuffmanTree=} rightChild
      */
     constructor(priority, operation, leftChild, rightChild) {
-        assert(priority instanceof HuffmanTreePriority);
-        assert(!operation || operation instanceof FieldPathOperation);
-        assert(!leftChild || leftChild instanceof HuffmanTree);
-        assert(!rightChild || rightChild instanceof HuffmanTree);
+        Assert.isTrue(priority instanceof HuffmanTreePriority)
+        Assert.isTrue(!operation || operation instanceof FieldPathOperation)
+        Assert.isTrue(!leftChild || leftChild instanceof HuffmanTree)
+        Assert.isTrue(!rightChild || rightChild instanceof HuffmanTree)
 
         this._priority = priority;
         this._operation = operation || null;
@@ -47,7 +47,7 @@ class HuffmanTree {
      * @returns {{bitsUsed: number, operation: FieldPathOperation}}
      */
     static getOperationByCode(code) {
-        assert(code < MAX_CODE);
+        Assert.isTrue(code < MAX_CODE)
 
         const bitsUsed = PRECALCULATED_TABLE.bits[code];
         const operationIndex = PRECALCULATED_TABLE.operations[code];
