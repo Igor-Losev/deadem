@@ -11,7 +11,7 @@ import FieldDefinition from '../data/fields/FieldDefinition.js';
 import Serializer from './../data/fields/Serializer.js';
 import SerializerKey from './../data/fields/SerializerKey.js';
 
-import ProtoProvider from '../providers/ProtoProviderInstance.js';
+import ProtoProvider from '../providers/ProtoProvider.instance.js';
 
 const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
 

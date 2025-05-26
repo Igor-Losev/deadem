@@ -1,6 +1,6 @@
 import assert from 'assert/strict';
 
-import ProtoProvider from '../../../providers/ProtoProviderInstance.js';
+import ProtoProvider from '../../../providers/ProtoProvider.instance.js';
 
 import StringTableType from './../../enums/StringTableType.js';
 
