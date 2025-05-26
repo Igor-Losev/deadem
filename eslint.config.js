@@ -6,9 +6,11 @@ import stylistic from '@stylistic/eslint-plugin';
 export default defineConfig([
     {
         files: [ '**/*.js' ],
+        ignores: [ 'dist/*' ],
         extends: [ 'js/recommended' ],
         languageOptions: {
             globals: {
+                ...globals.browser,
                 ...globals.commonjs,
                 ...globals.jest,
                 ...globals.node

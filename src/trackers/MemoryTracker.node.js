@@ -3,7 +3,7 @@ import Tracker from './Tracker.js';
 const INTERVAL_MILLISECONDS = 10;
 const MEGABYTE = 1024 * 1024;
 
-class MemoryTracker extends Tracker {
+class MemoryTrackerNode extends Tracker {
     /**
      * @constructor
      * @param {Logger} logger
@@ -44,4 +44,4 @@ class MemoryTracker extends Tracker {
     }
 }
 
-export default MemoryTracker;
+export default MemoryTrackerNode;

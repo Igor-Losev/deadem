@@ -1,18 +1,14 @@
 import { Worker } from 'node:worker_threads';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import Assert from './../core/Assert.js';
+import FileSystem from './../core/FileSystem.js';
 import Logger from './../core/Logger.js';
 
 import DeferredPromise from './../data/DeferredPromise.js';
 
 import WorkerThread from './WorkerThread.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const WORKER_PATH = join(__dirname, './scripts/worker.js');
+const WORKER_SCRIPT_PATH = FileSystem.getAbsolutePath(import.meta.url, './scripts/worker.js');
 
 /**
  * Manages a pool of {@link WorkerThread} instances with fixed concurrency.
@@ -38,7 +34,7 @@ class WorkerManager {
         this._threads = [ ];
 
         for (let i = 0; i < concurrency; i++) {
-            const worker = new Worker(WORKER_PATH);
+            const worker = new Worker(WORKER_SCRIPT_PATH);
 
             const thread = new WorkerThread(worker, logger);
 

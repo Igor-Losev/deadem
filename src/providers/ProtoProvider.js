@@ -1,12 +1,10 @@
-import protobuf from 'protobufjs';
-
-import protoJSON from './../../proto/compiled/proto.json' with { type: 'json' };
-
-const Root = protobuf.Root.fromJSON(protoJSON);
-
 class ProtoProvider {
-    constructor() {
-
+    /**
+     * @public
+     * @param {protobuf.Root} root
+     */
+    constructor(root) {
+        this._root = root;
     }
 
     /**
@@ -14,7 +12,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get BASE_MODIFIER() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -22,7 +20,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get CITADEL_GAME_EVENTS() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -30,7 +28,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get CITADEL_USER_MESSAGES() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -38,7 +36,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get DEMO() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -46,7 +44,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get GAME_EVENTS() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -54,7 +52,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get NET_MESSAGES() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -62,7 +60,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get NETWORK_BASE_TYPES() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -70,7 +68,7 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get TEMPORARY_ENTITIES() {
-        return Root;
+        return this._root;
     }
 
     /**
@@ -78,10 +76,8 @@ class ProtoProvider {
      * @returns {protobuf.Root}
      */
     get USER_MESSAGES() {
-        return Root;
+        return this._root;
     }
-
-    static instance = new ProtoProvider();
 }
 
-export default ProtoProvider.instance;
+export default ProtoProvider;

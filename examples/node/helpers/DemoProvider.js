@@ -1,12 +1,8 @@
-import fs from 'node:fs';
 import https from 'node:https';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import FileSystem from './../../../src/core/FileSystem.js';
 
-const DEMO_FOLDER = join(__dirname, './../../demos');
+const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../demos');
 const S3_BUCKET_URL = 'https://parser-demofiles.s3.us-east-1.amazonaws.com';
 
 class DemoProvider {
@@ -42,9 +38,7 @@ class DemoProvider {
         try {
             const path = getLocalPath(demoFile);
 
-            const stat = fs.statSync(path);
-
-            exists = stat.isFile();
+            exists = FileSystem.isFile(path);
         } catch {
             exists = false;
         }
@@ -61,7 +55,7 @@ class DemoProvider {
     static async readFile(demoFile) {
         const path = getLocalPath(demoFile);
 
-        return fs.createReadStream(path, { highWaterMark: 256 * 1024 });
+        return FileSystem.createReadStream(path, { highWaterMark: 256 * 1024 });
     }
 
     /**

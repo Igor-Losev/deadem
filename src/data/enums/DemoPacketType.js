@@ -1,6 +1,6 @@
 import Assert from './../../core/Assert.js';
 
-import ProtoProvider from '../../providers/ProtoProvider.instance.js';
+import ProtoProvider from '#providers/ProtoProvider.instance.js';
 
 const registry = {
     byCode: new Map(),

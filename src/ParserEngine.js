@@ -16,11 +16,11 @@ import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
 import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
 
-import MemoryTracker from './trackers/MemoryTracker.js';
-import PacketTracker from './trackers/PacketTracker.js';
-import PerformanceTracker from './trackers/PerformanceTracker.js';
+import MemoryTracker from '#trackers/MemoryTracker.js';
+import PacketTracker from '#trackers/PacketTracker.js';
+import PerformanceTracker from '#trackers/PerformanceTracker.js';
 
-import WorkerManager from './workers/WorkerManager.js';
+import WorkerManager from '#workers/WorkerManager.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 
