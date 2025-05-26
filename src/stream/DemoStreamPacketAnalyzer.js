@@ -9,9 +9,9 @@ import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCatego
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 
-import WorkerRequestDPacketSync from './../workers/requests/WorkerRequestDPacketSync.js';
-import WorkerRequestMPacketSync from './../workers/requests/WorkerRequestMPacketSync.js';
-import WorkerRequestSvcPacketEntities from './../workers/requests/WorkerRequestSvcPacketEntities.js';
+import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
+import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
+import WorkerRequestSvcPacketEntities from '#workers/requests/WorkerRequestSvcPacketEntities.js';
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,

@@ -1,7 +1,7 @@
 import DeferredPromise from './../data/DeferredPromise.js';
 
-import WorkerRequestSerializer from './../workers/serializers/WorkerRequestSerializer.instance.js';
-import WorkerResponseSerializer from './../workers/serializers/WorkerResponseSerializer.instance.js';
+import WorkerRequestSerializer from '#workers/serializers/WorkerRequestSerializer.instance.js';
+import WorkerResponseSerializer from '#workers/serializers/WorkerResponseSerializer.instance.js';
 
 /**
  * Represents a single worker thread with request serialization,

@@ -43,6 +43,7 @@
     "#providers/*.js": "./src/providers/*.js",
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
+    "#workers/*.js": "./src/workers/*.js",
 
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",

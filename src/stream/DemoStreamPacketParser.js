@@ -11,7 +11,7 @@ import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCatego
 
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
-import WorkerRequestDHPParse from './../workers/requests/WorkerRequestDHPParse.js';
+import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
 
 const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PACKET, DemoPacketType.DEM_FULL_PACKET ];
 
