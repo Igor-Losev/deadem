@@ -1,6 +1,6 @@
 import https from 'node:https';
 
-import FileSystem from './../../../src/core/FileSystem.js';
+import FileSystem from '#core/FileSystem.js';
 
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../demos');
 const S3_BUCKET_URL = 'https://parser-demofiles.s3.us-east-1.amazonaws.com';

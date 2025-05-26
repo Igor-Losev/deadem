@@ -1,4 +1,4 @@
-import { Parser } from '../../index.js';
+import { Parser } from '#root/index.js';
 
 import DemoFile from './helpers/DemoFile.js';
 import DemoProvider from './helpers/DemoProvider.js';

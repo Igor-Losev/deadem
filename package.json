@@ -37,6 +37,8 @@
     "src/**"
   ],
   "imports": {
+    "#root/*.js": "./*.js",
+    "#src/*.js": "./src/*.js",
     "#core/*.js": "./src/core/*.js",
     "#data/*.js": "./src/data/*.js",
     "#extractors/*.js": "./src/extractors/*.js",

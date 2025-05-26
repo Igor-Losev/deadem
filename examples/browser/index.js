@@ -1,6 +1,6 @@
 import { Readable } from 'readable-stream';
 
-import { Parser } from './../../index.js';
+import { Parser } from '#root/index.js';
 
 const state = {
     file: null,
