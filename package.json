@@ -39,6 +39,7 @@
   "imports": {
     "#core/*.js": "./src/core/*.js",
     "#extractors/*.js": "./src/extractors/*.js",
+    "#handlers/*.js": "./src/handlers/*.js",
     "#providers/*.js": "./src/providers/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
 

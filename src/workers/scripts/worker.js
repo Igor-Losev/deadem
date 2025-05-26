@@ -10,8 +10,8 @@ import DemoPacketType from '../../data/enums/DemoPacketType.js';
 import MessagePacketType from './../../data/enums/MessagePacketType.js';
 import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
-import DemoMessageHandler from './../../handlers/DemoMessageHandler.js';
-import DemoPacketHandler from './../../handlers/DemoPacketHandler.js';
+import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
+import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
 import WorkerRequestSerializer from './../serializers/WorkerRequestSerializer.instance.js';
 import WorkerResponseSerializer from './../serializers/WorkerResponseSerializer.instance.js';

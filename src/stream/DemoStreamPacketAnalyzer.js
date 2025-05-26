@@ -6,8 +6,8 @@ import InterceptorStage from './../data/enums/InterceptorStage.js';
 import MessagePacketType from './../data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketHandler from './../handlers/DemoPacketHandler.js';
-import DemoMessageHandler from './../handlers/DemoMessageHandler.js';
+import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
+import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 
 import WorkerRequestDPacketSync from './../workers/requests/WorkerRequestDPacketSync.js';
 import WorkerRequestMPacketSync from './../workers/requests/WorkerRequestMPacketSync.js';
