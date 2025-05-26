@@ -1,6 +1,5 @@
 import Assert from './../core/Assert.js';
-
-import BitBuffer from './../data/buffer/BitBuffer.js';
+import BitBuffer from '../core/BitBuffer.js';
 
 import FieldPathOperation from './../data/enums/FieldPathOperation.js';
 

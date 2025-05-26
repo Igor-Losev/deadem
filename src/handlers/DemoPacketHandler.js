@@ -1,9 +1,8 @@
 import Assert from './../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
 import Class from './../data/Class.js';
 import Demo from './../data/Demo.js';
-
-import BitBuffer from './../data/buffer/BitBuffer.js';
 
 import Field from './../data/fields/Field.js';
 import FieldDecoderInstructions from './../data/fields/FieldDecoderInstructions.js';

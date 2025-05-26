@@ -1,4 +1,4 @@
-import Assert from './../../core/Assert.js';
+import Assert from './Assert.js';
 
 class BinaryHeap {
     /**

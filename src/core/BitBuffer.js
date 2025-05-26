@@ -1,4 +1,4 @@
-import VarInt32 from './../VarInt32.js';
+import VarInt32 from '../data/VarInt32.js';
 
 const BITS_PER_BYTE = 8;
 

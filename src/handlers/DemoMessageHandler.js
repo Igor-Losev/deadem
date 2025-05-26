@@ -1,9 +1,8 @@
 import Assert from './../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
 import Demo from './../data/Demo.js';
 import Server from './../data/Server.js';
-
-import BitBuffer from './../data/buffer/BitBuffer.js';
 
 import Entity from './../data/entity/Entity.js';
 import EntityMutationEvent from './../data/entity/EntityMutationEvent.js';
