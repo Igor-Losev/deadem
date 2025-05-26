@@ -11,8 +11,8 @@ class FieldDecoderVectorN extends FieldDecoder {
     constructor(decoder, n) {
         super();
 
-        Assert.isTrue(decoder instanceof FieldDecoder)
-        Assert.isTrue(Number.isInteger(n) && n >= 2 && n <= 4)
+        Assert.isTrue(decoder instanceof FieldDecoder);
+        Assert.isTrue(Number.isInteger(n) && n >= 2 && n <= 4);
 
         this._decoder = decoder;
         this._n = n;

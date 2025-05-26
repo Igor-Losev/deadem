@@ -28,7 +28,7 @@ class WorkerManager {
             throw new Error(`Invalid concurrency argument [ ${concurrency} ]`);
         }
 
-        Assert.isTrue(logger instanceof Logger)
+        Assert.isTrue(logger instanceof Logger);
 
         this._concurrency = concurrency;
         this._logger = logger;
@@ -134,7 +134,7 @@ class WorkerManager {
      * @param {WorkerThread} thread - The thread to free.
      */
     free(thread) {
-        Assert.isTrue(thread instanceof WorkerThread)
+        Assert.isTrue(thread instanceof WorkerThread);
 
         if (thread.busy) {
             throw new Error(`Unable to free a busy thread [ ${thread.getId()} ]`);

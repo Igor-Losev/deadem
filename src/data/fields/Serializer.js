@@ -12,9 +12,9 @@ class Serializer {
      * @param {Array<Field>} fields
      */
     constructor(name, version, fields) {
-        Assert.isTrue(typeof name === 'string')
-        Assert.isTrue(Number.isInteger(version))
-        Assert.isTrue(Array.isArray(fields) && fields.every(f => f instanceof Field))
+        Assert.isTrue(typeof name === 'string');
+        Assert.isTrue(Number.isInteger(version));
+        Assert.isTrue(Array.isArray(fields) && fields.every(f => f instanceof Field));
 
         this._key = new SerializerKey(name, version);
         this._fields = fields;

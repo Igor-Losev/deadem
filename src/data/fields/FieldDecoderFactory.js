@@ -24,7 +24,7 @@ class FieldDecoderFactory {
      * @returns {FieldDecoderCoordinate|FieldDecoderNoScale|FieldDecoderQuantizedFloat|FieldDecoderRuneTime|FieldDecoderSimulationTime}
      */
     createFloat32(instructions) {
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         if (instructions.encoder === 'coord') {
             return decoderCoordinate;
@@ -47,7 +47,7 @@ class FieldDecoderFactory {
      * @returns {FieldDecoderQAngle}
      */
     createQAngle(instructions) {
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         return new FieldDecoderQAngle(instructions);
     }
@@ -58,7 +58,7 @@ class FieldDecoderFactory {
      * @returns {FieldDecoderQuantizedFloat}
      */
     createQuantizedFloat(instructions) {
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         return new FieldDecoderQuantizedFloat(instructions);
     }
@@ -69,7 +69,7 @@ class FieldDecoderFactory {
      * @returns {FieldDecoderUInt64|FieldDecoderUVarInt64}
      */
     createUInt64(instructions) {
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         if (instructions.encoder === 'fixed64') {
             return decoderUInt64;
@@ -85,8 +85,8 @@ class FieldDecoderFactory {
      * @returns {FieldDecoderVectorN|FieldDecoderVectorNormal}
      */
     createVector(instructions, dimension) {
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
-        Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
+        Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
 
         if (dimension === 3 && instructions.encoder === 'normal') {
             return decoderVectorNormal;

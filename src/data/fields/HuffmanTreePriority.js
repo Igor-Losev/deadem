@@ -8,8 +8,8 @@ class HuffmanTreePriority {
      * @param {number} sequence
      */
     constructor(weight, sequence) {
-        Assert.isTrue(Number.isInteger(weight))
-        Assert.isTrue(Number.isInteger(sequence))
+        Assert.isTrue(Number.isInteger(weight));
+        Assert.isTrue(Number.isInteger(sequence));
 
         this._weight = weight;
         this._sequence = sequence;
@@ -29,7 +29,7 @@ class HuffmanTreePriority {
      * @returns {boolean}
      */
     compare(other) {
-        Assert.isTrue(other instanceof HuffmanTreePriority)
+        Assert.isTrue(other instanceof HuffmanTreePriority);
 
         if (this._weight === other._weight) {
             return this._sequence < other._sequence;

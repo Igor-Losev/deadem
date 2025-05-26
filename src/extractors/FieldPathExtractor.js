@@ -13,7 +13,7 @@ class FieldPathExtractor {
      * @param {BitBuffer} bitBuffer
      */
     constructor(bitBuffer) {
-        Assert.isTrue(bitBuffer instanceof BitBuffer)
+        Assert.isTrue(bitBuffer instanceof BitBuffer);
 
         this._bitBuffer = bitBuffer;
 

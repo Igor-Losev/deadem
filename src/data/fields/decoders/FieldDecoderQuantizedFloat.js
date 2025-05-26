@@ -22,7 +22,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
     constructor(instructions) {
         super();
 
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         this._low = typeof instructions.valueLow === 'number' ? instructions.valueLow : DEFAULT_VALUE_LOW;
         this._high = typeof instructions.valueHigh === 'number' ? instructions.valueHigh : DEFAULT_VALUE_HIGH;
@@ -147,7 +147,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
  * @returns {number}
  */
 function assignMultipliers(steps) {
-    Assert.isTrue(Number.isInteger(steps))
+    Assert.isTrue(Number.isInteger(steps));
 
     const range = this._high - this._low;
 
@@ -194,7 +194,7 @@ function assignMultipliers(steps) {
  * @returns {number}
  */
 function getFlags(candidate) {
-    Assert.isTrue(Number.isInteger(candidate))
+    Assert.isTrue(Number.isInteger(candidate));
 
     let flags = candidate;
 

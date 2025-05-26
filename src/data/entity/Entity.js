@@ -10,9 +10,9 @@ class Entity {
      * @param {Class} clazz
      */
     constructor(index, serial, clazz) {
-        Assert.isTrue(Number.isInteger(index))
-        Assert.isTrue(Number.isInteger(serial))
-        Assert.isTrue(clazz instanceof Class)
+        Assert.isTrue(Number.isInteger(index));
+        Assert.isTrue(Number.isInteger(serial));
+        Assert.isTrue(clazz instanceof Class);
 
         this._index = index;
         this._serial = serial;

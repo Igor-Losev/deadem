@@ -4,9 +4,9 @@ import Serializer from './fields/Serializer.js';
 
 class Class {
     constructor(id, name, serializer) {
-        Assert.isTrue(Number.isInteger(id))
-        Assert.isTrue(typeof name === 'string' && name.length > 0)
-        Assert.isTrue(serializer instanceof Serializer)
+        Assert.isTrue(Number.isInteger(id));
+        Assert.isTrue(typeof name === 'string' && name.length > 0);
+        Assert.isTrue(serializer instanceof Serializer);
 
         this._id = id;
         this._name = name;

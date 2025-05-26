@@ -16,8 +16,8 @@ class MessagePacketType {
      * @param {*} proto
      */
     constructor(code, id, proto) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0)
-        Assert.isTrue(Number.isInteger(id))
+        Assert.isTrue(typeof code === 'string' && code.length > 0);
+        Assert.isTrue(Number.isInteger(id));
 
         this._code = code;
         this._id = id;

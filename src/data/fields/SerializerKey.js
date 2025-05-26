@@ -2,8 +2,8 @@ import Assert from './../../core/Assert.js';
 
 class SerializerKey {
     constructor(name, version) {
-        Assert.isTrue(typeof name === 'string')
-        Assert.isTrue(Number.isInteger(version))
+        Assert.isTrue(typeof name === 'string');
+        Assert.isTrue(Number.isInteger(version));
 
         this._name = name;
         this._version = version;

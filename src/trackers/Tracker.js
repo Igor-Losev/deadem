@@ -8,7 +8,7 @@ class Tracker {
      * @param {Logger} logger
      */
     constructor(logger) {
-        Assert.isTrue(logger instanceof Logger)
+        Assert.isTrue(logger instanceof Logger);
 
         this._logger = logger;
     }
@@ -42,7 +42,7 @@ class Tracker {
      * @returns {String}
      */
     _highlight(text) {
-        Assert.isTrue(typeof text === 'string')
+        Assert.isTrue(typeof text === 'string');
 
         return `----- ${text} -----`;
     }

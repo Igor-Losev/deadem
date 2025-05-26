@@ -7,7 +7,7 @@ class FieldModel {
      * @param {String} code
      */
     constructor(code) {
-        Assert.isTrue(typeof code === 'string')
+        Assert.isTrue(typeof code === 'string');
 
         this._code = code;
     }

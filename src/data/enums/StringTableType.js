@@ -13,8 +13,8 @@ class StringTableType {
      * @param {String} name
      */
     constructor(code, name) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0)
-        Assert.isTrue(typeof name === 'string' && name.length > 0)
+        Assert.isTrue(typeof code === 'string' && code.length > 0);
+        Assert.isTrue(typeof name === 'string' && name.length > 0);
 
         this._code = code;
         this._name = name;

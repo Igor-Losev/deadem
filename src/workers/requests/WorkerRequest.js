@@ -11,7 +11,7 @@ class WorkerRequest {
      * @param {Transferable[]} transfers
      */
     constructor(type, payload, transfers) {
-        Assert.isTrue(type instanceof WorkerMessageType)
+        Assert.isTrue(type instanceof WorkerMessageType);
 
         this._type = type;
         this._payload = payload;

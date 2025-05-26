@@ -20,7 +20,7 @@ class DemoPacketHandler {
      * @param {Demo} demo
      */
     constructor(demo) {
-        Assert.isTrue(demo instanceof Demo)
+        Assert.isTrue(demo instanceof Demo);
 
         this._demo = demo;
     }

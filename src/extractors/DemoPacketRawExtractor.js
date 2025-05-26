@@ -20,7 +20,7 @@ class DemoPacketRawExtractor {
     }
 
     *retrieve(sequenceStart) {
-        Assert.isTrue(Number.isInteger(sequenceStart))
+        Assert.isTrue(Number.isInteger(sequenceStart));
 
         this._tail = this._buffer;
 

@@ -22,7 +22,7 @@ class StringTableContainer {
      * @param {Logger} logger
      */
     constructor(logger) {
-        Assert.isTrue(logger instanceof Logger)
+        Assert.isTrue(logger instanceof Logger);
 
         this._eventEmitter = new EventEmitter();
 
@@ -166,8 +166,8 @@ class StringTableContainer {
      * @param {Function} callback
      */
     subscribe(event, callback) {
-        Assert.isTrue(event instanceof StringTableEvent)
-        Assert.isTrue(typeof callback === 'function')
+        Assert.isTrue(event instanceof StringTableEvent);
+        Assert.isTrue(typeof callback === 'function');
 
         this._eventEmitter.addListener(event.name, callback);
     }
@@ -178,8 +178,8 @@ class StringTableContainer {
      * @param {Function} callback
      */
     unsubscribe(event, callback) {
-        Assert.isTrue(event instanceof StringTableEvent)
-        Assert.isTrue(typeof callback === 'function')
+        Assert.isTrue(event instanceof StringTableEvent);
+        Assert.isTrue(typeof callback === 'function');
 
         this._eventEmitter.removeListener(event.name, callback);
     }

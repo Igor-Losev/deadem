@@ -17,9 +17,9 @@ class StringTableEntryExtractor {
      * @param {number} entriesCount
      */
     constructor(buffer, table, entriesCount) {
-        Assert.isTrue(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array)
-        Assert.isTrue(table instanceof StringTable)
-        Assert.isTrue(Number.isInteger(entriesCount))
+        Assert.isTrue(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array);
+        Assert.isTrue(table instanceof StringTable);
+        Assert.isTrue(Number.isInteger(entriesCount));
 
         this._bitBuffer = new BitBuffer(buffer);
         this._table = table;

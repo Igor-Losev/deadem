@@ -20,8 +20,8 @@ class DemoStreamPacketBatcher extends Stream.Transform {
     constructor(engine, thresholdSizeBytes, thresholdWaitMilliseconds) {
         super({ objectMode: true });
 
-        Assert.isTrue(Number.isInteger(thresholdSizeBytes))
-        Assert.isTrue(Number.isInteger(thresholdWaitMilliseconds))
+        Assert.isTrue(Number.isInteger(thresholdSizeBytes));
+        Assert.isTrue(Number.isInteger(thresholdWaitMilliseconds));
 
         this._engine = engine;
 

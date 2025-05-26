@@ -8,9 +8,9 @@ class StringTableInstructions {
      * @param {boolean} usingVarintBitcounts
      */
     constructor(userDataSizeBits, userDataFixedSize, usingVarintBitcounts) {
-        Assert.isTrue(Number.isInteger(userDataSizeBits))
-        Assert.isTrue(typeof userDataFixedSize === 'boolean')
-        Assert.isTrue(typeof  usingVarintBitcounts === 'boolean')
+        Assert.isTrue(Number.isInteger(userDataSizeBits));
+        Assert.isTrue(typeof userDataFixedSize === 'boolean');
+        Assert.isTrue(typeof  usingVarintBitcounts === 'boolean');
 
         this._userDataSizeBits = userDataSizeBits;
         this._userDataFixedSize = userDataFixedSize;

@@ -11,11 +11,11 @@ class FieldDecoderInstructions {
      * @param {number|null} valueHigh
      */
     constructor(encoder, encoderFlags, bitCount, valueLow, valueHigh) {
-        Assert.isTrue(encoder === null || typeof encoder === 'string')
-        Assert.isTrue(encoderFlags === null || Number.isInteger(encoderFlags))
-        Assert.isTrue(bitCount === null || Number.isInteger(bitCount))
-        Assert.isTrue(valueLow === null || typeof valueLow === 'number')
-        Assert.isTrue(valueHigh === null || typeof valueHigh === 'number')
+        Assert.isTrue(encoder === null || typeof encoder === 'string');
+        Assert.isTrue(encoderFlags === null || Number.isInteger(encoderFlags));
+        Assert.isTrue(bitCount === null || Number.isInteger(bitCount));
+        Assert.isTrue(valueLow === null || typeof valueLow === 'number');
+        Assert.isTrue(valueHigh === null || typeof valueHigh === 'number');
 
         this._encoder = encoder;
         this._encoderFlags = encoderFlags;

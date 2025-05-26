@@ -55,8 +55,8 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage)
-        Assert.isTrue(typeof interceptor === 'function')
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
 
         this._engine.interceptors.post[stage.code].push(interceptor);
     }
@@ -67,8 +67,8 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage)
-        Assert.isTrue(typeof interceptor === 'function')
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
 
         this._engine.interceptors.pre[stage.code].push(interceptor);
     }

@@ -13,8 +13,8 @@ class DemoPacket {
      * @param {*} data
      */
     constructor(sequence, type, tick, data) {
-        Assert.isTrue(type instanceof DemoPacketType)
-        Assert.isTrue(Number.isInteger(tick))
+        Assert.isTrue(type instanceof DemoPacketType);
+        Assert.isTrue(Number.isInteger(tick));
 
         this._sequence = sequence;
         this._type = type;

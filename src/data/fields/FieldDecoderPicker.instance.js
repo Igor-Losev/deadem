@@ -84,7 +84,7 @@ class FieldDecoderPicker {
      * @returns {FieldDecoder}
      */
     pick(code, field) {
-        Assert.isTrue(typeof code === 'string')
+        Assert.isTrue(typeof code === 'string');
 
         let decoder;
 

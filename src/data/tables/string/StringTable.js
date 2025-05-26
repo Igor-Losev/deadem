@@ -12,9 +12,9 @@ class StringTable {
      * @param {StringTableInstructions=} instructions
      */
     constructor(type, flags, instructions) {
-        Assert.isTrue(type instanceof StringTableType)
-        Assert.isTrue(Number.isInteger(flags))
-        Assert.isTrue(!instructions || instructions instanceof StringTableInstructions)
+        Assert.isTrue(type instanceof StringTableType);
+        Assert.isTrue(Number.isInteger(flags));
+        Assert.isTrue(!instructions || instructions instanceof StringTableInstructions);
 
         this._type = type;
         this._flags = flags;

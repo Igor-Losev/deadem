@@ -18,11 +18,11 @@ class FieldPathOperation {
      * @param {Function|null} executor
      */
     constructor(code, name, weight, sequence, executor) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0)
-        Assert.isTrue(typeof name === 'string' && name.length > 0)
-        Assert.isTrue(Number.isInteger(weight))
-        Assert.isTrue(Number.isInteger(sequence))
-        Assert.isTrue(executor === null || typeof executor === 'function')
+        Assert.isTrue(typeof code === 'string' && code.length > 0);
+        Assert.isTrue(typeof name === 'string' && name.length > 0);
+        Assert.isTrue(Number.isInteger(weight));
+        Assert.isTrue(Number.isInteger(sequence));
+        Assert.isTrue(executor === null || typeof executor === 'function');
 
         this._code = code;
         this._name = name;
@@ -97,8 +97,8 @@ class FieldPathOperation {
 }
 
 const executor = (callback) => (bitBuffer, fieldPathBuilder) => {
-    Assert.isTrue(bitBuffer instanceof BitBuffer)
-    Assert.isTrue(fieldPathBuilder instanceof FieldPathBuilder)
+    Assert.isTrue(bitBuffer instanceof BitBuffer);
+    Assert.isTrue(fieldPathBuilder instanceof FieldPathBuilder);
 
     callback(bitBuffer, fieldPathBuilder);
 };

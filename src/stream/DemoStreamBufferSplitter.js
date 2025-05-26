@@ -19,7 +19,7 @@ class DemoStreamBufferSplitter extends Stream.Transform {
     constructor(engine, maxChunkSize = MEGABYTE) {
         super({ objectMode: true });
 
-        Assert.isTrue(Number.isInteger(maxChunkSize))
+        Assert.isTrue(Number.isInteger(maxChunkSize));
 
         this._engine = engine;
         this._maxChunkSize = maxChunkSize;

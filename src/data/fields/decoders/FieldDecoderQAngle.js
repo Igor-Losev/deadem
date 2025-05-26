@@ -11,7 +11,7 @@ class FieldDecoderQAngle extends FieldDecoder {
     constructor(instructions) {
         super();
 
-        Assert.isTrue(instructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         this._instructions = instructions;
     }

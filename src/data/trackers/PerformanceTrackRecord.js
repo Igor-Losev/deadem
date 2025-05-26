@@ -9,7 +9,7 @@ class PerformanceTrackRecord {
      * @param {PerformanceTrackerCategory} category
      */
     constructor(category) {
-        Assert.isTrue(category instanceof PerformanceTrackerCategory)
+        Assert.isTrue(category instanceof PerformanceTrackerCategory);
 
         this._category = category;
 

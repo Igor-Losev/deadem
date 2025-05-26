@@ -17,9 +17,9 @@ class StringTableEntry {
      * @param {Buffer|null|*} value
      */
     constructor(type, id, key, value) {
-        Assert.isTrue(type instanceof StringTableType)
-        Assert.isTrue(Number.isInteger(id))
-        Assert.isTrue(typeof key === 'string')
+        Assert.isTrue(type instanceof StringTableType);
+        Assert.isTrue(Number.isInteger(id));
+        Assert.isTrue(typeof key === 'string');
 
         this._type = type;
         this._id = id;

@@ -11,8 +11,8 @@ class WorkerMessageType {
      * @param {String} description
      */
     constructor(code, description) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0)
-        Assert.isTrue(typeof description === 'string' && description.length > 0)
+        Assert.isTrue(typeof code === 'string' && code.length > 0);
+        Assert.isTrue(typeof description === 'string' && description.length > 0);
 
         this._code = code;
         this._description = description;

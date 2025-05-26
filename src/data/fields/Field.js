@@ -23,10 +23,10 @@ class Field {
         decoderInstructions,
         serializer
     ) {
-        Assert.isTrue(typeof name === 'string')
-        Assert.isTrue(definition instanceof FieldDefinition)
-        Assert.isTrue(Array.isArray(sendNode) && sendNode.every(s => s.length > 0))
-        Assert.isTrue(decoderInstructions instanceof FieldDecoderInstructions)
+        Assert.isTrue(typeof name === 'string');
+        Assert.isTrue(definition instanceof FieldDefinition);
+        Assert.isTrue(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
+        Assert.isTrue(decoderInstructions instanceof FieldDecoderInstructions);
 
         this._name = name;
         this._definition = definition;
@@ -157,7 +157,7 @@ class Field {
      * @param {FieldModel} model
      */
     _changeModel(model) {
-        Assert.isTrue(model instanceof FieldModel)
+        Assert.isTrue(model instanceof FieldModel);
 
         switch (model) {
             case FieldModel.ARRAY_FIXED:

@@ -9,9 +9,9 @@ class Server {
      * @param {number} tickInterval
      */
     constructor(maxClasses, maxClients, tickInterval) {
-        Assert.isTrue(Number.isInteger(maxClasses))
-        Assert.isTrue(Number.isInteger(maxClients))
-        Assert.isTrue(typeof tickInterval === 'number')
+        Assert.isTrue(Number.isInteger(maxClasses));
+        Assert.isTrue(Number.isInteger(maxClients));
+        Assert.isTrue(typeof tickInterval === 'number');
 
         this._maxClasses = maxClasses;
         this._maxClients = maxClients;

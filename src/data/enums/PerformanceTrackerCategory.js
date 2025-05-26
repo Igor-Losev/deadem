@@ -13,9 +13,9 @@ class PerformanceTrackerCategory {
      * @param {Array<PerformanceTrackerCategory>} subcategories
      */
     constructor(code, description, subcategories = [ ]) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0)
-        Assert.isTrue(typeof description === 'string' && description.length > 0)
-        Assert.isTrue(Array.isArray(subcategories) && subcategories.every(s => s instanceof PerformanceTrackerCategory))
+        Assert.isTrue(typeof code === 'string' && code.length > 0);
+        Assert.isTrue(typeof description === 'string' && description.length > 0);
+        Assert.isTrue(Array.isArray(subcategories) && subcategories.every(s => s instanceof PerformanceTrackerCategory));
 
         this._code = code;
         this._description = description;
