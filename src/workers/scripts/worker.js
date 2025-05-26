@@ -13,13 +13,13 @@ import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
-import WorkerRequestSerializer from './../serializers/WorkerRequestSerializer.instance.js';
-import WorkerResponseSerializer from './../serializers/WorkerResponseSerializer.instance.js';
+import WorkerRequestSerializer from '#workers/serializers/WorkerRequestSerializer.instance.js';
+import WorkerResponseSerializer from '#workers/serializers/WorkerResponseSerializer.instance.js';
 
-import WorkerResponseDHPParse from './../responses/WorkerResponseDHPParse.js';
-import WorkerResponseDPacketSync from './../responses/WorkerResponseDPacketSync.js';
-import WorkerResponseMPacketSync from './../responses/WorkerResponseMPacketSync.js';
-import WorkerResponseSvcPacketEntities from './../responses/WorkerResponseSvcPacketEntities.js';
+import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
+import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
+import WorkerResponseSvcPacketEntities from '#workers/responses/WorkerResponseSvcPacketEntities.js';
 
 const state = getInitialState();
 

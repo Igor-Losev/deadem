@@ -1,6 +1,6 @@
-import WorkerRequest from './WorkerRequest.js';
-
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
+
+import WorkerRequest from './WorkerRequest.js';
 
 class WorkerRequestSvcPacketEntities extends WorkerRequest {
     /**

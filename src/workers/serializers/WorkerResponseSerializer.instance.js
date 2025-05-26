@@ -2,10 +2,10 @@ import MessagePacketRaw from '#data/MessagePacketRaw.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
-import WorkerResponseDHPParse from './../responses/WorkerResponseDHPParse.js';
-import WorkerResponseDPacketSync from './../responses/WorkerResponseDPacketSync.js';
-import WorkerResponseMPacketSync from './../responses/WorkerResponseMPacketSync.js';
-import WorkerResponseSvcPacketEntities from './../responses/WorkerResponseSvcPacketEntities.js';
+import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
+import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
+import WorkerResponseSvcPacketEntities from '#workers/responses/WorkerResponseSvcPacketEntities.js';
 
 class WorkerResponseSerializer {
     constructor() {

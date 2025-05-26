@@ -3,10 +3,10 @@ import MessagePacket from '#data/MessagePacket.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
-import WorkerRequestDHPParse from './../requests/WorkerRequestDHPParse.js';
-import WorkerRequestDPacketSync from './../requests/WorkerRequestDPacketSync.js';
-import WorkerRequestMPacketSync from './../requests/WorkerRequestMPacketSync.js';
-import WorkerRequestSvcPacketEntities from './../requests/WorkerRequestSvcPacketEntities.js';
+import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
+import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
+import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
+import WorkerRequestSvcPacketEntities from '#workers/requests/WorkerRequestSvcPacketEntities.js';
 
 class WorkerRequestSerializer {
     constructor() {
