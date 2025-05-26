@@ -2,7 +2,7 @@ import { parentPort } from 'node:worker_threads';
 
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import MessagePacketRawExtractor from './../../extractors/MessagePacketRawExtractor.js';
+import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
 import Demo from './../../data/Demo.js';
 

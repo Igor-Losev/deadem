@@ -9,7 +9,7 @@ import EntityMutationEvent from './../data/entity/EntityMutationEvent.js';
 
 import EntityOperation from './../data/enums/EntityOperation.js';
 
-import EntityMutationExtractor from './../extractors/EntityMutationExtractor.js';
+import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
 
 class DemoMessageHandler {
     /**

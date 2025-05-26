@@ -2,7 +2,7 @@ import Stream from 'node:stream';
 
 import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketRawExtractor from './../extractors/DemoPacketRawExtractor.js';
+import DemoPacketRawExtractor from '#extractors/DemoPacketRawExtractor.js';
 
 const DEMO_HEADER_SIZE_BYTES = 16;
 

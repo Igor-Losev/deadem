@@ -9,7 +9,7 @@ import DemoPacketType from '../data/enums/DemoPacketType.js';
 import MessagePacketType from './../data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-import MessagePacketRawExtractor from './../extractors/MessagePacketRawExtractor.js';
+import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
 import WorkerRequestDHPParse from './../workers/requests/WorkerRequestDHPParse.js';
 

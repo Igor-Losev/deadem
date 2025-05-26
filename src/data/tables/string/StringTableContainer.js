@@ -1,18 +1,17 @@
 import EventEmitter from 'node:events';
 
 import Assert from '#core/Assert.js';
+import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import StringTableEvent from './../../enums/StringTableEvent.js';
 import StringTableType from './../../enums/StringTableType.js';
 
+import StringTableEntryExtractor from '#extractors/StringTableEntryExtractor.js';
+
 import StringTable from './StringTable.js';
 import StringTableEntry from './StringTableEntry.js';
 import StringTableInstructions from './StringTableInstructions.js';
-
-import StringTableEntryExtractor from './../../../extractors/StringTableEntryExtractor.js';
-
-import Logger from '#core/Logger.js';
 
 class StringTableContainer {
     /**
