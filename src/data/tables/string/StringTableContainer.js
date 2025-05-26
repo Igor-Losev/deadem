@@ -1,6 +1,7 @@
 import EventEmitter from 'node:events';
 
 import Assert from '#core/Assert.js';
+import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import StringTableEvent from './../../enums/StringTableEvent.js';
 import StringTableType from './../../enums/StringTableType.js';
@@ -8,8 +9,6 @@ import StringTableType from './../../enums/StringTableType.js';
 import StringTable from './StringTable.js';
 import StringTableEntry from './StringTableEntry.js';
 import StringTableInstructions from './StringTableInstructions.js';
-
-import SnappyDecompressor from '../../../decompressors/SnappyDecompressor.instance.js';
 
 import StringTableEntryExtractor from './../../../extractors/StringTableEntryExtractor.js';
 

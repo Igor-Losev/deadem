@@ -1,6 +1,6 @@
 import { parentPort } from 'node:worker_threads';
 
-import SnappyDecompressor from './../../decompressors/SnappyDecompressor.instance.js';
+import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import MessagePacketRawExtractor from './../../extractors/MessagePacketRawExtractor.js';
 
