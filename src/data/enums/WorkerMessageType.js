@@ -1,4 +1,4 @@
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 const registry = {
     byCode: new Map()
@@ -87,4 +87,4 @@ const messagePacketSync = new WorkerMessageType('MESSAGE_PACKET_SYNC', 'Synchron
 
 const svcPacketEntities = new WorkerMessageType('SVC_PACKET_ENTITIES', 'Parsing SVC_PACKET_ENTITIES message');
 
-module.exports = WorkerMessageType;
+export default WorkerMessageType;

@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class FieldDecoderInstructions {
     /**
@@ -69,4 +67,4 @@ class FieldDecoderInstructions {
     }
 }
 
-module.exports = FieldDecoderInstructions;
+export default FieldDecoderInstructions;

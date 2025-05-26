@@ -1,8 +1,6 @@
-'use strict';
+import EntityMutation from '../data/entity/EntityMutation.js';
 
-const EntityMutation = require('../data/entity/EntityMutation');
-
-const FieldPathExtractor = require('./FieldPathExtractor');
+import FieldPathExtractor from './FieldPathExtractor.js';
 
 class EntityMutationExtractor {
     /**
@@ -38,4 +36,4 @@ class EntityMutationExtractor {
     }
 }
 
-module.exports = EntityMutationExtractor;
+export default EntityMutationExtractor;

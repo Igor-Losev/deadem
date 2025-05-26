@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class SerializerKey {
     constructor(name, version) {
@@ -28,4 +26,4 @@ class SerializerKey {
     }
 }
 
-module.exports = SerializerKey;
+export default SerializerKey;

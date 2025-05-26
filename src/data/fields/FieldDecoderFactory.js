@@ -1,19 +1,17 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import FieldDecoderCoordinate from './decoders/FieldDecoderCoordinate.js';
+import FieldDecoderNoScale from './decoders/FieldDecoderNoScale.js';
+import FieldDecoderQAngle from './decoders/FieldDecoderQAngle.js';
+import FieldDecoderQuantizedFloat from './decoders/FieldDecoderQuantizedFloat.js';
+import FieldDecoderRuneTime from './decoders/FieldDecoderRuneTime.js';
+import FieldDecoderSimulationTime from './decoders/FieldDecoderSimulationTime.js';
+import FieldDecoderUInt64 from './decoders/FieldDecoderUInt64.js';
+import FieldDecoderUVarInt64 from './decoders/FieldDecoderUVarInt64.js';
+import FieldDecoderVectorN from './decoders/FieldDecoderVectorN.js';
+import FieldDecoderVectorNormal from './decoders/FieldDecoderVectorNormal.js';
 
-const FieldDecoderCoordinate = require('./decoders/FieldDecoderCoordinate'),
-    FieldDecoderNoScale = require('./decoders/FieldDecoderNoScale'),
-    FieldDecoderQAngle = require('./decoders/FieldDecoderQAngle'),
-    FieldDecoderQuantizedFloat = require('./decoders/FieldDecoderQuantizedFloat'),
-    FieldDecoderRuneTime = require('./decoders/FieldDecoderRuneTime'),
-    FieldDecoderSimulationTime = require('./decoders/FieldDecoderSimulationTime'),
-    FieldDecoderUInt64 = require('./decoders/FieldDecoderUInt64'),
-    FieldDecoderUVarInt64 = require('./decoders/FieldDecoderUVarInt64'),
-    FieldDecoderVectorN = require('./decoders/FieldDecoderVectorN'),
-    FieldDecoderVectorNormal = require('./decoders/FieldDecoderVectorNormal');
-
-const FieldDecoderInstructions = require('./FieldDecoderInstructions');
+import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 
 class FieldDecoderFactory {
     constructor() {
@@ -108,4 +106,4 @@ const decoderUInt64 = new FieldDecoderUInt64();
 const decoderUVarInt64 = new FieldDecoderUVarInt64();
 const decoderVectorNormal = new FieldDecoderVectorNormal();
 
-module.exports = FieldDecoderFactory;
+export default FieldDecoderFactory;

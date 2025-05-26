@@ -1,6 +1,4 @@
-'use strict';
-
-const Stream = require('stream');
+import Stream from 'node:stream';
 
 /**
  * Balances stream processing load by periodically yielding control back to
@@ -48,4 +46,4 @@ function pauseTimeout(ms) {
     });
 }
 
-module.exports = DemoStreamLoadBalancer;
+export default DemoStreamLoadBalancer;

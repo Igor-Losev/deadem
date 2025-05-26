@@ -1,18 +1,16 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import Demo from './../data/Demo.js';
+import Server from './../data/Server.js';
 
-const Demo = require('./../data/Demo'),
-    Server = require('./../data/Server');
+import BitBuffer from './../data/buffer/BitBuffer.js';
 
-const BitBuffer = require('./../data/buffer/BitBuffer');
+import Entity from './../data/entity/Entity.js';
+import EntityMutationEvent from './../data/entity/EntityMutationEvent.js';
 
-const Entity = require('./../data/entity/Entity'),
-    EntityMutationEvent = require('./../data/entity/EntityMutationEvent');
+import EntityOperation from './../data/enums/EntityOperation.js';
 
-const EntityOperation = require('./../data/enums/EntityOperation');
-
-const EntityMutationExtractor = require('./../extractors/EntityMutationExtractor');
+import EntityMutationExtractor from './../extractors/EntityMutationExtractor.js';
 
 class DemoMessageHandler {
     /**
@@ -199,4 +197,4 @@ class DemoMessageHandler {
     }
 }
 
-module.exports = DemoMessageHandler;
+export default DemoMessageHandler;

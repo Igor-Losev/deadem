@@ -1,19 +1,17 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import Class from './../data/Class.js';
+import Demo from './../data/Demo.js';
 
-const Class = require('./../data/Class'),
-    Demo = require('./../data/Demo');
+import BitBuffer from './../data/buffer/BitBuffer.js';
 
-const BitBuffer = require('./../data/buffer/BitBuffer');
+import Field from './../data/fields/Field.js';
+import FieldDecoderInstructions from './../data/fields/FieldDecoderInstructions.js';
+import FieldDefinition from '../data/fields/FieldDefinition.js';
+import Serializer from './../data/fields/Serializer.js';
+import SerializerKey from './../data/fields/SerializerKey.js';
 
-const Field = require('./../data/fields/Field'),
-    FieldDecoderInstructions = require('./../data/fields/FieldDecoderInstructions'),
-    FieldDefinition = require('../data/fields/FieldDefinition'),
-    Serializer = require('./../data/fields/Serializer'),
-    SerializerKey = require('./../data/fields/SerializerKey');
-
-const ProtoProvider = require('./../providers/ProtoProvider.instance');
+import ProtoProvider from '../providers/ProtoProviderInstance.js';
 
 const CSVCMsg_FlattenedSerializer = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer');
 
@@ -162,4 +160,4 @@ class DemoPacketHandler {
     }
 }
 
-module.exports = DemoPacketHandler;
+export default DemoPacketHandler;

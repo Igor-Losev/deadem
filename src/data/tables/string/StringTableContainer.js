@@ -1,20 +1,18 @@
-'use strict';
+import assert from 'node:assert/strict';
+import EventEmitter from 'node:events';
 
-const assert = require('node:assert/strict'),
-    EventEmitter = require('node:events');
+import StringTableEvent from './../../enums/StringTableEvent.js';
+import StringTableType from './../../enums/StringTableType.js';
 
-const StringTableEvent = require('./../../enums/StringTableEvent'),
-    StringTableType = require('./../../enums/StringTableType');
+import StringTable from './StringTable.js';
+import StringTableEntry from './StringTableEntry.js';
+import StringTableInstructions from './StringTableInstructions.js';
 
-const StringTable = require('./StringTable'),
-    StringTableEntry = require('./StringTableEntry'),
-    StringTableInstructions = require('./StringTableInstructions');
+import SnappyDecompressor from '../../../decompressors/SnappyDecompressor.instance.js';
 
-const SnappyDecompressor = require('../../../decompressors/SnappyDecompressor.instance');
+import StringTableEntryExtractor from './../../../extractors/StringTableEntryExtractor.js';
 
-const StringTableEntryExtractor = require('./../../../extractors/StringTableEntryExtractor');
-
-const Logger = require('./../../../Logger');
+import Logger from './../../../Logger.js';
 
 class StringTableContainer {
     /**
@@ -213,4 +211,4 @@ class StringTableContainer {
     }
 }
 
-module.exports = StringTableContainer;
+export default StringTableContainer;

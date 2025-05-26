@@ -1,4 +1,6 @@
-const FieldDefinition = require('./../FieldDefinition');
+import { describe, expect, test } from 'vitest';
+
+import FieldDefinition from './../FieldDefinition.js';
 
 describe('FieldDefinition.parse()', () => {
     describe('When parsing "CNetworkUtlVectorBase< CHandle< CBaseEntity > >"', () => {

@@ -1,9 +1,7 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const Field = require('./Field'),
-    SerializerKey = require('./SerializerKey');
+import Field from './Field.js';
+import SerializerKey from './SerializerKey.js';
 
 class Serializer {
     /**
@@ -77,4 +75,4 @@ class Serializer {
     }
 }
 
-module.exports = Serializer;
+export default Serializer;

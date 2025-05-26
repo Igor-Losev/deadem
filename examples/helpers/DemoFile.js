@@ -1,5 +1,3 @@
-'use strict';
-
 const EXTENSION = '.dem';
 
 const registry = new Map();
@@ -95,4 +93,4 @@ const match36127043 = new DemoFile(36127043, '5637');
 const match36127052 = new DemoFile(36127052, '5637');
 const match36127128 = new DemoFile(36127128, '5637');
 
-module.exports = DemoFile;
+export default DemoFile;

@@ -1,5 +1,3 @@
-'use strict';
-
 class InterceptorStage {
     /**
      * @constructor
@@ -49,4 +47,4 @@ const demoPacket = new InterceptorStage('DEMO_PACKET');
 const entityPacket = new InterceptorStage('ENTITY_PACKET');
 const messagePacket = new InterceptorStage('MESSAGE_PACKET');
 
-module.exports = InterceptorStage;
+export default InterceptorStage;

@@ -1,4 +1,4 @@
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 const registry = {
     byCode: new Map()
@@ -128,4 +128,4 @@ const parser = new PerformanceTrackerCategory('PARSER', 'Entire parse process', 
     demoPacketPrioritizer
 ]);
 
-module.exports = PerformanceTrackerCategory;
+export default PerformanceTrackerCategory;

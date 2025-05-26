@@ -1,12 +1,8 @@
-'use strict';
-
-module.exports = {
-    DemoPacketType: require('./src/data/enums/DemoPacketType'),
-    EntityOperation: require('./src/data/enums/EntityOperation'),
-    InterceptorStage: require('./src/data/enums/InterceptorStage'),
-    Logger: require('./src/Logger'),
-    MessagePacketType: require('./src/data/enums/MessagePacketType'),
-    Parser: require('./src/Parser'),
-    ParserConfiguration: require('./src/ParserConfiguration'),
-    StringTableType: require('./src/data/enums/StringTableType')
-};
+export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
+export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
+export { default as InterceptorStage } from './src/data/enums/InterceptorStage.js';
+export { default as Logger } from './src/Logger.js';
+export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
+export { default as Parser } from './src/Parser.js';
+export { default as ParserConfiguration } from './src/ParserConfiguration.js';
+export { default as StringTableType } from './src/data/enums/StringTableType.js';

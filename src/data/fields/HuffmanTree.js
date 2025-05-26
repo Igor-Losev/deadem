@@ -1,12 +1,10 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import BinaryHeap from './../../data/structures/BinaryHeap.js';
 
-const BinaryHeap = require('./../../data/structures/BinaryHeap');
+import FieldPathOperation from '../enums/FieldPathOperation.js';
 
-const FieldPathOperation = require('../enums/FieldPathOperation');
-
-const HuffmanTreePriority = require('./HuffmanTreePriority');
+import HuffmanTreePriority from './HuffmanTreePriority.js';
 
 const HUFFMAN_TREE_DEPTH = 17;
 const MAX_CODE = (1 << HUFFMAN_TREE_DEPTH) - 1;
@@ -220,4 +218,4 @@ function getNodeByCode(code) {
     throw new Error(`Unable to find a node for code [ ${code} ]. This should never happen. Verify the depth of the tree`);
 }
 
-module.exports = HuffmanTree;
+export default HuffmanTree;

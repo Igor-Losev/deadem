@@ -1,5 +1,3 @@
-'use strict';
-
 class MessagePacketRaw {
     /**
      * @public
@@ -39,4 +37,4 @@ class MessagePacketRaw {
     }
 }
 
-module.exports = MessagePacketRaw;
+export default MessagePacketRaw;

@@ -1,9 +1,7 @@
-'use strict';
+import { Parser } from './../index.js';
 
-const { Parser } = require('./../index');
-
-const DemoFile = require('./helpers/DemoFile'),
-    DemoProvider = require('./helpers/DemoProvider');
+import DemoFile from './helpers/DemoFile.js';
+import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
     const matchesArgument = process.argv.find(arg => arg.startsWith('--matches='));

@@ -1,6 +1,4 @@
-'use strict';
-
-const FieldPath = require('./FieldPath');
+import FieldPath from './FieldPath.js';
 
 const MAX_LENGTH = 7;
 
@@ -110,4 +108,4 @@ function getCacheKey(path) {
     return key;
 }
 
-module.exports = FieldPathBuilder;
+export default FieldPathBuilder;

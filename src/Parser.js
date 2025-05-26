@@ -1,12 +1,10 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import InterceptorStage from './data/enums/InterceptorStage.js';
 
-const InterceptorStage = require('./data/enums/InterceptorStage');
-
-const Logger = require('./Logger'),
-    ParserConfiguration = require('./ParserConfiguration'),
-    ParserEngine = require('./ParserEngine');
+import Logger from './Logger.js';
+import ParserConfiguration from './ParserConfiguration.js';
+import ParserEngine from './ParserEngine.js';
 
 class Parser {
     /**
@@ -112,4 +110,4 @@ class Parser {
     }
 }
 
-module.exports = Parser;
+export default Parser;

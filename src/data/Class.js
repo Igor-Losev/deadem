@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const Serializer = require('./fields/Serializer');
+import Serializer from './fields/Serializer.js';
 
 class Class {
     constructor(id, name, serializer) {
@@ -40,4 +38,4 @@ class Class {
     }
 }
 
-module.exports = Class;
+export default Class;

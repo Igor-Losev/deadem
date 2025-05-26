@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 const REGEX = /(?<base>[^*< >\n[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?])?(?<pointer>\*)?/;
 
@@ -61,4 +59,4 @@ class FieldDefinition {
     }
 }
 
-module.exports = FieldDefinition;
+export default FieldDefinition;

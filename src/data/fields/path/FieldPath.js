@@ -1,5 +1,3 @@
-'use strict';
-
 class FieldPath {
     /**
      * @public
@@ -48,4 +46,4 @@ class FieldPath {
     }
 }
 
-module.exports = FieldPath;
+export default FieldPath;

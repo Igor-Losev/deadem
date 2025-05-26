@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require('assert/strict'),
-    Stream = require('node:stream');
+import assert from 'assert/strict';
+import Stream from 'node:stream';
 
 /**
  * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.
@@ -97,4 +95,4 @@ class DemoStreamPacketBatcher extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamPacketBatcher;
+export default DemoStreamPacketBatcher;

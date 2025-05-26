@@ -1,10 +1,8 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import BitBuffer from './../buffer/BitBuffer.js';
 
-const BitBuffer = require('./../buffer/BitBuffer');
-
-const FieldPathBuilder = require('../fields/path/FieldPathBuilder');
+import FieldPathBuilder from '../fields/path/FieldPathBuilder.js';
 
 const registry = {
     byCode: new Map()
@@ -305,4 +303,4 @@ const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', '
 
 const finish = new FieldPathOperation('FINISH', 'Finish', 25474, 39, null);
 
-module.exports = FieldPathOperation;
+export default FieldPathOperation;

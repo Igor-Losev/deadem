@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class FieldModel {
     /**
@@ -74,4 +72,4 @@ const simple = new FieldModel('SIMPLE');
 const tableFixed = new FieldModel('TABLE_FIXED');
 const tableVariable = new FieldModel('TABLE_VARIABLE');
 
-module.exports = FieldModel;
+export default FieldModel;

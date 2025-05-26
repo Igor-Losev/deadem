@@ -1,9 +1,9 @@
-const { defineConfig } = require('eslint/config'),
-    globals = require('globals'),
-    js = require('@eslint/js'),
-    stylistic = require('@stylistic/eslint-plugin');
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 
-module.exports = defineConfig([
+export default defineConfig([
     {
         files: [ '**/*.js' ],
         extends: [ 'js/recommended' ],
@@ -12,8 +12,7 @@ module.exports = defineConfig([
                 ...globals.commonjs,
                 ...globals.jest,
                 ...globals.node
-            },
-            sourceType: 'script'
+            }
         },
         plugins: {
             js,

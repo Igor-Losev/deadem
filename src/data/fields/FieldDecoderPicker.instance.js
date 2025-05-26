@@ -1,14 +1,12 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import FieldDecoderFactory from './FieldDecoderFactory.js';
 
-const FieldDecoderFactory = require('./FieldDecoderFactory');
-
-const FieldDecoderBoolean = require('./decoders/FieldDecoderBoolean'),
-    FieldDecoderNoScale = require('./decoders/FieldDecoderNoScale'),
-    FieldDecoderString = require('./decoders/FieldDecoderString'),
-    FieldDecoderUVarInt32 = require('./decoders/FieldDecoderUVarInt32'),
-    FieldDecoderVarInt32 = require('./decoders/FieldDecoderVarInt32');
+import FieldDecoderBoolean from './decoders/FieldDecoderBoolean.js';
+import FieldDecoderNoScale from './decoders/FieldDecoderNoScale.js';
+import FieldDecoderString from './decoders/FieldDecoderString.js';
+import FieldDecoderUVarInt32 from './decoders/FieldDecoderUVarInt32.js';
+import FieldDecoderVarInt32 from './decoders/FieldDecoderVarInt32.js';
 
 const decoderBoolean = new FieldDecoderBoolean();
 const decoderNoScale = new FieldDecoderNoScale();
@@ -106,4 +104,4 @@ class FieldDecoderPicker {
     }
 }
 
-module.exports = FieldDecoderPicker.instance;
+export default FieldDecoderPicker.instance;

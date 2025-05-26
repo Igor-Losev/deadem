@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const Class = require('./../Class');
+import Class from './../Class.js';
 
 class Entity {
     /**
@@ -100,4 +98,4 @@ class Entity {
     }
 }
 
-module.exports = Entity;
+export default Entity;

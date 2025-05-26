@@ -1,5 +1,3 @@
-'use strict';
-
 class Logger {
     /**
      * @public
@@ -161,4 +159,4 @@ function noopFn() {
 
 }
 
-module.exports = Logger;
+export default Logger;

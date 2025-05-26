@@ -1,5 +1,3 @@
-'use strict';
-
 class DemoPacketRaw {
     /**
      * @public
@@ -84,4 +82,4 @@ class DemoPacketRaw {
     }
 }
 
-module.exports = DemoPacketRaw;
+export default DemoPacketRaw;

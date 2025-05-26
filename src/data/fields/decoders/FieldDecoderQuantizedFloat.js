@@ -1,11 +1,9 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import BitBuffer from './../../buffer/BitBuffer.js';
 
-const BitBuffer = require('./../../buffer/BitBuffer');
-
-const FieldDecoder = require('./FieldDecoder'),
-    FieldDecoderInstructions = require('./../FieldDecoderInstructions');
+import FieldDecoder from './FieldDecoder.js';
+import FieldDecoderInstructions from './../FieldDecoderInstructions.js';
 
 const DEFAULT_BIT_COUNT = 0;
 const DEFAULT_VALUE_LOW = 0;
@@ -250,4 +248,4 @@ function getFlags(candidate) {
     return flags;
 }
 
-module.exports = FieldDecoderQuantizedFloat;
+export default FieldDecoderQuantizedFloat;

@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 const registry = {
     byCode: new Map(),
@@ -75,4 +73,4 @@ const leave = new EntityOperation('LEAVE', 1);
 const create = new EntityOperation('CREATE', 2);
 const remove = new EntityOperation('DELETE', 3);
 
-module.exports = EntityOperation;
+export default EntityOperation;

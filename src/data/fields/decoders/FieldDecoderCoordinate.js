@@ -1,6 +1,4 @@
-'use strict';
-
-const FieldDecoder = require('./FieldDecoder');
+import FieldDecoder from './FieldDecoder.js';
 
 class FieldDecoderCoordinate extends FieldDecoder {
     /**
@@ -20,4 +18,4 @@ class FieldDecoderCoordinate extends FieldDecoder {
     }
 }
 
-module.exports = FieldDecoderCoordinate;
+export default FieldDecoderCoordinate;

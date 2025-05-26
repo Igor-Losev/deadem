@@ -1,5 +1,3 @@
-'use strict';
-
 class StringTableEvent {
     /**
      * @public
@@ -70,4 +68,4 @@ const tableCreated = new StringTableEvent('TABLE_CREATED', 'table-created');
 const tableRemoved = new StringTableEvent('TABLE_REMOVED', 'table-removed');
 const tableUpdated = new StringTableEvent('TABLE_UPDATED', 'table-updated');
 
-module.exports = StringTableEvent;
+export default StringTableEvent;

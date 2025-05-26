@@ -1,29 +1,27 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('node:stream');
+import Demo from './data/Demo.js';
 
-const Demo = require('./data/Demo');
+import InterceptorStage from './data/enums/InterceptorStage.js';
+import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
-const InterceptorStage = require('./data/enums/InterceptorStage'),
-    PerformanceTrackerCategory = require('./data/enums/PerformanceTrackerCategory');
+import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
+import DemoStreamLoadBalancer from './stream/DemoStreamLoadBalancer.js';
+import DemoStreamPacketAnalyzer from './stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketBatcher from './stream/DemoStreamPacketBatcher.js';
+import DemoStreamPacketCoordinator from './stream/DemoStreamPacketCoordinator.js';
+import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
+import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
+import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
 
-const DemoStreamBufferSplitter = require('./stream/DemoStreamBufferSplitter'),
-    DemoStreamLoadBalancer = require('./stream/DemoStreamLoadBalancer'),
-    DemoStreamPacketAnalyzer = require('./stream/DemoStreamPacketAnalyzer'),
-    DemoStreamPacketBatcher = require('./stream/DemoStreamPacketBatcher'),
-    DemoStreamPacketCoordinator = require('./stream/DemoStreamPacketCoordinator'),
-    DemoStreamPacketExtractor = require('./stream/DemoStreamPacketExtractor'),
-    DemoStreamPacketParser = require('./stream/DemoStreamPacketParser'),
-    DemoStreamPacketPrioritizer = require('./stream/DemoStreamPacketPrioritizer');
+import MemoryTracker from './trackers/MemoryTracker.js';
+import PacketTracker from './trackers/PacketTracker.js';
+import PerformanceTracker from './trackers/PerformanceTracker.js';
 
-const MemoryTracker = require('./trackers/MemoryTracker'),
-    PacketTracker = require('./trackers/PacketTracker'),
-    PerformanceTracker = require('./trackers/PerformanceTracker');
+import WorkerManager from './workers/WorkerManager.js';
 
-const WorkerManager = require('./workers/WorkerManager');
-
-const Logger = require('./Logger'),
-    ParserConfiguration = require('./ParserConfiguration');
+import Logger from './Logger.js';
+import ParserConfiguration from './ParserConfiguration.js';
 
 class ParserEngine {
     /**
@@ -217,4 +215,4 @@ class ParserEngine {
     }
 }
 
-module.exports = ParserEngine;
+export default ParserEngine;

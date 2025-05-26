@@ -1,5 +1,3 @@
-'use strict';
-
 class EntityMutationEvent {
     /**
      * @public
@@ -38,4 +36,4 @@ class EntityMutationEvent {
     }
 }
 
-module.exports = EntityMutationEvent;
+export default EntityMutationEvent;

@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class BinaryHeap {
     /**
@@ -186,4 +184,4 @@ class BinaryHeap {
     }
 }
 
-module.exports = BinaryHeap;
+export default BinaryHeap;

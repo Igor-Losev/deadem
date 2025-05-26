@@ -1,9 +1,7 @@
-'use strict';
+import assert from 'assert/strict';
+import Stream from 'node:stream';
 
-const assert = require('assert/strict'),
-    Stream = require('stream');
-
-const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
 const MEGABYTE = 1024 * 1024;
 
@@ -51,4 +49,4 @@ class DemoStreamBufferSplitter extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamBufferSplitter;
+export default DemoStreamBufferSplitter;

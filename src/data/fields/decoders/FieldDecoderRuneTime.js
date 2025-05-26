@@ -1,6 +1,4 @@
-'use strict';
-
-const FieldDecoder = require('./FieldDecoder');
+import FieldDecoder from './FieldDecoder.js';
 
 class FieldDecoderRuneTime extends FieldDecoder {
     /**
@@ -20,4 +18,4 @@ class FieldDecoderRuneTime extends FieldDecoder {
     }
 }
 
-module.exports = FieldDecoderRuneTime;
+export default FieldDecoderRuneTime;

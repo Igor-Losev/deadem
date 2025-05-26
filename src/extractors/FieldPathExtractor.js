@@ -1,13 +1,11 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import BitBuffer from './../data/buffer/BitBuffer.js';
 
-const BitBuffer = require('./../data/buffer/BitBuffer');
+import FieldPathOperation from './../data/enums/FieldPathOperation.js';
 
-const FieldPathOperation = require('./../data/enums/FieldPathOperation');
-
-const FieldPathBuilder = require('../data/fields/path/FieldPathBuilder'),
-    HuffmanTree = require('./../data/fields/HuffmanTree');
+import FieldPathBuilder from '../data/fields/path/FieldPathBuilder.js';
+import HuffmanTree from './../data/fields/HuffmanTree.js';
 
 class FieldPathExtractor {
     /**
@@ -79,4 +77,4 @@ class FieldPathExtractor {
     }
 }
 
-module.exports = FieldPathExtractor;
+export default FieldPathExtractor;

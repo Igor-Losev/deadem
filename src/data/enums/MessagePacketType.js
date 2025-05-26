@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const ProtoProvider = require('./../../providers/ProtoProvider.instance');
+import ProtoProvider from '../../providers/ProtoProviderInstance.js';
 
 const registry = {
     byCode: new Map(),
@@ -324,4 +322,4 @@ const GE_FireBullets = new MessagePacketType('GE_FireBullets', ECitadelGameEvent
 
 const citadelEntityMessageBreakablePropSpawnDebris = new MessagePacketType('k_EEntityMsg_BreakablePropSpawnDebris', ECitadelEntityMessageIds.k_EEntityMsg_BreakablePropSpawnDebris, CCitadelEntityMsg_BreakablePropSpawnDebris); // 500
 
-module.exports = MessagePacketType;
+export default MessagePacketType;

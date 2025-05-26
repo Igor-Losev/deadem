@@ -1,19 +1,17 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('stream');
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import EntityOperation from './../data/enums/EntityOperation.js';
+import InterceptorStage from './../data/enums/InterceptorStage.js';
+import MessagePacketType from './../data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-const DemoPacketType = require('../data/enums/DemoPacketType'),
-    EntityOperation = require('./../data/enums/EntityOperation'),
-    InterceptorStage = require('./../data/enums/InterceptorStage'),
-    MessagePacketType = require('./../data/enums/MessagePacketType'),
-    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
+import DemoPacketHandler from './../handlers/DemoPacketHandler.js';
+import DemoMessageHandler from './../handlers/DemoMessageHandler.js';
 
-const DemoPacketHandler = require('./../handlers/DemoPacketHandler'),
-    DemoMessageHandler = require('./../handlers/DemoMessageHandler');
-
-const WorkerRequestDPacketSync = require('./../workers/requests/WorkerRequestDPacketSync'),
-    WorkerRequestMPacketSync = require('./../workers/requests/WorkerRequestMPacketSync'),
-    WorkerRequestSvcPacketEntities = require('./../workers/requests/WorkerRequestSvcPacketEntities');
+import WorkerRequestDPacketSync from './../workers/requests/WorkerRequestDPacketSync.js';
+import WorkerRequestMPacketSync from './../workers/requests/WorkerRequestMPacketSync.js';
+import WorkerRequestSvcPacketEntities from './../workers/requests/WorkerRequestSvcPacketEntities.js';
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
@@ -340,4 +338,4 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamPacketAnalyzer;
+export default DemoStreamPacketAnalyzer;

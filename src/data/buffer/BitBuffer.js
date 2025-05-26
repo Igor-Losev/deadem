@@ -1,6 +1,4 @@
-'use strict';
-
-const VarInt32 = require('./../VarInt32');
+import VarInt32 from './../VarInt32.js';
 
 const BITS_PER_BYTE = 8;
 
@@ -592,4 +590,4 @@ for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {
     pool.push(reusable.subarray(0, i + 1));
 }
 
-module.exports = BitBuffer;
+export default BitBuffer;

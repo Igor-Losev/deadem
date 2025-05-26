@@ -1,6 +1,4 @@
-'use strict';
-
-const FieldDecoder = require('./FieldDecoder');
+import FieldDecoder from './FieldDecoder.js';
 
 class FieldDecoderVectorNormal extends FieldDecoder {
     /**
@@ -20,4 +18,4 @@ class FieldDecoderVectorNormal extends FieldDecoder {
     }
 }
 
-module.exports = FieldDecoderVectorNormal;
+export default FieldDecoderVectorNormal;

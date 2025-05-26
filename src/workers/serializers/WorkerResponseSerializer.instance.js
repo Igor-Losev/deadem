@@ -1,13 +1,11 @@
-'use strict';
+import MessagePacketRaw from './../../data/MessagePacketRaw.js';
 
-const MessagePacketRaw = require('./../../data/MessagePacketRaw');
+import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
-const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
-
-const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
-    WorkerResponseDPacketSync = require('./../responses/WorkerResponseDPacketSync'),
-    WorkerResponseMPacketSync = require('./../responses/WorkerResponseMPacketSync'),
-    WorkerResponseSvcPacketEntities = require('./../responses/WorkerResponseSvcPacketEntities');
+import WorkerResponseDHPParse from './../responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketSync from './../responses/WorkerResponseDPacketSync.js';
+import WorkerResponseMPacketSync from './../responses/WorkerResponseMPacketSync.js';
+import WorkerResponseSvcPacketEntities from './../responses/WorkerResponseSvcPacketEntities.js';
 
 class WorkerResponseSerializer {
     constructor() {
@@ -91,4 +89,4 @@ class WorkerResponseSerializer {
  * @typedef {WorkerRequest} SerializableResponse
  */
 
-module.exports = WorkerResponseSerializer.instance;
+export default WorkerResponseSerializer.instance;

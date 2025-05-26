@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const PerformanceTrackerCategory = require('./../enums/PerformanceTrackerCategory');
+import PerformanceTrackerCategory from './../enums/PerformanceTrackerCategory.js';
 
 class PerformanceTrackRecord {
     /**
@@ -69,4 +67,4 @@ class PerformanceTrackRecord {
     }
 }
 
-module.exports = PerformanceTrackRecord;
+export default PerformanceTrackRecord;

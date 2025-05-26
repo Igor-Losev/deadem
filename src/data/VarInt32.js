@@ -1,5 +1,3 @@
-'use strict';
-
 const MAXIMUM_SIZE_BYTES = 5;
 
 /**
@@ -74,4 +72,4 @@ class VarInt32 {
     }
 }
 
-module.exports = VarInt32;
+export default VarInt32;

@@ -1,16 +1,18 @@
-'use strict';
+import assert from 'assert/strict';
+import { Worker } from 'node:worker_threads';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const assert = require('assert/strict'),
-    { Worker } = require('worker_threads'),
-    path = require('path');
+import DeferredPromise from './../data/DeferredPromise.js';
 
-const DeferredPromise = require('./../data/DeferredPromise');
+import Logger from './../Logger.js';
 
-const Logger = require('./../Logger');
+import WorkerThread from './WorkerThread.js';
 
-const WorkerThread = require('./WorkerThread');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const WORKER_PATH = path.resolve(__dirname, './scripts/worker.js');
+const WORKER_PATH = join(__dirname, './scripts/worker.js');
 
 /**
  * Manages a pool of {@link WorkerThread} instances with fixed concurrency.
@@ -177,4 +179,4 @@ class WorkerManager {
     }
 }
 
-module.exports = WorkerManager;
+export default WorkerManager;

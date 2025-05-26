@@ -1,5 +1,3 @@
-'use strict';
-
 class FieldDecoder {
     /**
      * @constructor
@@ -27,4 +25,4 @@ class FieldDecoder {
     }
 }
 
-module.exports = FieldDecoder;
+export default FieldDecoder;

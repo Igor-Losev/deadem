@@ -1,10 +1,8 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import StringTableType from './../../enums/StringTableType.js';
 
-const StringTableType = require('./../../enums/StringTableType');
-
-const StringTableInstructions = require('./StringTableInstructions');
+import StringTableInstructions from './StringTableInstructions.js';
 
 class StringTable {
     /**
@@ -91,4 +89,4 @@ class StringTable {
     }
 }
 
-module.exports = StringTable;
+export default StringTable;

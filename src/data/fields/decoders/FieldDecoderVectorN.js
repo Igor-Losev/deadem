@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
-
-const FieldDecoder = require('./FieldDecoder');
+import FieldDecoder from './FieldDecoder.js';
 
 class FieldDecoderVectorN extends FieldDecoder {
     /**
@@ -36,4 +34,4 @@ class FieldDecoderVectorN extends FieldDecoder {
     }
 }
 
-module.exports = FieldDecoderVectorN;
+export default FieldDecoderVectorN;

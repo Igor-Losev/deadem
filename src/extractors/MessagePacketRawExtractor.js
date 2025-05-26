@@ -1,8 +1,6 @@
-'use strict';
+import BitBuffer from '../data/buffer/BitBuffer.js';
 
-const BitBuffer = require('../data/buffer/BitBuffer');
-
-const MessagePacketRaw = require('../data/MessagePacketRaw');
+import MessagePacketRaw from '../data/MessagePacketRaw.js';
 
 class MessagePacketRawExtractor {
     /**
@@ -59,4 +57,4 @@ class MessagePacketRawExtractor {
     }
 }
 
-module.exports = MessagePacketRawExtractor;
+export default MessagePacketRawExtractor;

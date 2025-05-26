@@ -1,21 +1,19 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import Class from './Class.js';
+import Server from './Server.js';
 
-const Class = require('./Class'),
-    Server = require('./Server');
+import Entity from './entity/Entity.js';
 
-const Entity = require('./entity/Entity');
+import StringTableEvent from './enums/StringTableEvent.js';
+import StringTableType from './enums/StringTableType.js';
 
-const StringTableEvent = require('./enums/StringTableEvent'),
-    StringTableType = require('./enums/StringTableType');
+import Serializer from './fields/Serializer.js';
+import SerializerKey from './fields/SerializerKey.js';
 
-const Serializer = require('./fields/Serializer'),
-    SerializerKey = require('./fields/SerializerKey');
+import StringTableContainer from './tables/string/StringTableContainer.js';
 
-const StringTableContainer = require('./tables/string/StringTableContainer');
-
-const Logger = require('./../Logger');
+import Logger from './../Logger.js';
 
 class Demo {
     /**
@@ -234,4 +232,4 @@ class Demo {
     }
 }
 
-module.exports = Demo;
+export default Demo;

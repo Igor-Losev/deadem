@@ -1,6 +1,4 @@
-'use strict';
-
-const MessagePacketType = require('./enums/MessagePacketType');
+import MessagePacketType from './enums/MessagePacketType.js';
 
 class MessagePacket {
     /**
@@ -55,4 +53,4 @@ class MessagePacket {
  * @typedef {{type: String, data: *}} MessagePacketObject
  */
 
-module.exports = MessagePacket;
+export default MessagePacket;

@@ -1,6 +1,4 @@
-'use strict';
-
-const snappy = require('snappyjs');
+import snappy from 'snappyjs';
 
 class SnappyDecompressor {
     constructor() {
@@ -19,4 +17,4 @@ class SnappyDecompressor {
     static instance = new SnappyDecompressor();
 }
 
-module.exports = SnappyDecompressor.instance;
+export default SnappyDecompressor.instance;

@@ -1,10 +1,12 @@
-'use strict';
+import fs from 'node:fs';
+import https from 'node:https';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const fs = require('fs'),
-    https = require('https'),
-    path = require('path');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const DEMO_FOLDER = path.resolve(__dirname, './../../demos');
+const DEMO_FOLDER = join(__dirname, './../../demos');
 const S3_BUCKET_URL = 'https://parser-demofiles.s3.us-east-1.amazonaws.com';
 
 class DemoProvider {
@@ -91,4 +93,4 @@ function getLocalPath(demoFile) {
     return `${DEMO_FOLDER}/${demoFile.getFileName()}`;
 }
 
-module.exports = DemoProvider;
+export default DemoProvider;

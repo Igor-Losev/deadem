@@ -1,10 +1,8 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
+import ProtoProvider from '../../../providers/ProtoProviderInstance.js';
 
-const ProtoProvider = require('./../../../providers/ProtoProvider.instance');
-
-const StringTableType = require('./../../enums/StringTableType');
+import StringTableType from './../../enums/StringTableType.js';
 
 const CModifierTableEntry = ProtoProvider.BASE_MODIFIER.lookupType('CModifierTableEntry');
 const CMsgPlayerInfo = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
@@ -79,4 +77,4 @@ class StringTableEntry {
     }
 }
 
-module.exports = StringTableEntry;
+export default StringTableEntry;

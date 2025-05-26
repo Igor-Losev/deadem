@@ -1,6 +1,4 @@
-'use strict';
-
-const Tracker = require('./Tracker');
+import Tracker from './Tracker.js';
 
 const INTERVAL_MILLISECONDS = 10;
 const MEGABYTE = 1024 * 1024;
@@ -46,4 +44,4 @@ class MemoryTracker extends Tracker {
     }
 }
 
-module.exports = MemoryTracker;
+export default MemoryTracker;

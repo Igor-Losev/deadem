@@ -1,8 +1,6 @@
-'use strict';
+import WorkerResponse from './WorkerResponse.js';
 
-const WorkerResponse = require('./WorkerResponse');
-
-const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
+import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
 class WorkerResponseDPacketSync extends WorkerResponse {
     /**
@@ -13,4 +11,4 @@ class WorkerResponseDPacketSync extends WorkerResponse {
     }
 }
 
-module.exports = WorkerResponseDPacketSync;
+export default WorkerResponseDPacketSync;

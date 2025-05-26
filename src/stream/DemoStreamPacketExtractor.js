@@ -1,10 +1,8 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('stream');
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
-
-const DemoPacketRawExtractor = require('./../extractors/DemoPacketRawExtractor');
+import DemoPacketRawExtractor from './../extractors/DemoPacketRawExtractor.js';
 
 const DEMO_HEADER_SIZE_BYTES = 16;
 
@@ -100,4 +98,4 @@ class DemoStreamPacketExtractor extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamPacketExtractor;
+export default DemoStreamPacketExtractor;

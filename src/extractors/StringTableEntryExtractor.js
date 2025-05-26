@@ -1,13 +1,11 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import BitBuffer from './../data/buffer/BitBuffer.js';
 
-const BitBuffer = require('./../data/buffer/BitBuffer');
+import StringTable from './../data/tables/string/StringTable.js';
+import StringTableEntry from './../data/tables/string/StringTableEntry.js';
 
-const StringTable = require('./../data/tables/string/StringTable'),
-    StringTableEntry = require('./../data/tables/string/StringTableEntry');
-
-const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
+import SnappyDecompressor from './../decompressors/SnappyDecompressor.instance.js';
 
 const MAX_HISTORY_ENTRIES = 32;
 
@@ -109,4 +107,4 @@ class StringTableEntryExtractor {
     }
 }
 
-module.exports = StringTableEntryExtractor;
+export default StringTableEntryExtractor;

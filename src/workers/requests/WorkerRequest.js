@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
-
-const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
+import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
 class WorkerRequest {
     /**
@@ -42,4 +40,4 @@ class WorkerRequest {
     }
 }
 
-module.exports = WorkerRequest;
+export default WorkerRequest;

@@ -1,10 +1,8 @@
-'use strict';
+import MessagePacketType from './../data/enums/MessagePacketType.js';
 
-const MessagePacketType = require('./../data/enums/MessagePacketType');
+import PacketTrackRecord from './../data/trackers/PacketTrackRecord.js';
 
-const PacketTrackRecord = require('./../data/trackers/PacketTrackRecord');
-
-const Tracker = require('./Tracker');
+import Tracker from './Tracker.js';
 
 class PacketTracker extends Tracker {
     /**
@@ -112,4 +110,4 @@ class PacketTracker extends Tracker {
     }
 }
 
-module.exports = PacketTracker;
+export default PacketTracker;

@@ -1,9 +1,7 @@
-'use strict';
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackRecord from './../data/trackers/PerformanceTrackRecord.js';
 
-const PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory'),
-    PerformanceTrackRecord = require('./../data/trackers/PerformanceTrackRecord');
-
-const Tracker = require('./Tracker');
+import Tracker from './Tracker.js';
 
 class PerformanceTracker extends Tracker {
     /**
@@ -71,4 +69,4 @@ class PerformanceTracker extends Tracker {
     }
 }
 
-module.exports = PerformanceTracker;
+export default PerformanceTracker;

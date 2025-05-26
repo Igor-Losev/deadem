@@ -1,27 +1,25 @@
-'use strict';
+import { parentPort } from 'node:worker_threads';
 
-const { parentPort } = require('node:worker_threads');
+import SnappyDecompressor from './../../decompressors/SnappyDecompressor.instance.js';
 
-const SnappyDecompressor = require('./../../decompressors/SnappyDecompressor.instance');
+import MessagePacketRawExtractor from './../../extractors/MessagePacketRawExtractor.js';
 
-const MessagePacketRawExtractor = require('./../../extractors/MessagePacketRawExtractor');
+import Demo from './../../data/Demo.js';
 
-const Demo = require('./../../data/Demo');
+import DemoPacketType from '../../data/enums/DemoPacketType.js';
+import MessagePacketType from './../../data/enums/MessagePacketType.js';
+import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
-const DemoPacketType = require('../../data/enums/DemoPacketType'),
-    MessagePacketType = require('./../../data/enums/MessagePacketType'),
-    WorkerMessageType = require('./../../data/enums/WorkerMessageType');
+import DemoMessageHandler from './../../handlers/DemoMessageHandler.js';
+import DemoPacketHandler from './../../handlers/DemoPacketHandler.js';
 
-const DemoMessageHandler = require('./../../handlers/DemoMessageHandler'),
-    DemoPacketHandler = require('./../../handlers/DemoPacketHandler');
+import WorkerRequestSerializer from './../serializers/WorkerRequestSerializer.instance.js';
+import WorkerResponseSerializer from './../serializers/WorkerResponseSerializer.instance.js';
 
-const WorkerRequestSerializer = require('./../serializers/WorkerRequestSerializer.instance'),
-    WorkerResponseSerializer = require('./../serializers/WorkerResponseSerializer.instance');
-
-const WorkerResponseDHPParse = require('./../responses/WorkerResponseDHPParse'),
-    WorkerResponseDPacketSync = require('./../responses/WorkerResponseDPacketSync'),
-    WorkerResponseMPacketSync = require('./../responses/WorkerResponseMPacketSync'),
-    WorkerResponseSvcPacketEntities = require('./../responses/WorkerResponseSvcPacketEntities');
+import WorkerResponseDHPParse from './../responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketSync from './../responses/WorkerResponseDPacketSync.js';
+import WorkerResponseMPacketSync from './../responses/WorkerResponseMPacketSync.js';
+import WorkerResponseSvcPacketEntities from './../responses/WorkerResponseSvcPacketEntities.js';
 
 const state = getInitialState();
 

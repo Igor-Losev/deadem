@@ -1,12 +1,10 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
+import FieldModel from './../enums/FieldModel.js';
 
-const FieldModel = require('./../enums/FieldModel');
-
-const FieldDecoderInstructions = require('./FieldDecoderInstructions'),
-    FieldDecoderPicker = require('./FieldDecoderPicker.instance'),
-    FieldDefinition = require('./FieldDefinition');
+import FieldDecoderInstructions from './FieldDecoderInstructions.js';
+import FieldDecoderPicker from './FieldDecoderPicker.instance.js';
+import FieldDefinition from './FieldDefinition.js';
 
 class Field {
     /**
@@ -233,4 +231,4 @@ function getDecoder(generic = false) {
     return FieldDecoderPicker.pick(baseType, this);
 }
 
-module.exports = Field;
+export default Field;

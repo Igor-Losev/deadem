@@ -1,10 +1,8 @@
-'use strict';
+import protobuf from 'protobufjs';
 
-const path = require('path');
+import protoJSON from './../../proto/compiled/proto.json' with { type: 'json' };
 
-const protobuf = require('protobufjs');
-
-const Root = protobuf.loadSync(path.resolve(__dirname, './../../proto/compiled/proto.json'));
+const Root = protobuf.Root.fromJSON(protoJSON);
 
 class ProtoProvider {
     constructor() {
@@ -86,4 +84,4 @@ class ProtoProvider {
     static instance = new ProtoProvider();
 }
 
-module.exports = ProtoProvider.instance;
+export default ProtoProvider.instance;

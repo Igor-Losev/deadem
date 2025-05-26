@@ -1,9 +1,7 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
-
-const FieldDecoder = require('./FieldDecoder'),
-    FieldDecoderInstructions = require('./../FieldDecoderInstructions');
+import FieldDecoder from './FieldDecoder.js';
+import FieldDecoderInstructions from './../FieldDecoderInstructions.js';
 
 class FieldDecoderQAngle extends FieldDecoder {
     /**
@@ -76,4 +74,4 @@ function getIsQAnglePrecise() {
     return this._instructions.encoder === 'qangle_precise';
 }
 
-module.exports = FieldDecoderQAngle;
+export default FieldDecoderQAngle;

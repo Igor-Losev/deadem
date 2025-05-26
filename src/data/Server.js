@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class Server {
     /**
@@ -64,4 +62,4 @@ class Server {
     }
 }
 
-module.exports = Server;
+export default Server;

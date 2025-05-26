@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 const registry = {
     byCode: new Map(),
@@ -193,4 +191,4 @@ const serverQueryInfo = new StringTableType('SERVER_QUERY_INFO', 'server_query_i
 const userInfo = new StringTableType('USER_INFO', 'userinfo');
 const vGuiScreen = new StringTableType('V_GUI_SCREEN', 'VguiScreen');
 
-module.exports = StringTableType;
+export default StringTableType;

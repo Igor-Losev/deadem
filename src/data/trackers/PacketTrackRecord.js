@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('assert/strict');
+import assert from 'assert/strict';
 
 class PacketTrackRecord {
     constructor(id) {
@@ -45,4 +43,4 @@ class PacketTrackRecord {
     }
 }
 
-module.exports = PacketTrackRecord;
+export default PacketTrackRecord;

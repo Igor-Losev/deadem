@@ -1,5 +1,3 @@
-'use strict';
-
 const OPTIONS = {
     BATCHER_CHUNK_SIZE: 'batcherChunkSize',
     BATCHER_THRESHOLD_MILLISECONDS: 'batcherThresholdMilliseconds',
@@ -105,4 +103,4 @@ const defaultConfiguration = new ParserConfiguration({
     splitterChunkSize: DEFAULTS[OPTIONS.SPLITTER_CHUNK_SIZE]
 });
 
-module.exports = ParserConfiguration;
+export default ParserConfiguration;

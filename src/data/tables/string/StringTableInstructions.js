@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('assert/strict');
+import assert from 'assert/strict';
 
 class StringTableInstructions {
     /**
@@ -32,4 +30,4 @@ class StringTableInstructions {
     }
 }
 
-module.exports = StringTableInstructions;
+export default StringTableInstructions;

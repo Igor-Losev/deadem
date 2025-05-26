@@ -1,9 +1,7 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const DemoPacketRaw = require('./../data/DemoPacketRaw'),
-    VarInt32 = require('../data/VarInt32');
+import DemoPacketRaw from './../data/DemoPacketRaw.js';
+import VarInt32 from '../data/VarInt32.js';
 
 class DemoPacketRawExtractor {
     /**
@@ -74,4 +72,4 @@ class DemoPacketRawExtractor {
     }
 }
 
-module.exports = DemoPacketRawExtractor;
+export default DemoPacketRawExtractor;

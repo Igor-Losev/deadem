@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'assert';
 
-const assert = require('assert');
-
-const Logger = require('./../Logger');
+import Logger from './../Logger.js';
 
 class Tracker {
     /**
@@ -51,4 +49,4 @@ class Tracker {
     }
 }
 
-module.exports = Tracker;
+export default Tracker;

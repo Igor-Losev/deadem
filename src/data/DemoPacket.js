@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'assert/strict';
 
-const assert = require('assert/strict');
-
-const DemoPacketType = require('./enums/DemoPacketType');
+import DemoPacketType from './enums/DemoPacketType.js';
 
 class DemoPacket {
     /**
@@ -102,4 +100,4 @@ class DemoPacket {
  * @typedef {{sequence: number, type: String, tick: number, data: *}} DemoPacketObject
  */
 
-module.exports = DemoPacket;
+export default DemoPacket;

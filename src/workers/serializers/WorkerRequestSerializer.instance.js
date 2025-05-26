@@ -1,14 +1,12 @@
-'use strict';
+import DemoPacket from './../../data/DemoPacket.js';
+import MessagePacket from './../../data/MessagePacket.js';
 
-const DemoPacket = require('./../../data/DemoPacket'),
-    MessagePacket = require('./../../data/MessagePacket');
+import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
 
-const WorkerMessageType = require('./../../data/enums/WorkerMessageType');
-
-const WorkerRequestDHPParse = require('./../requests/WorkerRequestDHPParse'),
-    WorkerRequestDPacketSync = require('./../requests/WorkerRequestDPacketSync'),
-    WorkerRequestMPacketSync = require('./../requests/WorkerRequestMPacketSync'),
-    WorkerRequestSvcPacketEntities = require('./../requests/WorkerRequestSvcPacketEntities');
+import WorkerRequestDHPParse from './../requests/WorkerRequestDHPParse.js';
+import WorkerRequestDPacketSync from './../requests/WorkerRequestDPacketSync.js';
+import WorkerRequestMPacketSync from './../requests/WorkerRequestMPacketSync.js';
+import WorkerRequestSvcPacketEntities from './../requests/WorkerRequestSvcPacketEntities.js';
 
 class WorkerRequestSerializer {
     constructor() {
@@ -89,4 +87,4 @@ class WorkerRequestSerializer {
  * @typedef {WorkerRequest} SerializableRequest
  */
 
-module.exports = WorkerRequestSerializer.instance;
+export default WorkerRequestSerializer.instance;

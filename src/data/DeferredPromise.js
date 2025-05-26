@@ -1,5 +1,3 @@
-'use strict';
-
 class DeferredPromise {
     constructor() {
         this._promise = new Promise((resolve, reject) => {
@@ -33,4 +31,4 @@ class DeferredPromise {
     }
 }
 
-module.exports = DeferredPromise;
+export default DeferredPromise;

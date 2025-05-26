@@ -1,19 +1,17 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('node:stream');
+import DemoPacket from './../data/DemoPacket.js';
+import MessagePacket from './../data/MessagePacket.js';
 
-const DemoPacket = require('./../data/DemoPacket'),
-    MessagePacket = require('./../data/MessagePacket');
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import MessagePacketType from './../data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
-const DemoPacketType = require('../data/enums/DemoPacketType'),
-    MessagePacketType = require('./../data/enums/MessagePacketType'),
-    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
+import SnappyDecompressor from './../decompressors/SnappyDecompressor.instance.js';
 
-const SnappyDecompressor = require('./../decompressors/SnappyDecompressor.instance');
+import MessagePacketRawExtractor from './../extractors/MessagePacketRawExtractor.js';
 
-const MessagePacketRawExtractor = require('./../extractors/MessagePacketRawExtractor');
-
-const WorkerRequestDHPParse = require('./../workers/requests/WorkerRequestDHPParse');
+import WorkerRequestDHPParse from './../workers/requests/WorkerRequestDHPParse.js';
 
 const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PACKET, DemoPacketType.DEM_FULL_PACKET ];
 
@@ -240,4 +238,4 @@ function parseMessagePacket(messagePacketRaw) {
     return new MessagePacket(messagePacketType, data);
 }
 
-module.exports = DemoStreamPacketParser;
+export default DemoStreamPacketParser;

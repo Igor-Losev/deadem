@@ -1,6 +1,4 @@
-'use strict';
-
-const FieldDecoder = require('./FieldDecoder');
+import FieldDecoder from './FieldDecoder.js';
 
 class FieldDecoderNoScale extends FieldDecoder {
     /**
@@ -20,5 +18,5 @@ class FieldDecoderNoScale extends FieldDecoder {
     }
 }
 
-module.exports = FieldDecoderNoScale;
+export default FieldDecoderNoScale;
 

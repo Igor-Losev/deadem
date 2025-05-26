@@ -1,10 +1,8 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('stream');
-
-const DemoPacketType = require('../data/enums/DemoPacketType'),
-    MessagePacketType = require('./../data/enums/MessagePacketType'),
-    PerformanceTrackerCategory = require('./../data/enums/PerformanceTrackerCategory');
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import MessagePacketType from './../data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Handles prioritization of internal messages within demo packets.
@@ -80,4 +78,4 @@ function getPacketPriority(type) {
     }
 }
 
-module.exports = DemoStreamPacketPrioritizer;
+export default DemoStreamPacketPrioritizer;

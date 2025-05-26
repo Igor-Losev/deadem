@@ -1,8 +1,6 @@
-'use strict';
+import assert from 'node:assert/strict';
 
-const assert = require('node:assert/strict');
-
-const ProtoProvider = require('./../../providers/ProtoProvider.instance');
+import ProtoProvider from '../../providers/ProtoProviderInstance.js';
 
 const registry = {
     byCode: new Map(),
@@ -134,4 +132,4 @@ const demAnimationData = new DemoPacketType('DEM_AnimationData', 16, CDemoAnimat
 const demAnimationHeader = new DemoPacketType('DEM_AnimationHeader', 17, CDemoAnimationHeader);
 const demRecovery = new DemoPacketType('DEM_Recovery', 18, CDemoRecovery);
 
-module.exports = DemoPacketType;
+export default DemoPacketType;

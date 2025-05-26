@@ -1,6 +1,4 @@
-'use strict';
-
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
 
 class HuffmanTreePriority {
     /**
@@ -41,4 +39,4 @@ class HuffmanTreePriority {
     }
 }
 
-module.exports = HuffmanTreePriority;
+export default HuffmanTreePriority;

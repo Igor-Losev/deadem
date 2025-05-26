@@ -1,9 +1,7 @@
-'use strict';
+import DeferredPromise from './../data/DeferredPromise.js';
 
-const DeferredPromise = require('./../data/DeferredPromise');
-
-const WorkerRequestSerializer = require('./../workers/serializers/WorkerRequestSerializer.instance'),
-    WorkerResponseSerializer = require('./../workers/serializers/WorkerResponseSerializer.instance');
+import WorkerRequestSerializer from './../workers/serializers/WorkerRequestSerializer.instance.js';
+import WorkerResponseSerializer from './../workers/serializers/WorkerResponseSerializer.instance.js';
 
 /**
  * Represents a single worker thread with request serialization,
@@ -99,4 +97,4 @@ class WorkerThread {
     }
 }
 
-module.exports = WorkerThread;
+export default WorkerThread;

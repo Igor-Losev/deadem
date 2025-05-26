@@ -1,8 +1,6 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('stream');
-
-const BinaryHeap = require('./../data/structures/BinaryHeap');
+import BinaryHeap from './../data/structures/BinaryHeap.js';
 
 /**
  * Given a stream of {@link DemoPacket}, ensures that they are passed
@@ -64,4 +62,4 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
     }
 }
 
-module.exports = DemoStreamPacketCoordinator;
+export default DemoStreamPacketCoordinator;

@@ -1,5 +1,3 @@
-'use strict';
-
 class EntityMutation {
     /**
      * @constructor
@@ -28,4 +26,4 @@ class EntityMutation {
     }
 }
 
-module.exports = EntityMutation;
+export default EntityMutation;
