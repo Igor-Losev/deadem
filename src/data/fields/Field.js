@@ -1,6 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import FieldModel from './../enums/FieldModel.js';
+import FieldModel from '#data/enums/FieldModel.js';
 
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 import FieldDecoderPicker from './FieldDecoderPicker.instance.js';

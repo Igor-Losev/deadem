@@ -4,11 +4,11 @@ import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
-import Demo from './../../data/Demo.js';
+import Demo from '#data/Demo.js';
 
-import DemoPacketType from '../../data/enums/DemoPacketType.js';
-import MessagePacketType from './../../data/enums/MessagePacketType.js';
-import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
+import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';

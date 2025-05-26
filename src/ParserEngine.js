@@ -2,10 +2,10 @@ import Stream from 'node:stream';
 
 import Logger from '#core/Logger.js';
 
-import Demo from './data/Demo.js';
+import Demo from '#data/Demo.js';
 
-import InterceptorStage from './data/enums/InterceptorStage.js';
-import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
+import InterceptorStage from '#data/enums/InterceptorStage.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
 import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';

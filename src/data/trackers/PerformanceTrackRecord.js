@@ -1,6 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import PerformanceTrackerCategory from './../enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 class PerformanceTrackRecord {
     /**

@@ -1,6 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import Class from './../Class.js';
+import Class from '#data/Class.js';
 
 class Entity {
     /**

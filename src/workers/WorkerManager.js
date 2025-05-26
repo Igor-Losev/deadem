@@ -4,7 +4,7 @@ import Assert from '#core/Assert.js';
 import FileSystem from '#core/FileSystem.js';
 import Logger from '#core/Logger.js';
 
-import DeferredPromise from './../data/DeferredPromise.js';
+import DeferredPromise from '#data/DeferredPromise.js';
 
 import WorkerThread from './WorkerThread.js';
 

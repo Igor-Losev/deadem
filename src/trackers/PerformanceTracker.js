@@ -1,5 +1,5 @@
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
-import PerformanceTrackRecord from './../data/trackers/PerformanceTrackRecord.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackRecord from '#data/trackers/PerformanceTrackRecord.js';
 
 import Tracker from './Tracker.js';
 

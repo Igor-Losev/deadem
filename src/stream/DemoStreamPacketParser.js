@@ -2,12 +2,12 @@ import Stream from 'node:stream';
 
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import DemoPacket from './../data/DemoPacket.js';
-import MessagePacket from './../data/MessagePacket.js';
+import DemoPacket from '#data/DemoPacket.js';
+import MessagePacket from '#data/MessagePacket.js';
 
-import DemoPacketType from '../data/enums/DemoPacketType.js';
-import MessagePacketType from './../data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 

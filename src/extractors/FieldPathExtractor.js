@@ -1,10 +1,10 @@
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 
-import FieldPathOperation from './../data/enums/FieldPathOperation.js';
+import FieldPathOperation from '#data/enums/FieldPathOperation.js';
 
-import FieldPathBuilder from '../data/fields/path/FieldPathBuilder.js';
-import HuffmanTree from './../data/fields/HuffmanTree.js';
+import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import HuffmanTree from '#data/fields/HuffmanTree.js';
 
 class FieldPathExtractor {
     /**

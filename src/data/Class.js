@@ -3,6 +3,12 @@ import Assert from '#core/Assert.js';
 import Serializer from './fields/Serializer.js';
 
 class Class {
+    /**
+     * @constructor
+     * @param {number} id
+     * @param {String} name
+     * @param {Serializer} serializer
+     */
     constructor(id, name, serializer) {
         Assert.isTrue(Number.isInteger(id));
         Assert.isTrue(typeof name === 'string' && name.length > 0);

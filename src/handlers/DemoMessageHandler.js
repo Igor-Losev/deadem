@@ -1,13 +1,13 @@
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 
-import Demo from './../data/Demo.js';
-import Server from './../data/Server.js';
+import Demo from '#data/Demo.js';
+import Server from '#data/Server.js';
 
-import Entity from './../data/entity/Entity.js';
-import EntityMutationEvent from './../data/entity/EntityMutationEvent.js';
+import Entity from '#data/entity/Entity.js';
+import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
 
-import EntityOperation from './../data/enums/EntityOperation.js';
+import EntityOperation from '#data/enums/EntityOperation.js';
 
 import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
 

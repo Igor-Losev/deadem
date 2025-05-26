@@ -1,6 +1,6 @@
-import MessagePacketType from './../data/enums/MessagePacketType.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
 
-import PacketTrackRecord from './../data/trackers/PacketTrackRecord.js';
+import PacketTrackRecord from '#data/trackers/PacketTrackRecord.js';
 
 import Tracker from './Tracker.js';
 

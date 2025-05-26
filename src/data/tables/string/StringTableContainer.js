@@ -4,8 +4,8 @@ import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import StringTableEvent from './../../enums/StringTableEvent.js';
-import StringTableType from './../../enums/StringTableType.js';
+import StringTableEvent from '#data/enums/StringTableEvent.js';
+import StringTableType from '#data/enums/StringTableType.js';
 
 import StringTableEntryExtractor from '#extractors/StringTableEntryExtractor.js';
 

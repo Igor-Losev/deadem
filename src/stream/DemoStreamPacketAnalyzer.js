@@ -1,10 +1,10 @@
 import Stream from 'node:stream';
 
-import DemoPacketType from '../data/enums/DemoPacketType.js';
-import EntityOperation from './../data/enums/EntityOperation.js';
-import InterceptorStage from './../data/enums/InterceptorStage.js';
-import MessagePacketType from './../data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+import EntityOperation from '#data/enums/EntityOperation.js';
+import InterceptorStage from '#data/enums/InterceptorStage.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';

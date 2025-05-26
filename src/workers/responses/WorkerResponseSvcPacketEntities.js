@@ -1,6 +1,6 @@
 import WorkerResponse from './WorkerResponse.js';
 
-import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
+import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 class WorkerResponseSvcPacketEntities extends WorkerResponse {
     /**

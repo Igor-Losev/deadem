@@ -2,7 +2,7 @@ import Assert from '#core/Assert.js';
 
 import ProtoProvider from '#providers/ProtoProvider.instance.js';
 
-import StringTableType from './../../enums/StringTableType.js';
+import StringTableType from '#data/enums/StringTableType.js';
 
 const CModifierTableEntry = ProtoProvider.BASE_MODIFIER.lookupType('CModifierTableEntry');
 const CMsgPlayerInfo = ProtoProvider.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');

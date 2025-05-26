@@ -1,7 +1,7 @@
-import DemoPacket from './../../data/DemoPacket.js';
-import MessagePacket from './../../data/MessagePacket.js';
+import DemoPacket from '#data/DemoPacket.js';
+import MessagePacket from '#data/MessagePacket.js';
 
-import WorkerMessageType from './../../data/enums/WorkerMessageType.js';
+import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerRequestDHPParse from './../requests/WorkerRequestDHPParse.js';
 import WorkerRequestDPacketSync from './../requests/WorkerRequestDPacketSync.js';

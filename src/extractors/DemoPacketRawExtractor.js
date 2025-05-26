@@ -1,7 +1,7 @@
 import Assert from '#core/Assert.js';
 
-import DemoPacketRaw from './../data/DemoPacketRaw.js';
-import VarInt32 from '../data/VarInt32.js';
+import DemoPacketRaw from '#data/DemoPacketRaw.js';
+import VarInt32 from '#data/VarInt32.js';
 
 class DemoPacketRawExtractor {
     /**

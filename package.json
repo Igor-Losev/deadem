@@ -38,6 +38,7 @@
   ],
   "imports": {
     "#core/*.js": "./src/core/*.js",
+    "#data/*.js": "./src/data/*.js",
     "#extractors/*.js": "./src/extractors/*.js",
     "#handlers/*.js": "./src/handlers/*.js",
     "#providers/*.js": "./src/providers/*.js",

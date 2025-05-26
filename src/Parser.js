@@ -1,4 +1,4 @@
-import InterceptorStage from './data/enums/InterceptorStage.js';
+import InterceptorStage from '#data/enums/InterceptorStage.js';
 
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';

@@ -1,6 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import StringTableType from './../../enums/StringTableType.js';
+import StringTableType from '#data/enums/StringTableType.js';
 
 import StringTableInstructions from './StringTableInstructions.js';
 

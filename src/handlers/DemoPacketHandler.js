@@ -1,14 +1,14 @@
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 
-import Class from './../data/Class.js';
-import Demo from './../data/Demo.js';
+import Class from '#data/Class.js';
+import Demo from '#data/Demo.js';
 
-import Field from './../data/fields/Field.js';
-import FieldDecoderInstructions from './../data/fields/FieldDecoderInstructions.js';
-import FieldDefinition from '../data/fields/FieldDefinition.js';
-import Serializer from './../data/fields/Serializer.js';
-import SerializerKey from './../data/fields/SerializerKey.js';
+import Field from '#data/fields/Field.js';
+import FieldDecoderInstructions from '#data/fields/FieldDecoderInstructions.js';
+import FieldDefinition from '#data/fields/FieldDefinition.js';
+import Serializer from '#data/fields/Serializer.js';
+import SerializerKey from '#data/fields/SerializerKey.js';
 
 import ProtoProvider from '#providers/ProtoProvider.instance.js';
 

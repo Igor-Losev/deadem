@@ -2,7 +2,7 @@ import Stream from 'node:stream';
 
 import Assert from '#core/Assert.js';
 
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 const MEGABYTE = 1024 * 1024;
 

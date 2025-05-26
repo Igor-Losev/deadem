@@ -1,6 +1,6 @@
 import BitBuffer from '#core/BitBuffer.js';
 
-import MessagePacketRaw from '../data/MessagePacketRaw.js';
+import MessagePacketRaw from '#data/MessagePacketRaw.js';
 
 class MessagePacketRawExtractor {
     /**

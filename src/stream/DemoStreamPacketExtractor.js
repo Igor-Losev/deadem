@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoPacketRawExtractor from '#extractors/DemoPacketRawExtractor.js';
 

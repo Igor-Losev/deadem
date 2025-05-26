@@ -1,8 +1,8 @@
 import Stream from 'node:stream';
 
-import DemoPacketType from '../data/enums/DemoPacketType.js';
-import MessagePacketType from './../data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from './../data/enums/PerformanceTrackerCategory.js';
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Handles prioritization of internal messages within demo packets.

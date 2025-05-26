@@ -1,4 +1,4 @@
-import EntityMutation from '../data/entity/EntityMutation.js';
+import EntityMutation from '#data/entity/EntityMutation.js';
 
 import FieldPathExtractor from './FieldPathExtractor.js';
 

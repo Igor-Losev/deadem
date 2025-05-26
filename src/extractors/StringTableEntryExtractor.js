@@ -2,8 +2,8 @@ import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import StringTable from './../data/tables/string/StringTable.js';
-import StringTableEntry from './../data/tables/string/StringTableEntry.js';
+import StringTable from '#data/tables/string/StringTable.js';
+import StringTableEntry from '#data/tables/string/StringTableEntry.js';
 
 const MAX_HISTORY_ENTRIES = 32;
 
