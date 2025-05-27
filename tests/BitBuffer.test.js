@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '../BitBuffer.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 describe('BitBuffer.read()', () => {
     describe('When reading chunks [ 6, 4, 3, 1, 2 ] from [ 0x51, 0x85 ]', () => {

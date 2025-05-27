@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import FieldDecoderInstructions from './../../FieldDecoderInstructions.js';
-import FieldDecoderQuantizedFloat from './../FieldDecoderQuantizedFloat.js';
+import FieldDecoderInstructions from '#data/fields/FieldDecoderInstructions.js';
+import FieldDecoderQuantizedFloat from '#data/fields/decoders/FieldDecoderQuantizedFloat.js';
 
 describe('FieldDecoderQuantizedFloat.quantize()', () => {
     describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, 0 ]', () => {
