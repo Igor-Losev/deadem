@@ -179,37 +179,31 @@ class ParserEngine {
         return new Promise((resolve, reject) => {
             this._logger.info('Parse started');
 
+            this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
             Stream.pipeline(
                 reader,
                 ...this._chain,
                 (error) => {
+                    this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
+                    this._trackers.memory.off();
+
                     this._finished = true;
 
                     if (error) {
                         this._logger.error('Parse failed', error);
 
                         reject(error);
+                    } else {
+                        this._logger.info('Parse finished');
+
+                        resolve();
                     }
-
-                    this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
-
-                    this._trackers.memory.print();
-                    this._trackers.packet.print();
-                    this._trackers.performance.print();
-
-                    this._trackers.memory.dispose();
-                    this._trackers.packet.dispose();
-                    this._trackers.performance.dispose();
 
                     if (this._workerManager !== null) {
                         this._workerManager.terminate();
                     }
-
-                    this._logger.info('Parse finished');
-
-                    resolve();
                 }
             );
         });

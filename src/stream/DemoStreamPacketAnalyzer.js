@@ -41,8 +41,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     async _transform(demoPacket, encoding, callback) {
-        this._engine.getPacketTracker().handleDemoPacket(demoPacket);
-
         await this._interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
@@ -116,8 +114,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 for (let i = 0; i < messagePackets.length; i++) {
                     const messagePacket = messagePackets[i];
-
-                    this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
 
                     await this._interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
 
@@ -297,6 +293,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                             break;
                     }
 
+                    this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
+
                     await this._interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
                 }
 
@@ -305,6 +303,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         }
 
         this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
+
+        this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
         await this._interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
 

@@ -1,12 +1,22 @@
-import Tracker from './Tracker.js';
+import MemoryTracker from './MemoryTracker.js';
 
-class MemoryTrackerBrowser extends Tracker {
-    constructor(logger) {
-        super(logger);
+class MemoryTrackerBrowser extends MemoryTracker {
+    constructor() {
+        super();
+
+        this._stats = {
+            maxMemoryUsage: null
+        };
     }
 
-    print() {
-
+    /**
+     * @public
+     * @returns {{maxMemoryUsage: number|null}}
+     */
+    getStats() {
+        return {
+            ...this._stats
+        };
     }
 }
 

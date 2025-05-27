@@ -42,6 +42,18 @@ class Parser {
 
     /**
      * @public
+     * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
+     */
+    getStats() {
+        return {
+            memory: this._engine.getMemoryTracker().getStats(),
+            packet: this._engine.getPacketTracker().getStats(),
+            performance: this._engine.getPerformanceTracker().getStats()
+        };
+    }
+
+    /**
+     * @public
      * @param {Stream.Readable} reader
      * @returns {Promise<void>}
      */

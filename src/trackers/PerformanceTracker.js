@@ -1,15 +1,11 @@
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
-import PerformanceTrackRecord from '#data/trackers/PerformanceTrackRecord.js';
+import PerformanceTrackerRecord from '#data/trackers/PerformanceTrackerRecord.js';
 
 import Tracker from './Tracker.js';
 
 class PerformanceTracker extends Tracker {
-    /**
-     * @constructor
-     * @param {Logger} logger
-     */
-    constructor(logger) {
-        super(logger);
+    constructor() {
+        super();
 
         this._registry = new Map();
     }
@@ -18,55 +14,84 @@ class PerformanceTracker extends Tracker {
      * @public
      * @param {PerformanceTrackerCategory} category
      */
-    start(category) {
-        const record = this._registry.get(category) || new PerformanceTrackRecord(category);
+    end(category) {
+        const record = this._registry.get(category) || null;
 
-        record.touch();
+        if (record === null) {
+            throw new Error(`Unable to end tracking of the category [ ${category.code} ]`);
+        }
 
-        this._registry.set(category, record);
+        record.end();
+    }
+
+    /**
+     * @public
+     * @returns {PerformanceTrackerStats}
+     */
+    getStats() {
+        return getStatsRecursively.call(this);
     }
 
     /**
      * @public
      * @param {PerformanceTrackerCategory} category
      */
-    end(category) {
-        const record = this._registry.get(category);
+    start(category) {
+        const record = this._registry.get(category) || new PerformanceTrackerRecord(category);
 
-        if (record === null) {
-            throw new Error(`Unable to finish tracking of the category [ ${category.code} ]`);
-        }
+        record.start();
 
-        record.commit();
-    }
-
-    /**
-     * @public
-     */
-    print() {
-        const open = this._highlight('<PerformanceTracker>');
-        const close = this._highlight('</PerformanceTracker>');
-
-        this._logger.info(open);
-
-        const walk = (category, depth = 0) => {
-            const record = this._registry.get(category) || null;
-
-            if (record !== null) {
-                const prefix = `${'\t'.repeat(depth)}`;
-
-                this._logger.info(`${prefix.length > 0 ? `${prefix} ` : ''}[ ${category.code} ]: total [ ${this._formatNumber(record.accumulator)} ] ms, [ ${this._formatNumber(record.count)} ] run(s) with [ ${this._formatNumber(Math.round(record.average * 1000) / 1000)} ] ms in average`);
-            }
-
-            category.categories.forEach((subcategory) => {
-                walk(subcategory, depth + 1);
-            });
-        };
-
-        walk(PerformanceTrackerCategory.PARSER);
-
-        this._logger.info(close);
+        this._registry.set(category, record);
     }
 }
+
+/**
+ * @param {PerformanceTrackerNode=} reference
+ * @returns {PerformanceTrackerNode}
+ */
+function getStatsRecursively(reference = getNode()) {
+    const record = this._registry.get(reference.category) || null;
+
+    if (record === null) {
+        return reference;
+    }
+
+    reference.stats = record.getSnapshot();
+
+    reference.category.categories.forEach((category) => {
+        if (this._registry.has(category)) {
+            const child = getNode(category);
+
+            reference.children.push(child);
+
+            getStatsRecursively.call(this, child);
+        }
+    });
+
+    return reference;
+}
+
+/**
+ * @param {PerformanceTrackerCategory} category
+ * @returns {PerformanceTrackerNode}
+ */
+function getNode(category = PerformanceTrackerCategory.PARSER) {
+    return {
+        category,
+        children: [ ],
+        stats: null
+    };
+}
+
+/**
+ * @typedef {Object} PerformanceTrackerNode
+ * @property {Array<PerformanceTrackerNode>} children
+ * @property {PerformanceTrackerRecordStats|null} stats
+ * @property {PerformanceTrackerCategory} category
+ */
+
+/**
+ * @typedef {PerformanceTrackerNode} PerformanceTrackerStats
+ */
 
 export default PerformanceTracker;

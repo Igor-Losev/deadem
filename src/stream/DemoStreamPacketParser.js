@@ -17,11 +17,13 @@ const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PAC
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload and
- * passes through instances of {@link DemoPacket}. Packets that
- * may hypothetically include large amounts of data (e.g. DEM_PACKET,
+ * passes through instances of:
+ *  - {@link DemoPacket} - in case of success.
+ *  - {@link DemoPacketRaw} - in case of failure.
+ * Packets that may hypothetically include large amounts of data (e.g. DEM_PACKET,
  * DEM_SIGNON_PACKET, DEM_FULL_PACKET) are processed through
  * asynchronous worker threads. As a result, the order of the {@link DemoPacket}
- * instances is not guaranteed.
+ * or {@link DemoPacketRaw} instances is not guaranteed.
  */
 class DemoStreamPacketParser extends Stream.Transform {
     /**
@@ -71,8 +73,12 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
 
-            demoPackets.forEach((demoPacket) => {
-                this.push(demoPacket);
+            demoPackets.forEach((demoPacket, index) => {
+                if (demoPacket !== null) {
+                    this.push(demoPacket);
+                } else {
+                    this.push(batch[index]);
+                }
             });
 
             callback();
@@ -85,8 +91,12 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             const demoPackets = this._processSync(other);
 
-            demoPackets.forEach((demoPacket) => {
-                this.push(demoPacket);
+            demoPackets.forEach((demoPacket, index) => {
+                if (demoPacket !== null) {
+                    this.push(demoPacket);
+                } else {
+                    this.push(batch[index]);
+                }
             });
 
             if (heavy.length > 0) {
@@ -109,7 +119,7 @@ class DemoStreamPacketParser extends Stream.Transform {
     /**
      * @protected
      * @param {Array<DemoPacketRaw>} packets
-     * @returns {Array<DemoPacket>}
+     * @returns {Array<DemoPacket|null>}
      */
     _processSync(packets) {
         return packets.map(demoPacketRaw => parseDemoPacket.call(this, demoPacketRaw));
@@ -150,6 +160,8 @@ class DemoStreamPacketParser extends Stream.Transform {
 
                         if (messagePacket !== null) {
                             messagePackets.push(messagePacket);
+                        } else {
+                            this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
                         }
                     });
 
@@ -168,22 +180,24 @@ class DemoStreamPacketParser extends Stream.Transform {
 
 /**
  * @param {DemoPacketRaw} demoPacketRaw
- * @returns {DemoPacket}
+ * @returns {DemoPacket|null}
  */
 function parseDemoPacket(demoPacketRaw) {
+    const demoPacketTypeId = demoPacketRaw.getTypeId();
+    const demoPacketType = DemoPacketType.parseById(demoPacketTypeId);
+
+    if (demoPacketType === null) {
+        this._engine.logger.warn(`Unknown DemoPacketType [ ${demoPacketTypeId} ]`);
+
+        return null;
+    }
+
     let data;
 
     if (demoPacketRaw.getIsCompressed()) {
         data = SnappyDecompressor.decompress(demoPacketRaw.payload);
     } else {
         data = demoPacketRaw.payload;
-    }
-
-    const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
-    const demoTick = demoPacketRaw.tick.value;
-
-    if (demoPacketType === null) {
-        throw new Error(`Unable to parse DemoPacketType [ ${demoPacketRaw.getTypeId()} ]`);
     }
 
     const decoded = demoPacketType.proto.decode(data);
@@ -201,12 +215,14 @@ function parseDemoPacket(demoPacketRaw) {
 
             if (messagePacket !== null) {
                 messagePackets.push(messagePacket);
+            } else {
+                this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
             }
         });
 
-        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, messagePackets);
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, messagePackets);
     } else {
-        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, decoded);
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
     }
 
     return demoPacket;
@@ -220,8 +236,6 @@ function parseMessagePacket(messagePacketRaw) {
     const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
 
     if (messagePacketType === null) {
-        this._engine.getPacketTracker().handleUnknownMessagePacket(messagePacketRaw.type);
-
         return null;
     }
 

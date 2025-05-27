@@ -1,6 +1,6 @@
 import { Readable } from 'readable-stream';
 
-import { Parser } from '#root/index.js';
+import { Parser, Printer } from '#root/index.js';
 
 const state = {
     file: null,
@@ -38,9 +38,12 @@ submit.addEventListener('click', () => {
     });
 
     const parser = new Parser();
+    const printer = new Printer(parser);
 
     parser.parse(readable)
         .then(() => {
+            printer.printStats();
+
             state.processing = false;
 
             submit.removeAttribute('disabled');

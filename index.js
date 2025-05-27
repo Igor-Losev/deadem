@@ -4,5 +4,6 @@ export { default as InterceptorStage } from './src/data/enums/InterceptorStage.j
 export { default as Logger } from './src/core/Logger.js';
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
 export { default as Parser } from './src/Parser.js';
+export { default as Printer } from './src/Printer.js';
 export { default as ParserConfiguration } from './src/ParserConfiguration.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';

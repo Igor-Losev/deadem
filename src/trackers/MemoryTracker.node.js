@@ -1,46 +1,59 @@
-import Tracker from './Tracker.js';
+import MemoryTracker from './MemoryTracker.js';
 
-const INTERVAL_MILLISECONDS = 10;
-const MEGABYTE = 1024 * 1024;
-
-class MemoryTrackerNode extends Tracker {
+class MemoryTrackerNode extends MemoryTracker {
     /**
      * @constructor
-     * @param {Logger} logger
+     * @param {number} intervalMilliseconds
      */
-    constructor(logger) {
-        super(logger);
+    constructor(intervalMilliseconds = 10) {
+        super();
 
-        this._statistics = {
-            maxMemoryUsage: -Infinity
+        this._intervalMilliseconds = intervalMilliseconds;
+        this._intervalId = null;
+
+        this._stats = {
+            maxMemoryUsage: null
         };
+    }
 
-        this._interval = setInterval(() => {
+    /**
+     * @public
+     * @returns {MemoryTrackerStats}
+     */
+    getStats() {
+        return {
+            ...this._stats
+        };
+    }
+
+    /**
+     * @public
+     */
+    off() {
+        if (this._intervalId === null) {
+            throw new Error('Unable to call MemoryTracker.off()');
+        }
+
+        clearInterval(this._intervalId);
+
+        this._intervalId = null;
+    }
+
+    /**
+     * @public
+     */
+    on() {
+        if (this._intervalId !== null) {
+            throw new Error('Unable to call MemoryTracker.on()');
+        }
+
+        this._intervalId = setInterval(() => {
             const memoryUsage = process.memoryUsage.rss();
 
-            if (memoryUsage > this._statistics.maxMemoryUsage) {
-                this._statistics.maxMemoryUsage = memoryUsage;
+            if (this._stats.maxMemoryUsage === null || memoryUsage > this._stats.maxMemoryUsage) {
+                this._stats.maxMemoryUsage = memoryUsage;
             }
-        }, INTERVAL_MILLISECONDS);
-    }
-
-    dispose() {
-        super.dispose();
-
-        clearInterval(this._interval);
-
-        this._interval = null;
-    }
-
-    print() {
-        const open = this._highlight('<MemoryTracker>');
-        const close = this._highlight('</MemoryTracker>');
-
-        this._logger.info(open);
-
-        this._logger.info(`Max Memory Usage: [ ${this._formatNumber(this._statistics.maxMemoryUsage / MEGABYTE)} ] MB`);
-
-        this._logger.info(close);
+        }, this._intervalMilliseconds);
     }
 }
 

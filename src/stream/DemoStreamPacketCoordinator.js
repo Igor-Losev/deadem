@@ -2,9 +2,12 @@ import Stream from 'node:stream';
 
 import BinaryHeap from '#core/BinaryHeap.js';
 
+import DemoPacketRaw from '#data/DemoPacketRaw.js';
+
 /**
- * Given a stream of {@link DemoPacket}, ensures that they are passed
- * through in the correct sequence order.
+ * Given a stream of {@link DemoPacket} or {@link DemoPacketRaw}:
+ *  - Filters out {@link DemoPacketRaw} packets.
+ *  - Ensures that {@link DemoPacket} packets are passed through in the correct sequence order.
  */
 class DemoStreamPacketCoordinator extends Stream.Transform {
     /**
@@ -35,20 +38,30 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
 
     /**
      * @protected
-     * @param {DemoPacket} demoPacket
+     * @param {DemoPacket|DemoPacketRaw} packet
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
      */
-    _transform(demoPacket, encoding, callback) {
-        if (demoPacket.sequence !== this._sequence) {
-            this._heap.insert(demoPacket);
+    _transform(packet, encoding, callback) {
+        if (packet instanceof DemoPacketRaw) {
+            this._engine.getPacketTracker().handleDemoPacketRaw(packet);
+
+            this._sequence += 1;
 
             callback();
 
             return;
         }
 
-        this.push(demoPacket);
+        if (packet.sequence !== this._sequence) {
+            this._heap.insert(packet);
+
+            callback();
+
+            return;
+        }
+
+        this.push(packet);
 
         this._sequence += 1;
 
