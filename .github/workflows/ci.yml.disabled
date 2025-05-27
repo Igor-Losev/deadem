@@ -12,6 +12,7 @@ jobs:
 
     env:
       FILES: "35244871 36126255-5637 36127043-5637"
+      S3: "https://deadem.s3.us-east-1.amazonaws.com"
 
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +43,7 @@ jobs:
           mkdir -p demos
           for file in $FILES; do
             echo "Downloading $file.dem"
-            curl -L -o demos/$file.dem https://parser-demofiles.s3.us-east-1.amazonaws.com/$file.dem
+            curl -L -o demos/$file.dem $S3/deadlock/demos/$file.dem
             echo "Downloaded $file.dem"
           done
 

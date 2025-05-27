@@ -6,7 +6,7 @@ import Logger from '#core/Logger.js';
 const logger = Logger.CONSOLE_DEBUG;
 
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../demos');
-const S3_BUCKET_URL = 'https://parser-demofiles.s3.us-east-1.amazonaws.com';
+const S3_BUCKET_URL = 'https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos';
 
 class DemoProvider {
     constructor() {
