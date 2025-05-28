@@ -461,28 +461,28 @@ class BitBuffer {
         flag = this.readBit();
 
         if (flag) {
-            return this._read(2).readUInt8() >>> 0;
+            return this._read(2).readUInt8();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return this._read(4).readUInt8() >>> 0;
+            return this._read(4).readUInt8();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return this._read(10).readUInt16LE() >>> 0;
+            return this._read(10).readUInt16LE();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return BitBuffer.readUInt32LE(this._read(17)) >>> 0;
+            return BitBuffer.readUInt32LE(this._read(17));
         }
 
-        return this._read(31).readUInt32LE() >>> 0;
+        return this._read(31).readUInt32LE();
     }
 
     /**
