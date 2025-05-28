@@ -14,9 +14,10 @@ const configuration = defineConfig(({ command }) => {
                     entry: './index.js',
                     name: 'deadem',
                     fileName: () => 'deadem.min.js',
-                    formats: [ 'iife' ]
+                    formats: [ 'umd' ]
                 },
-                emptyOutDir: true
+                emptyOutDir: true,
+                sourcemap: true
             }
         };
     } else {
