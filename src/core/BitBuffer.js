@@ -1,22 +1,10 @@
 import VarInt32 from '#data/VarInt32.js';
 
-const BITS_PER_BYTE = 8;
-
-const MASK_DIRECTION = {
-    LEFT: 'left',
-    RIGHT: 'right'
-};
-
-const MASK = {
-    [MASK_DIRECTION.LEFT]: [ 255, 127, 63, 31, 15, 7, 3, 1 ],
-    [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
-};
-
-const REUSABLE_BUFFER_SIZE = 4;
-
+/**
+ * A class for reading data at the bit level from {@link Buffer} or {@link Uint8Array}.
+ */
 class BitBuffer {
     /**
-     * @abstract
      * @constructor
      * @param {Buffer|Uint8Array} buffer
      */
@@ -29,6 +17,10 @@ class BitBuffer {
         };
     }
 
+    /**
+     * @static
+     * @returns {number}
+     */
     static get BITS_PER_BYTE() {
         return BITS_PER_BYTE;
     }
@@ -98,17 +90,17 @@ class BitBuffer {
             throw new Error(`Cannot move pointer backward by ${abs} bits: only [ ${this.getReadCount()} ] bits read`);
         }
 
-        const numberOfBytes = Math.floor(abs / BitBuffer.BITS_PER_BYTE);
-        const numberOfBits = abs % BitBuffer.BITS_PER_BYTE;
+        const numberOfBytes = Math.floor(abs / BITS_PER_BYTE);
+        const numberOfBits = abs % BITS_PER_BYTE;
 
         if (bits > 0) {
             this._pointers.byte += numberOfBytes;
 
-            if (this._pointers.bit + numberOfBits < BitBuffer.BITS_PER_BYTE) {
+            if (this._pointers.bit + numberOfBits < BITS_PER_BYTE) {
                 this._pointers.bit += numberOfBits;
             } else {
                 this._pointers.byte += 1;
-                this._pointers.bit = (this._pointers.bit + numberOfBits) % BitBuffer.BITS_PER_BYTE;
+                this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
             }
         }
 
@@ -119,7 +111,7 @@ class BitBuffer {
                 this._pointers.bit -= numberOfBits;
             } else {
                 this._pointers.byte -= 1;
-                this._pointers.bit = BitBuffer.BITS_PER_BYTE - Math.abs(this._pointers.bit - numberOfBits);
+                this._pointers.bit = BITS_PER_BYTE - Math.abs(this._pointers.bit - numberOfBits);
             }
         }
     }
@@ -521,8 +513,8 @@ class BitBuffer {
             throw new Error(`Unable to read [ ${numberOfBits} ] bit(s) - only [ ${unread} ] bit(s) left`);
         }
 
-        const numberOfRequestedBytes = Math.ceil(numberOfBits / BitBuffer.BITS_PER_BYTE);
-        const numberOfAffectedBytes = Math.ceil((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
+        const numberOfRequestedBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
+        const numberOfAffectedBytes = Math.ceil((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
 
         let extraByte;
 
@@ -545,7 +537,7 @@ class BitBuffer {
         }
 
         const zeroBitsOffset = this._pointers.bit;
-        const zeroBitsIgnored = numberOfAffectedBytes * BitBuffer.BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
+        const zeroBitsIgnored = numberOfAffectedBytes * BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
 
         buffer[0] &= MASK[MASK_DIRECTION.RIGHT][zeroBitsOffset];
 
@@ -567,7 +559,7 @@ class BitBuffer {
                     next = extraByte;
                 }
 
-                buffer[i] |= (next & MASK[MASK_DIRECTION.LEFT][BitBuffer.BITS_PER_BYTE - zeroBitsOffset]) << (BitBuffer.BITS_PER_BYTE - zeroBitsOffset);
+                buffer[i] |= (next & MASK[MASK_DIRECTION.LEFT][BITS_PER_BYTE - zeroBitsOffset]) << (BITS_PER_BYTE - zeroBitsOffset);
 
                 if (i < numberOfRequestedBytes) {
                     buffer[i + 1] = buffer[i + 1] >>> zeroBitsOffset;
@@ -575,12 +567,26 @@ class BitBuffer {
             }
         }
 
-        this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BitBuffer.BITS_PER_BYTE);
-        this._pointers.bit = (this._pointers.bit + numberOfBits) % BitBuffer.BITS_PER_BYTE;
+        this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
+        this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
 
         return buffer;
     }
 }
+
+const BITS_PER_BYTE = 8;
+
+const MASK_DIRECTION = {
+    LEFT: 'left',
+    RIGHT: 'right'
+};
+
+const MASK = {
+    [MASK_DIRECTION.LEFT]: [ 255, 127, 63, 31, 15, 7, 3, 1 ],
+    [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
+};
+
+const REUSABLE_BUFFER_SIZE = 4;
 
 const reusable = Buffer.allocUnsafe(REUSABLE_BUFFER_SIZE);
 
