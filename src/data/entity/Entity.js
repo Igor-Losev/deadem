@@ -76,7 +76,7 @@ class Entity {
      * @public
      * @returns {*}
      */
-    unpack() {
+    unpackFlattened() {
         const unpacked = { };
 
         this._state.forEach((value, fieldPath) => {

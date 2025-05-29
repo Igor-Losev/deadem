@@ -27,7 +27,7 @@ import DemoProvider from './helpers/DemoProvider.js';
             delimiter = ',';
         }
 
-        const demos = matchesArgument.split('=')[1]
+        demos = matchesArgument.split('=')[1]
             .split(delimiter)
             .map(m => m.replace(/(\d{1,})(-\d{1,})/, (match, g1) => g1))
             .map(m => parseInt(m))
