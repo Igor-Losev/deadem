@@ -1,3 +1,261 @@
-### Deadlock
+<h1 align="center">
+<img alt="deadem" src="https://deadem.s3.us-east-1.amazonaws.com/logo.svg" height="80" />
+<br/>
+deadem
+<br/>
+</h1>
 
-[![CI](https://github.com/Igor-Losev/deadlock/actions/workflows/ci.yml/badge.svg)](https://github.com/Igor-Losev/deadlock/actions/workflows/ci.yml)
+<a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
+
+**Deadem** is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
+
+## Contents
+
+* [Installation](#installation)
+* [Examples](#examples)
+* [Overview](#overview)
+  * [Understanding Demo](#understanding-demo)
+  * [Understanding Parser](#understanding-parser)
+  * [Understanding Interceptors](#understanding-interceptors)
+* [Usage](#usage)
+* [Compatibility](#compatibility)
+* [Performance](#performance)
+* [Building](#building)
+* [License](#license)
+* [Acknowledgements](#acknowledgements)
+
+## Installation
+
+### Node.js
+
+```shell
+npm install deadem --save
+```
+
+```js
+import { Parser } from 'deadem';
+```
+
+### Browser
+
+```js
+<script src="//cdn.jsdelivr.net"></script>
+```
+
+```js
+const { Parser } = window.deadem;
+```
+
+## Examples
+
+### Node.js
+
+| №                                                 | Description       | Commands                                                                                                                                       |
+|---------------------------------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| [01](examples/node/01_parse.js)                   | Single demo       | `node ./examples/node/01_parse.js`                                                                                                             |
+| [02](examples/node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/node/02_parse_multiple.js --matches="36126255-5637,36127043-5637"`<br/>`node ./examples/node/02_parse_multiple --matches=all` |
+| [10](examples/node/10_parse_game_time.js)         | Demo duration     | `node ./examples/node/10_parse_game_time.js`                                                                                                   |
+| [11](examples/node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/node/11_parse_top_damage_dealer.js`                                                                                            |
+
+### Browser
+
+| №                      | Description  | Commands    |
+|------------------------|--------------|-------------|
+| [01](examples/browser) | Example page | `npm start` |
+
+## Overview
+
+### Understanding Demo
+
+> ⚠️ **Warning**  
+> 
+> Demo files contain only the minimal data required for visual playback — not all game state information is preserved or available. Additionally, the parser may skip packets it cannot decode.  
+> 
+> You can retrieve detailed statistics about parsed and skipped packets by calling `parser.getStats()`.
+
+The demo file consists of a sequential stream of outer packets, referred to in this project as [DemoPacket](./src/data/DemoPacket.js).
+Each packet represents a type defined in [DemoPacketType](./src/data/enums/DemoPacketType.js).
+
+Most [DemoPacket](./src/data/DemoPacket.js) types, once parsed, become plain JavaScript objects containing structured data. However,
+some packet types — such as `DemoPacketType.DEM_PACKET`, `DemoPacketType.DEM_SIGNON_PACKET`, and
+`DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets ([MessagePacket](./src/data/MessagePacket.js)). These inner packets 
+correspond to a message types defined in [MessagePacketType](./src/data/enums/MessagePacketType.js).
+
+Similarly, most [MessagePacket](./src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
+  1. **Entities** ([Developier Wiki](https://developer.valvesoftware.com/wiki/Networking_Entities)) - `MessagePacketType.SVC_PACKET_ENTITIES`: contains granular (or full) updates to existing entities (i.e. game world objects).
+  2. **String Tables** ([Developer Wiki](https://developer.valvesoftware.com/wiki/String_Table_Dictionary)) - `MessagePacketType.SVC_CREATE_STRING_TABLE`, `MessagePacketType.SVC_UPDATE_STRING_TABLE`, `MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES`: granular (or full) updates to existing string tables (see [StringTableType](./src/data/enums/StringTableType.js)).
+
+### Understanding Parser
+
+The parser accepts a readable stream and incrementally parses individual packets from it.
+It maintains an internal, **mutable** instance of [Demo](./src/data/Demo.js), which represents the current state of the game. You can access it by calling:
+
+```js
+const demo = parser.getDemo();
+```
+
+> Note: The parser overwrites the existing state with each tick and **does not** store past states.
+
+### Understanding Interceptors
+
+Interceptors are user-defined functions that hook into the parsing process **before** or **after** specific stages (called [InterceptorStage](./src/data/enums/InterceptorStage.js)).
+They allow to inspect and extract desired data during parsing.
+Currently, there are three supported stages:
+
+  - `InterceptorStage.DEMO_PACKET`
+  - `InterceptorStage.MESSAGE_PACKET`
+  - `InterceptorStage.ENTITY_PACKET`
+
+Use the following methods to register hooks:
+
+- **Before** the [Demo](./src/data/Demo.js) state is affected:  
+  `parser.registerPreInterceptor(InterceptorStage.DEMO_PACKET, hookFn);`
+
+- **After** the [Demo](./src/data/Demo.js) state is affected:  
+  `parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, hookFn);`
+
+The diagram below provides an example of the parsing timeline, showing when **pre** and **post** interceptors are invoked at each stage.
+
+```text
+...
+PRE DEMO_PACKET
+ └─ DEM_FILE_HEADER
+POST DEMO_PACKET
+...
+PRE DEMO_PACKET
+ └─ DEM_SEND_TABLES
+POST DEMO_PACKET
+...
+PRE DEMO_PACKET
+ └─ DEM_PACKET
+     ├─ PRE MESSAGE_PACKET
+     │   └─ NET_TICK
+     └─ POST MESSAGE_PACKET
+     ├─ PRE MESSAGE_PACKET
+     │   └─ SVC_ENTITIES
+     │       ├─ PRE ENTITY_PACKET
+     │       │   └─ ENTITY_1
+     │       └─ POST ENTITY_PACKET
+     │       ├─ PRE ENTITY_PACKET
+     │       │   └─ ENTITY_2
+     │       └─ POST ENTITY_PACKET
+     └─ POST MESSAGE_PACKET
+POST DEMO_PACKET
+...
+```
+
+Each interceptor receives different arguments depending on the `InterceptorStage`.
+
+| Interceptor Stage | Hook Type      | Hook Signature                                                                                                                                                                                            |
+|-------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DEMO_PACKET`     | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js)) => void                                                                                                                                              |
+| `MESSAGE_PACKET`  | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js), messagePacket: [MessagePacket](./src/data/MessagePacket.js)) => void                                                                                 |
+| `ENTITY_PACKET`   | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js), messagePacket: [MessagePacket](./src/data/MessagePacket.js), events: Array<[EntityMutationEvent](./src/data/entity/EntityMutationEvent.js)>) => void |
+
+> ❗ **Important**
+> 
+> Interceptors hooks are **blocking** — the internal packet analyzer waits for hooks to complete before moving forward.
+
+## Usage
+
+```js
+import { InterceptorStage, MessagePacketType, Parser, Printer } from 'deadem';
+
+const parser = new Parser();
+const printer = new Printer(parser);
+
+let gameTime = null;
+
+// #1: Extraction of current game time
+parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
+    if (messagePacket.type === MessagePacketType.NET_TICK) {
+        const demo = parser.getDemo();
+        
+        // Ensure server is initialized
+        if (demo.server === null) {
+            return;
+        }
+        
+        // Current tick
+        const tick = messagePacket.data.tick;
+        
+        // Server tick rate
+        const tickRate = demo.server.tickRate;
+        
+        // Translating current tick to seconds
+        gameTime = tick / tickRate;
+    }
+});
+
+const topDamageDealer = {
+    player: null,
+    damage: 0
+};
+
+// #2 Getting top hero-damage dealer 
+parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, async (demoPacket, messagePacket, events) => {
+    events.forEach((event) => {
+        const entity = event.entity;
+        
+        if (entity.class.name === 'CCitadelPlayerController') {
+            const data = entity.unpackFlattened();
+            
+            if (data.m_iHeroDamage > topDamageDealer.damage) {
+                topDamageDealer.player = data.m_iszPlayerName;
+                topDamageDealer.damage = data.m_iHeroDamage;
+            }
+        }
+    });
+});
+
+await parser.parse(demoReadableStream);
+
+// Printing final stats to the console
+printer.printStats();
+
+console.log(`Game finished in [ ${gameTime} ] seconds; top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
+```
+
+## Compatibility
+
+Tested with Deadlock demo files from game build 5637 and below.
+
+* **Node.js:** v16.17.0 and above.
+* **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
+
+## Performance
+
+Performance...
+
+## Building
+
+### 1. Installing dependencies
+
+```shell
+npm install
+```
+
+### 2. Compiling .proto
+
+```shell
+npm run proto:json
+```
+
+### 3. Building a bundle
+
+```shell
+npm run build
+```
+
+## License
+
+This project is licensed under the [MIT](./LICENSE) License.
+
+## Acknowledgements
+
+This project was inspired by and built upon the work of the following repositories:
+
+- [dotabuff/manta](https://github.com/dotabuff/manta) - Dotabuff's Dota 2 replay parser in Go.
+- [saul/demofile-net](https://github.com/saul/demofile-net) - CS2 / Deadlock replay parser in C#.
+
+Huge thanks to their authors and contributors!
