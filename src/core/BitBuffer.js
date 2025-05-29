@@ -288,7 +288,7 @@ class BitBuffer {
      * @returns {string} The decoded string.
      */
     readString(length) {
-        let result = '';
+        const bytes = [ ];
 
         while (true) {
             if (Number.isInteger(length) && result.length >= length) {
@@ -301,10 +301,10 @@ class BitBuffer {
                 break;
             }
 
-            result += buffer.toString();
+            bytes.push(buffer[0]);
         }
 
-        return result;
+        return Buffer.from(bytes).toString();
     }
 
     /**
