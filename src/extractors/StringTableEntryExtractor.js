@@ -36,7 +36,7 @@ class StringTableEntryExtractor {
             let key = '';
             let value = null;
 
-            const increment = this._bitBuffer.readBit() === 1;
+            const increment = this._bitBuffer.readBit();
 
             if (increment) {
                 index += 1;
@@ -44,10 +44,10 @@ class StringTableEntryExtractor {
                 index += this._bitBuffer.readUVarInt32() + 2;
             }
 
-            const hasKey = this._bitBuffer.readBit() === 1;
+            const hasKey = this._bitBuffer.readBit();
 
             if (hasKey) {
-                const useHistory = this._bitBuffer.readBit() === 1;
+                const useHistory = this._bitBuffer.readBit();
 
                 if (useHistory) {
                     const offset = this._bitBuffer.read(5).readUInt8();
@@ -69,7 +69,7 @@ class StringTableEntryExtractor {
                 history[i] = key;
             }
 
-            const hasValue = this._bitBuffer.readBit() === 1;
+            const hasValue = this._bitBuffer.readBit();
 
             if (hasValue) {
                 let bitSize = 0;
@@ -79,7 +79,7 @@ class StringTableEntryExtractor {
                     bitSize = this._table.instructions.userDataSizeBits;
                 } else {
                     if (this._table.getIsValueCompressionSupported()) {
-                        isCompressed = this._bitBuffer.readBit() === 1;
+                        isCompressed = this._bitBuffer.readBit();
                     }
 
                     if (this._table.instructions.usingVarintBitcounts) {

@@ -14,7 +14,7 @@ class FieldDecoderBoolean extends FieldDecoder {
      * @returns {boolean}
      */
     _decode(bitBuffer) {
-        return bitBuffer.readBit() === 1;
+        return bitBuffer.readBit();
     }
 }
 

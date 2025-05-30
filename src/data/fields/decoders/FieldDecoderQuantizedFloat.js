@@ -97,15 +97,15 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
      * @returns {number}
      */
     decode(bitBuffer) {
-        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit() === 1) {
+        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
             return this._low;
         }
 
-        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit() === 1) {
+        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
             return this._high;
         }
 
-        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit() === 1) {
+        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
             return 0;
         }
 

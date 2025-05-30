@@ -144,13 +144,12 @@ class BitBuffer {
 
     /**
      * Reads a single bit from the buffer.
-     * Returns either 0 or 1.
      *
      * @public
-     * @returns {0|1} The bit value (0 or 1).
+     * @returns {boolean}
      */
     readBit() {
-        const value = (this._buffer[this._pointers.byte] >> this._pointers.bit) & 1;
+        const value = ((this._buffer[this._pointers.byte] >> this._pointers.bit) & 1) === 1;
 
         this.move(1);
 
@@ -166,11 +165,11 @@ class BitBuffer {
     readCoordinate() {
         let value = 0;
 
-        const hasInteger = this.readBit() === 1;
-        const hasFractional = this.readBit() === 1;
+        const hasInteger = this.readBit();
+        const hasFractional = this.readBit();
 
         if (hasInteger || hasFractional) {
-            const sign = this.readBit() === 1;
+            const sign = this.readBit();
 
             let integer = 0;
 
@@ -231,7 +230,7 @@ class BitBuffer {
      * @returns {number} The normalized value in the range [-1.0, 1.0].
      */
     readNormal() {
-        const sign = this.readBit() === 1;
+        const sign = this.readBit();
         const length = this._read(11).readUInt16LE();
 
         const value = length * (1 / ((1 << 11) - 1));
@@ -252,8 +251,8 @@ class BitBuffer {
     readNormalVector() {
         const vector = [ 0, 0, 0 ];
 
-        const hasX = this.readBit() === 1;
-        const hasY = this.readBit() === 1;
+        const hasX = this.readBit();
+        const hasY = this.readBit();
 
         if (hasX) {
             vector[0] = this.readNormal();
@@ -263,7 +262,7 @@ class BitBuffer {
             vector[1] = this.readNormal();
         }
 
-        const negativeZ = this.readBit() === 1;
+        const negativeZ = this.readBit();
         const sum = Math.pow(vector[0], 2) + Math.pow(vector[1], 2);
 
         if (sum < 1) {

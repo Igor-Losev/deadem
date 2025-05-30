@@ -40,9 +40,9 @@ class FieldDecoderQAngle extends FieldDecoder {
             ? bitBuffer.readCoordinatePrecise()
             : bitBuffer.readCoordinate();
 
-        const hasPitch = bitBuffer.readBit() === 1;
-        const hasYaw = bitBuffer.readBit() === 1;
-        const hasRoll = bitBuffer.readBit() === 1;
+        const hasPitch = bitBuffer.readBit();
+        const hasYaw = bitBuffer.readBit();
+        const hasRoll = bitBuffer.readBit();
 
         const result = [ 0, 0, 0 ];
 
