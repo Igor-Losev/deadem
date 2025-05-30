@@ -11,18 +11,41 @@ deadem
 
 ## Contents
 
-* [Installation](#installation)
-* [Examples](#examples)
-* [Overview](#overview)
-  * [Understanding Demo](#understanding-demo)
-  * [Understanding Parser](#understanding-parser)
-  * [Understanding Interceptors](#understanding-interceptors)
-* [Usage](#usage)
-* [Compatibility](#compatibility)
-* [Performance](#performance)
-* [Building](#building)
-* [License](#license)
-* [Acknowledgements](#acknowledgements)
+* [Installation](#installation)<br/>
+  Installing and including the library in your project.
+
+* [Examples](#examples)<br/>
+  Running example scripts and working with demo files.
+
+* [Overview](#overview)<br/>
+  Core concepts and architecture of the parser.
+  
+  * [Understanding Demo](#understanding-demo)<br/>
+    Structure and content of demo files.
+  
+  * [Understanding Parser](#understanding-parser)<br/>
+    Parser internals and state management.
+  
+  * [Understanding Interceptors](#understanding-interceptors)<br/>
+    Extracting data during parsing.
+
+* [Usage](#usage)<br/>
+  Basic usage example with real game data.
+
+* [Compatibility](#compatibility)<br/>
+  Supported environments and versions.
+
+* [Performance](#performance)<br/>
+  Benchmark results across platforms.
+
+* [Building](#building)<br/>
+  Setup and build instructions.
+
+* [License](#license)<br/>
+  Project licensing information.
+
+* [Acknowledgements](#acknowledgements)<br/>
+  Credits to upstream and inspiring projects.
 
 ## Installation
 
