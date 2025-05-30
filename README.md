@@ -83,12 +83,12 @@ https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}
 A list of all available demo files can be found in the [DemoFile](./examples/common/DemoFile.js) class.
 
 
-| №                                                         | Description       | Commands                                                                                                                                                       |
-|-----------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [01](examples/runtime-node/01_parse.js)                   | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                                     |
-| [02](examples/runtime-node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255-5637,36127043-5637"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
-| [10](examples/runtime-node/10_parse_game_time.js)         | Demo duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                           |
-| [11](examples/runtime-node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                                   |
+| №                                                         | Description       | Commands                                                                                                                                             |
+|-----------------------------------------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [01](examples/runtime-node/01_parse.js)                   | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                           |
+| [02](examples/runtime-node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
+| [10](examples/runtime-node/10_parse_game_time.js)         | Demo duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
+| [11](examples/runtime-node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
 
 ### Browser
 
