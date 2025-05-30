@@ -5,6 +5,7 @@ deadem
 <br/>
 </h1>
 
+<a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.ym" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg?branch=main" /></a>
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 
 **Deadem** is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
