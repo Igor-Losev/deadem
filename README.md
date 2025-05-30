@@ -63,7 +63,7 @@ import { Parser } from 'deadem';
 ### Browser
 
 ```js
-<script src="//cdn.jsdelivr.net"></script>
+<script src="//cdn.jsdelivr.net/npm/deadem@1.X.X/dist/deadem.min.js"></script>
 ```
 
 ```js
