@@ -39,7 +39,7 @@ class Benchmark {
     /**
      * @public
      * @param {Parser} parser
-     * @param {Readable} readable
+     * @param {Stream.Readable|ReadableStream} readable
      * @returns {Promise<void>}
      */
     async parse(parser, readable) {

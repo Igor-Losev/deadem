@@ -24,6 +24,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "benchmark": "node --expose-gc ./examples/benchmark/01_benchmark.js",
     "build": "vite build --config vite.config.browser.js",
     "lint": "eslint ./",
     "proto:js": "pbjs --path ./proto/source -t static-module -w commonjs --no-create --no-verify --no-delimited --no-convert -o ./proto/compiled/proto.js ./proto/source/**/*.proto",

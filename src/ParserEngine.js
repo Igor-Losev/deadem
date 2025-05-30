@@ -166,7 +166,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @param {Stream.Readable} reader
+     * @param {Stream.Readable|ReadableStream} reader
      * @returns {Promise<void>}
      */
     async parse(reader) {
