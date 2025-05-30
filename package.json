@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "JavaScript (Node.js & Browsers) parser for Deadlock (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
@@ -49,7 +49,6 @@
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
     "#workers/*.js": "./src/workers/*.js",
-
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",
       "browser": "./src/providers/ProtoProvider.browser.instance.js"
