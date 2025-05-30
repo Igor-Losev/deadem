@@ -45,6 +45,8 @@ class Benchmark {
     async parse(parser, readable) {
         let lastTick = 0;
 
+        // Packet timings affect the performance / memory usage.
+        /*
         parser.registerPreInterceptor(InterceptorStage.DEMO_PACKET, () => {
             this._totalDPacketTiming.start();
         });
@@ -57,9 +59,12 @@ class Benchmark {
             this._totalDPacketTiming.end();
         });
 
-        parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
+        parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, () => {
             this._totalMPacketTiming.end();
+        });
+        */
 
+        parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
             if (messagePacket.type === MessagePacketType.NET_TICK) {
                 lastTick = messagePacket.data.tick;
             }
