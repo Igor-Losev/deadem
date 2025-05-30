@@ -67,12 +67,6 @@ const { Parser } = window.deadem;
 
 ### Understanding Demo
 
-> ⚠️ **Warning**  
-> 
-> Demo files contain only the minimal data required for visual playback — not all game state information is preserved or available. Additionally, the parser may skip packets it cannot decode.  
-> 
-> You can retrieve detailed statistics about parsed and skipped packets by calling `parser.getStats()`.
-
 The demo file consists of a sequential stream of outer packets, referred to in this project as [DemoPacket](./src/data/DemoPacket.js).
 Each packet represents a type defined in [DemoPacketType](./src/data/enums/DemoPacketType.js).
 
@@ -84,6 +78,12 @@ correspond to a message types defined in [MessagePacketType](./src/data/enums/Me
 Similarly, most [MessagePacket](./src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
   1. **Entities** ([Developier Wiki](https://developer.valvesoftware.com/wiki/Networking_Entities)) - `MessagePacketType.SVC_PACKET_ENTITIES`: contains granular (or full) updates to existing entities (i.e. game world objects).
   2. **String Tables** ([Developer Wiki](https://developer.valvesoftware.com/wiki/String_Table_Dictionary)) - `MessagePacketType.SVC_CREATE_STRING_TABLE`, `MessagePacketType.SVC_UPDATE_STRING_TABLE`, `MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES`: granular (or full) updates to existing string tables (see [StringTableType](./src/data/enums/StringTableType.js)).
+
+> ⚠️ **Warning**
+>
+> Demo files contain only the minimal data required for visual playback — not all game state information is preserved or available. Additionally, the parser may skip packets it cannot decode.
+>
+> You can retrieve detailed statistics about parsed and skipped packets by calling `parser.getStats()`.
 
 ### Understanding Parser
 
@@ -114,7 +114,7 @@ Use the following methods to register hooks:
 - **After** the [Demo](./src/data/Demo.js) state is affected:  
   `parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, hookFn);`
 
-The diagram below provides an example of the parsing timeline, showing when **pre** and **post** interceptors are invoked at each stage.
+The diagram below provides an example of the parsing timeline, showing when **pre** and **post** interceptors are invoked at each stage:
 
 ```text
 ...
@@ -144,7 +144,7 @@ POST DEMO_PACKET
 ...
 ```
 
-Each interceptor receives different arguments depending on the `InterceptorStage`.
+Each interceptor receives different arguments depending on the `InterceptorStage`:
 
 | Interceptor Stage | Hook Type      | Hook Signature                                                                                                                                                                                            |
 |-------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -225,7 +225,18 @@ Tested with Deadlock demo files from game build 5637 and below.
 
 ## Performance
 
-Performance...
+By default, entities are **parsed but not unpacked**. Parser performance may vary depending on the number
+of`entity.unpackFlattened()` calls.
+
+The table below shows performance results **without calling `entity.unpackFlattened()`** for MacBook Pro with M3 chip:
+
+|  # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb |
+|--------|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|
+| 1      | Node.js v22.14.0      | 14 694 ± 0.91%          | 229.59 ± 0.91%                                  | ~7.84                                   | 362.99 ± 3.24%       |
+| 2      | Browser Chrome v133.0 | 12 479 ± 0.59%          | 194.98 ± 0.59%                                  | ~9.23                                   | -                    |
+| 3      | Node.js v16.20.2      | 10 845 ± 0.64%          | 169.45 ± 0.64%                                  | ~10.62                                  | 334.06 ± 4.64%       |
+| 4      | Browser Safari v18.3  | 9 794 ± 0.86%           | 153.03 ± 0.86%                                  | ~11.76                                  | -                    |
+| 5      | Browser Firefox v139  | 5 546 ± 0.62%           | 86.66 ± 0.62%                                   | ~20.77                                  | -                    |
 
 ## Building
 
