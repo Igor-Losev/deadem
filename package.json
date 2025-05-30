@@ -33,6 +33,7 @@
     "test": "vitest run"
   },
   "files": [
+    "dist/**",
     "index.js",
     "proto/compiled/**",
     "src/**"
