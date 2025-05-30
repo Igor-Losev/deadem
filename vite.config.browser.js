@@ -23,7 +23,7 @@ const configuration = defineConfig(({ command }) => {
     } else {
         return {
             ...common,
-            root: 'examples/browser',
+            root: 'examples/runtime-browser',
             server: {
                 open: true
             }

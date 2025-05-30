@@ -2,7 +2,7 @@ import { Readable } from 'readable-stream';
 
 import { Logger, Parser, ParserConfiguration } from '#root/index.js';
 
-import Benchmark from '#root/examples/benchmark/helpers/Benchmark.js';
+import Benchmark from '#root/examples/common/Benchmark.js';
 
 const REPEATS = 30;
 

@@ -1,6 +1,7 @@
 import { InterceptorStage, MessagePacketType, Parser, Printer } from '#root/index.js';
 
-import DemoFile from './helpers/DemoFile.js';
+import DemoFile from '#root/examples/common/DemoFile.js';
+
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {

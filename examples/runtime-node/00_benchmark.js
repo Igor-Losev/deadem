@@ -1,9 +1,9 @@
 import { Logger, Parser, ParserConfiguration } from '#root/index.js';
 
-import DemoFile from '#root/examples/node/helpers/DemoFile.js';
-import DemoProvider from '#root/examples/node/helpers/DemoProvider.js';
+import Benchmark from '#root/examples/common/Benchmark.js';
+import DemoFile from '#root/examples/common/DemoFile.js';
 
-import Benchmark from './helpers/Benchmark.js';
+import DemoProvider from './helpers/DemoProvider.js';
 
 const CONFIG = {
     DEMOS: [ DemoFile.MATCH_36126420 ],
