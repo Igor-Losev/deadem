@@ -50,6 +50,16 @@ const { Parser } = window.deadem;
 
 ### Node.js
 
+The example scripts will, by default, look for a demo file in the `/demos` folder.
+If no demo file is found locally, they will automatically download one from a public S3 bucket:
+
+```text
+https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}.dem
+```
+
+A list of all available demo files can be found in the [DemoFile](./examples/common/DemoFile.js) class.
+
+
 | №                                                         | Description       | Commands                                                                                                                                                       |
 |-----------------------------------------------------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [01](examples/runtime-node/01_parse.js)                   | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                                     |
@@ -72,7 +82,7 @@ Each packet represents a type defined in [DemoPacketType](./src/data/enums/DemoP
 
 Most [DemoPacket](./src/data/DemoPacket.js) types, once parsed, become plain JavaScript objects containing structured data. However,
 some packet types — such as `DemoPacketType.DEM_PACKET`, `DemoPacketType.DEM_SIGNON_PACKET`, and
-`DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets ([MessagePacket](./src/data/MessagePacket.js)). These inner packets 
+`DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets, referred to in this project as [MessagePacket](./src/data/MessagePacket.js). These inner packets 
 correspond to a message types defined in [MessagePacketType](./src/data/enums/MessagePacketType.js).
 
 Similarly, most [MessagePacket](./src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
