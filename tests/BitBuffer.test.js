@@ -75,7 +75,7 @@ describe('BitBuffer.readBit()', () => {
 
             const reader = new BitBuffer(buffer);
 
-            const expected = [ 1, 1, 0, 1, 0, 0, 0, 1 ];
+            const expected = [ true, true, false, true, false, false, false, true ];
 
             expected.forEach((result) => {
                 const value = reader.readBit();
