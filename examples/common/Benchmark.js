@@ -32,7 +32,7 @@ class Benchmark {
             packets: {
                 demo: this._totalDPacketTiming.getResult(),
                 message: this._totalMPacketTiming.getResult()
-            },
+            }
         };
     }
 

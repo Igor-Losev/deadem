@@ -1,4 +1,4 @@
-import StatsAccumulator from './StatsAccumulator.js'
+import StatsAccumulator from './StatsAccumulator.js';
 
 class StatsAccumulatorTiming extends StatsAccumulator {
     /**

@@ -1,4 +1,4 @@
-import { InterceptorStage, MessagePacketType, Parser, Printer } from '#root/index.js';
+import { InterceptorStage, Parser, Printer } from '#root/index.js';
 
 import DemoFile from '#root/examples/common/DemoFile.js';
 

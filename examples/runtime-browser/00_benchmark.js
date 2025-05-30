@@ -44,7 +44,7 @@ submit.addEventListener('click', async () => {
 
     console.log(benchmark.getResult());
 
-    output.innerText = `Done`;
+    output.innerText = 'Done';
 
     state.processing = false;
 
@@ -71,6 +71,6 @@ function pause(ms = 0) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve();
-        }, ms)
+        }, ms);
     });
 }

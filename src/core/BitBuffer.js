@@ -290,7 +290,7 @@ class BitBuffer {
         const bytes = [ ];
 
         while (true) {
-            if (Number.isInteger(length) && result.length >= length) {
+            if (Number.isInteger(length) && bytes.length >= length) {
                 break;
             }
 
