@@ -5,14 +5,13 @@ import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 /**
- * Handles prioritization of internal messages within demo packets.
+ * Handles prioritization of internal messages for
+ * packets of the following types:
  *
- * For packets of the following types:
  * - {@link DemoPacketType.DEM_PACKET}
  * - {@link DemoPacketType.DEM_FULL_PACKET}
  * - {@link DemoPacketType.DEM_SIGNON_PACKET}
  *
- * This class prioritizes internal messages and forwards them in the desired order.
  * All other packet types are passed through unchanged.
  */
 class DemoStreamPacketPrioritizer extends Stream.Transform {
