@@ -12,14 +12,11 @@ class FileSystem {
     /**
      * @public
      * @static
-     * @param {String} path
-     * @param {Object=} options
+     * @param {...*} ...args
      * @returns {ReadStream}
      */
-    static createReadStream(path, options) {
-        Assert.isTrue(typeof path === 'string');
-
-        return fs.createReadStream(path, options || { });
+    static createReadStream(...args) {
+        return fs.createReadStream(...args);
     }
 
     /**
@@ -53,7 +50,7 @@ class FileSystem {
         Assert.isTrue(typeof importMetaUrl === 'string');
         Assert.isTrue(typeof path === 'string');
 
-        const __filename = fileURLToPath(import.meta.url);
+        const __filename = fileURLToPath(importMetaUrl);
         const __dirname = dirname(__filename);
 
         return join(__dirname, path);
