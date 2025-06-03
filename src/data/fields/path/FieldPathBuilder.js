@@ -29,6 +29,28 @@ class FieldPathBuilder {
 
     /**
      * @public
+     * @static
+     * @param {Array<number>} path
+     * @returns {FieldPath}
+     */
+    static build(path) {
+        const cacheKey = getCacheKey(path);
+
+        const existing = registry.get(cacheKey);
+
+        if (existing) {
+            return existing;
+        }
+
+        const fieldPath = new FieldPath(path.slice());
+
+        registry.set(cacheKey, fieldPath);
+
+        return fieldPath;
+    }
+
+    /**
+     * @public
      * @param {number} value
      * @param {number=} index
      */
@@ -49,19 +71,7 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     build() {
-        const cacheKey = getCacheKey(this._path);
-
-        const existing = registry.get(cacheKey);
-
-        if (existing) {
-            return existing;
-        }
-
-        const fieldPath = new FieldPath(this._path.slice());
-
-        registry.set(cacheKey, fieldPath);
-
-        return fieldPath;
+        return FieldPathBuilder.build(this._path);
     }
 
     /**
