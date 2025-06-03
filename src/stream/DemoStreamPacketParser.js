@@ -51,7 +51,15 @@ class DemoStreamPacketParser extends Stream.Transform {
      * @returns {Promise<void>}
      */
     async _flush(callback) {
-        await Promise.all(this._pendingRequests.map(m => m.promise));
+        const wait = async () => {
+            await Promise.all(this._pendingRequests);
+
+            if (this._pendingRequests.length > 0) {
+                await wait();
+            }
+        }
+
+        await wait();
 
         callback();
     }
@@ -100,7 +108,13 @@ class DemoStreamPacketParser extends Stream.Transform {
             });
 
             if (heavy.length > 0) {
-                const thread = await this._engine.workerManager.allocate();
+                const promise = this._engine.workerManager.allocate();
+
+                this._pendingRequests.push(promise);
+
+                const thread = await promise;
+
+                this._removePending(promise);
 
                 this._processAsync(thread, heavy)
                     .then((demoPackets) => {
@@ -134,19 +148,13 @@ class DemoStreamPacketParser extends Stream.Transform {
     async _processAsync(thread, packets) {
         this._counts.requests += 1;
 
-        const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
+        const promise = thread.send(new WorkerRequestDHPParse(packets.map(p => p.payload)));
 
-        const promise = thread.send(request);
-
-        this._pendingRequests.push({ request, promise });
+        this._pendingRequests.push(promise);
 
         return promise
             .then((response) => {
-                const taskIndex = this._pendingRequests.findIndex(({ request: r }) => r === request);
-
-                if (taskIndex >= 0) {
-                    this._pendingRequests.splice(taskIndex, 1);
-                }
+                this._removePending(promise);
 
                 const demoPackets = [ ];
 
@@ -175,6 +183,18 @@ class DemoStreamPacketParser extends Stream.Transform {
 
                 return demoPackets;
             });
+    }
+
+    /**
+     * @protected
+     * @param {Promise<any>} promise
+     */
+    _removePending(promise) {
+        const index = this._pendingRequests.findIndex(p => promise === p);
+
+        if (index >= 0) {
+            this._pendingRequests.splice(index, 1);
+        }
     }
 }
 
