@@ -12,7 +12,7 @@ class FileSystem {
     /**
      * @public
      * @static
-     * @param {...*} ...args
+     * @param {...*} args
      * @returns {ReadStream}
      */
     static createReadStream(...args) {
