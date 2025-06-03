@@ -6,7 +6,7 @@ import DemoPacketRaw from '#data/DemoPacketRaw.js';
 
 /**
  * Given a stream of {@link DemoPacket} or {@link DemoPacketRaw}:
- *  - Filters out {@link DemoPacketRaw} packets.
+ *  - Filters out unparsed {@link DemoPacketRaw} packets.
  *  - Ensures that {@link DemoPacket} packets are passed through in the correct sequence order.
  */
 class DemoStreamPacketCoordinator extends Stream.Transform {
