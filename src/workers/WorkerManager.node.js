@@ -20,27 +20,25 @@ class WorkerManagerNode {
      * @param {Logger} logger - Logger.
      */
     constructor(concurrency, logger) {
-        if (concurrency <= 0 || !Number.isInteger(concurrency)) {
-            throw new Error(`Invalid concurrency argument [ ${concurrency} ]`);
-        }
-
+        Assert.isTrue(concurrency > 0 && Number.isInteger(concurrency), `Invalid concurrency argument [ ${concurrency} ]`);
         Assert.isTrue(logger instanceof Logger);
 
         this._concurrency = concurrency;
         this._logger = logger;
 
-        this._allocated = new Set();
+        this._allocations = new Set();
+
         this._queue = [ ];
         this._threads = [ ];
 
         for (let i = 0; i < concurrency; i++) {
             const worker = new Worker(WORKER_SCRIPT_PATH);
 
-            const thread = new WorkerThread(worker, logger);
+            const thread = new WorkerThread(worker, i, logger);
 
             this._threads.push(thread);
 
-            this._logger.info(`Starting worker [ ${thread.getId()} ]`);
+            this._logger.info(`Starting worker [ ${thread.localId} ]`);
         }
     }
 
@@ -57,28 +55,32 @@ class WorkerManagerNode {
      * Allocates a free worker thread if available, or waits for one to be freed.
      *
      * @public
+     * @param {number=} id - A thread id.
      * @returns {Promise<WorkerThread>} - A promise that resolves to an available worker thread.
      */
-    async allocate() {
-        const thread = this._threads.find(t => !this._allocated.has(t)) || null;
+    async allocate(id) {
+        Assert.isTrue(id === undefined || id < this._concurrency);
+
+        let thread;
+
+        if (Number.isInteger(id)) {
+            thread = !this._allocations.has(id)
+                ? this._threads[id]
+                : null;
+        } else {
+            thread = this._threads.find(t => !this._allocations.has(t.localId)) || null;
+        }
 
         if (thread !== null) {
-            this._allocated.add(thread);
-
-            this._logger.trace(`Allocated a thread [ ${thread.getId()} ]`);
+            this._allocations.add(thread.localId);
 
             return thread;
         } else {
-            const deferred = new DeferredPromise();
+            const item = createQueueItem(id);
 
-            this._queue.push(deferred);
+            this._queue.push(item);
 
-            return deferred.promise
-                .then((thread) => {
-                    this._logger.trace(`Allocated a thread [ ${thread.getId()} ] after waiting`);
-
-                    return thread;
-                });
+            return item.deferred.promise;
         }
     }
 
@@ -92,7 +94,7 @@ class WorkerManagerNode {
         const promises = [ ];
 
         for (let i = 0; i < this._concurrency; i++) {
-            const promise = this.allocate();
+            const promise = this.allocate(i);
 
             promises.push(promise);
         }
@@ -104,7 +106,7 @@ class WorkerManagerNode {
      * Broadcasts a {@link WorkerRequest} to all threads.
      *
      * @param {WorkerRequest} request - The request.
-     * @returns {Promise<Array<*>>} - An array of length = concurrency, where each element is a result promise.
+     * @returns {Promise<Array<*>>} - An array of length === concurrency, where each element is a result promise.
      */
     async broadcast(request) {
         const allocations = this.allocateAll();
@@ -124,6 +126,14 @@ class WorkerManagerNode {
     }
 
     /**
+     * @public
+     * @returns {boolean}
+     */
+    getIsAllBusy() {
+        return this._threads.every(t => t.busy);
+    }
+
+    /**
      * Frees a previously allocated thread and resolves the next waiting promise if any.
      *
      * @public
@@ -133,19 +143,31 @@ class WorkerManagerNode {
         Assert.isTrue(thread instanceof WorkerThread);
 
         if (thread.busy) {
-            throw new Error(`Unable to free a busy thread [ ${thread.getId()} ]`);
+            throw new Error(`Unable to free a busy thread [ ${thread.localId} ]`);
         }
 
-        this._logger.trace(`Freeing a thread [ ${thread.getId()} ]`);
+        if (this._queue.length === 0) {
+            this._allocations.delete(thread.localId);
+        }
 
-        this._allocated.delete(thread);
+        const targetIndex = this._queue.findIndex(item => item.id === thread.localId);
 
-        if (this._queue.length > 0) {
-            const promise = this._queue.shift();
+        if (targetIndex >= 0) {
+            const [ target ] = this._queue.splice(targetIndex, 1);
 
-            this._allocated.add(thread);
+            target.deferred.resolve(thread);
 
-            promise.resolve(thread);
+            return;
+        }
+
+        const availableIndex = this._queue.findIndex(item => item.id === null);
+
+        if (availableIndex >= 0) {
+            const [ target ] = this._queue.splice(availableIndex, 1);
+
+            target.deferred.resolve(thread);
+        } else {
+            this._allocations.delete(thread.localId);
         }
     }
 
@@ -155,8 +177,8 @@ class WorkerManagerNode {
      * @public
      */
     terminate() {
-        if (this._allocated.size > 0) {
-            throw new Error(`Unable to terminate WorkerManager - there are [ ${this._allocated.size} ] allocated threads`);
+        if (this._allocations.size > 0) {
+            throw new Error(`Unable to terminate WorkerManager - there are [ ${this._allocations.size} ] allocated threads`);
         }
 
         const busy = this._threads.filter(t => t.busy).length;
@@ -168,11 +190,20 @@ class WorkerManagerNode {
         this._threads.forEach((thread) => {
             thread.worker.terminate();
 
-            this._logger.info(`Terminated Worker [ ${thread.getId()} ]`);
+            this._logger.info(`Terminated Worker [ ${thread.localId} ]`);
         });
 
         this._threads = [ ];
     }
+}
+
+function createQueueItem(id) {
+    return {
+        deferred: new DeferredPromise(),
+        id: Number.isInteger(id)
+            ? id
+            : null
+    };
 }
 
 export default WorkerManagerNode;
