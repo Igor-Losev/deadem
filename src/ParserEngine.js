@@ -4,12 +4,12 @@ import Logger from '#core/Logger.js';
 
 import Demo from '#data/Demo.js';
 
-import InterceptorStage from '#data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
 import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketAnalyzerConcurrent from '#stream/DemoStreamPacketAnalyzerConcurrent.js';
 import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
 import DemoStreamPacketCoordinator from '#stream/DemoStreamPacketCoordinator.js';
 import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
@@ -58,26 +58,29 @@ class ParserEngine {
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
             new DemoStreamPacketPrioritizer(this),
-            new DemoStreamPacketAnalyzer(this)
+            configuration.parserThreads > 0
+                ? new DemoStreamPacketAnalyzerConcurrent(this)
+                : new DemoStreamPacketAnalyzer(this)
+
         ];
 
         this._interceptors = {
-            pre: {
-                [InterceptorStage.DEMO_PACKET.code]: [ ],
-                [InterceptorStage.ENTITY_PACKET.code]: [ ],
-                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
-            },
-            post: {
-                [InterceptorStage.DEMO_PACKET.code]: [ ],
-                [InterceptorStage.ENTITY_PACKET.code]: [ ],
-                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
-            }
+            pre: [
+                [ ],
+                [ ],
+                [ ]
+            ],
+            post: [
+                [ ],
+                [ ],
+                [ ]
+            ]
         };
 
         this._trackers = {
-            memory: new MemoryTracker(logger),
-            packet: new PacketTracker(logger),
-            performance: new PerformanceTracker(logger)
+            memory: new MemoryTracker(),
+            packet: new PacketTracker(),
+            performance: new PerformanceTracker()
         };
 
         this._finished = false;
@@ -162,6 +165,40 @@ class ParserEngine {
      */
     getPerformanceTracker() {
         return this._trackers.performance;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getThreadsCount() {
+        return this._configuration.parserThreads;
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async interceptPost(stage, ...args) {
+        for (let i = 0; i < this._interceptors.post[stage.id].length; i++) {
+            const interceptor = this._interceptors.post[stage.id][i];
+
+            await interceptor(...args);
+        }
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async interceptPre(stage, ...args) {
+        for (let i = 0; i < this._interceptors.pre[stage.id].length; i++) {
+            const interceptor = this._interceptors.pre[stage.id][i];
+
+            await interceptor(...args);
+        }
     }
 
     /**

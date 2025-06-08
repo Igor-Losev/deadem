@@ -4,23 +4,28 @@ import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerRequest from './WorkerRequest.js';
 
-class WorkerRequestMPacketSync extends WorkerRequest {
+class WorkerRequestSvcUpdatedEntities extends WorkerRequest {
     /**
      * @constructor
      * @param {MessagePacket} messagePacket
      */
     constructor(messagePacket) {
-        super(WorkerMessageType.MESSAGE_PACKET_SYNC, messagePacket, [ ]);
+        const minified = new MessagePacket(messagePacket.type, {
+            entityData: messagePacket.data.entityData,
+            updatedEntries: messagePacket.data.updatedEntries
+        });
+
+        super(WorkerMessageType.SVC_UPDATED_ENTITIES, minified, [ ]);
     }
 
     /**
      * @public
      * @static
      * @param {MessagePacketObject} raw
-     * @returns {WorkerRequestMPacketSync}
+     * @returns {WorkerRequestSvcUpdatedEntities}
      */
     static deserialize(raw) {
-        return new WorkerRequestMPacketSync(MessagePacket.fromObject(raw));
+        return new WorkerRequestSvcUpdatedEntities(MessagePacket.fromObject(raw));
     }
 
     /**
@@ -32,4 +37,4 @@ class WorkerRequestMPacketSync extends WorkerRequest {
     }
 }
 
-export default WorkerRequestMPacketSync;
+export default WorkerRequestSvcUpdatedEntities;

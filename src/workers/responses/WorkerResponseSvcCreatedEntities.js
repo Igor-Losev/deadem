@@ -2,21 +2,21 @@ import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerResponse from './WorkerResponse.js';
 
-class WorkerResponseDPacketSync extends WorkerResponse {
+class WorkerResponseSvcCreatedEntities extends WorkerResponse {
     /**
      * @constructor
      */
     constructor() {
-        super(WorkerMessageType.DEMO_PACKET_SYNC, null, [ ]);
+        super(WorkerMessageType.SVC_CREATED_ENTITIES, null, [ ]);
     }
 
     /**
      * @public
      * @static
-     * @returns {WorkerResponseDPacketSync}
+     * @returns {WorkerResponseSvcCreatedEntities}
      */
     static deserialize() {
-        return new WorkerResponseDPacketSync();
+        return new WorkerResponseSvcCreatedEntities();
     }
 
     /**
@@ -28,4 +28,4 @@ class WorkerResponseDPacketSync extends WorkerResponse {
     }
 }
 
-export default WorkerResponseDPacketSync;
+export default WorkerResponseSvcCreatedEntities;

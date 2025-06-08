@@ -2,9 +2,11 @@ class InterceptorStage {
     /**
      * @constructor
      * @param {String} code
+     * @param {number} id
      */
-    constructor(code) {
+    constructor(code, id) {
         this._code = code;
+        this._id = id;
     }
 
     /**
@@ -13,6 +15,14 @@ class InterceptorStage {
      */
     get code() {
         return this._code;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    get id() {
+        return this._id;
     }
 
     /**
@@ -43,8 +53,8 @@ class InterceptorStage {
     }
 }
 
-const demoPacket = new InterceptorStage('DEMO_PACKET');
-const entityPacket = new InterceptorStage('ENTITY_PACKET');
-const messagePacket = new InterceptorStage('MESSAGE_PACKET');
+const demoPacket = new InterceptorStage('DEMO_PACKET', 0);
+const messagePacket = new InterceptorStage('MESSAGE_PACKET', 1);
+const entityPacket = new InterceptorStage('ENTITY_PACKET', 2);
 
 export default InterceptorStage;

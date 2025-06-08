@@ -1,6 +1,6 @@
 import DeferredPromise from '#data/DeferredPromise.js';
 
-import WorkerSerializer from '#workers/serializers/WorkerSerializer.instance.js';
+import WorkerMessageBridge from '#workers/WorkerMessageBridge.instance.js';
 
 /**
  * Represents a single worker thread with request serialization,
@@ -18,7 +18,7 @@ class WorkerThread {
         this._logger = logger;
 
         this._worker.on('message', (responseRaw) => {
-            const workerResponseClass = WorkerSerializer.resolveResponseClass(responseRaw);
+            const workerResponseClass = WorkerMessageBridge.resolveResponseClass(responseRaw);
 
             const response = workerResponseClass.deserialize(responseRaw.payload);
 

@@ -13,28 +13,61 @@ class MessagePacketRawExtractor {
     }
 
     /**
+     * Extracts and returns all message packets (raw) from the buffer.
+     *
      * @public
      * @returns {Array<MessagePacketRaw>}
      */
     all() {
         const extracted = [ ];
 
+        const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
+        const buffer = Buffer.allocUnsafe(bytes);
+
+        let bytesRead = 0;
+
         while (this._bitBuffer.getUnreadCount() >= BitBuffer.BITS_PER_BYTE) {
-            extracted.push(this._extractOnce());
+            const type = this._bitBuffer.readUVarInt();
+            const size = this._bitBuffer.readUVarInt32();
+
+            const payload = this._bitBuffer.readInBuffer(size * BitBuffer.BITS_PER_BYTE, buffer.subarray(bytesRead, bytesRead + size));
+
+            bytesRead += size;
+
+            extracted.push(new MessagePacketRaw(type, size, payload));
         }
 
         return extracted;
     }
 
     /**
-     * @generator
-     * @yields {MessagePacketRaw}
-     * @returns {void}
+     * Extracts and returns all message packets from the buffer
+     * in a packed (transferable) format, suitable for transmission
+     * between threads.
+     *
+     * @public
+     * @returns {MessagePacketRawPacked}
      */
-    *retrieve() {
+    allPacked() {
+        const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
+
+        const buffer = Buffer.allocUnsafe(bytes);
+        const meta = [ ];
+
+        let pointer = 0;
+
         while (this._bitBuffer.getUnreadCount() >= BitBuffer.BITS_PER_BYTE) {
-            yield this._extractOnce();
+            const type = this._bitBuffer.readUVarInt();
+            const size = this._bitBuffer.readUVarInt32();
+
+            meta.push(type, pointer, size);
+
+            this._bitBuffer.readInBuffer(size * BitBuffer.BITS_PER_BYTE, buffer.subarray(pointer, pointer + size));
+
+            pointer += size;
         }
+
+        return { buffer, meta };
     }
 
     /**
@@ -43,18 +76,10 @@ class MessagePacketRawExtractor {
     reset() {
         this._bitBuffer.reset();
     }
-
-    /**
-     * @protected
-     * @returns {MessagePacketRaw}
-     */
-    _extractOnce() {
-        const type = this._bitBuffer.readUVarInt();
-        const size = this._bitBuffer.readUVarInt32();
-        const payload = this._bitBuffer.read(size * BitBuffer.BITS_PER_BYTE, true);
-
-        return new MessagePacketRaw(type, size, payload);
-    }
 }
+
+/**
+ * @typedef {{ meta: Array<number>, buffer: Buffer }} MessagePacketRawPacked
+ */
 
 export default MessagePacketRawExtractor;

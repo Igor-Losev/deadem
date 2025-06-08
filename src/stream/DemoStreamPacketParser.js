@@ -13,8 +13,6 @@ import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js'
 
 import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
 
-const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PACKET, DemoPacketType.DEM_FULL_PACKET ];
-
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload and
  * passes through instances of:
@@ -57,7 +55,7 @@ class DemoStreamPacketParser extends Stream.Transform {
             if (this._pendingRequests.length > 0) {
                 await wait();
             }
-        }
+        };
 
         await wait();
 
@@ -91,7 +89,7 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             callback();
         } else {
-            const getIsHeavy = demoPacketRaw => HEAVY_PACKETS.includes(DemoPacketType.parseById(demoPacketRaw.getTypeId()));
+            const getIsHeavy = demoPacketRaw => DemoPacketType.parseById(demoPacketRaw.getTypeId())?.heavy;
             const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
 
             const heavy = batch.filter(getIsHeavy);
@@ -224,7 +222,7 @@ function parseDemoPacket(demoPacketRaw) {
 
     let demoPacket;
 
-    if (HEAVY_PACKETS.includes(demoPacketType)) {
+    if (demoPacketType.heavy) {
         const extractor = new MessagePacketRawExtractor(decoded.data);
 
         const messagePacketsRaw = extractor.all();

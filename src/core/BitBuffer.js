@@ -117,15 +117,35 @@ class BitBuffer {
     }
 
     /**
-     * @see {@link BitBuffer#_read}
+     * Reads the specified number of bits.
      *
      * @public
-     * @param {number} numberOfBits
-     * @param {boolean} allocateNew
-     * @returns {Buffer}
+     * @param {number} numberOfBits - The number of bits to read.
+     * @param {boolean} [allocateNew=false] - Whether to allocate a new memory for returning buffer.
+     * If `true`, a new buffer is allocated.
+     * If `false` (default), a reusable buffer may be returned, which can be overwritten in subsequent operations.
+     * @returns {Buffer|Uint8Array}
      */
     read(numberOfBits, allocateNew = false) {
-        return this._read(numberOfBits, allocateNew);
+        const numberOfBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
+
+        if (!allocateNew && numberOfBytes <= REUSABLE_BUFFER_SIZE) {
+            return this._read(numberOfBits, pool[numberOfBytes - 1]);
+        } else {
+            return this._read(numberOfBits, Buffer.allocUnsafe(numberOfBytes));
+        }
+    }
+
+    /**
+     * Reads the specified number of bits and writes them into the provided buffer.
+     *
+     * @public
+     * @param {number} numberOfBits - The number of bits to read.
+     * @param {Buffer|Uint8Array} buffer - The buffer to write the results into.
+     * @returns {Buffer|Uint8Array}
+     */
+    readInBuffer(numberOfBits, buffer) {
+        return this._read(numberOfBits, buffer);
     }
 
     /**
@@ -135,7 +155,7 @@ class BitBuffer {
      * @returns {number} - The angle.
      */
     readAngle(n) {
-        const buffer = this._read(n);
+        const buffer = this.read(n);
 
         const value = BitBuffer.readUInt32LE(buffer);
 
@@ -174,7 +194,7 @@ class BitBuffer {
             let integer = 0;
 
             if (hasInteger) {
-                const buffer = this._read(14);
+                const buffer = this.read(14);
 
                 integer = buffer.readUInt16LE() + 1;
             }
@@ -182,7 +202,7 @@ class BitBuffer {
             let fractional = 0;
 
             if (hasFractional) {
-                const buffer = this._read(5);
+                const buffer = this.read(5);
 
                 fractional = buffer.readUInt8();
             }
@@ -204,7 +224,7 @@ class BitBuffer {
      * @returns {number}
      */
     readCoordinatePrecise() {
-        const value = BitBuffer.readUInt32LE(this._read(20));
+        const value = BitBuffer.readUInt32LE(this.read(20));
 
         return value * (360 / (1 << 20)) - 180;
     }
@@ -216,7 +236,7 @@ class BitBuffer {
      * @returns {number} The float value interpreted from the 32-bit buffer.
      */
     readFloat() {
-        const buffer = this._read(32);
+        const buffer = this.read(32);
 
         return buffer.readFloatLE();
     }
@@ -231,7 +251,7 @@ class BitBuffer {
      */
     readNormal() {
         const sign = this.readBit();
-        const length = this._read(11).readUInt16LE();
+        const length = this.read(11).readUInt16LE();
 
         const value = length * (1 / ((1 << 11) - 1));
 
@@ -294,7 +314,7 @@ class BitBuffer {
                 break;
             }
 
-            const buffer = this._read(BITS_PER_BYTE);
+            const buffer = this.read(BITS_PER_BYTE);
 
             if (buffer[0] === 0) {
                 break;
@@ -313,7 +333,7 @@ class BitBuffer {
      * @returns {number} The read unsigned integer (0–255).
      */
     readUInt8() {
-        const buffer = this._read(BITS_PER_BYTE);
+        const buffer = this.read(BITS_PER_BYTE);
 
         return buffer[0] >>> 0;
     }
@@ -326,25 +346,25 @@ class BitBuffer {
      * @returns {number} The decoded unsigned integer.
      */
     readUVarInt() {
-        let result = this._read(6).readUInt8();
+        let result = this.read(6).readUInt8();
 
         switch (result & 48) {
             case 16: {
-                const value = this._read(4).readUInt8();
+                const value = this.read(4).readUInt8();
 
                 result = (result & 15) | (value << 4);
 
                 break;
             }
             case 32: {
-                const value = this._read(8).readUInt8();
+                const value = this.read(8).readUInt8();
 
                 result = (result & 15) | (value << 4);
 
                 break;
             }
             case 48: {
-                const value = this._read(28).readUInt32LE();
+                const value = this.read(28).readUInt32LE();
 
                 result = (result & 15) | (value << 4);
 
@@ -460,28 +480,28 @@ class BitBuffer {
         flag = this.readBit();
 
         if (flag) {
-            return this._read(2).readUInt8();
+            return this.read(2).readUInt8();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return this._read(4).readUInt8();
+            return this.read(4).readUInt8();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return this._read(10).readUInt16LE();
+            return this.read(10).readUInt16LE();
         }
 
         flag = this.readBit();
 
         if (flag) {
-            return BitBuffer.readUInt32LE(this._read(17));
+            return BitBuffer.readUInt32LE(this.read(17));
         }
 
-        return this._read(31).readUInt32LE();
+        return this.read(31).readUInt32LE();
     }
 
     /**
@@ -495,17 +515,14 @@ class BitBuffer {
     }
 
     /**
-     * Reads the specified number of bits from the buffer.
-     * Returns a Buffer with a length of Math.ceil(numberOfBits / 8).
+     * Reads the specified number of bits and writes them into the provided buffer.
      *
      * @protected
-     * @param {number} numberOfBits - The number of beats to read.
-     * @param {boolean=} allocateNew - Whether to allocate a new memory for returning buffer.
-     * If `true`, a new buffer is allocated.
-     * If `false` (default), a reusable buffer may be returned, which can be overwritten in subsequent operations.
-     * @returns {Buffer} - A buffer containing the read data.
+     * @param {number} numberOfBits - The number of bits to read.
+     * @param {Buffer|Uint8Array} buffer - The buffer to write the results into.
+     * @returns {Buffer|Uint8Array} - A buffer containing the read data.
      */
-    _read(numberOfBits, allocateNew = false) {
+    _read(numberOfBits, buffer) {
         const unread = this.getUnreadCount();
 
         if (numberOfBits > unread) {
@@ -521,14 +538,6 @@ class BitBuffer {
             extraByte = this._buffer[this._pointers.byte + numberOfAffectedBytes - 1];
         } else {
             extraByte = 0;
-        }
-
-        let buffer;
-
-        if (!allocateNew && numberOfRequestedBytes <= REUSABLE_BUFFER_SIZE) {
-            buffer = pool[numberOfRequestedBytes - 1];
-        } else {
-            buffer = Buffer.allocUnsafe(numberOfRequestedBytes);
         }
 
         for (let i = 0; i < numberOfRequestedBytes; i++) {

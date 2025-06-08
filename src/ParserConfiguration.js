@@ -15,7 +15,7 @@ const DEFAULTS = {
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ batcherChunkSize: number, batcherThresholdMilliseconds: number, parserThreads: number, splitterChunkSize: number }} options
+     * @param {{ batcherChunkSize: number=, batcherThresholdMilliseconds: number=, parserThreads: number=, splitterChunkSize: number= }} options
      */
     constructor(options) {
         const getOption = key => options && options[key] ? options[key] : DEFAULTS[key];
@@ -41,10 +41,6 @@ class ParserConfiguration {
 
         if (!Number.isInteger(splitterChunkSize) || splitterChunkSize <= 0) {
             throw new Error('options.splitterChunkSize must be a positive integer');
-        }
-
-        if (Number.isInteger(parserThreads) && parserThreads > 0) {
-            throw new Error('Multithreading is not supported yet. Set parserThreads to 0');
         }
 
         this._batcherChunkSize = batcherChunkSize;

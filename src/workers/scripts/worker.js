@@ -5,6 +5,7 @@ import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
 import Demo from '#data/Demo.js';
+import Entity from '#data/entity/Entity.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
@@ -13,19 +14,21 @@ import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
-import WorkerRequestSerializer from '#workers/serializers/WorkerRequestSerializer.instance.js';
-import WorkerResponseSerializer from '#workers/serializers/WorkerResponseSerializer.instance.js';
-
 import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
 import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
-import WorkerResponseSvcPacketEntities from '#workers/responses/WorkerResponseSvcPacketEntities.js';
+import WorkerResponseSvcCreatedEntities from '#workers/responses/WorkerResponseSvcCreatedEntities.js';
+import WorkerResponseSvcUpdatedEntities from '#workers/responses/WorkerResponseSvcUpdatedEntities.js';
+
+import WorkerMessageBridge from '#workers/WorkerMessageBridge.instance.js';
 
 const state = getInitialState();
 
 (() => {
     parentPort.on('message', (requestRaw) => {
-        const request = WorkerRequestSerializer.deserialize(requestRaw);
+        const workerRequestClass = WorkerMessageBridge.resolveRequestClass(requestRaw);
+
+        const request = workerRequestClass.deserialize(requestRaw.payload);
 
         switch (request.type) {
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
@@ -81,8 +84,13 @@ const state = getInitialState();
 
                 break;
             }
-            case WorkerMessageType.SVC_PACKET_ENTITIES: {
-                handleSvcPacketEntities(request);
+            case WorkerMessageType.SVC_CREATED_ENTITIES: {
+                handleSvcCreatedEntities(request);
+
+                break;
+            }
+            case WorkerMessageType.SVC_UPDATED_ENTITIES: {
+                handleSvcUpdatedEntities(request);
 
                 break;
             }
@@ -124,53 +132,53 @@ function handleHeavyPacketParse(request) {
 
         const extractor = new MessagePacketRawExtractor(decoded.data);
 
-        const batch = extractor.all();
+        const packed = extractor.allPacked();
 
-        batches.push(batch);
+        batches.push(packed);
     });
 
     const response = new WorkerResponseDHPParse(batches);
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    respond(response);
 }
 
 /**
  * @param {WorkerRequestDPacketSync} request
  */
 function handleClassInfo(request) {
-    const response = new WorkerResponseDPacketSync();
-
     const demoPacket = request.payload;
 
     state.demoPacketHandler.handleDemClassInfo(demoPacket);
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    const response = new WorkerResponseDPacketSync();
+
+    respond(response);
 }
 
 /**
  * @param {WorkerRequestDPacketSync} request
  */
 function handleSendTables(request) {
-    const response = new WorkerResponseDPacketSync();
-
     const demoPacket = request.payload;
 
     state.demoPacketHandler.handleDemSendTables(demoPacket);
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    const response = new WorkerResponseDPacketSync();
+
+    respond(response);
 }
 
 /**
  * @param {WorkerRequestDPacketSync} request
  */
 function handleStringTables(request) {
-    const response = new WorkerResponseDPacketSync();
-
     const demoPacket = request.payload;
 
     state.demoPacketHandler.handleDemStringTables(demoPacket);
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    const response = new WorkerResponseDPacketSync();
+
+    respond(response);
 }
 
 /**
@@ -183,7 +191,7 @@ function handleSvcClearAllStringTables(request) {
 
     const response = new WorkerResponseMPacketSync();
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    respond(response);
 }
 
 /**
@@ -196,7 +204,7 @@ function handleSvcCreateStringTable(request) {
 
     const response = new WorkerResponseMPacketSync();
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    respond(response);
 }
 
 /**
@@ -209,20 +217,51 @@ function handleSvcUpdateStringTable(request) {
 
     const response = new WorkerResponseMPacketSync();
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    respond(response);
 }
 
 /**
- * @param {WorkerRequestSvcPacketEntities} request
+ * @param {WorkerRequestSvcCreatedEntities} request
  */
-function handleSvcPacketEntities(request) {
+function handleSvcCreatedEntities(request) {
+    const length = request.payload.length;
+
+    for (let i = 0; i < length; i += 3) {
+        const index = request.payload[i];
+        const serial = request.payload[i + 1];
+        const clazzId = request.payload[i + 2];
+
+        const clazz = state.demo.getClassById(clazzId);
+
+        if (clazz === null) {
+            throw new Error(`Couldn't find class [ ${clazzId} ]`);
+        }
+
+        state.demo.registerEntity(new Entity(index, serial, clazz));
+    }
+
+    const response = new WorkerResponseSvcCreatedEntities();
+
+    respond(response);
+}
+
+/**
+ * @param {WorkerRequestSvcUpdatedEntities} request
+ */
+function handleSvcUpdatedEntities(request) {
     const messagePacket = request.payload;
 
-    state.demoMessageHandler.handleSvcPacketEntities(messagePacket);
+    let events;
 
-    const response = new WorkerResponseSvcPacketEntities();
+    try {
+        events = state.demoMessageHandler.handleSvcPacketEntitiesPartial(messagePacket);
+    } catch {
+        events = [ ];
+    }
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    const response = new WorkerResponseSvcUpdatedEntities(events);
+
+    respond(response);
 }
 
 /**
@@ -235,5 +274,12 @@ function handleSvcServerInfo(request) {
 
     const response = new WorkerResponseMPacketSync();
 
-    parentPort.postMessage(WorkerResponseSerializer.serialize(response));
+    respond(response);
+}
+
+/**
+ * @param {WorkerResponse} response
+ */
+function respond(response) {
+    parentPort.postMessage(response.serialize(), response.transfers);
 }

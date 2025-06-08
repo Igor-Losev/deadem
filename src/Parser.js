@@ -70,7 +70,7 @@ class Parser {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        this._engine.interceptors.post[stage.code].push(interceptor);
+        this._engine.interceptors.post[stage.id].push(interceptor);
     }
 
     /**
@@ -82,7 +82,7 @@ class Parser {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        this._engine.interceptors.pre[stage.code].push(interceptor);
+        this._engine.interceptors.pre[stage.id].push(interceptor);
     }
 
     /**
@@ -92,13 +92,16 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        const index = this._engine.interceptors.post[stage.code].findIndex(i => i === interceptor);
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        const index = this._engine.interceptors.post[stage.id].findIndex(i => i === interceptor);
 
         if (index === -1) {
             return false;
         }
 
-        this._engine.interceptors.post[stage.code].splice(index, 1);
+        this._engine.interceptors.post[stage.id].splice(index, 1);
 
         return true;
     }
@@ -110,13 +113,16 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        const index = this._engine.interceptors.pre[stage.code].findIndex(i => i === interceptor);
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        const index = this._engine.interceptors.pre[stage.id].findIndex(i => i === interceptor);
 
         if (index === -1) {
             return false;
         }
 
-        this._engine.interceptors.pre[stage.code].splice(index, 1);
+        this._engine.interceptors.pre[stage.id].splice(index, 1);
 
         return true;
     }

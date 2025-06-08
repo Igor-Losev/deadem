@@ -1,6 +1,5 @@
 import Stream from 'node:stream';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
@@ -24,8 +23,6 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
         super({ objectMode: true });
 
         this._engine = engine;
-
-        this._packets = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_FULL_PACKET, DemoPacketType.DEM_SIGNON_PACKET ];
     }
 
     /**
@@ -35,7 +32,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     _transform(demoPacket, encoding, callback) {
-        if (!this._packets.includes(demoPacket.type)) {
+        if (!demoPacket.type.heavy) {
             this.push(demoPacket);
 
             callback();

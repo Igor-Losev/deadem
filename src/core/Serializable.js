@@ -22,7 +22,7 @@ class Serializable {
      * @protected
      */
     _serialize() {
-        throw new Error(`serialize() method is not implemented`);
+        throw new Error('serialize() method is not implemented');
     }
 }
 

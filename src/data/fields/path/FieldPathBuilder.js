@@ -1,8 +1,13 @@
 import FieldPath from './FieldPath.js';
 
+const BITS_PER_ELEMENT = 16;
+const BITS_PER_ELEMENT_BIG = BigInt(BITS_PER_ELEMENT);
+const MASK = (1 << BITS_PER_ELEMENT) - 1;
+const MASK_BIG = BigInt(MASK);
 const MAX_LENGTH = 7;
 
-const registry = new Map();
+const registryByCode = new Map();
+const registryById = [ ];
 
 /**
  * Constructs and caches unique {@link FieldPath} instances.
@@ -28,23 +33,51 @@ class FieldPathBuilder {
     }
 
     /**
+     * Given a path builds an appropriate {@link FieldPath};
+     *
      * @public
      * @static
      * @param {Array<number>} path
      * @returns {FieldPath}
      */
     static build(path) {
-        const cacheKey = getCacheKey(path);
+        const code = toCode(path);
 
-        const existing = registry.get(cacheKey);
+        const existing = registryByCode.get(code);
 
         if (existing) {
             return existing;
         }
 
-        const fieldPath = new FieldPath(path.slice());
+        const fieldPath = new FieldPath(path.slice(), code, registryById.length);
 
-        registry.set(cacheKey, fieldPath);
+        registryByCode.set(code, fieldPath);
+        registryById[fieldPath.id] = fieldPath;
+
+        return fieldPath;
+    }
+
+    /**
+     * Given a code of the {@link FieldPath} - reconstructs the instance.
+     *
+     * @public
+     * @static
+     * @param {BigInt} code
+     * @returns {FieldPath}
+     */
+    static reconstruct(code) {
+        const existing = registryByCode.get(code);
+
+        if (existing) {
+            return existing;
+        }
+
+        const path = fromCode(code);
+
+        const fieldPath = new FieldPath(path, code, registryById.length);
+
+        registryByCode.set(code, fieldPath);
+        registryById[fieldPath.id] = fieldPath;
 
         return fieldPath;
     }
@@ -108,14 +141,42 @@ class FieldPathBuilder {
     }
 }
 
-function getCacheKey(path) {
-    let key = BigInt(path.length) << 16n;
+/**
+ * @param {bigint} code
+ * @returns {Array<number>}
+ */
+function fromCode(code) {
+    const path = [ ];
 
-    for (let i = 0; i < path.length; i++) {
-        key = (key << 16n) | BigInt(path[i]);
+    let remainder = code;
+
+    const length = remainder & MASK_BIG;
+
+    for (let i = 1; i <= length; i++) {
+        remainder = remainder >> BITS_PER_ELEMENT_BIG;
+
+        const value = remainder & MASK_BIG;
+
+        path.push(Number(value));
     }
 
-    return key;
+    return path;
+}
+
+/**
+ * @param {Array<number>} path
+ * @returns {bigint}
+ */
+function toCode(path) {
+    let code = 0n;
+
+    for (let i = path.length - 1; i >= 0; i--) {
+        code = (code << BITS_PER_ELEMENT_BIG) | BigInt(path[i]);
+    }
+
+    code = (code << BITS_PER_ELEMENT_BIG) | BigInt(path.length);
+
+    return code;
 }
 
 export default FieldPathBuilder;

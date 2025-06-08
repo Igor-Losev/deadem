@@ -1,8 +1,9 @@
 import Assert from '#core/Assert.js';
+import Serializable from '#core/Serializable.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
-class WorkerRequest {
+class WorkerRequest extends Serializable {
     /**
      * @abstract
      * @constructor
@@ -11,6 +12,8 @@ class WorkerRequest {
      * @param {Transferable[]} transfers
      */
     constructor(type, payload, transfers) {
+        super();
+
         Assert.isTrue(type instanceof WorkerMessageType);
 
         this._type = type;
@@ -38,6 +41,22 @@ class WorkerRequest {
     get transfers() {
         return this._transfers;
     }
+
+    /**
+     * @protected
+     * @param {*} payload
+     * @returns {WorkerRequestRaw}
+     */
+    _serialize(payload) {
+        return {
+            __type: this._type.code,
+            payload
+        };
+    }
 }
+
+/**
+ * @typedef {{ __type: String, payload: * }} WorkerRequestRaw
+ */
 
 export default WorkerRequest;

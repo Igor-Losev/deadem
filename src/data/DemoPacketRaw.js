@@ -7,7 +7,7 @@ class DemoPacketRaw {
      * @param {VarInt32} type
      * @param {VarInt32} tick
      * @param {VarInt32} frame
-     * @param {Buffer} payload
+     * @param {Buffer|Uint8Array} payload
      */
     constructor(sequence, type, tick, frame, payload) {
         this._sequence = sequence;
@@ -51,7 +51,7 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {Buffer}
+     * @returns {Buffer|Uint8Array}
      */
     get payload() {
         return this._payload;
