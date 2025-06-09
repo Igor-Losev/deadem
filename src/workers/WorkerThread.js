@@ -17,30 +17,6 @@ class WorkerThread {
         this._worker = worker;
         this._logger = logger;
 
-        this._worker.on('message', (responseRaw) => {
-            const workerResponseClass = WorkerMessageBridge.resolveResponseClass(responseRaw);
-
-            const response = workerResponseClass.deserialize(responseRaw.payload);
-
-            const deferred = this._deferred;
-
-            this._busy = false;
-            this._deferred = null;
-
-            deferred.resolve(response);
-        });
-
-        this._worker.on('error', (error) => {
-            this._logger.error(`Thread [ ${this._localId} ]: `, error);
-
-            const deferred = this._deferred;
-
-            this._deferred = null;
-            this._busy = false;
-
-            deferred.reject(error);
-        });
-
         this._localId = localId;
         this._systemId = worker.threadId;
 
@@ -100,9 +76,48 @@ class WorkerThread {
 
         this._deferred = new DeferredPromise();
 
-        this._worker.postMessage(request.serialize(), request.transfers);
+        this._sendRequest(request);
 
         return this._deferred.promise;
+    }
+
+    /**
+     * @protected
+     * @param {WorkerResponse} responseRaw
+     */
+    _handleMessage(responseRaw) {
+        const workerResponseClass = WorkerMessageBridge.resolveResponseClass(responseRaw);
+
+        const response = workerResponseClass.deserialize(responseRaw.payload);
+
+        const deferred = this._deferred;
+
+        this._busy = false;
+        this._deferred = null;
+
+        deferred.resolve(response);
+    }
+
+    /**
+     * @protected
+     * @param {Error} error
+     */
+    _handleError(error) {
+        this._logger.error(`Thread [ ${this._localId} ]: `, error);
+
+        const deferred = this._deferred;
+
+        this._deferred = null;
+        this._busy = false;
+
+        deferred.reject(error);
+    }
+
+    /**
+     * @protected
+     */
+    _sendRequest() {
+        throw new Error('WorkerThread._sendRequest not implemented()');
     }
 }
 

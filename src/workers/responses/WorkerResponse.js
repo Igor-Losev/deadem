@@ -9,7 +9,7 @@ class WorkerResponse extends Serializable {
      * @constructor
      * @param {WorkerMessageType} type
      * @param {*} payload
-     * @param {Transferable[]} transfers
+     * @param {TransferListItem[]} transfers
      */
     constructor(type, payload, transfers) {
         super();
@@ -36,7 +36,7 @@ class WorkerResponse extends Serializable {
     }
 
     /**
-     * @returns {Transferable[]}
+     * @returns {TransferListItem[]}
      */
     get transfers() {
         return this._transfers;

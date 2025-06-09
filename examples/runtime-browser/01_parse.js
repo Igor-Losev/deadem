@@ -1,6 +1,6 @@
 import { Readable } from 'readable-stream';
 
-import { Parser, Printer } from '#root/index.js';
+import { Parser, ParserConfiguration, Printer } from '#root/index.js';
 
 const state = {
     file: null,
@@ -37,7 +37,9 @@ submit.addEventListener('click', () => {
         }
     });
 
-    const parser = new Parser();
+    const configuration = new ParserConfiguration({ parserThreads: 0 });
+
+    const parser = new Parser(configuration);
     const printer = new Printer(parser);
 
     parser.parse(readable)
