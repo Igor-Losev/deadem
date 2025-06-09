@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 import BitBuffer from '#core/BitBuffer.js';
 
 import MessagePacketRaw from '#data/MessagePacketRaw.js';

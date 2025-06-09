@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 import VarInt32 from '#data/VarInt32.js';
 
 /**

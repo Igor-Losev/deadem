@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import Stream from 'node:stream';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';

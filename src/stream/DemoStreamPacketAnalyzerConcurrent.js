@@ -190,10 +190,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Stream.Transform {
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
                             const response = await deferred.promise;
 
-                            const {
-                                events,
-                                lastIndex
-                            } = this._getEntityEvents(demoPacket, messagePacket, response.payload);
+                            const { events, lastIndex } = this._getEntityEvents(demoPacket, messagePacket, response.payload);
 
                             const created = [];
 

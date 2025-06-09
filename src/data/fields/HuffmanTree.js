@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 import Assert from '#core/Assert.js';
 import BinaryHeap from '#core/BinaryHeap.js';
 

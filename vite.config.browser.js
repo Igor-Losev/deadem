@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const configuration = defineConfig(({ command }) => {
     const common = getCommonConfiguration();
@@ -33,20 +32,17 @@ const configuration = defineConfig(({ command }) => {
 
 function getCommonConfiguration() {
     return {
+        define: {
+            global: 'globalThis'
+        },
         optimizeDeps: {
             include: [
+                'buffer',
+                'events',
                 'readable-stream'
             ]
         },
         plugins: [
-            nodePolyfills({
-                globals: {
-                    Buffer: true,
-                    global: true,
-                    process: true
-                },
-                protocolImports: true
-            }),
             {
                 /**
                  * https://github.com/protobufjs/protobuf.js/issues/1754
@@ -70,8 +66,9 @@ function getCommonConfiguration() {
         ],
         resolve: {
             alias: {
-                'node:stream': 'readable-stream',
-                'process/': 'process'
+                'node:buffer': 'buffer',
+                'node:events': 'events',
+                'node:stream': 'readable-stream'
             }
         }
     };
