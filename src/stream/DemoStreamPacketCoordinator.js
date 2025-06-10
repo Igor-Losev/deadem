@@ -1,6 +1,5 @@
-import Stream from 'node:stream';
-
 import BinaryHeap from '#core/BinaryHeap.js';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 
@@ -9,14 +8,14 @@ import DemoPacketRaw from '#data/DemoPacketRaw.js';
  *  - Filters out unparsed {@link DemoPacketRaw} packets.
  *  - Ensures that {@link DemoPacket} packets are passed through in the correct sequence order.
  */
-class DemoStreamPacketCoordinator extends Stream.Transform {
+class DemoStreamPacketCoordinator extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -26,29 +25,22 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
 
     /**
      * @protected
-     * @param {TransformCallback} callback
      */
-    _flush(callback) {
+    async _finalize() {
         if (this._heap.length > 0) {
             this._engine.logger.warn(`DemoStreamPacketCoordinator._flush() is called. However, heap has [ ${this._heap.length} ] packets. This should never happen`);
         }
-
-        callback();
     }
 
     /**
      * @protected
      * @param {DemoPacket|DemoPacketRaw} packet
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(packet, encoding, callback) {
+    async _handle(packet) {
         if (packet instanceof DemoPacketRaw) {
             this._engine.getPacketTracker().handleDemoPacketRaw(packet);
 
             this._sequence += 1;
-
-            callback();
 
             return;
         }
@@ -56,22 +48,18 @@ class DemoStreamPacketCoordinator extends Stream.Transform {
         if (packet.sequence !== this._sequence) {
             this._heap.insert(packet);
 
-            callback();
-
             return;
         }
 
-        this.push(packet);
+        this._push(packet);
 
         this._sequence += 1;
 
         while (this._heap.length > 0 && this._heap.root.sequence === this._sequence) {
-            this.push(this._heap.extract());
+            this._push(this._heap.extract());
 
             this._sequence += 1;
         }
-
-        callback();
     }
 }
 

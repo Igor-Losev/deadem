@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer';
-import Stream from 'node:stream';
+
+import TransformStream from '#core/stream/TransformStream.js';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
@@ -13,14 +14,14 @@ const DEMO_HEADER_SIZE_BYTES = 16;
  * the {@link DemoStreamPacketExtractor} will wait for subsequent chunks to complete
  * the extraction of the {@link DemoPacketRaw}.
  */
-class DemoStreamPacketExtractor extends Stream.Transform {
+class DemoStreamPacketExtractor extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -33,29 +34,29 @@ class DemoStreamPacketExtractor extends Stream.Transform {
         this._tail = Buffer.alloc(0);
     }
 
+    /**
+     * @public
+     * @returns {{bytes: number, chunks: number, packets: number}}
+     */
     get counts() {
         return this._counts;
     }
 
     /**
      * @protected
-     * @param {TransformCallback} callback
+     * @returns {Promise<void>}
      */
-    _flush(callback) {
+    async _finalize() {
         if (this._tail.length !== 0) {
             this._engine.logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
         }
-
-        callback();
     }
 
     /**
      * @protected
      * @param {Buffer} chunk
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(chunk, encoding, callback) {
+    async _handle(chunk) {
         let buffer = chunk;
 
         if (this._counts.chunks === 0) {
@@ -87,15 +88,13 @@ class DemoStreamPacketExtractor extends Stream.Transform {
             if (packet !== null) {
                 this._counts.packets += 1;
 
-                this.push(packet);
+                this._push(packet);
             } else if (extractor.tail.length > 0) {
                 this._tail = extractor.tail;
             }
         }
 
         this._counts.chunks += 1;
-
-        callback();
     }
 }
 

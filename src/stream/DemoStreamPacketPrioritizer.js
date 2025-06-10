@@ -1,4 +1,4 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
@@ -8,19 +8,18 @@ import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.j
  * packets of the following types:
  *
  * - {@link DemoPacketType.DEM_PACKET}
- * - {@link DemoPacketType.DEM_FULL_PACKET}
  * - {@link DemoPacketType.DEM_SIGNON_PACKET}
  *
  * All other packet types are passed through unchanged.
  */
-class DemoStreamPacketPrioritizer extends Stream.Transform {
+class DemoStreamPacketPrioritizer extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
     }
@@ -28,14 +27,10 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(demoPacket, encoding, callback) {
+    async _handle(demoPacket) {
         if (!demoPacket.type.heavy) {
-            this.push(demoPacket);
-
-            callback();
+            this._push(demoPacket);
 
             return;
         }
@@ -51,9 +46,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
 
         this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
-        this.push(demoPacket);
-
-        callback();
+        this._push(demoPacket);
     }
 }
 

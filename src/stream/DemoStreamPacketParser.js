@@ -1,6 +1,5 @@
-import Stream from 'node:stream';
-
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DemoPacket from '#data/DemoPacket.js';
 import MessagePacket from '#data/MessagePacket.js';
@@ -23,14 +22,14 @@ import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
  * asynchronous worker threads. As a result, the order of the {@link DemoPacket}
  * or {@link DemoPacketRaw} instances is not guaranteed.
  */
-class DemoStreamPacketParser extends Stream.Transform {
+class DemoStreamPacketParser extends TransformStream {
     /**
      * @constructor
      * @public
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -44,11 +43,9 @@ class DemoStreamPacketParser extends Stream.Transform {
 
     /**
      * @protected
-     * @async
-     * @param {TransformCallback} callback
      * @returns {Promise<void>}
      */
-    async _flush(callback) {
+    async _finalize() {
         const wait = async () => {
             await Promise.all(this._pendingRequests);
 
@@ -58,18 +55,13 @@ class DemoStreamPacketParser extends Stream.Transform {
         };
 
         await wait();
-
-        callback();
     }
 
     /**
      * @protected
      * @param {Array<DemoPacketRaw>} batch
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
-     * @private
      */
-    async _transform(batch, encoding, callback) {
+    async _handle(batch) {
         this._counts.batches += 1;
 
         if (!this._engine.getIsMultiThreaded()) {
@@ -81,13 +73,11 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             demoPackets.forEach((demoPacket, index) => {
                 if (demoPacket !== null) {
-                    this.push(demoPacket);
+                    this._push(demoPacket);
                 } else {
-                    this.push(batch[index]);
+                    this._push(batch[index]);
                 }
             });
-
-            callback();
         } else {
             const getIsHeavy = demoPacketRaw => DemoPacketType.parseById(demoPacketRaw.getTypeId())?.heavy;
             const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
@@ -99,9 +89,9 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             demoPackets.forEach((demoPacket, index) => {
                 if (demoPacket !== null) {
-                    this.push(demoPacket);
+                    this._push(demoPacket);
                 } else {
-                    this.push(batch[index]);
+                    this._push(batch[index]);
                 }
             });
 
@@ -119,12 +109,10 @@ class DemoStreamPacketParser extends Stream.Transform {
                         this._engine.workerManager.free(thread);
 
                         demoPackets.forEach((demoPacket) => {
-                            this.push(demoPacket);
+                            this._push(demoPacket);
                         });
                     });
             }
-
-            callback();
         }
     }
 

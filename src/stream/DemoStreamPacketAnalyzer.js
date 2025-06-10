@@ -1,4 +1,4 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 import InterceptorStage from '#data/enums/InterceptorStage.js';
@@ -13,14 +13,14 @@ import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
  * Given a stream of {@link DemoPacket}, processes them sequentially,
  * updating the state of the {@link Demo} accordingly.
  */
-class DemoStreamPacketAnalyzer extends Stream.Transform {
+class DemoStreamPacketAnalyzer extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -32,10 +32,8 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    async _transform(demoPacket, encoding, callback) {
+    async _handle(demoPacket) {
         await this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
@@ -51,10 +49,11 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
                 break;
             }
-            case DemoPacketType.DEM_STRING_TABLES:
+            case DemoPacketType.DEM_STRING_TABLES: {
                 this._demoPacketHandler.handleDemStringTables(demoPacket);
 
                 break;
+            }
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET:
             case DemoPacketType.DEM_FULL_PACKET: {
@@ -115,8 +114,6 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
         await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
-
-        callback();
     }
 }
 

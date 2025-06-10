@@ -43,6 +43,14 @@ class WorkerThread {
     }
 
     /**
+     * @public
+     * @returns {Promise<*>|null}
+     */
+    get deferred() {
+        return this._deferred;
+    }
+
+    /**
      * The system id (thread id).
      *
      * @returns {number}

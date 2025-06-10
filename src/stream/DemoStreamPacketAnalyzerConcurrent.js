@@ -1,4 +1,4 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 
@@ -20,14 +20,14 @@ import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
 
-class DemoStreamPacketAnalyzerConcurrent extends Stream.Transform {
+class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -40,27 +40,30 @@ class DemoStreamPacketAnalyzerConcurrent extends Stream.Transform {
 
     /**
      * @protected
-     * @param {TransformCallback} callback
      */
-    async _flush(callback) {
-        await Promise.all(this._queue.filter(i => i.deferred !== null).map(i => i.deferred.promise));
+    async _finalize() {
+        const wait = async () => {
+            await Promise.all(this._queue.filter(i => i.deferred !== null).map(i => i.deferred.promise));
 
-        callback();
+            await this._drain();
+
+            if (this._queue.length > 0) {
+                await wait();
+            }
+        };
+
+        await wait();
     }
 
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    async _transform(demoPacket, encoding, callback) {
+    async _handle(demoPacket) {
         if (!demoPacket.type.heavy) {
             this._enqueue(demoPacket);
 
             await this._drain();
-
-            callback();
 
             return;
         }
@@ -71,8 +74,6 @@ class DemoStreamPacketAnalyzerConcurrent extends Stream.Transform {
             this._enqueue(demoPacket);
 
             await this._drain();
-
-            callback();
 
             return;
         }
@@ -99,8 +100,6 @@ class DemoStreamPacketAnalyzerConcurrent extends Stream.Transform {
         this._enqueue(demoPacket, deferred);
 
         await this._drain();
-
-        callback();
     }
 
     /**

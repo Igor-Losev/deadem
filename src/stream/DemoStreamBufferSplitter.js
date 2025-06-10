@@ -1,23 +1,20 @@
-import Stream from 'node:stream';
-
 import Assert from '#core/Assert.js';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
-
-const MEGABYTE = 1024 * 1024;
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).
  */
-class DemoStreamBufferSplitter extends Stream.Transform {
+class DemoStreamBufferSplitter extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      * @param {number} maxChunkSize - The maximum size of each chunk in bytes.
      */
-    constructor(engine, maxChunkSize = MEGABYTE) {
-        super({ objectMode: true });
+    constructor(engine, maxChunkSize) {
+        super();
 
         Assert.isTrue(Number.isInteger(maxChunkSize));
 
@@ -28,12 +25,10 @@ class DemoStreamBufferSplitter extends Stream.Transform {
     /**
      * @protected
      * @param {Buffer} chunk
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(chunk, encoding, callback) {
+    async _handle(chunk) {
         if (chunk.byteLength <= this._maxChunkSize) {
-            this.push(chunk);
+            this._push(chunk);
         } else {
             for (let i = 0; i < Math.ceil(chunk.byteLength / this._maxChunkSize); i++) {
                 this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
@@ -42,11 +37,9 @@ class DemoStreamBufferSplitter extends Stream.Transform {
 
                 this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_BUFFER_SPLITTER);
 
-                this.push(slice);
+                this._push(slice);
             }
         }
-
-        callback();
     }
 }
 

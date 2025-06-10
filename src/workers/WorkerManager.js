@@ -158,9 +158,13 @@ class WorkerManager {
      *
      * @public
      */
-    terminate() {
+    async terminate() {
         if (this._allocations.size > 0) {
-            throw new Error(`Unable to terminate WorkerManager - there are [ ${this._allocations.size} ] allocated threads`);
+            await Promise.all(
+                this._threads
+                    .filter(t => t.deferred !== null)
+                    .map(t => t.deferred.promise)
+            );
         }
 
         const busy = this._threads.filter(t => t.busy).length;

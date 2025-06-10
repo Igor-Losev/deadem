@@ -1,5 +1,3 @@
-import { Readable } from 'readable-stream';
-
 import { Parser, ParserConfiguration, Printer } from '#root/index.js';
 
 const state = {
@@ -23,26 +21,14 @@ submit.addEventListener('click', () => {
 
     submit.setAttribute('disabled', '');
 
-    const reader = state.file.stream().getReader();
+    const reader = state.file.stream();
 
-    const readable = new Readable({
-        async read() {
-            const { done, value } = await reader.read();
-
-            if (done) {
-                this.push(null);
-            } else {
-                this.push(value);
-            }
-        }
-    });
-
-    const configuration = new ParserConfiguration({ parserThreads: 0 });
+    const configuration = new ParserConfiguration({ parserThreads: 4 });
 
     const parser = new Parser(configuration);
     const printer = new Printer(parser);
 
-    parser.parse(readable)
+    parser.parse(reader)
         .then(() => {
             printer.printStats();
 

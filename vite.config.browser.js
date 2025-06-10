@@ -38,8 +38,7 @@ function getCommonConfiguration() {
         optimizeDeps: {
             include: [
                 'buffer',
-                'events',
-                'readable-stream'
+                'events'
             ]
         },
         plugins: [
@@ -67,8 +66,7 @@ function getCommonConfiguration() {
         resolve: {
             alias: {
                 'node:buffer': 'buffer',
-                'node:events': 'events',
-                'node:stream': 'readable-stream'
+                'node:events': 'events'
             }
         }
     };

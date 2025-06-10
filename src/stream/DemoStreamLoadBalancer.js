@@ -1,18 +1,18 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
 /**
  * Balances stream processing load by periodically yielding control back to
  * the event loop, preventing long blocking operations and allowing
  * garbage collection to proceed smoothly.
  */
-class DemoStreamLoadBalancer extends Stream.Transform {
+class DemoStreamLoadBalancer extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -21,20 +21,16 @@ class DemoStreamLoadBalancer extends Stream.Transform {
 
     /**
      * @public
-     * @param {demoPacketRaw} demoPacketRaw
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
+     * @param {DemoPacketRaw} demoPacketRaw
      */
-    async _transform(demoPacketRaw, encoding, callback) {
+    async _handle(demoPacketRaw) {
         this._counter += 1;
 
         if (this._counter % 1000 === 0) {
             await pauseTimeout(0);
         }
 
-        this.push(demoPacketRaw);
-
-        callback();
+        this._push(demoPacketRaw);
     }
 }
 

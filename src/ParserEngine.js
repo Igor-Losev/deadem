@@ -1,6 +1,5 @@
-import Stream from 'node:stream';
-
 import Logger from '#core/Logger.js';
+import Pipeline from '#core/stream/Pipeline.js';
 
 import Demo from '#data/Demo.js';
 
@@ -61,7 +60,6 @@ class ParserEngine {
             configuration.parserThreads > 0
                 ? new DemoStreamPacketAnalyzerConcurrent(this)
                 : new DemoStreamPacketAnalyzer(this)
-
         ];
 
         this._interceptors = {
@@ -213,37 +211,29 @@ class ParserEngine {
 
         this._started = true;
 
-        return new Promise((resolve, reject) => {
+        try {
             this._logger.info('Parse started');
 
             this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            Stream.pipeline(
-                reader,
-                ...this._chain,
-                (error) => {
-                    this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
-                    this._trackers.memory.off();
+            const pipeline = new Pipeline(reader, this._chain);
 
-                    this._finished = true;
+            await pipeline.ready();
+        } catch (error) {
+            this._logger.error('Parse failed', error);
 
-                    if (error) {
-                        this._logger.error('Parse failed', error);
+            throw error;
+        } finally {
+            this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
+            this._trackers.memory.off();
 
-                        reject(error);
-                    } else {
-                        this._logger.info('Parse finished');
+            this._finished = true;
 
-                        resolve();
-                    }
-
-                    if (this._workerManager !== null) {
-                        this._workerManager.terminate();
-                    }
-                }
-            );
-        });
+            if (this._workerManager !== null) {
+                await this._workerManager.terminate();
+            }
+        }
     }
 }
 
