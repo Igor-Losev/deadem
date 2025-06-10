@@ -1,3 +1,4 @@
+import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
 
@@ -30,13 +31,8 @@ class ParserEngine {
      * @param {Logger} logger
      */
     constructor(configuration, logger) {
-        if (!(configuration instanceof ParserConfiguration)) {
-            throw new Error('Invalid configuration: expected an instance of ParserConfiguration');
-        }
-
-        if (!(logger instanceof Logger)) {
-            throw new Error('Invalid logger: expected an instance of Logger');
-        }
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         this._configuration = configuration;
         this._logger = logger;

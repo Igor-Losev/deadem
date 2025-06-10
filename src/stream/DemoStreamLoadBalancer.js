@@ -10,11 +10,13 @@ class DemoStreamLoadBalancer extends TransformStream {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} [breakInterval=1000]
      */
-    constructor(engine) {
+    constructor(engine, breakInterval = 1000) {
         super();
 
         this._engine = engine;
+        this._breakInterval = breakInterval;
 
         this._counter = 0;
     }
@@ -26,7 +28,7 @@ class DemoStreamLoadBalancer extends TransformStream {
     async _handle(demoPacketRaw) {
         this._counter += 1;
 
-        if (this._counter % 1000 === 0) {
+        if (this._counter % this._breakInterval === 0) {
             await pauseTimeout(0);
         }
 
