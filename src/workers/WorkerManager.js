@@ -159,13 +159,19 @@ class WorkerManager {
      * @public
      */
     async terminate() {
-        if (this._allocations.size > 0) {
-            await Promise.all(
-                this._threads
-                    .filter(t => t.deferred !== null)
-                    .map(t => t.deferred.promise)
-            );
-        }
+        const wait = async () => {
+            if (this._allocations.size > 0) {
+                await Promise.all(
+                    this._threads
+                        .filter(t => t.deferred !== null)
+                        .map(t => t.deferred.promise)
+                );
+
+                await wait();
+            }
+        };
+
+        await wait();
 
         const busy = this._threads.filter(t => t.busy).length;
 
