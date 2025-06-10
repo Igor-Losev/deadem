@@ -17,6 +17,16 @@ const configuration = defineConfig(({ command }) => {
                 },
                 emptyOutDir: true,
                 sourcemap: true
+            },
+            worker: {
+                plugins: () => [
+                    protobufPatchPlugin
+                ],
+                rollupOptions: {
+                    output: {
+                        file: 'deadem-worker.min.js'
+                    }
+                }
             }
         };
     } else {
@@ -42,26 +52,7 @@ function getCommonConfiguration() {
             ]
         },
         plugins: [
-            {
-                /**
-                 * https://github.com/protobufjs/protobuf.js/issues/1754
-                 *
-                 * Protobufjs uses `eval` internally via dynamic `require` resolution.
-                 * This "plugin" removes the use of `eval`, which is unnecessary in browser environments
-                 * and may cause security concerns or CSP violations.
-                 *
-                 * Since dynamic `require` is only relevant in Node.js, omitting it has no effect in browsers.
-                 */
-                name: 'protobuf-patch',
-                transform(code, id) {
-                    if (id.endsWith('@protobufjs/inquire/index.js')) {
-                        return {
-                            code: code.replace('eval("quire".replace(/^/,"re"))', 'require'),
-                            map: null
-                        };
-                    }
-                }
-            }
+            protobufPatchPlugin
         ],
         resolve: {
             alias: {
@@ -71,5 +62,26 @@ function getCommonConfiguration() {
         }
     };
 }
+
+/**
+ * https://github.com/protobufjs/protobuf.js/issues/1754
+ *
+ * Protobufjs uses `eval` internally via dynamic `require` resolution.
+ * This "plugin" removes the use of `eval`, which is unnecessary in browser environments
+ * and may cause security concerns or CSP violations.
+ *
+ * Since dynamic `require` is only relevant in Node.js, omitting it has no effect in browsers.
+ */
+const protobufPatchPlugin = {
+    name: 'protobuf-patch',
+    transform(code, id) {
+        if (id.endsWith('@protobufjs/inquire/index.js')) {
+            return {
+                code: code.replace('eval("quire".replace(/^/,"re"))', 'require'),
+                map: null
+            };
+        }
+    }
+};
 
 export default configuration;
