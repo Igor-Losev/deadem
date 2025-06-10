@@ -20,6 +20,7 @@ class Entity {
 
         this._active = true;
 
+        this._names = new Map();
         this._state = new Map();
     }
 
@@ -80,7 +81,13 @@ class Entity {
         const unpacked = { };
 
         this._state.forEach((value, fieldPath) => {
-            const name = this._class.serializer.getNameForFieldPath(fieldPath);
+            let name = this._names.get(fieldPath.id) || null;
+
+            if (name === null) {
+                name = this._class.serializer.getNameForFieldPath(fieldPath);
+
+                this._names.set(fieldPath.id, name);
+            }
 
             unpacked[name] = value;
         });
