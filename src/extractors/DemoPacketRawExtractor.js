@@ -15,10 +15,19 @@ class DemoPacketRawExtractor {
         this._tail = buffer;
     }
 
+    /**
+     * @public
+     * @returns {Buffer}
+     */
     get tail() {
         return this._tail;
     }
 
+    /**
+     * @public
+     * @param {number} sequenceStart
+     * @returns {Generator<DemoPacketRaw|null, void, *>}
+     */
     *retrieve(sequenceStart) {
         Assert.isTrue(Number.isInteger(sequenceStart));
 
