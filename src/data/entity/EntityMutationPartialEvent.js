@@ -9,7 +9,7 @@ class EntityMutationPartialEvent {
      * @param {number} bitPointer
      * @param {number} entityIndex
      * @param {number} entityClassId
-     * @param {Array<EntityMutation>} mutations
+     * @param {Array<bigint|*>} mutations
      */
     constructor(bitPointer, entityIndex, entityClassId, mutations) {
         this._bitPointer = bitPointer;
@@ -44,7 +44,7 @@ class EntityMutationPartialEvent {
 
     /**
      * @public
-     * @returns {Array<EntityMutation>}
+     * @returns {Array<bigint|*>}
      */
     get mutations() {
         return this._mutations;
