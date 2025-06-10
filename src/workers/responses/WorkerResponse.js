@@ -43,6 +43,15 @@ class WorkerResponse extends Serializable {
     }
 
     /**
+     * @public
+     * @param {*} payload
+     * @returns {WorkerResponseRaw}
+     */
+    serialize(payload) {
+        return this._serialize(payload);
+    }
+
+    /**
      * @protected
      * @param {*} payload
      * @returns {WorkerResponseRaw}

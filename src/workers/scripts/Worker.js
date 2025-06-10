@@ -17,6 +17,7 @@ import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketS
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
 import WorkerResponseSvcCreatedEntities from '#workers/responses/WorkerResponseSvcCreatedEntities.js';
 import WorkerResponseSvcUpdatedEntities from '#workers/responses/WorkerResponseSvcUpdatedEntities.js';
+import WorkerResponseSvcUpdatedEntitiesBatch from '#workers/responses/WorkerResponseSvcUpdatedEntitiesBatch.js';
 
 import WorkerMessageBridge from '#workers/WorkerMessageBridge.instance.js';
 
@@ -48,9 +49,11 @@ class Worker {
 
         const request = workerRequestClass.deserialize(requestRaw.payload);
 
+        let response;
+
         switch (request.type) {
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
-                this._handleHeavyPacketParse(request);
+                response = this._handleHeavyPacketParse(request);
 
                 break;
             }
@@ -59,15 +62,15 @@ class Worker {
 
                 switch (demoPacket.type) {
                     case DemoPacketType.DEM_CLASS_INFO:
-                        this._handleClassInfo(request);
+                        response = this._handleClassInfo(request);
 
                         break;
                     case DemoPacketType.DEM_SEND_TABLES:
-                        this._handleSendTables(request);
+                        response = this._handleSendTables(request);
 
                         break;
                     case DemoPacketType.DEM_STRING_TABLES:
-                        this._handleStringTables(request);
+                        response = this._handleStringTables(request);
 
                         break;
                     default:
@@ -81,19 +84,19 @@ class Worker {
 
                 switch (messagePacket.type) {
                     case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
-                        this._handleSvcClearAllStringTables(request);
+                        response = this._handleSvcClearAllStringTables(request);
 
                         break;
                     case MessagePacketType.SVC_CREATE_STRING_TABLE:
-                        this._handleSvcCreateStringTable(request);
+                        response = this._handleSvcCreateStringTable(request);
 
                         break;
                     case MessagePacketType.SVC_UPDATE_STRING_TABLE:
-                        this._handleSvcUpdateStringTable(request);
+                        response = this._handleSvcUpdateStringTable(request);
 
                         break;
                     case MessagePacketType.SVC_SERVER_INFO:
-                        this._handleSvcServerInfo(request);
+                        response = this._handleSvcServerInfo(request);
 
                         break;
                     default:
@@ -103,23 +106,31 @@ class Worker {
                 break;
             }
             case WorkerMessageType.SVC_CREATED_ENTITIES: {
-                this._handleSvcCreatedEntities(request);
+                response = this._handleSvcCreatedEntities(request);
 
                 break;
             }
             case WorkerMessageType.SVC_UPDATED_ENTITIES: {
-                this._handleSvcUpdatedEntities(request);
+                response = this._handleSvcUpdatedEntities(request);
+
+                break;
+            }
+            case WorkerMessageType.SVC_UPDATED_ENTITIES_BATCH: {
+                response = this._handleSvcUpdatedEntitiesBatch(request);
 
                 break;
             }
             default:
                 throw new Error(`Unhandled request [ ${request.type.code} ]`);
         }
+
+        this._respond(response);
     }
 
     /**
      * @protected
      * @param {WorkerRequestDHPParse} request
+     * @returns {WorkerResponseDHPParse}
      */
     _handleHeavyPacketParse(request) {
         const batches = [ ];
@@ -142,112 +153,104 @@ class Worker {
             batches.push(packed);
         });
 
-        const response = new WorkerResponseDHPParse(batches);
-
-        this._respond(response);
+        return new WorkerResponseDHPParse(batches);
     }
 
     /**
      * @protected
      * @param {WorkerRequestDPacketSync} request
+     * @returns {WorkerResponseDPacketSync}
      */
     _handleClassInfo(request) {
         const demoPacket = request.payload;
 
         this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseDPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestDPacketSync} request
+     * @returns {WorkerResponseDPacketSync}
      */
     _handleSendTables(request) {
         const demoPacket = request.payload;
 
         this._demoPacketHandler.handleDemSendTables(demoPacket);
 
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseDPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestDPacketSync} request
+     * @returns {WorkerResponseDPacketSync}
      */
     _handleStringTables(request) {
         const demoPacket = request.payload;
 
         this._demoPacketHandler.handleDemStringTables(demoPacket);
 
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseDPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestMPacketSync} request
+     * @returns {WorkerResponseMPacketSync}
      */
     _handleSvcClearAllStringTables(request) {
         const messagePacket = request.payload;
 
         this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
 
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseMPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestMPacketSync} request
+     * @returns {WorkerResponseMPacketSync}
      */
     _handleSvcCreateStringTable(request) {
         const messagePacket = request.payload;
 
         this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
 
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseMPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestMPacketSync} request
+     * @returns {WorkerResponseMPacketSync}
      */
     _handleSvcUpdateStringTable(request) {
         const messagePacket = request.payload;
 
         this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
 
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseMPacketSync();
     }
 
     /**
      * @protected
      * @param {WorkerRequestMPacketSync} request
+     * @returns {WorkerResponseMPacketSync}
      */
     _handleSvcServerInfo(request) {
         const messagePacket = request.payload;
 
         this._demoMessageHandler.handleSvcServerInfo(messagePacket);
 
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
+        return new WorkerResponseMPacketSync();
     }
 
     /**
      * @protected
-     * @param {WorkerRequestMPacketSync} request
+     * @param {WorkerRequestSvcCreatedEntities} request
+     * @returns {WorkerResponseSvcCreatedEntities}
      */
     _handleSvcCreatedEntities(request) {
         const length = request.payload.length;
@@ -266,14 +269,13 @@ class Worker {
             this._demo.registerEntity(new Entity(index, serial, clazz));
         }
 
-        const response = new WorkerResponseSvcCreatedEntities();
-
-        this._respond(response);
+        return new WorkerResponseSvcCreatedEntities();
     }
 
     /**
      * @protected
-     * @param {WorkerRequestMPacketSync} request
+     * @param {WorkerRequestSvcUpdatedEntities} request
+     * @returns {WorkerResponseSvcUpdatedEntities}
      */
     _handleSvcUpdatedEntities(request) {
         const messagePacket = request.payload;
@@ -286,9 +288,18 @@ class Worker {
             events = [ ];
         }
 
-        const response = new WorkerResponseSvcUpdatedEntities(events);
+        return new WorkerResponseSvcUpdatedEntities(events);
+    }
 
-        this._respond(response);
+    /**
+     * @protected
+     * @param {WorkerRequestSvcUpdatedEntitiesBatch} request
+     * @returns {WorkerResponseSvcUpdatedEntitiesBatch}
+     */
+    _handleSvcUpdatedEntitiesBatch(request) {
+        const responses = request.payload.map(r => this._handleSvcUpdatedEntities(r));
+
+        return new WorkerResponseSvcUpdatedEntitiesBatch(responses);
     }
 }
 

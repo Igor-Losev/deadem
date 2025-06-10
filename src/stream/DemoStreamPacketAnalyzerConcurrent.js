@@ -1,3 +1,5 @@
+import Batcher from '#core/Batcher.js';
+import Semaphore from '#core/Semaphore.js';
 import TransformStream from '#core/stream/TransformStream.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
@@ -19,22 +21,52 @@ import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
+import WorkerRequestSvcUpdatedEntitiesBatch from '#workers/requests/WorkerRequestSvcUpdatedEntitiesBatch.js';
 
 class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} [batchSize=2]
      */
-    constructor(engine) {
+    constructor(engine, batchSize = 2) {
         super();
 
         this._engine = engine;
+
+        const limiter = new Semaphore(this._engine.getThreadsCount() * batchSize);
 
         this._demoEntityHandler = new DemoEntityHandler(engine.demo);
         this._demoMessageHandler = new DemoMessageHandler(engine.demo);
         this._demoPacketHandler = new DemoPacketHandler(engine.demo);
 
+        this._batcher = new Batcher(batchSize, async (batch) => {
+            const requests = batch.map((item) => {
+                return new WorkerRequestSvcUpdatedEntities(item.packet);
+            });
+
+            const thread = await engine.workerManager.allocate();
+
+            thread.send(new WorkerRequestSvcUpdatedEntitiesBatch(requests))
+                .then((response) => {
+                    engine.workerManager.free(thread);
+
+                    batch.forEach((item, index) => {
+                        item.deferred.resolve(response.payload[index]);
+
+                        limiter.release();
+                    });
+                }).catch((error) => {
+                    batch.forEach((item) => {
+                        item.deferred.reject(error);
+
+                        limiter.release();
+                    });
+                });
+        });
+
+        this._limiter = limiter;
         this._queue = [ ];
     }
 
@@ -84,18 +116,11 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
         const packet = packets[0];
 
-        const thread = await this._engine.workerManager.allocate();
+        await this._limiter.acquire();
 
         const deferred = new DeferredPromise();
 
-        thread.send(new WorkerRequestSvcUpdatedEntities(packet))
-            .then((response) => {
-                this._engine.workerManager.free(thread);
-
-                deferred.resolve(response);
-            }).catch((error) => {
-                deferred.reject(error);
-            });
+        this._batcher.push({ packet, deferred });
 
         this._enqueue(demoPacket, deferred);
 
@@ -226,7 +251,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
-        await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
+        // await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
     }
 
     /**

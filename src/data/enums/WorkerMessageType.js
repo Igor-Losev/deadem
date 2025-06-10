@@ -87,6 +87,15 @@ class WorkerMessageType {
     static get SVC_UPDATED_ENTITIES() {
         return svcUpdatedEntities;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get SVC_UPDATED_ENTITIES_BATCH() {
+        return svcUpdatedEntitiesBatch;
+    }
 }
 
 const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
@@ -96,5 +105,6 @@ const messagePacketSync = new WorkerMessageType('MESSAGE_PACKET_SYNC', 'Synchron
 
 const svcCreatedEntities = new WorkerMessageType('SVC_CREATED_ENTITIES', 'Parsing SVC_CREATED_ENTITIES message');
 const svcUpdatedEntities = new WorkerMessageType('SVC_UPDATED_ENTITIES', 'Parsing SVC_UPDATED_ENTITIES message');
+const svcUpdatedEntitiesBatch = new WorkerMessageType('SVC_UPDATED_ENTITIES_BATCH', 'Parsing SVC_UPDATED_ENTITIES_BATCH message');
 
 export default WorkerMessageType;

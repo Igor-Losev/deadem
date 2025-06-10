@@ -47,6 +47,15 @@ class WorkerRequest extends Serializable {
      * @param {*} payload
      * @returns {WorkerRequestRaw}
      */
+    serialize(payload) {
+        return this._serialize(payload);
+    }
+
+    /**
+     * @protected
+     * @param {*} payload
+     * @returns {WorkerRequestRaw}
+     */
     _serialize(payload) {
         return {
             __type: this._type.code,
