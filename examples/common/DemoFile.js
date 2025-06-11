@@ -63,6 +63,8 @@ class DemoFile {
     static get MATCH_36127052() { return match36127052; }
     static get MATCH_36127128() { return match36127128; }
 
+    static get MATCH_36437939() { return match36437939; }
+
     /**
      * @public
      * @returns {`${string}.dem`}
@@ -92,5 +94,7 @@ const match36126858 = new DemoFile(36126858, '5637');
 const match36127043 = new DemoFile(36127043, '5637');
 const match36127052 = new DemoFile(36127052, '5637');
 const match36127128 = new DemoFile(36127128, '5637');
+
+const match36437939 = new DemoFile(36437939, '5654');
 
 export default DemoFile;

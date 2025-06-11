@@ -75,8 +75,17 @@ class WorkerMessageType {
      * @static
      * @returns {WorkerMessageType}
      */
-    static get SVC_PACKET_ENTITIES() {
-        return svcPacketEntities;
+    static get SVC_CREATED_ENTITIES() {
+        return svcCreatedEntities;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get SVC_UPDATED_ENTITIES() {
+        return svcUpdatedEntities;
     }
 }
 
@@ -85,6 +94,7 @@ const demoPacketSync = new WorkerMessageType('DEMO_PACKET_SYNC', 'Synchronize de
 
 const messagePacketSync = new WorkerMessageType('MESSAGE_PACKET_SYNC', 'Synchronize message packet');
 
-const svcPacketEntities = new WorkerMessageType('SVC_PACKET_ENTITIES', 'Parsing SVC_PACKET_ENTITIES message');
+const svcCreatedEntities = new WorkerMessageType('SVC_CREATED_ENTITIES', 'Parsing SVC_CREATED_ENTITIES message');
+const svcUpdatedEntities = new WorkerMessageType('SVC_UPDATED_ENTITIES', 'Parsing SVC_UPDATED_ENTITIES message');
 
 export default WorkerMessageType;

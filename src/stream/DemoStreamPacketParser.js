@@ -1,6 +1,5 @@
-import Stream from 'node:stream';
-
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DemoPacket from '#data/DemoPacket.js';
 import MessagePacket from '#data/MessagePacket.js';
@@ -13,8 +12,6 @@ import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js'
 
 import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
 
-const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PACKET, DemoPacketType.DEM_FULL_PACKET ];
-
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload and
  * passes through instances of:
@@ -25,14 +22,14 @@ const HEAVY_PACKETS = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_SIGNON_PAC
  * asynchronous worker threads. As a result, the order of the {@link DemoPacket}
  * or {@link DemoPacketRaw} instances is not guaranteed.
  */
-class DemoStreamPacketParser extends Stream.Transform {
+class DemoStreamPacketParser extends TransformStream {
     /**
      * @constructor
      * @public
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
@@ -46,24 +43,25 @@ class DemoStreamPacketParser extends Stream.Transform {
 
     /**
      * @protected
-     * @async
-     * @param {TransformCallback} callback
      * @returns {Promise<void>}
      */
-    async _flush(callback) {
-        await Promise.all(this._pendingRequests.map(m => m.promise));
+    async _finalize() {
+        const wait = async () => {
+            await Promise.all(this._pendingRequests);
 
-        callback();
+            if (this._pendingRequests.length > 0) {
+                await wait();
+            }
+        };
+
+        await wait();
     }
 
     /**
      * @protected
      * @param {Array<DemoPacketRaw>} batch
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
-     * @private
      */
-    async _transform(batch, encoding, callback) {
+    async _handle(batch) {
         this._counts.batches += 1;
 
         if (!this._engine.getIsMultiThreaded()) {
@@ -75,15 +73,13 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             demoPackets.forEach((demoPacket, index) => {
                 if (demoPacket !== null) {
-                    this.push(demoPacket);
+                    this._push(demoPacket);
                 } else {
-                    this.push(batch[index]);
+                    this._push(batch[index]);
                 }
             });
-
-            callback();
         } else {
-            const getIsHeavy = demoPacketRaw => HEAVY_PACKETS.includes(DemoPacketType.parseById(demoPacketRaw.getTypeId()));
+            const getIsHeavy = demoPacketRaw => DemoPacketType.parseById(demoPacketRaw.getTypeId())?.heavy;
             const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
 
             const heavy = batch.filter(getIsHeavy);
@@ -93,26 +89,30 @@ class DemoStreamPacketParser extends Stream.Transform {
 
             demoPackets.forEach((demoPacket, index) => {
                 if (demoPacket !== null) {
-                    this.push(demoPacket);
+                    this._push(demoPacket);
                 } else {
-                    this.push(batch[index]);
+                    this._push(batch[index]);
                 }
             });
 
             if (heavy.length > 0) {
-                const thread = await this._engine.workerManager.allocate();
+                const promise = this._engine.workerManager.allocate();
+
+                this._pendingRequests.push(promise);
+
+                const thread = await promise;
+
+                this._removePending(promise);
 
                 this._processAsync(thread, heavy)
                     .then((demoPackets) => {
                         this._engine.workerManager.free(thread);
 
                         demoPackets.forEach((demoPacket) => {
-                            this.push(demoPacket);
+                            this._push(demoPacket);
                         });
                     });
             }
-
-            callback();
         }
     }
 
@@ -134,19 +134,13 @@ class DemoStreamPacketParser extends Stream.Transform {
     async _processAsync(thread, packets) {
         this._counts.requests += 1;
 
-        const request = new WorkerRequestDHPParse(packets.map(p => p.payload));
+        const promise = thread.send(new WorkerRequestDHPParse(packets.map(p => p.payload)));
 
-        const promise = thread.send(request);
-
-        this._pendingRequests.push({ request, promise });
+        this._pendingRequests.push(promise);
 
         return promise
             .then((response) => {
-                const taskIndex = this._pendingRequests.findIndex(({ request: r }) => r === request);
-
-                if (taskIndex >= 0) {
-                    this._pendingRequests.splice(taskIndex, 1);
-                }
+                this._removePending(promise);
 
                 const demoPackets = [ ];
 
@@ -176,6 +170,18 @@ class DemoStreamPacketParser extends Stream.Transform {
                 return demoPackets;
             });
     }
+
+    /**
+     * @protected
+     * @param {Promise<any>} promise
+     */
+    _removePending(promise) {
+        const index = this._pendingRequests.findIndex(p => promise === p);
+
+        if (index >= 0) {
+            this._pendingRequests.splice(index, 1);
+        }
+    }
 }
 
 /**
@@ -204,7 +210,7 @@ function parseDemoPacket(demoPacketRaw) {
 
     let demoPacket;
 
-    if (HEAVY_PACKETS.includes(demoPacketType)) {
+    if (demoPacketType.heavy) {
         const extractor = new MessagePacketRawExtractor(decoded.data);
 
         const messagePacketsRaw = extractor.all();

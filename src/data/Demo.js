@@ -1,4 +1,5 @@
 import Assert from '#core/Assert.js';
+import Logger from '#core/Logger.js';
 
 import Class from './Class.js';
 import Server from './Server.js';
@@ -12,8 +13,6 @@ import Serializer from './fields/Serializer.js';
 import SerializerKey from './fields/SerializerKey.js';
 
 import StringTableContainer from './tables/string/StringTableContainer.js';
-
-import Logger from '#core/Logger.js';
 
 class Demo {
     /**

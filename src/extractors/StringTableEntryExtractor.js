@@ -1,3 +1,5 @@
+import { Buffer } from 'node:buffer';
+
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';

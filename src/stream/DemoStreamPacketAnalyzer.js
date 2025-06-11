@@ -1,112 +1,59 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
-import EntityOperation from '#data/enums/EntityOperation.js';
 import InterceptorStage from '#data/enums/InterceptorStage.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
+import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
-
-import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
-import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
-import WorkerRequestSvcPacketEntities from '#workers/requests/WorkerRequestSvcPacketEntities.js';
+import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
  * updating the state of the {@link Demo} accordingly.
  */
-class DemoStreamPacketAnalyzer extends Stream.Transform {
+class DemoStreamPacketAnalyzer extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
 
-        this._demoPacketHandler = new DemoPacketHandler(engine.demo);
+        this._demoEntityHandler = new DemoEntityHandler(engine.demo);
         this._demoMessageHandler = new DemoMessageHandler(engine.demo);
-
-        this._multiThreaded = this._engine.getIsMultiThreaded();
+        this._demoPacketHandler = new DemoPacketHandler(engine.demo);
     }
 
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    async _transform(demoPacket, encoding, callback) {
-        await this._interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
+    async _handle(demoPacket) {
+        await this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
 
         switch (demoPacket.type) {
-            case DemoPacketType.DEM_ERROR:
-                break;
-            case DemoPacketType.DEM_STOP:
-                break;
-            case DemoPacketType.DEM_FILE_HEADER:
-                break;
-            case DemoPacketType.DEM_FILE_INFO:
-                break;
-            case DemoPacketType.DEM_SYNC_TICK:
-                break;
             case DemoPacketType.DEM_SEND_TABLES: {
                 this._demoPacketHandler.handleDemSendTables(demoPacket);
-
-                if (this._multiThreaded) {
-                    const request = new WorkerRequestDPacketSync(demoPacket);
-
-                    await this._engine.workerManager.broadcast(request);
-                }
 
                 break;
             }
             case DemoPacketType.DEM_CLASS_INFO: {
                 this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
-                if (this._multiThreaded) {
-                    const request = new WorkerRequestDPacketSync(demoPacket);
-
-                    await this._engine.workerManager.broadcast(request);
-                }
+                break;
+            }
+            case DemoPacketType.DEM_STRING_TABLES: {
+                this._demoPacketHandler.handleDemStringTables(demoPacket);
 
                 break;
             }
-            case DemoPacketType.DEM_STRING_TABLES:
-                this._demoPacketHandler.handleDemStringTables(demoPacket);
-
-                if (this._multiThreaded) {
-                    const request = new WorkerRequestDPacketSync(demoPacket);
-
-                    await this._engine.workerManager.broadcast(request);
-                }
-
-                break;
-            case DemoPacketType.DEM_CONSOLE_CMD:
-                break;
-            case DemoPacketType.DEM_CUSTOM_DATA:
-                break;
-            case DemoPacketType.DEM_CUSTOM_DATA_CALLBACKS:
-                break;
-            case DemoPacketType.DEM_USER_CMD:
-                break;
-            case DemoPacketType.DEM_SAVE_GAME:
-                break;
-            case DemoPacketType.DEM_SPAWN_GROUPS:
-                break;
-            case DemoPacketType.DEM_ANIMATION_DATA:
-                break;
-            case DemoPacketType.DEM_ANIMATION_HEADER:
-                break;
-            case DemoPacketType.DEM_RECOVERY:
-                break;
-
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET:
             case DemoPacketType.DEM_FULL_PACKET: {
@@ -115,187 +62,47 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
                 for (let i = 0; i < messagePackets.length; i++) {
                     const messagePacket = messagePackets[i];
 
-                    await this._interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+                    await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
 
                     switch (messagePacket.type) {
-                        case MessagePacketType.NET_TICK:
-                            break;
-                        case MessagePacketType.NET_SET_CON_VAR:
-                        case MessagePacketType.NET_SIGNON_STATE:
-                        case MessagePacketType.NET_SPAWN_GROUP_LOAD:
-                        case MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK:
-                            break;
-
                         case MessagePacketType.SVC_SERVER_INFO: {
                             this._demoMessageHandler.handleSvcServerInfo(messagePacket);
 
-                            if (this._multiThreaded) {
-                                const request = new WorkerRequestMPacketSync(messagePacket);
-
-                                await this._engine.workerManager.broadcast(request);
-                            }
-
                             break;
                         }
-                        case MessagePacketType.SVC_CLASS_INFO:
-                            break;
                         case MessagePacketType.SVC_CREATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
-
-                            if (this._multiThreaded) {
-                                const request = new WorkerRequestMPacketSync(messagePacket);
-
-                                await this._engine.workerManager.broadcast(request);
-                            }
 
                             break;
                         }
                         case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
                             this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
 
-                            if (this._multiThreaded) {
-                                const request = new WorkerRequestMPacketSync(messagePacket);
-
-                                await this._engine.workerManager.broadcast(request);
-                            }
-
                             break;
                         }
-                        case MessagePacketType.SVC_VOICE_INIT:
-                            break;
                         case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
                             this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
-
-                            if (this._multiThreaded) {
-                                const request = new WorkerRequestMPacketSync(messagePacket);
-
-                                await this._engine.workerManager.broadcast(request);
-                            }
 
                             break;
                         }
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
-                            if (this._multiThreaded) {
-                                const thread = await this._engine.workerManager.allocate();
+                            const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
 
-                                const request = new WorkerRequestSvcPacketEntities(messagePacket);
+                            await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
-                                thread.send(request)
-                                    .then(() => {
-                                        this._engine.workerManager.free(thread);
-                                    });
-                            } else {
-                                const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+                            this._demoEntityHandler.handleEntityEvents(events);
 
-                                await this._interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-
-                                events.forEach((event) => {
-                                    const entity = event.entity;
-
-                                    switch (event.operation) {
-                                        case EntityOperation.CREATE:
-                                        case EntityOperation.UPDATE:
-                                            if (!entity.active) {
-                                                entity.activate();
-                                            }
-
-                                            event.mutations.forEach((mutation) => {
-                                                entity.updateByFieldPath(mutation.fieldPath, mutation.value);
-                                            });
-
-                                            break;
-                                        case EntityOperation.DELETE:
-                                            this._engine.demo.deleteEntity(entity.index);
-
-                                            break;
-                                        case EntityOperation.LEAVE:
-                                            entity.deactivate();
-
-                                            break;
-                                    }
-                                });
-
-                                await this._interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-                            }
+                            await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
                             break;
                         }
-                        case MessagePacketType.SVC_HLTV_STATUS:
-                        case MessagePacketType.SVC_USER_COMMANDS:
-                            break;
-
-                        case MessagePacketType.USER_MESSAGE_PARTICLE_MANAGER:
-                        case MessagePacketType.USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL:
-                            break;
-
-                        case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST:
-                        case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT:
-                        case MessagePacketType.GE_SOS_START_SOUND_EVENT:
-                        case MessagePacketType.GE_SOS_STOP_SOUND_EVENT:
-                        case MessagePacketType.GE_SOS_SET_SOUND_EVENT_PARAMS:
-                        case MessagePacketType.GE_SOS_STOP_SOUND_EVENT_HASH:
-                            break;
-
-                        case MessagePacketType.TE_EFFECT_DISPATCH:
-                            break;
-
-                        case MessagePacketType.CITADEL_USER_MESSAGE_DAMAGE:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_MAP_PING:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_TEAM_REWARDS:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_TRIGGER_DAMAGE_FLASH:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_CHANGED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_RECENT_DAMAGE_SUMMARY:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_SPECTATOR_TEAM_CHANGED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_GOLD_HISTORY:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_QUICK_RESPONSE:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_POST_MATCH_DETAILS:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_EVENT:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_INTERRUPTED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_RETURN_IDOL:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_SET_CLIENT_CAMERA_ANGLES:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_MAP_LINE:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_BULLET_HIT:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_OBJECTIVE_MASK:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_MODIFIER_APPLIED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_CAMERA_CONTROLLER:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_AURA_MODIFIER_APPLIED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_OBSTRUCTED_SHOT_FIRED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_LATE_FAILURE:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_PING:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_POST_PROCESSING_ANIM:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_DEATH_REPLAY_DATA:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_PLAYER_LIFETIME_STAT_INFO:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_FORCE_SHOP_CLOSED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_STAMINA_DRAINED:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_ABILITY_NOTIFY:
-                        case MessagePacketType.CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE:
-                            break;
-
-                        case MessagePacketType.GE_FIRE_BULLETS:
-                        case MessagePacketType.GE_PLAYER_ANIM_EVENT:
-                        case MessagePacketType.GE_PARTICLE_SYSTEM_MANAGER:
-                        case MessagePacketType.GE_SCREEN_TEXT_PRETTY:
-                        case MessagePacketType.GE_SERVER_REQUESTED_TRACER:
-                        case MessagePacketType.GE_BULLET_IMPACT:
-                        case MessagePacketType.GE_ENABLE_SAT_VOLUMES_EVENT:
-                        case MessagePacketType.GE_PLACE_SAT_VOLUME_EVENT:
-                        case MessagePacketType.GE_DISABLE_SAT_VOLUME_EVENT:
-                        case MessagePacketType.GE_REMOVE_SAT_VOLUME_EVENT:
-                            break;
-
-                        case MessagePacketType.CITADEL_ENTITY_MESSAGE_BREAKABLE_PROP_SPAWN_DEBRIS:
-                            break;
-
                         default:
                             break;
                     }
 
                     this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
 
-                    await this._interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+                    await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
                 }
 
                 break;
@@ -306,35 +113,7 @@ class DemoStreamPacketAnalyzer extends Stream.Transform {
 
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
-        await this._interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
-
-        callback();
-    }
-
-    /**
-     * @protected
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    async _interceptPost(stage, ...args) {
-        for (let i = 0; i < this._engine.interceptors.post[stage.code].length; i++) {
-            const interceptor = this._engine.interceptors.post[stage.code][i];
-
-            await interceptor(...args);
-        }
-    }
-
-    /**
-     * @protected
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    async _interceptPre(stage, ...args) {
-        for (let i = 0; i < this._engine.interceptors.pre[stage.code].length; i++) {
-            const interceptor = this._engine.interceptors.pre[stage.code][i];
-
-            await interceptor(...args);
-        }
+        await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
     }
 }
 

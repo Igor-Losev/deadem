@@ -7,7 +7,7 @@ import DemoProvider from './helpers/DemoProvider.js';
 
 const CONFIG = {
     DEMOS: [ DemoFile.MATCH_36126420 ],
-    REPEATS: 30
+    REPEATS: 10
 };
 
 (async () => {
@@ -18,6 +18,7 @@ const CONFIG = {
     const logger = Logger.CONSOLE_INFO;
 
     const benchmark = new Benchmark();
+    const configuration = new ParserConfiguration({ parserThreads: 4 });
 
     for (let demoIndex = 0; demoIndex < CONFIG.DEMOS.length; demoIndex++) {
         const demo = CONFIG.DEMOS[demoIndex];
@@ -26,7 +27,7 @@ const CONFIG = {
 
         for (let counter = 0; counter < CONFIG.REPEATS; counter++) {
             let readable = await DemoProvider.read(demo);
-            let parser = new Parser(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
+            let parser = new Parser(configuration, Logger.CONSOLE_WARN);
 
             await benchmark.parse(parser, readable);
 

@@ -6,6 +6,7 @@ import Server from '#data/Server.js';
 
 import Entity from '#data/entity/Entity.js';
 import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
+import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
 
 import EntityOperation from '#data/enums/EntityOperation.js';
 
@@ -71,12 +72,13 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @param {number} [startPointer=0]
+     * @param {number} [startLoop=0]
+     * @param {number} [startIndex=-1]
      * @returns {Array<EntityMutationEvent>}
      */
-    handleSvcPacketEntities(messagePacket) {
+    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1) {
         const message = messagePacket.data;
-
-        const bitBuffer = new BitBuffer(message.entityData);
 
         if (message.updateBaseline) {
             throw new Error('Unhandled CSVCMsg_PacketEntities.updateBaseline === true');
@@ -86,11 +88,15 @@ class DemoMessageHandler {
             throw new Error('CSVCMsg_PacketEntities found, but server data is missing');
         }
 
+        const bitBuffer = new BitBuffer(message.entityData);
+
+        bitBuffer.move(startPointer);
+
         const events = [ ];
 
-        let index = -1;
+        let index = startIndex;
 
-        for (let i = 0; i < message.updatedEntries; i++) {
+        for (let i = startLoop; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
 
             const command = bitBuffer.read(2)[0];
@@ -189,6 +195,57 @@ class DemoMessageHandler {
 
                     break;
                 }
+            }
+        }
+
+        return events;
+    }
+
+    /**
+     * Handles a partial of the {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     * @returns {Array<EntityMutationPartialEvent>}
+     */
+    handleSvcPacketEntitiesPartial(messagePacket) {
+        const message = messagePacket.data;
+
+        const events = [ ];
+
+        const bitBuffer = new BitBuffer(message.entityData);
+
+        let index = -1;
+
+        for (let i = 0; i < message.updatedEntries; i++) {
+            index += bitBuffer.readUVarInt() + 1;
+
+            const command = bitBuffer.read(2)[0];
+
+            switch (command) {
+                case EntityOperation.UPDATE.id: {
+                    const entity = this._demo.getEntity(index);
+
+                    if (entity === null) {
+                        return events;
+                    }
+
+                    try {
+                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                        const mutations = extractor.allPacked();
+
+                        const event = new EntityMutationPartialEvent(bitBuffer.getReadCount(), index, entity.class.id, mutations);
+
+                        events.push(event);
+                    } catch {
+                        return events;
+                    }
+
+                    break;
+                }
+                default:
+                    return events;
             }
         }
 

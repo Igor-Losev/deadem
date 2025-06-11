@@ -77,6 +77,7 @@ class PacketTrackerRegistry {
     }
 
     /**
+     * @protected
      * @param {number} demoPacketId
      * @param {number=} messagePacketId
      * @returns {number}

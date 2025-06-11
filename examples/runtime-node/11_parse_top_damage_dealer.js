@@ -1,13 +1,15 @@
-import { InterceptorStage, Parser, Printer } from '#root/index.js';
+import { InterceptorStage, Parser, ParserConfiguration, Printer } from '#root/index.js';
 
 import DemoFile from '#root/examples/common/DemoFile.js';
 
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_35244871);
+    const reader = await DemoProvider.read(DemoFile.MATCH_36126420);
 
-    const parser = new Parser();
+    const configuration = new ParserConfiguration({ parserThreads: 0 });
+
+    const parser = new Parser(configuration);
     const printer = new Printer(parser);
 
     const topDamageDealer = {

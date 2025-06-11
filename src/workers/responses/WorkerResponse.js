@@ -1,16 +1,19 @@
 import Assert from '#core/Assert.js';
+import Serializable from '#core/Serializable.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
-class WorkerResponse {
+class WorkerResponse extends Serializable {
     /**
      * @abstract
      * @constructor
      * @param {WorkerMessageType} type
      * @param {*} payload
-     * @param {Transferable[]} transfers
+     * @param {TransferListItem[]} transfers
      */
     constructor(type, payload, transfers) {
+        super();
+
         Assert.isTrue(type instanceof WorkerMessageType);
 
         this._type = type;
@@ -33,11 +36,27 @@ class WorkerResponse {
     }
 
     /**
-     * @returns {Transferable[]}
+     * @returns {TransferListItem[]}
      */
     get transfers() {
         return this._transfers;
     }
+
+    /**
+     * @protected
+     * @param {*} payload
+     * @returns {WorkerResponseRaw}
+     */
+    _serialize(payload) {
+        return {
+            __type: this._type.code,
+            payload
+        };
+    }
 }
+
+/**
+ * @typedef {{ __type: String, payload: * }} WorkerResponseRaw
+ */
 
 export default WorkerResponse;

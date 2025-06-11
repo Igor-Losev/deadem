@@ -20,7 +20,11 @@ class Entity {
 
         this._active = true;
 
+        this._names = new Map();
         this._state = new Map();
+
+        this._changed = new Set();
+        this._snapshot = null;
     }
 
     /**
@@ -77,13 +81,24 @@ class Entity {
      * @returns {*}
      */
     unpackFlattened() {
-        const unpacked = { };
+        const unpacked = this._snapshot || { };
 
-        this._state.forEach((value, fieldPath) => {
-            const name = this._class.serializer.getNameForFieldPath(fieldPath);
+        this._changed.forEach((fieldPath) => {
+            const value = this._state.get(fieldPath);
+
+            let name = this._names.get(fieldPath) || null;
+
+            if (name === null) {
+                name = this._class.serializer.getNameForFieldPath(fieldPath);
+
+                this._names.set(fieldPath, name);
+            }
 
             unpacked[name] = value;
         });
+
+        this._snapshot = unpacked;
+        this._changed.clear();
 
         return unpacked;
     }
@@ -95,6 +110,7 @@ class Entity {
      */
     updateByFieldPath(fieldPath, value) {
         this._state.set(fieldPath, value);
+        this._changed.add(fieldPath);
     }
 }
 

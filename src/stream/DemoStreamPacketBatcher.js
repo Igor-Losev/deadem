@@ -1,6 +1,5 @@
-import Stream from 'node:stream';
-
 import Assert from '#core/Assert.js';
+import TransformStream from '#core/stream/TransformStream.js';
 
 /**
  * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.
@@ -8,7 +7,7 @@ import Assert from '#core/Assert.js';
  *  1. The total byte size of the included messages. If it exceeds a threshold, the batch is passed through.
  *  2. The amount of time (in milliseconds) pending. If it exceeds a threshold, the batch is passed through.
  */
-class DemoStreamPacketBatcher extends Stream.Transform {
+class DemoStreamPacketBatcher extends TransformStream {
     /**
      * @public
      * @constructor
@@ -18,7 +17,7 @@ class DemoStreamPacketBatcher extends Stream.Transform {
      * @param {number} thresholdWaitMilliseconds - The threshold for the amount of time (in milliseconds) that the batch has been pending.
      */
     constructor(engine, thresholdSizeBytes, thresholdWaitMilliseconds) {
-        super({ objectMode: true });
+        super();
 
         Assert.isTrue(Number.isInteger(thresholdSizeBytes));
         Assert.isTrue(Number.isInteger(thresholdWaitMilliseconds));
@@ -38,21 +37,17 @@ class DemoStreamPacketBatcher extends Stream.Transform {
 
     /**
      * @protected
-     * @param {TransformCallback} callback
+     * @returns {Promise<void>}
      */
-    _flush(callback) {
+    async _finalize() {
         this._send();
-
-        callback();
     }
 
     /**
      * @protected
      * @param {DemoPacketRaw} demoPacketRaw
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(demoPacketRaw, encoding, callback) {
+    async _handle(demoPacketRaw) {
         if (this._timeoutId !== null) {
             clearTimeout(this._timeoutId);
 
@@ -69,8 +64,6 @@ class DemoStreamPacketBatcher extends Stream.Transform {
                 this._send();
             }, this._thresholdWaitMilliseconds);
         }
-
-        callback();
     }
 
     /**
@@ -92,7 +85,7 @@ class DemoStreamPacketBatcher extends Stream.Transform {
         this._batch.packets = [ ];
         this._batch.size = 0;
 
-        this.push(packets);
+        this._push(packets);
     }
 }
 

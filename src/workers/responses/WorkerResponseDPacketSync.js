@@ -9,6 +9,23 @@ class WorkerResponseDPacketSync extends WorkerResponse {
     constructor() {
         super(WorkerMessageType.DEMO_PACKET_SYNC, null, [ ]);
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerResponseDPacketSync}
+     */
+    static deserialize() {
+        return new WorkerResponseDPacketSync();
+    }
+
+    /**
+     * @protected
+     * @returns {WorkerResponseRaw}
+     */
+    _serialize() {
+        return super._serialize(this._payload);
+    }
 }
 
 export default WorkerResponseDPacketSync;

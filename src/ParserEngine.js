@@ -1,15 +1,15 @@
-import Stream from 'node:stream';
-
+import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
+import Pipeline from '#core/stream/Pipeline.js';
 
 import Demo from '#data/Demo.js';
 
-import InterceptorStage from '#data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
 import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketAnalyzerConcurrent from '#stream/DemoStreamPacketAnalyzerConcurrent.js';
 import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
 import DemoStreamPacketCoordinator from '#stream/DemoStreamPacketCoordinator.js';
 import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
@@ -31,13 +31,8 @@ class ParserEngine {
      * @param {Logger} logger
      */
     constructor(configuration, logger) {
-        if (!(configuration instanceof ParserConfiguration)) {
-            throw new Error('Invalid configuration: expected an instance of ParserConfiguration');
-        }
-
-        if (!(logger instanceof Logger)) {
-            throw new Error('Invalid logger: expected an instance of Logger');
-        }
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         this._configuration = configuration;
         this._logger = logger;
@@ -58,26 +53,28 @@ class ParserEngine {
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),
             new DemoStreamPacketPrioritizer(this),
-            new DemoStreamPacketAnalyzer(this)
+            configuration.parserThreads > 0
+                ? new DemoStreamPacketAnalyzerConcurrent(this)
+                : new DemoStreamPacketAnalyzer(this)
         ];
 
         this._interceptors = {
-            pre: {
-                [InterceptorStage.DEMO_PACKET.code]: [ ],
-                [InterceptorStage.ENTITY_PACKET.code]: [ ],
-                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
-            },
-            post: {
-                [InterceptorStage.DEMO_PACKET.code]: [ ],
-                [InterceptorStage.ENTITY_PACKET.code]: [ ],
-                [InterceptorStage.MESSAGE_PACKET.code]: [ ]
-            }
+            pre: [
+                [ ],
+                [ ],
+                [ ]
+            ],
+            post: [
+                [ ],
+                [ ],
+                [ ]
+            ]
         };
 
         this._trackers = {
-            memory: new MemoryTracker(logger),
-            packet: new PacketTracker(logger),
-            performance: new PerformanceTracker(logger)
+            memory: new MemoryTracker(),
+            packet: new PacketTracker(),
+            performance: new PerformanceTracker()
         };
 
         this._finished = false;
@@ -166,6 +163,40 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {number}
+     */
+    getThreadsCount() {
+        return this._configuration.parserThreads;
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async interceptPost(stage, ...args) {
+        for (let i = 0; i < this._interceptors.post[stage.id].length; i++) {
+            const interceptor = this._interceptors.post[stage.id][i];
+
+            await interceptor(...args);
+        }
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {...*} args
+     */
+    async interceptPre(stage, ...args) {
+        for (let i = 0; i < this._interceptors.pre[stage.id].length; i++) {
+            const interceptor = this._interceptors.pre[stage.id][i];
+
+            await interceptor(...args);
+        }
+    }
+
+    /**
+     * @public
      * @param {Stream.Readable|ReadableStream} reader
      * @returns {Promise<void>}
      */
@@ -176,37 +207,29 @@ class ParserEngine {
 
         this._started = true;
 
-        return new Promise((resolve, reject) => {
+        try {
             this._logger.info('Parse started');
 
             this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            Stream.pipeline(
-                reader,
-                ...this._chain,
-                (error) => {
-                    this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
-                    this._trackers.memory.off();
+            const pipeline = new Pipeline(reader, this._chain);
 
-                    this._finished = true;
+            await pipeline.ready();
+        } catch (error) {
+            this._logger.error('Parse failed', error);
 
-                    if (error) {
-                        this._logger.error('Parse failed', error);
+            throw error;
+        } finally {
+            this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
+            this._trackers.memory.off();
 
-                        reject(error);
-                    } else {
-                        this._logger.info('Parse finished');
+            this._finished = true;
 
-                        resolve();
-                    }
-
-                    if (this._workerManager !== null) {
-                        this._workerManager.terminate();
-                    }
-                }
-            );
-        });
+            if (this._workerManager !== null) {
+                await this._workerManager.terminate();
+            }
+        }
     }
 }
 

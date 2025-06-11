@@ -57,7 +57,7 @@ class Serializer {
     /**
      * @public
      * @param {FieldPath} fieldPath
-     * @param {number} fieldPathIndex
+     * @param {number} [fieldPathIndex=0]
      * @returns {string}
      */
     getNameForFieldPath(fieldPath, fieldPathIndex = 0) {

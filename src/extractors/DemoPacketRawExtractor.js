@@ -15,10 +15,19 @@ class DemoPacketRawExtractor {
         this._tail = buffer;
     }
 
+    /**
+     * @public
+     * @returns {Buffer}
+     */
     get tail() {
         return this._tail;
     }
 
+    /**
+     * @public
+     * @param {number} sequenceStart
+     * @returns {Generator<DemoPacketRaw|null, void, *>}
+     */
     *retrieve(sequenceStart) {
         Assert.isTrue(Number.isInteger(sequenceStart));
 
@@ -58,7 +67,7 @@ class DemoPacketRawExtractor {
             offset += frame.size;
 
             if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, type, tick, frame, this._tail.subarray(offset, offset + frame.value));
+                yield new DemoPacketRaw(sequence, type, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
 
                 offset += frame.value;
 

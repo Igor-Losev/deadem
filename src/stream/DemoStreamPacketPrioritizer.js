@@ -1,45 +1,36 @@
-import Stream from 'node:stream';
+import TransformStream from '#core/stream/TransformStream.js';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 /**
- * Handles prioritization of internal messages within demo packets.
+ * Handles prioritization of internal messages for
+ * packets of the following types:
  *
- * For packets of the following types:
  * - {@link DemoPacketType.DEM_PACKET}
- * - {@link DemoPacketType.DEM_FULL_PACKET}
  * - {@link DemoPacketType.DEM_SIGNON_PACKET}
  *
- * This class prioritizes internal messages and forwards them in the desired order.
  * All other packet types are passed through unchanged.
  */
-class DemoStreamPacketPrioritizer extends Stream.Transform {
+class DemoStreamPacketPrioritizer extends TransformStream {
     /**
      * @public
      * @constructor
      * @param {ParserEngine} engine
      */
     constructor(engine) {
-        super({ objectMode: true });
+        super();
 
         this._engine = engine;
-
-        this._packets = [ DemoPacketType.DEM_PACKET, DemoPacketType.DEM_FULL_PACKET, DemoPacketType.DEM_SIGNON_PACKET ];
     }
 
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {BufferEncoding} encoding
-     * @param {TransformCallback} callback
      */
-    _transform(demoPacket, encoding, callback) {
-        if (!this._packets.includes(demoPacket.type)) {
-            this.push(demoPacket);
-
-            callback();
+    async _handle(demoPacket) {
+        if (!demoPacket.type.heavy) {
+            this._push(demoPacket);
 
             return;
         }
@@ -55,9 +46,7 @@ class DemoStreamPacketPrioritizer extends Stream.Transform {
 
         this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
-        this.push(demoPacket);
-
-        callback();
+        this._push(demoPacket);
     }
 }
 

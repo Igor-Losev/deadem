@@ -3,9 +3,13 @@ class FieldPath {
      * @public
      * @constructor
      * @param {Array<Number>} path
+     * @param {BigInt} code
+     * @param {number} id
      */
-    constructor(path) {
+    constructor(path, code, id) {
         this._path = path;
+        this._code = code;
+        this._id = id;
     }
 
     /**
@@ -14,6 +18,22 @@ class FieldPath {
      */
     get path() {
         return this._path;
+    }
+
+    /**
+     * @public
+     * @returns {BigInt}
+     */
+    get code() {
+        return this._code;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    get id() {
+        return this._id;
     }
 
     /**
