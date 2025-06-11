@@ -194,6 +194,8 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 
 ## Configuration
 
+### Parsing
+
 Below is a list of available options that can be passed to the `ParserConfiguration`:
 
 | Option          | Description                                                                                                                                                               | Type   | Default |
@@ -201,10 +203,16 @@ Below is a list of available options that can be passed to the `ParserConfigurat
 | `breakInterval` | How often (in packets) to yield to the event loop to avoid blocking. The smaller the value, the more responsive the interface will be (may slow down parser performance). | number | `1000`  |
 | `parserThreads` | Number of **additional** threads used by the parser.                                                                                                                      | number | `0`     |
 
-```js
-import { Parser, ParserConfiguration } from 'deadem';
+### Logging
 
-const configuration = new ParserConfiguration({ parserThreads: 2 });
+The library provides a [Logger](./src/core/Logger.js) class with several pre-defined logging strategies. For example:
+  - `Logger.CONSOLE_WARN` — only logs warnings and errors.
+  - `Logger.NOOP` - disables all logging.
+
+```js
+import { Logger, Parser, ParserConfiguration } from 'deadem';
+
+const configuration = new ParserConfiguration({ parserThreads: 2 }, Logger.CONSOLE_WARN);
 
 const parser = new Parser(configuration);
 ```
