@@ -24,7 +24,7 @@ const configuration = defineConfig(({ command }) => {
                 ],
                 rollupOptions: {
                     output: {
-                        file: 'deadem-worker.min.js'
+                        file: 'deadem-worker.min.js',
                     }
                 }
             }

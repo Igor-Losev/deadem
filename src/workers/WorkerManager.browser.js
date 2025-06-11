@@ -1,7 +1,7 @@
 import WorkerManager from './WorkerManager.js';
 import WorkerThread from './WorkerThread.browser.js';
 
-import Worker from './scripts/Worker.browser.js?worker';
+import Worker from './scripts/Worker.browser.js?worker&inline';
 
 class WorkerManagerBrowser extends WorkerManager {
     /**
