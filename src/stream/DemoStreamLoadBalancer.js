@@ -1,3 +1,5 @@
+import Assert from '#core/Assert.js';
+
 import TransformStream from '#core/stream/TransformStream.js';
 
 /**
@@ -10,10 +12,12 @@ class DemoStreamLoadBalancer extends TransformStream {
      * @public
      * @constructor
      * @param {ParserEngine} engine
-     * @param {number} [breakInterval=1000]
+     * @param {number} breakInterval
      */
-    constructor(engine, breakInterval = 1000) {
+    constructor(engine, breakInterval) {
         super();
+
+        Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0);
 
         this._engine = engine;
         this._breakInterval = breakInterval;

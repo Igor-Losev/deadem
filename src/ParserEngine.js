@@ -48,7 +48,7 @@ class ParserEngine {
         this._chain = [
             new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
             new DemoStreamPacketExtractor(this),
-            new DemoStreamLoadBalancer(this),
+            new DemoStreamLoadBalancer(this, configuration.breakInterval),
             new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
             new DemoStreamPacketParser(this),
             new DemoStreamPacketCoordinator(this),

@@ -19,7 +19,7 @@ const DEFAULTS = {
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ batcherChunkSize: number=, batcherThresholdMilliseconds: number=, parserThreads: number=, splitterChunkSize: number= }} options
+     * @param {{ batcherChunkSize: number=, batcherThresholdMilliseconds: number=, breakInterval: number=, parserThreads: number=, splitterChunkSize: number= }} options
      */
     constructor(options) {
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
