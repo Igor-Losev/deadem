@@ -30,6 +30,9 @@ deadem
   * [Understanding Interceptors](#understanding-interceptors)<br/>
     Extracting data during parsing.
 
+* [Configuration](#configuration)<br/>
+  Customizing parser options and behavior.
+
 * [Usage](#usage)<br/>
   Basic usage example with real game data.
 
@@ -87,7 +90,7 @@ A list of all available demo files can be found in the [DemoFile](https://github
 |----------------------------------------------------------------------------------------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/01_parse.js)                   | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                           |
 | [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
-| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)         | Demo duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
+| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)         | Game duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
 | [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
 
 ### Browser
@@ -189,6 +192,23 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 > 
 > Interceptors hooks are **blocking** — the internal packet analyzer waits for hooks to complete before moving forward.
 
+## Configuration
+
+Below is a list of available options that can be passed to the `ParserConfiguration`:
+
+| Option          | Description                                                                                                                                                               | Type   | Default |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|---------|
+| `breakInterval` | How often (in packets) to yield to the event loop to avoid blocking. The smaller the value, the more responsive the interface will be (may slow down parser performance). | number | `1000`  |
+| `parserThreads` | Number of **additional** threads used by the parser.                                                                                                                      | number | `0`     |
+
+```js
+import { Parser, ParserConfiguration } from 'deadem';
+
+const configuration = new ParserConfiguration({ parserThreads: 2 });
+
+const parser = new Parser(configuration);
+```
+
 ## Usage
 
 ```js
@@ -263,13 +283,35 @@ of`entity.unpackFlattened()` calls.
 
 The table below shows performance results **without calling `entity.unpackFlattened()`** for MacBook Pro with M3 chip:
 
-|  # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb |
-|--------|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|
-| 1      | Node.js v22.14.0      | 14 694 ± 0.91%          | 229.59 ± 0.91%                                  | ~7.84                                   | 266.20 ± 4.31%       |
-| 2      | Browser Chrome v133.0 | 12 479 ± 0.59%          | 194.98 ± 0.59%                                  | ~9.23                                   | -                    |
-| 3      | Node.js v16.20.2      | 10 845 ± 0.64%          | 169.45 ± 0.64%                                  | ~10.62                                  | 242.04 ± 5.49%       |
-| 4      | Browser Safari v18.3  | 9 794 ± 0.86%           | 153.03 ± 0.86%                                  | ~11.76                                  | -                    |
-| 5      | Browser Firefox v139  | 5 546 ± 0.62%           | 86.66 ± 0.62%                                   | ~20.77                                  | -                    |
+### 1. `configuration.parserThreads = 0`:
+
+| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb |
+|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|
+| 1 | Node.js v22.14.0      | 14 694 ± 0.91%          | 229.59 ± 0.91%                                  | ~7.84                                   | 266.20 ± 4.31%       |
+| 2 | Browser Chrome v133.0 | 12 479 ± 0.59%          | 194.98 ± 0.59%                                  | ~9.23                                   | -                    |
+| 3 | Node.js v16.20.2      | 10 845 ± 0.64%          | 169.45 ± 0.64%                                  | ~10.62                                  | 242.04 ± 5.49%       |
+| 4 | Browser Safari v18.3  | 9 794 ± 0.86%           | 153.03 ± 0.86%                                  | ~11.76                                  | -                    |
+| 5 | Browser Firefox v139  | 5 546 ± 0.62%           | 86.66 ± 0.62%                                   | ~20.77                                  | -                    |
+
+### 2. `configuration.parserThreads = 2`:
+
+| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb | Performance Gain (vs 0 p. threads), % |
+|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|---------------------------------------|
+| 1 | Node.js v22.14.0      | 19 478 ± 1.09%          | 304,34 ± 1.09%                                  | ~5.91                                   | 444.10 ± 4.25%       | 32.56                                 |
+| 2 | Browser Chrome v133.0 | 17 749 ± 1.36%          | 277.33 ± 1.36%                                  | ~6.49                                   | -                    | 42.23                                 |
+| 3 | Node.js v16.20.2      | 14 790 ± 0.71%          | 231.09 ± 0.71%                                  | ~7.79                                   | 416.67 ± 4.38%       | 36.38                                 |
+| 4 | Browser Safari v18.3  | 12 446 ± 0.60%          | 194.47 ± 0.60%                                  | ~9.26                                   | -                    | 27.08                                 |
+| 5 | Browser Firefox v139  | 8 523 ± 0.80%           | 133.17 ± 0.80%                                  | ~13.52                                  | -                    | 53.68                                 |
+
+### 3. `configuration.parserThreads = 4`:
+
+| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb | Performance Gain (vs 0 p. threads), % |
+|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|---------------------------------------|
+| 1 | Node.js v22.14.0      | 22 114 ± 0.54%          | 345.53 ± 0.54%                                  | ~5.20                                   | 552.73 ± 2.96%       | 50.50                                 |
+| 2 | Browser Chrome v133.0 | 20 486 ± 0.95%          | 320.09 ± 0.95%                                  | ~5.62                                   | -                    | 64.16                                 |
+| 3 | Node.js v16.20.2      | 18 059 ± 1.02%          | 282.17 ± 1.02%                                  | ~6.38                                   | 520.56 ± 2.80%       | 66.52                                 |
+| 4 | Browser Safari v18.3  | 15 083 ± 0.67%          | 235.67 ± 0.67%                                  | ~7.64                                   | -                    | 54.00                                 |
+| 5 | Browser Firefox v139  | 8 493 ± 0.91%           | 132.70 ± 0.91%                                  | ~13.56                                  | -                    | 53.14                                 |
 
 ## Building
 
