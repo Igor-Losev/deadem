@@ -29,17 +29,15 @@ import DemoProvider from './helpers/DemoProvider.js';
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
         switch (messagePacket.type) {
             case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE:
+                console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
+
                 break;
             case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL:
+                console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+
                 break;
-        }
-
-        if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE) {
-            console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
-        }
-
-        if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL) {
-            console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+            default:
+                break;
         }
     });
 
