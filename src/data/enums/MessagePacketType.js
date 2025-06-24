@@ -90,6 +90,7 @@ class MessagePacketType {
     static get SVC_CREATE_STRING_TABLE() { return svcCreateStringTable; }
     static get SVC_UPDATE_STRING_TABLE() { return svcUpdateStringTable; }
     static get SVC_VOICE_INIT() { return svcVoiceInit; }
+    static get SVC_VOICE_DATA() { return svcVoiceData; }
     static get SVC_CLEAR_ALL_STRING_TABLES() { return svcClearAllStringTables; }
     static get SVC_PACKET_ENTITIES() { return svcPacketEntities; }
     static get SVC_HLTV_STATUS() { return svcHltvStatus; }
@@ -237,6 +238,7 @@ const CSVCMsg_ServerInfo = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_Server
     CSVCMsg_CreateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_CreateStringTable'),
     CSVCMsg_UpdateStringTable = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_UpdateStringTable'),
     CSVCMsg_VoiceInit = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_VoiceInit'),
+    CSVCMsg_VoiceData = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_VoiceData'),
     CSVCMsg_ClearAllStringTables = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_ClearAllStringTables'),
     CSVCMsg_PacketEntities = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_PacketEntities'),
     CSVCMsg_HltvStatus = ProtoProvider.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus'),
@@ -258,6 +260,7 @@ const svcServerInfo = new MessagePacketType('svc_ServerInfo', ESVC_Messages.svc_
     svcCreateStringTable = new MessagePacketType('svc_CreateStringTable', ESVC_Messages.svc_CreateStringTable, CSVCMsg_CreateStringTable), // 44
     svcUpdateStringTable = new MessagePacketType('svc_UpdateStringTable', ESVC_Messages.svc_UpdateStringTable, CSVCMsg_UpdateStringTable), // 45
     svcVoiceInit = new MessagePacketType('svc_VoiceInit', ESVC_Messages.svc_VoiceInit, CSVCMsg_VoiceInit), // 46
+    svcVoiceData = new MessagePacketType('svc_VoiceData', ESVC_Messages.svc_VoiceData, CSVCMsg_VoiceData), // 47
     svcClearAllStringTables = new MessagePacketType('svc_ClearAllStringTables', ESVC_Messages.svc_ClearAllStringTables, CSVCMsg_ClearAllStringTables), // 51
     svcPacketEntities = new MessagePacketType('svc_PacketEntities', ESVC_Messages.svc_PacketEntities, CSVCMsg_PacketEntities), // 55
     svcHltvStatus = new MessagePacketType('svc_HLTVStatus', ESVC_Messages.svc_HLTVStatus, CSVCMsg_HltvStatus), // 62

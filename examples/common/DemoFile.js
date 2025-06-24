@@ -6,11 +6,13 @@ class DemoFile {
     /**
      * @constructor
      * @param {number} id
-     * @param {String|null} gameBuild
+     * @param {String|null} [gameBuild=null]
+     * @param {String|null} [date=null]
      */
-    constructor(id, gameBuild = null) {
+    constructor(id, gameBuild = null, date = null) {
         this._id = id;
         this._gameBuild = gameBuild;
+        this._date = date;
 
         registry.set(id, this);
     }
@@ -33,6 +35,14 @@ class DemoFile {
 
     /**
      * @public
+     * @returns {String|null}
+     */
+    get date() {
+        return this._date;
+    }
+
+    /**
+     * @public
      * @static
      * @returns {Array<DemoFile>}
      */
@@ -51,7 +61,6 @@ class DemoFile {
     }
 
     static get MATCH_35244871() { return match35244871; }
-
     static get MATCH_36126255() { return match36126255; }
     static get MATCH_36126420() { return match36126420; }
     static get MATCH_36126460() { return match36126460; }
@@ -62,8 +71,9 @@ class DemoFile {
     static get MATCH_36127043() { return match36127043; }
     static get MATCH_36127052() { return match36127052; }
     static get MATCH_36127128() { return match36127128; }
-
     static get MATCH_36437939() { return match36437939; }
+    static get MATCH_37289286() { return match37289286; }
+    static get MATCH_37289347() { return match37289347; }
 
     /**
      * @public
@@ -82,19 +92,19 @@ class DemoFile {
     }
 }
 
-const match35244871 = new DemoFile(35244871, null);
-
-const match36126255 = new DemoFile(36126255, '5637');
-const match36126420 = new DemoFile(36126420, '5637');
-const match36126460 = new DemoFile(36126460, '5637');
-const match36126674 = new DemoFile(36126674, '5637');
-const match36126684 = new DemoFile(36126684, '5637');
-const match36126738 = new DemoFile(36126738, '5637');
-const match36126858 = new DemoFile(36126858, '5637');
-const match36127043 = new DemoFile(36127043, '5637');
-const match36127052 = new DemoFile(36127052, '5637');
-const match36127128 = new DemoFile(36127128, '5637');
-
-const match36437939 = new DemoFile(36437939, '5654');
+const match35244871 = new DemoFile(35244871, null, null);
+const match36126255 = new DemoFile(36126255, '5637', '22-05-2025');
+const match36126420 = new DemoFile(36126420, '5637', '22-05-2025');
+const match36126460 = new DemoFile(36126460, '5637', '22-05-2025');
+const match36126674 = new DemoFile(36126674, '5637', '22-05-2025');
+const match36126684 = new DemoFile(36126684, '5637', '22-05-2025');
+const match36126738 = new DemoFile(36126738, '5637', '22-05-2025');
+const match36126858 = new DemoFile(36126858, '5637', '22-05-2025');
+const match36127043 = new DemoFile(36127043, '5637', '22-05-2025');
+const match36127052 = new DemoFile(36127052, '5637', '22-05-2025');
+const match36127128 = new DemoFile(36127128, '5637', '22-05-2025');
+const match36437939 = new DemoFile(36437939, '5654', '22-05-2025');
+const match37289286 = new DemoFile(37289286, '5678', '24-06-2025');
+const match37289347 = new DemoFile(37289347, '5678', '24-06-2025');
 
 export default DemoFile;

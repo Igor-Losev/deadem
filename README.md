@@ -92,6 +92,7 @@ A list of all available demo files can be found in the [DemoFile](https://github
 | [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
 | [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)         | Game duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
 | [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
+| [12](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/12_parse_chat.js)              | Chat messages     | `node ./examples/runtime-node/12_parse_chat.js`                                                                                                      |
 
 ### Browser
 

@@ -124,12 +124,14 @@ class Worker {
     _handleHeavyPacketParse(request) {
         const batches = [ ];
 
-        request.payload.forEach((buffer) => {
+        request.payload.forEach((data) => {
+            const [ compressed, buffer ] = data;
+
             let decompressed;
 
-            try {
+            if (compressed) {
                 decompressed = SnappyDecompressor.decompress(buffer);
-            } catch {
+            } else {
                 decompressed = buffer;
             }
 

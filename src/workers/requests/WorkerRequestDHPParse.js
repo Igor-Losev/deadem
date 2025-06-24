@@ -5,20 +5,20 @@ import WorkerRequest from './WorkerRequest.js';
 class WorkerRequestDHPParse extends WorkerRequest {
     /**
      * @constructor
-     * @param {Array<Buffer>} buffers
+     * @param {Array<WorkrerRequestDHPItem>} items
      */
-    constructor(buffers) {
-        super(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE, buffers, [ ]);
+    constructor(items) {
+        super(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE, items, [ ]);
     }
 
     /**
      * @public
      * @static
-     * @param {Array<Buffer>} buffers
+     * @param {Array<WorkrerRequestDHPItem>} items
      * @returns {WorkerRequestDHPParse}
      */
-    static deserialize(buffers) {
-        return new WorkerRequestDHPParse(buffers);
+    static deserialize(items) {
+        return new WorkerRequestDHPParse(items);
     }
 
     /**
@@ -29,5 +29,9 @@ class WorkerRequestDHPParse extends WorkerRequest {
         return super._serialize(this._payload);
     }
 }
+
+/**
+ * @typedef {[boolean, Buffer]} WorkrerRequestDHPItem
+ */
 
 export default WorkerRequestDHPParse;

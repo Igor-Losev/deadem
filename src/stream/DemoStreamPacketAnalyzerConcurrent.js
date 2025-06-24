@@ -139,6 +139,12 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
         this._queue.push({ demoPacket, deferred });
     }
 
+    /**
+     * @protected
+     * @param {DemoPacket} demoPacket
+     * @param {DeferredPromise} deferred
+     * @returns {Promise<void>}
+     */
     async _handlePacket(demoPacket, deferred) {
         await this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
@@ -205,7 +211,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
                             await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
-                            this._handleEntityEvents(events);
+                            this._demoEntityHandler.handleEntityEvents(events);
 
                             await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
@@ -303,14 +309,6 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
             ],
             lastIndex: i
         };
-    }
-
-    /**
-     * @protected
-     * @param {Array<EntityMutationEvent>} events
-     */
-    _handleEntityEvents(events) {
-        this._demoEntityHandler.handleEntityEvents(events);
     }
 }
 
