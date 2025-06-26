@@ -136,6 +136,17 @@ class Demo {
 
     /**
      * @public
+     * @param {number} handle
+     * @returns {Entity|null}
+     */
+    getEntityByHandle(handle) {
+        Assert.isTrue(Number.isInteger(handle));
+
+        return this._entities.get(handle & 0x3FFF) || null;
+    }
+
+    /**
+     * @public
      * @param {SerializerKey} key
      * @returns {Serializer|null}
      */
