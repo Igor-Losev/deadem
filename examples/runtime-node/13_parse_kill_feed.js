@@ -92,9 +92,6 @@ function getEntityOwner(demo, entity) {
     const ownerEntity = demo.getEntityByHandle(ownerEntityHandle);
 
     if (ownerEntity === null) {
-        console.log(entity);
-        console.log(entity.unpackFlattened());
-
         throw new Error(`Unable to get owner entity by handle [ ${ownerEntityHandle} ]`);
     }
 
