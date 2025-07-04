@@ -1,9 +1,12 @@
 package google.protobuf;
 
 option optimize_for = SPEED;
+option cc_enable_arenas = true;
 option go_package = "google.golang.org/protobuf/types/descriptorpb";
 option java_package = "com.google.protobuf";
 option java_outer_classname = "DescriptorProtos";
+option objc_class_prefix = "GPB";
+option csharp_namespace = "Google.Protobuf.Reflection";
 
 message FileDescriptorSet {
 	repeated .google.protobuf.FileDescriptorProto file = 1;
@@ -194,11 +197,9 @@ message FieldOptions {
 	optional bool packed = 2;
 	optional .google.protobuf.FieldOptions.JSType jstype = 6 [default = JS_NORMAL];
 	optional bool lazy = 5 [default = false];
-	optional bool unverified_lazy = 15 [default = false];
 	optional bool deprecated = 3 [default = false];
 	optional bool weak = 10 [default = false];
 	optional string boxed_type = 20;
-	optional string synthetic_default = 21;
 	repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;
 
 	extensions 1000 to max;
