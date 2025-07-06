@@ -74,6 +74,8 @@ class DemoFile {
     static get MATCH_36437939() { return match36437939; }
     static get MATCH_37289286() { return match37289286; }
     static get MATCH_37289347() { return match37289347; }
+    static get MATCH_37554876() { return match37554876; }
+    static get MATCH_37610767() { return match37610767; }
 
     /**
      * @public
@@ -106,5 +108,7 @@ const match36127128 = new DemoFile(36127128, '5637', '22-05-2025');
 const match36437939 = new DemoFile(36437939, '5654', '22-05-2025');
 const match37289286 = new DemoFile(37289286, '5678', '24-06-2025');
 const match37289347 = new DemoFile(37289347, '5678', '24-06-2025');
+const match37554876 = new DemoFile(37554876, '5681', '03-07-2025');
+const match37610767 = new DemoFile(37610767, '5691', '05-07-2025');
 
 export default DemoFile;
