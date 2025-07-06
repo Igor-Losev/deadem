@@ -1,5 +1,5 @@
 <h1 align="center">
-<img alt="deadem" src="https://deadem.s3.us-east-1.amazonaws.com/logo.svg" height="80" />
+<img alt="deadem" src="https://deadem.s3.us-east-1.amazonaws.com/logo80.svg" height="80" />
 <br/>
 deadem
 <br/>
