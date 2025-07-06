@@ -41,7 +41,7 @@ class WorkerManager {
      * @returns {Promise<WorkerThread>} - A promise that resolves to an available worker thread.
      */
     async allocate(id) {
-        Assert.isTrue(id === undefined || id < this._concurrency);
+        Assert.isTrue(id === undefined || (Number.isInteger(id) && id < this._concurrency));
 
         let thread;
 

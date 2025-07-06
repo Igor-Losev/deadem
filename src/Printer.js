@@ -104,17 +104,21 @@ class Printer {
      * @param {PacketTrackerStats} packetStats
      */
     _printPacketStats(packetStats) {
-        this._log(this._highlight('<Packets.Parsed>'));
+        if (packetStats.parsed.length > 0) {
+            this._log(this._highlight('<Packets.Parsed>'));
 
-        this._printPacketStatsPartition(packetStats.parsed);
+            this._printPacketStatsPartition(packetStats.parsed);
 
-        this._log(this._highlight('</Packets.Parsed>'));
+            this._log(this._highlight('</Packets.Parsed>'));
+        }
 
-        this._log(this._highlight('<Packets.Skipped>'));
+        if (packetStats.unparsed.length > 0) {
+            this._log(this._highlight('<Packets.Skipped>'));
 
-        this._printPacketStatsPartition(packetStats.unparsed);
+            this._printPacketStatsPartition(packetStats.unparsed);
 
-        this._log(this._highlight('</Packets.Skipped>'));
+            this._log(this._highlight('</Packets.Skipped>'));
+        }
     }
 
     /**

@@ -18,6 +18,8 @@ class Entity {
         this._serial = serial;
         this._class = clazz;
 
+        this._handle = ((serial << 14) | index) >>> 0;
+
         this._active = true;
 
         this._names = new Map();
@@ -28,6 +30,7 @@ class Entity {
     }
 
     /**
+     * @public
      * @returns {number}
      */
     get index() {
@@ -35,6 +38,7 @@ class Entity {
     }
 
     /**
+     * @public
      * @returns {number}
      */
     get serial() {
@@ -42,6 +46,7 @@ class Entity {
     }
 
     /**
+     * @public
      * @returns {Class}
      */
     get class() {
@@ -49,6 +54,21 @@ class Entity {
     }
 
     /**
+     * Unique identifier (handle) for an entity in the game world.
+     *
+     * The handle encodes two components:
+     *  - index: the index of the entity in the entity list.
+     *  - serial: a generation counter used to distinguish between recycled entity indices.
+     *
+     * @public
+     * @returns {number}
+     */
+    get handle() {
+        return this._handle;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     get active() {
@@ -56,6 +76,7 @@ class Entity {
     }
 
     /**
+     * @public
      * @returns {Map<FieldPath, *>}
      */
     get state() {
