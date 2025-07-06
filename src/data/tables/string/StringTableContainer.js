@@ -1,6 +1,5 @@
-import EventEmitter from 'node:events';
-
 import Assert from '#core/Assert.js';
+import EventEmitter from '#core/EventEmitter.js';
 import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
@@ -22,7 +21,7 @@ class StringTableContainer {
     constructor(logger) {
         Assert.isTrue(logger instanceof Logger);
 
-        this._eventEmitter = new EventEmitter();
+        this._eventEmitter = new EventEmitter(this);
 
         this._registry = {
             tableById: new Map(),
@@ -100,8 +99,8 @@ class StringTableContainer {
             stringTable.updateEntry(entry);
         }
 
-        this._eventEmitter.emit(StringTableEvent.TABLE_CREATED.name, stringTable);
-        this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
     }
 
     /**
@@ -128,8 +127,8 @@ class StringTableContainer {
 
             this._register(stringTable);
 
-            this._eventEmitter.emit(StringTableEvent.TABLE_CREATED.name, stringTable);
-            this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
+            this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
+            this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
         });
     }
 
@@ -154,8 +153,8 @@ class StringTableContainer {
             stringTable.updateEntry(entry);
         }
 
-        this._eventEmitter.emit(StringTableEvent.TABLE_UPDATED.name, stringTable);
-        this._eventEmitter.emit(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        this._eventEmitter.fire(StringTableEvent.TABLE_UPDATED.name, stringTable);
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
     }
 
     /**
@@ -167,7 +166,7 @@ class StringTableContainer {
         Assert.isTrue(event instanceof StringTableEvent);
         Assert.isTrue(typeof callback === 'function');
 
-        this._eventEmitter.addListener(event.name, callback);
+        this._eventEmitter.register(event.name, callback);
     }
 
     /**
@@ -179,7 +178,7 @@ class StringTableContainer {
         Assert.isTrue(event instanceof StringTableEvent);
         Assert.isTrue(typeof callback === 'function');
 
-        this._eventEmitter.removeListener(event.name, callback);
+        this._eventEmitter.unregister(event.name, callback);
     }
 
     /**
@@ -189,7 +188,7 @@ class StringTableContainer {
         this._logger.debug('Clearing StringTable registry');
 
         this._registry.tableById.forEach((stringTable) => {
-            this._eventEmitter.emit(StringTableEvent.TABLE_REMOVED, stringTable);
+            this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable);
         });
 
         this._registry.tableByName.clear();

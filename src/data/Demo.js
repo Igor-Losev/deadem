@@ -125,6 +125,15 @@ class Demo {
 
     /**
      * @public
+     * @param {string} className
+     * @returns {Array<Entity>}
+     */
+    getEntitiesByClassName(className) {
+        return Array.from(this._entities.values()).filter(entity => entity.class.name === className);
+    }
+
+    /**
+     * @public
      * @param {number} index
      * @returns {Entity|null}
      */
@@ -199,9 +208,10 @@ class Demo {
 
     /**
      * @protected
+     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      */
-    _handleTableChanged(stringTable) {
+    _handleTableChanged(stringTableContainer, stringTable) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 const entries = stringTable.getEntries();
@@ -226,9 +236,10 @@ class Demo {
 
     /**
      * @protected
+     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      */
-    _handleTableRemoved(stringTable) {
+    _handleTableRemoved(stringTableContainer, stringTable) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 this._classBaselines.clear();
