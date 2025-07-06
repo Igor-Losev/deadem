@@ -86,15 +86,17 @@ https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}
 
 A list of all available demo files can be found in the [DemoFile](https://github.com/Igor-Losev/deadem/blob/main/examples/common/DemoFile.js) class.
 
-| №                                                                                                        | Description       | Commands                                                                                                                                             |
-|----------------------------------------------------------------------------------------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/01_parse.js)                   | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                           |
-| [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)          | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
-| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)         | Game duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
-| [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js) | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
-| [12](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/12_parse_chat.js)              | Chat messages     | `node ./examples/runtime-node/12_parse_chat.js`                                                                                                      |
-| [13](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/13_parse_kill_feed.js)         | Kill feed         | `node ./examples/runtime-node/13_parse_kill_feed.js`                                                                                                 |
-| [14](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/14_parse_ability_feed.js)      | Ability feed      | `node ./examples/runtime-node/14_parse_ability_feed.js`                                                                                              |
+| №                                                                                                          | Description       | Commands                                                                                                                                             |
+|------------------------------------------------------------------------------------------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/01_parse.js)                     | Single demo       | `node ./examples/runtime-node/01_parse.js`                                                                                                           |
+| [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)            | Multiple demos    | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
+| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)           | Game duration     | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
+| [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js)   | Top damage dealer | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
+| [12](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/12_parse_chat.js)                | Chat messages     | `node ./examples/runtime-node/12_parse_chat.js`                                                                                                      |
+| [13](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/13_parse_kill_feed.js)           | Kill feed         | `node ./examples/runtime-node/13_parse_kill_feed.js`                                                                                                 |
+| [14](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/14_parse_ability_feed.js)        | Ability feed      | `node ./examples/runtime-node/14_parse_ability_feed.js`                                                                                              |
+| [15](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/15_parse_mid_boss_deaths.js)     | Mid boss deaths   | `node ./examples/runtime-node/15_parse_mid_boss_deaths.js`                                                                                           |
+| [16](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/16_parse_towers_deaths.js)       | Towers deaths     | `node ./examples/runtime-node/16_parse_towers_deaths.js`                                                                                             |
 
 ### Browser
 
@@ -228,26 +230,10 @@ import { InterceptorStage, MessagePacketType, Parser, Printer } from 'deadem';
 const parser = new Parser();
 const printer = new Printer(parser);
 
-let gameTime = null;
-
-// #1: Extraction of current game time
-parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
-    if (messagePacket.type === MessagePacketType.NET_TICK) {
-        const demo = parser.getDemo();
-        
-        // Ensure server is initialized
-        if (demo.server === null) {
-            return;
-        }
-        
-        // Current tick
-        const tick = messagePacket.data.tick;
-        
-        // Server tick rate
-        const tickRate = demo.server.tickRate;
-        
-        // Translating current tick to seconds
-        gameTime = tick / tickRate;
+// #1: Extraction of chat messages
+parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
+    if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE) {
+        console.log(`CHAT_MESSAGE: player slot [ ${messagePacket.data.playerSlot} ], message [ ${messagePacket.data.text} ]`);
     }
 });
 
@@ -277,12 +263,12 @@ await parser.parse(demoReadableStream);
 // Printing final stats to the console
 printer.printStats();
 
-console.log(`Game finished in [ ${gameTime} ] seconds; top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
+console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
 ```
 
 ## Compatibility
 
-Tested with Deadlock demo files from game build 5637 and below.
+Tested with Deadlock demo files from game build 5691 and below.
 
 * **Node.js:** v16.17.0 and above.
 * **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
