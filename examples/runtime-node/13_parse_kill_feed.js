@@ -1,14 +1,17 @@
 import { InterceptorStage, MessagePacketType, Parser, Printer } from '#root/index.js';
 
 import DemoFile from '#root/examples/common/DemoFile.js';
+import GameClockObserver from '#root/examples/common/GameClockObserver.js';
 
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_37289347);
+    const reader = await DemoProvider.read(DemoFile.MATCH_37610767);
 
     const parser = new Parser();
     const printer = new Printer(parser);
+
+    const gameClockObserver = new GameClockObserver(parser);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
         if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED) {
@@ -52,7 +55,7 @@ import DemoProvider from './helpers/DemoProvider.js';
 
             const entityKiller = entityScorer || entityAttacker;
 
-            console.log(`${getEntityLog(demo, entityKiller)} -> ${getEntityLog(demo, entityVictim)}`);
+            console.log(`${gameClockObserver.getClockFormatted()}: ${getEntityLog(demo, entityKiller)} -> ${getEntityLog(demo, entityVictim)}`);
 
             messagePacket.data.entindexAssisters.forEach((assistIndex) => {
                 const entity = demo.getEntity(assistIndex);

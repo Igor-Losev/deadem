@@ -1,14 +1,17 @@
 import { InterceptorStage, MessagePacketType, Parser, Printer, StringTableType } from '#root/index.js';
 
 import DemoFile from '#root/examples/common/DemoFile.js';
+import GameClockObserver from '#root/examples/common/GameClockObserver.js';
 
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_37289347);
+    const reader = await DemoProvider.read(DemoFile.MATCH_37610767);
 
     const parser = new Parser();
     const printer = new Printer(parser);
+
+    const gameClockObserver = new GameClockObserver(parser);
 
     const players = new Map();
 
@@ -29,11 +32,11 @@ import DemoProvider from './helpers/DemoProvider.js';
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
         switch (messagePacket.type) {
             case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE:
-                console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
+                console.log(`CHAT_MESSAGE [ ${gameClockObserver.getClockFormatted()} ]: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
 
                 break;
             case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL:
-                console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+                console.log(`CHAT_WHEEL: [ ${gameClockObserver.getClockFormatted()} ]: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
 
                 break;
             default:

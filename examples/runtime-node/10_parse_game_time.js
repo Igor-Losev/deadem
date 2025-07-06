@@ -1,30 +1,23 @@
 import { InterceptorStage, MessagePacketType, Parser, Printer } from '#root/index.js';
 
 import DemoFile from '#root/examples/common/DemoFile.js';
+import GameClockObserver from '#root/examples/common/GameClockObserver.js';
 
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_35244871);
+    const reader = await DemoProvider.read(DemoFile.MATCH_37610767);
 
     const parser = new Parser();
     const printer = new Printer(parser);
 
-    let gameTime = null;
+    const gameClockObserver = new GameClockObserver(parser);
 
-    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
-        if (messagePacket.type === MessagePacketType.NET_TICK) {
-            const demo = parser.getDemo();
+    let clock = null;
 
-            if (demo.server === null) {
-                return;
-            }
-
-            const tick = messagePacket.data.tick;
-
-            const tickRate = demo.server.tickRate;
-
-            gameTime = tick / tickRate;
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
+        if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_GAME_OVER) {
+            clock = gameClockObserver.getClockFormatted();
         }
     });
 
@@ -32,5 +25,5 @@ import DemoProvider from './helpers/DemoProvider.js';
 
     printer.printStats();
 
-    console.log(`Game finished in [ ${gameTime} ] seconds`);
+    console.log(`Game finished: [ ${clock} ]`);
 })();
