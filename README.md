@@ -242,7 +242,7 @@ const topDamageDealer = {
     damage: 0
 };
 
-// #2 Getting top hero-damage dealer 
+// #2: Getting top hero-damage dealer 
 parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, async (demoPacket, messagePacket, events) => {
     events.forEach((event) => {
         const entity = event.entity;
