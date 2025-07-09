@@ -32,13 +32,6 @@ class FieldDecoderInstructions {
     }
 
     /**
-     * @param {String|null} value
-     */
-    set encoder(value) {
-        this._encoder = value;
-    }
-
-    /**
      * @returns {number|null}
      */
     get encoderFlags() {

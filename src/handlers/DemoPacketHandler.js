@@ -5,7 +5,7 @@ import Class from '#data/Class.js';
 import Demo from '#data/Demo.js';
 
 import Field from '#data/fields/Field.js';
-import FieldDecoderInstructions from '#data/fields/FieldDecoderInstructions.js';
+import FieldDecoderInstructionsFactory from '#data/fields/FieldDecoderInstructionsFactory.js';
 import FieldDefinition from '#data/fields/FieldDefinition.js';
 import Serializer from '#data/fields/Serializer.js';
 import SerializerKey from '#data/fields/SerializerKey.js';
@@ -23,6 +23,8 @@ class DemoPacketHandler {
         Assert.isTrue(demo instanceof Demo);
 
         this._demo = demo;
+
+        this._instructionsFactory = new FieldDecoderInstructionsFactory();
     }
 
     /**
@@ -43,9 +45,6 @@ class DemoPacketHandler {
 
         const fields = new Map();
         const symbols = decoded.symbols;
-
-        const has = (target, key) => Object.hasOwn(target, key);
-        const get = (value, predicate, fallback) => predicate(value) ? value : fallback;
 
         // Step 1: initialize serializers
         decoded.serializers.forEach((serializerRaw) => {
@@ -78,8 +77,10 @@ class DemoPacketHandler {
 
                     let fieldSerializer = null;
 
-                    if (has(fieldRaw, 'fieldSerializerNameSym') && has(fieldRaw, 'fieldSerializerVersion')) {
-                        const serializerName = symbols[fieldRaw.fieldSerializerNameSym];
+                    if (Object.hasOwn(fieldRaw, 'fieldSerializerNameSym') && Object.hasOwn(fieldRaw, 'fieldSerializerVersion')) {
+                        const fieldSerializerNameSym = fieldRaw.fieldSerializerNameSym;
+
+                        const serializerName = symbols[fieldSerializerNameSym];
                         const serializerVersion = fieldRaw.fieldSerializerVersion;
 
                         const serializerKey = new SerializerKey(serializerName, serializerVersion);
@@ -93,27 +94,40 @@ class DemoPacketHandler {
                         fieldSerializer = existing;
                     }
 
-                    const name = symbols[fieldRaw.varNameSym];
-                    const definition = FieldDefinition.parse(symbols[fieldRaw.varTypeSym]);
+                    const varEncoderSym = fieldRaw.varEncoderSym;
+                    const varNameSym = fieldRaw.varNameSym;
+                    const varTypeSym = fieldRaw.varTypeSym;
+                    const sendNodeSym = fieldRaw.sendNodeSym;
 
-                    const decoderInstructions = new FieldDecoderInstructions(
-                        get(symbols[fieldRaw.varEncoderSym], v => has(fieldRaw, 'varEncoderSym') && typeof v === 'string', null),
-                        get(fieldRaw.encodeFlags, v => has(fieldRaw, 'encodeFlags') && Number.isInteger(v), null),
-                        get(fieldRaw.bitCount, v => has(fieldRaw, 'bitCount') && Number.isInteger(v), null),
-                        get(fieldRaw.lowValue, v => has(fieldRaw, 'lowValue') && typeof v === 'number', null),
-                        get(fieldRaw.highValue, v => has(fieldRaw, 'highValue') && typeof v === 'number', null)
+                    const name = symbols[varNameSym];
+                    const definition = FieldDefinition.parse(symbols[varTypeSym]);
+
+                    let encoder;
+
+                    if (name === 'm_flSimulationTime') {
+                        encoder = 'simtime';
+                    } else if (typeof symbols[varEncoderSym] === 'string') {
+                        encoder = symbols[varEncoderSym];
+                    } else {
+                        encoder = null;
+                    }
+
+                    const encodeFlags = Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null;
+                    const bitCount = Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null;
+                    const lowValue = Number.isInteger(fieldRaw.lowValue) ? fieldRaw.lowValue : null;
+                    const highValue = Number.isInteger(fieldRaw.highValue) ? fieldRaw.highValue : null;
+
+                    const decoderInstructions = this._instructionsFactory.build(
+                        encoder,
+                        encodeFlags,
+                        bitCount,
+                        lowValue,
+                        highValue
                     );
 
-                    const sendNode = symbols[fieldRaw.sendNodeSym].split('.').filter(s => s.length > 0);
+                    const sendNode = symbols[sendNodeSym].split('.').filter(s => s.length > 0);
 
                     // TODO: polymorphic types
-
-                    // patch
-                    if ([
-                        'm_flSimulationTime'
-                    ].includes(name)) {
-                        decoderInstructions.encoder = 'simtime';
-                    }
 
                     field = new Field(name, definition, sendNode, decoderInstructions, fieldSerializer);
                 }

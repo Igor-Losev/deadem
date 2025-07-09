@@ -92,29 +92,6 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
     }
 
     /**
-     * @public
-     * @param {BitBuffer} bitBuffer
-     * @returns {number}
-     */
-    decode(bitBuffer) {
-        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
-            return this._low;
-        }
-
-        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
-            return this._high;
-        }
-
-        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
-            return 0;
-        }
-
-        const value = BitBuffer.readUInt32LE(bitBuffer.read(this._bitCount));
-
-        return this._low + (this._high - this._low) * value * this._dequantizationStep;
-    }
-
-    /**
      * Maps a float value within the [low, high] range to a discrete quantized value.
      *
      * @public
@@ -139,6 +116,29 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
         const integer = Math.floor((number - this._low) * this._quantizationMultiplier);
 
         return this._low + (this._high - this._low) * integer * this._dequantizationStep;
+    }
+
+    /**
+     * @protected
+     * @param {BitBuffer} bitBuffer
+     * @returns {number}
+     */
+    _decode(bitBuffer) {
+        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
+            return this._low;
+        }
+
+        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
+            return this._high;
+        }
+
+        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
+            return 0;
+        }
+
+        const value = BitBuffer.readUInt32LE(bitBuffer.read(this._bitCount));
+
+        return this._low + (this._high - this._low) * value * this._dequantizationStep;
     }
 }
 

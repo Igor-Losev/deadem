@@ -2,6 +2,7 @@ import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
 
+import FieldDecoderFactory from './FieldDecoderFactory.js';
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 import FieldDecoderPicker from './FieldDecoderPicker.instance.js';
 import FieldDefinition from './FieldDefinition.js';
@@ -169,7 +170,7 @@ class Field {
                     throw new Error('Field with a model of ARRAY_VARIABLE doesn\'t have a generic. This should never happen');
                 }
 
-                this._decoderBase = FieldDecoderPicker.getUVarInt32();
+                this._decoderBase = FieldDecoderFactory.U_VAR_INT_32;
                 this._decoderChild = getDecoder.call(this, true);
 
                 break;
@@ -178,11 +179,11 @@ class Field {
 
                 break;
             case FieldModel.TABLE_FIXED:
-                this._decoderBase = FieldDecoderPicker.getBoolean();
+                this._decoderBase = FieldDecoderFactory.BOOLEAN;
 
                 break;
             case FieldModel.TABLE_VARIABLE:
-                this._decoderBase = FieldDecoderPicker.getUVarInt32();
+                this._decoderBase = FieldDecoderFactory.U_VAR_INT_32;
 
                 break;
         }

@@ -268,10 +268,10 @@ class BitBuffer {
      * Reads a normal vector from the buffer.
      *
      * @public
-     * @returns {number[]} An array containing the X, Y, and Z components of the normal vector.
+     * @returns {Float32Array} An array containing the X, Y, and Z components of the normal vector.
      */
     readNormalVector() {
-        const vector = [ 0, 0, 0 ];
+        const vector = new Float32Array(3);
 
         const hasX = this.readBit();
         const hasY = this.readBit();
@@ -285,6 +285,7 @@ class BitBuffer {
         }
 
         const negativeZ = this.readBit();
+
         const sum = Math.pow(vector[0], 2) + Math.pow(vector[1], 2);
 
         if (sum < 1) {
@@ -412,25 +413,22 @@ class BitBuffer {
      * @returns {number} The decoded unsigned integer.
      */
     readUVarInt32() {
-        let bitsAvailable = this.getUnreadCount();
-        let value = 0;
+        let result = 0;
         let offset = 0;
 
-        while (bitsAvailable >= BITS_PER_BYTE && offset < VarInt32.MAXIMUM_SIZE_BYTES) {
-            const byte = this.readUInt8();
+        let byte;
 
-            bitsAvailable -= BITS_PER_BYTE;
+        for (let i = 0; i < VarInt32.MAXIMUM_SIZE_BYTES; i++) {
+            byte = this.readUInt8();
 
-            value |= (byte & 127) << (7 * offset);
+            result |= (byte & 0x7F) << (offset * 7);
+
+            if ((byte & 0x80) === 0) {
+                return result >>> 0;
+            }
 
             offset += 1;
-
-            if ((byte & 128) !== 128) {
-                break;
-            }
         }
-
-        return value >>> 0;
     }
 
     /**
