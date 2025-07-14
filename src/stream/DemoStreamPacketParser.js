@@ -211,27 +211,42 @@ function parseDemoPacket(demoPacketRaw) {
     let demoPacket;
 
     if (demoPacketType.heavy) {
-        const extractor = new MessagePacketRawExtractor(decoded.data);
-
-        const messagePacketsRaw = extractor.all();
-        const messagePackets = [ ];
-
-        messagePacketsRaw.forEach((messagePacketRaw) => {
-            const messagePacket = parseMessagePacket.call(this, messagePacketRaw);
-
-            if (messagePacket !== null) {
-                messagePackets.push(messagePacket);
-            } else {
-                this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
-            }
-        });
+        const messagePackets = parseMessagePackets.call(this, demoPacketRaw, decoded.data);
 
         demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, messagePackets);
+    } else if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
+        const messagePackets = parseMessagePackets.call(this, demoPacketRaw, decoded.packet.data);
+
+        demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, { messagePackets, stringTables: decoded.stringTable });
     } else {
         demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
     }
 
     return demoPacket;
+}
+
+/**
+ * @param {Buffer} data
+ * @param {DemoPacketRaw} demoPacketRaw
+ * @returns {Array<MessagePacket>}
+ */
+function parseMessagePackets(demoPacketRaw, data) {
+    const extractor = new MessagePacketRawExtractor(data);
+
+    const messagePacketsRaw = extractor.all();
+    const messagePackets = [ ];
+
+    messagePacketsRaw.forEach((messagePacketRaw) => {
+        const messagePacket = parseMessagePacket.call(this, messagePacketRaw);
+
+        if (messagePacket !== null) {
+            messagePackets.push(messagePacket);
+        } else {
+            this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
+        }
+    });
+
+    return messagePackets;
 }
 
 /**
