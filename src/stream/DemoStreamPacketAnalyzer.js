@@ -55,55 +55,13 @@ class DemoStreamPacketAnalyzer extends TransformStream {
                 break;
             }
             case DemoPacketType.DEM_PACKET:
-            case DemoPacketType.DEM_SIGNON_PACKET:
+            case DemoPacketType.DEM_SIGNON_PACKET: {
+                await handleMessagePackets.call(this, demoPacket, demoPacket.data);
+
+                break;
+            }
             case DemoPacketType.DEM_FULL_PACKET: {
-                const messagePackets = demoPacket.data;
-
-                for (let i = 0; i < messagePackets.length; i++) {
-                    const messagePacket = messagePackets[i];
-
-                    await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
-
-                    switch (messagePacket.type) {
-                        case MessagePacketType.SVC_SERVER_INFO: {
-                            this._demoMessageHandler.handleSvcServerInfo(messagePacket);
-
-                            break;
-                        }
-                        case MessagePacketType.SVC_CREATE_STRING_TABLE: {
-                            this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
-
-                            break;
-                        }
-                        case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
-                            this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
-
-                            break;
-                        }
-                        case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
-                            this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
-
-                            break;
-                        }
-                        case MessagePacketType.SVC_PACKET_ENTITIES: {
-                            const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
-
-                            await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-
-                            this._demoEntityHandler.handleEntityEvents(events);
-
-                            await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-
-                    this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
-
-                    await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
-                }
+                await handleMessagePackets.call(this, demoPacket, demoPacket.data.messagePackets);
 
                 break;
             }
@@ -114,6 +72,59 @@ class DemoStreamPacketAnalyzer extends TransformStream {
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
         await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
+    }
+}
+
+/**
+ * @param {DemoPacket} demoPacket
+ * @param {Array<MessagePacket>} messagePackets
+ * @returns {Promise<void>}
+ */
+async function handleMessagePackets(demoPacket, messagePackets) {
+    for (let i = 0; i < messagePackets.length; i++) {
+        const messagePacket = messagePackets[i];
+
+        await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+
+        switch (messagePacket.type) {
+            case MessagePacketType.SVC_SERVER_INFO: {
+                this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+
+                break;
+            }
+            case MessagePacketType.SVC_CREATE_STRING_TABLE: {
+                this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+
+                break;
+            }
+            case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
+                this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+
+                break;
+            }
+            case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
+                this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
+
+                break;
+            }
+            case MessagePacketType.SVC_PACKET_ENTITIES: {
+                const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+
+                await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+
+                this._demoEntityHandler.handleEntityEvents(events);
+
+                await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+
+                break;
+            }
+            default:
+                break;
+        }
+
+        this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
+
+        await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
     }
 }
 
