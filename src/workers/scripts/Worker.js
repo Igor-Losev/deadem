@@ -1,6 +1,7 @@
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import Demo from '#data/Demo.js';
+import DemoPacket from '#data/DemoPacket.js';
 import Entity from '#data/entity/Entity.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
@@ -12,7 +13,11 @@ import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js'
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
+import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
+import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
+
 import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketRawBatchSync from '#workers/responses/WorkerResponseDPacketRawBatchSync.js';
 import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
 import WorkerResponseSvcCreatedEntities from '#workers/responses/WorkerResponseSvcCreatedEntities.js';
@@ -49,66 +54,8 @@ class Worker {
         const request = workerRequestClass.deserialize(requestRaw.payload);
 
         switch (request.type) {
-            case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
-                this._handleHeavyPacketParse(request);
-
-                break;
-            }
-            case WorkerMessageType.DEMO_PACKET_SYNC: {
-                const demoPacket = request.payload;
-
-                switch (demoPacket.type) {
-                    case DemoPacketType.DEM_CLASS_INFO:
-                        this._handleClassInfo(request);
-
-                        break;
-                    case DemoPacketType.DEM_SEND_TABLES:
-                        this._handleSendTables(request);
-
-                        break;
-                    case DemoPacketType.DEM_STRING_TABLES:
-                        this._handleStringTables(request);
-
-                        break;
-                    default:
-                        throw new Error(`Unhandled message [ ${WorkerMessageType.DEMO_PACKET_SYNC.code} ] [ ${demoPacket.type.code} ]`);
-                }
-
-                break;
-            }
-            case WorkerMessageType.MESSAGE_PACKET_SYNC: {
-                const messagePacket = request.payload;
-
-                switch (messagePacket.type) {
-                    case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
-                        this._handleSvcClearAllStringTables(request);
-
-                        break;
-                    case MessagePacketType.SVC_CREATE_STRING_TABLE:
-                        this._handleSvcCreateStringTable(request);
-
-                        break;
-                    case MessagePacketType.SVC_UPDATE_STRING_TABLE:
-                        this._handleSvcUpdateStringTable(request);
-
-                        break;
-                    case MessagePacketType.SVC_SERVER_INFO:
-                        this._handleSvcServerInfo(request);
-
-                        break;
-                    default:
-                        throw new Error(`Unhandled message [ ${WorkerMessageType.MESSAGE_PACKET_SYNC.code} ] [ ${messagePacket.type.code} ]`);
-                }
-
-                break;
-            }
-            case WorkerMessageType.SVC_CREATED_ENTITIES: {
-                this._handleSvcCreatedEntities(request);
-
-                break;
-            }
-            case WorkerMessageType.SVC_UPDATED_ENTITIES: {
-                this._handleSvcUpdatedEntities(request);
+            case WorkerMessageType.DEMO_PACKET_RAW_BATCH_SYNC: {
+                this._handleDemoPacketRawBatch(request);
 
                 break;
             }
@@ -119,176 +66,85 @@ class Worker {
 
     /**
      * @protected
-     * @param {WorkerRequestDHPParse} request
+     * @param {WorkerRequestDPacketRawBatchSync} request
      */
-    _handleHeavyPacketParse(request) {
-        const batches = [ ];
+    _handleDemoPacketRawBatch(request) {
+        let events = [ ];
 
-        request.payload.forEach((data) => {
-            const [ compressed, buffer ] = data;
+        [ ...request.payload.snapshots, ...request.payload.batch.packets ].forEach((demoPacketRaw) => {
+            const demoPacket = DemoPacket.parse(demoPacketRaw);
 
-            let decompressed;
-
-            if (compressed) {
-                decompressed = SnappyDecompressor.decompress(buffer);
-            } else {
-                decompressed = buffer;
+            if (demoPacket === null) {
+                return;
             }
 
-            const decoded = DemoPacketType.DEM_PACKET.proto.decode(decompressed);
+            switch (demoPacket.type) {
+                case DemoPacketType.DEM_CLASS_INFO:
+                    this._demoPacketHandler.handleDemClassInfo(demoPacket);
 
-            const extractor = new MessagePacketRawExtractor(decoded.data);
+                    break;
+                case DemoPacketType.DEM_SEND_TABLES:
+                    this._demoPacketHandler.handleDemSendTables(demoPacket);
 
-            const packed = extractor.allPacked();
+                    break;
+                case DemoPacketType.DEM_STRING_TABLES:
+                    this._demoPacketHandler.handleDemStringTables(demoPacket);
 
-            batches.push(packed);
+                    break;
+                case DemoPacketType.DEM_PACKET:
+                case DemoPacketType.DEM_SIGNON_PACKET:
+                case DemoPacketType.DEM_FULL_PACKET: {
+                    let messagePackets;
+
+                    if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
+                        this._demo.stringTableContainer.handleInstantiate(demoPacket.data.stringTables);
+
+                        messagePackets = demoPacket.data.messagePackets;
+                    } else {
+                        messagePackets = demoPacket.data;
+                    }
+
+                    messagePackets.forEach((messagePacket) => {
+                        switch (messagePacket.type) {
+                            case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
+                                this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
+
+                                break;
+                            case MessagePacketType.SVC_CREATE_STRING_TABLE:
+                                this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+
+                                break;
+                            case MessagePacketType.SVC_UPDATE_STRING_TABLE:
+                                this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+
+                                break;
+                            case MessagePacketType.SVC_SERVER_INFO:
+                                this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+
+                                break;
+                            case MessagePacketType.SVC_PACKET_ENTITIES:
+                                events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+
+                                break;
+                        }
+                    });
+
+                    break;
+                }
+            }
         });
 
-        const response = new WorkerResponseDHPParse(batches);
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestDPacketSync} request
-     */
-    _handleClassInfo(request) {
-        const demoPacket = request.payload;
-
-        this._demoPacketHandler.handleDemClassInfo(demoPacket);
-
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestDPacketSync} request
-     */
-    _handleSendTables(request) {
-        const demoPacket = request.payload;
-
-        this._demoPacketHandler.handleDemSendTables(demoPacket);
-
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestDPacketSync} request
-     */
-    _handleStringTables(request) {
-        const demoPacket = request.payload;
-
-        this._demoPacketHandler.handleDemStringTables(demoPacket);
-
-        const response = new WorkerResponseDPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcClearAllStringTables(request) {
-        const messagePacket = request.payload;
-
-        this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
-
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcCreateStringTable(request) {
-        const messagePacket = request.payload;
-
-        this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
-
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcUpdateStringTable(request) {
-        const messagePacket = request.payload;
-
-        this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
-
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcServerInfo(request) {
-        const messagePacket = request.payload;
-
-        this._demoMessageHandler.handleSvcServerInfo(messagePacket);
-
-        const response = new WorkerResponseMPacketSync();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcCreatedEntities(request) {
-        const length = request.payload.length;
-
-        for (let i = 0; i < length; i += 3) {
-            const index = request.payload[i];
-            const serial = request.payload[i + 1];
-            const clazzId = request.payload[i + 2];
-
-            const clazz = this._demo.getClassById(clazzId);
-
-            if (clazz === null) {
-                throw new Error(`Couldn't find class [ ${clazzId} ]`);
-            }
-
-            this._demo.registerEntity(new Entity(index, serial, clazz));
-        }
-
-        const response = new WorkerResponseSvcCreatedEntities();
-
-        this._respond(response);
-    }
-
-    /**
-     * @protected
-     * @param {WorkerRequestMPacketSync} request
-     */
-    _handleSvcUpdatedEntities(request) {
-        const messagePacket = request.payload;
-
-        let events;
-
-        try {
-            events = this._demoMessageHandler.handleSvcPacketEntitiesPartial(messagePacket);
-        } catch {
-            events = [ ];
-        }
-
-        const response = new WorkerResponseSvcUpdatedEntities(events);
+        const response = new WorkerResponseDPacketRawBatchSync(
+            events.map((event) => {
+                return [
+                    event.operation.id,
+                    event.entity.index,
+                    event.entity.serial,
+                    event.entity.class.id,
+                    event.mutations.map(m => [ m.fieldPath.code, m.value ])
+                ];
+            })
+        );
 
         this._respond(response);
     }

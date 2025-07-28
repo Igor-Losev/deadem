@@ -117,7 +117,9 @@ class StringTableContainer {
                 return;
             }
 
-            const stringTable = new StringTable(type, tableData.tableFlags, null);
+            const existing = this._registry.tableByName.get(type.name) || null;
+
+            const stringTable = existing || new StringTable(type, tableData.tableFlags, null);
 
             tableData.items.forEach((entryData, index) => {
                 const entry = StringTableEntry.fromBuffer(entryData.data, stringTable.type, index, entryData.str);
@@ -125,9 +127,12 @@ class StringTableContainer {
                 stringTable.updateEntry(entry);
             });
 
-            this._register(stringTable);
+            if (existing === null) {
+                this._register(stringTable);
 
-            this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
+                this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
+            }
+
             this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
         });
     }

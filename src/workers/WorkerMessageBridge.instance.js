@@ -1,12 +1,14 @@
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
+import WorkerRequestDPacketRawBatchSync from '#workers/requests/WorkerRequestDPacketRawBatchSync.js';
 import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
 import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
 
 import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
+import WorkerResponseDPacketRawBatchSync from '#workers/responses/WorkerResponseDPacketRawBatchSync.js';
 import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
 import WorkerResponseSvcCreatedEntities from '#workers/responses/WorkerResponseSvcCreatedEntities.js';
@@ -15,6 +17,7 @@ import WorkerResponseSvcUpdatedEntities from '#workers/responses/WorkerResponseS
 const workerRequests = new Map();
 
 workerRequests.set(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE.code, WorkerRequestDHPParse);
+workerRequests.set(WorkerMessageType.DEMO_PACKET_RAW_BATCH_SYNC.code, WorkerRequestDPacketRawBatchSync);
 workerRequests.set(WorkerMessageType.DEMO_PACKET_SYNC.code, WorkerRequestDPacketSync);
 workerRequests.set(WorkerMessageType.MESSAGE_PACKET_SYNC.code, WorkerRequestMPacketSync);
 workerRequests.set(WorkerMessageType.SVC_CREATED_ENTITIES.code, WorkerRequestSvcCreatedEntities);
@@ -23,6 +26,7 @@ workerRequests.set(WorkerMessageType.SVC_UPDATED_ENTITIES.code, WorkerRequestSvc
 const workerResponses = new Map();
 
 workerResponses.set(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE.code, WorkerResponseDHPParse);
+workerResponses.set(WorkerMessageType.DEMO_PACKET_RAW_BATCH_SYNC.code, WorkerResponseDPacketRawBatchSync);
 workerResponses.set(WorkerMessageType.DEMO_PACKET_SYNC.code, WorkerResponseDPacketSync);
 workerResponses.set(WorkerMessageType.MESSAGE_PACKET_SYNC.code, WorkerResponseMPacketSync);
 workerResponses.set(WorkerMessageType.SVC_CREATED_ENTITIES.code, WorkerResponseSvcCreatedEntities);

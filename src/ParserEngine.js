@@ -6,15 +6,24 @@ import Demo from '#data/Demo.js';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
-import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
-import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';
+// import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
+// import DemoStreamLoadBalancer from '#stream/DemoStreamLoadBalancer.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
 import DemoStreamPacketAnalyzerConcurrent from '#stream/DemoStreamPacketAnalyzerConcurrent.js';
-import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
+// import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
 import DemoStreamPacketCoordinator from '#stream/DemoStreamPacketCoordinator.js';
-import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
-import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
+// import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
+// import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
 import DemoStreamPacketPrioritizer from '#stream/DemoStreamPacketPrioritizer.js';
+
+import DemoStreamBufferSplitter from '#stream2/DemoStreamBufferSplitter.js';
+import DemoStreamEventLoopBreaker from '#stream2/DemoStreamEventLoopBreaker.js';
+import DemoStreamLoadBalancer from '#stream2/DemoStreamLoadBalancer.js';
+import DemoStreamPacketBatchCoordinator from '#stream2/DemoStreamPacketBatchCoordinator.js';
+import DemoStreamPacketBatcher from '#stream2/DemoStreamPacketBatcher.js';
+import DemoStreamPacketExtractor from '#stream2/DemoStreamPacketExtractor.js';
+import DemoStreamPacketParser from '#stream2/DemoStreamPacketParser.js';
+import DemoStreamPacketSplitter from '#stream2/DemoStreamPacketSplitter.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
 import PacketTracker from '#trackers/PacketTracker.js';
@@ -23,6 +32,7 @@ import PerformanceTracker from '#trackers/PerformanceTracker.js';
 import WorkerManager from '#workers/WorkerManager.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
+import Recorder from './Recorder.js';
 
 class ParserEngine {
     /**
@@ -39,24 +49,43 @@ class ParserEngine {
 
         this._demo = new Demo(logger);
 
-        if (configuration.parserThreads === 0) {
-            this._workerManager = null;
-        } else {
+        const isMultiThreaded = configuration.parserThreads !== 0;
+
+        if (isMultiThreaded) {
             this._workerManager = new WorkerManager(configuration.parserThreads, logger);
+
+            this._chain = [
+                new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
+                new DemoStreamPacketExtractor(this),
+                new DemoStreamEventLoopBreaker(this, configuration.breakInterval),
+                new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
+                new DemoStreamLoadBalancer(this),
+                new DemoStreamPacketBatchCoordinator(this),
+                new DemoStreamPacketSplitter(this)
+            ];
+        } else {
+            this._workerManager = null;
+
+            this._chain = [
+                new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
+                new DemoStreamPacketExtractor(this),
+                new DemoStreamEventLoopBreaker(this, configuration.breakInterval),
+                new DemoStreamPacketParser(this),
+            ];
         }
 
-        this._chain = [
-            new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
-            new DemoStreamPacketExtractor(this),
-            new DemoStreamLoadBalancer(this, configuration.breakInterval),
-            new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
-            new DemoStreamPacketParser(this),
-            new DemoStreamPacketCoordinator(this),
-            new DemoStreamPacketPrioritizer(this),
-            configuration.parserThreads > 0
-                ? new DemoStreamPacketAnalyzerConcurrent(this)
-                : new DemoStreamPacketAnalyzer(this)
-        ];
+        // this._chain = [
+        //     new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
+        //     new DemoStreamPacketExtractor(this),
+        //     new DemoStreamLoadBalancer(this, configuration.breakInterval),
+        //     new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
+        //     new DemoStreamPacketParser(this),
+        //     new DemoStreamPacketCoordinator(this),
+        //     new DemoStreamPacketPrioritizer(this),
+        //     configuration.parserThreads > 0
+        //         ? new DemoStreamPacketAnalyzerConcurrent(this)
+        //         : new DemoStreamPacketAnalyzer(this)
+        // ];
 
         this._interceptors = {
             pre: [
@@ -70,6 +99,8 @@ class ParserEngine {
                 [ ]
             ]
         };
+
+        this._recorder = new Recorder();
 
         this._trackers = {
             memory: new MemoryTracker(),
@@ -111,6 +142,14 @@ class ParserEngine {
      */
     get logger() {
         return this._logger;
+    }
+
+    /**
+     * @public
+     * @returns {Recorder}
+     */
+    get recorder() {
+        return this._recorder;
     }
 
     /**

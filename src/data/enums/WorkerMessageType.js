@@ -66,6 +66,24 @@ class WorkerMessageType {
      * @static
      * @returns {WorkerMessageType}
      */
+    static get DEMO_PACKET_RAW_BATCH_SYNC() {
+        return demoPacketRawBatchSync;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
+    static get MESSAGE_PACKET_BATCH_SYNC() {
+        return messagePacketBatchSync;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
     static get MESSAGE_PACKET_SYNC() {
         return messagePacketSync;
     }
@@ -91,7 +109,9 @@ class WorkerMessageType {
 
 const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
 const demoPacketSync = new WorkerMessageType('DEMO_PACKET_SYNC', 'Synchronize demo packet');
+const demoPacketRawBatchSync = new WorkerMessageType('DEMO_PACKET_RAW_BATCH_SYNC', 'Synchronize demo packet raw batch');
 
+const messagePacketBatchSync = new WorkerMessageType('MESSAGE_PACKET_BATCH_SYNC', 'Synchronize message packet batch');
 const messagePacketSync = new WorkerMessageType('MESSAGE_PACKET_SYNC', 'Synchronize message packet');
 
 const svcCreatedEntities = new WorkerMessageType('SVC_CREATED_ENTITIES', 'Parsing SVC_CREATED_ENTITIES message');

@@ -3,6 +3,8 @@ import Assert from '#core/Assert.js';
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 import VarInt32 from '#data/VarInt32.js';
 
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+
 class DemoPacketRawExtractor {
     /**
      * @public
@@ -26,14 +28,16 @@ class DemoPacketRawExtractor {
     /**
      * @public
      * @param {number} sequenceStart
+     * @param {number} partitionStart
      * @returns {Generator<DemoPacketRaw|null, void, *>}
      */
-    *retrieve(sequenceStart) {
+    *retrieve(sequenceStart, partitionStart) {
         Assert.isTrue(Number.isInteger(sequenceStart));
+        Assert.isTrue(Number.isInteger(partitionStart));
 
         this._tail = this._buffer;
 
-        for (let sequence = sequenceStart; true; sequence++) {
+        for (let sequence = sequenceStart, partition = partitionStart; true; sequence++) {
             let offset = 0;
 
             const type = VarInt32.parse(this._tail.subarray(offset));
@@ -67,7 +71,13 @@ class DemoPacketRawExtractor {
             offset += frame.size;
 
             if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, type, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
+                if (DemoPacketRaw.getTypeId(type.value) === DemoPacketType.DEM_FULL_PACKET.id) {
+                    partition += 1;
+                }
+
+                const demoPacketRaw = new DemoPacketRaw(sequence, partition, type, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
+
+                yield demoPacketRaw;
 
                 offset += frame.value;
 

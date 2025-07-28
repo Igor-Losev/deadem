@@ -1,4 +1,5 @@
 import Assert from './Assert.js';
+import Queue from './Queue.js';
 
 class Semaphore {
     /**
@@ -11,7 +12,7 @@ class Semaphore {
 
         this._count = 0;
         this._limit = limit;
-        this._queue = [ ];
+        this._queue = new Queue();
     }
 
     /**
@@ -26,7 +27,7 @@ class Semaphore {
         }
 
         return new Promise((resolve) => {
-            this._queue.push(resolve);
+            this._queue.enqueue(resolve);
         });
     }
 
@@ -34,8 +35,8 @@ class Semaphore {
      * @public
      */
     release() {
-        if (this._queue.length > 0) {
-            const resolve = this._queue.shift();
+        if (this._queue.size > 0) {
+            const resolve = this._queue.dequeue();
 
             resolve();
         } else {

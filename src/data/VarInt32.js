@@ -42,6 +42,16 @@ class VarInt32 {
     }
 
     /**
+     * @public
+     * @static
+     * @param {VarInt32Object} object
+     * @returns {VarInt32}
+     */
+    static fromObject(object) {
+        return new VarInt32(object.value, object.size);
+    }
+
+    /**
      * Parses a {@link VarInt32} from the provided buffer.
      *
      * @public
@@ -70,6 +80,21 @@ class VarInt32 {
 
         return new VarInt32(value, offset);
     }
+
+    /**
+     * @public
+     * @returns {VarInt32Object}
+     */
+    toObject() {
+        return {
+            value: this._value,
+            size: this._size
+        };
+    }
 }
+
+/**
+ * @typedef {{value: number, size: number}} VarInt32Object
+ */
 
 export default VarInt32;

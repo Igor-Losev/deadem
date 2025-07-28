@@ -47,6 +47,7 @@
     "#handlers/*.js": "./src/handlers/*.js",
     "#providers/*.js": "./src/providers/*.js",
     "#stream/*.js": "./src/stream/*.js",
+    "#stream2/*.js": "./src/stream2/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
     "#workers/*.js": "./src/workers/*.js",
     "#core/stream/Pipeline.js": {

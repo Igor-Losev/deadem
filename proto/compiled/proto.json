@@ -5,14 +5,12 @@
   },
   "nested": {
     "MODIFIER_ENTRY_TYPE": {
-      "edition": "proto2",
       "values": {
         "MODIFIER_ENTRY_TYPE_ACTIVE": 1,
         "MODIFIER_ENTRY_TYPE_REMOVED": 2
       }
     },
     "CModifierTableEntry": {
-      "edition": "proto2",
       "fields": {
         "entryType": {
           "rule": "required",
@@ -210,7 +208,6 @@
       }
     },
     "SignonState_t": {
-      "edition": "proto2",
       "values": {
         "SIGNONSTATE_NONE": 0,
         "SIGNONSTATE_CHALLENGE": 1,
@@ -223,7 +220,6 @@
       }
     },
     "NET_Messages": {
-      "edition": "proto2",
       "values": {
         "net_NOP": 0,
         "net_Disconnect_Legacy": 1,
@@ -241,7 +237,6 @@
       }
     },
     "SpawnGroupFlags_t": {
-      "edition": "proto2",
       "values": {
         "SPAWN_GROUP_LOAD_ENTITIES_FROM_SAVE": 1,
         "SPAWN_GROUP_DONT_SPAWN_ENTITIES": 2,
@@ -254,7 +249,6 @@
       }
     },
     "CMsgVector": {
-      "edition": "proto2",
       "fields": {
         "x": {
           "type": "float",
@@ -275,7 +269,6 @@
       }
     },
     "CMsgVector2D": {
-      "edition": "proto2",
       "fields": {
         "x": {
           "type": "float",
@@ -288,7 +281,6 @@
       }
     },
     "CMsgQAngle": {
-      "edition": "proto2",
       "fields": {
         "x": {
           "type": "float",
@@ -305,7 +297,6 @@
       }
     },
     "CMsgQuaternion": {
-      "edition": "proto2",
       "fields": {
         "x": {
           "type": "float",
@@ -326,7 +317,6 @@
       }
     },
     "CMsgTransform": {
-      "edition": "proto2",
       "fields": {
         "position": {
           "type": ".CMsgVector",
@@ -343,7 +333,6 @@
       }
     },
     "CMsgRGBA": {
-      "edition": "proto2",
       "fields": {
         "r": {
           "type": "int32",
@@ -364,7 +353,6 @@
       }
     },
     "CMsgPlayerInfo": {
-      "edition": "proto2",
       "fields": {
         "name": {
           "type": "string",
@@ -393,7 +381,6 @@
       }
     },
     "CEntityMsg": {
-      "edition": "proto2",
       "fields": {
         "targetEntity": {
           "type": "uint32",
@@ -405,7 +392,6 @@
       }
     },
     "CMsg_CVars": {
-      "edition": "proto2",
       "fields": {
         "cvars": {
           "rule": "repeated",
@@ -429,11 +415,9 @@
       }
     },
     "CNETMsg_NOP": {
-      "edition": "proto2",
       "fields": {}
     },
     "CNETMsg_SplitScreenUser": {
-      "edition": "proto2",
       "fields": {
         "slot": {
           "type": "int32",
@@ -442,7 +426,6 @@
       }
     },
     "CNETMsg_Tick": {
-      "edition": "proto2",
       "fields": {
         "tick": {
           "type": "uint32",
@@ -487,7 +470,6 @@
       }
     },
     "CNETMsg_StringCmd": {
-      "edition": "proto2",
       "fields": {
         "command": {
           "type": "string",
@@ -500,7 +482,6 @@
       }
     },
     "CNETMsg_SetConVar": {
-      "edition": "proto2",
       "fields": {
         "convars": {
           "type": ".CMsg_CVars",
@@ -509,7 +490,6 @@
       }
     },
     "CNETMsg_SignonState": {
-      "edition": "proto2",
       "fields": {
         "signonState": {
           "type": ".SignonState_t",
@@ -542,7 +522,6 @@
       }
     },
     "CSVCMsg_GameEvent": {
-      "edition": "proto2",
       "fields": {
         "eventName": {
           "type": "string",
@@ -598,7 +577,6 @@
       }
     },
     "CSVCMsgList_GameEvents": {
-      "edition": "proto2",
       "fields": {
         "events": {
           "rule": "repeated",
@@ -622,7 +600,6 @@
       }
     },
     "CNETMsg_SpawnGroup_Load": {
-      "edition": "proto2",
       "fields": {
         "worldname": {
           "type": "string",
@@ -707,7 +684,6 @@
       }
     },
     "CNETMsg_SpawnGroup_ManifestUpdate": {
-      "edition": "proto2",
       "fields": {
         "spawngrouphandle": {
           "type": "uint32",
@@ -724,7 +700,6 @@
       }
     },
     "CNETMsg_SpawnGroup_SetCreationTick": {
-      "edition": "proto2",
       "fields": {
         "spawngrouphandle": {
           "type": "uint32",
@@ -741,7 +716,6 @@
       }
     },
     "CNETMsg_SpawnGroup_Unload": {
-      "edition": "proto2",
       "fields": {
         "spawngrouphandle": {
           "type": "uint32",
@@ -758,7 +732,6 @@
       }
     },
     "CNETMsg_SpawnGroup_LoadCompleted": {
-      "edition": "proto2",
       "fields": {
         "spawngrouphandle": {
           "type": "uint32",
@@ -767,7 +740,6 @@
       }
     },
     "CSVCMsg_GameSessionConfiguration": {
-      "edition": "proto2",
       "fields": {
         "isMultiplayer": {
           "type": "bool",
@@ -848,7 +820,6 @@
       }
     },
     "CNETMsg_DebugOverlay": {
-      "edition": "proto2",
       "fields": {
         "etype": {
           "type": "int32",
@@ -867,22 +838,34 @@
         "dimensions": {
           "rule": "repeated",
           "type": "float",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         },
         "times": {
           "rule": "repeated",
           "type": "float",
-          "id": 5
+          "id": 5,
+          "options": {
+            "packed": false
+          }
         },
         "bools": {
           "rule": "repeated",
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "options": {
+            "packed": false
+          }
         },
         "uint64s": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 7
+          "id": 7,
+          "options": {
+            "packed": false
+          }
         },
         "strings": {
           "rule": "repeated",
@@ -892,373 +875,16 @@
       }
     },
     "networkConnectionToken": {
-      "edition": "proto2",
       "type": "string",
       "id": 50500,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "networkConnectionDetailToken": {
-      "edition": "proto2",
       "type": "string",
       "id": 50501,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "ENetworkDisconnectionReason": {
-      "edition": "proto2",
-      "valuesOptions": {
-        "NETWORK_DISCONNECT_DISCONNECT_BY_USER": {
-          "(network_connection_token)": "#GameUI_Disconnect_User"
-        },
-        "NETWORK_DISCONNECT_DISCONNECT_BY_SERVER": {
-          "(network_connection_token)": "#GameUI_Disconnect_Server"
-        },
-        "NETWORK_DISCONNECT_LOST": {
-          "(network_connection_token)": "#GameUI_Disconnect_ConnectionLost"
-        },
-        "NETWORK_DISCONNECT_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_ConnectionOverflow"
-        },
-        "NETWORK_DISCONNECT_STEAM_BANNED": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamIDBanned"
-        },
-        "NETWORK_DISCONNECT_STEAM_INUSE": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamIDInUse"
-        },
-        "NETWORK_DISCONNECT_STEAM_TICKET": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamTicket"
-        },
-        "NETWORK_DISCONNECT_STEAM_LOGON": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamLogon"
-        },
-        "NETWORK_DISCONNECT_STEAM_AUTHCANCELLED": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamLogon"
-        },
-        "NETWORK_DISCONNECT_STEAM_AUTHALREADYUSED": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamLogon"
-        },
-        "NETWORK_DISCONNECT_STEAM_AUTHINVALID": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamLogon"
-        },
-        "NETWORK_DISCONNECT_STEAM_VACBANSTATE": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamVAC"
-        },
-        "NETWORK_DISCONNECT_STEAM_LOGGED_IN_ELSEWHERE": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamInUse"
-        },
-        "NETWORK_DISCONNECT_STEAM_VAC_CHECK_TIMEDOUT": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamTimeOut"
-        },
-        "NETWORK_DISCONNECT_STEAM_DROPPED": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamDropped"
-        },
-        "NETWORK_DISCONNECT_STEAM_OWNERSHIP": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamOwnership"
-        },
-        "NETWORK_DISCONNECT_SERVERINFO_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_ServerInfoOverflow"
-        },
-        "NETWORK_DISCONNECT_TICKMSG_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_TickMessage"
-        },
-        "NETWORK_DISCONNECT_STRINGTABLEMSG_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_StringTableMessage"
-        },
-        "NETWORK_DISCONNECT_DELTAENTMSG_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_DeltaEntMessage"
-        },
-        "NETWORK_DISCONNECT_TEMPENTMSG_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_TempEntMessage"
-        },
-        "NETWORK_DISCONNECT_SOUNDSMSG_OVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_SoundsMessage"
-        },
-        "NETWORK_DISCONNECT_SNAPSHOTOVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_SnapshotOverflow"
-        },
-        "NETWORK_DISCONNECT_SNAPSHOTERROR": {
-          "(network_connection_token)": "#GameUI_Disconnect_SnapshotError"
-        },
-        "NETWORK_DISCONNECT_RELIABLEOVERFLOW": {
-          "(network_connection_token)": "#GameUI_Disconnect_ReliableOverflow"
-        },
-        "NETWORK_DISCONNECT_BADDELTATICK": {
-          "(network_connection_token)": "#GameUI_Disconnect_BadClientDeltaTick"
-        },
-        "NETWORK_DISCONNECT_NOMORESPLITS": {
-          "(network_connection_token)": "#GameUI_Disconnect_NoMoreSplits"
-        },
-        "NETWORK_DISCONNECT_TIMEDOUT": {
-          "(network_connection_token)": "#GameUI_Disconnect_TimedOut"
-        },
-        "NETWORK_DISCONNECT_DISCONNECTED": {
-          "(network_connection_token)": "#GameUI_Disconnect_Disconnected"
-        },
-        "NETWORK_DISCONNECT_LEAVINGSPLIT": {
-          "(network_connection_token)": "#GameUI_Disconnect_LeavingSplit"
-        },
-        "NETWORK_DISCONNECT_DIFFERENTCLASSTABLES": {
-          "(network_connection_token)": "#GameUI_Disconnect_DifferentClassTables"
-        },
-        "NETWORK_DISCONNECT_BADRELAYPASSWORD": {
-          "(network_connection_token)": "#GameUI_Disconnect_BadRelayPassword"
-        },
-        "NETWORK_DISCONNECT_BADSPECTATORPASSWORD": {
-          "(network_connection_token)": "#GameUI_Disconnect_BadSpectatorPassword"
-        },
-        "NETWORK_DISCONNECT_HLTVRESTRICTED": {
-          "(network_connection_token)": "#GameUI_Disconnect_HLTVRestricted"
-        },
-        "NETWORK_DISCONNECT_NOSPECTATORS": {
-          "(network_connection_token)": "#GameUI_Disconnect_NoSpectators"
-        },
-        "NETWORK_DISCONNECT_HLTVUNAVAILABLE": {
-          "(network_connection_token)": "#GameUI_Disconnect_HLTVUnavailable"
-        },
-        "NETWORK_DISCONNECT_HLTVSTOP": {
-          "(network_connection_token)": "#GameUI_Disconnect_HLTVStop"
-        },
-        "NETWORK_DISCONNECT_KICKED": {
-          "(network_connection_token)": "#GameUI_Disconnect_Kicked"
-        },
-        "NETWORK_DISCONNECT_BANADDED": {
-          "(network_connection_token)": "#GameUI_Disconnect_BanAdded"
-        },
-        "NETWORK_DISCONNECT_KICKBANADDED": {
-          "(network_connection_token)": "#GameUI_Disconnect_KickBanAdded"
-        },
-        "NETWORK_DISCONNECT_HLTVDIRECT": {
-          "(network_connection_token)": "#GameUI_Disconnect_HLTVDirect"
-        },
-        "NETWORK_DISCONNECT_PURESERVER_CLIENTEXTRA": {
-          "(network_connection_token)": "#GameUI_Disconnect_PureServer_ClientExtra"
-        },
-        "NETWORK_DISCONNECT_PURESERVER_MISMATCH": {
-          "(network_connection_token)": "#GameUI_Disconnect_PureServer_Mismatch"
-        },
-        "NETWORK_DISCONNECT_USERCMD": {
-          "(network_connection_token)": "#GameUI_Disconnect_UserCmd"
-        },
-        "NETWORK_DISCONNECT_REJECTED_BY_GAME": {
-          "(network_connection_token)": "#GameUI_Disconnect_RejectedByGame"
-        },
-        "NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR": {
-          "(network_connection_token)": "#GameUI_Disconnect_MessageParseError"
-        },
-        "NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR": {
-          "(network_connection_token)": "#GameUI_Disconnect_InvalidMessageError"
-        },
-        "NETWORK_DISCONNECT_BAD_SERVER_PASSWORD": {
-          "(network_connection_token)": "#GameUI_Disconnect_BadServerPassword"
-        },
-        "NETWORK_DISCONNECT_CONNECTION_FAILURE": {
-          "(network_connection_token)": "#GameUI_Disconnect_ConnectionFailure"
-        },
-        "NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS": {
-          "(network_connection_token)": "#GameUI_Disconnect_NoPeerGroupHandlers"
-        },
-        "NETWORK_DISCONNECT_LOOPSHUTDOWN": {
-          "(network_connection_token)": "#GameUI_Disconnect_LoopShutdown"
-        },
-        "NETWORK_DISCONNECT_LOOPDEACTIVATE": {
-          "(network_connection_token)": "#GameUI_Disconnect_LoopDeactivate"
-        },
-        "NETWORK_DISCONNECT_HOST_ENDGAME": {
-          "(network_connection_token)": "#GameUI_Disconnect_Host_EndGame"
-        },
-        "NETWORK_DISCONNECT_LOOP_LEVELLOAD_ACTIVATE": {
-          "(network_connection_token)": "#GameUI_Disconnect_LoopLevelLoadActivate"
-        },
-        "NETWORK_DISCONNECT_CREATE_SERVER_FAILED": {
-          "(network_connection_token)": "#GameUI_Disconnect_CreateServerFailed"
-        },
-        "NETWORK_DISCONNECT_EXITING": {
-          "(network_connection_token)": "#GameUI_Disconnect_ExitingEngine"
-        },
-        "NETWORK_DISCONNECT_REQUEST_HOSTSTATE_IDLE": {
-          "(network_connection_token)": "#GameUI_Disconnect_Request_HSIdle"
-        },
-        "NETWORK_DISCONNECT_REQUEST_HOSTSTATE_HLTVRELAY": {
-          "(network_connection_token)": "#GameUI_Disconnect_Request_HLTVRelay"
-        },
-        "NETWORK_DISCONNECT_CLIENT_CONSISTENCY_FAIL": {
-          "(network_connection_token)": "#GameUI_ClientConsistencyFail"
-        },
-        "NETWORK_DISCONNECT_CLIENT_UNABLE_TO_CRC_MAP": {
-          "(network_connection_token)": "#GameUI_ClientUnableToCRCMap"
-        },
-        "NETWORK_DISCONNECT_CLIENT_NO_MAP": {
-          "(network_connection_token)": "#GameUI_ClientNoMap"
-        },
-        "NETWORK_DISCONNECT_CLIENT_DIFFERENT_MAP": {
-          "(network_connection_token)": "#GameUI_ClientDifferentMap"
-        },
-        "NETWORK_DISCONNECT_SERVER_REQUIRES_STEAM": {
-          "(network_connection_token)": "#GameUI_ServerRequireSteams"
-        },
-        "NETWORK_DISCONNECT_STEAM_DENY_MISC": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamDeny_Misc"
-        },
-        "NETWORK_DISCONNECT_STEAM_DENY_BAD_ANTI_CHEAT": {
-          "(network_connection_token)": "#GameUI_Disconnect_SteamDeny_BadAntiCheat"
-        },
-        "NETWORK_DISCONNECT_SERVER_SHUTDOWN": {
-          "(network_connection_token)": "#GameUI_Disconnect_ServerShutdown"
-        },
-        "NETWORK_DISCONNECT_REPLAY_INCOMPATIBLE": {
-          "(network_connection_token)": "#GameUI_Disconnect_ReplayIncompatible"
-        },
-        "NETWORK_DISCONNECT_CONNECT_REQUEST_TIMEDOUT": {
-          "(network_connection_token)": "#GameUI_Disconnect_ConnectionTimedout"
-        },
-        "NETWORK_DISCONNECT_SERVER_INCOMPATIBLE": {
-          "(network_connection_token)": "#GameUI_Disconnect_ServerIncompatible"
-        },
-        "NETWORK_DISCONNECT_LOCALPROBLEM_MANYRELAYS": {
-          "(network_connection_token)": "#GameUI_Disconnect_LocalProblem_ManyRelays"
-        },
-        "NETWORK_DISCONNECT_LOCALPROBLEM_HOSTEDSERVERPRIMARYRELAY": {
-          "(network_connection_token)": "#GameUI_Disconnect_LocalProblem_HostedServerPrimaryRelay"
-        },
-        "NETWORK_DISCONNECT_LOCALPROBLEM_NETWORKCONFIG": {
-          "(network_connection_token)": "#GameUI_Disconnect_LocalProblem_NetworkConfig"
-        },
-        "NETWORK_DISCONNECT_LOCALPROBLEM_OTHER": {
-          "(network_connection_token)": "#GameUI_Disconnect_LocalProblem_Other"
-        },
-        "NETWORK_DISCONNECT_REMOTE_TIMEOUT": {
-          "(network_connection_token)": "#GameUI_Disconnect_RemoteProblem_Timeout"
-        },
-        "NETWORK_DISCONNECT_REMOTE_TIMEOUT_CONNECTING": {
-          "(network_connection_token)": "#GameUI_Disconnect_RemoteProblem_TimeoutConnecting"
-        },
-        "NETWORK_DISCONNECT_REMOTE_OTHER": {
-          "(network_connection_token)": "#GameUI_Disconnect_RemoteProblem_Other"
-        },
-        "NETWORK_DISCONNECT_REMOTE_BADCRYPT": {
-          "(network_connection_token)": "#GameUI_Disconnect_RemoteProblem_BadCrypt"
-        },
-        "NETWORK_DISCONNECT_REMOTE_CERTNOTTRUSTED": {
-          "(network_connection_token)": "#GameUI_Disconnect_RemoteProblem_BadCert"
-        },
-        "NETWORK_DISCONNECT_UNUSUAL": {
-          "(network_connection_token)": "#GameUI_Disconnect_Unusual"
-        },
-        "NETWORK_DISCONNECT_INTERNAL_ERROR": {
-          "(network_connection_token)": "#GameUI_Disconnect_InternalError"
-        },
-        "NETWORK_DISCONNECT_REJECT_BADCHALLENGE": {
-          "(network_connection_token)": "#GameUI_ServerRejectBadChallenge"
-        },
-        "NETWORK_DISCONNECT_REJECT_NOLOBBY": {
-          "(network_connection_token)": "#GameUI_ServerNoLobby"
-        },
-        "NETWORK_DISCONNECT_REJECT_BACKGROUND_MAP": {
-          "(network_connection_token)": "#Valve_Reject_Background_Map"
-        },
-        "NETWORK_DISCONNECT_REJECT_SINGLE_PLAYER": {
-          "(network_connection_token)": "#Valve_Reject_Single_Player"
-        },
-        "NETWORK_DISCONNECT_REJECT_HIDDEN_GAME": {
-          "(network_connection_token)": "#Valve_Reject_Hidden_Game"
-        },
-        "NETWORK_DISCONNECT_REJECT_LANRESTRICT": {
-          "(network_connection_token)": "#GameUI_ServerRejectLANRestrict"
-        },
-        "NETWORK_DISCONNECT_REJECT_BADPASSWORD": {
-          "(network_connection_token)": "#GameUI_ServerRejectBadPassword"
-        },
-        "NETWORK_DISCONNECT_REJECT_SERVERFULL": {
-          "(network_connection_token)": "#GameUI_ServerRejectServerFull"
-        },
-        "NETWORK_DISCONNECT_REJECT_INVALIDRESERVATION": {
-          "(network_connection_token)": "#GameUI_ServerRejectInvalidReservation"
-        },
-        "NETWORK_DISCONNECT_REJECT_FAILEDCHANNEL": {
-          "(network_connection_token)": "#GameUI_ServerRejectFailedChannel"
-        },
-        "NETWORK_DISCONNECT_REJECT_CONNECT_FROM_LOBBY": {
-          "(network_connection_token)": "#Valve_Reject_Connect_From_Lobby"
-        },
-        "NETWORK_DISCONNECT_REJECT_RESERVED_FOR_LOBBY": {
-          "(network_connection_token)": "#Valve_Reject_Reserved_For_Lobby"
-        },
-        "NETWORK_DISCONNECT_REJECT_INVALIDKEYLENGTH": {
-          "(network_connection_token)": "#GameUI_ServerReject_InvalidKeyLength"
-        },
-        "NETWORK_DISCONNECT_REJECT_OLDPROTOCOL": {
-          "(network_connection_token)": "#GameUI_ServerRejectOldProtocol"
-        },
-        "NETWORK_DISCONNECT_REJECT_NEWPROTOCOL": {
-          "(network_connection_token)": "#GameUI_ServerRejectNewProtocol"
-        },
-        "NETWORK_DISCONNECT_REJECT_INVALIDCONNECTION": {
-          "(network_connection_token)": "#GameUI_ServerRejectInvalidConnection"
-        },
-        "NETWORK_DISCONNECT_REJECT_INVALIDCERTLEN": {
-          "(network_connection_token)": "#GameUI_ServerRejectInvalidCertLen"
-        },
-        "NETWORK_DISCONNECT_REJECT_INVALIDSTEAMCERTLEN": {
-          "(network_connection_token)": "#GameUI_ServerRejectInvalidSteamCertLen"
-        },
-        "NETWORK_DISCONNECT_REJECT_STEAM": {
-          "(network_connection_token)": "#GameUI_ServerRejectSteam"
-        },
-        "NETWORK_DISCONNECT_REJECT_SERVERAUTHDISABLED": {
-          "(network_connection_token)": "#GameUI_ServerAuthDisabled"
-        },
-        "NETWORK_DISCONNECT_REJECT_SERVERCDKEYAUTHINVALID": {
-          "(network_connection_token)": "#GameUI_ServerCDKeyAuthInvalid"
-        },
-        "NETWORK_DISCONNECT_REJECT_BANNED": {
-          "(network_connection_token)": "#GameUI_ServerRejectBanned"
-        },
-        "NETWORK_DISCONNECT_KICKED_TEAMKILLING": {
-          "(network_connection_token)": "#Player_DisconnectReason_TeamKilling"
-        },
-        "NETWORK_DISCONNECT_KICKED_TK_START": {
-          "(network_connection_token)": "#Player_DisconnectReason_TK_Start"
-        },
-        "NETWORK_DISCONNECT_KICKED_UNTRUSTEDACCOUNT": {
-          "(network_connection_token)": "#Player_DisconnectReason_UntrustedAccount"
-        },
-        "NETWORK_DISCONNECT_KICKED_CONVICTEDACCOUNT": {
-          "(network_connection_token)": "#Player_DisconnectReason_ConvictedAccount"
-        },
-        "NETWORK_DISCONNECT_KICKED_COMPETITIVECOOLDOWN": {
-          "(network_connection_token)": "#Player_DisconnectReason_CompetitiveCooldown"
-        },
-        "NETWORK_DISCONNECT_KICKED_TEAMHURTING": {
-          "(network_connection_token)": "#Player_DisconnectReason_TeamHurting"
-        },
-        "NETWORK_DISCONNECT_KICKED_HOSTAGEKILLING": {
-          "(network_connection_token)": "#Player_DisconnectReason_HostageKilling"
-        },
-        "NETWORK_DISCONNECT_KICKED_VOTEDOFF": {
-          "(network_connection_token)": "#Player_DisconnectReason_VotedOff"
-        },
-        "NETWORK_DISCONNECT_KICKED_IDLE": {
-          "(network_connection_token)": "#Player_DisconnectReason_Idle"
-        },
-        "NETWORK_DISCONNECT_KICKED_SUICIDE": {
-          "(network_connection_token)": "#Player_DisconnectReason_Suicide"
-        },
-        "NETWORK_DISCONNECT_KICKED_NOSTEAMLOGIN": {
-          "(network_connection_token)": "#Player_DisconnectReason_NoSteamLogin"
-        },
-        "NETWORK_DISCONNECT_KICKED_NOSTEAMTICKET": {
-          "(network_connection_token)": "#Player_DisconnectReason_NoSteamTicket"
-        },
-        "NETWORK_DISCONNECT_KICKED_INPUTAUTOMATION": {
-          "(network_connection_token)": "#Player_DisconnectReason_InputAutomation",
-          "(network_connection_detail_token)": "#Player_DisconnectReason_InputAutomation_Detail"
-        },
-        "NETWORK_DISCONNECT_KICKED_VACNETABNORMALBEHAVIOR": {
-          "(network_connection_token)": "#Player_DisconnectReason_VacNetAbnormalBehavior"
-        },
-        "NETWORK_DISCONNECT_KICKED_INSECURECLIENT": {
-          "(network_connection_token)": "#Player_DisconnectReason_InsecureClient"
-        }
-      },
       "values": {
         "NETWORK_DISCONNECT_INVALID": 0,
         "NETWORK_DISCONNECT_SHUTDOWN": 1,
@@ -1397,7 +1023,6 @@
           },
           "nested": {
             "FileDescriptorSet": {
-              "edition": "proto2",
               "fields": {
                 "file": {
                   "rule": "repeated",
@@ -1407,7 +1032,6 @@
               }
             },
             "FileDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1425,12 +1049,18 @@
                 "publicDependency": {
                   "rule": "repeated",
                   "type": "int32",
-                  "id": 10
+                  "id": 10,
+                  "options": {
+                    "packed": false
+                  }
                 },
                 "weakDependency": {
                   "rule": "repeated",
                   "type": "int32",
-                  "id": 11
+                  "id": 11,
+                  "options": {
+                    "packed": false
+                  }
                 },
                 "messageType": {
                   "rule": "repeated",
@@ -1467,7 +1097,6 @@
               }
             },
             "DescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1550,7 +1179,6 @@
               }
             },
             "ExtensionRangeOptions": {
-              "edition": "proto2",
               "fields": {
                 "uninterpretedOption": {
                   "rule": "repeated",
@@ -1566,7 +1194,6 @@
               ]
             },
             "FieldDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1652,7 +1279,6 @@
               }
             },
             "OneofDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1665,7 +1291,6 @@
               }
             },
             "EnumDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1707,7 +1332,6 @@
               }
             },
             "EnumValueDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1724,7 +1348,6 @@
               }
             },
             "ServiceDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1742,7 +1365,6 @@
               }
             },
             "MethodDescriptorProto": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "type": "string",
@@ -1777,7 +1399,6 @@
               }
             },
             "FileOptions": {
-              "edition": "proto2",
               "fields": {
                 "javaPackage": {
                   "type": "string",
@@ -1917,7 +1538,6 @@
               }
             },
             "MessageOptions": {
-              "edition": "proto2",
               "fields": {
                 "messageSetWireFormat": {
                   "type": "bool",
@@ -1958,7 +1578,6 @@
               ]
             },
             "FieldOptions": {
-              "edition": "proto2",
               "fields": {
                 "ctype": {
                   "type": ".google.protobuf.FieldOptions.CType",
@@ -2033,7 +1652,6 @@
               }
             },
             "OneofOptions": {
-              "edition": "proto2",
               "fields": {
                 "uninterpretedOption": {
                   "rule": "repeated",
@@ -2049,7 +1667,6 @@
               ]
             },
             "EnumOptions": {
-              "edition": "proto2",
               "fields": {
                 "allowAlias": {
                   "type": "bool",
@@ -2076,7 +1693,6 @@
               ]
             },
             "EnumValueOptions": {
-              "edition": "proto2",
               "fields": {
                 "deprecated": {
                   "type": "bool",
@@ -2099,7 +1715,6 @@
               ]
             },
             "ServiceOptions": {
-              "edition": "proto2",
               "fields": {
                 "deprecated": {
                   "type": "bool",
@@ -2122,7 +1737,6 @@
               ]
             },
             "MethodOptions": {
-              "edition": "proto2",
               "fields": {
                 "deprecated": {
                   "type": "bool",
@@ -2161,7 +1775,6 @@
               }
             },
             "UninterpretedOption": {
-              "edition": "proto2",
               "fields": {
                 "name": {
                   "rule": "repeated",
@@ -2211,7 +1824,6 @@
               }
             },
             "SourceCodeInfo": {
-              "edition": "proto2",
               "fields": {
                 "location": {
                   "rule": "repeated",
@@ -2225,18 +1837,12 @@
                     "path": {
                       "rule": "repeated",
                       "type": "int32",
-                      "id": 1,
-                      "options": {
-                        "packed": true
-                      }
+                      "id": 1
                     },
                     "span": {
                       "rule": "repeated",
                       "type": "int32",
-                      "id": 2,
-                      "options": {
-                        "packed": true
-                      }
+                      "id": 2
                     },
                     "leadingComments": {
                       "type": "string",
@@ -2256,7 +1862,6 @@
               }
             },
             "GeneratedCodeInfo": {
-              "edition": "proto2",
               "fields": {
                 "annotation": {
                   "rule": "repeated",
@@ -2270,10 +1875,7 @@
                     "path": {
                       "rule": "repeated",
                       "type": "int32",
-                      "id": 1,
-                      "options": {
-                        "packed": true
-                      }
+                      "id": 1
                     },
                     "sourceFile": {
                       "type": "string",
@@ -2296,7 +1898,6 @@
       }
     },
     "ECitadelGameEvents": {
-      "edition": "proto2",
       "values": {
         "GE_FireBullets": 450,
         "GE_PlayerAnimEvent": 451,
@@ -2311,7 +1912,6 @@
       }
     },
     "PARTICLE_SYSTEM_MANAGER_MESSAGE": {
-      "edition": "proto2",
       "values": {
         "PARTICLE_SYSTEM_MANAGER_EVENT_CREATE": 0,
         "PARTICLE_SYSTEM_MANAGER_EVENT_DESTROY": 1,
@@ -2328,7 +1928,6 @@
       }
     },
     "CMsgFireBullets": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -2435,7 +2034,6 @@
       }
     },
     "CMsgBulletImpact": {
-      "edition": "proto2",
       "fields": {
         "traceStart": {
           "type": ".CMsgVector",
@@ -2489,7 +2087,6 @@
       }
     },
     "CMsgPlayerAnimEvent": {
-      "edition": "proto2",
       "fields": {
         "player": {
           "type": "fixed32",
@@ -2509,7 +2106,6 @@
       }
     },
     "CMsgParticleSystemManager": {
-      "edition": "proto2",
       "fields": {
         "type": {
           "rule": "required",
@@ -2741,7 +2337,6 @@
       }
     },
     "CMsgScreenTextPretty": {
-      "edition": "proto2",
       "fields": {
         "xPos": {
           "type": "float",
@@ -2794,7 +2389,6 @@
       }
     },
     "CMsgServerRequestedTracer": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -2825,7 +2419,6 @@
       }
     },
     "CMsgEnableSatVolumesEvent": {
-      "edition": "proto2",
       "fields": {
         "mode": {
           "type": "uint32",
@@ -2850,7 +2443,6 @@
       }
     },
     "CMsgPlaceSatVolumeEvent": {
-      "edition": "proto2",
       "fields": {
         "position": {
           "type": ".CMsgVector",
@@ -2898,7 +2490,6 @@
       }
     },
     "CMsgRemoveSatVolumeEvent": {
-      "edition": "proto2",
       "fields": {
         "volumeId": {
           "type": "int32",
@@ -2907,11 +2498,9 @@
       }
     },
     "CMsgDisableSatVolumesEvent": {
-      "edition": "proto2",
       "fields": {}
     },
     "CMsgRemoveBullet": {
-      "edition": "proto2",
       "fields": {
         "shooterEntindex": {
           "type": "int32",
@@ -2931,24 +2520,6 @@
       }
     },
     "CMsgLaneColor": {
-      "edition": "proto2",
-      "valuesOptions": {
-        "k_ELaneColor_Invalid": {
-          "(schema_friendly_name)": "None"
-        },
-        "k_ELaneColor_Yellow": {
-          "(schema_friendly_name)": "Yellow"
-        },
-        "k_ELaneColor_Green": {
-          "(schema_friendly_name)": "Green"
-        },
-        "k_ELaneColor_Blue": {
-          "(schema_friendly_name)": "Blue"
-        },
-        "k_ELaneColor_Purple": {
-          "(schema_friendly_name)": "Purple"
-        }
-      },
       "values": {
         "k_ELaneColor_Invalid": 0,
         "k_ELaneColor_Yellow": 1,
@@ -2958,14 +2529,12 @@
       }
     },
     "EGCCitadelCommonMessages": {
-      "edition": "proto2",
       "values": {
         "k_EMsgAnyToGCReportAsserts": 7000,
         "k_EMsgAnyToGCReportAssertsResponse": 7001
       }
     },
     "ECitadelMatchMode": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelMatchMode_Invalid": 0,
         "k_ECitadelMatchMode_Unranked": 1,
@@ -2978,7 +2547,6 @@
       }
     },
     "ECitadelLobbyTeam": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelLobbyTeam_Team0": 0,
         "k_ECitadelLobbyTeam_Team1": 1,
@@ -2986,7 +2554,6 @@
       }
     },
     "ECitadelAccountStatMedal": {
-      "edition": "proto2",
       "values": {
         "k_eNone": 0,
         "k_eBronze": 1,
@@ -2995,7 +2562,6 @@
       }
     },
     "ECitadelMMPreference": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelMMPreference_Invalid": 0,
         "k_ECitadelMMPreference_Casual": 1,
@@ -3003,7 +2569,6 @@
       }
     },
     "ECitadelObjective": {
-      "edition": "proto2",
       "values": {
         "k_eCitadelObjective_Team0_Core": 0,
         "k_eCitadelObjective_Team0_Tier1_Lane1": 1,
@@ -3041,7 +2606,6 @@
       }
     },
     "ECitadelTeamObjective": {
-      "edition": "proto2",
       "values": {
         "k_eCitadelTeamObjective_Core": 0,
         "k_eCitadelTeamObjective_Tier1_Lane1": 1,
@@ -3062,7 +2626,6 @@
       }
     },
     "ECitadelBotDifficulty": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelBotDifficulty_None": 0,
         "k_ECitadelBotDifficulty_Easy": 1,
@@ -3073,7 +2636,6 @@
       }
     },
     "ECitadelRegionMode": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelRegionMode_ROW": 0,
         "k_ECitadelRegionMode_Europe": 1,
@@ -3084,7 +2646,6 @@
       }
     },
     "ECitadelLeaderboardRegion": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelLeaderboardRegion_None": 0,
         "k_ECitadelLeaderboardRegion_Europe": 1,
@@ -3095,7 +2656,6 @@
       }
     },
     "ECitadelGameMode": {
-      "edition": "proto2",
       "values": {
         "k_ECitadelGameMode_Invalid": 0,
         "k_ECitadelGameMode_Normal": 1,
@@ -3104,7 +2664,6 @@
       }
     },
     "ELobbyServerState": {
-      "edition": "proto2",
       "values": {
         "k_eLobbyServerState_Assign": 0,
         "k_eLobbyServerState_InGame": 1,
@@ -3114,7 +2673,6 @@
       }
     },
     "EBannedFeature": {
-      "edition": "proto2",
       "values": {
         "k_eBannedFeature_Invalid": 0,
         "k_eBannedFeature_LowPriorityMatchmaking": 1,
@@ -3123,7 +2681,6 @@
       }
     },
     "EFeatureBanReason": {
-      "edition": "proto2",
       "values": {
         "k_eFeatureBanReason_Invalid": 0,
         "k_eFeatureBanReason_DevCommand": 1,
@@ -3133,7 +2690,6 @@
       }
     },
     "CSOCitadelLobby": {
-      "edition": "proto2",
       "fields": {
         "lobbyId": {
           "type": "uint64",
@@ -3208,7 +2764,6 @@
       }
     },
     "CLobbyData_PostMatchSurvey": {
-      "edition": "proto2",
       "fields": {
         "surveys": {
           "rule": "repeated",
@@ -3232,7 +2787,6 @@
       }
     },
     "CMsgHeroSelectionMatchInfo": {
-      "edition": "proto2",
       "fields": {
         "heroSelections": {
           "rule": "repeated",
@@ -3256,7 +2810,6 @@
       }
     },
     "CMsgStartFindingMatchInfo": {
-      "edition": "proto2",
       "fields": {
         "serverSearchKey": {
           "type": "string",
@@ -3308,7 +2861,6 @@
       }
     },
     "CMsgAnyToGCReportAsserts": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "uint32",
@@ -3360,7 +2912,6 @@
       }
     },
     "CMsgAnyToGCReportAssertsResponse": {
-      "edition": "proto2",
       "fields": {
         "success": {
           "type": "bool",
@@ -3369,28 +2920,20 @@
       }
     },
     "CMsgRegionPingTimesClient": {
-      "edition": "proto2",
       "fields": {
         "dataCenterCodes": {
           "rule": "repeated",
           "type": "fixed32",
-          "id": 1,
-          "options": {
-            "packed": true
-          }
+          "id": 1
         },
         "pingTimes": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2,
-          "options": {
-            "packed": true
-          }
+          "id": 2
         }
       }
     },
     "CSOCitadelParty": {
-      "edition": "proto2",
       "fields": {
         "partyId": {
           "type": "uint64",
@@ -3608,10 +3151,7 @@
             "ownedHeroes": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 12,
-              "options": {
-                "packed": true
-              }
+              "id": 12
             }
           }
         },
@@ -3672,7 +3212,6 @@
       }
     },
     "CMsgMatchPlayerPathsData": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "uint32",
@@ -3722,50 +3261,32 @@
             "xPos": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 6,
-              "options": {
-                "packed": true
-              }
+              "id": 6
             },
             "yPos": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 7,
-              "options": {
-                "packed": true
-              }
+              "id": 7
             },
             "alive": {
               "rule": "repeated",
               "type": "bool",
-              "id": 8,
-              "options": {
-                "packed": true
-              }
+              "id": 8
             },
             "health": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 9,
-              "options": {
-                "packed": true
-              }
+              "id": 9
             },
             "combatType": {
               "rule": "repeated",
               "type": ".CMsgMatchPlayerPathsData.ECombatType",
-              "id": 10,
-              "options": {
-                "packed": true
-              }
+              "id": 10
             },
             "moveType": {
               "rule": "repeated",
               "type": ".CMsgMatchPlayerPathsData.EMoveType",
-              "id": 11,
-              "options": {
-                "packed": true
-              }
+              "id": 11
             }
           }
         },
@@ -3793,7 +3314,6 @@
       }
     },
     "CMsgMatchPlayerDamageMatrix": {
-      "edition": "proto2",
       "fields": {
         "damageDealers": {
           "rule": "repeated",
@@ -3803,10 +3323,7 @@
         "sampleTimeS": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2,
-          "options": {
-            "packed": true
-          }
+          "id": 2
         },
         "sourceDetails": {
           "type": ".CMsgMatchPlayerDamageMatrix.SourceDetails",
@@ -3823,10 +3340,7 @@
             "damage": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 2,
-              "options": {
-                "packed": true
-              }
+              "id": 2
             }
           }
         },
@@ -3861,10 +3375,7 @@
             "statType": {
               "rule": "repeated",
               "type": ".CMsgMatchPlayerDamageMatrix.EStatType",
-              "id": 1,
-              "options": {
-                "packed": true
-              }
+              "id": 1
             },
             "sourceName": {
               "rule": "repeated",
@@ -3886,7 +3397,6 @@
       }
     },
     "CMsgMatchMetaDataContents": {
-      "edition": "proto2",
       "fields": {
         "matchInfo": {
           "type": ".CMsgMatchMetaDataContents.MatchInfo",
@@ -4328,10 +3838,7 @@
             "statsTypeStat": {
               "rule": "repeated",
               "type": "float",
-              "id": 21,
-              "options": {
-                "packed": true
-              }
+              "id": 21
             },
             "bookRewards": {
               "rule": "repeated",
@@ -4586,7 +4093,6 @@
       }
     },
     "CMsgMatchMetaData": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "uint32",
@@ -4603,7 +4109,6 @@
       }
     },
     "CMsgMapLine": {
-      "edition": "proto2",
       "fields": {
         "x": {
           "type": "int32",
@@ -4620,7 +4125,6 @@
       }
     },
     "CMsgAccountHeroStats": {
-      "edition": "proto2",
       "fields": {
         "heroId": {
           "type": "uint32",
@@ -4629,32 +4133,46 @@
         "statId": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         },
         "totalValue": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         },
         "medalsBronze": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         },
         "medalsSilver": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "options": {
+            "packed": false
+          }
         },
         "medalsGold": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CMsgAccountBookStats": {
-      "edition": "proto2",
       "fields": {
         "bookId": {
           "type": "uint32",
@@ -4671,7 +4189,6 @@
       }
     },
     "CMsgAccountStats": {
-      "edition": "proto2",
       "fields": {
         "accountId": {
           "type": "uint32",
@@ -4685,7 +4202,6 @@
       }
     },
     "CMsgGCAccountData": {
-      "edition": "proto2",
       "fields": {
         "accountId": {
           "type": "uint32",
@@ -4698,7 +4214,6 @@
       }
     },
     "keyField": {
-      "edition": "proto2",
       "type": "bool",
       "id": 60000,
       "extend": ".google.protobuf.FieldOptions",
@@ -4707,7 +4222,6 @@
       }
     },
     "msgpoolSoftLimit": {
-      "edition": "proto2",
       "type": "int32",
       "id": 60000,
       "extend": ".google.protobuf.MessageOptions",
@@ -4716,7 +4230,6 @@
       }
     },
     "msgpoolHardLimit": {
-      "edition": "proto2",
       "type": "int32",
       "id": 60001,
       "extend": ".google.protobuf.MessageOptions",
@@ -4725,7 +4238,6 @@
       }
     },
     "EGCPlatform": {
-      "edition": "proto2",
       "values": {
         "k_eGCPlatform_None": 0,
         "k_eGCPlatform_PC": 1,
@@ -4736,7 +4248,6 @@
       }
     },
     "GCProtoBufMsgSrc": {
-      "edition": "proto2",
       "values": {
         "GCProtoBufMsgSrc_Unspecified": 0,
         "GCProtoBufMsgSrc_FromSystem": 1,
@@ -4747,7 +4258,6 @@
       }
     },
     "CMsgProtoBufHeader": {
-      "edition": "proto2",
       "options": {
         "(msgpool_soft_limit)": 256,
         "(msgpool_hard_limit)": 1024
@@ -4811,7 +4321,6 @@
       }
     },
     "CGCSystemMsg_GetAccountDetails": {
-      "edition": "proto2",
       "options": {
         "(msgpool_soft_limit)": 128,
         "(msgpool_hard_limit)": 512
@@ -4828,7 +4337,6 @@
       }
     },
     "CGCSystemMsg_GetAccountDetails_Response": {
-      "edition": "proto2",
       "options": {
         "(msgpool_soft_limit)": 128,
         "(msgpool_hard_limit)": 512
@@ -4988,7 +4496,6 @@
       }
     },
     "CIPLocationInfo": {
-      "edition": "proto2",
       "fields": {
         "ip": {
           "type": "uint32",
@@ -5017,7 +4524,6 @@
       }
     },
     "CGCMsgGetIPLocationResponse": {
-      "edition": "proto2",
       "fields": {
         "infos": {
           "rule": "repeated",
@@ -5027,14 +4533,12 @@
       }
     },
     "ESourceEngine": {
-      "edition": "proto2",
       "values": {
         "k_ESE_Source1": 0,
         "k_ESE_Source2": 1
       }
     },
     "PartnerAccountType": {
-      "edition": "proto2",
       "values": {
         "PARTNER_NONE": 0,
         "PARTNER_PERFECT_WORLD": 1,
@@ -5042,7 +4546,6 @@
       }
     },
     "GCConnectionStatus": {
-      "edition": "proto2",
       "values": {
         "GCConnectionStatus_HAVE_SESSION": 0,
         "GCConnectionStatus_GC_GOING_DOWN": 1,
@@ -5054,7 +4557,6 @@
       }
     },
     "CExtraMsgBlock": {
-      "edition": "proto2",
       "fields": {
         "msgType": {
           "type": "uint32",
@@ -5078,7 +4580,6 @@
       }
     },
     "CMsgSteamLearnServerInfo": {
-      "edition": "proto2",
       "fields": {
         "accessTokens": {
           "type": ".CMsgSteamLearnAccessTokens",
@@ -5118,7 +4619,6 @@
       }
     },
     "CMsgGCAssertJobData": {
-      "edition": "proto2",
       "fields": {
         "messageType": {
           "type": "string",
@@ -5131,7 +4631,6 @@
       }
     },
     "CMsgGCConCommand": {
-      "edition": "proto2",
       "fields": {
         "command": {
           "type": "string",
@@ -5140,7 +4639,6 @@
       }
     },
     "CMsgSDOAssert": {
-      "edition": "proto2",
       "fields": {
         "sdoType": {
           "type": "int32",
@@ -5158,7 +4656,10 @@
             "key": {
               "rule": "repeated",
               "type": "uint64",
-              "id": 1
+              "id": 1,
+              "options": {
+                "packed": false
+              }
             },
             "requestingJob": {
               "type": "string",
@@ -5169,7 +4670,6 @@
       }
     },
     "CMsgSOIDOwner": {
-      "edition": "proto2",
       "fields": {
         "type": {
           "type": "uint32",
@@ -5182,7 +4682,6 @@
       }
     },
     "CMsgSOSingleObject": {
-      "edition": "proto2",
       "fields": {
         "typeId": {
           "type": "int32",
@@ -5207,7 +4706,6 @@
       }
     },
     "CMsgSOMultipleObjects": {
-      "edition": "proto2",
       "fields": {
         "objectsModified": {
           "rule": "repeated",
@@ -5257,7 +4755,6 @@
       }
     },
     "CMsgSOCacheSubscribed": {
-      "edition": "proto2",
       "fields": {
         "objects": {
           "rule": "repeated",
@@ -5279,7 +4776,10 @@
         "serviceList": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "options": {
+            "packed": false
+          }
         },
         "syncVersion": {
           "type": "fixed64",
@@ -5303,7 +4803,6 @@
       }
     },
     "CMsgSOCacheSubscribedUpToDate": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "fixed64",
@@ -5320,7 +4819,10 @@
         "serviceList": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         },
         "syncVersion": {
           "type": "fixed64",
@@ -5329,7 +4831,6 @@
       }
     },
     "CMsgSOCacheUnsubscribed": {
-      "edition": "proto2",
       "fields": {
         "ownerSoid": {
           "type": ".CMsgSOIDOwner",
@@ -5338,7 +4839,6 @@
       }
     },
     "CMsgSOCacheSubscriptionCheck": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "fixed64",
@@ -5355,7 +4855,10 @@
         "serviceList": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "options": {
+            "packed": false
+          }
         },
         "syncVersion": {
           "type": "fixed64",
@@ -5364,7 +4867,6 @@
       }
     },
     "CMsgSOCacheSubscriptionRefresh": {
-      "edition": "proto2",
       "fields": {
         "ownerSoid": {
           "type": ".CMsgSOIDOwner",
@@ -5373,7 +4875,6 @@
       }
     },
     "CMsgSOCacheVersion": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "fixed64",
@@ -5382,7 +4883,6 @@
       }
     },
     "CMsgGCMultiplexMessage": {
-      "edition": "proto2",
       "fields": {
         "msgtype": {
           "type": "uint32",
@@ -5395,12 +4895,14 @@
         "steamids": {
           "rule": "repeated",
           "type": "fixed64",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CMsgGCToGCSubGCStarting": {
-      "edition": "proto2",
       "fields": {
         "dirIndex": {
           "type": "int32",
@@ -5412,7 +4914,6 @@
       }
     },
     "CGCToGCMsgMasterAck": {
-      "edition": "proto2",
       "fields": {
         "dirIndex": {
           "type": "int32",
@@ -5448,14 +4949,16 @@
             "typeInstances": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "options": {
+                "packed": false
+              }
             }
           }
         }
       }
     },
     "CGCToGCMsgMasterAck_Response": {
-      "edition": "proto2",
       "fields": {
         "eresult": {
           "type": "int32",
@@ -5467,7 +4970,6 @@
       }
     },
     "CMsgGCToGCUniverseStartup": {
-      "edition": "proto2",
       "fields": {
         "isInitialStartup": {
           "type": "bool",
@@ -5476,7 +4978,6 @@
       }
     },
     "CMsgGCToGCUniverseStartupResponse": {
-      "edition": "proto2",
       "fields": {
         "eresult": {
           "type": "int32",
@@ -5485,7 +4986,6 @@
       }
     },
     "CGCToGCMsgMasterStartupComplete": {
-      "edition": "proto2",
       "fields": {
         "gcInfo": {
           "rule": "repeated",
@@ -5512,7 +5012,6 @@
       }
     },
     "CGCToGCMsgRouted": {
-      "edition": "proto2",
       "fields": {
         "msgType": {
           "type": "uint32",
@@ -5529,7 +5028,6 @@
       }
     },
     "CGCToGCMsgRoutedReply": {
-      "edition": "proto2",
       "fields": {
         "msgType": {
           "type": "uint32",
@@ -5542,7 +5040,6 @@
       }
     },
     "CMsgGCUpdateSubGCSessionInfo": {
-      "edition": "proto2",
       "fields": {
         "updates": {
           "rule": "repeated",
@@ -5570,7 +5067,6 @@
       }
     },
     "CMsgGCRequestSubGCSessionInfo": {
-      "edition": "proto2",
       "fields": {
         "steamid": {
           "type": "fixed64",
@@ -5579,7 +5075,6 @@
       }
     },
     "CMsgGCRequestSubGCSessionInfoResponse": {
-      "edition": "proto2",
       "fields": {
         "ip": {
           "type": "fixed32",
@@ -5600,7 +5095,6 @@
       }
     },
     "CMsgSOCacheHaveVersion": {
-      "edition": "proto2",
       "fields": {
         "soid": {
           "type": ".CMsgSOIDOwner",
@@ -5621,7 +5115,6 @@
       }
     },
     "CMsgClientHello": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "uint32",
@@ -5725,7 +5218,6 @@
       }
     },
     "CMsgClientWelcome": {
-      "edition": "proto2",
       "fields": {
         "version": {
           "type": "uint32",
@@ -5814,7 +5306,6 @@
       }
     },
     "CMsgConnectionStatus": {
-      "edition": "proto2",
       "fields": {
         "status": {
           "type": ".GCConnectionStatus",
@@ -5846,7 +5337,6 @@
       }
     },
     "CMsgGCToGCSOCacheSubscribe": {
-      "edition": "proto2",
       "fields": {
         "subscriber": {
           "type": "fixed64",
@@ -5886,7 +5376,6 @@
       }
     },
     "CMsgGCToGCSOCacheUnsubscribe": {
-      "edition": "proto2",
       "fields": {
         "subscriber": {
           "type": "fixed64",
@@ -5903,11 +5392,9 @@
       }
     },
     "CMsgGCClientPing": {
-      "edition": "proto2",
       "fields": {}
     },
     "CMsgGCToGCForwardAccountDetails": {
-      "edition": "proto2",
       "fields": {
         "steamid": {
           "type": "fixed64",
@@ -5924,7 +5411,6 @@
       }
     },
     "CMsgGCToGCLoadSessionSOCache": {
-      "edition": "proto2",
       "fields": {
         "accountId": {
           "type": "uint32",
@@ -5937,11 +5423,9 @@
       }
     },
     "CMsgGCToGCLoadSessionSOCacheResponse": {
-      "edition": "proto2",
       "fields": {}
     },
     "CMsgGCToGCUpdateSessionStats": {
-      "edition": "proto2",
       "fields": {
         "userSessions": {
           "type": "uint32",
@@ -5958,11 +5442,9 @@
       }
     },
     "CMsgGCToClientRequestDropped": {
-      "edition": "proto2",
       "fields": {}
     },
     "CWorkshop_PopulateItemDescriptions_Request": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -6003,7 +5485,6 @@
       }
     },
     "CWorkshop_GetContributors_Request": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -6016,17 +5497,18 @@
       }
     },
     "CWorkshop_GetContributors_Response": {
-      "edition": "proto2",
       "fields": {
         "contributors": {
           "rule": "repeated",
           "type": "fixed64",
-          "id": 1
+          "id": 1,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CWorkshop_SetItemPaymentRules_Request": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -6114,7 +5596,6 @@
       }
     },
     "CWorkshop_SetItemPaymentRules_Response": {
-      "edition": "proto2",
       "fields": {
         "validationErrors": {
           "rule": "repeated",
@@ -6124,7 +5605,6 @@
       }
     },
     "CCommunity_ClanAnnouncementInfo": {
-      "edition": "proto2",
       "fields": {
         "gid": {
           "type": "uint64",
@@ -6178,7 +5658,6 @@
       }
     },
     "CCommunity_GetClanAnnouncements_Request": {
-      "edition": "proto2",
       "fields": {
         "steamid": {
           "type": "uint64",
@@ -6212,7 +5691,10 @@
         "languagePreference": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "options": {
+            "packed": false
+          }
         },
         "hiddenOnly": {
           "type": "bool",
@@ -6237,7 +5719,6 @@
       }
     },
     "CCommunity_GetClanAnnouncements_Response": {
-      "edition": "proto2",
       "fields": {
         "maxchars": {
           "type": "uint32",
@@ -6255,7 +5736,6 @@
       }
     },
     "CBroadcast_PostGameDataFrame_Request": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -6276,7 +5756,6 @@
       }
     },
     "CMsgSerializedSOCache": {
-      "edition": "proto2",
       "fields": {
         "fileVersion": {
           "type": "uint32",
@@ -6349,7 +5828,6 @@
       }
     },
     "CMsgGCToClientPollConvarRequest": {
-      "edition": "proto2",
       "fields": {
         "convarName": {
           "type": "string",
@@ -6362,7 +5840,6 @@
       }
     },
     "CMsgGCToClientPollConvarResponse": {
-      "edition": "proto2",
       "fields": {
         "pollId": {
           "type": "uint32",
@@ -6375,7 +5852,6 @@
       }
     },
     "CGCMsgCompressedMsgToClient": {
-      "edition": "proto2",
       "fields": {
         "msgId": {
           "type": "uint32",
@@ -6388,7 +5864,6 @@
       }
     },
     "CMsgGCToGCMasterBroadcastMessage": {
-      "edition": "proto2",
       "fields": {
         "usersPerSecond": {
           "type": "uint32",
@@ -6413,7 +5888,6 @@
       }
     },
     "CMsgGCToGCMasterSubscribeToCache": {
-      "edition": "proto2",
       "fields": {
         "soidType": {
           "type": "uint32",
@@ -6426,21 +5900,25 @@
         "accountIds": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         },
         "steamIds": {
           "rule": "repeated",
           "type": "fixed64",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CMsgGCToGCMasterSubscribeToCacheResponse": {
-      "edition": "proto2",
       "fields": {}
     },
     "CMsgGCToGCMasterSubscribeToCacheAsync": {
-      "edition": "proto2",
       "fields": {
         "subscribeMsg": {
           "type": ".CMsgGCToGCMasterSubscribeToCache",
@@ -6449,7 +5927,6 @@
       }
     },
     "CMsgGCToGCMasterUnsubscribeFromCache": {
-      "edition": "proto2",
       "fields": {
         "soidType": {
           "type": "uint32",
@@ -6462,17 +5939,22 @@
         "accountIds": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         },
         "steamIds": {
           "rule": "repeated",
           "type": "fixed64",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CMsgGCToGCMasterDestroyCache": {
-      "edition": "proto2",
       "fields": {
         "soidType": {
           "type": "uint32",
@@ -6485,7 +5967,6 @@
       }
     },
     "valveMapField": {
-      "edition": "proto2",
       "type": "bool",
       "id": 61000,
       "extend": ".google.protobuf.FieldOptions",
@@ -6494,7 +5975,6 @@
       }
     },
     "valveMapKey": {
-      "edition": "proto2",
       "type": "bool",
       "id": 61001,
       "extend": ".google.protobuf.FieldOptions",
@@ -6503,7 +5983,6 @@
       }
     },
     "diffEncodeField": {
-      "edition": "proto2",
       "type": "int32",
       "id": 61002,
       "extend": ".google.protobuf.FieldOptions",
@@ -6512,7 +5991,6 @@
       }
     },
     "deltaIgnore": {
-      "edition": "proto2",
       "type": "bool",
       "id": 61003,
       "extend": ".google.protobuf.FieldOptions",
@@ -6521,7 +5999,6 @@
       }
     },
     "steammlMaxEntries": {
-      "edition": "proto2",
       "type": "uint32",
       "id": 61004,
       "extend": ".google.protobuf.FieldOptions",
@@ -6530,7 +6007,6 @@
       }
     },
     "steammlIsTimestamp": {
-      "edition": "proto2",
       "type": "bool",
       "id": 61005,
       "extend": ".google.protobuf.FieldOptions",
@@ -6539,7 +6015,6 @@
       }
     },
     "steamlearnCount": {
-      "edition": "proto2",
       "type": "uint32",
       "id": 61006,
       "extend": ".google.protobuf.FieldOptions",
@@ -6548,7 +6023,6 @@
       }
     },
     "debugprintVisibility": {
-      "edition": "proto2",
       "type": ".EProtoDebugVisiblity",
       "id": 61007,
       "extend": ".google.protobuf.FieldOptions",
@@ -6557,25 +6031,21 @@
       }
     },
     "schemaFriendlyName": {
-      "edition": "proto2",
       "type": "string",
       "id": 1000,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "schemaDescription": {
-      "edition": "proto2",
       "type": "string",
       "id": 1001,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "schemaSuppressEnumerator": {
-      "edition": "proto2",
       "type": "bool",
       "id": 1002,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "EProtoDebugVisiblity": {
-      "edition": "proto2",
       "values": {
         "k_EProtoDebugVisibility_Always": 0,
         "k_EProtoDebugVisibility_Server": 70,
@@ -6585,7 +6055,6 @@
       }
     },
     "ESteamLearnDataType": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_DATATYPE_INVALID": 0,
         "STEAMLEARN_DATATYPE_INT32": 1,
@@ -6596,7 +6065,6 @@
       }
     },
     "ESteammLearnRegisterDataSourceResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_REGISTER_DATA_SOURCE_RESULT_ERROR": 0,
         "STEAMLEARN_REGISTER_DATA_SOURCE_RESULT_SUCCESS_CREATED": 1,
@@ -6612,7 +6080,6 @@
       }
     },
     "ESteamLearnCacheDataResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_CACHE_DATA_ERROR": 0,
         "STEAMLEARN_CACHE_DATA_SUCCESS": 1,
@@ -6625,7 +6092,6 @@
       }
     },
     "ESteamLearnSnapshotProjectResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_SNAPSHOT_PROJECT_ERROR": 0,
         "STEAMLEARN_SNAPSHOT_PROJECT_SUCCESS_STORED": 1,
@@ -6643,14 +6109,12 @@
       }
     },
     "ESteamLearnGetAccessTokensResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_GET_ACCESS_TOKENS_ERROR": 0,
         "STEAMLEARN_GET_ACCESS_TOKENS_SUCCESS": 1
       }
     },
     "ESteamLearnInferenceResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_INFERENCE_ERROR": 0,
         "STEAMLEARN_INFERENCE_SUCCESS": 1,
@@ -6665,7 +6129,6 @@
       }
     },
     "ESteamLearnInferenceMetadataResult": {
-      "edition": "proto2",
       "values": {
         "STEAMLEARN_INFERENCE_METADATA_ERROR": 0,
         "STEAMLEARN_INFERENCE_METADATA_SUCCESS": 1,
@@ -6678,7 +6141,6 @@
       }
     },
     "CMsgSteamLearnDataSourceDescObject": {
-      "edition": "proto2",
       "fields": {
         "elements": {
           "rule": "repeated",
@@ -6688,7 +6150,6 @@
       }
     },
     "CMsgSteamLearnDataSourceDescElement": {
-      "edition": "proto2",
       "fields": {
         "name": {
           "type": "string",
@@ -6712,7 +6173,6 @@
       }
     },
     "CMsgSteamLearnDataSource": {
-      "edition": "proto2",
       "fields": {
         "id": {
           "type": "uint32",
@@ -6745,7 +6205,6 @@
       }
     },
     "CMsgSteamLearnDataObject": {
-      "edition": "proto2",
       "fields": {
         "elements": {
           "rule": "repeated",
@@ -6755,7 +6214,6 @@
       }
     },
     "CMsgSteamLearnDataElement": {
-      "edition": "proto2",
       "fields": {
         "name": {
           "type": "string",
@@ -6764,17 +6222,26 @@
         "dataInt32s": {
           "rule": "repeated",
           "type": "int32",
-          "id": 20
+          "id": 20,
+          "options": {
+            "packed": false
+          }
         },
         "dataFloats": {
           "rule": "repeated",
           "type": "float",
-          "id": 21
+          "id": 21,
+          "options": {
+            "packed": false
+          }
         },
         "dataBools": {
           "rule": "repeated",
           "type": "bool",
-          "id": 22
+          "id": 22,
+          "options": {
+            "packed": false
+          }
         },
         "dataStrings": {
           "rule": "repeated",
@@ -6789,7 +6256,6 @@
       }
     },
     "CMsgSteamLearnData": {
-      "edition": "proto2",
       "fields": {
         "dataSourceId": {
           "type": "uint32",
@@ -6798,7 +6264,10 @@
         "keys": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         },
         "dataObject": {
           "type": ".CMsgSteamLearnDataObject",
@@ -6807,7 +6276,6 @@
       }
     },
     "CMsgSteamLearnDataList": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "rule": "repeated",
@@ -6817,7 +6285,6 @@
       }
     },
     "CMsgSteamLearn_RegisterDataSource_Request": {
-      "edition": "proto2",
       "fields": {
         "accessToken": {
           "type": "string",
@@ -6830,7 +6297,6 @@
       }
     },
     "CMsgSteamLearn_RegisterDataSource_Response": {
-      "edition": "proto2",
       "fields": {
         "result": {
           "type": ".ESteammLearnRegisterDataSourceResult",
@@ -6846,7 +6312,6 @@
       }
     },
     "CMsgSteamLearn_CacheData_Request": {
-      "edition": "proto2",
       "fields": {
         "accessToken": {
           "type": "string",
@@ -6859,7 +6324,6 @@
       }
     },
     "CMsgSteamLearn_CacheData_Response": {
-      "edition": "proto2",
       "fields": {
         "cacheDataResult": {
           "type": ".ESteamLearnCacheDataResult",
@@ -6871,7 +6335,6 @@
       }
     },
     "CMsgSteamLearn_SnapshotProject_Request": {
-      "edition": "proto2",
       "fields": {
         "accessToken": {
           "type": "string",
@@ -6888,7 +6351,10 @@
         "keys": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         },
         "data": {
           "rule": "repeated",
@@ -6902,7 +6368,6 @@
       }
     },
     "CMsgSteamLearn_SnapshotProject_Response": {
-      "edition": "proto2",
       "fields": {
         "snapshotResult": {
           "type": ".ESteamLearnSnapshotProjectResult",
@@ -6914,7 +6379,6 @@
       }
     },
     "CMsgSteamLearn_BatchOperation_Request": {
-      "edition": "proto2",
       "fields": {
         "cacheDataRequests": {
           "rule": "repeated",
@@ -6934,7 +6398,6 @@
       }
     },
     "CMsgSteamLearn_BatchOperation_Response": {
-      "edition": "proto2",
       "fields": {
         "cacheDataResponses": {
           "rule": "repeated",
@@ -6954,7 +6417,6 @@
       }
     },
     "CMsgSteamLearnAccessTokens": {
-      "edition": "proto2",
       "fields": {
         "registerDataSourceAccessToken": {
           "type": "string",
@@ -7016,7 +6478,6 @@
       }
     },
     "CMsgSteamLearn_GetAccessTokens_Request": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -7025,7 +6486,6 @@
       }
     },
     "CMsgSteamLearn_GetAccessTokens_Response": {
-      "edition": "proto2",
       "fields": {
         "result": {
           "type": ".ESteamLearnGetAccessTokensResult",
@@ -7041,7 +6501,6 @@
       }
     },
     "CMsgInferenceIterateBeamSearch": {
-      "edition": "proto2",
       "fields": {
         "beamLength": {
           "type": "uint32",
@@ -7081,7 +6540,6 @@
       }
     },
     "CMsgSteamLearn_Inference_Request": {
-      "edition": "proto2",
       "fields": {
         "accessToken": {
           "type": "string",
@@ -7106,12 +6564,18 @@
         "additionalData": {
           "rule": "repeated",
           "type": "float",
-          "id": 7
+          "id": 7,
+          "options": {
+            "packed": false
+          }
         },
         "keys": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 8
+          "id": 8,
+          "options": {
+            "packed": false
+          }
         },
         "namedInference": {
           "type": "string",
@@ -7124,7 +6588,6 @@
       }
     },
     "CMsgSteamLearn_InferenceMetadata_Request": {
-      "edition": "proto2",
       "fields": {
         "accessToken": {
           "type": "string",
@@ -7145,7 +6608,6 @@
       }
     },
     "CMsgSteamLearn_InferenceMetadataBackend_Request": {
-      "edition": "proto2",
       "fields": {
         "projectId": {
           "type": "uint32",
@@ -7158,7 +6620,6 @@
       }
     },
     "CMsgSteamLearn_InferenceMetadata_Response": {
-      "edition": "proto2",
       "fields": {
         "inferenceMetadataResult": {
           "type": ".ESteamLearnInferenceMetadataResult",
@@ -7338,7 +6799,10 @@
                 "values": {
                   "rule": "repeated",
                   "type": "uint32",
-                  "id": 1
+                  "id": 1,
+                  "options": {
+                    "packed": false
+                  }
                 },
                 "crc": {
                   "type": "uint32",
@@ -7436,7 +6900,10 @@
             "bucketCounts": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 4
+              "id": 4,
+              "options": {
+                "packed": false
+              }
             }
           }
         },
@@ -7487,7 +6954,6 @@
       }
     },
     "CMsgSteamLearn_InferenceBackend_Response": {
-      "edition": "proto2",
       "fields": {
         "outputs": {
           "rule": "repeated",
@@ -7501,7 +6967,10 @@
             "value": {
               "rule": "repeated",
               "type": "float",
-              "id": 1
+              "id": 1,
+              "options": {
+                "packed": false
+              }
             }
           }
         },
@@ -7526,12 +6995,18 @@
             "weight": {
               "rule": "repeated",
               "type": "float",
-              "id": 1
+              "id": 1,
+              "options": {
+                "packed": false
+              }
             },
             "value": {
               "rule": "repeated",
               "type": "float",
-              "id": 2
+              "id": 2,
+              "options": {
+                "packed": false
+              }
             },
             "valueSequence": {
               "rule": "repeated",
@@ -7545,12 +7020,18 @@
             "weight": {
               "rule": "repeated",
               "type": "float",
-              "id": 1
+              "id": 1,
+              "options": {
+                "packed": false
+              }
             },
             "value": {
               "rule": "repeated",
               "type": "float",
-              "id": 2
+              "id": 2,
+              "options": {
+                "packed": false
+              }
             },
             "valueSequence": {
               "rule": "repeated",
@@ -7592,7 +7073,6 @@
       }
     },
     "CMsgSteamLearn_Inference_Response": {
-      "edition": "proto2",
       "fields": {
         "inferenceResult": {
           "type": ".ESteamLearnInferenceResult",
@@ -7608,12 +7088,14 @@
         "keys": {
           "rule": "repeated",
           "type": "uint64",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "SteamLearn": {
-      "edition": "proto2",
       "options": {
         "(service_description)": "Service for submitting data, training, and inferencing with SteamLearn."
       },
@@ -7705,19 +7187,16 @@
       }
     },
     "description": {
-      "edition": "proto2",
       "type": "string",
       "id": 50000,
       "extend": ".google.protobuf.FieldOptions"
     },
     "serviceDescription": {
-      "edition": "proto2",
       "type": "string",
       "id": 50000,
       "extend": ".google.protobuf.ServiceOptions"
     },
     "serviceExecutionSite": {
-      "edition": "proto2",
       "type": ".EProtoExecutionSite",
       "id": 50008,
       "extend": ".google.protobuf.ServiceOptions",
@@ -7726,32 +7205,27 @@
       }
     },
     "methodDescription": {
-      "edition": "proto2",
       "type": "string",
       "id": 50000,
       "extend": ".google.protobuf.MethodOptions"
     },
     "enumDescription": {
-      "edition": "proto2",
       "type": "string",
       "id": 50000,
       "extend": ".google.protobuf.EnumOptions"
     },
     "enumValueDescription": {
-      "edition": "proto2",
       "type": "string",
       "id": 50000,
       "extend": ".google.protobuf.EnumValueOptions"
     },
     "EProtoExecutionSite": {
-      "edition": "proto2",
       "values": {
         "k_EProtoExecutionSiteUnknown": 0,
         "k_EProtoExecutionSiteSteamClient": 3
       }
     },
     "CitadelUserMessageIds": {
-      "edition": "proto2",
       "values": {
         "k_EUserMsg_Damage": 300,
         "k_EUserMsg_MapPing": 303,
@@ -7810,30 +7284,11 @@
       }
     },
     "CitadelEntityMessageIds": {
-      "edition": "proto2",
       "values": {
         "k_EEntityMsg_BreakablePropSpawnDebris": 500
       }
     },
     "ChatMsgPingMarkerInfo": {
-      "edition": "proto2",
-      "valuesOptions": {
-        "k_EPingMarkerInfo_ShowMarkerAndSound": {
-          "(schema_friendly_name)": "Show Ping Indicator at Ping Location, Play Ping Sound, and Play VO"
-        },
-        "k_EPingMarkerInfo_ShowMarkerOnSender": {
-          "(schema_friendly_name)": "Show Ping Indicator on Pinging Player, Play Ping Sound, and Play VO"
-        },
-        "k_EPingMarkerInfo_HideMarkerAndSound": {
-          "(schema_friendly_name)": "No Marker or Sound (just VO)"
-        },
-        "k_EPingMarkerInfo_OnlyShowMarker": {
-          "(schema_friendly_name)": "Only Show Ping Indicator at Ping Location (no ping sound)"
-        },
-        "k_EPingMarkerInfo_OnlyPlaySound": {
-          "(schema_friendly_name)": "Only Play Ping Sound (and VO)"
-        }
-      },
       "values": {
         "k_EPingMarkerInfo_ShowMarkerAndSound": 0,
         "k_EPingMarkerInfo_ShowMarkerOnSender": 1,
@@ -7843,7 +7298,6 @@
       }
     },
     "CameraOperation": {
-      "edition": "proto2",
       "values": {
         "k_ECameraOp_Maintain": 2,
         "k_ECameraOp_Approach": 3,
@@ -7853,7 +7307,6 @@
       }
     },
     "CameraParam": {
-      "edition": "proto2",
       "values": {
         "k_EParam_ClearAllOps": 0,
         "k_EParam_ClearAllOpsForContext": 1,
@@ -7865,14 +7318,12 @@
       }
     },
     "CameraParamMode": {
-      "edition": "proto2",
       "values": {
         "k_EParamMode_AllowInOneContext": 0,
         "k_EParamMode_AllowInMultipleContexts": 1
       }
     },
     "CameraAction": {
-      "edition": "proto2",
       "values": {
         "k_EAction_AddOp": 0,
         "k_EAction_ClearAllOps": 1,
@@ -7880,7 +7331,6 @@
       }
     },
     "ECitadelChatMessage": {
-      "edition": "proto2",
       "values": {
         "CITADEL_CHAT_MESSAGE_UNPAUSE_COUNTDOWN": 1,
         "CITADEL_CHAT_MESSAGE_UNPAUSED": 2,
@@ -7898,7 +7348,6 @@
       }
     },
     "PostProcessingGameStates": {
-      "edition": "proto2",
       "values": {
         "PostProcState_Killed": 0,
         "PostProcState_Black": 1,
@@ -7907,7 +7356,6 @@
       }
     },
     "CUserMessageEmpty": {
-      "edition": "proto2",
       "fields": {
         "empty": {
           "type": "uint32",
@@ -7916,7 +7364,6 @@
       }
     },
     "CCitadelUserMessage_Damage": {
-      "edition": "proto2",
       "fields": {
         "damage": {
           "type": "int32",
@@ -8052,7 +7499,6 @@
       }
     },
     "PingCommonData": {
-      "edition": "proto2",
       "fields": {
         "pingMessageId": {
           "type": "uint32",
@@ -8091,7 +7537,6 @@
       }
     },
     "CCitadelUserMsg_MapPing": {
-      "edition": "proto2",
       "fields": {
         "pingData": {
           "rule": "required",
@@ -8132,7 +7577,6 @@
       }
     },
     "CCitadelUserMsg_PingWheel": {
-      "edition": "proto2",
       "fields": {
         "pingData": {
           "rule": "required",
@@ -8146,7 +7590,6 @@
       }
     },
     "CCitadelUserMsg_AbilityPing": {
-      "edition": "proto2",
       "fields": {
         "pingData": {
           "type": ".PingCommonData",
@@ -8170,7 +7613,6 @@
       }
     },
     "CCitadelUserMsg_QuickResponse": {
-      "edition": "proto2",
       "fields": {
         "pingData": {
           "rule": "required",
@@ -8198,7 +7640,6 @@
       }
     },
     "CCitadelUserMsg_MapLine": {
-      "edition": "proto2",
       "fields": {
         "senderPlayerSlot": {
           "type": "int32",
@@ -8214,7 +7655,6 @@
       }
     },
     "CCitadelUserMsg_TeamRewards": {
-      "edition": "proto2",
       "fields": {
         "xp": {
           "type": "uint32",
@@ -8231,7 +7671,6 @@
       }
     },
     "CCitadelUserMsg_TriggerDamageFlash": {
-      "edition": "proto2",
       "fields": {
         "entindexFlashVictim": {
           "type": "int32",
@@ -8270,7 +7709,6 @@
       }
     },
     "CCitadelUserMsg_AbilitiesChanged": {
-      "edition": "proto2",
       "fields": {
         "purchaserPlayerSlot": {
           "type": "int32",
@@ -8305,7 +7743,6 @@
       }
     },
     "CCitadelUserMsg_AbilityInterrupted": {
-      "edition": "proto2",
       "fields": {
         "entindexVictim": {
           "type": "int32",
@@ -8336,7 +7773,6 @@
       }
     },
     "CCitadelUserMsg_AbilityLateFailure": {
-      "edition": "proto2",
       "fields": {
         "entindexCaster": {
           "type": "int32",
@@ -8359,7 +7795,6 @@
       }
     },
     "CCitadelUserMsg_RecentDamageSummary": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "type": "int32",
@@ -8482,7 +7917,6 @@
       }
     },
     "CCitadelUserMsg_SpectatorTeamChanged": {
-      "edition": "proto2",
       "fields": {
         "teamnumber": {
           "type": "int32",
@@ -8491,7 +7925,6 @@
       }
     },
     "CCitadelUserMsg_ChatWheel": {
-      "edition": "proto2",
       "fields": {
         "chatMessageId": {
           "type": "uint32",
@@ -8533,7 +7966,6 @@
       }
     },
     "CCitadelUserMsg_ChatMsg": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "type": "int32",
@@ -8560,7 +7992,6 @@
       }
     },
     "CCitadelUserMsg_GoldHistory": {
-      "edition": "proto2",
       "fields": {
         "entindexPlayer": {
           "type": "int32",
@@ -8608,7 +8039,6 @@
       }
     },
     "CCitadelUserMsg_CameraController": {
-      "edition": "proto2",
       "fields": {
         "action": {
           "rule": "required",
@@ -8833,7 +8263,6 @@
       }
     },
     "CCitadelUserMsg_PostMatchDetails": {
-      "edition": "proto2",
       "fields": {
         "matchDetails": {
           "type": "bytes",
@@ -8842,7 +8271,6 @@
       }
     },
     "CCitadelUserMsg_ChatEvent": {
-      "edition": "proto2",
       "fields": {
         "type": {
           "type": ".ECitadelChatMessage",
@@ -8854,17 +8282,22 @@
         "values": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         },
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_HeroKilled": {
-      "edition": "proto2",
       "fields": {
         "entindexVictim": {
           "type": "int32",
@@ -8890,7 +8323,10 @@
         "entindexAssisters": {
           "rule": "repeated",
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "options": {
+            "packed": false
+          }
         },
         "entindexScorer": {
           "type": "int32",
@@ -8910,7 +8346,6 @@
       }
     },
     "CCitadelEntityMsg_BreakablePropSpawnDebris": {
-      "edition": "proto2",
       "fields": {
         "entityMsg": {
           "type": ".CEntityMsg",
@@ -8927,7 +8362,6 @@
       }
     },
     "CCitadelUserMsg_ReturnIdol": {
-      "edition": "proto2",
       "fields": {
         "locationIndex": {
           "type": "int32",
@@ -8944,7 +8378,6 @@
       }
     },
     "CCitadelUserMsg_SetClientCameraAngles": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "type": "int32",
@@ -8960,7 +8393,6 @@
       }
     },
     "CCitadelUserMessage_BulletHit": {
-      "edition": "proto2",
       "fields": {
         "shotid": {
           "type": "int32",
@@ -8991,7 +8423,6 @@
       }
     },
     "CCitadelUserMessage_ObjectiveMask": {
-      "edition": "proto2",
       "fields": {
         "objectiveMaskTeam0": {
           "type": "uint64",
@@ -9004,7 +8435,6 @@
       }
     },
     "CCitadelUserMessage_ModifierApplied": {
-      "edition": "proto2",
       "fields": {
         "entindexCaster": {
           "type": "int32",
@@ -9027,7 +8457,6 @@
       }
     },
     "CCitadelUserMessage_AuraModifierApplied": {
-      "edition": "proto2",
       "fields": {
         "entindexCaster": {
           "type": "int32",
@@ -9062,11 +8491,9 @@
       }
     },
     "CCitadelUserMsg_ObstructedShotFired": {
-      "edition": "proto2",
       "fields": {}
     },
     "CCitadelUserMsg_PostProcessingAnim": {
-      "edition": "proto2",
       "fields": {
         "entindexOwner": {
           "type": "int32",
@@ -9109,7 +8536,6 @@
       }
     },
     "CCitadelUserMsg_DeathReplayData": {
-      "edition": "proto2",
       "fields": {
         "killerScorer": {
           "type": "int32",
@@ -9132,11 +8558,9 @@
       }
     },
     "CCitadelUserMsg_ForceShopClosed": {
-      "edition": "proto2",
       "fields": {}
     },
     "CCitadelUserMsg_PlayerLifetimeStatInfo": {
-      "edition": "proto2",
       "fields": {
         "stats": {
           "rule": "repeated",
@@ -9192,7 +8616,6 @@
       }
     },
     "CCitadelUserMsg_StaminaDrained": {
-      "edition": "proto2",
       "fields": {
         "entindexVictim": {
           "type": "int32",
@@ -9208,7 +8631,6 @@
       }
     },
     "CCitadelUserMessage_AbilityNotify": {
-      "edition": "proto2",
       "fields": {
         "entindexVictim": {
           "type": "int32",
@@ -9235,7 +8657,6 @@
       }
     },
     "CCitadelUserMessage_CurrencyChanged": {
-      "edition": "proto2",
       "fields": {
         "userid": {
           "type": "int32",
@@ -9286,7 +8707,6 @@
       }
     },
     "CCitadelUserMessage_GameOver": {
-      "edition": "proto2",
       "fields": {
         "winningTeam": {
           "type": "int32",
@@ -9299,7 +8719,6 @@
       }
     },
     "CCitadelUserMsg_GetDamageStatsResponse": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "type": "uint32",
@@ -9324,25 +8743,18 @@
             "targetPlayerSlot": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 1,
-              "options": {
-                "packed": true
-              }
+              "id": 1
             },
             "value": {
               "rule": "repeated",
               "type": "uint32",
-              "id": 2,
-              "options": {
-                "packed": true
-              }
+              "id": 2
             }
           }
         }
       }
     },
     "CCitadelUserMsg_ParticipantStartSoundEvent": {
-      "edition": "proto2",
       "fields": {
         "event": {
           "rule": "required",
@@ -9352,12 +8764,14 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_ParticipantStopSoundEvent": {
-      "edition": "proto2",
       "fields": {
         "event": {
           "rule": "required",
@@ -9367,12 +8781,14 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_ParticipantStopSoundEventHash": {
-      "edition": "proto2",
       "fields": {
         "event": {
           "rule": "required",
@@ -9382,12 +8798,14 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_ParticipantSetSoundEventParams": {
-      "edition": "proto2",
       "fields": {
         "event": {
           "rule": "required",
@@ -9397,12 +8815,14 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_ParticipantSetLibraryStackFields": {
-      "edition": "proto2",
       "fields": {
         "event": {
           "rule": "required",
@@ -9412,12 +8832,14 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCitadelUserMsg_BossKilled": {
-      "edition": "proto2",
       "fields": {
         "objectiveTeam": {
           "type": "int32",
@@ -9460,7 +8882,6 @@
       }
     },
     "CCitadelUserMsg_BossDamaged": {
-      "edition": "proto2",
       "fields": {
         "objectiveTeam": {
           "rule": "required",
@@ -9483,11 +8904,9 @@
       }
     },
     "CCitadelUserMsg_MidBossSpawned": {
-      "edition": "proto2",
       "fields": {}
     },
     "CCitadelUserMsg_RejuvStatus": {
-      "edition": "proto2",
       "fields": {
         "killingTeam": {
           "type": "int32",
@@ -9514,7 +8933,6 @@
       }
     },
     "CCitadelUserMsg_KillStreak": {
-      "edition": "proto2",
       "fields": {
         "playerPawn": {
           "rule": "required",
@@ -9537,7 +8955,6 @@
       }
     },
     "CCitadelUserMsg_TeamMsg": {
-      "edition": "proto2",
       "fields": {
         "eventType": {
           "rule": "required",
@@ -9565,7 +8982,6 @@
       }
     },
     "CCitadelUserMsg_PlayerRespawned": {
-      "edition": "proto2",
       "fields": {
         "playerPawn": {
           "rule": "required",
@@ -9583,7 +8999,6 @@
       }
     },
     "CCitadelUserMsg_CallCheaterVote": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "rule": "required",
@@ -9596,7 +9011,6 @@
       }
     },
     "CCitadelUserMessage_MeleeHit": {
-      "edition": "proto2",
       "fields": {
         "hitEntindex": {
           "type": "int32",
@@ -9612,7 +9026,6 @@
       }
     },
     "CCitadelUserMsg_FlexSlotUnlocked": {
-      "edition": "proto2",
       "fields": {
         "teamNumber": {
           "type": "int32",
@@ -9625,7 +9038,6 @@
       }
     },
     "CCitadelUserMsg_SeasonalAchievementUnlocked": {
-      "edition": "proto2",
       "fields": {
         "accountId": {
           "type": "uint32",
@@ -9638,7 +9050,6 @@
       }
     },
     "CCitadelUserMsg_MusicQueue": {
-      "edition": "proto2",
       "fields": {
         "musicState": {
           "rule": "required",
@@ -9652,7 +9063,6 @@
       }
     },
     "CCitadelUserMsg_AG2ParamTrigger": {
-      "edition": "proto2",
       "fields": {
         "paramId": {
           "type": "string",
@@ -9665,7 +9075,6 @@
       }
     },
     "EBaseGameEvents": {
-      "edition": "proto2",
       "values": {
         "GE_VDebugGameSessionIDEvent": 200,
         "GE_PlaceDecalEvent": 201,
@@ -9683,7 +9092,6 @@
       }
     },
     "CMsgVDebugGameSessionIDEvent": {
-      "edition": "proto2",
       "fields": {
         "clientid": {
           "type": "int32",
@@ -9696,7 +9104,6 @@
       }
     },
     "CMsgPlaceDecalEvent": {
-      "edition": "proto2",
       "fields": {
         "position": {
           "type": ".CMsgVector",
@@ -9757,7 +9164,6 @@
       }
     },
     "CMsgClearWorldDecalsEvent": {
-      "edition": "proto2",
       "fields": {
         "flagstoclear": {
           "type": "uint32",
@@ -9766,7 +9172,6 @@
       }
     },
     "CMsgClearEntityDecalsEvent": {
-      "edition": "proto2",
       "fields": {
         "flagstoclear": {
           "type": "uint32",
@@ -9775,7 +9180,6 @@
       }
     },
     "CMsgClearDecalsForSkeletonInstanceEvent": {
-      "edition": "proto2",
       "fields": {
         "flagstoclear": {
           "type": "uint32",
@@ -9792,7 +9196,6 @@
       }
     },
     "CMsgSource1LegacyGameEventList": {
-      "edition": "proto2",
       "fields": {
         "descriptors": {
           "rule": "repeated",
@@ -9833,7 +9236,6 @@
       }
     },
     "CMsgSource1LegacyListenEvents": {
-      "edition": "proto2",
       "fields": {
         "playerslot": {
           "type": "int32",
@@ -9842,12 +9244,14 @@
         "eventarraybits": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CMsgSource1LegacyGameEvent": {
-      "edition": "proto2",
       "fields": {
         "eventName": {
           "type": "string",
@@ -9911,7 +9315,6 @@
       }
     },
     "CMsgSosStartSoundEvent": {
-      "edition": "proto2",
       "fields": {
         "soundeventGuid": {
           "type": "int32",
@@ -9943,7 +9346,6 @@
       }
     },
     "CMsgSosStopSoundEvent": {
-      "edition": "proto2",
       "fields": {
         "soundeventGuid": {
           "type": "int32",
@@ -9952,7 +9354,6 @@
       }
     },
     "CMsgSosStopSoundEventHash": {
-      "edition": "proto2",
       "fields": {
         "soundeventHash": {
           "type": "fixed32",
@@ -9968,7 +9369,6 @@
       }
     },
     "CMsgSosSetSoundEventParams": {
-      "edition": "proto2",
       "fields": {
         "soundeventGuid": {
           "type": "int32",
@@ -9981,7 +9381,6 @@
       }
     },
     "CMsgSosSetLibraryStackFields": {
-      "edition": "proto2",
       "fields": {
         "stackHash": {
           "type": "fixed32",
@@ -9994,7 +9393,6 @@
       }
     },
     "EDemoCommands": {
-      "edition": "proto2",
       "values": {
         "DEM_Error": -1,
         "DEM_Stop": 0,
@@ -10021,7 +9419,6 @@
       }
     },
     "CDemoFileHeader": {
-      "edition": "proto2",
       "fields": {
         "demoFileStamp": {
           "rule": "required",
@@ -10087,7 +9484,6 @@
       }
     },
     "CGameInfo": {
-      "edition": "proto2",
       "fields": {
         "dota": {
           "type": ".CGameInfo.CDotaGameInfo",
@@ -10196,14 +9592,16 @@
             "roundStartTicks": {
               "rule": "repeated",
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "options": {
+                "packed": false
+              }
             }
           }
         }
       }
     },
     "CDemoFileInfo": {
-      "edition": "proto2",
       "fields": {
         "playbackTime": {
           "type": "float",
@@ -10224,7 +9622,6 @@
       }
     },
     "CDemoPacket": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -10233,7 +9630,6 @@
       }
     },
     "CDemoFullPacket": {
-      "edition": "proto2",
       "fields": {
         "stringTable": {
           "type": ".CDemoStringTables",
@@ -10246,7 +9642,6 @@
       }
     },
     "CDemoSaveGame": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -10267,11 +9662,9 @@
       }
     },
     "CDemoSyncTick": {
-      "edition": "proto2",
       "fields": {}
     },
     "CDemoConsoleCmd": {
-      "edition": "proto2",
       "fields": {
         "cmdstring": {
           "type": "string",
@@ -10280,7 +9673,6 @@
       }
     },
     "CDemoSendTables": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -10289,7 +9681,6 @@
       }
     },
     "CDemoClassInfo": {
-      "edition": "proto2",
       "fields": {
         "classes": {
           "rule": "repeated",
@@ -10317,7 +9708,6 @@
       }
     },
     "CDemoCustomData": {
-      "edition": "proto2",
       "fields": {
         "callbackIndex": {
           "type": "int32",
@@ -10330,7 +9720,6 @@
       }
     },
     "CDemoCustomDataCallbacks": {
-      "edition": "proto2",
       "fields": {
         "saveId": {
           "rule": "repeated",
@@ -10340,7 +9729,6 @@
       }
     },
     "CDemoAnimationHeader": {
-      "edition": "proto2",
       "fields": {
         "entityId": {
           "type": "sint32",
@@ -10357,7 +9745,6 @@
       }
     },
     "CDemoAnimationData": {
-      "edition": "proto2",
       "fields": {
         "entityId": {
           "type": "sint32",
@@ -10382,7 +9769,6 @@
       }
     },
     "CDemoStringTables": {
-      "edition": "proto2",
       "fields": {
         "tables": {
           "rule": "repeated",
@@ -10428,11 +9814,9 @@
       }
     },
     "CDemoStop": {
-      "edition": "proto2",
       "fields": {}
     },
     "CDemoUserCmd": {
-      "edition": "proto2",
       "fields": {
         "cmdNumber": {
           "type": "int32",
@@ -10445,7 +9829,6 @@
       }
     },
     "CDemoSpawnGroups": {
-      "edition": "proto2",
       "fields": {
         "msgs": {
           "rule": "repeated",
@@ -10455,7 +9838,6 @@
       }
     },
     "CDemoRecovery": {
-      "edition": "proto2",
       "fields": {
         "initialSpawnGroup": {
           "type": ".CDemoRecovery.DemoInitialSpawnGroupEntry",
@@ -10482,7 +9864,6 @@
       }
     },
     "CLC_Messages": {
-      "edition": "proto2",
       "values": {
         "clc_ClientInfo": 20,
         "clc_Move": 21,
@@ -10502,7 +9883,6 @@
       }
     },
     "SVC_Messages": {
-      "edition": "proto2",
       "values": {
         "svc_ServerInfo": 40,
         "svc_FlattenedSerializer": 41,
@@ -10537,7 +9917,6 @@
       }
     },
     "VoiceDataFormat_t": {
-      "edition": "proto2",
       "values": {
         "VOICEDATA_FORMAT_STEAM": 0,
         "VOICEDATA_FORMAT_ENGINE": 1,
@@ -10545,7 +9924,6 @@
       }
     },
     "RequestPause_t": {
-      "edition": "proto2",
       "values": {
         "RP_PAUSE": 0,
         "RP_UNPAUSE": 1,
@@ -10553,20 +9931,17 @@
       }
     },
     "PrefetchType": {
-      "edition": "proto2",
       "values": {
         "PFT_SOUND": 0
       }
     },
     "ESplitScreenMessageType": {
-      "edition": "proto2",
       "values": {
         "MSG_SPLITSCREEN_ADDUSER": 0,
         "MSG_SPLITSCREEN_REMOVEUSER": 1
       }
     },
     "EQueryCvarValueStatus": {
-      "edition": "proto2",
       "values": {
         "eQueryCvarValueStatus_ValueIntact": 0,
         "eQueryCvarValueStatus_CvarNotFound": 1,
@@ -10575,7 +9950,6 @@
       }
     },
     "DIALOG_TYPE": {
-      "edition": "proto2",
       "values": {
         "DIALOG_MSG": 0,
         "DIALOG_MENU": 1,
@@ -10585,13 +9959,11 @@
       }
     },
     "SVC_Messages_LowFrequency": {
-      "edition": "proto2",
       "values": {
         "svc_dummy": 600
       }
     },
     "Bidirectional_Messages": {
-      "edition": "proto2",
       "values": {
         "bi_RebroadcastGameEvent": 16,
         "bi_RebroadcastSource": 17,
@@ -10600,14 +9972,12 @@
       }
     },
     "Bidirectional_Messages_LowFrequency": {
-      "edition": "proto2",
       "values": {
         "bi_RelayInfo": 700,
         "bi_RelayPacket": 701
       }
     },
     "ReplayEventType_t": {
-      "edition": "proto2",
       "values": {
         "REPLAY_EVENT_CANCEL": 0,
         "REPLAY_EVENT_DEATH": 1,
@@ -10617,7 +9987,6 @@
       }
     },
     "CCLCMsg_ClientInfo": {
-      "edition": "proto2",
       "fields": {
         "sendTableCrc": {
           "type": "fixed32",
@@ -10642,7 +10011,6 @@
       }
     },
     "CCLCMsg_Move": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -10655,7 +10023,6 @@
       }
     },
     "CMsgVoiceAudio": {
-      "edition": "proto2",
       "fields": {
         "format": {
           "type": ".VoiceDataFormat_t",
@@ -10691,10 +10058,7 @@
         "packetOffsets": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 8,
-          "options": {
-            "packed": true
-          }
+          "id": 8
         },
         "voiceLevel": {
           "type": "float",
@@ -10703,7 +10067,6 @@
       }
     },
     "CCLCMsg_VoiceData": {
-      "edition": "proto2",
       "fields": {
         "audio": {
           "type": ".CMsgVoiceAudio",
@@ -10720,7 +10083,6 @@
       }
     },
     "CCLCMsg_BaselineAck": {
-      "edition": "proto2",
       "fields": {
         "baselineTick": {
           "type": "int32",
@@ -10733,17 +10095,18 @@
       }
     },
     "CCLCMsg_ListenEvents": {
-      "edition": "proto2",
       "fields": {
         "eventMask": {
           "rule": "repeated",
           "type": "fixed32",
-          "id": 1
+          "id": 1,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CCLCMsg_RespondCvarValue": {
-      "edition": "proto2",
       "fields": {
         "cookie": {
           "type": "int32",
@@ -10764,7 +10127,6 @@
       }
     },
     "CCLCMsg_FileCRCCheck": {
-      "edition": "proto2",
       "fields": {
         "codePath": {
           "type": "int32",
@@ -10789,7 +10151,6 @@
       }
     },
     "CCLCMsg_LoadingProgress": {
-      "edition": "proto2",
       "fields": {
         "progress": {
           "type": "int32",
@@ -10798,7 +10159,6 @@
       }
     },
     "CCLCMsg_SplitPlayerConnect": {
-      "edition": "proto2",
       "fields": {
         "playername": {
           "type": "string",
@@ -10807,7 +10167,6 @@
       }
     },
     "CCLCMsg_SplitPlayerDisconnect": {
-      "edition": "proto2",
       "fields": {
         "slot": {
           "type": "int32",
@@ -10816,7 +10175,6 @@
       }
     },
     "CCLCMsg_ServerStatus": {
-      "edition": "proto2",
       "fields": {
         "simplified": {
           "type": "bool",
@@ -10825,7 +10183,6 @@
       }
     },
     "CCLCMsg_RequestPause": {
-      "edition": "proto2",
       "fields": {
         "pauseType": {
           "type": ".RequestPause_t",
@@ -10841,7 +10198,6 @@
       }
     },
     "CCLCMsg_CmdKeyValues": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -10850,7 +10206,6 @@
       }
     },
     "CCLCMsg_RconServerDetails": {
-      "edition": "proto2",
       "fields": {
         "token": {
           "type": "bytes",
@@ -10859,7 +10214,6 @@
       }
     },
     "CMsgSource2SystemSpecs": {
-      "edition": "proto2",
       "fields": {
         "cpuId": {
           "type": "string",
@@ -10912,7 +10266,6 @@
       }
     },
     "CMsgSource2VProfLiteReportItem": {
-      "edition": "proto2",
       "fields": {
         "name": {
           "type": "string",
@@ -10989,7 +10342,6 @@
       }
     },
     "CMsgSource2VProfLiteReport": {
-      "edition": "proto2",
       "fields": {
         "total": {
           "type": ".CMsgSource2VProfLiteReportItem",
@@ -11007,7 +10359,6 @@
       }
     },
     "CMsgSource2NetworkFlowQuality": {
-      "edition": "proto2",
       "fields": {
         "duration": {
           "type": "uint32",
@@ -11128,7 +10479,6 @@
       }
     },
     "CCLCMsg_Diagnostic": {
-      "edition": "proto2",
       "fields": {
         "systemSpecs": {
           "type": ".CMsgSource2SystemSpecs",
@@ -11141,7 +10491,6 @@
       }
     },
     "CSource2Metrics_MatchPerfSummary_Notification": {
-      "edition": "proto2",
       "fields": {
         "appid": {
           "type": "uint32",
@@ -11193,7 +10542,6 @@
       }
     },
     "CSVCMsg_ServerInfo": {
-      "edition": "proto2",
       "fields": {
         "protocol": {
           "type": "int32",
@@ -11265,7 +10613,6 @@
       }
     },
     "CSVCMsg_ClassInfo": {
-      "edition": "proto2",
       "fields": {
         "createOnClient": {
           "type": "bool",
@@ -11293,7 +10640,6 @@
       }
     },
     "CSVCMsg_SetPause": {
-      "edition": "proto2",
       "fields": {
         "paused": {
           "type": "bool",
@@ -11302,7 +10648,6 @@
       }
     },
     "CSVCMsg_VoiceInit": {
-      "edition": "proto2",
       "fields": {
         "quality": {
           "type": "int32",
@@ -11322,7 +10667,6 @@
       }
     },
     "CSVCMsg_Print": {
-      "edition": "proto2",
       "fields": {
         "text": {
           "type": "string",
@@ -11331,7 +10675,6 @@
       }
     },
     "CSVCMsg_Sounds": {
-      "edition": "proto2",
       "fields": {
         "reliableSound": {
           "type": "bool",
@@ -11430,7 +10773,6 @@
       }
     },
     "CSVCMsg_Prefetch": {
-      "edition": "proto2",
       "fields": {
         "soundIndex": {
           "type": "int32",
@@ -11446,7 +10788,6 @@
       }
     },
     "CSVCMsg_SetView": {
-      "edition": "proto2",
       "fields": {
         "entityIndex": {
           "type": "int32",
@@ -11465,7 +10806,6 @@
       }
     },
     "CSVCMsg_FixAngle": {
-      "edition": "proto2",
       "fields": {
         "relative": {
           "type": "bool",
@@ -11478,7 +10818,6 @@
       }
     },
     "CSVCMsg_CrosshairAngle": {
-      "edition": "proto2",
       "fields": {
         "angle": {
           "type": ".CMsgQAngle",
@@ -11487,7 +10826,6 @@
       }
     },
     "CSVCMsg_BSPDecal": {
-      "edition": "proto2",
       "fields": {
         "pos": {
           "type": ".CMsgVector",
@@ -11515,7 +10853,6 @@
       }
     },
     "CSVCMsg_SplitScreen": {
-      "edition": "proto2",
       "fields": {
         "type": {
           "type": ".ESplitScreenMessageType",
@@ -11538,7 +10875,6 @@
       }
     },
     "CSVCMsg_GetCvarValue": {
-      "edition": "proto2",
       "fields": {
         "cookie": {
           "type": "int32",
@@ -11551,7 +10887,6 @@
       }
     },
     "CSVCMsg_Menu": {
-      "edition": "proto2",
       "fields": {
         "dialogType": {
           "type": "int32",
@@ -11564,7 +10899,6 @@
       }
     },
     "CSVCMsg_UserMessage": {
-      "edition": "proto2",
       "fields": {
         "msgType": {
           "type": "int32",
@@ -11581,7 +10915,6 @@
       }
     },
     "CSVCMsg_SendTable": {
-      "edition": "proto2",
       "fields": {
         "isEnd": {
           "type": "bool",
@@ -11645,7 +10978,6 @@
       }
     },
     "CSVCMsg_GameEventList": {
-      "edition": "proto2",
       "fields": {
         "descriptors": {
           "rule": "repeated",
@@ -11686,7 +11018,6 @@
       }
     },
     "CSVCMsg_PacketEntities": {
-      "edition": "proto2",
       "fields": {
         "maxEntries": {
           "type": "int32",
@@ -11756,10 +11087,7 @@
         "cmdRecvStatus": {
           "rule": "repeated",
           "type": "sint32",
-          "id": 22,
-          "options": {
-            "packed": true
-          }
+          "id": 22
         },
         "nonTransmittedEntities": {
           "type": ".CSVCMsg_PacketEntities.non_transmitted_entities_t",
@@ -11806,7 +11134,6 @@
       }
     },
     "CSVCMsg_TempEntities": {
-      "edition": "proto2",
       "fields": {
         "reliable": {
           "type": "bool",
@@ -11823,7 +11150,6 @@
       }
     },
     "CSVCMsg_CreateStringTable": {
-      "edition": "proto2",
       "fields": {
         "name": {
           "type": "string",
@@ -11868,7 +11194,6 @@
       }
     },
     "CSVCMsg_UpdateStringTable": {
-      "edition": "proto2",
       "fields": {
         "tableId": {
           "type": "int32",
@@ -11885,7 +11210,6 @@
       }
     },
     "CSVCMsg_VoiceData": {
-      "edition": "proto2",
       "fields": {
         "audio": {
           "type": ".CMsgVoiceAudio",
@@ -11921,7 +11245,6 @@
       }
     },
     "CSVCMsg_PacketReliable": {
-      "edition": "proto2",
       "fields": {
         "tick": {
           "type": "int32",
@@ -11938,7 +11261,6 @@
       }
     },
     "CSVCMsg_FullFrameSplit": {
-      "edition": "proto2",
       "fields": {
         "tick": {
           "type": "int32",
@@ -11959,7 +11281,6 @@
       }
     },
     "CSVCMsg_HLTVStatus": {
-      "edition": "proto2",
       "fields": {
         "master": {
           "type": "string",
@@ -11980,7 +11301,6 @@
       }
     },
     "CSVCMsg_ServerSteamID": {
-      "edition": "proto2",
       "fields": {
         "steamId": {
           "type": "uint64",
@@ -11989,7 +11309,6 @@
       }
     },
     "CSVCMsg_CmdKeyValues": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -11998,7 +11317,6 @@
       }
     },
     "CSVCMsg_RconServerDetails": {
-      "edition": "proto2",
       "fields": {
         "token": {
           "type": "bytes",
@@ -12011,7 +11329,6 @@
       }
     },
     "CMsgIPCAddress": {
-      "edition": "proto2",
       "fields": {
         "computerGuid": {
           "type": "fixed64",
@@ -12024,7 +11341,6 @@
       }
     },
     "CMsgServerPeer": {
-      "edition": "proto2",
       "fields": {
         "playerSlot": {
           "type": "int32",
@@ -12056,7 +11372,6 @@
       }
     },
     "CSVCMsg_PeerList": {
-      "edition": "proto2",
       "fields": {
         "peer": {
           "rule": "repeated",
@@ -12066,7 +11381,6 @@
       }
     },
     "CSVCMsg_ClearAllStringTables": {
-      "edition": "proto2",
       "fields": {
         "mapname": {
           "type": "string",
@@ -12079,7 +11393,6 @@
       }
     },
     "ProtoFlattenedSerializerField_t": {
-      "edition": "proto2",
       "fields": {
         "varTypeSym": {
           "type": "int32",
@@ -12147,7 +11460,6 @@
       }
     },
     "ProtoFlattenedSerializer_t": {
-      "edition": "proto2",
       "fields": {
         "serializerNameSym": {
           "type": "int32",
@@ -12160,12 +11472,14 @@
         "fieldsIndex": {
           "rule": "repeated",
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
     "CSVCMsg_FlattenedSerializer": {
-      "edition": "proto2",
       "fields": {
         "serializers": {
           "rule": "repeated",
@@ -12185,7 +11499,6 @@
       }
     },
     "CSVCMsg_StopSound": {
-      "edition": "proto2",
       "fields": {
         "guid": {
           "type": "fixed32",
@@ -12194,7 +11507,6 @@
       }
     },
     "CBidirMsg_RebroadcastGameEvent": {
-      "edition": "proto2",
       "fields": {
         "posttoserver": {
           "type": "bool",
@@ -12215,7 +11527,6 @@
       }
     },
     "CBidirMsg_RebroadcastSource": {
-      "edition": "proto2",
       "fields": {
         "eventsource": {
           "type": "int32",
@@ -12224,7 +11535,6 @@
       }
     },
     "CBidirMsg_PredictionEvent": {
-      "edition": "proto2",
       "fields": {
         "eventId": {
           "rule": "required",
@@ -12255,7 +11565,6 @@
       }
     },
     "CMsgServerNetworkStats": {
-      "edition": "proto2",
       "fields": {
         "dedicated": {
           "type": "bool",
@@ -12412,7 +11721,6 @@
       }
     },
     "CSVCMsg_HltvReplay": {
-      "edition": "proto2",
       "fields": {
         "delay": {
           "type": "int32",
@@ -12452,7 +11760,6 @@
       }
     },
     "CCLCMsg_HltvReplay": {
-      "edition": "proto2",
       "fields": {
         "request": {
           "type": "int32",
@@ -12480,7 +11787,6 @@
       }
     },
     "CSVCMsg_Broadcast_Command": {
-      "edition": "proto2",
       "fields": {
         "cmd": {
           "type": "string",
@@ -12489,7 +11795,6 @@
       }
     },
     "CCLCMsg_HltvFixupOperatorTick": {
-      "edition": "proto2",
       "fields": {
         "tick": {
           "type": "int32",
@@ -12526,7 +11831,6 @@
       }
     },
     "CSVCMsg_HltvFixupOperatorStatus": {
-      "edition": "proto2",
       "fields": {
         "mode": {
           "type": "uint32",
@@ -12539,7 +11843,6 @@
       }
     },
     "CMsgServerUserCmd": {
-      "edition": "proto2",
       "fields": {
         "data": {
           "type": "bytes",
@@ -12567,7 +11870,6 @@
       }
     },
     "CSVCMsg_UserCommands": {
-      "edition": "proto2",
       "fields": {
         "commands": {
           "rule": "repeated",
@@ -12577,7 +11879,6 @@
       }
     },
     "ETEProtobufIds": {
-      "edition": "proto2",
       "values": {
         "TE_EffectDispatchId": 400,
         "TE_ArmorRicochetId": 401,
@@ -12608,7 +11909,6 @@
       }
     },
     "CMsgTEArmorRicochet": {
-      "edition": "proto2",
       "fields": {
         "pos": {
           "type": ".CMsgVector",
@@ -12621,7 +11921,6 @@
       }
     },
     "CMsgTEBaseBeam": {
-      "edition": "proto2",
       "fields": {
         "modelindex": {
           "type": "fixed64",
@@ -12674,7 +11973,6 @@
       }
     },
     "CMsgTEBeamEntPoint": {
-      "edition": "proto2",
       "fields": {
         "base": {
           "type": ".CMsgTEBaseBeam",
@@ -12699,7 +11997,6 @@
       }
     },
     "CMsgTEBeamEnts": {
-      "edition": "proto2",
       "fields": {
         "base": {
           "type": ".CMsgTEBaseBeam",
@@ -12716,7 +12013,6 @@
       }
     },
     "CMsgTEBeamPoints": {
-      "edition": "proto2",
       "fields": {
         "base": {
           "type": ".CMsgTEBaseBeam",
@@ -12733,7 +12029,6 @@
       }
     },
     "CMsgTEBeamRing": {
-      "edition": "proto2",
       "fields": {
         "base": {
           "type": ".CMsgTEBaseBeam",
@@ -12750,7 +12045,6 @@
       }
     },
     "CMsgTEBSPDecal": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -12778,7 +12072,6 @@
       }
     },
     "CMsgTEBubbles": {
-      "edition": "proto2",
       "fields": {
         "mins": {
           "type": ".CMsgVector",
@@ -12803,7 +12096,6 @@
       }
     },
     "CMsgTEBubbleTrail": {
-      "edition": "proto2",
       "fields": {
         "mins": {
           "type": ".CMsgVector",
@@ -12828,7 +12120,6 @@
       }
     },
     "CMsgTEDecal": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -12856,7 +12147,6 @@
       }
     },
     "CMsgEffectData": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -12943,7 +12233,6 @@
       }
     },
     "CMsgTEEffectDispatch": {
-      "edition": "proto2",
       "fields": {
         "effectdata": {
           "type": ".CMsgEffectData",
@@ -12952,7 +12241,6 @@
       }
     },
     "CMsgTEEnergySplash": {
-      "edition": "proto2",
       "fields": {
         "pos": {
           "type": ".CMsgVector",
@@ -12969,7 +12257,6 @@
       }
     },
     "CMsgTEFizz": {
-      "edition": "proto2",
       "fields": {
         "entity": {
           "type": "int32",
@@ -12989,7 +12276,6 @@
       }
     },
     "CMsgTEShatterSurface": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13034,7 +12320,6 @@
       }
     },
     "CMsgTEGlowSprite": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13055,7 +12340,6 @@
       }
     },
     "CMsgTEImpact": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13072,7 +12356,6 @@
       }
     },
     "CMsgTEMuzzleFlash": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13093,7 +12376,6 @@
       }
     },
     "CMsgTEBloodStream": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13114,7 +12396,6 @@
       }
     },
     "CMsgTEExplosion": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13163,7 +12444,6 @@
       }
     },
     "CMsgTEDust": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13184,7 +12464,6 @@
       }
     },
     "CMsgTELargeFunnel": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13197,7 +12476,6 @@
       }
     },
     "CMsgTESparks": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13218,7 +12496,6 @@
       }
     },
     "CMsgTEPhysicsProp": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13275,7 +12552,6 @@
       }
     },
     "CMsgTEPlayerDecal": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13298,7 +12574,6 @@
       }
     },
     "CMsgTEProjectedDecal": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13319,7 +12594,6 @@
       }
     },
     "CMsgTESmoke": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13332,7 +12606,6 @@
       }
     },
     "CMsgTEWorldDecal": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -13349,7 +12622,6 @@
       }
     },
     "EBaseUserMessages": {
-      "edition": "proto2",
       "values": {
         "UM_AchievementEvent": 101,
         "UM_CloseCaption": 102,
@@ -13405,7 +12677,6 @@
       }
     },
     "EBaseEntityMessages": {
-      "edition": "proto2",
       "values": {
         "EM_PlayJingle": 136,
         "EM_ScreenOverlay": 137,
@@ -13416,7 +12687,6 @@
       }
     },
     "eRollType": {
-      "edition": "proto2",
       "values": {
         "ROLL_NONE": -1,
         "ROLL_STATS": 0,
@@ -13426,7 +12696,6 @@
       }
     },
     "PARTICLE_MESSAGE": {
-      "edition": "proto2",
       "values": {
         "GAME_PARTICLE_MANAGER_EVENT_CREATE": 0,
         "GAME_PARTICLE_MANAGER_EVENT_UPDATE": 1,
@@ -13470,7 +12739,6 @@
       }
     },
     "EHapticPulseType": {
-      "edition": "proto2",
       "values": {
         "VR_HAND_HAPTIC_PULSE_LIGHT": 0,
         "VR_HAND_HAPTIC_PULSE_MEDIUM": 1,
@@ -13478,7 +12746,6 @@
       }
     },
     "CUserMessageAchievementEvent": {
-      "edition": "proto2",
       "fields": {
         "achievement": {
           "type": "uint32",
@@ -13487,7 +12754,6 @@
       }
     },
     "CUserMessageCloseCaption": {
-      "edition": "proto2",
       "fields": {
         "hash": {
           "type": "fixed32",
@@ -13511,7 +12777,6 @@
       }
     },
     "CUserMessageCloseCaptionDirect": {
-      "edition": "proto2",
       "fields": {
         "hash": {
           "type": "fixed32",
@@ -13535,7 +12800,6 @@
       }
     },
     "CUserMessageCloseCaptionPlaceholder": {
-      "edition": "proto2",
       "fields": {
         "string": {
           "type": "string",
@@ -13559,7 +12823,6 @@
       }
     },
     "CUserMessageCurrentTimescale": {
-      "edition": "proto2",
       "fields": {
         "current": {
           "type": "float",
@@ -13568,7 +12831,6 @@
       }
     },
     "CUserMessageDesiredTimescale": {
-      "edition": "proto2",
       "fields": {
         "desired": {
           "type": "float",
@@ -13589,7 +12851,6 @@
       }
     },
     "CUserMessageFade": {
-      "edition": "proto2",
       "fields": {
         "duration": {
           "type": "uint32",
@@ -13610,7 +12871,6 @@
       }
     },
     "CUserMessageShake": {
-      "edition": "proto2",
       "fields": {
         "command": {
           "type": "uint32",
@@ -13631,7 +12891,6 @@
       }
     },
     "CUserMessageShakeDir": {
-      "edition": "proto2",
       "fields": {
         "shake": {
           "type": ".CUserMessageShake",
@@ -13644,7 +12903,6 @@
       }
     },
     "CUserMessageWaterShake": {
-      "edition": "proto2",
       "fields": {
         "command": {
           "type": "uint32",
@@ -13665,7 +12923,6 @@
       }
     },
     "CUserMessageScreenTilt": {
-      "edition": "proto2",
       "fields": {
         "command": {
           "type": "uint32",
@@ -13690,7 +12947,6 @@
       }
     },
     "CUserMessageSayText": {
-      "edition": "proto2",
       "fields": {
         "playerindex": {
           "type": "int32",
@@ -13710,7 +12966,6 @@
       }
     },
     "CUserMessageSayText2": {
-      "edition": "proto2",
       "fields": {
         "entityindex": {
           "type": "int32",
@@ -13746,7 +13001,6 @@
       }
     },
     "CUserMessageHudMsg": {
-      "edition": "proto2",
       "fields": {
         "channel": {
           "type": "uint32",
@@ -13779,7 +13033,6 @@
       }
     },
     "CUserMessageHudText": {
-      "edition": "proto2",
       "fields": {
         "message": {
           "type": "string",
@@ -13788,7 +13041,6 @@
       }
     },
     "CUserMessageTextMsg": {
-      "edition": "proto2",
       "fields": {
         "dest": {
           "type": "uint32",
@@ -13802,15 +13054,12 @@
       }
     },
     "CUserMessageGameTitle": {
-      "edition": "proto2",
       "fields": {}
     },
     "CUserMessageResetHUD": {
-      "edition": "proto2",
       "fields": {}
     },
     "CUserMessageSendAudio": {
-      "edition": "proto2",
       "fields": {
         "soundname": {
           "type": "string",
@@ -13823,7 +13072,6 @@
       }
     },
     "CUserMessageAudioParameter": {
-      "edition": "proto2",
       "fields": {
         "parameterType": {
           "type": "uint32",
@@ -13844,17 +13092,22 @@
       }
     },
     "CUserMessageVoiceMask": {
-      "edition": "proto2",
       "fields": {
         "gamerulesMasks": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "options": {
+            "packed": false
+          }
         },
         "banMasks": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         },
         "modEnable": {
           "type": "bool",
@@ -13863,11 +13116,9 @@
       }
     },
     "CUserMessageRequestState": {
-      "edition": "proto2",
       "fields": {}
     },
     "CUserMessageRumble": {
-      "edition": "proto2",
       "fields": {
         "index": {
           "type": "int32",
@@ -13884,7 +13135,6 @@
       }
     },
     "CUserMessageSayTextChannel": {
-      "edition": "proto2",
       "fields": {
         "player": {
           "type": "int32",
@@ -13901,7 +13151,6 @@
       }
     },
     "CUserMessageColoredText": {
-      "edition": "proto2",
       "fields": {
         "color": {
           "type": "uint32",
@@ -13933,7 +13182,6 @@
       }
     },
     "CUserMessageItemPickup": {
-      "edition": "proto2",
       "fields": {
         "itemname": {
           "type": "string",
@@ -13942,7 +13190,6 @@
       }
     },
     "CUserMessageAmmoDenied": {
-      "edition": "proto2",
       "fields": {
         "ammoId": {
           "type": "uint32",
@@ -13951,7 +13198,6 @@
       }
     },
     "CUserMessageShowMenu": {
-      "edition": "proto2",
       "fields": {
         "validslots": {
           "type": "uint32",
@@ -13972,7 +13218,6 @@
       }
     },
     "CUserMessageCreditsMsg": {
-      "edition": "proto2",
       "fields": {
         "rolltype": {
           "type": ".eRollType",
@@ -13988,7 +13233,6 @@
       }
     },
     "CEntityMessagePlayJingle": {
-      "edition": "proto2",
       "fields": {
         "entityMsg": {
           "type": ".CEntityMsg",
@@ -13997,7 +13241,6 @@
       }
     },
     "CEntityMessageScreenOverlay": {
-      "edition": "proto2",
       "fields": {
         "startEffect": {
           "type": "bool",
@@ -14010,7 +13253,6 @@
       }
     },
     "CEntityMessageRemoveAllDecals": {
-      "edition": "proto2",
       "fields": {
         "removeDecals": {
           "type": "bool",
@@ -14023,7 +13265,6 @@
       }
     },
     "CEntityMessagePropagateForce": {
-      "edition": "proto2",
       "fields": {
         "impulse": {
           "type": ".CMsgVector",
@@ -14036,7 +13277,6 @@
       }
     },
     "CEntityMessageDoSpark": {
-      "edition": "proto2",
       "fields": {
         "origin": {
           "type": ".CMsgVector",
@@ -14076,7 +13316,6 @@
       }
     },
     "CEntityMessageFixAngle": {
-      "edition": "proto2",
       "fields": {
         "relative": {
           "type": "bool",
@@ -14093,7 +13332,6 @@
       }
     },
     "CUserMessageCameraTransition": {
-      "edition": "proto2",
       "fields": {
         "cameraType": {
           "type": "uint32",
@@ -14131,7 +13369,6 @@
       }
     },
     "CUserMsg_ParticleManager": {
-      "edition": "proto2",
       "fields": {
         "type": {
           "rule": "required",
@@ -14968,7 +14205,6 @@
       }
     },
     "CUserMsg_HudError": {
-      "edition": "proto2",
       "fields": {
         "orderId": {
           "type": "int32",
@@ -14977,7 +14213,6 @@
       }
     },
     "CUserMsg_CustomGameEvent": {
-      "edition": "proto2",
       "fields": {
         "eventName": {
           "type": "string",
@@ -14990,7 +14225,6 @@
       }
     },
     "CUserMessageHapticsManagerPulse": {
-      "edition": "proto2",
       "fields": {
         "handId": {
           "type": "int32",
@@ -15011,7 +14245,6 @@
       }
     },
     "CUserMessageHapticsManagerEffect": {
-      "edition": "proto2",
       "fields": {
         "handId": {
           "type": "int32",
@@ -15028,7 +14261,6 @@
       }
     },
     "CUserMessageAnimStateGraphState": {
-      "edition": "proto2",
       "fields": {
         "entityIndex": {
           "type": "int32",
@@ -15041,7 +14273,6 @@
       }
     },
     "CUserMessageUpdateCssClasses": {
-      "edition": "proto2",
       "fields": {
         "targetWorldPanel": {
           "type": "int32",
@@ -15058,7 +14289,6 @@
       }
     },
     "CUserMessageServerFrameTime": {
-      "edition": "proto2",
       "fields": {
         "frameTime": {
           "type": "float",
@@ -15067,7 +14297,6 @@
       }
     },
     "CUserMessageLagCompensationError": {
-      "edition": "proto2",
       "fields": {
         "distance": {
           "type": "float",
@@ -15076,7 +14305,6 @@
       }
     },
     "CUserMessageRequestDllStatus": {
-      "edition": "proto2",
       "fields": {
         "dllAction": {
           "type": "string",
@@ -15089,7 +14317,6 @@
       }
     },
     "CUserMessageRequestUtilAction": {
-      "edition": "proto2",
       "fields": {
         "util1": {
           "type": "int32",
@@ -15114,7 +14341,6 @@
       }
     },
     "CUserMessage_UtilMsg_Response": {
-      "edition": "proto2",
       "fields": {
         "crc": {
           "type": "fixed32",
@@ -15135,12 +14361,18 @@
         "crcPart": {
           "rule": "repeated",
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "options": {
+            "packed": false
+          }
         },
         "crcPart2": {
           "rule": "repeated",
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "options": {
+            "packed": false
+          }
         },
         "clientTimestamp": {
           "type": "int32",
@@ -15192,7 +14424,6 @@
       }
     },
     "CUserMessage_DllStatus": {
-      "edition": "proto2",
       "fields": {
         "fileReport": {
           "type": "string",
@@ -15273,7 +14504,6 @@
       }
     },
     "CUserMessageRequestInventory": {
-      "edition": "proto2",
       "fields": {
         "inventory": {
           "type": "int32",
@@ -15290,7 +14520,6 @@
       }
     },
     "CUserMessage_Inventory_Response": {
-      "edition": "proto2",
       "fields": {
         "crc": {
           "type": "fixed32",
@@ -15396,7 +14625,6 @@
       }
     },
     "CUserMessageRequestDiagnostic": {
-      "edition": "proto2",
       "fields": {
         "diagnostics": {
           "rule": "repeated",
@@ -15464,7 +14692,6 @@
       }
     },
     "CUserMessage_Diagnostic_Response": {
-      "edition": "proto2",
       "fields": {
         "diagnostics": {
           "rule": "repeated",
@@ -15560,7 +14787,6 @@
       }
     },
     "CUserMessage_ExtraUserData": {
-      "edition": "proto2",
       "fields": {
         "item": {
           "type": "int32",
@@ -15587,7 +14813,6 @@
       }
     },
     "CUserMessage_NotifyResponseFound": {
-      "edition": "proto2",
       "fields": {
         "entIndex": {
           "type": "int32",
@@ -15616,47 +14841,35 @@
         "intCriteriaNames": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 6,
-          "options": {
-            "packed": true
-          }
+          "id": 6
         },
         "intCriteriaValues": {
           "rule": "repeated",
           "type": "int32",
-          "id": 7,
-          "options": {
-            "packed": true
-          }
+          "id": 7
         },
         "floatCriteriaNames": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 8,
-          "options": {
-            "packed": true
-          }
+          "id": 8
         },
         "floatCriteriaValues": {
           "rule": "repeated",
           "type": "float",
-          "id": 9
+          "id": 9,
+          "options": {
+            "packed": false
+          }
         },
         "symbolCriteriaNames": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 10,
-          "options": {
-            "packed": true
-          }
+          "id": 10
         },
         "symbolCriteriaValues": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 11,
-          "options": {
-            "packed": true
-          }
+          "id": 11
         },
         "speakResult": {
           "type": "int32",
@@ -15679,7 +14892,6 @@
       }
     },
     "CUserMessage_PlayResponseConditional": {
-      "edition": "proto2",
       "fields": {
         "entIndex": {
           "type": "int32",
@@ -15691,7 +14903,10 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         },
         "response": {
           "type": "string",

@@ -34,6 +34,13 @@ class WorkerManager {
     }
 
     /**
+     * @returns {Array<WorkerThread>}
+     */
+    get threads() {
+        return this._threads;
+    }
+
+    /**
      * Allocates a free worker thread if available, or waits for one to be freed.
      *
      * @public
