@@ -171,6 +171,16 @@ class DemoPacketHandler {
     handleDemStringTables(demoPacket) {
         this._demo.stringTableContainer.handleInstantiate(demoPacket.data);
     }
+
+    /**
+     * Handles tables data from the {@link DemoPacketType.DEM_FULL_PACKET} (ID = 13).
+     *
+     * @public
+     * @param {DemoPacket} demoPacket
+     */
+    handleDemFullPacketTables(demoPacket) {
+        this._demo.stringTableContainer.handleInstantiate(demoPacket.data.stringTables);
+    }
 }
 
 export default DemoPacketHandler;

@@ -168,7 +168,15 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
             case DemoPacketType.DEM_FULL_PACKET:
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET: {
-                const messagePackets = demoPacket.data;
+                let messagePackets;
+
+                if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
+                    this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
+
+                    messagePackets = demoPacket.data.messagePackets;
+                } else {
+                    messagePackets = demoPacket.data;
+                }
 
                 for (let i = 0; i < messagePackets.length; i++) {
                     const messagePacket = messagePackets[i];
@@ -193,11 +201,19 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
                             break;
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
-                            const response = await deferred.promise;
+                            let partialEvents;
 
-                            const { events, lastIndex } = this._getEntityEvents(demoPacket, messagePacket, response.payload);
+                            if (deferred === null) {
+                                partialEvents = [ ];
+                            } else {
+                                const response = await deferred.promise;
 
-                            const created = [];
+                                partialEvents = response.payload;
+                            }
+
+                            const { events, lastIndex } = this._getEntityEvents(demoPacket, messagePacket, partialEvents);
+
+                            const created = [ ];
 
                             for (let i = lastIndex; i < events.length; i++) {
                                 if (events[i].operation === EntityOperation.CREATE) {

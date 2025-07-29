@@ -61,6 +61,8 @@ class DemoStreamPacketAnalyzer extends TransformStream {
                 break;
             }
             case DemoPacketType.DEM_FULL_PACKET: {
+                this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
+
                 await handleMessagePackets.call(this, demoPacket, demoPacket.data.messagePackets);
 
                 break;
