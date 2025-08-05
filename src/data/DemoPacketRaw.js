@@ -78,8 +78,13 @@ class DemoPacketRaw {
      * @returns {number}
      */
     getTypeId() {
-        return this._type.value & ~64;
+        return getTypeId.call(this);
     }
 }
 
+function getTypeId() {
+    return this._type.value & ~64;
+}
+
 export default DemoPacketRaw;
+

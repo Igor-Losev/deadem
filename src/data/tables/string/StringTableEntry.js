@@ -27,18 +27,30 @@ class StringTableEntry {
         this._value = value;
     }
 
+    /**
+     * @returns {StringTableType}
+     */
     get type() {
         return this._type;
     }
 
+    /**
+     * @returns {number} 
+     */
     get id() {
         return this._id;
     }
 
-    get key() {
+    /**
+     * @returns {String} 
+     */
+    get key() { 
         return this._key;
     }
 
+    /**
+     * @returns {Buffer|null|*} 
+     */
     get value() {
         return this._value;
     }

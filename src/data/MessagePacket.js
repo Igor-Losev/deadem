@@ -1,4 +1,4 @@
-import MessagePacketType from './enums/MessagePacketType.js';
+import MessagePacketType from '#data/enums/MessagePacketType.js';
 
 class MessagePacket {
     /**
@@ -35,6 +35,30 @@ class MessagePacket {
      */
     static fromObject(object) {
         return new MessagePacket(MessagePacketType.parse(object.type), object.data);
+    }
+
+    /**
+     * @static
+     * @public
+     * @param {MessagePacketRaw} messagePacketRaw
+     * @returns {MessagePacket|null}
+     */
+    static parse(messagePacketRaw) {
+        const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
+
+        if (messagePacketType === null) {
+            return null;
+        }
+
+        let data;
+
+        try {
+            data = messagePacketType.proto.decode(messagePacketRaw.payload);
+        } catch {
+            return null;
+        }
+
+        return new MessagePacket(messagePacketType, data);
     }
 
     /**

@@ -179,7 +179,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemFullPacketTables(demoPacket) {
-        this._demo.stringTableContainer.handleInstantiate(demoPacket.data.stringTables);
+        this._demo.stringTableContainer.handleSnapshot(demoPacket.data.stringTables);
     }
 }
 

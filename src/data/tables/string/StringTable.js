@@ -7,15 +7,18 @@ import StringTableInstructions from './StringTableInstructions.js';
 class StringTable {
     /**
      * @public
+     * @param {number} id
      * @param {StringTableType} type
      * @param {number} flags
      * @param {StringTableInstructions=} instructions
      */
-    constructor(type, flags, instructions) {
+    constructor(id, type, flags, instructions) {
+        Assert.isTrue(Number.isInteger(id) && id >= 0);
         Assert.isTrue(type instanceof StringTableType);
         Assert.isTrue(Number.isInteger(flags));
         Assert.isTrue(!instructions || instructions instanceof StringTableInstructions);
 
+        this._id = id;
         this._type = type;
         this._flags = flags;
         this._instructions = instructions || null;
@@ -23,6 +26,13 @@ class StringTable {
         this._registry = {
             entryById: new Map()
         };
+    }
+
+    /**
+     * @returns {number}
+     */
+    get id() {
+        return this._id;
     }
 
     /**

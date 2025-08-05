@@ -9,7 +9,7 @@ class PipelineNode {
      * @public
      * @constructor
      * @param {Stream.Readable} readable
-     * @param {Array<Stream.Transform>} transforms
+     * @param {Array<TransformStream>} transforms
      */
     constructor(readable, transforms) {
         const deferred = new DeferredPromise();

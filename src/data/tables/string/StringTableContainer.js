@@ -87,7 +87,7 @@ class StringTableContainer {
             payload = createData.stringData;
         }
 
-        const stringTable = new StringTable(stringTableType, createData.flags, instructions);
+        const stringTable = new StringTable(this._registry.tableById.size, stringTableType, createData.flags, instructions);
 
         this._register(stringTable);
 
@@ -117,7 +117,7 @@ class StringTableContainer {
                 return;
             }
 
-            const stringTable = new StringTable(type, tableData.tableFlags, null);
+            const stringTable = new StringTable(this._registry.tableById.size, type, tableData.tableFlags, null);
 
             tableData.items.forEach((entryData, index) => {
                 const entry = StringTableEntry.fromBuffer(entryData.data, stringTable.type, index, entryData.str);
@@ -129,6 +129,38 @@ class StringTableContainer {
 
             this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
             this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        });
+    }
+
+    /**
+    * @public
+    * @param {*} snapshotData 
+    */
+    handleSnapshot(snapshotData) {
+        snapshotData.tables.forEach((tableData) => {
+            const type = StringTableType.parseByName(tableData.tableName);
+
+            if (type === null) {
+                this._logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
+
+                return;
+            }
+
+            const existingTable = this._registry.tableByName.get(type.name) || null;
+
+            if (existingTable === null) {
+                this._logger.warn(`Unable to find a table [ ${type.name} ]`);
+
+                return;
+            }
+
+            tableData.items.forEach((entryData, index) => {
+                const entry = StringTableEntry.fromBuffer(entryData.data || null, existingTable.type, index, entryData.str);
+
+                existingTable.updateEntry(entry);
+            });
+
+            this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, existingTable);
         });
     }
 
@@ -200,12 +232,19 @@ class StringTableContainer {
      * @param {StringTable} stringTable
      */
     _register(stringTable) {
-        const id = this._registry.tableById.size;
-
-        this._logger.debug(`Registering StringTable: [ ${id} ] [ ${stringTable.type.name} ]`);
+        this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
 
         this._registry.tableByName.set(stringTable.type.name, stringTable);
-        this._registry.tableById.set(id, stringTable);
+        this._registry.tableById.set(stringTable.id, stringTable);
+    }
+
+    /**
+     * @private
+     * @param {StringTable} stringTable
+     */  
+    _unregister(stringTable) {
+        this._registry.tableById.delete(stringTable.id);
+        this._registry.tableByName.delete(stringTable.type.name);
     }
 }
 

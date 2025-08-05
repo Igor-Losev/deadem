@@ -9,6 +9,7 @@ import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.j
  *
  * - {@link DemoPacketType.DEM_PACKET}
  * - {@link DemoPacketType.DEM_SIGNON_PACKET}
+ * - {@link DemoPacketType.DEM_FULL_PACKET}
  *
  * All other packet types are passed through unchanged.
  */
@@ -37,7 +38,7 @@ class DemoStreamPacketPrioritizer extends TransformStream {
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
-        demoPacket.data.sort((a, b) => {
+        demoPacket.data.messagePackets.sort((a, b) => {
             const priorityA = getPacketPriority(a.type);
             const priorityB = getPacketPriority(b.type);
 

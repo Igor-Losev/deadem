@@ -8,24 +8,25 @@ class WorkerResponseDHPParse extends WorkerResponse {
     /**
      * @constructor
      * @param {Array<Array<MessagePacketRaw>>|Array<Array<MessagePacketRawPacked>>} batches
+     * @param {Array<Uint8Array|null>} stringTables 
      */
-    constructor(batches) {
-        super(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE, batches, [ ]);
+    constructor(batches, stringTables) {
+        super(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE, { batches, stringTables }, [ ]);
     }
 
     /**
      * @public
      * @static
-     * @param {Array<Array<MessagePacketRawPacked>>} packed
+     * @param {{ batches: Array<Array<MessagePacketRawPacked>>, stringTables: Array<Uint8Array|null> }} packed
      * @returns {WorkerResponseDHPParse}
      */
     static deserialize(packed) {
         const batches = [ ];
 
-        for (let batchIndex = 0; batchIndex < packed.length; batchIndex += 1) {
+        for (let batchIndex = 0; batchIndex < packed.batches.length; batchIndex += 1) {
             const batch = [ ];
 
-            const { meta, buffer } = packed[batchIndex];
+            const { meta, buffer } = packed.batches[batchIndex];
 
             for (let index = 0; index < meta.length; index += 3) {
                 const type = meta[index];
@@ -38,7 +39,7 @@ class WorkerResponseDHPParse extends WorkerResponse {
             batches.push(batch);
         }
 
-        return new WorkerResponseDHPParse(batches);
+        return new WorkerResponseDHPParse(batches, packed.stringTables);
     }
 
     /**

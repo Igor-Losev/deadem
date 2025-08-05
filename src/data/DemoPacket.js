@@ -1,6 +1,11 @@
 import Assert from '#core/Assert.js';
+import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import DemoPacketType from './enums/DemoPacketType.js';
+import MessagePacket from '#data/MessagePacket.js';
+
+import DemoPacketType from '#data/enums/DemoPacketType.js';
+
+import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
 class DemoPacket {
     /**
@@ -70,6 +75,57 @@ class DemoPacket {
     }
 
     /**
+     * @static
+     * @public
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @returns {DemoPacket|null}
+     */
+    static parse(demoPacketRaw) {
+        const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
+
+        if (demoPacketType === null) {
+            return null;
+        }
+
+        let data;
+
+        if (demoPacketRaw.getIsCompressed()) {
+            data = SnappyDecompressor.decompress(demoPacketRaw.payload);
+        } else {
+            data = demoPacketRaw.payload;
+        }
+
+        const decoded = demoPacketType.proto.decode(data);
+
+        switch (demoPacketType) {
+            case DemoPacketType.DEM_PACKET:
+            case DemoPacketType.DEM_SIGNON_PACKET:
+            case DemoPacketType.DEM_FULL_PACKET: {
+                const isFullPacket = demoPacketType === DemoPacketType.DEM_FULL_PACKET;
+
+                let messagePacketsRaw;
+
+                if (isFullPacket) {
+                    messagePacketsRaw = new MessagePacketRawExtractor(decoded.packet.data).all();
+                } else {
+                    messagePacketsRaw = new MessagePacketRawExtractor(decoded.data).all();
+                }
+
+                const messagePackets = messagePacketsRaw.map(messagePacketRaw => MessagePacket.parse(messagePacketRaw) || messagePacketRaw);
+
+                if (isFullPacket) {
+                    return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, createDemoPacketData(messagePackets, decoded.stringTable));
+                } else {
+                    return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, createDemoPacketData(messagePackets, null));
+                }
+            }
+            default: {
+                return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
+            }
+        }
+    }
+
+    /**
      * Determines whether this is the initial packet at the start of the demo.
      *
      * In Source 2 demos, the initial packet typically contains the baseline state
@@ -94,6 +150,17 @@ class DemoPacket {
             data: this._data
         };
     }
+}
+
+/**
+ * @param {Array<MessagePacket|MessagePacketRaw>} messagePackets
+ * @param {CDemoStringTables|null} stringTables
+ */
+function createDemoPacketData(messagePackets, stringTables = null) {
+    return {
+        messagePackets,
+        stringTables
+    };
 }
 
 /**

@@ -123,9 +123,12 @@ class Worker {
      */
     _handleHeavyPacketParse(request) {
         const batches = [ ];
+        const stringTables = [ ];
 
         request.payload.forEach((data) => {
-            const [ compressed, buffer ] = data;
+            const [ type, compressed, buffer ] = data;
+
+            const demoPacketType = DemoPacketType.parseById(type);
 
             let decompressed;
 
@@ -135,16 +138,26 @@ class Worker {
                 decompressed = buffer;
             }
 
-            const decoded = DemoPacketType.DEM_PACKET.proto.decode(decompressed);
+            const decoded = demoPacketType.proto.decode(decompressed);
 
-            const extractor = new MessagePacketRawExtractor(decoded.data);
+            let extractor;
+            
+            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
+                extractor = new MessagePacketRawExtractor(decoded.packet.data);
+
+                stringTables.push(decoded.stringTable);
+            } else {
+                extractor = new MessagePacketRawExtractor(decoded.data);
+
+                stringTables.push(null);
+            }
 
             const packed = extractor.allPacked();
 
             batches.push(packed);
         });
 
-        const response = new WorkerResponseDHPParse(batches);
+        const response = new WorkerResponseDHPParse(batches, stringTables);
 
         this._respond(response);
     }

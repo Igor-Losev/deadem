@@ -38,8 +38,6 @@ class DemoStreamPacketCoordinator extends TransformStream {
      */
     async _handle(packet) {
         if (packet instanceof DemoPacketRaw) {
-            this._engine.getPacketTracker().handleDemoPacketRaw(packet);
-
             this._sequence += 1;
 
             return;

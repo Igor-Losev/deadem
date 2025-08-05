@@ -9,7 +9,6 @@ const registry = {
 
 class DemoPacketType {
     /**
-     * @private
      * @constructor
      * @param {String} code
      * @param {number} id
@@ -137,7 +136,7 @@ const demConsoleCmd = new DemoPacketType('DEM_ConsoleCmd', 9, CDemoConsoleCmd, f
 const demCustomData = new DemoPacketType('DEM_CustomData', 10, CDemoCustomData, false);
 const demCustomDataCallbacks = new DemoPacketType('DEM_CustomDataCallbacks', 11, CDemoCustomDataCallbacks, false);
 const demUserCmd = new DemoPacketType('DEM_UserCmd', 12, CDemoUserCmd, false);
-const demFullPacket = new DemoPacketType('DEM_FullPacket', 13, CDemoFullPacket, false);
+const demFullPacket = new DemoPacketType('DEM_FullPacket', 13, CDemoFullPacket, true);
 const demSaveGame = new DemoPacketType('DEM_SaveGame', 14, CDemoSaveGame, false);
 const demSpawnGroups = new DemoPacketType('DEM_SpawnGroups', 15, CDemoSpawnGroups, false);
 const demAnimationData = new DemoPacketType('DEM_AnimationData', 16, CDemoAnimationData, false);

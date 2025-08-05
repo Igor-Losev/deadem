@@ -68,7 +68,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
             return;
         }
 
-        const packets = demoPacket.data.filter(messagePacket => messagePacket.type === MessagePacketType.SVC_PACKET_ENTITIES);
+        const packets = demoPacket.data.messagePackets.filter(messagePacket => messagePacket.type === MessagePacketType.SVC_PACKET_ENTITIES);
 
         if (packets.length === 0) {
             this._enqueue(demoPacket);
@@ -168,15 +168,11 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
             case DemoPacketType.DEM_FULL_PACKET:
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET: {
-                let messagePackets;
-
                 if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
                     this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
-
-                    messagePackets = demoPacket.data.messagePackets;
-                } else {
-                    messagePackets = demoPacket.data;
                 }
+
+                const messagePackets = demoPacket.data.messagePackets;
 
                 for (let i = 0; i < messagePackets.length; i++) {
                     const messagePacket = messagePackets[i];
@@ -197,7 +193,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
                             break;
                         case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
-                            this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
+                            this._demoMessageHandler.handleSvcClearAllStringTables();
 
                             break;
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
@@ -275,7 +271,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
      * @param {DemoPacket} demoPacket
      * @param {MessagePacket} messagePacket
      * @param {Array<EntityMutationPartialEvent>} partial
-     * @returns {Array<EntityMutationEvent>}
+     * @returns {{ lastIndex: number, events: Array<EntityMutationEvent>}}
      */
     _getEntityEvents(demoPacket, messagePacket, partial) {
         if (partial.length === 0) {
