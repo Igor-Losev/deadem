@@ -4,6 +4,7 @@ import Demo from '#data/Demo.js';
 import Entity from '#data/entity/Entity.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoSource from '#data/enums/DemoSource.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
@@ -126,9 +127,10 @@ class Worker {
         const stringTables = [ ];
 
         request.payload.forEach((data) => {
-            const [ type, compressed, buffer ] = data;
+            const [ typeId, sourceId, compressed, buffer ] = data;
 
-            const demoPacketType = DemoPacketType.parseById(type);
+            const demoPacketType = DemoPacketType.parseById(typeId);
+            const demoSource = DemoSource.parseById(sourceId);
 
             let decompressed;
 
@@ -138,7 +140,13 @@ class Worker {
                 decompressed = buffer;
             }
 
-            const decoded = demoPacketType.proto.decode(decompressed);
+            let decoded;
+
+            if (demoSource === DemoSource.HTTP_BROADCAST) {
+                decoded = { data: decompressed };
+            } else {
+                decoded = demoPacketType.proto.decode(decompressed);
+            }
 
             let extractor;
             

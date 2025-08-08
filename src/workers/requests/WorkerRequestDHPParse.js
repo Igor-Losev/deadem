@@ -31,7 +31,7 @@ class WorkerRequestDHPParse extends WorkerRequest {
 }
 
 /**
- * @typedef {[nuber, boolean, Buffer]} WorkrerRequestDHPItem
+ * @typedef {[number, number, boolean, Buffer]} WorkrerRequestDHPItem
  */
 
 export default WorkerRequestDHPParse;

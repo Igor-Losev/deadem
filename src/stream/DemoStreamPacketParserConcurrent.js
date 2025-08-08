@@ -108,7 +108,7 @@ class DemoStreamPacketParserConcurrent extends TransformStream {
     async _processAsync(thread, packets) {
         this._counts.requests += 1;
 
-        const promise = thread.send(new WorkerRequestDHPParse(packets.map(p => [ p.getTypeId(), p.getIsCompressed(), p.payload ])));
+        const promise = thread.send(new WorkerRequestDHPParse(packets.map(p => [ p.getTypeId(), p.source.id, p.getIsCompressed(), p.payload ])));
 
         this._pendingRequests.push(promise);
 
