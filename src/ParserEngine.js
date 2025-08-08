@@ -4,6 +4,7 @@ import Pipeline from '#core/stream/Pipeline.js';
 
 import Demo from '#data/Demo.js';
 
+import DemoSource from '#data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
@@ -41,26 +42,8 @@ class ParserEngine {
 
         if (configuration.parserThreads === 0) {
             this._workerManager = null;
-
-            this._chain = [
-                new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
-                new DemoStreamPacketExtractor(this),
-                new DemoStreamPacketParser(this),
-                new DemoStreamPacketPrioritizer(this),
-                new DemoStreamPacketAnalyzer(this)
-            ];
         } else {
             this._workerManager = new WorkerManager(configuration.parserThreads, logger);
-
-            this._chain = [
-                new DemoStreamBufferSplitter(this, configuration.splitterChunkSize),
-                new DemoStreamPacketExtractor(this),
-                new DemoStreamPacketBatcher(this, configuration.batcherChunkSize, configuration.batcherThresholdMilliseconds),
-                new DemoStreamPacketParserConcurrent(this),
-                new DemoStreamPacketCoordinator(this),
-                new DemoStreamPacketPrioritizer(this),
-                new DemoStreamPacketAnalyzerConcurrent(this)
-            ];
         }
 
         this._interceptors = {
@@ -203,11 +186,34 @@ class ParserEngine {
     /**
      * @public
      * @param {Stream.Readable|ReadableStream} reader
+     * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {Promise<void>}
      */
-    async parse(reader) {
+    async parse(reader, source = DemoSource.REPLAY) {
         if (this._started) {
             throw new Error('Unable to parse: parser instance has already been used. Create a new instance to parse another demo');
+        }
+
+        let chain;
+
+        if (this.getIsMultiThreaded()) {
+            chain = [
+                new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
+                new DemoStreamPacketExtractor(this, source),
+                new DemoStreamPacketBatcher(this, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
+                new DemoStreamPacketParserConcurrent(this),
+                new DemoStreamPacketCoordinator(this),
+                new DemoStreamPacketPrioritizer(this),
+                new DemoStreamPacketAnalyzerConcurrent(this)
+            ];
+        } else {
+            chain = [
+                new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
+                new DemoStreamPacketExtractor(this, source),
+                new DemoStreamPacketParser(this),
+                new DemoStreamPacketPrioritizer(this),
+                new DemoStreamPacketAnalyzer(this)
+            ];
         }
 
         this._started = true;
@@ -218,7 +224,7 @@ class ParserEngine {
             this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            const pipeline = new Pipeline(reader, this._chain);
+            const pipeline = new Pipeline(reader, chain);
 
             await pipeline.ready();
         } catch (error) {
@@ -239,3 +245,4 @@ class ParserEngine {
 }
 
 export default ParserEngine;
+

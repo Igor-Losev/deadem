@@ -4,6 +4,7 @@ import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 import MessagePacket from '#data/MessagePacket.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoSource from '#data/enums/DemoSource.js';
 
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
@@ -18,6 +19,7 @@ class DemoPacket {
      * @param {*} data
      */
     constructor(sequence, type, tick, data) {
+        Assert.isTrue(Number.isInteger(sequence));
         Assert.isTrue(type instanceof DemoPacketType);
         Assert.isTrue(Number.isInteger(tick));
 
@@ -87,42 +89,48 @@ class DemoPacket {
             return null;
         }
 
-        let data;
+        let decompressed;
 
         if (demoPacketRaw.getIsCompressed()) {
-            data = SnappyDecompressor.decompress(demoPacketRaw.payload);
+            decompressed = SnappyDecompressor.decompress(demoPacketRaw.payload);
         } else {
-            data = demoPacketRaw.payload;
+            decompressed = demoPacketRaw.payload;
         }
 
-        const decoded = demoPacketType.proto.decode(data);
+        let decoded;
 
-        switch (demoPacketType) {
-            case DemoPacketType.DEM_PACKET:
-            case DemoPacketType.DEM_SIGNON_PACKET:
-            case DemoPacketType.DEM_FULL_PACKET: {
-                const isFullPacket = demoPacketType === DemoPacketType.DEM_FULL_PACKET;
-
-                let messagePacketsRaw;
-
-                if (isFullPacket) {
-                    messagePacketsRaw = new MessagePacketRawExtractor(decoded.packet.data).all();
-                } else {
-                    messagePacketsRaw = new MessagePacketRawExtractor(decoded.data).all();
-                }
-
-                const messagePackets = messagePacketsRaw.map(messagePacketRaw => MessagePacket.parse(messagePacketRaw) || messagePacketRaw);
-
-                if (isFullPacket) {
-                    return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, createDemoPacketData(messagePackets, decoded.stringTable));
-                } else {
-                    return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, createDemoPacketData(messagePackets, null));
-                }
+        if (demoPacketRaw.source === DemoSource.HTTP_BROADCAST && (demoPacketType.heavy || demoPacketType === DemoPacketType.DEM_SPAWN_GROUPS)) {
+            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
+                throw new Error('Unhandled [ DEM_FULL_PACKET ] packet for source [ HTTP_BROADCAST ]');
             }
-            default: {
-                return new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
+
+            decoded = { data: decompressed };
+        } else {
+            decoded = demoPacketType.proto.decode(decompressed);
+        }  
+
+        let demoPacket;
+
+        if (demoPacketType.heavy) {
+            let messagePacketsRaw;
+            let stringTables;
+
+            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
+                messagePacketsRaw = new MessagePacketRawExtractor(decoded.packet.data).all();
+                stringTables = decoded.stringTable;
+            } else {
+                messagePacketsRaw = new MessagePacketRawExtractor(decoded.data).all();
+                stringTables = null;
             }
+
+            const messagePackets = messagePacketsRaw.map(messagePacketRaw => MessagePacket.parse(messagePacketRaw) || messagePacketRaw);
+
+            demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, createDemoPacketData(messagePackets, stringTables));
+        } else {
+            demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
         }
+
+        return demoPacket;
     }
 
     /**
