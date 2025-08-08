@@ -1,10 +1,20 @@
+const registry = {
+    byCode: new Map(),
+    byId: new Map()
+};
+
 class DemoSource {
     /**
      * @constructor
      * @param {string} code
+     * @param {number} id 
      */
-    constructor(code) {
+    constructor(code, id) {
         this._code = code;
+        this._id = id;
+
+        registry.byCode.set(code, this);
+        registry.byId.set(id, this);
     }
 
     /**
@@ -12,6 +22,31 @@ class DemoSource {
      */
     get code() {
         return this._code;
+    }
+
+    /**
+     * @returns {number} 
+     */
+    get id() {
+        return this._id;
+    }
+
+    /**
+     * @public
+     * @param {string} code 
+     * @returns {DemoSource|null} 
+     */
+    static parse(code) {
+        return registry.byCode.get(code) || null;
+    }
+
+    /**
+     * @public
+     * @param {number} id 
+     * @returns {DemoSource|null} 
+     */
+    static parseById(id) {
+        return registry.byId.get(id) || null;
     }
 
     /**
@@ -33,8 +68,8 @@ class DemoSource {
     }
 }
 
-const httpBroadcast = new DemoSource('HTTP_BROADCAST');
-const replay = new DemoSource('REPLAY');
+const httpBroadcast = new DemoSource('HTTP_BROADCAST', 0);
+const replay = new DemoSource('REPLAY', 1);
 
 export default DemoSource;
 

@@ -3,7 +3,7 @@ import Assert from '#core/Assert.js';
 const registry = new Map();
 
 class Protocol {
-   /**
+    /**
     * @constructor
     * @param {String} code
     * @param {String} scheme

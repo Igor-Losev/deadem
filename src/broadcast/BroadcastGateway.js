@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Buffer }  from 'buffer';
 
 import Assert from '#core/Assert.js';
 
@@ -6,7 +7,7 @@ import BroadcastFragmentType from '#data/enums/BroadcastFragmentType.js';
 import Protocol from '#data/enums/Protocol.js';
 
 class BroadcastGateway {
-   /** 
+    /** 
     * @constructor
     * @param {String} baseUrl  
     * @param {Protocol} [protocol=Protocol.HTTPS]  
@@ -35,7 +36,7 @@ class BroadcastGateway {
             responseType: 'arraybuffer'
         });
 
-        return response.data;
+        return Buffer.from(response.data);
     }
 
     /**
