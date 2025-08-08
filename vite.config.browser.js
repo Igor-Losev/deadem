@@ -34,7 +34,13 @@ const configuration = defineConfig(({ command }) => {
             ...common,
             root: 'examples/runtime-browser',
             server: {
-                open: true
+                open: true,
+                proxy: {
+                    '/tv': {
+                        target: 'https://dist1-ord1.steamcontent.com',
+                        changeOrigin: true
+                    }
+                }
             }
         };
     }
