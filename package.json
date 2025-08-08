@@ -41,6 +41,7 @@
   "imports": {
     "#root/*.js": "./*.js",
     "#src/*.js": "./src/*.js",
+    "#broadcast/*.js": "./src/broadcast/*.js",
     "#core/*.js": "./src/core/*.js",
     "#data/*.js": "./src/data/*.js",
     "#extractors/*.js": "./src/extractors/*.js",
@@ -49,6 +50,10 @@
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
     "#workers/*.js": "./src/workers/*.js",
+    "#broadcast/BroadcastReadStream.js": {
+      "node": "./src/broadcast/BroadcastReadStream.node.js",
+      "browser": "./src/broadcast/BroadcastReadStream.browser.js"
+    },
     "#core/stream/Pipeline.js": {
       "node": "./src/core/stream/Pipeline.node.js",
       "browser": "./src/core/stream/Pipeline.browser.js"
