@@ -10,6 +10,12 @@ input.remove();
 submit.remove();
 output.innerText = 'See console...';
 
+/**
+ * Valve's https://dist1-ord1.steamcontent.com/tv/{MATCH_ID}/sync 
+ * endpoint does not allow browser requests due to CORS restrictions.
+ * To work around this in local development, the Vite config (vite.config.browser.js) 
+ * is set up with a proxy. As a result, all requests are routed through localhost:5173.
+ */
 const broadcastGateway = new BroadcastGateway('localhost:5173/tv', Protocol.HTTP);
 const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);
 
