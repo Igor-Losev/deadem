@@ -6,7 +6,7 @@ import DemoFile from '#root/examples/common/DemoFile.js';
 import DemoProvider from './helpers/DemoProvider.js';
 
 const CONFIG = {
-    DEMOS: [ DemoFile.MATCH_36126420 ],
+    DEMOS: [ DemoFile.REPLAY_36126420 ],
     REPEATS: 10
 };
 

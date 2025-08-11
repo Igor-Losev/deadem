@@ -6,7 +6,7 @@ import GameClockObserver from '#root/examples/common/GameClockObserver.js';
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_37610767);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_37610767);
 
     const parser = new Parser();
     const printer = new Printer(parser);
