@@ -8,6 +8,7 @@ import DemoSource from '#data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
+import DemoStreamEventLoopBreaker from '#stream/DemoStreamEventLoopBreaker.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
 import DemoStreamPacketAnalyzerConcurrent from '#stream/DemoStreamPacketAnalyzerConcurrent.js';
 import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
@@ -200,6 +201,7 @@ class ParserEngine {
             chain = [
                 new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
                 new DemoStreamPacketExtractor(this, source),
+                new DemoStreamEventLoopBreaker(this, this._configuration.breakInterval),
                 new DemoStreamPacketBatcher(this, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
                 new DemoStreamPacketParserConcurrent(this),
                 new DemoStreamPacketCoordinator(this),
@@ -210,6 +212,7 @@ class ParserEngine {
             chain = [
                 new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
                 new DemoStreamPacketExtractor(this, source),
+                new DemoStreamEventLoopBreaker(this, this._configuration.breakInterval),
                 new DemoStreamPacketParser(this),
                 new DemoStreamPacketPrioritizer(this),
                 new DemoStreamPacketAnalyzer(this)
