@@ -9,6 +9,13 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 
 **Deadem** is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
+<p align="center">
+  ┌ Node.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Browser ┐
+</p>
+<p align="center">
+  <img src="https://deadem.s3.us-east-1.amazonaws.com/deadlock/example-node.png" alt="node" width="45%" height="376px">
+  <img src="https://deadem.s3.us-east-1.amazonaws.com/deadlock/example-browser.png" alt="browser" width="45%" height="376px">
+</p>
 
 ## Contents
 
@@ -77,32 +84,41 @@ const { Parser } = window.deadem;
 
 ### Node.js
 
-The example scripts will, by default, look for a demo file in the `/demos` folder.
-If no demo file is found locally, they will automatically download one from a public S3 bucket:
+The example scripts will, by default, look for demo files in the `/demos` folder. There are two types of files used:
+
+- `DemoSource.REPLAY` files with the `.dem` extension
+- `DemoSource.HTTP_BROADCAST` files with the `.bin` extension
+
+If no local demo file is found, the scripts will automatically download the required file from a public S3 bucket:
 
 ```text
-https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}.dem
+https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}.dem   (for REPLAY files)
+
+https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}.bin   (for HTTP_BROADCAST files)
 ```
 
 A list of all available demo files can be found in the [DemoFile](https://github.com/Igor-Losev/deadem/blob/main/examples/common/DemoFile.js) class.
 
-| №                                                                                                         | Description        | Commands                                                                                                                                              |
-|-----------------------------------------------------------------------------------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/01_parse.js)                    | Single demo        | `node ./examples/runtime-node/01_parse.js`                                                                                                            |
-| [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)           | Multiple demos     | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all`  |
-| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)          | Game duration      | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                  |
-| [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js)  | Top damage dealer  | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                          |
-| [12](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/12_parse_chat.js)               | Chat messages      | `node ./examples/runtime-node/12_parse_chat.js`                                                                                                       |
-| [13](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/13_parse_kill_feed.js)          | Kill feed          | `node ./examples/runtime-node/13_parse_kill_feed.js`                                                                                                  |
-| [14](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/14_parse_ability_feed.js)       | Ability feed       | `node ./examples/runtime-node/14_parse_ability_feed.js`                                                                                               |
-| [15](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/15_parse_mid_boss_deaths.js)    | Mid boss deaths    | `node ./examples/runtime-node/15_parse_mid_boss_deaths.js`                                                                                            |
-| [16](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/16_parse_tower_deaths.js)       | Tower deaths       | `node ./examples/runtime-node/16_parse_tower_deaths.js`                                                                                               |
+| №                                                                                                            | Description                               | Commands                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/01_parse.js)                       | Parse a single replay file                | `node ./examples/runtime-node/01_parse.js`                                                                                                           |
+| [02](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/02_parse_multiple.js)              | Parse multiple replay files               | `node ./examples/runtime-node/02_parse_multiple.js --matches="36126255,36127043"`<br/>`node ./examples/runtime-node/02_parse_multiple --matches=all` |
+| [03](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/03_parse_http_broadcast)           | Parse HTTP Broadcast data from web server | `node ./examples/runtime-node/03_parse_http_broadcast.js`                                                                                            |
+| [04](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/04_parse_http_broadcast_file.js)   | Parse HTTP Broadcast data from file       | `node ./examples/runtime-node/04_parse_http_broadcast_file.js`                                                                                       |
+| [05](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/05_http_broadcast_save_to_file.js) | Save HTTP Broadcast data to a file        | `node ./examples/runtime-node/05_http_broadcast_save_to_file.js`                                                                                     |
+| [10](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/10_parse_game_time.js)             | Parse game duration from replay           | `node ./examples/runtime-node/10_parse_game_time.js`                                                                                                 |
+| [11](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/11_parse_top_damage_dealer.js)     | Identify top damage dealer                | `node ./examples/runtime-node/11_parse_top_damage_dealer.js`                                                                                         |
+| [12](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/12_parse_chat.js)                  | Extract chat messages                     | `node ./examples/runtime-node/12_parse_chat.js`                                                                                                      |
+| [13](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/13_parse_kill_feed.js)             | Extract kill feed events                  | `node ./examples/runtime-node/13_parse_kill_feed.js`                                                                                                 |
+| [14](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/14_parse_ability_feed.js)          | Extract ability usage events              | `node ./examples/runtime-node/14_parse_ability_feed.js`                                                                                              |
+| [15](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/15_parse_mid_boss_deaths.js)       | Parse mid boss death events               | `node ./examples/runtime-node/15_parse_mid_boss_deaths.js`                                                                                           |
+| [16](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-node/16_parse_tower_deaths.js)          | Parse tower destruction events            | `node ./examples/runtime-node/16_parse_tower_deaths.js`                                                                                              |
 
 ### Browser
 
-| №                                                                             | Description  | Commands    |
-|-------------------------------------------------------------------------------|--------------|-------------|
-| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-browser) | Example page | `npm start` |
+| №                                                                                         | Description                | Commands    |
+| ----------------------------------------------------------------------------------------- | -------------------------- | ----------- |
+| [01](https://github.com/Igor-Losev/deadem/blob/main/examples/runtime-browser/01_parse.js) | Parse a single replay file | `npm start` |
 
 ## Overview
 
@@ -204,7 +220,7 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 Below is a list of available options that can be passed to the `ParserConfiguration`:
 
 | Option          | Description                                                                                                                                                               | Type   | Default |
-|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|---------|
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- |
 | `breakInterval` | How often (in packets) to yield to the event loop to avoid blocking. The smaller the value, the more responsive the interface will be (may slow down parser performance). | number | `1000`  |
 | `parserThreads` | Number of **additional** threads used by the parser.                                                                                                                      | number | `0`     |
 
@@ -224,12 +240,49 @@ const parser = new Parser(configuration);
 
 ## Usage
 
+### For Replay (.dem)
+
 ```js
-import { InterceptorStage, MessagePacketType, Parser, Printer } from 'deadem';
+import { createReadStream } from 'node:fs';
+
+import { Parser, Printer } from 'deadem';
 
 const parser = new Parser();
 const printer = new Printer(parser);
 
+const readable = createReadStream(PATH_TO_DEM_FILE);
+
+await parser.parse(readable);
+
+printer.printStats();
+```
+
+### For HTTP Broadcast
+
+```js
+import { BroadcastAgent, BroadcastGateway, DemoSource, Parser, Printer } from 'deadem';
+
+const FROM_BEGINNING = false;
+const MATCH_ID = 38624662;
+
+const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
+const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID);
+
+const parser = new Parser();
+const printer = new Printer(parser);
+
+const readable = broadcastAgent.stream(FROM_BEGINNING);
+
+await parser.parse(readable, DemoSource.HTTP_BROADCAST);
+
+printer.printStats();
+```
+
+### Data extraction
+
+```js
+...
+...
 // #1: Extraction of chat messages
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
     if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE) {
@@ -258,17 +311,14 @@ parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, async (demoPacket
     });
 });
 
-await parser.parse(demoReadableStream);
-
-// Printing final stats to the console
-printer.printStats();
+await parser.parse(readable);
 
 console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
 ```
 
 ## Compatibility
 
-Tested with Deadlock demo files from game build 5691 and below.
+Tested with Deadlock demo files from game build `5716` and below.
 
 * **Node.js:** v16.17.0 and above.
 * **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
@@ -282,33 +332,21 @@ The table below shows performance results **without calling `entity.unpackFlatte
 
 ### 1. `configuration.parserThreads = 0`:
 
-| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb |
-|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|
-| 1 | Node.js v22.14.0      | 14 694 ± 0.91%          | 229.59 ± 0.91%                                  | ~7.84                                   | 266.20 ± 4.31%       |
-| 2 | Browser Chrome v133.0 | 12 479 ± 0.59%          | 194.98 ± 0.59%                                  | ~9.23                                   | -                    |
-| 3 | Node.js v16.20.2      | 10 845 ± 0.64%          | 169.45 ± 0.64%                                  | ~10.62                                  | 242.04 ± 5.49%       |
-| 4 | Browser Safari v18.3  | 9 794 ± 0.86%           | 153.03 ± 0.86%                                  | ~11.76                                  | -                    |
-| 5 | Browser Firefox v139  | 5 546 ± 0.62%           | 86.66 ± 0.62%                                   | ~20.77                                  | -                    |
+| #   | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb |
+| --- | --------------------- | ----------------------- | ----------------------------------------------- | --------------------------------------- | -------------------- |
+| 1   | Node.js v22.14.0      | 8 542 ± 1.30%           | 133.47 ± 1.30%                                  | ~13.53                                  | 329 ± 6.21%          |
+| 2   | Browser Chrome v133.0 | 7 650 ± 0.59%           | 119.53 ± 0.59                                   | ~15.06                                  | -                    |
+| 3   | Node.js v16.20.2      | 5 405 ± 0.61%           | 84.45 ± 0.26%                                   | ~21.31                                  | 270 ± 6.98%          |
+| 4   | Browser Safari v18.3  | 5 295 ± 1.27%           | 82.73 ± 1.27%                                   | ~21.76                                  | -                    |
 
-### 2. `configuration.parserThreads = 2`:
+### 2. `configuration.parserThreads = 3`:
 
-| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb | Performance Gain (vs 0 p. threads), % |
-|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|---------------------------------------|
-| 1 | Node.js v22.14.0      | 19 478 ± 1.09%          | 304,34 ± 1.09%                                  | ~5.91                                   | 444.10 ± 4.25%       | 32.56                                 |
-| 2 | Browser Chrome v133.0 | 17 749 ± 1.36%          | 277.33 ± 1.36%                                  | ~6.49                                   | -                    | 42.23                                 |
-| 3 | Node.js v16.20.2      | 14 790 ± 0.71%          | 231.09 ± 0.71%                                  | ~7.79                                   | 416.67 ± 4.38%       | 36.38                                 |
-| 4 | Browser Safari v18.3  | 12 446 ± 0.60%          | 194.47 ± 0.60%                                  | ~9.26                                   | -                    | 27.08                                 |
-| 5 | Browser Firefox v139  | 8 523 ± 0.80%           | 133.17 ± 0.80%                                  | ~13.52                                  | -                    | 53.68                                 |
-
-### 3. `configuration.parserThreads = 4`:
-
-| # | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb | Performance Gain (vs 0 p. threads), % |
-|---|-----------------------|-------------------------|-------------------------------------------------|-----------------------------------------|----------------------|---------------------------------------|
-| 1 | Node.js v22.14.0      | 22 114 ± 0.54%          | 345.53 ± 0.54%                                  | ~5.20                                   | 552.73 ± 2.96%       | 50.50                                 |
-| 2 | Browser Chrome v133.0 | 20 486 ± 0.95%          | 320.09 ± 0.95%                                  | ~5.62                                   | -                    | 64.16                                 |
-| 3 | Node.js v16.20.2      | 18 059 ± 1.02%          | 282.17 ± 1.02%                                  | ~6.38                                   | 520.56 ± 2.80%       | 66.52                                 |
-| 4 | Browser Safari v18.3  | 15 083 ± 0.67%          | 235.67 ± 0.67%                                  | ~7.64                                   | -                    | 54.00                                 |
-| 5 | Browser Firefox v139  | 8 493 ± 0.91%           | 132.70 ± 0.91%                                  | ~13.56                                  | -                    | 53.14                                 |
+| #   | Runtime               | Speed, ticks per second | Speed, game seconds per second (tick rate — 64) | Time to parse a 30-minute game, seconds | Max Memory Usage, mb | Performance Gain (vs 0 p. threads), % |
+| --- | --------------------- | ----------------------- | ----------------------------------------------- | --------------------------------------- | -------------------- | ------------------------------------- |
+| 1   | Node.js v22.14.0      | 11 292 ± 0.26%          | 176.44 ± 0.26%                                  | ~10.20                                  | 639.16 ± 4.94%       | 32.19                                 |
+| 2   | Browser Chrome v133.0 | 9 560 ± 0.43%           | 149.38 ± 0.43%                                  | ~12.05                                  | -                    | 24.97                                 |
+| 3   | Node.js v16.20.2      | 8 696 ± 0.26%           | 135.86 ± 0.26%                                  | ~13.25                                  | 497.86 ± 6.57%       | 60.89                                 |
+| 4   | Browser Safari v18.3  | 7 073 ± 0.44%           | 110.52 ± 0.44%                                  | ~16.29                                  | -                    | 33.58                                 |
 
 ## Building
 
@@ -342,3 +380,4 @@ This project was inspired by and built upon the work of the following repositori
 - [saul/demofile-net](https://github.com/saul/demofile-net) - CS2 / Deadlock replay parser in C#.
 
 Huge thanks to their authors and contributors!
+
