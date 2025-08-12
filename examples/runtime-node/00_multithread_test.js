@@ -13,7 +13,7 @@ import DemoProvider from './helpers/DemoProvider.js';
  * parsers.
  */
 (async () => {
-    const demoFile = DemoFile.MATCH_36126420;
+    const demoFile = DemoFile.REPLAY_36126420;
 
     const logger = Logger.CONSOLE_INFO;
 

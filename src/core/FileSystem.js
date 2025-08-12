@@ -13,10 +13,20 @@ class FileSystem {
      * @public
      * @static
      * @param {...*} args
-     * @returns {ReadStream}
+     * @returns {Stream.Write}
      */
     static createReadStream(...args) {
         return fs.createReadStream(...args);
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {...*} args
+     * @returns {Stream.Write}
+     */
+    static createWriteStream(...args) {
+        return fs.createWriteStream(...args);
     }
 
     /**

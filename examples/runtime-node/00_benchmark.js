@@ -6,7 +6,7 @@ import DemoFile from '#root/examples/common/DemoFile.js';
 import DemoProvider from './helpers/DemoProvider.js';
 
 const CONFIG = {
-    DEMOS: [ DemoFile.MATCH_36126420 ],
+    DEMOS: [ DemoFile.REPLAY_38625795 ],
     REPEATS: 10
 };
 
@@ -18,7 +18,7 @@ const CONFIG = {
     const logger = Logger.CONSOLE_INFO;
 
     const benchmark = new Benchmark();
-    const configuration = new ParserConfiguration({ parserThreads: 4 });
+    const configuration = new ParserConfiguration({ parserThreads: 3 });
 
     for (let demoIndex = 0; demoIndex < CONFIG.DEMOS.length; demoIndex++) {
         const demo = CONFIG.DEMOS[demoIndex];

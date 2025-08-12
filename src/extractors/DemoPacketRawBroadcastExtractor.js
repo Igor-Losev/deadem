@@ -3,7 +3,9 @@ import Assert from '#core/Assert.js';
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 import VarInt32 from '#data/VarInt32.js';
 
-class DemoPacketRawExtractor {
+import DemoSource from '#data/enums/DemoSource.js';
+
+class DemoPacketRawBroadcastExtractor {
     /**
      * @public
      * @constructor
@@ -46,19 +48,26 @@ class DemoPacketRawExtractor {
 
             offset += type.size;
 
-            const tick = VarInt32.parse(this._tail.subarray(offset));
+            let tick;
 
-            if (tick === null) {
+            try {
+                tick = new VarInt32(this._tail.readUInt32LE(offset), 4);
+            } catch {
                 yield null;
 
                 break;
             }
 
             offset += tick.size;
+            
+            // 1 byte ignored
+            offset += 1;
 
-            const frame = VarInt32.parse(this._tail.subarray(offset));
+            let frame;
 
-            if (frame === null) {
+            try {
+                frame = new VarInt32(this._tail.readUInt32LE(offset), 4);
+            } catch {
                 yield null;
 
                 break;
@@ -66,8 +75,8 @@ class DemoPacketRawExtractor {
 
             offset += frame.size;
 
-            if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, type, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
+            if (this._tail.byteLength - offset >= frame.value) {
+                yield new DemoPacketRaw(sequence, type, DemoSource.HTTP_BROADCAST, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
 
                 offset += frame.value;
 
@@ -81,4 +90,5 @@ class DemoPacketRawExtractor {
     }
 }
 
-export default DemoPacketRawExtractor;
+export default DemoPacketRawBroadcastExtractor;
+

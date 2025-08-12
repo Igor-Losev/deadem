@@ -5,13 +5,15 @@ class DemoPacketRaw {
      *
      * @param {number} sequence
      * @param {VarInt32} type
+     * @param {DemoSource} source
      * @param {VarInt32} tick
      * @param {VarInt32} frame
      * @param {Buffer|Uint8Array} payload
      */
-    constructor(sequence, type, tick, frame, payload) {
+    constructor(sequence, type, source, tick, frame, payload) {
         this._sequence = sequence;
         this._type = type;
+        this._source = source;
         this._tick = tick;
         this._frame = frame;
         this._payload = payload;
@@ -31,6 +33,14 @@ class DemoPacketRaw {
      */
     get type() {
         return this._type;
+    }
+
+    /**
+     * @public
+     * @returns {DemoSource} 
+     */
+    get source() {
+        return this._source;
     }
 
     /**

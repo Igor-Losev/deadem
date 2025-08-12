@@ -27,7 +27,7 @@ submit.addEventListener('click', async () => {
     submit.setAttribute('disabled', '');
 
     const benchmark = new Benchmark();
-    const configuration = new ParserConfiguration({ parserThreads: 4 });
+    const configuration = new ParserConfiguration({ parserThreads: 0 });
 
     for (let i = 0; i < REPEATS; i++) {
         output.innerText = `Parsing #${i + 1}...`;

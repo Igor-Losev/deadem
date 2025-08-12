@@ -1,7 +1,8 @@
-import InterceptorStage from '#data/enums/InterceptorStage.js';
-
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
+
+import DemoSource from '#data/enums/DemoSource.js';
+import InterceptorStage from '#data/enums/InterceptorStage.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
@@ -55,10 +56,11 @@ class Parser {
     /**
      * @public
      * @param {Stream.Readable|ReadableStream} reader
+     * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {Promise<void>}
      */
-    async parse(reader) {
-        return this._engine.parse(reader);
+    parse(reader, source = DemoSource.REPLAY) {
+        return this._engine.parse(reader, source);
     }
 
     /**

@@ -1,12 +1,16 @@
 import { Buffer } from 'node:buffer';
 
+import Assert from '#core/Assert.js';
+
 import TransformStream from '#core/stream/TransformStream.js';
 
+import DemoSource from '#data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketRawExtractor from '#extractors/DemoPacketRawExtractor.js';
+import DemoPacketRawBroadcastExtractor from '#extractors/DemoPacketRawBroadcastExtractor.js';
+import DemoPacketRawReplayExtractor from '#extractors/DemoPacketRawReplayExtractor.js';
 
-const DEMO_HEADER_SIZE_BYTES = 16;
+const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 
 /**
  * Extracts one or more {@link DemoPacketRaw} from a given buffer.
@@ -19,11 +23,15 @@ class DemoStreamPacketExtractor extends TransformStream {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {DemoSource} source
      */
-    constructor(engine) {
+    constructor(engine, source) {
         super();
 
+        Assert.isTrue(source instanceof DemoSource);
+
         this._engine = engine;
+        this._source = source;
 
         this._counts = {
             bytes: 0,
@@ -59,8 +67,8 @@ class DemoStreamPacketExtractor extends TransformStream {
     async _handle(chunk) {
         let buffer = chunk;
 
-        if (this._counts.chunks === 0) {
-            buffer = chunk.subarray(DEMO_HEADER_SIZE_BYTES);
+        if (this._source === DemoSource.REPLAY && this._counts.chunks === 0) {
+            buffer = chunk.subarray(DEMO_REPLAY_HEADER_SIZE_BYTES);
         }
 
         if (this._tail.length !== 0) {
@@ -69,7 +77,14 @@ class DemoStreamPacketExtractor extends TransformStream {
             this._tail = Buffer.alloc(0);
         }
 
-        const extractor = new DemoPacketRawExtractor(buffer);
+        let extractor;
+
+        if (this._source === DemoSource.HTTP_BROADCAST) {
+            extractor = new DemoPacketRawBroadcastExtractor(buffer);
+        } else {
+            extractor = new DemoPacketRawReplayExtractor(buffer);
+        }
+
         const generator = extractor.retrieve(this._counts.packets);
 
         while (true) {

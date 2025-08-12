@@ -126,21 +126,25 @@ class Printer {
      * @param {Array<PacketTrackerUnpackedItem>} partition
      */
     _printPacketStatsPartition(partition) {
+        const getColumnForType = type => `${type}`.padStart(3, '0'); 
+        const getColumnForCode = code => `${code}`.padEnd(40, ' '); 
+        const getColumnForCount = count => `${count}`.padStart(10, ' ');
+
         partition.forEach((parent) => {
             const demoPacketType = DemoPacketType.parseById(parent.type) || null;
 
             const parentCode = demoPacketType === null ? 'Unknown' : demoPacketType.code;
 
-            this._log(`[ ${parent.type} ] [ ${parentCode} ]: [ ${this._formatNumber(parent.count)} ] packet(s)`);
-
             const indent = this._indent(1);
+
+            this._log(`[ ${getColumnForType(parent.type)} ] ${indent}[ ${getColumnForCode(parentCode)} ]: [ ${getColumnForCount(this._formatNumber(parent.count))} ] packet(s)`);
 
             parent.children.forEach((child) => {
                 const messagePacketType = MessagePacketType.parseById(child.type) || null;
 
                 const childCode = messagePacketType === null ? 'Unknown' : messagePacketType.code;
 
-                this._logger.info(`${indent}[ ${child.type} ] [ ${childCode} ]: [ ${this._formatNumber(child.count)} ] packet(s)`);
+                this._logger.info(`${indent}[ ${getColumnForType(child.type)} ] [ ${getColumnForCode(childCode)} ]: [ ${getColumnForCount(this._formatNumber(child.count))} ] packet(s)`);
             });
         });
     }

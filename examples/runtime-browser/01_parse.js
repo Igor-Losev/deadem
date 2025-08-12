@@ -23,7 +23,7 @@ submit.addEventListener('click', () => {
 
     const reader = state.file.stream();
 
-    const configuration = new ParserConfiguration({ parserThreads: 4 });
+    const configuration = new ParserConfiguration({ parserThreads: 0 });
 
     const parser = new Parser(configuration);
     const printer = new Printer(parser);

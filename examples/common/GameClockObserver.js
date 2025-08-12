@@ -66,8 +66,8 @@ class GameClockObserver {
 
             const entities = demo.getEntitiesByClassName(GAME_RULES_CLASS_NAME);
 
-            if (entities.length !== 1) {
-                throw new Error(`Unexpected entities.length [ ${entities.length} ]. Expected a single entity of type [ ${GAME_RULES_CLASS_NAME} ]`);
+            if (entities.length === 0) {
+                return;
             }
 
             this._gameRulesReference = entities[0];

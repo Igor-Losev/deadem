@@ -5,7 +5,7 @@ import DemoFile from '#root/examples/common/DemoFile.js';
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.MATCH_36126420);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_36126420);
 
     const configuration = new ParserConfiguration({ parserThreads: 0 });
 
