@@ -5,7 +5,7 @@ import DemoFile from '#root/examples/common/DemoFile.js';
 import DemoProvider from './helpers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_38625795);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
 
     const parser = new Parser(new ParserConfiguration({ parserThreads: 3 }));
     const printer = new Printer(parser);
