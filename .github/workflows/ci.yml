@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      FILES: "35244871 36126255-5637 36126420-5637 37289286-5678"
+      FILES: "36126255-5637 36126420-5637 37289286-5678 38969017-5768"
       S3: "https://deadem.s3.us-east-1.amazonaws.com"
 
     steps:
