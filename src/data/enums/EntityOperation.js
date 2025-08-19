@@ -34,6 +34,26 @@ class EntityOperation {
     /**
      * @public
      * @static
+     * @param {string} code 
+     * @returns {EntityOperation|null} 
+     */
+    static parse(code) {
+        return registry.byCode.get(code) || null;
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {number} id 
+     * @returns {EntityOperation|null} 
+     */
+    static parseById(id) {
+        return registry.byId.get(id) || null;
+    }
+
+    /**
+     * @public
+     * @static
      * @returns {EntityOperation}
      */
     static get UPDATE() {

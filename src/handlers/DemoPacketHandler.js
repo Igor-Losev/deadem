@@ -104,7 +104,7 @@ class DemoPacketHandler {
 
                     let encoder;
 
-                    if (name === 'm_flSimulationTime') {
+                    if (name === 'm_flSimulationTime' || name === 'm_flAnimTime') {
                         encoder = 'simtime';
                     } else if (typeof symbols[varEncoderSym] === 'string') {
                         encoder = symbols[varEncoderSym];
