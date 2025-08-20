@@ -1,4 +1,4 @@
-import { InterceptorStage, MessagePacketType } from '#root/index.js';
+import { InterceptorStage, MessagePacketType } from 'deadem';
 
 import StatsAccumulator from './StatsAccumulator.js';
 import StatsAccumulatorTiming from './StatsAccumulatorTiming.js';

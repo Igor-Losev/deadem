@@ -1,4 +1,4 @@
-import { BroadcastAgent, BroadcastGateway, DemoSource, InterceptorStage, Logger, Parser, ParserConfiguration, Printer, Protocol } from '#root/index.js';
+import { BroadcastAgent, BroadcastGateway, DemoSource, InterceptorStage, Logger, Parser, ParserConfiguration, Printer, Protocol } from 'deadem';
 
 const MATCH_ID = 38624662;
 

@@ -1,4 +1,4 @@
-import { InterceptorStage, MessagePacketType } from '#root/index.js';
+import { InterceptorStage, MessagePacketType } from 'deadem';
 
 const GAME_RULES_CLASS_NAME = 'CCitadelGameRulesProxy';
 const SECONDS_IN_MINUTE = 60;

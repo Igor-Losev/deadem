@@ -1,6 +1,6 @@
-import { BroadcastAgent, BroadcastGateway, Logger } from '#root/index.js';
+import { BroadcastAgent, BroadcastGateway, Logger } from 'deadem';
 
-import FileSystem from '#core/FileSystem.js';
+import FileSystem from 'deadem/src/core/FileSystem.js';
 
 (async () => {
     const FROM_BEGINNING = true;
