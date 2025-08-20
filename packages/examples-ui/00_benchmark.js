@@ -1,6 +1,6 @@
-import { Logger, Parser, ParserConfiguration } from '#root/index.js';
+import { Logger, Parser, ParserConfiguration } from 'deadem';
 
-import Benchmark from '#root/examples/common/Benchmark.js';
+import Benchmark from 'deadem-examples-common/data/Benchmark.js';
 
 const REPEATS = 10;
 

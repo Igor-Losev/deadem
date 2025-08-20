@@ -1,4 +1,4 @@
-import { BroadcastAgent, BroadcastGateway, DemoSource, Logger, Parser, ParserConfiguration, Printer } from '#root/index.js';
+import { BroadcastAgent, BroadcastGateway, DemoSource, Logger, Parser, ParserConfiguration, Printer } from 'deadem';
 
 (async () => {
     /**
@@ -11,7 +11,7 @@ import { BroadcastAgent, BroadcastGateway, DemoSource, Logger, Parser, ParserCon
      * 4. Replace the MATCH_ID variable in your script with the ID of the selected match.
      */
     const FROM_BEGINNING = false;
-    const MATCH_ID = 38624662;
+    const MATCH_ID = 39056521;
 
     const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
     const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);

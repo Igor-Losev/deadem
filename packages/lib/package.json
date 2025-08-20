@@ -1,0 +1,93 @@
+{
+  "name": "deadem",
+  "version": "1.3.1",
+  "description": "JavaScript (Node.js & Browsers) parser for Deadlock (Valve Source 2 Engine) demo/replay files",
+  "author": "Igor Losev",
+  "license": "MIT",
+  "bugs": "https://github.com/Igor-Losev/deadem/issues",
+  "homepage": "https://github.com/Igor-Losev/deadem",
+  "engines": {
+    "node": ">=16.17.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Igor-Losev/deadem.git"
+  },
+  "keywords": [
+    "deadem",
+    "deadlock",
+    "demo",
+    "demoparser",
+    "parser",
+    "replay"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "benchmark": "node --expose-gc examples/runtime-node/00_benchmark.js",
+    "build": "vite build --config vite.config.browser.js",
+    "lint": "eslint ./",
+    "proto:js": "pbjs --path ./proto/source -t static-module -w commonjs --no-create --no-verify --no-delimited --no-convert -o ./proto/compiled/proto.js ./proto/source/**/*.proto",
+    "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto",
+    "start": "vite --config vite.config.browser.js",
+    "test": "vitest run"
+  },
+  "files": [
+    "dist/**",
+    "index.js",
+    "proto/compiled/**",
+    "src/**"
+  ],
+  "imports": {
+    "#root/*.js": "./*.js",
+    "#src/*.js": "./src/*.js",
+    "#broadcast/*.js": "./src/broadcast/*.js",
+    "#core/*.js": "./src/core/*.js",
+    "#data/*.js": "./src/data/*.js",
+    "#extractors/*.js": "./src/extractors/*.js",
+    "#handlers/*.js": "./src/handlers/*.js",
+    "#providers/*.js": "./src/providers/*.js",
+    "#stream/*.js": "./src/stream/*.js",
+    "#trackers/*.js": "./src/trackers/*.js",
+    "#workers/*.js": "./src/workers/*.js",
+    "#broadcast/BroadcastReadStream.js": {
+      "node": "./src/broadcast/BroadcastReadStream.node.js",
+      "browser": "./src/broadcast/BroadcastReadStream.browser.js"
+    },
+    "#core/stream/Pipeline.js": {
+      "node": "./src/core/stream/Pipeline.node.js",
+      "browser": "./src/core/stream/Pipeline.browser.js"
+    },
+    "#core/stream/TransformStream.js": {
+      "node": "./src/core/stream/TransformStream.node.js",
+      "browser": "./src/core/stream/TransformStream.browser.js"
+    },
+    "#providers/ProtoProvider.instance.js": {
+      "node": "./src/providers/ProtoProvider.node.instance.js",
+      "browser": "./src/providers/ProtoProvider.browser.instance.js"
+    },
+    "#trackers/MemoryTracker.js": {
+      "node": "./src/trackers/MemoryTracker.node.js",
+      "browser": "./src/trackers/MemoryTracker.browser.js"
+    },
+    "#workers/WorkerManager.js": {
+      "node": "./src/workers/WorkerManager.node.js",
+      "browser": "./src/workers/WorkerManager.browser.js"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "protobufjs": "^7.5.0",
+    "snappyjs": "^0.7.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "buffer": "^6.0.3",
+    "eslint": "^9.27.0",
+    "globals": "^16.2.0",
+    "protobufjs-cli": "^1.1.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4"
+  }
+}

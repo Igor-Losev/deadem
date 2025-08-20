@@ -1,7 +1,8 @@
 import https from 'node:https';
 
-import FileSystem from '#core/FileSystem.js';
-import Logger from '#core/Logger.js';
+import { Logger } from 'deadem';
+
+import FileSystem from 'deadem/src/core/FileSystem.js';
 
 const logger = Logger.CONSOLE_DEBUG;
 

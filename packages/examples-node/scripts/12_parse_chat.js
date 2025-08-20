@@ -1,9 +1,9 @@
-import { InterceptorStage, MessagePacketType, Parser, Printer, StringTableType } from '#root/index.js';
+import { InterceptorStage, MessagePacketType, Parser, Printer, StringTableType } from 'deadem';
 
-import DemoFile from '#root/examples/common/DemoFile.js';
-import GameClockObserver from '#root/examples/common/GameClockObserver.js';
+import DemoFile from 'deadem-examples-common/data/DemoFile.js';
+import GameClockObserver from 'deadem-examples-common/data/GameClockObserver.js';
 
-import DemoProvider from './helpers/DemoProvider.js';
+import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
     const reader = await DemoProvider.read(DemoFile.REPLAY_37610767);

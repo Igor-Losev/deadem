@@ -1,9 +1,9 @@
-import { Logger, Parser, ParserConfiguration } from '#root/index.js';
+import { Logger, Parser, ParserConfiguration } from 'deadem';
 
-import Benchmark from '#root/examples/common/Benchmark.js';
-import DemoFile from '#root/examples/common/DemoFile.js';
+import Benchmark from 'deadem-examples-common/data/Benchmark.js';
+import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 
-import DemoProvider from './helpers/DemoProvider.js';
+import DemoProvider from '#root/providers/DemoProvider.js';
 
 const CONFIG = {
     DEMOS: [ DemoFile.REPLAY_38625795 ],

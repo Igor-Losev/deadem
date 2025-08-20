@@ -1,4 +1,4 @@
-import { Parser, ParserConfiguration, Printer } from '#root/index.js';
+import { Parser, ParserConfiguration, Printer } from 'deadem';
 
 const state = {
     file: null,

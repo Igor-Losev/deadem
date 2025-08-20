@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import { DemoSource } from 'deadem';
 
-import DemoSource from '#data/enums/DemoSource.js';
+import Assert from 'deadem/src/core/Assert.js';
 
 const EXTENSION_BIN = '.bin';
 const EXTENSION_DEM = '.dem';
@@ -25,7 +25,9 @@ class DemoFile {
         this._source = source;
         this._meta = meta;
 
-        registry.set(id, this);
+        const key = getKey(id, source);
+
+        registry.set(key, this);
     }
 
     /**
@@ -73,10 +75,13 @@ class DemoFile {
      * @public
      * @static
      * @param {number} id
+     * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {DemoFile|null}
      */
-    static parse(id) {
-        return registry.get(id) || null;
+    static parse(id, source = DemoSource.REPLAY) {
+        const key = getKey(id, source);
+        
+        return registry.get(key) || null;
     }
 
     static get REPLAY_35244871() { return replay35244871; }
@@ -120,6 +125,10 @@ class DemoFile {
 
         return filename;
     }
+}
+
+function getKey(id, source) {
+    return `${id}-${source.code}`;
 }
 
 const replay35244871 = new DemoFile(DemoSource.REPLAY, 35244871, null, null);
