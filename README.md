@@ -42,7 +42,16 @@ deadem
   Customizing parser options and behavior.
 
 * [Usage](#usage)<br/>
-  Basic usage example with real game data.
+  Basic usage example with real game data. 
+  
+  * [Demo File](#demo-file)<br/>
+    Parsing demo using `.dem` file.
+  
+  * [HTTP Broadcast](#http-broadcast)<br/>
+    Parsing demo using `HTTP Broadcast`.
+  
+  * [Data Extraction](#data-extraction)<br/>
+    Extracting data during parsing.
 
 * [Compatibility](#compatibility)<br/>
   Supported environments and versions.
@@ -241,7 +250,7 @@ const parser = new Parser(configuration);
 
 ## Usage
 
-### For Replay (.dem)
+### Demo File
 
 ```js
 import { createReadStream } from 'node:fs';
@@ -258,7 +267,7 @@ await parser.parse(readable);
 printer.printStats();
 ```
 
-### For HTTP Broadcast
+### HTTP Broadcast
 
 ```js
 import { BroadcastAgent, BroadcastGateway, DemoSource, Parser, Printer } from 'deadem';
@@ -279,7 +288,7 @@ await parser.parse(readable, DemoSource.HTTP_BROADCAST);
 printer.printStats();
 ```
 
-### Data extraction
+### Data Extraction
 
 ```js
 ...
