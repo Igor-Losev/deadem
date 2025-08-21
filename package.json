@@ -12,6 +12,7 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
     "proto:json": "npm run proto:json --workspace=deadem",
+    "release": "./release.sh",
     "start": "npm run start --workspace=deadem-examples-ui",
     "test": "npm run test --workspaces --if-present"
   },
