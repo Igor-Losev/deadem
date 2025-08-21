@@ -98,7 +98,7 @@ https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}
 https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos/${matchId}-{gameBuild?}.bin   (for HTTP_BROADCAST files)
 ```
 
-A list of all available demo files can be found in the [DemoFile](https://github.com/Igor-Losev/deadem/blob/main/examples/common/DemoFile.js) class.
+A list of all available demo files can be found in the [DemoFile](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-common/data/DemoFile.js) class.
 
 | №                                                                                                            | Description                               | Commands                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -125,17 +125,17 @@ A list of all available demo files can be found in the [DemoFile](https://github
 
 ### Understanding Demo
 
-The demo file consists of a sequential stream of outer packets, referred to in this project as [DemoPacket](./src/data/DemoPacket.js).
-Each packet represents a type defined in [DemoPacketType](./src/data/enums/DemoPacketType.js).
+The demo file consists of a sequential stream of outer packets, referred to in this project as [DemoPacket](./packages/lib/src/data/DemoPacket.js).
+Each packet represents a type defined in [DemoPacketType](./packages/lib/src/data/enums/DemoPacketType.js).
 
-Most [DemoPacket](./src/data/DemoPacket.js) types, once parsed, become plain JavaScript objects containing structured data. However,
+Most [DemoPacket](./packages/lib/src/data/DemoPacket.js) types, once parsed, become plain JavaScript objects containing structured data. However,
 some packet types — such as `DemoPacketType.DEM_PACKET`, `DemoPacketType.DEM_SIGNON_PACKET`, and
-`DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets, referred to in this project as [MessagePacket](./src/data/MessagePacket.js). These inner packets 
-correspond to a message types defined in [MessagePacketType](./src/data/enums/MessagePacketType.js).
+`DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets, referred to in this project as [MessagePacket](./packages/lib/src/data/MessagePacket.js). These inner packets 
+correspond to a message types defined in [MessagePacketType](./packages/lib/src/data/enums/MessagePacketType.js).
 
-Similarly, most [MessagePacket](./src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
+Similarly, most [MessagePacket](./packages/lib/src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
   1. **Entities** ([Developier Wiki](https://developer.valvesoftware.com/wiki/Networking_Entities)) - `MessagePacketType.SVC_PACKET_ENTITIES`: contains granular (or full) updates to existing entities (i.e. game world objects).
-  2. **String Tables** ([Developer Wiki](https://developer.valvesoftware.com/wiki/String_Table_Dictionary)) - `MessagePacketType.SVC_CREATE_STRING_TABLE`, `MessagePacketType.SVC_UPDATE_STRING_TABLE`, `MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES`: granular (or full) updates to existing string tables (see [StringTableType](./src/data/enums/StringTableType.js)).
+  2. **String Tables** ([Developer Wiki](https://developer.valvesoftware.com/wiki/String_Table_Dictionary)) - `MessagePacketType.SVC_CREATE_STRING_TABLE`, `MessagePacketType.SVC_UPDATE_STRING_TABLE`, `MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES`: granular (or full) updates to existing string tables (see [StringTableType](./packages/lib/src/data/enums/StringTableType.js)).
 
 > ⚠️ **Warning**
 >
@@ -146,7 +146,7 @@ Similarly, most [MessagePacket](./src/data/MessagePacket.js) types also parse in
 ### Understanding Parser
 
 The parser accepts a readable stream and incrementally parses individual packets from it.
-It maintains an internal, **mutable** instance of [Demo](./src/data/Demo.js), which represents the current state of the game. You can access it by calling:
+It maintains an internal, **mutable** instance of [Demo](./packages/lib/src/data/Demo.js), which represents the current state of the game. You can access it by calling:
 
 ```js
 const demo = parser.getDemo();
@@ -156,7 +156,7 @@ const demo = parser.getDemo();
 
 ### Understanding Interceptors
 
-Interceptors are user-defined functions that hook into the parsing process **before** or **after** specific stages (called [InterceptorStage](./src/data/enums/InterceptorStage.js)).
+Interceptors are user-defined functions that hook into the parsing process **before** or **after** specific stages (called [InterceptorStage](./packages/lib/src/data/enums/InterceptorStage.js)).
 They allow to inspect and extract desired data during parsing.
 Currently, there are three supported stages:
 
@@ -166,10 +166,10 @@ Currently, there are three supported stages:
 
 Use the following methods to register hooks:
 
-- **Before** the [Demo](./src/data/Demo.js) state is affected:  
+- **Before** the [Demo](./packages/lib/src/data/Demo.js) state is affected:  
   `parser.registerPreInterceptor(InterceptorStage.DEMO_PACKET, hookFn);`
 
-- **After** the [Demo](./src/data/Demo.js) state is affected:  
+- **After** the [Demo](./packages/lib/src/data/Demo.js) state is affected:  
   `parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, hookFn);`
 
 The diagram below provides an example of the parsing timeline, showing when **pre** and **post** interceptors are invoked at each stage:
@@ -206,9 +206,9 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 
 | Interceptor Stage | Hook Type      | Hook Signature                                                                                                                                                                                            |
 |-------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DEMO_PACKET`     | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js)) => void                                                                                                                                              |
-| `MESSAGE_PACKET`  | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js), messagePacket: [MessagePacket](./src/data/MessagePacket.js)) => void                                                                                 |
-| `ENTITY_PACKET`   | `pre` / `post` | (demoPacket: [DemoPacket](./src/data/DemoPacket.js), messagePacket: [MessagePacket](./src/data/MessagePacket.js), events: Array<[EntityMutationEvent](./src/data/entity/EntityMutationEvent.js)>) => void |
+| `DEMO_PACKET`     | `pre` / `post` | (demoPacket: [DemoPacket](./packages/lib/src/data/DemoPacket.js)) => void                                                                                                                                              |
+| `MESSAGE_PACKET`  | `pre` / `post` | (demoPacket: [DemoPacket](./packages/lib/src/data/DemoPacket.js), messagePacket: [MessagePacket](./packages/lib/src/data/MessagePacket.js)) => void                                                                                 |
+| `ENTITY_PACKET`   | `pre` / `post` | (demoPacket: [DemoPacket](./packages/lib/src/data/DemoPacket.js), messagePacket: [MessagePacket](./packages/lib/src/data/MessagePacket.js), events: Array<[EntityMutationEvent](./packages/lib/src/data/entity/EntityMutationEvent.js)>) => void |
 
 > ❗ **Important**
 > 
@@ -227,7 +227,7 @@ Below is a list of available options that can be passed to the `ParserConfigurat
 
 ### Logging
 
-The library provides a [Logger](./src/core/Logger.js) class with several pre-defined logging strategies. For example:
+The library provides a [Logger](./packages/lib/src/core/Logger.js) class with several pre-defined logging strategies. For example:
   - `Logger.CONSOLE_WARN` — only logs warnings and errors.
   - `Logger.NOOP` - disables all logging.
 
@@ -319,7 +319,7 @@ console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDama
 
 ## Compatibility
 
-Tested with Deadlock demo files from game build `5716` and below.
+Tested with Deadlock demo files from game build `5768` and below.
 
 * **Node.js:** v16.17.0 and above.
 * **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
