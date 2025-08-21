@@ -3,8 +3,7 @@ import commonConfig from './../../eslint.common.config.js';
 
 export default defineConfig([
     {
-        extends: [ commonConfig ],
-        ignores: [ 'dist/*' ]
+        extends: [ commonConfig ]
     }
 ]);
 
