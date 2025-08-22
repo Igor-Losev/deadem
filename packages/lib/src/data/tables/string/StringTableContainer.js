@@ -37,7 +37,7 @@ class StringTableContainer {
      * @param {number} id
      * @returns {StringTable}
      */
-    getById(id) {
+    getyId(id) {
         return this._registry.tableById.get(id) || null;
     }
 
@@ -49,6 +49,14 @@ class StringTableContainer {
      */
     getByName(name) {
         return this._registry.tableByName.get(name) || null;
+    }
+
+    /**
+     * @public
+     * @returns {Array<StringTable>} 
+     */
+    getTables() {
+        return Array.from(this._registry.tableById.values());
     }
 
     /**
@@ -87,7 +95,15 @@ class StringTableContainer {
             payload = createData.stringData;
         }
 
-        const stringTable = new StringTable(this._registry.tableById.size, stringTableType, createData.flags, instructions);
+        let tableId;
+
+        if (existing !== null) {
+            tableId = existing.id;
+        } else {
+            tableId = this._registry.tableById.size;
+        }
+
+        const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions);
 
         this._register(stringTable);
 
@@ -109,15 +125,23 @@ class StringTableContainer {
      */
     handleInstantiate(instantiateData) {
         instantiateData.tables.forEach((tableData) => {
-            const type = StringTableType.parseByName(tableData.tableName);
+            const stringTableType = StringTableType.parseByName(tableData.tableName);
 
-            if (type === null) {
+            if (stringTableType === null) {
                 this._logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
 
                 return;
             }
 
-            const stringTable = new StringTable(this._registry.tableById.size, type, tableData.tableFlags, null);
+            const existing = this.getByName(stringTableType.name);
+
+            let stringTable;
+
+            if (existing !== null) {
+                stringTable = new StringTable(existing.id, stringTableType, tableData.tableFlags, existing.instructions);
+            } else {
+                stringTable = new StringTable(this._registry.tableById.size, stringTableType, tableData.tableFlags, null);
+            }
 
             tableData.items.forEach((entryData, index) => {
                 const entry = StringTableEntry.fromBuffer(entryData.data, stringTable.type, index, entryData.str);

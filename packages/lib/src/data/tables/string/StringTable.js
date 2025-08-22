@@ -10,7 +10,7 @@ class StringTable {
      * @param {number} id
      * @param {StringTableType} type
      * @param {number} flags
-     * @param {StringTableInstructions=} instructions
+     * @param {StringTableInstructions|null=} instructions
      */
     constructor(id, type, flags, instructions) {
         Assert.isTrue(Number.isInteger(id) && id >= 0);

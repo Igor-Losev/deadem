@@ -167,6 +167,19 @@ class Demo {
 
     /**
      * @public
+     * @returns {{ classBaselines: number, classes: number, entities: number, serializers: number }} 
+     */
+    getStats() {
+        return {
+            classBaselines: this._classBaselines.size,
+            classes: this._classes.byId.size,
+            entities: this._entities.size,
+            serializers: this._serializers.size
+        };
+    }
+
+    /**
+     * @public
      * @param {Class} clazz
      */
     registerClass(clazz) {
