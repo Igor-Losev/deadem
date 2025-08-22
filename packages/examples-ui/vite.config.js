@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig((_) => {
     return {
@@ -10,6 +11,9 @@ export default defineConfig((_) => {
                 'buffer'
             ]
         },
+        plugins: [
+            react()
+        ],
         resolve: {
             alias: {
                 'node:buffer': 'buffer'

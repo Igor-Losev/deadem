@@ -7,7 +7,6 @@ const registry = {
 
 class StringTableType {
     /**
-     * @private
      * @constructor
      * @param {String} code
      * @param {String} name
