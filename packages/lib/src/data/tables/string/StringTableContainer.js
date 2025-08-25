@@ -37,7 +37,7 @@ class StringTableContainer {
      * @param {number} id
      * @returns {StringTable}
      */
-    getyId(id) {
+    getById(id) {
         return this._registry.tableById.get(id) || null;
     }
 
