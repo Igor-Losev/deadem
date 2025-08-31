@@ -107,11 +107,11 @@ class GameState {
     }
 }
 
-const stateInit = new GameState(1, 'STATE_INIT');
-const statePlayersLoading = new GameState(2, 'STATE_PLAYERS_LOADING');
-const stateUnknown3 = new GameState(3, 'STATE_UNKNOWN_3');
-const statePreGame = new GameState(4, 'STATE_PRE_GAME');
-const stateGameInProgress = new GameState(5, 'STATE_IN_PROGRESS');
-const statePostGame = new GameState(6, 'STATE_POST_GAME');
+const stateInit = new GameState(1, 'INIT');
+const statePlayersLoading = new GameState(2, 'PLAYERS_LOADING');
+const stateUnknown3 = new GameState(3, 'UNKNOWN_3');
+const statePreGame = new GameState(4, 'PRE_GAME');
+const stateGameInProgress = new GameState(5, 'GAME_IN_PROGRESS');
+const statePostGame = new GameState(6, 'POST_GAME');
 
 export default GameState;
