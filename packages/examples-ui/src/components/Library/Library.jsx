@@ -40,7 +40,7 @@ export default function Library() {
               <TableCell>{file.source.code}</TableCell>
               <TableCell>{file.meta ? file.meta.date : '-'}</TableCell>
               <TableCell>
-                <Link href={`${S3_BUCKET_URL}/${file.getFileName()}`}>
+                <Link href={`${S3_BUCKET_URL}/${file.getFileName()}`} target='_blank'>
                   Download
                 </Link>
               </TableCell>
