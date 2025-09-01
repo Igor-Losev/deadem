@@ -8890,6 +8890,10 @@
             "rewardsEligible": {
               "type": "bool",
               "id": 26
+            },
+            "notScored": {
+              "type": "bool",
+              "id": 27
             }
           }
         },
