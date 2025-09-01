@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+import packageJson from './package.json';
+
 const htmlPlugin = () => {
     return {
         name: 'html-transform',
         transformIndexHtml(html) {
             return html.replace(
                 '</head>',
-                `<script src="//cdn.jsdelivr.net/npm/deadem@1.X.X/dist/deadem.min.js"></script></head>`
+                `<script src="//cdn.jsdelivr.net/npm/deadem@${packageJson.version}/dist/deadem.min.js"></script></head>`
             )
         }
     };
