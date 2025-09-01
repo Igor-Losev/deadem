@@ -1,8 +1,8 @@
 import { InterceptorStage } from 'deadem';
 
-import GameObserver from 'deadem-examples-common/data/GameObserver';
+import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 
-import ParserFlowController from './ParserFlowController';
+import ParserFlowController from './ParserFlowController.js';
 
 class Player {
     /**

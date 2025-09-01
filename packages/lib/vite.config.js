@@ -38,7 +38,7 @@ const configuration = defineConfig((_) => {
                 }
             }
         }
-    };  
+    };
 });
 
 /**

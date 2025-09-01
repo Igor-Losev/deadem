@@ -7,11 +7,11 @@ import commonConfig from './../../eslint.common.config.js';
 
 export default defineConfig([
     {
-        files: [ '**/*.js' ],
+        files: [ 'src/**/*.js' ],
         extends: [ commonConfig ]
     },
     {
-        files: [ '**/*.{js,jsx}' ],
+        files: [ 'src/**/*.{js,jsx}' ],
         ...react.configs.flat.recommended,
         languageOptions: {
             ...react.configs.flat.languageOptions,
@@ -30,7 +30,7 @@ export default defineConfig([
         }
     },
     {
-        files: [ '**/*.{js,jsx}' ],
+        files: [ 'src/**/*.{js,jsx}' ],
         ...react.configs.flat['jsx-runtime']
     }
 ]);
