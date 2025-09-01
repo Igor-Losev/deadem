@@ -5,7 +5,7 @@ import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_37289347);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
 
     const parser = new Parser();
     const printer = new Printer(parser);
