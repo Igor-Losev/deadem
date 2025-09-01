@@ -1,10 +1,12 @@
-import { Folder as FolderIcon, Troubleshoot as TroubleshootIcon } from '@mui/icons-material';
-import { Box, Container } from '@mui/material';
-import React, { useState } from 'react';
+import { Folder as FolderIcon, GitHub as GitHubIcon, Troubleshoot as TroubleshootIcon } from '@mui/icons-material';
+import { Box, Container, IconButton, Typography } from '@mui/material';
+import { useState } from 'react';
 
 import Library from './components/Library/Library';
 import Navigation from './components/Navigation/Navigation';
 import Parser from './components/Parser/Parser';
+
+import packageJson from './../package.json';
 
 const TABS = [
   {
@@ -35,8 +37,33 @@ function App() {
   };
 
   return (
-    <Container fixed sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-      <Navigation active={tabIndex} onChange={handleTabChanged} tabs={TABS} tabsProps={{ centered: true }} />
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        maxWidth: '1200px', width: '100%',
+        overflow: 'hidden'
+      }}>
+
+      <Box display='flex'>
+        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-start'>
+        </Box>
+
+        <Navigation active={tabIndex} onChange={handleTabChanged} tabs={TABS} tabsProps={{ centered: true }} />
+
+        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end'>
+          <Typography color='gray' fontSize='0.875rem' marginRight={1}>v{packageJson.version}</Typography>
+          <IconButton 
+            href='https://github.com/Igor-Losev/deadem'
+            sx={{ '&:hover svg': { fill: 'black' } }} 
+            target='_blank'
+          >
+            <GitHubIcon />
+          </IconButton>
+        </Box>
+      </Box>
+
       {TABS.map((tab, index) => (
         <Box
           key={tab.key}

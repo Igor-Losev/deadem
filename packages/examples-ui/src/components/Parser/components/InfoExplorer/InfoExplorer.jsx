@@ -43,7 +43,20 @@ const ColumnsForServer = [
 export default function InfoExplorer({ demo }) {
   const server = demo ? demo.server : null;
   const general = demo ? demo.getStats() : null;
-  const stringTables = demo ? demo.stringTableContainer.getTables() : null;
+
+  let stringTables;
+
+  if (demo) {
+    const tables = demo.stringTableContainer.getTables();
+
+    if (tables.length > 0) {
+      stringTables = tables;
+    } else {
+      stringTables = null;
+    }
+  } else {
+    stringTables = null;
+  }
 
   const columnsForStringTables = (stringTables || [ ]).map((stringTable, i) => ({
     label: stringTable.type.code,
@@ -52,9 +65,9 @@ export default function InfoExplorer({ demo }) {
 
   return (
     <Grid padding={2} container spacing={3} justifyContent='space-around'>
-      { general && <Grid size={4}><Widget header='General' columns={ColumnsForGeneral} data={general} /></Grid> }
-      { server && <Grid size={4}><Widget header='Server' columns={ColumnsForServer} data={server} /></Grid> }
-      { stringTables && <Grid size={4}><Widget header='String Table Entries' columns={columnsForStringTables} data={stringTables} /></Grid> }
+      { <Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='General' columns={ColumnsForGeneral} data={general} /></Grid> }
+      { <Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='Server' columns={ColumnsForServer} data={server} /></Grid> }
+      { <Grid size={{ md: 4, sm: 12, xs: 12 }}><Widget header='String Table Entries' columns={columnsForStringTables} data={stringTables} /></Grid> }
     </Grid>
   );
 }
