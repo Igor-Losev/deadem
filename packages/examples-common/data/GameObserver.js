@@ -116,10 +116,10 @@ class GameObserver {
                 elapsed = (gameTick - clockLastUpdatedTick) * demo.server.tickInterval;
             }
 
-            this._game.clockGame = clockLastUpdatedAt + elapsed;
+            this._game.clockGame = Math.max(clockLastUpdatedAt + elapsed, 0);
         }
 
-        this._game.clockTotal = gameTick / demo.server.tickRate;
+        this._game.clockTotal = Math.max(gameTick / demo.server.tickRate, 0);
         this._game.paused = gamePaused;
         this._game.state = gameState;
     }
