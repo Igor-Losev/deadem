@@ -5,7 +5,7 @@
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
-  "homepage": "https://github.com/Igor-Losev/deadem",
+  "homepage": "https://deadem.com",
   "engines": {
     "node": ">=16.17.0"
   },
