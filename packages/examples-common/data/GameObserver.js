@@ -1,6 +1,6 @@
 import { InterceptorStage } from 'deadem';
 
-import GameState from './GameState';
+import GameState from './GameState.js';
 
 const GAME_RULES_CLASS_NAME = 'CCitadelGameRulesProxy';
 const NOT_AVAILABLE = 'N/A';
@@ -57,6 +57,22 @@ class GameObserver {
             state: this._game.state !== null ? this._game.state.name : NOT_AVAILABLE,
             tick: this._game.tick !== null ? this._game.tick.toString() : NOT_AVAILABLE
         };
+    }
+
+    /**
+     * @public
+     * @returns {string} 
+     */
+    getGameClockFormatted() {
+        return formatClock(this._game.clockGame);
+    }
+
+    /**
+     * @public
+     * @returns {string}
+     */
+    getTotalClockFormatted() {
+        return formatClock(this._game.clockTotal);
     }
 
     /** 

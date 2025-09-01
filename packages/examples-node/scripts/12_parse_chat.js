@@ -1,17 +1,17 @@
-import { InterceptorStage, MessagePacketType, Parser, Printer, StringTableType } from 'deadem';
+import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer, StringTableType } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
-import GameClockObserver from 'deadem-examples-common/data/GameClockObserver.js';
+import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_37610767);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
 
-    const parser = new Parser();
+    const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
     const printer = new Printer(parser);
 
-    const gameClockObserver = new GameClockObserver(parser);
+    const gameObserver = new GameObserver(parser, Infinity);
 
     const players = new Map();
 
@@ -30,17 +30,21 @@ import DemoProvider from '#root/providers/DemoProvider.js';
     const getUserName = slot => players.get(slot);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
-        switch (messagePacket.type) {
-            case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE:
-                console.log(`CHAT_MESSAGE [ ${gameClockObserver.getClockFormatted()} ]: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
+        const isChatMessage = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE;
+        const isChatWheel = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL;
 
-                break;
-            case MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL:
-                console.log(`CHAT_WHEEL: [ ${gameClockObserver.getClockFormatted()} ]: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+        if (!isChatMessage && !isChatWheel) {
+            return;
+        }
 
-                break;
-            default:
-                break;
+        gameObserver.forceUpdate();
+
+        const gameData = gameObserver.getGameFormatted();
+
+        if (isChatMessage) {
+            console.log(`CHAT_MESSAGE [ ${gameData.state}|${gameData.clockGame} ]: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
+        } else {
+            console.log(`CHAT_WHEEL: [ ${gameData.state}|${gameData.clockGame} ]: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
         }
     });
 

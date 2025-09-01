@@ -1,68 +1,72 @@
-import { InterceptorStage, MessagePacketType, Parser, Printer } from 'deadem';
+import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
-import GameClockObserver from 'deadem-examples-common/data/GameClockObserver.js';
+import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_37610767);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
 
-    const parser = new Parser();
+    const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
     const printer = new Printer(parser);
 
-    const gameClockObserver = new GameClockObserver(parser);
+    const gameObserver = new GameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
-        if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED) {
-            const demo = parser.getDemo();
-
-            let entityAttacker;
-
-            if (messagePacket.data.entindexAttacker === -1) {
-                entityAttacker = null;
-            } else {
-                entityAttacker = getEntity(demo, messagePacket.data.entindexAttacker);
-            }
-
-            let entityScorer;
-
-            if (messagePacket.data.entindexScorer === -1) {
-                entityScorer = null;
-            } else {
-                entityScorer = getEntity(demo, messagePacket.data.entindexScorer);
-            }
-
-            let entityVictim;
-
-            if (messagePacket.data.entindexVictim === -1) {
-                entityVictim = null;
-            } else {
-                entityVictim = getEntity(demo, messagePacket.data.entindexVictim);
-            }
-
-            if (entityAttacker === null && entityScorer === null) {
-                console.warn('Unhandled case: entityAttacker is null and entityScorer is null. Skipping');
-
-                return;
-            }
-
-            if (entityVictim === null) {
-                console.warn('Unhandled case: entityVictim is null. Skipping');
-
-                return;
-            }
-
-            const entityKiller = entityScorer || entityAttacker;
-
-            console.log(`${gameClockObserver.getClockFormatted()}: ${getEntityLog(demo, entityKiller)} -> ${getEntityLog(demo, entityVictim)}`);
-
-            messagePacket.data.entindexAssisters.forEach((assistIndex) => {
-                const entity = demo.getEntity(assistIndex);
-
-                console.log(`└──── Assist ${getEntityLog(demo, entity)}`);
-            });
+        if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED) {
+            return;
         }
+
+        gameObserver.forceUpdate();
+
+        const demo = parser.getDemo();
+
+        let entityAttacker;
+
+        if (messagePacket.data.entindexAttacker === -1) {
+            entityAttacker = null;
+        } else {
+            entityAttacker = getEntity(demo, messagePacket.data.entindexAttacker);
+        }
+
+        let entityScorer;
+
+        if (messagePacket.data.entindexScorer === -1) {
+            entityScorer = null;
+        } else {
+            entityScorer = getEntity(demo, messagePacket.data.entindexScorer);
+        }
+
+        let entityVictim;
+
+        if (messagePacket.data.entindexVictim === -1) {
+            entityVictim = null;
+        } else {
+            entityVictim = getEntity(demo, messagePacket.data.entindexVictim);
+        }
+
+        if (entityAttacker === null && entityScorer === null) {
+            console.warn('Unhandled case: entityAttacker is null and entityScorer is null. Skipping');
+
+            return;
+        }
+
+        if (entityVictim === null) {
+            console.warn('Unhandled case: entityVictim is null. Skipping');
+
+            return;
+        }
+
+        const entityKiller = entityScorer || entityAttacker;
+
+        console.log(`${gameObserver.getGameClockFormatted()}: ${getEntityLog(demo, entityKiller)} -> ${getEntityLog(demo, entityVictim)}`);
+
+        messagePacket.data.entindexAssisters.forEach((assistIndex) => {
+            const entity = demo.getEntity(assistIndex);
+
+            console.log(`└──── Assist ${getEntityLog(demo, entity)}`);
+        });
     });
 
     await parser.parse(reader);
