@@ -95,25 +95,33 @@ export default function EntityExplorer({ demo }) {
 
   return (
     <Box color='text.primary' display='flex' minHeight={0}>
-      <Box flex={1} fontWeight='0.875rem' overflow='auto'>
-        <RichTreeView
-          items={tree}
-          onItemClick={handleTreeItemClick}
-          slots={{
-            endIcon: DataObjectOutlinedIcon,
-            item: EntityTreeItem
-          }}
-        >
-        </RichTreeView>
-      </Box>
+      {tree.length > 0 ? (
+        <>
+          <Box flex={1} fontWeight='0.875rem' overflow='auto'>
+            <RichTreeView
+              items={tree}
+              onItemClick={handleTreeItemClick}
+              slots={{
+                endIcon: DataObjectOutlinedIcon,
+                item: EntityTreeItem
+              }}
+            >
+            </RichTreeView>
+          </Box>
 
-      <Divider orientation='vertical' flexItem />
+          <Divider orientation='vertical' flexItem />
 
-      <Box flex={1} overflow='auto' padding={1}>
-        <Box component='pre' margin={0}>
-          <Typography fontSize='0.875rem'>{unpackedEntity}</Typography>
+          <Box flex={1} overflow='auto' padding={1}>
+            <Box component='pre' margin={0}>
+              <Typography fontSize='0.875rem'>{unpackedEntity}</Typography>
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box alignItems='center' display='flex' justifyContent='center' minHeight={140} width='100%'>
+          <Typography color='text.secondary' fontSize='0.875rem'>No data.</Typography>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }

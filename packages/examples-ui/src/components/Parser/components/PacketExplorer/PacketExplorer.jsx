@@ -1,4 +1,4 @@
-import { Box, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { ManageSearch as ManageSearchIcon } from '@mui/icons-material';
 import { useMemo, useState } from 'react';
 
@@ -78,18 +78,27 @@ export default function PacketExplorer({ history }) {
       </TableHead>
 
       <TableBody>
-        {history.map(demoPacket => (
-          <TableRow key={demoPacket.sequence}>
-            {COLUMNS.map(column => (
-              <TableCell key={column.header}>{column.selector(demoPacket)}</TableCell>
-            ))}
-            <TableCell align='center'>
-              <IconButton onClick={() => handleDataClicked(demoPacket)} sx={{ padding: '3px' }}>
-                <ManageSearchIcon fontSize='small' />
-              </IconButton>
+        {history.length > 0 ? (
+          history.map(demoPacket => (
+            <TableRow key={demoPacket.sequence}>
+              {COLUMNS.map(column => (
+                <TableCell key={column.header}>{column.selector(demoPacket)}</TableCell>
+              ))}
+              <TableCell align='center'>
+                <IconButton onClick={() => handleDataClicked(demoPacket)} sx={{ padding: '3px' }}>
+                  <ManageSearchIcon fontSize='small' />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={COLUMNS.length + 1} sx={{ height: '120px', textAlign: 'center' }}>
+              <Typography color='text.secondary' fontSize='0.875rem'>No data.</Typography>
             </TableCell>
           </TableRow>
-        ))}
+        )}
+
       </TableBody>
 
       {packet &&

@@ -20,19 +20,22 @@ export default function Widget({ header, columns, data }) {
       <Divider />
 
       {data
-        ? <Table size='small'>
-          <TableBody>
-            {columns.map((column) => (
-              <StyledTableRow key={column.label}>
-                <TableCell width='50%'>{column.label}</TableCell>
-                <TableCell width='50%'>{column.selector(data)}</TableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-        : <Box alignItems='center' display='flex' justifyContent='center' minHeight={60}>
-          <Typography fontSize='0.875rem'>No data</Typography>
-        </Box>
+        ? (
+          <Table size='small'>
+            <TableBody>
+              {columns.map((column) => (
+                <StyledTableRow key={column.label}>
+                  <TableCell width='50%'>{column.label}</TableCell>
+                  <TableCell width='50%'>{column.selector(data)}</TableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Box alignItems='center' display='flex' justifyContent='center' minHeight={60}>
+            <Typography color='text.secondary' fontSize='0.875rem'>No data.</Typography>
+          </Box>
+        )
       }
     </Box>
   );

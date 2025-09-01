@@ -2,7 +2,7 @@ import { UploadFile as UploadFileIcon } from '@mui/icons-material';
 import { Button, Tooltip } from '@mui/material';
 import { forwardRef } from 'react';
 
-const UploadForm = forwardRef(({ onChange }, ref) => {
+const UploadForm = forwardRef(({ onFileChange }, ref) => {
   return (
     <Tooltip title='.dem file' arrow>
       <Button
@@ -14,8 +14,9 @@ const UploadForm = forwardRef(({ onChange }, ref) => {
         Upload
 
         <input
-          hidden 
-          onChange={onChange} 
+          accept='.dem'
+          hidden
+          onChange={onFileChange}
           ref={ref}
           type='file'
         />
