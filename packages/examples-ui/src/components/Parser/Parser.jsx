@@ -254,15 +254,15 @@ export default function ParserComponent() {
           <Alert
             severity='info'
             variant='outlined'
-            sx={{ backgroundColor: 'white', border: 'none', borderRadius: 1, boxShadow: 2, maxWidth: 600, overflowY: 'auto' }}
+            sx={{ backgroundColor: 'white', border: 'none', borderRadius: 1, boxShadow: 2, maxWidth: 600, overflowY: 'auto', paddingRight: '46px' }}
           >
             <AlertTitle color='text.secondary'>Deadem Explorer</AlertTitle>
             <Divider />
             <Typography variant='body2' color='text.secondary' marginTop={2} paragraph>
-              This is <strong>Deadem Explorer</strong>, a tool that showcases the capabilities of the <strong>deadem</strong> library in a simplified way. Currently, this UI supports only the parsing of demo files (with the <code>.dem</code> extension). You can select any file from the Library or upload your own.
+              <strong>Deadem</strong> is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
             </Typography>
             <Typography variant='body2' color='text.secondary' marginTop={2} paragraph>
-              <strong>Deadem</strong> is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
+              This is <strong>Deadem Explorer</strong>, a tool that showcases the capabilities of the <strong>deadem</strong> library in a simplified way. Currently, this UI supports only the parsing of demo files (with the <code>.dem</code> extension). You can select any file from the Library or upload your own.
             </Typography>
             <Typography color='text.secondary' marginBottom={0} variant='body2' paragraph>
               For more information, check out the links below:
