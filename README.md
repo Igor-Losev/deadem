@@ -128,7 +128,7 @@ A list of all available demo files can be found in the [DemoFile](./packages/exa
 
 | №                                                                                         | Description                | Commands    |
 | ----------------------------------------------------------------------------------------- | -------------------------- | ----------- |
-| [01](./packages/examples-ui/01_parse.js) | Parse a single replay file | `npm start` |
+| [01](https://deadem.com) | Deadem Explorer | `npm start` |
 
 ## Overview
 
@@ -336,7 +336,7 @@ Tested with Deadlock demo files from game build `5888` and below.
 ## Performance
 
 By default, entities are **parsed but not unpacked**. Parser performance may vary depending on the number
-of`entity.unpackFlattened()` calls.
+of `entity.unpackFlattened()` calls.
 
 The table below shows performance results **without calling `entity.unpackFlattened()`** for MacBook Pro with M3 chip:
 
