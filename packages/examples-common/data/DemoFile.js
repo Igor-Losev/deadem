@@ -105,6 +105,7 @@ class DemoFile {
     static get REPLAY_38625795() { return replay38625795; }
     static get REPLAY_38969017() { return replay38969017; }
     static get REPLAY_40637165() { return replay40637165; }
+    static get REPLAY_48960058() { return replay48960058; }
     static get BROADCAST_38625795() { return broadcast38625795; }
 
     /**
@@ -154,6 +155,7 @@ const replay38625795 = new DemoFile(DemoSource.REPLAY, 38625795, 5716, { date: '
 const broadcast38625795 = new DemoFile(DemoSource.HTTP_BROADCAST, 38625795, 5716, { date: '2025-08-08' });
 const replay38969017 = new DemoFile(DemoSource.REPLAY, 38969017, 5768, { date: '2025-08-19' });
 const replay40637165 = new DemoFile(DemoSource.REPLAY, 40637165, 5888, { date: '2025-09-01' });
+const replay48960058 = new DemoFile(DemoSource.REPLAY, 48960058, 6023, { date: '2025-12-14' });
 
 /**
  * @typedef {{ date: string }} metaObject
