@@ -114,8 +114,8 @@ class DemoPacketHandler {
 
                     const encodeFlags = Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null;
                     const bitCount = Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null;
-                    const lowValue = Number.isInteger(fieldRaw.lowValue) ? fieldRaw.lowValue : null;
-                    const highValue = Number.isInteger(fieldRaw.highValue) ? fieldRaw.highValue : null;
+                    const lowValue = typeof fieldRaw.lowValue === 'number' ? fieldRaw.lowValue : null;
+                    const highValue = typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null;
 
                     const decoderInstructions = this._instructionsFactory.build(
                         encoder,

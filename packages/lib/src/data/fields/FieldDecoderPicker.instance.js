@@ -41,9 +41,11 @@ class FieldDecoderPicker {
 
         this._pool.set('uint64', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
         this._pool.set('CStrongHandle', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
+        this._pool.set('ResourceId_t', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
 
         this._pool.set('Vector2D', f => fieldDecoderFactory.createVector(f.decoderInstructions, 2));
         this._pool.set('Vector', f => fieldDecoderFactory.createVector(f.decoderInstructions, 3));
+        this._pool.set('VectorWS', f => fieldDecoderFactory.createVector(f.decoderInstructions, 3));
         this._pool.set('Vector4D', f => fieldDecoderFactory.createVector(f.decoderInstructions, 4));
     }
 

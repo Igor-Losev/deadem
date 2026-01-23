@@ -174,6 +174,24 @@ class StringTableType {
     static get V_GUI_SCREEN() {
         return vGuiScreen;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {StringTableType}
+     */
+    static get ANIM_TASK_TYPES() {
+        return animTaskTypes;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {StringTableType}
+     */
+    static get ANIM_ASSET_DATA() {
+        return animAssetData;
+    }
 }
 
 const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
@@ -189,5 +207,7 @@ const scenes = new StringTableType('SCENES', 'Scenes');
 const serverQueryInfo = new StringTableType('SERVER_QUERY_INFO', 'server_query_info');
 const userInfo = new StringTableType('USER_INFO', 'userinfo');
 const vGuiScreen = new StringTableType('V_GUI_SCREEN', 'VguiScreen');
+const animTaskTypes = new StringTableType('ANIM_TASK_TYPES', 'AnimTaskTypes');
+const animAssetData = new StringTableType('ANIM_ASSET_DATA', 'AnimAssetData');
 
 export default StringTableType;

@@ -136,7 +136,7 @@ class MessagePacketType {
     static get CITADEL_USER_MESSAGE_DEATH_REPLAY_DATA() { return citadelUserMessageDeathReplayData; }
     static get CITADEL_USER_MESSAGE_PLAYER_LIFETIME_STAT_INFO() { return citadelUserMessagePlayerLifetimeStatInfo; }
     static get CITADEL_USER_MESSAGE_FORCE_SHOP_CLOSED() { return citadelUserMessageForceShopClosed; }
-    static get CITADEL_USER_MESSAGE_STAMINA_DRAINED() { return citadelUserMessageStaminaDrained; }
+    static get CITADEL_USER_MESSAGE_STAMINA_CONSUMED() { return citadelUserMessageStaminaConsumed; }
     static get CITADEL_USER_MESSAGE_ABILITY_NOTIFY() { return citadelUserMessageAbilityNotify; }
     static get CITADEL_USER_MESSAGE_GET_DAMAGE_STATS_RESPONSE() { return citadelUserMessageGetDamageStatsResponse; }
     static get CITADEL_USER_MESSAGE_PARTICIPANT_START_SOUND_EVENT() { return citadelUserMessageParticipantStartSoundEvent; }
@@ -156,11 +156,15 @@ class MessagePacketType {
     static get CITADEL_USER_MESSAGE_CALL_CHEATER_VOTE() { return citadelUserMessageCallCheaterVote; }
     static get CITADEL_USER_MESSAGE_MELEE_HIT() { return citadelUserMessageMeleeHit; }
     static get CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED() { return citadelUserMessageFlexSlotUnlocked; }
-    static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalAchievementUnlocked; }
+    static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalKill; }
     static get CITADEL_USER_MESSAGE_MUSIC_QUEUE() { return citadelUserMessageMusicQueue; }
     static get CITADEL_USER_MESSAGE_AG2_PARAM_TRIGGER() { return citadelUserMessageAG2ParamTrigger; }
     static get CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION() { return citadelUserMessageItemPurchaseNotification; }
     static get CITADEL_USER_MESSAGE_ENTITY_PORTALLED() { return citadelUserMessageEntityPortalled; }
+    static get CITADEL_USER_MESSAGE_STREET_BRAWL_SCORING() { return citadelUserMessageStreetBrawlScoring; }
+    static get CITADEL_USER_MESSAGE_HUD_GAME_ANNOUNCEMENT() { return citadelUserMessageHudGameAnnouncement; }
+    static get CITADEL_USER_MESSAGE_ITEM_DRAFT_REACTION() { return citadelUserMessageItemDraftReaction; }
+    static get CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED() { return citadelUserMessageImportantAbilityUsed; }
 
     static get TE_EFFECT_DISPATCH() { return TE_EffectDispatch; }
 
@@ -240,7 +244,7 @@ const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupTyp
     CCitadelUserMsg_DeathReplayData = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_DeathReplayData'),
     CCitadelUserMsg_PlayerLifetimeStatInfo = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_PlayerLifetimeStatInfo'),
     CCitadelUserMsg_ForceShopClosed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ForceShopClosed'),
-    CCitadelUserMsg_StaminaDrained = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_StaminaDrained'),
+    CCitadelUserMsg_StaminaConsumed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_StaminaConsumed'),
     CCitadelUserMessage_AbilityNotify = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_AbilityNotify'),
     CCitadelUserMsg_GetDamageStatsResponse = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_GetDamageStatsResponse'),
     CCitadelUserMsg_ParticipantStartSoundEvent = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ParticipantStartSoundEvent'),
@@ -260,11 +264,15 @@ const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupTyp
     CCitadelUserMsg_CallCheaterVote = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_CallCheaterVote'),
     CCitadelUserMessage_MeleeHit = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_MeleeHit'),
     CCitadelUserMsg_FlexSlotUnlocked = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_FlexSlotUnlocked'),
-    CCitadelUserMsg_SeasonalAchievementUnlocked = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_SeasonalAchievementUnlocked'),
+    CCitadelUserMsg_SeasonalKill = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_SeasonalKill'),
     CCitadelUserMsg_MusicQueue = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_MusicQueue'),
     CCitadelUserMsg_AG2ParamTrigger = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_AG2ParamTrigger'),
     CCitadelUserMessage_ItemPurchaseNotification = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ItemPurchaseNotification'),
-    CCitadelUserMsg_EntityPortalled = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_EntityPortalled');
+    CCitadelUserMsg_EntityPortalled = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_EntityPortalled'),
+    CCitadelUserMsg_StreetBrawlScoring = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_StreetBrawlScoring'),
+    CCitadelUserMsg_HudGameAnnouncement = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_HudGameAnnouncement'),
+    CCitadelUserMsg_ItemDraftReaction = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ItemDraftReaction'),
+    CCitadelUserMessage_ImportantAbilityUsed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ImportantAbilityUsed');
 
 // Game Events
 const CMsgSource1LegacyGameEventList = ProtoProvider.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEventList'),
@@ -352,7 +360,7 @@ const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECit
     citadelUserMessageDeathReplayData = new MessagePacketType('k_EUserMsg_DeathReplayData', ECitadelUserMessageIds.k_EUserMsg_DeathReplayData, CCitadelUserMsg_DeathReplayData), // 333
     citadelUserMessagePlayerLifetimeStatInfo = new MessagePacketType('k_EUserMsg_PlayerLifetimeStatInfo', ECitadelUserMessageIds.k_EUserMsg_PlayerLifetimeStatInfo, CCitadelUserMsg_PlayerLifetimeStatInfo), // 334
     citadelUserMessageForceShopClosed = new MessagePacketType('k_EUserMsg_ForceShopClosed', ECitadelUserMessageIds.k_EUserMsg_ForceShopClosed, CCitadelUserMsg_ForceShopClosed), // 336
-    citadelUserMessageStaminaDrained = new MessagePacketType('k_EUserMsg_StaminaDrained', ECitadelUserMessageIds.k_EUserMsg_StaminaDrained, CCitadelUserMsg_StaminaDrained), // 337
+    citadelUserMessageStaminaConsumed = new MessagePacketType('k_EUserMsg_StaminaConsumed', ECitadelUserMessageIds.k_EUserMsg_StaminaConsumed, CCitadelUserMsg_StaminaConsumed), // 337
     citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', ECitadelUserMessageIds.k_EUserMsg_AbilityNotify, CCitadelUserMessage_AbilityNotify), // 338
     citadelUserMessageGetDamageStatsResponse = new MessagePacketType('k_EUserMsg_GetDamageStatsResponse', ECitadelUserMessageIds.k_EUserMsg_GetDamageStatsResponse, CCitadelUserMsg_GetDamageStatsResponse), // 339
     citadelUserMessageParticipantStartSoundEvent = new MessagePacketType('k_EUserMsg_ParticipantStartSoundEvent', ECitadelUserMessageIds.k_EUserMsg_ParticipantStartSoundEvent, CCitadelUserMsg_ParticipantStartSoundEvent), // 340
@@ -372,11 +380,15 @@ const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECit
     citadelUserMessageCallCheaterVote = new MessagePacketType('k_EUserMsg_CallCheaterVote', ECitadelUserMessageIds.k_EUserMsg_CallCheaterVote, CCitadelUserMsg_CallCheaterVote), // 354
     citadelUserMessageMeleeHit = new MessagePacketType('k_EUserMsg_MeleeHit', ECitadelUserMessageIds.k_EUserMsg_MeleeHit, CCitadelUserMessage_MeleeHit), // 355
     citadelUserMessageFlexSlotUnlocked = new MessagePacketType('k_EUserMsg_FlexSlotUnlocked', ECitadelUserMessageIds.k_EUserMsg_FlexSlotUnlocked, CCitadelUserMsg_FlexSlotUnlocked), // 356
-    citadelUserMessageSeasonalAchievementUnlocked = new MessagePacketType('k_EUserMsg_SeasonalAchievementUnlocked', ECitadelUserMessageIds.k_EUserMsg_SeasonalAchievementUnlocked, CCitadelUserMsg_SeasonalAchievementUnlocked), // 357
+    citadelUserMessageSeasonalKill = new MessagePacketType('k_EUserMsg_SeasonalKill', ECitadelUserMessageIds.k_EUserMsg_SeasonalKill, CCitadelUserMsg_SeasonalKill), // 357
     citadelUserMessageMusicQueue = new MessagePacketType('k_EUserMsg_MusicQueue', ECitadelUserMessageIds.k_EUserMsg_MusicQueue, CCitadelUserMsg_MusicQueue), // 358
     citadelUserMessageAG2ParamTrigger = new MessagePacketType('k_EUserMsg_AG2ParamTrigger', ECitadelUserMessageIds.k_EUserMsg_AG2ParamTrigger, CCitadelUserMsg_AG2ParamTrigger), // 359
     citadelUserMessageItemPurchaseNotification = new MessagePacketType('k_EUserMsg_ItemPurchaseNotification', ECitadelUserMessageIds.k_EUserMsg_ItemPurchaseNotification, CCitadelUserMessage_ItemPurchaseNotification), // 360
-    citadelUserMessageEntityPortalled = new MessagePacketType('k_EUserMsg_EntityPortalled', ECitadelUserMessageIds.k_EUserMsg_EntityPortalled, CCitadelUserMsg_EntityPortalled); // 361
+    citadelUserMessageEntityPortalled = new MessagePacketType('k_EUserMsg_EntityPortalled', ECitadelUserMessageIds.k_EUserMsg_EntityPortalled, CCitadelUserMsg_EntityPortalled), // 361
+    citadelUserMessageStreetBrawlScoring = new MessagePacketType('k_EUserMsg_StreetBrawlScoring', ECitadelUserMessageIds.k_EUserMsg_StreetBrawlScoring, CCitadelUserMsg_StreetBrawlScoring), // 362
+    citadelUserMessageHudGameAnnouncement = new MessagePacketType('k_EUserMsg_HudGameAnnouncement', ECitadelUserMessageIds.k_EUserMsg_HudGameAnnouncement, CCitadelUserMsg_HudGameAnnouncement), // 363
+    citadelUserMessageItemDraftReaction = new MessagePacketType('k_EUserMsg_ItemDraftReaction', ECitadelUserMessageIds.k_EUserMsg_ItemDraftReaction, CCitadelUserMsg_ItemDraftReaction), // 364
+    citadelUserMessageImportantAbilityUsed = new MessagePacketType('k_EUserMsg_ImportantAbilityUsed', ECitadelUserMessageIds.k_EUserMsg_ImportantAbilityUsed, CCitadelUserMessage_ImportantAbilityUsed); // 365
 
 const TE_EffectDispatch = new MessagePacketType('TE_EffectDispatch', ETemporaryEntityIds.TE_EffectDispatchId, CMsgTEEffectDispatch); // 400
 
