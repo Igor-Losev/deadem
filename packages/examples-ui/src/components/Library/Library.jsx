@@ -16,6 +16,14 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 const S3_BUCKET_URL = 'https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos';
 
+function formatSize(bytes) {
+  if (!bytes) {
+    return '-';
+  }
+
+  return `${(bytes / 1024 / 1024).toFixed(0)} MB`;
+}
+
 export default function Library() {
   return (
     <TableContainer component={Paper}>
@@ -27,6 +35,8 @@ export default function Library() {
             <TableCell sx={{ fontWeight: 'bold' }}>Game Build</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Source</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Mode</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Size</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Link</TableCell>
           </TableRow>
         </TableHead>
@@ -36,9 +46,11 @@ export default function Library() {
             <StyledTableRow key={`${file.id}-${file.source.code}`}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{file.id}</TableCell>
-              <TableCell>{file.gameBuild ? file.gameBuild : '-'}</TableCell>
+              <TableCell>{file.gameBuild ?? '-'}</TableCell>
               <TableCell>{file.source.code}</TableCell>
-              <TableCell>{file.meta ? file.meta.date : '-'}</TableCell>
+              <TableCell>{file.meta?.date ?? '-'}</TableCell>
+              <TableCell>{file.meta?.mode ?? 'Normal'}</TableCell>
+              <TableCell>{formatSize(file.meta?.size)}</TableCell>
               <TableCell>
                 <Link href={`${S3_BUCKET_URL}/${file.getFileName()}`} target='_blank'>
                   Download
