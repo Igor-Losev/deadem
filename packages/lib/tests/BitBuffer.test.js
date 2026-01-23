@@ -194,7 +194,7 @@ describe('BitBuffer.readVarInt64()', () => {
     });
 
     describe('When reading Int64 from [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01 ]', () => {
-        test('It should return 4607430648700738616n', () => {
+        test('It should return -9223372036854775808n', () => {
             const value = reader.readVarInt64();
 
             expect(value).toBe(-9223372036854775808n);
@@ -253,7 +253,7 @@ describe('BitBuffer.readUVarInt64()', () => {
     });
 
     describe('When reading UInt64 from [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01 ]', () => {
-        test('It should return 9223372036854775807n', () => {
+        test('It should return 18446744073709551615n', () => {
             const value = reader.readUVarInt64();
 
             expect(value).toBe(18446744073709551615n);
