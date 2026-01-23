@@ -9,7 +9,7 @@ deadem
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6023-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6140-darkGreen" /></a>
 
 **Deadem** is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
 <p align="center">
@@ -330,7 +330,7 @@ console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDama
 
 ## Compatibility
 
-Tested with Deadlock demo files from game build `6023` and below.
+Tested with Deadlock demo files from game build `6140` and below.
 
 * **Node.js:** v16.17.0 and above.
 * **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
