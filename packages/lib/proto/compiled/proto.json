@@ -3715,6 +3715,10 @@
         "msgData": {
           "type": "bytes",
           "id": 5
+        },
+        "trustedServersOnly": {
+          "type": "bool",
+          "id": 6
         }
       }
     },
@@ -5102,7 +5106,6 @@
       "edition": "proto2",
       "fields": {
         "entryType": {
-          "rule": "required",
           "type": ".MODIFIER_ENTRY_TYPE",
           "id": 1,
           "options": {
@@ -5110,7 +5113,6 @@
           }
         },
         "parent": {
-          "rule": "required",
           "type": "uint32",
           "id": 2,
           "options": {
@@ -5118,13 +5120,15 @@
           }
         },
         "serialNumber": {
-          "rule": "required",
           "type": "uint32",
           "id": 3
         },
         "modifierSubclass": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "options": {
+            "default": 0
+          }
         },
         "stackCount": {
           "type": "int32",
@@ -5172,7 +5176,10 @@
         },
         "abilitySubclass": {
           "type": "uint32",
-          "id": 13
+          "id": 13,
+          "options": {
+            "default": 0
+          }
         },
         "inAuraRange": {
           "type": "bool",
@@ -5250,6 +5257,30 @@
           "type": "float",
           "id": 54
         },
+        "float11_": {
+          "type": "float",
+          "id": 55
+        },
+        "float12_": {
+          "type": "float",
+          "id": 56
+        },
+        "float13_": {
+          "type": "float",
+          "id": 57
+        },
+        "float14_": {
+          "type": "float",
+          "id": 58
+        },
+        "float15_": {
+          "type": "float",
+          "id": 59
+        },
+        "float16_": {
+          "type": "float",
+          "id": 60
+        },
         "uint1_": {
           "type": "uint64",
           "id": 35
@@ -5299,6 +5330,12 @@
           "id": 48
         }
       }
+    },
+    "maximumSizeBytes": {
+      "edition": "proto2",
+      "type": "int32",
+      "id": 50000,
+      "extend": ".google.protobuf.MessageOptions"
     },
     "SignonState_t": {
       "edition": "proto2",
@@ -5592,6 +5629,9 @@
     },
     "CNETMsg_SetConVar": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
       "fields": {
         "convars": {
           "type": ".CMsg_CVars",
@@ -5714,6 +5754,9 @@
     },
     "CNETMsg_SpawnGroup_Load": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 131072
+      },
       "fields": {
         "worldname": {
           "type": "string",
@@ -6632,6 +6675,10 @@
         "muzzleNumber": {
           "type": "int32",
           "id": 24
+        },
+        "abilityAsBullet": {
+          "type": "bool",
+          "id": 25
         }
       },
       "nested": {
@@ -6700,6 +6747,10 @@
           "options": {
             "default": 16777215
           }
+        },
+        "bulletRadiusOverride": {
+          "type": "float",
+          "id": 12
         }
       }
     },
@@ -6727,7 +6778,6 @@
       "edition": "proto2",
       "fields": {
         "type": {
-          "rule": "required",
           "type": ".PARTICLE_SYSTEM_MANAGER_MESSAGE",
           "id": 1,
           "options": {
@@ -6735,7 +6785,6 @@
           }
         },
         "index": {
-          "rule": "required",
           "type": "uint32",
           "id": 2
         },
@@ -7316,7 +7365,8 @@
         "k_ECitadelGameMode_Invalid": 0,
         "k_ECitadelGameMode_Normal": 1,
         "k_ECitadelGameMode_1v1Test": 2,
-        "k_ECitadelGameMode_Sandbox": 3
+        "k_ECitadelGameMode_Sandbox": 3,
+        "k_ECitadelGameMode_StreetBrawl": 4
       }
     },
     "ELobbyServerState": {
@@ -7343,9 +7393,9 @@
       "values": {
         "k_eFeatureBanReason_Invalid": 0,
         "k_eFeatureBanReason_DevCommand": 1,
-        "k_eFeatureBanReason_PlayerReports": 2,
+        "k_eFeatureBanReason_ReportedByOtherPlayers": 2,
         "k_eFeatureBanReason_MatchAbandons": 3,
-        "k_eFeatureBanReason_ExcessivePlayerReports": 4
+        "k_eFeatureBanReason_TooManyReportsSubmitted": 4
       }
     },
     "CSOCitadelLobby": {
@@ -7480,13 +7530,13 @@
               "type": "uint32",
               "id": 1
             },
-            "accountAwards": {
-              "rule": "repeated",
-              "type": "uint32",
-              "id": 20,
-              "options": {
-                "packed": true
-              }
+            "hideoutHolidayAward_2024": {
+              "type": "bool",
+              "id": 30
+            },
+            "hideoutHolidayAward_2025": {
+              "type": "bool",
+              "id": 32
             }
           }
         }
@@ -7858,10 +7908,6 @@
             "duplicateHeroesEnabled": {
               "type": "bool",
               "id": 9
-            },
-            "experimentalHeroesEnabled": {
-              "type": "bool",
-              "id": 10
             }
           }
         },
@@ -7924,6 +7970,10 @@
               "options": {
                 "packed": true
               }
+            },
+            "lowPriorityGamesRemaining": {
+              "type": "uint32",
+              "id": 13
             }
           }
         },
@@ -8337,6 +8387,22 @@
             }
           }
         },
+        "PowerUpBuff": {
+          "fields": {
+            "type": {
+              "type": "string",
+              "id": 1
+            },
+            "value": {
+              "type": "uint32",
+              "id": 2
+            },
+            "isPermanent": {
+              "type": "bool",
+              "id": 3
+            }
+          }
+        },
         "PlayerStats": {
           "fields": {
             "timeStampS": {
@@ -8528,6 +8594,22 @@
             "selfDamage": {
               "type": "uint32",
               "id": 47
+            },
+            "bulletKills": {
+              "type": "uint32",
+              "id": 48
+            },
+            "meleeKills": {
+              "type": "uint32",
+              "id": 49
+            },
+            "abilityKills": {
+              "type": "uint32",
+              "id": 50
+            },
+            "headshotKills": {
+              "type": "uint32",
+              "id": 51
             }
           }
         },
@@ -8555,6 +8637,22 @@
             },
             "startingXp": {
               "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "PlayerAccolade": {
+          "fields": {
+            "accoladeId": {
+              "type": "uint32",
+              "id": 1
+            },
+            "accoladeStatValue": {
+              "type": "int32",
+              "id": 2
+            },
+            "accoladeThresholdAchieved": {
+              "type": "int32",
               "id": 3
             }
           }
@@ -8669,6 +8767,45 @@
             "rewardsEligible": {
               "type": "bool",
               "id": 26
+            },
+            "playerTrackedStats": {
+              "rule": "repeated",
+              "type": ".CMsgTrackedStat",
+              "id": 48
+            },
+            "accolades": {
+              "rule": "repeated",
+              "type": ".CMsgMatchMetaDataContents.PlayerAccolade",
+              "id": 27
+            },
+            "mvpRank": {
+              "type": "uint32",
+              "id": 28
+            },
+            "earnedHolidayAward_2025": {
+              "type": "bool",
+              "id": 29
+            },
+            "powerUpBuffs": {
+              "rule": "repeated",
+              "type": ".CMsgMatchMetaDataContents.PowerUpBuff",
+              "id": 30
+            }
+          }
+        },
+        "Teams": {
+          "fields": {
+            "team": {
+              "type": ".ECitadelLobbyTeam",
+              "id": 1,
+              "options": {
+                "default": "k_ECitadelLobbyTeam_Team0"
+              }
+            },
+            "teamTrackedStats": {
+              "rule": "repeated",
+              "type": ".CMsgTrackedStat",
+              "id": 2
             }
           }
         },
@@ -8718,6 +8855,10 @@
               "options": {
                 "default": "k_ECitadelLobbyTeam_Team0"
               }
+            },
+            "playerSpiritDamage": {
+              "type": "uint32",
+              "id": 11
             }
           }
         },
@@ -8768,6 +8909,21 @@
             "playerSlot": {
               "type": "uint32",
               "id": 2
+            }
+          }
+        },
+        "StreetBrawlRound": {
+          "fields": {
+            "roundDurationS": {
+              "type": "uint32",
+              "id": 1
+            },
+            "winningTeam": {
+              "type": ".ECitadelLobbyTeam",
+              "id": 2,
+              "options": {
+                "default": "k_ECitadelLobbyTeam_Team0"
+              }
             }
           }
         },
@@ -8894,13 +9050,41 @@
             "notScored": {
               "type": "bool",
               "id": 27
+            },
+            "teamScore": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 28
+            },
+            "matchTrackedStats": {
+              "rule": "repeated",
+              "type": ".CMsgTrackedStat",
+              "id": 29
+            },
+            "teams": {
+              "rule": "repeated",
+              "type": ".CMsgMatchMetaDataContents.Teams",
+              "id": 30
+            },
+            "botDifficulty": {
+              "type": ".ECitadelBotDifficulty",
+              "id": 32,
+              "options": {
+                "default": "k_ECitadelBotDifficulty_None"
+              }
+            },
+            "streetBrawlRounds": {
+              "rule": "repeated",
+              "type": ".CMsgMatchMetaDataContents.StreetBrawlRound",
+              "id": 33
             }
           }
         },
         "EMatchOutcome": {
           "values": {
             "k_eOutcome_TeamWin": 0,
-            "k_eOutcome_Error": 1
+            "k_eOutcome_Error": 1,
+            "k_eOutcome_MatchDraw": 2
           }
         },
         "EGoldSource": {
@@ -9016,6 +9200,19 @@
         "stats": {
           "rule": "repeated",
           "type": ".CMsgAccountHeroStats",
+          "id": 2
+        }
+      }
+    },
+    "CMsgTrackedStat": {
+      "edition": "proto2",
+      "fields": {
+        "trackedStatId": {
+          "type": "uint32",
+          "id": 1
+        },
+        "trackedStatValue": {
+          "type": "int32",
           "id": 2
         }
       }
@@ -9205,6 +9402,27 @@
         }
       }
     },
+    "CMsgHeroReleaseVoteTally": {
+      "edition": "proto2",
+      "fields": {
+        "remainingVotes": {
+          "type": "uint32",
+          "id": 1
+        },
+        "votesCast": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "packed": true
+          }
+        },
+        "dailyRewardTimeStamp": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
     "CitadelUserMessageIds": {
       "edition": "proto2",
       "values": {
@@ -9239,7 +9457,7 @@
         "k_EUserMsg_DeathReplayData": 333,
         "k_EUserMsg_PlayerLifetimeStatInfo": 334,
         "k_EUserMsg_ForceShopClosed": 336,
-        "k_EUserMsg_StaminaDrained": 337,
+        "k_EUserMsg_StaminaConsumed": 337,
         "k_EUserMsg_AbilityNotify": 338,
         "k_EUserMsg_GetDamageStatsResponse": 339,
         "k_EUserMsg_ParticipantStartSoundEvent": 340,
@@ -9259,11 +9477,15 @@
         "k_EUserMsg_CallCheaterVote": 354,
         "k_EUserMsg_MeleeHit": 355,
         "k_EUserMsg_FlexSlotUnlocked": 356,
-        "k_EUserMsg_SeasonalAchievementUnlocked": 357,
+        "k_EUserMsg_SeasonalKill": 357,
         "k_EUserMsg_MusicQueue": 358,
         "k_EUserMsg_AG2ParamTrigger": 359,
         "k_EUserMsg_ItemPurchaseNotification": 360,
-        "k_EUserMsg_EntityPortalled": 361
+        "k_EUserMsg_EntityPortalled": 361,
+        "k_EUserMsg_StreetBrawlScoring": 362,
+        "k_EUserMsg_HudGameAnnouncement": 363,
+        "k_EUserMsg_ItemDraftReaction": 364,
+        "k_EUserMsg_ImportantAbilityUsed": 365
       }
     },
     "CitadelEntityMessageIds": {
@@ -9289,6 +9511,9 @@
         },
         "k_EPingMarkerInfo_OnlyPlaySound": {
           "(schema_friendly_name)": "Only Play Ping Sound (and VO)"
+        },
+        "k_EPingMarkerInfo_OnlyMiniMap": {
+          "(schema_friendly_name)": "Only show on Minimap, no world, no sound"
         }
       },
       "values": {
@@ -9296,7 +9521,8 @@
         "k_EPingMarkerInfo_ShowMarkerOnSender": 1,
         "k_EPingMarkerInfo_HideMarkerAndSound": 2,
         "k_EPingMarkerInfo_OnlyShowMarker": 3,
-        "k_EPingMarkerInfo_OnlyPlaySound": 4
+        "k_EPingMarkerInfo_OnlyPlaySound": 4,
+        "k_EPingMarkerInfo_OnlyMiniMap": 5
       }
     },
     "CameraOperation": {
@@ -9361,7 +9587,8 @@
         "PostProcState_Black": 1,
         "PostProcState_DoormanHotelVictim": 2,
         "PostProcState_Blinded": 3,
-        "PostProcState_DrifterDarknessCaster": 4
+        "PostProcState_DrifterDarknessCaster": 4,
+        "PostProcState_MatchIntro": 5
       }
     },
     "CUserMessageEmpty": {
@@ -9552,7 +9779,6 @@
       "edition": "proto2",
       "fields": {
         "pingData": {
-          "rule": "required",
           "type": ".PingCommonData",
           "id": 1
         },
@@ -9593,7 +9819,6 @@
       "edition": "proto2",
       "fields": {
         "pingData": {
-          "rule": "required",
           "type": ".PingCommonData",
           "id": 1
         },
@@ -9631,7 +9856,6 @@
       "edition": "proto2",
       "fields": {
         "pingData": {
-          "rule": "required",
           "type": ".PingCommonData",
           "id": 1
         },
@@ -9652,6 +9876,23 @@
           "options": {
             "default": "k_ELaneColor_Invalid"
           }
+        }
+      }
+    },
+    "CCitadelUserMsg_ItemDraftReaction": {
+      "edition": "proto2",
+      "fields": {
+        "pingData": {
+          "type": ".PingCommonData",
+          "id": 1
+        },
+        "rare": {
+          "type": "bool",
+          "id": 2
+        },
+        "legendary": {
+          "type": "bool",
+          "id": 3
         }
       }
     },
@@ -10069,7 +10310,6 @@
       "edition": "proto2",
       "fields": {
         "action": {
-          "rule": "required",
           "type": ".CameraAction",
           "id": 1,
           "options": {
@@ -10292,6 +10532,9 @@
     },
     "CCitadelUserMsg_PostMatchDetails": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 1000000
+      },
       "fields": {
         "matchDetails": {
           "type": "bytes",
@@ -10381,6 +10624,10 @@
         "damage": {
           "type": "float",
           "id": 3
+        },
+        "damageForce": {
+          "type": ".CMsgVector",
+          "id": 4
         }
       }
     },
@@ -10544,7 +10791,7 @@
             "default": "PostProcState_Killed"
           }
         },
-        "startTime": {
+        "delay": {
           "type": "float",
           "id": 4
         },
@@ -10649,10 +10896,10 @@
         }
       }
     },
-    "CCitadelUserMsg_StaminaDrained": {
+    "CCitadelUserMsg_StaminaConsumed": {
       "edition": "proto2",
       "fields": {
-        "entindexVictim": {
+        "entindexTarget": {
           "type": "int32",
           "id": 1,
           "options": {
@@ -10666,6 +10913,18 @@
         "staminaAfter": {
           "type": "float",
           "id": 4
+        },
+        "drained": {
+          "type": "bool",
+          "id": 5
+        },
+        "staminaMax": {
+          "type": "float",
+          "id": 6
+        },
+        "gametime": {
+          "type": "float",
+          "id": 7
         }
       }
     },
@@ -10690,8 +10949,8 @@
           "type": "uint32",
           "id": 3
         },
-        "modifierState": {
-          "type": "int32",
+        "statusImpact": {
+          "type": "uint32",
           "id": 4
         }
       }
@@ -10807,7 +11066,6 @@
       "edition": "proto2",
       "fields": {
         "event": {
-          "rule": "required",
           "type": ".CMsgSosStartSoundEvent",
           "id": 1
         },
@@ -10822,7 +11080,6 @@
       "edition": "proto2",
       "fields": {
         "event": {
-          "rule": "required",
           "type": ".CMsgSosStopSoundEvent",
           "id": 1
         },
@@ -10837,7 +11094,6 @@
       "edition": "proto2",
       "fields": {
         "event": {
-          "rule": "required",
           "type": ".CMsgSosStopSoundEventHash",
           "id": 1
         },
@@ -10852,7 +11108,6 @@
       "edition": "proto2",
       "fields": {
         "event": {
-          "rule": "required",
           "type": ".CMsgSosSetSoundEventParams",
           "id": 1
         },
@@ -10867,7 +11122,6 @@
       "edition": "proto2",
       "fields": {
         "event": {
-          "rule": "required",
           "type": ".CMsgSosSetLibraryStackFields",
           "id": 1
         },
@@ -10925,17 +11179,14 @@
       "edition": "proto2",
       "fields": {
         "objectiveTeam": {
-          "rule": "required",
           "type": "int32",
           "id": 1
         },
         "objectiveId": {
-          "rule": "required",
           "type": "int32",
           "id": 2
         },
         "entityDamaged": {
-          "rule": "required",
           "type": "uint32",
           "id": 3,
           "options": {
@@ -10956,7 +11207,6 @@
           "id": 1
         },
         "playerPawn": {
-          "rule": "required",
           "type": "uint32",
           "id": 2,
           "options": {
@@ -10964,12 +11214,10 @@
           }
         },
         "userTeam": {
-          "rule": "required",
           "type": "int32",
           "id": 3
         },
         "eventType": {
-          "rule": "required",
           "type": "int32",
           "id": 4
         }
@@ -10979,7 +11227,6 @@
       "edition": "proto2",
       "fields": {
         "playerPawn": {
-          "rule": "required",
           "type": "uint32",
           "id": 1,
           "options": {
@@ -10987,14 +11234,23 @@
           }
         },
         "numKills": {
-          "rule": "required",
           "type": "int32",
           "id": 2
         },
         "isFirstBlood": {
-          "rule": "required",
           "type": "bool",
           "id": 3
+        },
+        "streakEnded": {
+          "type": "bool",
+          "id": 4
+        },
+        "duration": {
+          "type": "float",
+          "id": 5,
+          "options": {
+            "default": 5
+          }
         }
       }
     },
@@ -11002,22 +11258,18 @@
       "edition": "proto2",
       "fields": {
         "eventType": {
-          "rule": "required",
           "type": "int32",
           "id": 1
         },
         "teamNumber": {
-          "rule": "required",
           "type": "int32",
           "id": 2
         },
         "laneColor": {
-          "rule": "required",
           "type": "int32",
           "id": 3
         },
         "playerController": {
-          "rule": "required",
           "type": "uint32",
           "id": 4,
           "options": {
@@ -11030,7 +11282,6 @@
       "edition": "proto2",
       "fields": {
         "playerPawn": {
-          "rule": "required",
           "type": "uint32",
           "id": 1,
           "options": {
@@ -11038,7 +11289,6 @@
           }
         },
         "facingYaw": {
-          "rule": "required",
           "type": "float",
           "id": 2
         }
@@ -11048,7 +11298,6 @@
       "edition": "proto2",
       "fields": {
         "playerSlot": {
-          "rule": "required",
           "type": "int32",
           "id": 1,
           "options": {
@@ -11110,16 +11359,22 @@
         }
       }
     },
-    "CCitadelUserMsg_SeasonalAchievementUnlocked": {
+    "CCitadelUserMsg_SeasonalKill": {
       "edition": "proto2",
       "fields": {
-        "accountId": {
+        "killer": {
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
         },
-        "heroId": {
+        "victim": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
         }
       }
     },
@@ -11127,7 +11382,6 @@
       "edition": "proto2",
       "fields": {
         "musicState": {
-          "rule": "required",
           "type": "int32",
           "id": 1
         },
@@ -11163,6 +11417,78 @@
         "portalTransform": {
           "type": ".CMsgTransform",
           "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_StreetBrawlScoring": {
+      "edition": "proto2",
+      "fields": {
+        "scoringTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "justATest": {
+          "type": "bool",
+          "id": 2
+        },
+        "sapphireScore": {
+          "type": "int32",
+          "id": 3
+        },
+        "amberScore": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMsg_HudGameAnnouncement": {
+      "edition": "proto2",
+      "fields": {
+        "titleLocstring": {
+          "type": "string",
+          "id": 1
+        },
+        "descriptionLocstring": {
+          "type": "string",
+          "id": 2
+        },
+        "classname": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 3
+        },
+        "dialogVariableName": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4
+        },
+        "dialogVariableLocstring": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 5
+        }
+      }
+    },
+    "CCitadelUserMessage_ImportantAbilityUsed": {
+      "edition": "proto2",
+      "fields": {
+        "player": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "caster": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "abilityName": {
+          "type": "string",
+          "id": 3
         }
       }
     },
@@ -11215,6 +11541,10 @@
         "boneindex": {
           "type": "int32",
           "id": 4
+        },
+        "triangleindex": {
+          "type": "int32",
+          "id": 13
         },
         "flags": {
           "type": "uint32",
@@ -11289,6 +11619,9 @@
     },
     "CMsgSource1LegacyGameEventList": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 24576
+      },
       "fields": {
         "descriptors": {
           "rule": "repeated",
@@ -11524,7 +11857,7 @@
           "type": "string",
           "id": 1
         },
-        "networkProtocol": {
+        "patchVersion": {
           "type": "int32",
           "id": 2
         },
@@ -11950,6 +12283,15 @@
         }
       }
     },
+    "CDemoSpawnGroupsHLTVBroadcast": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
     "CDemoRecovery": {
       "edition": "proto2",
       "fields": {
@@ -11985,7 +12327,6 @@
         "clc_VoiceData": 22,
         "clc_BaselineAck": 23,
         "clc_RespondCvarValue": 25,
-        "clc_FileCRCCheck": 26,
         "clc_LoadingProgress": 27,
         "clc_SplitPlayerConnect": 28,
         "clc_SplitPlayerDisconnect": 30,
@@ -12029,7 +12370,8 @@
         "svc_UserMessage": 72,
         "svc_Broadcast_Command": 74,
         "svc_HltvFixupOperatorStatus": 75,
-        "svc_UserCmds": 76
+        "svc_UserCmds": 76,
+        "svc_NextMsgPredicted": 77
       }
     },
     "VoiceDataFormat_t": {
@@ -12259,31 +12601,6 @@
         }
       }
     },
-    "CCLCMsg_FileCRCCheck": {
-      "edition": "proto2",
-      "fields": {
-        "codePath": {
-          "type": "int32",
-          "id": 1
-        },
-        "path": {
-          "type": "string",
-          "id": 2
-        },
-        "codeFilename": {
-          "type": "int32",
-          "id": 3
-        },
-        "filename": {
-          "type": "string",
-          "id": 4
-        },
-        "crc": {
-          "type": "fixed32",
-          "id": 5
-        }
-      }
-    },
     "CCLCMsg_LoadingProgress": {
       "edition": "proto2",
       "fields": {
@@ -12338,6 +12655,9 @@
     },
     "CCLCMsg_CmdKeyValues": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 1500
+      },
       "fields": {
         "data": {
           "type": "bytes",
@@ -12354,285 +12674,11 @@
         }
       }
     },
-    "CMsgSource2SystemSpecs": {
-      "edition": "proto2",
-      "fields": {
-        "cpuId": {
-          "type": "string",
-          "id": 1
-        },
-        "cpuBrand": {
-          "type": "string",
-          "id": 2
-        },
-        "cpuModel": {
-          "type": "uint32",
-          "id": 3
-        },
-        "cpuNumPhysical": {
-          "type": "uint32",
-          "id": 4
-        },
-        "ramPhysicalTotalMb": {
-          "type": "uint32",
-          "id": 21
-        },
-        "gpuRendersystemDllName": {
-          "type": "string",
-          "id": 41
-        },
-        "gpuVendorId": {
-          "type": "uint32",
-          "id": 42
-        },
-        "gpuDriverName": {
-          "type": "string",
-          "id": 43
-        },
-        "gpuDriverVersionHigh": {
-          "type": "uint32",
-          "id": 44
-        },
-        "gpuDriverVersionLow": {
-          "type": "uint32",
-          "id": 45
-        },
-        "gpuDxSupportLevel": {
-          "type": "uint32",
-          "id": 46
-        },
-        "gpuTextureMemorySizeMb": {
-          "type": "uint32",
-          "id": 47
-        },
-        "backbufferWidth": {
-          "type": "uint32",
-          "id": 51
-        },
-        "backbufferHeight": {
-          "type": "uint32",
-          "id": 52
-        }
-      }
-    },
-    "CMsgSource2VProfLiteReportItem": {
-      "edition": "proto2",
-      "fields": {
-        "name": {
-          "type": "string",
-          "id": 1
-        },
-        "activeSamples": {
-          "type": "uint32",
-          "id": 2
-        },
-        "activeSamples_1secmax": {
-          "type": "uint32",
-          "id": 4
-        },
-        "usecMax": {
-          "type": "uint32",
-          "id": 3
-        },
-        "usecAvgActive": {
-          "type": "uint32",
-          "id": 11
-        },
-        "usecP50Active": {
-          "type": "uint32",
-          "id": 12
-        },
-        "usecP99Active": {
-          "type": "uint32",
-          "id": 13
-        },
-        "usecAvgAll": {
-          "type": "uint32",
-          "id": 21
-        },
-        "usecP50All": {
-          "type": "uint32",
-          "id": 22
-        },
-        "usecP99All": {
-          "type": "uint32",
-          "id": 23
-        },
-        "usec_1secmaxAvgActive": {
-          "type": "uint32",
-          "id": 31
-        },
-        "usec_1secmaxP50Active": {
-          "type": "uint32",
-          "id": 32
-        },
-        "usec_1secmaxP95Active": {
-          "type": "uint32",
-          "id": 33
-        },
-        "usec_1secmaxP99Active": {
-          "type": "uint32",
-          "id": 34
-        },
-        "usec_1secmaxAvgAll": {
-          "type": "uint32",
-          "id": 41
-        },
-        "usec_1secmaxP50All": {
-          "type": "uint32",
-          "id": 42
-        },
-        "usec_1secmaxP95All": {
-          "type": "uint32",
-          "id": 43
-        },
-        "usec_1secmaxP99All": {
-          "type": "uint32",
-          "id": 44
-        }
-      }
-    },
-    "CMsgSource2VProfLiteReport": {
-      "edition": "proto2",
-      "fields": {
-        "total": {
-          "type": ".CMsgSource2VProfLiteReportItem",
-          "id": 1
-        },
-        "items": {
-          "rule": "repeated",
-          "type": ".CMsgSource2VProfLiteReportItem",
-          "id": 2
-        },
-        "discardedFrames": {
-          "type": "uint32",
-          "id": 3
-        }
-      }
-    },
-    "CMsgSource2NetworkFlowQuality": {
-      "edition": "proto2",
-      "fields": {
-        "duration": {
-          "type": "uint32",
-          "id": 1
-        },
-        "bytesTotal": {
-          "type": "uint64",
-          "id": 5
-        },
-        "bytesTotalReliable": {
-          "type": "uint64",
-          "id": 6
-        },
-        "bytesTotalVoice": {
-          "type": "uint64",
-          "id": 7
-        },
-        "bytesSecP95": {
-          "type": "uint32",
-          "id": 10
-        },
-        "bytesSecP99": {
-          "type": "uint32",
-          "id": 11
-        },
-        "enginemsgsTotal": {
-          "type": "uint32",
-          "id": 20
-        },
-        "enginemsgsSecP95": {
-          "type": "uint32",
-          "id": 21
-        },
-        "enginemsgsSecP99": {
-          "type": "uint32",
-          "id": 22
-        },
-        "ticksTotal": {
-          "type": "uint32",
-          "id": 40
-        },
-        "ticksGood": {
-          "type": "uint32",
-          "id": 41
-        },
-        "ticksGoodAlmostLate": {
-          "type": "uint32",
-          "id": 42
-        },
-        "ticksFixedDropped": {
-          "type": "uint32",
-          "id": 43
-        },
-        "ticksFixedLate": {
-          "type": "uint32",
-          "id": 44
-        },
-        "ticksBadDropped": {
-          "type": "uint32",
-          "id": 45
-        },
-        "ticksBadLate": {
-          "type": "uint32",
-          "id": 46
-        },
-        "ticksBadOther": {
-          "type": "uint32",
-          "id": 47
-        },
-        "tickMissrateSamplesTotal": {
-          "type": "uint32",
-          "id": 50
-        },
-        "tickMissrateSamplesPerfect": {
-          "type": "uint32",
-          "id": 51
-        },
-        "tickMissrateSamplesPerfectnet": {
-          "type": "uint32",
-          "id": 52
-        },
-        "tickMissratenetP75X10": {
-          "type": "uint32",
-          "id": 53
-        },
-        "tickMissratenetP95X10": {
-          "type": "uint32",
-          "id": 54
-        },
-        "tickMissratenetP99X10": {
-          "type": "uint32",
-          "id": 55
-        },
-        "recvmarginP1": {
-          "type": "sint32",
-          "id": 61
-        },
-        "recvmarginP5": {
-          "type": "sint32",
-          "id": 62
-        },
-        "recvmarginP25": {
-          "type": "sint32",
-          "id": 63
-        },
-        "recvmarginP50": {
-          "type": "sint32",
-          "id": 64
-        },
-        "recvmarginP75": {
-          "type": "sint32",
-          "id": 65
-        },
-        "recvmarginP95": {
-          "type": "sint32",
-          "id": 66
-        }
-      }
-    },
     "CCLCMsg_Diagnostic": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 16384
+      },
       "fields": {
         "systemSpecs": {
           "type": ".CMsgSource2SystemSpecs",
@@ -12649,75 +12695,19 @@
         "upstreamFlow": {
           "type": ".CMsgSource2NetworkFlowQuality",
           "id": 4
-        }
-      }
-    },
-    "CSource2Metrics_MatchPerfSummary_Notification": {
-      "edition": "proto2",
-      "fields": {
-        "appid": {
-          "type": "uint32",
-          "id": 1
         },
-        "gameMode": {
-          "type": "string",
-          "id": 2
-        },
-        "serverBuildId": {
-          "type": "uint32",
-          "id": 3
-        },
-        "serverPopid": {
-          "type": "fixed32",
-          "id": 4
-        },
-        "serverProfile": {
-          "type": ".CMsgSource2VProfLiteReport",
-          "id": 10
-        },
-        "clients": {
+        "perfSamples": {
           "rule": "repeated",
-          "type": ".CSource2Metrics_MatchPerfSummary_Notification.Client",
-          "id": 11
-        },
-        "map": {
-          "type": "string",
-          "id": 20
-        }
-      },
-      "nested": {
-        "Client": {
-          "fields": {
-            "systemSpecs": {
-              "type": ".CMsgSource2SystemSpecs",
-              "id": 1
-            },
-            "profile": {
-              "type": ".CMsgSource2VProfLiteReport",
-              "id": 2
-            },
-            "buildId": {
-              "type": "uint32",
-              "id": 3
-            },
-            "downstreamFlow": {
-              "type": ".CMsgSource2NetworkFlowQuality",
-              "id": 4
-            },
-            "upstreamFlow": {
-              "type": ".CMsgSource2NetworkFlowQuality",
-              "id": 5
-            },
-            "steamid": {
-              "type": "fixed64",
-              "id": 10
-            }
-          }
+          "type": ".CMsgSource2PerfIntervalSample",
+          "id": 5
         }
       }
     },
     "CSVCMsg_ServerInfo": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 102400
+      },
       "fields": {
         "protocol": {
           "type": "int32",
@@ -13211,6 +13201,9 @@
     },
     "CSVCMsg_PacketEntities": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
       "fields": {
         "maxEntries": {
           "type": "int32",
@@ -13364,6 +13357,9 @@
     },
     "CSVCMsg_CreateStringTable": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 49152
+      },
       "fields": {
         "name": {
           "type": "string",
@@ -13409,6 +13405,9 @@
     },
     "CSVCMsg_UpdateStringTable": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 262144
+      },
       "fields": {
         "tableId": {
           "type": "int32",
@@ -13706,6 +13705,9 @@
     },
     "CSVCMsg_FlattenedSerializer": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
       "fields": {
         "serializers": {
           "rule": "repeated",
@@ -13767,12 +13769,10 @@
       "edition": "proto2",
       "fields": {
         "eventId": {
-          "rule": "required",
           "type": "uint32",
           "id": 1
         },
         "eventData": {
-          "rule": "required",
           "type": "bytes",
           "id": 2
         },
@@ -14116,6 +14116,647 @@
         }
       }
     },
+    "CSVCMsg_NextMsgPredicted": {
+      "edition": "proto2",
+      "fields": {
+        "predictedByPlayerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "messageTypeId": {
+          "type": "uint32",
+          "id": 2
+        }
+      }
+    },
+    "ESource2PlayStatsFieldType": {
+      "edition": "proto2",
+      "values": {
+        "Source2PlayStats_Invalid": 0,
+        "Source2PlayStats_UInt64": 1,
+        "Source2PlayStats_UInt32": 2,
+        "Source2PlayStats_UInt16": 3,
+        "Source2PlayStats_UInt8": 4,
+        "Source2PlayStats_Int64": 5,
+        "Source2PlayStats_Int32": 6,
+        "Source2PlayStats_Int16": 7,
+        "Source2PlayStats_Int8": 8,
+        "Source2PlayStats_Float64": 9,
+        "Source2PlayStats_Float32": 10,
+        "Source2PlayStats_Bool": 11,
+        "Source2PlayStats_String": 12,
+        "Source2PlayStats_LowCardinalityString": 13,
+        "Source2PlayStats_UTCDateTime": 14
+      }
+    },
+    "CMsgSource2SystemSpecs": {
+      "edition": "proto2",
+      "fields": {
+        "cpuId": {
+          "type": "string",
+          "id": 1
+        },
+        "cpuBrand": {
+          "type": "string",
+          "id": 2
+        },
+        "cpuModel": {
+          "type": "uint32",
+          "id": 3
+        },
+        "cpuNumPhysical": {
+          "type": "uint32",
+          "id": 4
+        },
+        "ramPhysicalTotalMb": {
+          "type": "uint32",
+          "id": 21
+        },
+        "gpuRendersystemDllName": {
+          "type": "string",
+          "id": 41
+        },
+        "gpuVendorId": {
+          "type": "uint32",
+          "id": 42
+        },
+        "gpuDriverName": {
+          "type": "string",
+          "id": 43
+        },
+        "gpuDriverVersionHigh": {
+          "type": "uint32",
+          "id": 44
+        },
+        "gpuDriverVersionLow": {
+          "type": "uint32",
+          "id": 45
+        },
+        "gpuDxSupportLevel": {
+          "type": "uint32",
+          "id": 46
+        },
+        "gpuTextureMemorySizeMb": {
+          "type": "uint32",
+          "id": 47
+        },
+        "backbufferWidth": {
+          "type": "uint32",
+          "id": 51
+        },
+        "backbufferHeight": {
+          "type": "uint32",
+          "id": 52
+        }
+      }
+    },
+    "CMsgSource2VProfLiteReportItem": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "activeSamples": {
+          "type": "uint32",
+          "id": 2
+        },
+        "activeSamples_1secmax": {
+          "type": "uint32",
+          "id": 4
+        },
+        "usecMax": {
+          "type": "uint32",
+          "id": 3
+        },
+        "usecAvgActive": {
+          "type": "uint32",
+          "id": 11
+        },
+        "usecP50Active": {
+          "type": "uint32",
+          "id": 12
+        },
+        "usecP99Active": {
+          "type": "uint32",
+          "id": 13
+        },
+        "usecAvgAll": {
+          "type": "uint32",
+          "id": 21
+        },
+        "usecP50All": {
+          "type": "uint32",
+          "id": 22
+        },
+        "usecP99All": {
+          "type": "uint32",
+          "id": 23
+        },
+        "usec_1secmaxAvgActive": {
+          "type": "uint32",
+          "id": 31
+        },
+        "usec_1secmaxP50Active": {
+          "type": "uint32",
+          "id": 32
+        },
+        "usec_1secmaxP95Active": {
+          "type": "uint32",
+          "id": 33
+        },
+        "usec_1secmaxP99Active": {
+          "type": "uint32",
+          "id": 34
+        },
+        "usec_1secmaxAvgAll": {
+          "type": "uint32",
+          "id": 41
+        },
+        "usec_1secmaxP50All": {
+          "type": "uint32",
+          "id": 42
+        },
+        "usec_1secmaxP95All": {
+          "type": "uint32",
+          "id": 43
+        },
+        "usec_1secmaxP99All": {
+          "type": "uint32",
+          "id": 44
+        }
+      }
+    },
+    "CMsgSource2VProfLiteReport": {
+      "edition": "proto2",
+      "fields": {
+        "total": {
+          "type": ".CMsgSource2VProfLiteReportItem",
+          "id": 1
+        },
+        "items": {
+          "rule": "repeated",
+          "type": ".CMsgSource2VProfLiteReportItem",
+          "id": 2
+        },
+        "discardedFrames": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CMsgSource2NetworkFlowQuality": {
+      "edition": "proto2",
+      "fields": {
+        "duration": {
+          "type": "uint32",
+          "id": 1
+        },
+        "bytesTotal": {
+          "type": "uint64",
+          "id": 5
+        },
+        "bytesTotalReliable": {
+          "type": "uint64",
+          "id": 6
+        },
+        "bytesTotalVoice": {
+          "type": "uint64",
+          "id": 7
+        },
+        "bytesSecP95": {
+          "type": "uint32",
+          "id": 10
+        },
+        "bytesSecP99": {
+          "type": "uint32",
+          "id": 11
+        },
+        "enginemsgsTotal": {
+          "type": "uint32",
+          "id": 20
+        },
+        "enginemsgsSecP95": {
+          "type": "uint32",
+          "id": 21
+        },
+        "enginemsgsSecP99": {
+          "type": "uint32",
+          "id": 22
+        },
+        "netframesTotal": {
+          "type": "uint32",
+          "id": 30
+        },
+        "netframesDropped": {
+          "type": "uint32",
+          "id": 31
+        },
+        "netframesOutoforder": {
+          "type": "uint32",
+          "id": 32
+        },
+        "netframesSizeExceedsMtu": {
+          "type": "uint32",
+          "id": 34
+        },
+        "netframesSizeP95": {
+          "type": "uint32",
+          "id": 35
+        },
+        "netframesSizeP99": {
+          "type": "uint32",
+          "id": 36
+        },
+        "ticksTotal": {
+          "type": "uint32",
+          "id": 40
+        },
+        "ticksGood": {
+          "type": "uint32",
+          "id": 41
+        },
+        "ticksGoodAlmostLate": {
+          "type": "uint32",
+          "id": 42
+        },
+        "ticksFixedDropped": {
+          "type": "uint32",
+          "id": 43
+        },
+        "ticksFixedLate": {
+          "type": "uint32",
+          "id": 44
+        },
+        "ticksBadDropped": {
+          "type": "uint32",
+          "id": 45
+        },
+        "ticksBadLate": {
+          "type": "uint32",
+          "id": 46
+        },
+        "ticksBadOther": {
+          "type": "uint32",
+          "id": 47
+        },
+        "tickMissrateSamplesTotal": {
+          "type": "uint32",
+          "id": 50
+        },
+        "tickMissrateSamplesPerfect": {
+          "type": "uint32",
+          "id": 51
+        },
+        "tickMissrateSamplesPerfectnet": {
+          "type": "uint32",
+          "id": 52
+        },
+        "tickMissratenetP75X10": {
+          "type": "uint32",
+          "id": 53
+        },
+        "tickMissratenetP95X10": {
+          "type": "uint32",
+          "id": 54
+        },
+        "tickMissratenetP99X10": {
+          "type": "uint32",
+          "id": 55
+        },
+        "recvmarginP1": {
+          "type": "sint32",
+          "id": 61
+        },
+        "recvmarginP5": {
+          "type": "sint32",
+          "id": 62
+        },
+        "recvmarginP25": {
+          "type": "sint32",
+          "id": 63
+        },
+        "recvmarginP50": {
+          "type": "sint32",
+          "id": 64
+        },
+        "recvmarginP75": {
+          "type": "sint32",
+          "id": 65
+        },
+        "recvmarginP95": {
+          "type": "sint32",
+          "id": 66
+        },
+        "netframeJitterP50": {
+          "type": "uint32",
+          "id": 70
+        },
+        "netframeJitterP99": {
+          "type": "uint32",
+          "id": 71
+        },
+        "intervalPeakjitterP50": {
+          "type": "uint32",
+          "id": 72
+        },
+        "intervalPeakjitterP95": {
+          "type": "uint32",
+          "id": 73
+        },
+        "packetMisdeliveryRateP50X4": {
+          "type": "uint32",
+          "id": 74
+        },
+        "packetMisdeliveryRateP95X4": {
+          "type": "uint32",
+          "id": 75
+        },
+        "netPingP5": {
+          "type": "uint32",
+          "id": 80
+        },
+        "netPingP50": {
+          "type": "uint32",
+          "id": 81
+        },
+        "netPingP95": {
+          "type": "uint32",
+          "id": 82
+        }
+      }
+    },
+    "CMsgSource2PerfIntervalSample": {
+      "edition": "proto2",
+      "fields": {
+        "frameTimeMaxMs": {
+          "type": "float",
+          "id": 1
+        },
+        "frameTimeAvgMs": {
+          "type": "float",
+          "id": 2
+        },
+        "frameTimeMinMs": {
+          "type": "float",
+          "id": 3
+        },
+        "frameCount": {
+          "type": "int32",
+          "id": 4
+        },
+        "frameTimeTotalMs": {
+          "type": "float",
+          "id": 5
+        },
+        "tags": {
+          "rule": "repeated",
+          "type": ".CMsgSource2PerfIntervalSample.Tag",
+          "id": 6
+        }
+      },
+      "nested": {
+        "Tag": {
+          "fields": {
+            "tag": {
+              "type": "string",
+              "id": 1
+            },
+            "maxValue": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CSource2Metrics_MatchPerfSummary_Notification": {
+      "edition": "proto2",
+      "fields": {
+        "appid": {
+          "type": "uint32",
+          "id": 1
+        },
+        "gameMode": {
+          "type": "string",
+          "id": 2
+        },
+        "serverBuildId": {
+          "type": "uint32",
+          "id": 3
+        },
+        "serverPopid": {
+          "type": "fixed32",
+          "id": 4
+        },
+        "serverProfile": {
+          "type": ".CMsgSource2VProfLiteReport",
+          "id": 10
+        },
+        "clients": {
+          "rule": "repeated",
+          "type": ".CSource2Metrics_MatchPerfSummary_Notification.Client",
+          "id": 11
+        },
+        "map": {
+          "type": "string",
+          "id": 20
+        }
+      },
+      "nested": {
+        "Client": {
+          "fields": {
+            "systemSpecs": {
+              "type": ".CMsgSource2SystemSpecs",
+              "id": 1
+            },
+            "profile": {
+              "type": ".CMsgSource2VProfLiteReport",
+              "id": 2
+            },
+            "buildId": {
+              "type": "uint32",
+              "id": 3
+            },
+            "downstreamFlow": {
+              "type": ".CMsgSource2NetworkFlowQuality",
+              "id": 4
+            },
+            "upstreamFlow": {
+              "type": ".CMsgSource2NetworkFlowQuality",
+              "id": 5
+            },
+            "steamid": {
+              "type": "fixed64",
+              "id": 10
+            },
+            "perfSamples": {
+              "rule": "repeated",
+              "type": ".CMsgSource2PerfIntervalSample",
+              "id": 11
+            }
+          }
+        }
+      }
+    },
+    "CMsgSource2PlayStatsPackedRecordList": {
+      "edition": "proto2",
+      "fields": {
+        "recordName": {
+          "type": "string",
+          "id": 1
+        },
+        "fieldDefs": {
+          "rule": "repeated",
+          "type": ".CMsgSource2PlayStatsPackedRecordList.FieldDef",
+          "id": 2
+        },
+        "recordCount": {
+          "type": "uint32",
+          "id": 3
+        },
+        "uint64Vals": {
+          "rule": "repeated",
+          "type": "uint64",
+          "id": 4,
+          "options": {
+            "packed": true
+          }
+        },
+        "uint32Vals": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 5,
+          "options": {
+            "packed": true
+          }
+        },
+        "uint16Vals": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 6,
+          "options": {
+            "packed": true
+          }
+        },
+        "uint8Vals": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 7,
+          "options": {
+            "packed": true
+          }
+        },
+        "int64Vals": {
+          "rule": "repeated",
+          "type": "int64",
+          "id": 8,
+          "options": {
+            "packed": true
+          }
+        },
+        "int32Vals": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 9,
+          "options": {
+            "packed": true
+          }
+        },
+        "int16Vals": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 10,
+          "options": {
+            "packed": true
+          }
+        },
+        "int8Vals": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 11,
+          "options": {
+            "packed": true
+          }
+        },
+        "float64Vals": {
+          "rule": "repeated",
+          "type": "double",
+          "id": 12,
+          "options": {
+            "packed": true
+          }
+        },
+        "float32Vals": {
+          "rule": "repeated",
+          "type": "float",
+          "id": 13,
+          "options": {
+            "packed": true
+          }
+        },
+        "boolVals": {
+          "rule": "repeated",
+          "type": "bool",
+          "id": 14,
+          "options": {
+            "packed": true
+          }
+        },
+        "stringVals": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 15
+        },
+        "lowCardinalityStringVals": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 16
+        },
+        "utcdatetimeVals": {
+          "rule": "repeated",
+          "type": "fixed32",
+          "id": 17,
+          "options": {
+            "packed": true
+          }
+        }
+      },
+      "nested": {
+        "FieldDef": {
+          "fields": {
+            "fieldName": {
+              "type": "string",
+              "id": 1
+            },
+            "fieldType": {
+              "type": ".ESource2PlayStatsFieldType",
+              "id": 2,
+              "options": {
+                "default": "Source2PlayStats_Invalid"
+              }
+            }
+          }
+        }
+      }
+    },
+    "CSource2Metrics_RecordPlayStats_Notification": {
+      "edition": "proto2",
+      "fields": {
+        "recordTypes": {
+          "rule": "repeated",
+          "type": ".CMsgSource2PlayStatsPackedRecordList",
+          "id": 1
+        },
+        "appid": {
+          "type": "uint32",
+          "id": 2
+        }
+      }
+    },
     "ETEProtobufIds": {
       "edition": "proto2",
       "values": {
@@ -14447,7 +15088,10 @@
         },
         "attachmentname": {
           "type": "uint32",
-          "id": 19
+          "id": 19,
+          "options": {
+            "default": 0
+          }
         }
       }
     },
@@ -14657,6 +15301,13 @@
           "type": "uint32",
           "id": 11
         },
+        "explosionTypeName": {
+          "type": "uint32",
+          "id": 15,
+          "options": {
+            "default": 0
+          }
+        },
         "createDebris": {
           "type": "bool",
           "id": 12
@@ -14743,7 +15394,10 @@
         },
         "skin": {
           "type": "fixed32",
-          "id": 4
+          "id": 4,
+          "options": {
+            "default": 0
+          }
         },
         "flags": {
           "type": "uint32",
@@ -14931,7 +15585,8 @@
         "GAME_PARTICLE_MANAGER_EVENT_SET_MATERIAL_OVERRIDE": 35,
         "GAME_PARTICLE_MANAGER_EVENT_ADD_FAN": 36,
         "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FAN": 37,
-        "GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH": 38
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH": 38,
+        "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39
       }
     },
     "EHapticPulseType": {
@@ -15597,9 +16252,11 @@
     },
     "CUserMsg_ParticleManager": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
       "fields": {
         "type": {
-          "rule": "required",
           "type": ".PARTICLE_MESSAGE",
           "id": 1,
           "options": {
@@ -15607,7 +16264,6 @@
           }
         },
         "index": {
-          "rule": "required",
           "type": "uint32",
           "id": 2
         },
@@ -15762,6 +16418,10 @@
         "setParticleClusterGrowth": {
           "type": ".CUserMsg_ParticleManager.SetParticleClusterGrowth",
           "id": 41
+        },
+        "removeFan": {
+          "type": ".CUserMsg_ParticleManager.RemoveFan",
+          "id": 42
         }
       },
       "extensions": [
@@ -16112,6 +16772,10 @@
             "text": {
               "type": "string",
               "id": 1
+            },
+            "localize": {
+              "type": "bool",
+              "id": 2
             }
           }
         },
@@ -16383,6 +17047,33 @@
             "curveMaxDist": {
               "type": "float",
               "id": 12
+            },
+            "fanType": {
+              "type": "uint32",
+              "id": 13
+            },
+            "coneStartRadius": {
+              "type": "float",
+              "id": 14
+            },
+            "coneEndRadius": {
+              "type": "float",
+              "id": 15
+            },
+            "coneLength": {
+              "type": "float",
+              "id": 16
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 17,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachmentName": {
+              "type": "string",
+              "id": 18
             }
           }
         },
@@ -16417,6 +17108,9 @@
               "id": 6
             }
           }
+        },
+        "RemoveFan": {
+          "fields": {}
         },
         "SetParticleClusterGrowth": {
           "fields": {
