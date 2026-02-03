@@ -22,16 +22,16 @@ function highlightJson(json) {
     /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g,
     (match, str, colon, bool, num) => {
       if (str && colon) {
-        return `<span style="color:#0451a5">${str}</span>:`;
+        return `<span style="color:#b388ff">${str}</span>:`;
       }
       if (str) {
-        return `<span style="color:#a31515">${str}</span>`;
+        return `<span style="color:#80cbc4">${str}</span>`;
       }
       if (bool) {
-        return `<span style="color:#0000ff">${bool}</span>`;
+        return `<span style="color:#7c4dff">${bool}</span>`;
       }
       if (num) {
-        return `<span style="color:#098658">${num}</span>`;
+        return `<span style="color:#69f0ae">${num}</span>`;
       }
       return match;
     }
@@ -143,11 +143,14 @@ export default function PacketExplorer({ history }) {
         >
           <Box
             sx={{
+              backgroundColor: '#151522',
               borderRadius: '8px',
               left: '50%',
               maxHeight: '80vh',
-              maxWidth: '720px',
-              width: '90vw',
+              maxWidth: '90vw',
+              width: 720,
+              minWidth: 320,
+              minHeight: 200,
               outline: 'none',
               overflow: 'hidden',
               position: 'absolute',
@@ -155,14 +158,15 @@ export default function PacketExplorer({ history }) {
               transform: 'translate(-50%, -50%)',
               display: 'flex',
               flexDirection: 'column',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.2)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              resize: 'both',
             }}
           >
             <Box
               sx={{
-                backgroundColor: '#f5f5f5',
-                borderBottom: '1px solid',
-                borderColor: 'divider',
+                backgroundColor: '#1e1e2e',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -175,8 +179,8 @@ export default function PacketExplorer({ history }) {
                   label={packet.type.code}
                   size='small'
                   sx={{
-                    backgroundColor: '#e0e0e0',
-                    color: 'text.primary',
+                    backgroundColor: 'rgba(124, 77, 255, 0.2)',
+                    color: '#b388ff',
                     fontSize: '0.6875rem',
                     fontWeight: 600,
                     height: 22,
@@ -200,8 +204,9 @@ export default function PacketExplorer({ history }) {
 
             <Box
               sx={{
-                backgroundColor: '#fafafa',
+                backgroundColor: '#151522',
                 overflow: 'auto',
+                flex: 1,
                 px: 2.5,
                 py: 2,
               }}
@@ -212,7 +217,7 @@ export default function PacketExplorer({ history }) {
                   fontSize: '0.75rem',
                   lineHeight: 1.65,
                   fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
-                  color: '#1e1e1e',
+                  color: 'rgba(255, 255, 255, 0.8)',
                 }}
                 dangerouslySetInnerHTML={{ __html: highlightedJson }}
               />

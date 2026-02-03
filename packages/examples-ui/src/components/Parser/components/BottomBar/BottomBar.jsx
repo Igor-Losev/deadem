@@ -87,7 +87,7 @@ export default function BottomBar({
 
       <Box
         component={Paper}
-        elevation={2}
+        elevation={0}
         sx={{
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,

@@ -48,7 +48,7 @@ function App() {
 
       <Box component='header' display='flex' alignItems='center' sx={{ minHeight: '56px' }}>
         <Box alignItems='center' display='flex' flex={1} justifyContent='flex-start' gap={1}>
-          <TroubleshootIcon sx={{ color: 'primary.main', fontSize: '1.5rem' }} />
+          <TroubleshootIcon sx={{ color: '#b388ff', fontSize: '1.5rem' }} />
           <Typography
             component='h1'
             sx={{
@@ -86,7 +86,7 @@ function App() {
           <Box
             key={tab.key}
             sx={{
-              backgroundColor: 'hsla(215, 15%, 97%, 0.5)',
+              backgroundColor: 'transparent',
               display: tabIndex === index ? 'flex' : 'none',
               flex: 1,
               flexDirection: 'column',

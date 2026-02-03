@@ -30,7 +30,7 @@ function formatSize(bytes) {
 
 export default function Library() {
   return (
-    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider' }}>
+    <TableContainer component={Paper} elevation={0}>
       <Table aria-label='Demo files library' stickyHeader size='small'>
         <TableHead>
           <TableRow>

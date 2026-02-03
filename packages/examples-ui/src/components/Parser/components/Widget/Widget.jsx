@@ -1,20 +1,31 @@
 import { Box, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const StyledTableRow = styled(TableRow)(() => ({
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: theme.palette.action.hover,
   },
   '&:last-child td, &:last-child th': {
     border: 0,
   },
 }));
 
+function formatValue(value) {
+  if (typeof value === 'number') {
+    return (
+      <span style={{ color: '#69f0ae', fontFamily: "'SF Mono', 'Fira Code', Menlo, monospace", fontVariantNumeric: 'tabular-nums' }}>
+        {value.toLocaleString('en-US')}
+      </span>
+    );
+  }
+  return value;
+}
+
 export default function Widget({ header, columns, data }) {
   return (
     <Box sx={{ border: 1, borderRadius: 1, borderColor: 'divider' }}>
       <Box paddingY={1} textAlign='center'>
-        <Typography component='div' sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{header}</Typography>
+        <Typography component='div' sx={{ fontSize: '0.875rem', fontWeight: 600, color: '#b388ff' }}>{header}</Typography>
       </Box>
 
       <Divider />
@@ -25,8 +36,8 @@ export default function Widget({ header, columns, data }) {
             <TableBody>
               {columns.map((column) => (
                 <StyledTableRow key={column.label}>
-                  <TableCell width='50%'>{column.label}</TableCell>
-                  <TableCell width='50%'>{column.selector(data)}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: '0.8125rem' }}>{column.label}</TableCell>
+                  <TableCell align='right' sx={{ fontSize: '0.8125rem' }}>{formatValue(column.selector(data))}</TableCell>
                 </StyledTableRow>
               ))}
             </TableBody>

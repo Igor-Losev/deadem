@@ -31,7 +31,7 @@ const TABS = [
     props: {
       icon: <EmailIcon />,
       label: 'Packets',
-      sx: { fontSize: '0.75rem', minHeight: '50px' }
+      sx: { fontSize: '0.8125rem', minHeight: '50px' }
     },
     overflow: 'auto'
   },
@@ -40,7 +40,7 @@ const TABS = [
     props: {
       icon: <CategoryIcon />,
       label: 'Entities',
-      sx: { fontSize: '0.75rem', minHeight: '50px' }
+      sx: { fontSize: '0.8125rem', minHeight: '50px' }
     },
     overflow: null
   },
@@ -49,7 +49,7 @@ const TABS = [
     props: {
       icon: <InfoIcon />,
       label: 'Info',
-      sx: { fontSize: '0.75rem', minHeight: '50px' }
+      sx: { fontSize: '0.8125rem', minHeight: '50px' }
     },
     overflow: 'auto'
   }
@@ -63,9 +63,9 @@ const LINKS = [
 ];
 
 const FEATURES = [
-  { icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />, color: '#1976d2', title: 'Inspect Packets', description: 'Step through demo packets, view their contents as JSON.' },
-  { icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />, color: '#7b1fa2', title: 'Explore Entities', description: 'Browse game entities grouped by class and view their properties.' },
-  { icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />, color: '#388e3c', title: 'View Game Info', description: 'Check tick rate, server settings, entity counts, and string tables.' },
+  { icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />, color: '#7c4dff', title: 'Inspect Packets', description: 'Step through demo packets, view their contents as JSON.' },
+  { icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />, color: '#00e5ff', title: 'Explore Entities', description: 'Browse game entities grouped by class and view their properties.' },
+  { icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />, color: '#69f0ae', title: 'View Game Info', description: 'Check tick rate, server settings, entity counts, and string tables.' },
 ];
 
 function getInitialFileState() {
@@ -275,9 +275,6 @@ export default function ParserComponent() {
           <Paper
             elevation={0}
             sx={{
-              backgroundColor: 'white',
-              border: '1px solid',
-              borderColor: 'divider',
               borderRadius: 2,
               maxWidth: 680,
               overflow: 'auto',
@@ -285,7 +282,7 @@ export default function ParserComponent() {
             }}
           >
             <Box display='flex' alignItems='center' gap={1} mb={2}>
-              <RocketLaunchIcon sx={{ color: 'primary.main', fontSize: '1.25rem' }} />
+              <RocketLaunchIcon sx={{ color: '#b388ff', fontSize: '1.25rem' }} />
               <Typography variant='subtitle1' fontWeight={600} color='text.primary'>
                 Getting Started
               </Typography>

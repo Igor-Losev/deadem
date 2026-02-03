@@ -1,14 +1,43 @@
+html {
+    background-color: #0f0f1a;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     margin: 0;
+    background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 40%, #16213e 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-    background: rgba(25, 118, 210, 0.2);
+    background: rgba(124, 77, 255, 0.3);
 }
 
 pre {
     font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+::-webkit-resizer {
+    background: linear-gradient(135deg, transparent 60%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.15) 65%, transparent 65%, transparent 75%, rgba(255, 255, 255, 0.15) 75%, rgba(255, 255, 255, 0.15) 80%, transparent 80%);
 }
