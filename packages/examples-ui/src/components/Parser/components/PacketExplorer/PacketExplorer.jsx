@@ -1,6 +1,6 @@
-import { Box, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { ManageSearch as ManageSearchIcon } from '@mui/icons-material';
-import { useMemo, useState } from 'react';
+import { Box, Chip, Divider, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
+import { Close as CloseIcon, ContentCopy as ContentCopyIcon, ManageSearch as ManageSearchIcon } from '@mui/icons-material';
+import { useCallback, useMemo, useState } from 'react';
 
 const COLUMNS = [
   {
@@ -17,8 +17,30 @@ const COLUMNS = [
   }
 ];
 
+function highlightJson(json) {
+  return json.replace(
+    /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g,
+    (match, str, colon, bool, num) => {
+      if (str && colon) {
+        return `<span style="color:#0451a5">${str}</span>:`;
+      }
+      if (str) {
+        return `<span style="color:#a31515">${str}</span>`;
+      }
+      if (bool) {
+        return `<span style="color:#0000ff">${bool}</span>`;
+      }
+      if (num) {
+        return `<span style="color:#098658">${num}</span>`;
+      }
+      return match;
+    }
+  );
+}
+
 export default function PacketExplorer({ history }) {
   const [packet, setPacket] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const stringifiedPacket = useMemo(() => {
     if (packet === null) {
@@ -58,13 +80,26 @@ export default function PacketExplorer({ history }) {
     }, null, 2);
   }, [packet]);
 
+  const highlightedJson = useMemo(() => {
+    if (!stringifiedPacket) return '';
+    return highlightJson(stringifiedPacket);
+  }, [stringifiedPacket]);
+
   const handleDataClicked = (demoPacket) => {
     setPacket(demoPacket);
+    setCopied(false);
   };
 
   const handleModalClosed = () => {
     setPacket(null);
   };
+
+  const handleCopyClicked = useCallback(() => {
+    navigator.clipboard.writeText(stringifiedPacket).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [stringifiedPacket]);
 
   return (
     <Table size='small' stickyHeader>
@@ -108,25 +143,83 @@ export default function PacketExplorer({ history }) {
         >
           <Box
             sx={{
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              boxShadow: 24,
+              borderRadius: '8px',
               left: '50%',
               maxHeight: '80vh',
-              maxWidth: '80vw',
+              maxWidth: '720px',
+              width: '90vw',
               outline: 'none',
-              overflow: 'auto',
-              p: 2,
+              overflow: 'hidden',
               position: 'absolute',
               top: '50%',
-              transform: 'translate(-50%, -50%)'
+              transform: 'translate(-50%, -50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.2)',
             }}
           >
-            <pre>{stringifiedPacket}</pre>
+            <Box
+              sx={{
+                backgroundColor: '#f5f5f5',
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                px: 2,
+                py: 1,
+              }}
+            >
+              <Box display='flex' alignItems='center' gap={1}>
+                <Chip
+                  label={packet.type.code}
+                  size='small'
+                  sx={{
+                    backgroundColor: '#e0e0e0',
+                    color: 'text.primary',
+                    fontSize: '0.6875rem',
+                    fontWeight: 600,
+                    height: 22,
+                  }}
+                />
+                <Typography sx={{ color: 'text.secondary', fontSize: '0.6875rem' }}>
+                  seq {packet.sequence} / tick {packet.tick}
+                </Typography>
+              </Box>
+              <Box display='flex' alignItems='center' gap={0.25}>
+                <Tooltip title={copied ? 'Copied!' : 'Copy'} arrow>
+                  <IconButton onClick={handleCopyClicked} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
+                    <ContentCopyIcon sx={{ fontSize: '0.875rem' }} />
+                  </IconButton>
+                </Tooltip>
+                <IconButton onClick={handleModalClosed} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
+                  <CloseIcon sx={{ fontSize: '0.95rem' }} />
+                </IconButton>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                backgroundColor: '#fafafa',
+                overflow: 'auto',
+                px: 2.5,
+                py: 2,
+              }}
+            >
+              <pre
+                style={{
+                  margin: 0,
+                  fontSize: '0.75rem',
+                  lineHeight: 1.65,
+                  fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
+                  color: '#1e1e1e',
+                }}
+                dangerouslySetInnerHTML={{ __html: highlightedJson }}
+              />
+            </Box>
           </Box>
         </Modal>
       }
     </Table>
   );
 }
-

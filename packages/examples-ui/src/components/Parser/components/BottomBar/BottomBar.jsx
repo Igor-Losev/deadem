@@ -1,5 +1,5 @@
 import { Pause as PauseIcon, PlayCircle as PlayCircleIcon } from '@mui/icons-material';
-import { Box, Container, IconButton, LinearProgress, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Container, Divider, IconButton, LinearProgress, Paper, Tooltip, Typography } from '@mui/material';
 
 const CONTROL_ICON_SIZE = '32px';
 const INCREMENTAL_ICON_SIZE = '40px';
@@ -29,7 +29,7 @@ export default function BottomBar({
   onIncrementClick,
   onPauseClick,
   onPlayClick,
-  status: { done, processing } 
+  status: { done, processing }
 }) {
   const handleIncrementClicked = (count) => {
     if (typeof onIncrementClick === 'function') {
@@ -87,12 +87,12 @@ export default function BottomBar({
 
       <Box
         component={Paper}
+        elevation={2}
         sx={{
-          border: '1px solid #f0f0f0',
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          borderTopLeftRadius: '2px',
-          borderTopRightRadius: '2px',
+          borderTopLeftRadius: '4px',
+          borderTopRightRadius: '4px',
           display: 'flex',
           justifyContent: 'space-between',
           height: height || '60px',
@@ -100,16 +100,22 @@ export default function BottomBar({
         }}
       >
         <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end' marginRight={1}>
-          {labels.map(label => (
-            <Tooltip key={label.key} title={label.tooltip} arrow>
-              <Typography
-                color='textSecondary'
-                fontSize='0.875rem'
-                marginX={1}
-              >
-                {label.value}
-              </Typography>
-            </Tooltip>
+          {labels.map((label, index) => (
+            <Box key={label.key} display='flex' alignItems='center'>
+              <Tooltip title={label.tooltip} arrow>
+                <Typography
+                  color='text.secondary'
+                  fontSize='0.875rem'
+                  marginX={1}
+                  sx={{ fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {label.value}
+                </Typography>
+              </Tooltip>
+              {index < labels.length - 1 && (
+                <Divider orientation='vertical' flexItem sx={{ my: 2 }} />
+              )}
+            </Box>
           ))}
         </Box>
 
@@ -143,7 +149,8 @@ export default function BottomBar({
                   minWidth: INCREMENTAL_ICON_SIZE,
                   padding: 1,
                   width: INCREMENTAL_ICON_SIZE,
-                  fontSize: '0.875rem'
+                  fontSize: '0.875rem',
+                  fontWeight: 500
                 }}
               >
                 +{button.count}
@@ -155,4 +162,3 @@ export default function BottomBar({
     </Container>
   );
 }
-
