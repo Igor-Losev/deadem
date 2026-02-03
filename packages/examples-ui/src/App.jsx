@@ -46,40 +46,59 @@ function App() {
         overflow: 'hidden'
       }}>
 
-      <Box display='flex'>
-        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-start'>
+      <Box component='header' display='flex' alignItems='center' sx={{ minHeight: '56px' }}>
+        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-start' gap={1}>
+          <TroubleshootIcon sx={{ color: 'primary.main', fontSize: '1.5rem' }} />
+          <Typography
+            component='h1'
+            sx={{
+              color: 'text.primary',
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Deadem Explorer
+          </Typography>
         </Box>
 
-        <Navigation active={tabIndex} onChange={handleTabChanged} tabs={TABS} tabsProps={{ centered: true }} />
+        <Box component='nav'>
+          <Navigation active={tabIndex} onChange={handleTabChanged} tabs={TABS} tabsProps={{ centered: true }} />
+        </Box>
 
-        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end'>
-          <Typography color='gray' fontSize='0.875rem' marginRight={1}>v{packageJson.version}</Typography>
-          <IconButton 
+        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end' gap={0.5}>
+          <Typography color='text.secondary' fontSize='0.75rem'>v{packageJson.version}</Typography>
+          <IconButton
+            aria-label='GitHub repository'
             href='https://github.com/Igor-Losev/deadem'
-            sx={{ '&:hover svg': { fill: 'black' } }} 
+            size='small'
+            sx={{ '&:hover svg': { color: 'text.primary' } }}
             target='_blank'
           >
-            <GitHubIcon />
+            <GitHubIcon fontSize='small' />
           </IconButton>
         </Box>
       </Box>
 
-      {TABS.map((tab, index) => (
-        <Box
-          key={tab.key}
-          sx={{
-            backgroundColor: 'hsla(215, 15%, 97%, 0.5)',
-            display: tabIndex === index ? 'flex' : 'none',
-            flex: 1,
-            flexDirection: 'column',
-            minHeight: 0,
-            paddingX: 4,
-            paddingY: 2
-          }}
-        >
-          {tab.component}
-        </Box>
-      ))}
+      <Box component='main' display='flex' flexDirection='column' flex={1} minHeight={0}>
+        {TABS.map((tab, index) => (
+          <Box
+            key={tab.key}
+            sx={{
+              backgroundColor: 'hsla(215, 15%, 97%, 0.5)',
+              display: tabIndex === index ? 'flex' : 'none',
+              flex: 1,
+              flexDirection: 'column',
+              minHeight: 0,
+              paddingX: 4,
+              paddingY: 2
+            }}
+          >
+            {tab.component}
+          </Box>
+        ))}
+      </Box>
     </Container>
   );
 }

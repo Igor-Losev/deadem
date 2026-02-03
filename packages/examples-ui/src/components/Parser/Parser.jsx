@@ -1,7 +1,15 @@
 import { Parser, ParserConfiguration } from 'deadem';
 
-import { Category as CategoryIcon, Email as EmailIcon, Info as InfoIcon } from '@mui/icons-material';
-import { Alert, AlertTitle, Box, Chip, Divider, Link, List, ListItem, Paper, Typography } from '@mui/material';
+import {
+  Category as CategoryIcon,
+  Email as EmailIcon,
+  Info as InfoIcon,
+  ManageSearch as ManageSearchIcon,
+  RocketLaunch as RocketLaunchIcon,
+  AccountTree as AccountTreeIcon,
+  Assessment as AssessmentIcon
+} from '@mui/icons-material';
+import { Box, Chip, Divider, Link, List, ListItem, Paper, Typography } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Navigation from './../Navigation/Navigation';
@@ -45,6 +53,19 @@ const TABS = [
     },
     overflow: 'auto'
   }
+];
+
+const LINKS = [
+  { label: 'Documentation', href: 'https://github.com/Igor-Losev/deadem/blob/main/README.md' },
+  { label: 'NPM', href: 'https://www.npmjs.com/package/deadem' },
+  { label: 'Issues', href: 'https://github.com/Igor-Losev/deadem/issues' },
+  { label: 'Releases', href: 'https://github.com/Igor-Losev/deadem/releases' },
+];
+
+const FEATURES = [
+  { icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />, color: '#1976d2', title: 'Inspect Packets', description: 'Step through demo packets, view their contents as JSON.' },
+  { icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />, color: '#7b1fa2', title: 'Explore Entities', description: 'Browse game entities grouped by class and view their properties.' },
+  { icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />, color: '#388e3c', title: 'View Game Info', description: 'Check tick rate, server settings, entity counts, and string tables.' },
 ];
 
 function getInitialFileState() {
@@ -251,44 +272,89 @@ export default function ParserComponent() {
         </>
       ) : (
         <Box display='flex' justifyContent='center' minHeight={0} marginY={2}>
-          <Alert
-            severity='info'
-            variant='outlined'
-            sx={{ backgroundColor: 'white', border: 'none', borderRadius: 1, boxShadow: 2, maxWidth: 600, overflowY: 'auto', paddingRight: '46px' }}
+          <Paper
+            elevation={0}
+            sx={{
+              backgroundColor: 'white',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 2,
+              maxWidth: 680,
+              overflow: 'auto',
+              p: 4
+            }}
           >
-            <AlertTitle color='text.secondary'>Deadem Explorer</AlertTitle>
+            <Box display='flex' alignItems='center' gap={1} mb={2}>
+              <RocketLaunchIcon sx={{ color: 'primary.main', fontSize: '1.25rem' }} />
+              <Typography variant='subtitle1' fontWeight={600} color='text.primary'>
+                Getting Started
+              </Typography>
+            </Box>
+
             <Divider />
-            <Typography variant='body2' color='text.secondary' marginTop={2} paragraph>
-              <strong>Deadem</strong> is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
+
+            <Typography variant='body2' color='text.secondary' mt={2} paragraph>
+              <strong>Deadem</strong> is an open-source JavaScript library for parsing Deadlock demo files (<code>.dem</code>) built for Node.js and modern browsers.
             </Typography>
-            <Typography variant='body2' color='text.secondary' marginTop={2} paragraph>
-              This is <strong>Deadem Explorer</strong>, a tool that showcases the capabilities of the <strong>deadem</strong> library in a simplified way. Currently, this UI supports only the parsing of demo files (with the <code>.dem</code> extension). You can select any file from the Library or upload your own.
+            <Typography variant='body2' color='text.secondary' paragraph>
+              <strong>Deadem Explorer</strong> lets you open any Deadlock replay (<code>.dem</code>) and explore its contents right in the browser.
+              Upload your own file above or pick one from the <strong>Library</strong> tab.
             </Typography>
-            <Typography color='text.secondary' marginBottom={0} variant='body2' paragraph>
-              For more information, check out the links below:
+
+            <Typography variant='body2' color='text.secondary' fontWeight={500} mt={2} mb={1.5}>
+              What you can do:
             </Typography>
-            <List sx={{ listStyleType: 'disc', pl: 4 }}>
-              {[
-                { label: 'Documentation', href: 'https://github.com/Igor-Losev/deadem/blob/main/README.md' },
-                { label: 'NPM', href: 'https://www.npmjs.com/package/deadem' },
-                { label: 'Issues', href: 'https://github.com/Igor-Losev/deadem/issues' },
-                { label: 'Releases', href: 'https://github.com/Igor-Losev/deadem/releases' },
-              ].map((item) => (
-                <ListItem key={item.label} sx={{ display: 'list-item', p: 0 }}>
+            <Box display='flex' flexDirection='column' gap={1.5}>
+              {FEATURES.map((feature) => (
+                <Box key={feature.title} display='flex' gap={1.5} alignItems='flex-start'>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 32,
+                      height: 32,
+                      borderRadius: '8px',
+                      backgroundColor: `${feature.color}14`,
+                      color: feature.color,
+                      flexShrink: 0,
+                      mt: '1px',
+                    }}
+                  >
+                    {feature.icon}
+                  </Box>
+                  <Box>
+                    <Typography variant='body2' color='text.primary' fontWeight={600} lineHeight={1.3}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary' lineHeight={1.4} mt={0.25}>
+                      {feature.description}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+
+            <Typography variant='body2' color='text.secondary' fontWeight={500} mt={2} mb={0.5}>
+              Resources
+            </Typography>
+            <List sx={{ listStyleType: 'disc', pl: 4, pt: 0 }}>
+              {LINKS.map((item) => (
+                <ListItem key={item.label} sx={{ display: 'list-item', p: 0, pb: 0.25 }}>
                   <Link
                     href={item.href}
                     target='_blank'
                     underline='hover'
+                    variant='body2'
                   >
                     {item.label}
                   </Link>
                 </ListItem>
               ))}
             </List>
-          </Alert>
+          </Paper>
         </Box>
       )}
     </>
   );
 }
-
