@@ -27,9 +27,11 @@ class DemoEntityHandler {
                         entity.activate();
                     }
 
-                    event.mutations.forEach((mutation) => {
+                    for (let j = 0; j < event.mutations.length; j++) {
+                        const mutation = event.mutations[j];
+
                         entity.updateByFieldPath(mutation.fieldPath, mutation.value);
-                    });
+                    }
 
                     break;
                 case EntityOperation.DELETE:
