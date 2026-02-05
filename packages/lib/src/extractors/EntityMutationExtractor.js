@@ -26,13 +26,14 @@ class EntityMutationExtractor {
 
         const mutations = [ ];
 
-        fieldPaths.forEach((fieldPath) => {
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
+        for (let i = 0; i < fieldPaths.length; i++) {
+            const fieldPath = fieldPaths[i];
 
+            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
             const value = decoder(this._bitBuffer);
 
             mutations.push(new EntityMutation(fieldPath, value));
-        });
+        }
 
         return mutations;
     }
@@ -51,13 +52,14 @@ class EntityMutationExtractor {
 
         const mutations = [ ];
 
-        fieldPaths.forEach((fieldPath) => {
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
+        for (let i = 0; i < fieldPaths.length; i++) {
+            const fieldPath = fieldPaths[i];
 
+            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
             const value = decoder(this._bitBuffer);
 
             mutations.push(fieldPath.code, value);
-        });
+        }
 
         return mutations;
     }

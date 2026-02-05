@@ -13,10 +13,9 @@ class BitBuffer {
     constructor(buffer) {
         this._buffer = buffer;
 
-        this._pointers = {
-            byte: 0,
-            bit: 0
-        };
+        this._pByte = 0;
+        this._pBit = 0;
+        this._totalBits = buffer.length * BITS_PER_BYTE;
     }
 
     /**
@@ -58,7 +57,7 @@ class BitBuffer {
      * @returns {number}
      */
     getReadCount() {
-        return this._pointers.byte * BITS_PER_BYTE + this._pointers.bit;
+        return this._pByte * BITS_PER_BYTE + this._pBit;
     }
 
     /**
@@ -68,7 +67,7 @@ class BitBuffer {
      * @returns {number}
      */
     getUnreadCount() {
-        return this._buffer.length * BITS_PER_BYTE - (this._pointers.byte * BITS_PER_BYTE + this._pointers.bit);
+        return this._totalBits - (this._pByte * BITS_PER_BYTE + this._pBit);
     }
 
     /**
@@ -96,26 +95,40 @@ class BitBuffer {
         const numberOfBits = abs % BITS_PER_BYTE;
 
         if (bits > 0) {
-            this._pointers.byte += numberOfBytes;
+            this._pByte += numberOfBytes;
 
-            if (this._pointers.bit + numberOfBits < BITS_PER_BYTE) {
-                this._pointers.bit += numberOfBits;
+            if (this._pBit + numberOfBits < BITS_PER_BYTE) {
+                this._pBit += numberOfBits;
             } else {
-                this._pointers.byte += 1;
-                this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
+                this._pByte += 1;
+                this._pBit = (this._pBit + numberOfBits) % BITS_PER_BYTE;
             }
         }
 
         if (bits < 0) {
-            this._pointers.byte -= numberOfBytes;
+            this._pByte -= numberOfBytes;
 
-            if (this._pointers.bit - numberOfBits >= 0) {
-                this._pointers.bit -= numberOfBits;
+            if (this._pBit - numberOfBits >= 0) {
+                this._pBit -= numberOfBits;
             } else {
-                this._pointers.byte -= 1;
-                this._pointers.bit = BITS_PER_BYTE - Math.abs(this._pointers.bit - numberOfBits);
+                this._pByte -= 1;
+                this._pBit = BITS_PER_BYTE - Math.abs(this._pBit - numberOfBits);
             }
         }
+    }
+
+    /**
+     * Fast backward pointer move without validation.
+     * Used in hot paths where the count is known to be safe.
+     *
+     * @public
+     * @param {number} count - Non-negative number of bits to move back.
+     */
+    moveBack(count) {
+        const total = this._pByte * BITS_PER_BYTE + this._pBit - count;
+
+        this._pByte = total >>> 3;
+        this._pBit = total & 7;
     }
 
     /**
@@ -139,6 +152,45 @@ class BitBuffer {
     }
 
     /**
+     * Reads n bits (up to 31) directly as an unsigned integer.
+     *
+     * @public
+     * @param {number} n - Number of bits to read (1-31).
+     * @returns {number}
+     */
+    readBitsAsUInt(n) {
+        const totalBits = this._pBit + n;
+
+        let raw;
+
+        if (totalBits <= 8) {
+            raw = this._buffer[this._pByte];
+        } else if (totalBits <= 16) {
+            raw = this._buffer[this._pByte] | (this._buffer[this._pByte + 1] << 8);
+        } else if (totalBits <= 24) {
+            raw = this._buffer[this._pByte] | (this._buffer[this._pByte + 1] << 8) | (this._buffer[this._pByte + 2] << 16);
+        } else if (totalBits <= 32) {
+            raw = (this._buffer[this._pByte] | (this._buffer[this._pByte + 1] << 8) | (this._buffer[this._pByte + 2] << 16) | (this._buffer[this._pByte + 3] << 24)) >>> 0;
+        } else {
+            const lo = (this._buffer[this._pByte] | (this._buffer[this._pByte + 1] << 8) | (this._buffer[this._pByte + 2] << 16) | (this._buffer[this._pByte + 3] << 24)) >>> 0;
+            const hi = this._buffer[this._pByte + 4];
+            const pBit = this._pBit;
+
+            this._pByte += totalBits >>> 3;
+            this._pBit = totalBits & 7;
+
+            return (((lo >>> pBit) | (hi << (32 - pBit))) & ((1 << n) - 1)) >>> 0;
+        }
+
+        const pBit = this._pBit;
+
+        this._pByte += totalBits >>> 3;
+        this._pBit = totalBits & 7;
+
+        return ((raw >>> pBit) & ((1 << n) - 1)) >>> 0;
+    }
+
+    /**
      * Reads the specified number of bits and writes them into the provided buffer.
      *
      * @public
@@ -157,11 +209,7 @@ class BitBuffer {
      * @returns {number} - The angle.
      */
     readAngle(n) {
-        const buffer = this.read(n);
-
-        const value = BitBuffer.readUInt32LE(buffer);
-
-        return (value * 360) / (1 << n);
+        return (this.readBitsAsUInt(n) * 360) / (1 << n);
     }
 
     /**
@@ -171,9 +219,14 @@ class BitBuffer {
      * @returns {boolean}
      */
     readBit() {
-        const value = ((this._buffer[this._pointers.byte] >> this._pointers.bit) & 1) === 1;
+        const value = ((this._buffer[this._pByte] >> this._pBit) & 1) === 1;
 
-        this.move(1);
+        if (this._pBit < 7) {
+            this._pBit++;
+        } else {
+            this._pByte++;
+            this._pBit = 0;
+        }
 
         return value;
     }
@@ -196,17 +249,13 @@ class BitBuffer {
             let integer = 0;
 
             if (hasInteger) {
-                const buffer = this.read(14);
-
-                integer = buffer.readUInt16LE() + 1;
+                integer = this.readBitsAsUInt(14) + 1;
             }
 
             let fractional = 0;
 
             if (hasFractional) {
-                const buffer = this.read(5);
-
-                fractional = buffer.readUInt8();
+                fractional = this.readBitsAsUInt(5);
             }
 
             value = integer + fractional * (1 / (1 << 5));
@@ -226,9 +275,7 @@ class BitBuffer {
      * @returns {number}
      */
     readCoordinatePrecise() {
-        const value = BitBuffer.readUInt32LE(this.read(20));
-
-        return value * (360 / (1 << 20)) - 180;
+        return this.readBitsAsUInt(20) * (360 / (1 << 20)) - 180;
     }
 
     /**
@@ -253,7 +300,7 @@ class BitBuffer {
      */
     readNormal() {
         const sign = this.readBit();
-        const length = this.read(11).readUInt16LE();
+        const length = this.readBitsAsUInt(11);
 
         const value = length * (1 / ((1 << 11) - 1));
 
@@ -349,27 +396,21 @@ class BitBuffer {
      * @returns {number} The decoded unsigned integer.
      */
     readUVarInt() {
-        let result = this.read(6).readUInt8();
+        let result = this.readBitsAsUInt(6);
 
         switch (result & 48) {
             case 16: {
-                const value = this.read(4).readUInt8();
-
-                result = (result & 15) | (value << 4);
+                result = (result & 15) | (this.readBitsAsUInt(4) << 4);
 
                 break;
             }
             case 32: {
-                const value = this.read(8).readUInt8();
-
-                result = (result & 15) | (value << 4);
+                result = (result & 15) | (this.readBitsAsUInt(8) << 4);
 
                 break;
             }
             case 48: {
-                const value = this.read(28).readUInt32LE();
-
-                result = (result & 15) | (value << 4);
+                result = (result & 15) | (this.readBitsAsUInt(28) << 4);
 
                 break;
             }
@@ -475,33 +516,23 @@ class BitBuffer {
      * @returns {number}
      */
     readUVarIntFieldPath() {
-        let flag;
-
-        flag = this.readBit();
-
-        if (flag) {
-            return this.read(2).readUInt8();
+        if (this.readBit()) {
+            return this.readBitsAsUInt(2);
         }
 
-        flag = this.readBit();
-
-        if (flag) {
-            return this.read(4).readUInt8();
+        if (this.readBit()) {
+            return this.readBitsAsUInt(4);
         }
 
-        flag = this.readBit();
-
-        if (flag) {
-            return this.read(10).readUInt16LE();
+        if (this.readBit()) {
+            return this.readBitsAsUInt(10);
         }
 
-        flag = this.readBit();
-
-        if (flag) {
-            return BitBuffer.readUInt32LE(this.read(17));
+        if (this.readBit()) {
+            return this.readBitsAsUInt(17);
         }
 
-        return this.read(31).readUInt32LE();
+        return this.readBitsAsUInt(31);
     }
 
     /**
@@ -510,8 +541,8 @@ class BitBuffer {
      * @public
      */
     reset() {
-        this._pointers.byte = 0;
-        this._pointers.bit = 0;
+        this._pByte = 0;
+        this._pBit = 0;
     }
 
     /**
@@ -530,33 +561,32 @@ class BitBuffer {
         }
 
         const numberOfRequestedBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
-        const numberOfAffectedBytes = Math.ceil((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
+        const numberOfAffectedBytes = Math.ceil((this._pBit + numberOfBits) / BITS_PER_BYTE);
 
         let extraByte;
 
         if (numberOfAffectedBytes > numberOfRequestedBytes) {
-            extraByte = this._buffer[this._pointers.byte + numberOfAffectedBytes - 1];
+            extraByte = this._buffer[this._pByte + numberOfAffectedBytes - 1];
         } else {
             extraByte = 0;
         }
 
         for (let i = 0; i < numberOfRequestedBytes; i++) {
-            buffer[i] = this._buffer[this._pointers.byte + i];
+            buffer[i] = this._buffer[this._pByte + i];
         }
 
-        const zeroBitsOffset = this._pointers.bit;
-        const zeroBitsIgnored = numberOfAffectedBytes * BITS_PER_BYTE - (this._pointers.bit + numberOfBits);
+        const zeroBitsIgnored = numberOfAffectedBytes * BITS_PER_BYTE - (this._pBit + numberOfBits);
 
-        buffer[0] &= MASK[MASK_DIRECTION.RIGHT][zeroBitsOffset];
+        buffer[0] &= MASK_RIGHT[this._pBit];
 
         if (numberOfAffectedBytes > numberOfRequestedBytes) {
-            extraByte &= MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+            extraByte &= MASK_LEFT[zeroBitsIgnored];
         } else {
-            buffer[buffer.length - 1] &= MASK[MASK_DIRECTION.LEFT][zeroBitsIgnored];
+            buffer[buffer.length - 1] &= MASK_LEFT[zeroBitsIgnored];
         }
 
-        if (zeroBitsOffset > 0) {
-            buffer[0] = buffer[0] >>> zeroBitsOffset;
+        if (this._pBit > 0) {
+            buffer[0] = buffer[0] >>> this._pBit;
 
             for (let i = 0; i < numberOfRequestedBytes; i++) {
                 let next;
@@ -567,16 +597,18 @@ class BitBuffer {
                     next = extraByte;
                 }
 
-                buffer[i] |= (next & MASK[MASK_DIRECTION.LEFT][BITS_PER_BYTE - zeroBitsOffset]) << (BITS_PER_BYTE - zeroBitsOffset);
+                buffer[i] |= (next & MASK_LEFT[BITS_PER_BYTE - this._pBit]) << (BITS_PER_BYTE - this._pBit);
 
                 if (i < numberOfRequestedBytes) {
-                    buffer[i + 1] = buffer[i + 1] >>> zeroBitsOffset;
+                    buffer[i + 1] = buffer[i + 1] >>> this._pBit;
                 }
             }
         }
 
-        this._pointers.byte += Math.floor((this._pointers.bit + numberOfBits) / BITS_PER_BYTE);
-        this._pointers.bit = (this._pointers.bit + numberOfBits) % BITS_PER_BYTE;
+        const totalBits = this._pBit + numberOfBits;
+
+        this._pByte += totalBits >>> 3;
+        this._pBit = totalBits & 7;
 
         return buffer;
     }
@@ -584,15 +616,8 @@ class BitBuffer {
 
 const BITS_PER_BYTE = 8;
 
-const MASK_DIRECTION = {
-    LEFT: 'left',
-    RIGHT: 'right'
-};
-
-const MASK = {
-    [MASK_DIRECTION.LEFT]: [ 255, 127, 63, 31, 15, 7, 3, 1 ],
-    [MASK_DIRECTION.RIGHT]: [ 255, 254, 252, 248, 240, 224, 192, 128 ]
-};
+const MASK_LEFT = [ 255, 127, 63, 31, 15, 7, 3, 1 ];
+const MASK_RIGHT = [ 255, 254, 252, 248, 240, 224, 192, 128 ];
 
 const REUSABLE_BUFFER_SIZE = 4;
 

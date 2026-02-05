@@ -1,10 +1,12 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
-
 import FieldPathOperation from '#data/enums/FieldPathOperation.js';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
 import HuffmanTree from '#data/fields/HuffmanTree.js';
+import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+
+const HUFFMAN_TREE_DEPTH = HuffmanTree.DEPTH;
+const OPERATIONS = HuffmanTree.OPERATIONS;
+const BITS_TABLE = HuffmanTree.PRECALCULATED_TABLE.bits;
+const OPS_TABLE = HuffmanTree.PRECALCULATED_TABLE.operations;
 
 class FieldPathExtractor {
     /**
@@ -13,8 +15,6 @@ class FieldPathExtractor {
      * @param {BitBuffer} bitBuffer
      */
     constructor(bitBuffer) {
-        Assert.isTrue(bitBuffer instanceof BitBuffer);
-
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
@@ -25,10 +25,28 @@ class FieldPathExtractor {
      * @returns {Array<FieldPath>}
      */
     all() {
+        const bitBuffer = this._bitBuffer;
+        const builder = this._fieldPathBuilder;
         const fieldPaths = [ ];
 
-        for (let fieldPath = this._extractOnce(); fieldPath !== null; fieldPath = this._extractOnce()) {
-            fieldPaths.push(fieldPath);
+        for (;;) {
+            const unread = bitBuffer.getUnreadCount();
+            const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
+
+            const code = bitBuffer.readBitsAsUInt(bits);
+
+            const bitsUsed = BITS_TABLE[code];
+            const operation = OPERATIONS[OPS_TABLE[code]];
+
+            bitBuffer.moveBack(bits - bitsUsed);
+
+            if (operation === FieldPathOperation.FINISH) {
+                break;
+            }
+
+            operation._executor(bitBuffer, builder);
+
+            fieldPaths.push(builder.build());
         }
 
         return fieldPaths;
@@ -37,11 +55,29 @@ class FieldPathExtractor {
     /**
      * @generator
      * @yields {FieldPath}
-     * @returns {void}
      */
     *retrieve() {
-        for (let fieldPath = this._extractOnce(); fieldPath !== null; fieldPath = this._extractOnce()) {
-            yield fieldPath;
+        const bitBuffer = this._bitBuffer;
+        const builder = this._fieldPathBuilder;
+
+        for (;;) {
+            const unread = bitBuffer.getUnreadCount();
+            const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
+
+            const code = bitBuffer.readBitsAsUInt(bits);
+
+            const bitsUsed = BITS_TABLE[code];
+            const operation = OPERATIONS[OPS_TABLE[code]];
+
+            bitBuffer.moveBack(bits - bitsUsed);
+
+            if (operation === FieldPathOperation.FINISH) {
+                break;
+            }
+
+            operation._executor(bitBuffer, builder);
+
+            yield builder.build();
         }
     }
 
@@ -51,28 +87,6 @@ class FieldPathExtractor {
     reset() {
         this._bitBuffer.reset();
         this._fieldPathBuilder = new FieldPathBuilder();
-    }
-
-    /**
-     * @protected
-     * @returns {FieldPath}
-     */
-    _extractOnce() {
-        const bits = Math.min(this._bitBuffer.getUnreadCount(), HuffmanTree.DEPTH);
-
-        const code = BitBuffer.readUInt32LE(this._bitBuffer.read(bits));
-
-        const { bitsUsed, operation } = HuffmanTree.getOperationByCode(code);
-
-        this._bitBuffer.move(-(bits - bitsUsed));
-
-        if (operation === FieldPathOperation.FINISH) {
-            return null;
-        }
-
-        operation.executor(this._bitBuffer, this._fieldPathBuilder);
-
-        return this._fieldPathBuilder.build();
     }
 }
 

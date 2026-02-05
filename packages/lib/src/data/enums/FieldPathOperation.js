@@ -1,7 +1,4 @@
 import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
-
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
 
 const registry = {
     byCode: new Map()
@@ -96,12 +93,7 @@ class FieldPathOperation {
     }
 }
 
-const executor = (callback) => (bitBuffer, fieldPathBuilder) => {
-    Assert.isTrue(bitBuffer instanceof BitBuffer);
-    Assert.isTrue(fieldPathBuilder instanceof FieldPathBuilder);
-
-    callback(bitBuffer, fieldPathBuilder);
-};
+const executor = (callback) => callback;
 
 /* eslint-disable no-unused-vars */
 

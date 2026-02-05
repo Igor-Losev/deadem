@@ -43,6 +43,27 @@ class HuffmanTree {
     }
 
     /**
+     * All {@link FieldPathOperation} instances in sequence order.
+     *
+     * @static
+     * @returns {Array<FieldPathOperation>}
+     */
+    static get OPERATIONS() {
+        return OPERATIONS;
+    }
+
+    /**
+     * Precalculated lookup table mapping Huffman codes to
+     * bit lengths and operation indices.
+     *
+     * @static
+     * @returns {{ bits: Buffer, operations: Buffer }}
+     */
+    static get PRECALCULATED_TABLE() {
+        return PRECALCULATED_TABLE;
+    }
+
+    /**
      * @static
      * @param {number} code - The code.
      * @returns {{bitsUsed: number, operation: FieldPathOperation}}
