@@ -1,5 +1,7 @@
 import Assert from '#core/Assert.js';
 
+import FieldModel from '#data/enums/FieldModel.js';
+
 import Field from './Field.js';
 import SerializerKey from './SerializerKey.js';
 
@@ -18,6 +20,8 @@ class Serializer {
 
         this._key = new SerializerKey(name, version);
         this._fields = fields;
+
+        this._decoderCache = [];
     }
 
     /**
@@ -37,21 +41,76 @@ class Serializer {
     }
 
     /**
+     * Resolves the decoder function for a given field path.
+     *
      * @public
      * @param {FieldPath} fieldPath
      * @param {number=} fieldPathIndex
      * @returns {FieldDecoder}
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
-        const fieldIndex = fieldPath.get(fieldPathIndex);
+        if (fieldPathIndex === 0) {
+            const cached = this._decoderCache[fieldPath.id] ?? null;
 
-        if (!Number.isInteger(fieldIndex) || fieldIndex >= this._fields.length) {
-            throw new Error(`Unable to get decoder: field index [ ${fieldIndex} ] is out of bounds(${this._fields.length})`);
+            if (cached !== null) {
+                return cached;
+            }
         }
 
-        const field = this._fields[fieldIndex];
+        let serializer = this;
+        let idx = fieldPathIndex;
+        let decoder;
 
-        return field.getDecoderForFieldPath(fieldPath, fieldPathIndex + 1);
+        for (;;) {
+            const field = serializer.fields[fieldPath.path[idx]];
+
+            idx++;
+
+            if (field.model === FieldModel.SIMPLE || field.model === FieldModel.ARRAY_FIXED) {
+                decoder = field.decoder;
+
+                break;
+            }
+
+            if (field.model === FieldModel.ARRAY_VARIABLE) {
+                decoder = (fieldPath.length - 1 === idx) ? field.decoderChild : field.decoderBase;
+
+                break;
+            }
+
+            if (field.model === FieldModel.TABLE_FIXED) {
+                if (fieldPath.length === idx) {
+                    decoder = field.decoderBase;
+
+                    break;
+                }
+
+                serializer = field.serializer;
+
+                continue;
+            }
+
+            if (field.model === FieldModel.TABLE_VARIABLE) {
+                if (fieldPath.length - 1 >= idx + 1) {
+                    serializer = field.serializer;
+                    idx++;
+
+                    continue;
+                }
+
+                decoder = field.decoderBase;
+
+                break;
+            }
+
+            throw new Error(`Unhandled model [ ${field.model} ]`);
+        }
+
+        if (fieldPathIndex === 0) {
+            this._decoderCache[fieldPath.id] = decoder;
+        }
+
+        return decoder;
     }
 
     /**

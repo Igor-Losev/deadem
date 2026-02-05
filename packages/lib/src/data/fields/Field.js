@@ -45,6 +45,46 @@ class Field {
     }
 
     /**
+     * @public
+     * @returns {FieldModel}
+     */
+    get model() {
+        return this._model;
+    }
+
+    /**
+     * @public
+     * @returns {FieldDecoder|null}
+     */
+    get decoder() {
+        return this._decoder;
+    }
+
+    /**
+     * @public
+     * @returns {FieldDecoder|null}
+     */
+    get decoderBase() {
+        return this._decoderBase;
+    }
+
+    /**
+     * @public
+     * @returns {FieldDecoder|null}
+     */
+    get decoderChild() {
+        return this._decoderChild;
+    }
+
+    /**
+     * @public
+     * @returns {Serializer|null}
+     */
+    get serializer() {
+        return this._serializer;
+    }
+
+    /**
      * @returns {FieldDecoderInstructions}
      */
     get decoderInstructions() {
