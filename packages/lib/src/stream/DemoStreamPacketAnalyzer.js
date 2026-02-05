@@ -61,7 +61,7 @@ class DemoStreamPacketAnalyzer extends TransformStream {
                     this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
                 }
 
-                await handleMessagePackets.call(this, demoPacket, demoPacket.data.messagePackets);
+                await this._handleMessagePackets(demoPacket, demoPacket.data.messagePackets);
 
                 break;
             }
@@ -73,58 +73,59 @@ class DemoStreamPacketAnalyzer extends TransformStream {
 
         await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
     }
-}
 
-/**
- * @param {DemoPacket} demoPacket
- * @param {Array<MessagePacket>} messagePackets
- * @returns {Promise<void>}
- */
-async function handleMessagePackets(demoPacket, messagePackets) {
-    for (let i = 0; i < messagePackets.length; i++) {
-        const messagePacket = messagePackets[i];
+    /**
+     * @protected
+     * @param {DemoPacket} demoPacket
+     * @param {Array<MessagePacket>} messagePackets
+     * @returns {Promise<void>}
+     */
+    async _handleMessagePackets(demoPacket, messagePackets) {
+        for (let i = 0; i < messagePackets.length; i++) {
+            const messagePacket = messagePackets[i];
 
-        await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+            await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
 
-        switch (messagePacket.type) {
-            case MessagePacketType.SVC_SERVER_INFO: {
-                this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+            switch (messagePacket.type) {
+                case MessagePacketType.SVC_SERVER_INFO: {
+                    this._demoMessageHandler.handleSvcServerInfo(messagePacket);
 
-                break;
+                    break;
+                }
+                case MessagePacketType.SVC_CREATE_STRING_TABLE: {
+                    this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+
+                    break;
+                }
+                case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
+                    this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+
+                    break;
+                }
+                case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
+                    this._demoMessageHandler.handleSvcClearAllStringTables();
+
+                    break;
+                }
+                case MessagePacketType.SVC_PACKET_ENTITIES: {
+                    const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+
+                    await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+
+                    this._demoEntityHandler.handleEntityEvents(events);
+
+                    await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+
+                    break;
+                }
+                default:
+                    break;
             }
-            case MessagePacketType.SVC_CREATE_STRING_TABLE: {
-                this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
 
-                break;
-            }
-            case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
-                this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+            this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
 
-                break;
-            }
-            case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
-                this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
-
-                break;
-            }
-            case MessagePacketType.SVC_PACKET_ENTITIES: {
-                const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
-
-                await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-
-                this._demoEntityHandler.handleEntityEvents(events);
-
-                await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
-
-                break;
-            }
-            default:
-                break;
+            await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
         }
-
-        this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
-
-        await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
     }
 }
 
