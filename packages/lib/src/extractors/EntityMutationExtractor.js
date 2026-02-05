@@ -58,7 +58,7 @@ class EntityMutationExtractor {
             const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
             const value = decoder(this._bitBuffer);
 
-            mutations.push(fieldPath.code, value);
+            mutations.push(fieldPath.transferCode, value);
         }
 
         return mutations;
