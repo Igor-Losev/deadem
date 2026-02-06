@@ -146,7 +146,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
      * @returns {Promise<void>}
      */
     async _handlePacket(demoPacket, deferred) {
-        await this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
+        this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         switch (demoPacket.type) {
             case DemoPacketType.DEM_SEND_TABLES:
@@ -177,7 +177,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
                 for (let i = 0; i < messagePackets.length; i++) {
                     const messagePacket = messagePackets[i];
 
-                    await this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+                    this._engine.interceptPre(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
 
                     switch (messagePacket.type) {
                         case MessagePacketType.SVC_SERVER_INFO:
@@ -221,11 +221,11 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
                                 this._broadcastCreatedEntities(created);
                             }
 
-                            await this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+                            this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
                             this._demoEntityHandler.handleEntityEvents(events);
 
-                            await this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+                            this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
                             break;
                         }
@@ -233,7 +233,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
                     this._engine.getPacketTracker().handleMessagePacket(demoPacket, messagePacket);
 
-                    await this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
+                    this._engine.interceptPost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
                 }
 
                 break;
@@ -244,7 +244,7 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
         this._engine.getPacketTracker().handleDemoPacket(demoPacket);
 
-        await this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
+        this._engine.interceptPost(InterceptorStage.DEMO_PACKET, demoPacket);
     }
 
     /**
@@ -296,10 +296,10 @@ class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
 
             const mutations = [ ];
 
-            for (let i = 0; i < eventPartial.mutations.length; i += 2) {
-                const fieldPath = FieldPathBuilder.reconstruct(eventPartial.mutations[i]);
+            for (let j = 0; j < eventPartial.mutations.length; j += 2) {
+                const fieldPath = FieldPathBuilder.reconstruct(eventPartial.mutations[j]);
 
-                mutations.push(new EntityMutation(fieldPath, eventPartial.mutations[i + 1]));
+                mutations.push(new EntityMutation(fieldPath, eventPartial.mutations[j + 1]));
             }
 
             events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, mutations));
