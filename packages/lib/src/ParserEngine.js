@@ -163,11 +163,11 @@ class ParserEngine {
      * @param {InterceptorStage} stage
      * @param {...*} args
      */
-    async interceptPost(stage, ...args) {
+    interceptPost(stage, ...args) {
         for (let i = 0; i < this._interceptors.post[stage.id].length; i++) {
             const interceptor = this._interceptors.post[stage.id][i];
 
-            await interceptor(...args);
+            interceptor(...args);
         }
     }
 
@@ -176,11 +176,11 @@ class ParserEngine {
      * @param {InterceptorStage} stage
      * @param {...*} args
      */
-    async interceptPre(stage, ...args) {
+    interceptPre(stage, ...args) {
         for (let i = 0; i < this._interceptors.pre[stage.id].length; i++) {
             const interceptor = this._interceptors.pre[stage.id][i];
 
-            await interceptor(...args);
+            interceptor(...args);
         }
     }
 
