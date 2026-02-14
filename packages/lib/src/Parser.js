@@ -18,6 +18,26 @@ class Parser {
     }
 
     /**
+     * Aborts the currently running pipeline, if any.
+     *
+     * @public
+     */
+    abort() {
+        this._engine.abort();
+    }
+
+    /**
+     * Disposes the parser, terminating workers and clearing all state.
+     * After disposal, the parser cannot be used.
+     *
+     * @public
+     * @returns {Promise<void>}
+     */
+    dispose() {
+        return this._engine.dispose();
+    }
+
+    /**
      * @public
      * @returns {Demo}
      */
@@ -54,13 +74,27 @@ class Parser {
     }
 
     /**
+     * Extracts raw packets from a demo stream without parsing them.
+     * This is a lightweight pass that only extracts {@link DemoPacketRaw} objects.
+     *
      * @public
      * @param {Stream.Readable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
+     * @returns {Promise<Array<DemoPacketRaw>>}
+     */
+    extract(reader, source = DemoSource.REPLAY) {
+        return this._engine.extract(reader, source);
+    }
+
+    /**
+     * @public
+     * @param {Stream.Readable|ReadableStream} reader
+     * @param {DemoSource} [source=DemoSource.REPLAY]
+     * @param {boolean} [objectMode=false]
      * @returns {Promise<void>}
      */
-    parse(reader, source = DemoSource.REPLAY) {
-        return this._engine.parse(reader, source);
+    parse(reader, source = DemoSource.REPLAY, objectMode = false) {
+        return this._engine.parse(reader, source, objectMode);
     }
 
     /**
