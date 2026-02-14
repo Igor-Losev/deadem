@@ -46,6 +46,7 @@
     "#data/*.js": "./src/data/*.js",
     "#extractors/*.js": "./src/extractors/*.js",
     "#handlers/*.js": "./src/handlers/*.js",
+    "#player/*.js": "./src/player/*.js",
     "#providers/*.js": "./src/providers/*.js",
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
@@ -58,9 +59,17 @@
       "node": "./src/core/stream/Pipeline.node.js",
       "browser": "./src/core/stream/Pipeline.browser.js"
     },
+    "#core/stream/ReadableArray.js": {
+      "node": "./src/core/stream/ReadableArray.node.js",
+      "browser": "./src/core/stream/ReadableArray.browser.js"
+    },
     "#core/stream/TransformStream.js": {
       "node": "./src/core/stream/TransformStream.node.js",
       "browser": "./src/core/stream/TransformStream.browser.js"
+    },
+    "#core/stream/WritableSinkStream.js": {
+      "node": "./src/core/stream/WritableSinkStream.node.js",
+      "browser": "./src/core/stream/WritableSinkStream.browser.js"
     },
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",
