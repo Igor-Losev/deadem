@@ -1,11 +1,13 @@
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
+import WorkerRequestDemoClear from '#workers/requests/WorkerRequestDemoClear.js';
 import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
 import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
 import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js';
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
 
+import WorkerResponseDemoClear from '#workers/responses/WorkerResponseDemoClear.js';
 import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
 import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
@@ -14,6 +16,7 @@ import WorkerResponseSvcUpdatedEntities from '#workers/responses/WorkerResponseS
 
 const workerRequests = new Map();
 
+workerRequests.set(WorkerMessageType.DEMO_CLEAR.code, WorkerRequestDemoClear);
 workerRequests.set(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE.code, WorkerRequestDHPParse);
 workerRequests.set(WorkerMessageType.DEMO_PACKET_SYNC.code, WorkerRequestDPacketSync);
 workerRequests.set(WorkerMessageType.MESSAGE_PACKET_SYNC.code, WorkerRequestMPacketSync);
@@ -22,6 +25,7 @@ workerRequests.set(WorkerMessageType.SVC_UPDATED_ENTITIES.code, WorkerRequestSvc
 
 const workerResponses = new Map();
 
+workerResponses.set(WorkerMessageType.DEMO_CLEAR.code, WorkerResponseDemoClear);
 workerResponses.set(WorkerMessageType.DEMO_HEAVY_PACKET_PARSE.code, WorkerResponseDHPParse);
 workerResponses.set(WorkerMessageType.DEMO_PACKET_SYNC.code, WorkerResponseDPacketSync);
 workerResponses.set(WorkerMessageType.MESSAGE_PACKET_SYNC.code, WorkerResponseMPacketSync);

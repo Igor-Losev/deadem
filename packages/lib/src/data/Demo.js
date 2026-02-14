@@ -220,6 +220,21 @@ class Demo {
     }
 
     /**
+     * Resets all state to its initial values.
+     *
+     * @public
+     */
+    reset() {
+        this._classBaselines.clear();
+        this._classes.byId.clear();
+        this._classes.byName.clear();
+        this._entities.clear();
+        this._serializers.clear();
+        this._server = null;
+        this._stringTableContainer.handleClear();
+    }
+
+    /**
      * @protected
      * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
