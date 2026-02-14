@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import WritableNoopStreamNode from '#core/stream/WritableNoopStream.node.js';
+import WritableSinkStream from '#core/stream/WritableSinkStream.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 
@@ -10,16 +10,17 @@ class PipelineNode {
      * @constructor
      * @param {Stream.Readable} readable
      * @param {Array<TransformStream>} transforms
+     * @param {Stream.Writable|null} [writable=null]
      */
-    constructor(readable, transforms) {
+    constructor(readable, transforms, writable = null) {
         const deferred = new DeferredPromise();
 
-        const writeNoop = new WritableNoopStreamNode();
+        const destination = writable !== null ? writable : new WritableSinkStream();
 
         Stream.pipeline(
             readable,
             ...transforms,
-            writeNoop,
+            destination,
             (error) => {
                 if (error) {
                     deferred.reject(error);
@@ -30,6 +31,24 @@ class PipelineNode {
         );
 
         this._deferred = deferred;
+        this._readable = readable;
+        this._aborted = false;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get aborted() {
+        return this._aborted;
+    }
+
+    /**
+     * @public
+     */
+    abort() {
+        this._aborted = true;
+        this._readable.destroy();
     }
 
     /**

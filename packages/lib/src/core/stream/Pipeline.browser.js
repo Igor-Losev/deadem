@@ -1,4 +1,4 @@
-import WritableNoopStreamBrowser from '#core/stream/WritableNoopStream.browser.js';
+import WritableSinkStream from '#core/stream/WritableSinkStream.js';
 
 class PipelineBrowser {
     /**
@@ -6,23 +6,41 @@ class PipelineBrowser {
      * @constructor
      * @param {ReadableStream} readable
      * @param {Array<TransformStreamBrowser>} transforms
+     * @param {WritableStream|null} [writable=null]
      */
-    constructor(readable, transforms) {
-        const writeNoop = new WritableNoopStreamBrowser();
+    constructor(readable, transforms, writable = null) {
+        const abortController = new AbortController();
 
-        transforms
+        const destination = writable !== null ? writable : new WritableSinkStream();
+
+        this._promise = transforms
             .reduce((p, t) => p.pipeThrough(t), readable)
-            .pipeTo(writeNoop);
+            .pipeTo(destination, { signal: abortController.signal });
 
-        this._writeNoop = writeNoop;
+        this._abortController = abortController;
     }
 
     /**
      * @public
-     * @returns {Promise<*>}
+     * @returns {boolean}
+     */
+    get aborted() {
+        return this._abortController.signal.aborted;
+    }
+
+    /**
+     * @public
+     */
+    abort() {
+        this._abortController.abort();
+    }
+
+    /**
+     * @public
+     * @returns {Promise<void>}
      */
     ready() {
-        return this._writeNoop.ready();
+        return this._promise;
     }
 }
 
