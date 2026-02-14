@@ -19,7 +19,7 @@ class DemoStreamPacketCoordinator extends TransformStream {
 
         this._engine = engine;
 
-        this._heap = new BinaryHeap(demoPacket => demoPacket.sequence);
+        this._heap = new BinaryHeap(demoPacket => demoPacket.ordinal);
         this._sequence = 0;
     }
 
@@ -43,7 +43,7 @@ class DemoStreamPacketCoordinator extends TransformStream {
             return;
         }
 
-        if (packet.sequence !== this._sequence) {
+        if (packet.ordinal !== this._sequence) {
             this._heap.insert(packet);
 
             return;
@@ -53,7 +53,7 @@ class DemoStreamPacketCoordinator extends TransformStream {
 
         this._sequence += 1;
 
-        while (this._heap.length > 0 && this._heap.root.sequence === this._sequence) {
+        while (this._heap.length > 0 && this._heap.root.ordinal === this._sequence) {
             this._push(this._heap.extract());
 
             this._sequence += 1;
