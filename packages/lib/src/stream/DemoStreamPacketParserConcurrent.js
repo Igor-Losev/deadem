@@ -139,6 +139,8 @@ class DemoStreamPacketParserConcurrent extends TransformStream {
 
                     const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, createDemoPacketData(messagePackets, stringTables));
 
+                    demoPacket.ordinal = demoPacketRaw.ordinal;
+
                     demoPackets.push(demoPacket);
                 });
 

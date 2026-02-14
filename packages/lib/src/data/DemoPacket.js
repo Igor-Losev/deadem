@@ -1,10 +1,8 @@
 import Assert from '#core/Assert.js';
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import MessagePacket from '#data/MessagePacket.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
-import DemoSource from '#data/enums/DemoSource.js';
 
 import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
 
@@ -24,6 +22,7 @@ class DemoPacket {
         Assert.isTrue(Number.isInteger(tick));
 
         this._sequence = sequence;
+        this._ordinal = sequence;
         this._type = type;
         this._tick = tick;
         this._data = data;
@@ -35,6 +34,22 @@ class DemoPacket {
      */
     get sequence() {
         return this._sequence;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    get ordinal() {
+        return this._ordinal;
+    }
+
+    /**
+     * @public
+     * @param {number} value
+     */
+    set ordinal(value) {
+        this._ordinal = value;
     }
 
     /**
@@ -83,31 +98,17 @@ class DemoPacket {
      * @returns {DemoPacket|null}
      */
     static parse(demoPacketRaw) {
-        const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
+        const demoPacketType = demoPacketRaw.getType();
 
         if (demoPacketType === null) {
             return null;
         }
 
-        let decompressed;
+        const decoded = demoPacketRaw.decode();
 
-        if (demoPacketRaw.getIsCompressed()) {
-            decompressed = SnappyDecompressor.decompress(demoPacketRaw.payload);
-        } else {
-            decompressed = demoPacketRaw.payload;
+        if (decoded === null) {
+            return null;
         }
-
-        let decoded;
-
-        if (demoPacketRaw.source === DemoSource.HTTP_BROADCAST && (demoPacketType.heavy || demoPacketType === DemoPacketType.DEM_SPAWN_GROUPS)) {
-            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
-                throw new Error('Unhandled [ DEM_FULL_PACKET ] packet for source [ HTTP_BROADCAST ]');
-            }
-
-            decoded = { data: decompressed };
-        } else {
-            decoded = demoPacketType.proto.decode(decompressed);
-        }  
 
         let demoPacket;
 
@@ -129,6 +130,8 @@ class DemoPacket {
         } else {
             demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoPacketRaw.tick.value, decoded);
         }
+
+        demoPacket.ordinal = demoPacketRaw.ordinal;
 
         return demoPacket;
     }
