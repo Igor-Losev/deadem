@@ -13,6 +13,7 @@ import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js'
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
 
+import WorkerResponseDemoClear from '#workers/responses/WorkerResponseDemoClear.js';
 import WorkerResponseDHPParse from '#workers/responses/WorkerResponseDHPParse.js';
 import WorkerResponseDPacketSync from '#workers/responses/WorkerResponseDPacketSync.js';
 import WorkerResponseMPacketSync from '#workers/responses/WorkerResponseMPacketSync.js';
@@ -50,6 +51,11 @@ class Worker {
         const request = workerRequestClass.deserialize(requestRaw.payload);
 
         switch (request.type) {
+            case WorkerMessageType.DEMO_CLEAR: {
+                this._handleDemoClear(request);
+
+                break;
+            }
             case WorkerMessageType.DEMO_HEAVY_PACKET_PARSE: {
                 this._handleHeavyPacketParse(request);
 
@@ -166,6 +172,18 @@ class Worker {
         });
 
         const response = new WorkerResponseDHPParse(batches, stringTables);
+
+        this._respond(response);
+    }
+
+    /**
+     * @protected
+     * @param {WorkerRequestDemoClear} request
+     */
+    _handleDemoClear(request) {
+        this._demo.reset();
+
+        const response = new WorkerResponseDemoClear();
 
         this._respond(response);
     }

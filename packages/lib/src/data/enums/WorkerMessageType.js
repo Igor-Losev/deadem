@@ -48,6 +48,15 @@ class WorkerMessageType {
      * @static
      * @returns {WorkerMessageType}
      */
+    static get DEMO_CLEAR() {
+        return demoClear;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {WorkerMessageType}
+     */
     static get DEMO_HEAVY_PACKET_PARSE() {
         return demoHeavyPacketParse;
     }
@@ -89,6 +98,7 @@ class WorkerMessageType {
     }
 }
 
+const demoClear = new WorkerMessageType('DEMO_CLEAR', 'Clear demo state');
 const demoHeavyPacketParse = new WorkerMessageType('DEMO_HEAVY_PACKET_PARSE', 'Parsing heavy demo packets');
 const demoPacketSync = new WorkerMessageType('DEMO_PACKET_SYNC', 'Synchronize demo packet');
 
