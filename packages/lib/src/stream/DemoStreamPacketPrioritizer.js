@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
@@ -13,7 +13,7 @@ import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.j
  *
  * All other packet types are passed through unchanged.
  */
-class DemoStreamPacketPrioritizer extends TransformStream {
+class DemoStreamPacketPrioritizer extends Transform {
     /**
      * @public
      * @constructor

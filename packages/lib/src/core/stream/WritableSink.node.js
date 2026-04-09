@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-class WritableSinkStreamNode extends Stream.Writable {
+class WritableSinkNode extends Stream.Writable {
     /**
      * @public
      * @constructor
@@ -27,4 +27,4 @@ class WritableSinkStreamNode extends Stream.Writable {
     }
 }
 
-export default WritableSinkStreamNode;
+export default WritableSinkNode;

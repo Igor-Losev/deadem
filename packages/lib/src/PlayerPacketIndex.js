@@ -79,11 +79,32 @@ class PlayerPacketIndex {
     }
 
     /**
+     * @public
+     * @param {number} tick 
+     * @returns {number} 
+     */
+    getPacketCountForTick(tick) {
+        const start = this._findByTick(tick);
+
+        if (start === null || this._packets[start].tick.value !== tick) {
+            return 0;
+        }
+
+        let count = 0;
+
+        for (let i = start; i < this._packets.length && this._packets[i].tick.value === tick; i++) {
+            count++;
+        }
+
+        return count;
+    }
+
+    /**
      * Returns all data required to reconstruct the game state at the specified tick.
      *
      * @public
      * @param {number} tick
-     * @returns {{bootstrap: Array<DemoPacketRaw>, stringTableSnapshots: Array<*>, packets: Array<DemoPacketRaw>}}
+     * @returns {{bootstrap: Array<DemoPacketRaw>, stringTableSnapshots: Array<*>, packets: Array<DemoPacketRaw>, remaining: Array<DemoPacketRaw>}}
      */
     getPacketsForTick(tick) {
         Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
@@ -100,7 +121,8 @@ class PlayerPacketIndex {
         return {
             bootstrap: this._bootstrap.map(i => this._packets[i]),
             stringTableSnapshots,
-            packets: this._getRange(keyframeIndex, packetIndex)
+            packets: this._getRange(keyframeIndex, packetIndex),
+            remaining: this._getRange(packetIndex, this._packets.length)
         };
     }
 

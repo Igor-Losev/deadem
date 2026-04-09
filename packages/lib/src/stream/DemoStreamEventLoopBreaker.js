@@ -1,13 +1,13 @@
 import Assert from '#core/Assert.js';
 
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 /**
  * Balances stream processing load by periodically yielding control back to
  * the event loop, preventing long blocking operations and allowing
  * garbage collection to proceed smoothly.
  */
-class DemoStreamEventLoopBreaker extends TransformStream {
+class DemoStreamEventLoopBreaker extends Transform {
     /**
      * @public
      * @constructor

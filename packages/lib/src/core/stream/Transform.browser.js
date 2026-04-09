@@ -1,4 +1,4 @@
-class TransformStreamBrowser extends TransformStream {
+class TransformBrowser extends TransformStream {
     constructor() {
         super({
             flush: async (controller) => {
@@ -48,7 +48,7 @@ class TransformStreamBrowser extends TransformStream {
      * @abstract
      */
     async _handle() {
-        throw new Error('TransformStreamBrowser.handle() is not implemented');
+        throw new Error('TransformBrowser.handle() is not implemented');
     }
 
     /**
@@ -64,4 +64,4 @@ class TransformStreamBrowser extends TransformStream {
     }
 }
 
-export default TransformStreamBrowser;
+export default TransformBrowser;

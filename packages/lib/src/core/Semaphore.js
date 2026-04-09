@@ -25,9 +25,22 @@ class Semaphore {
             return;
         }
 
-        return new Promise((resolve) => {
-            this._queue.push(resolve);
+        return new Promise((resolve, reject) => {
+            this._queue.push({ resolve, reject });
         });
+    }
+
+    /**
+     * Rejects all pending acquires, preventing further use.
+     *
+     * @public
+     */
+    destroy() {
+        while (this._queue.length > 0) {
+            const { reject } = this._queue.shift();
+
+            reject(new Error('Semaphore destroyed'));
+        }
     }
 
     /**
@@ -35,7 +48,7 @@ class Semaphore {
      */
     release() {
         if (this._queue.length > 0) {
-            const resolve = this._queue.shift();
+            const { resolve } = this._queue.shift();
 
             resolve();
         } else {

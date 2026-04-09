@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-import WritableSinkStream from '#core/stream/WritableSinkStream.js';
+import WritableSink from '#core/stream/WritableSink.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 
@@ -9,13 +9,13 @@ class PipelineNode {
      * @public
      * @constructor
      * @param {Stream.Readable} readable
-     * @param {Array<TransformStream>} transforms
+     * @param {Array<Stream.Transform>} transforms
      * @param {Stream.Writable|null} [writable=null]
      */
     constructor(readable, transforms, writable = null) {
         const deferred = new DeferredPromise();
 
-        const destination = writable !== null ? writable : new WritableSinkStream();
+        const destination = writable !== null ? writable : new WritableSink();
 
         Stream.pipeline(
             readable,
@@ -30,9 +30,9 @@ class PipelineNode {
             }
         );
 
+        this._aborted = false;
         this._deferred = deferred;
         this._readable = readable;
-        this._aborted = false;
     }
 
     /**
@@ -48,6 +48,7 @@ class PipelineNode {
      */
     abort() {
         this._aborted = true;
+
         this._readable.destroy();
     }
 

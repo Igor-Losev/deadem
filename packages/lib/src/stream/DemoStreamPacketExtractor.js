@@ -2,7 +2,7 @@ import { Buffer } from 'node:buffer';
 
 import Assert from '#core/Assert.js';
 
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DemoSource from '#data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
@@ -18,7 +18,7 @@ const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
  * the {@link DemoStreamPacketExtractor} will wait for subsequent chunks to complete
  * the extraction of the {@link DemoPacketRaw}.
  */
-class DemoStreamPacketExtractor extends TransformStream {
+class DemoStreamPacketExtractor extends Transform {
     /**
      * @public
      * @constructor

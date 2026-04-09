@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 import InterceptorStage from '#data/enums/InterceptorStage.js';
@@ -13,7 +13,7 @@ import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
  * Given a stream of {@link DemoPacket}, processes them sequentially,
  * updating the state of the {@link Demo} accordingly.
  */
-class DemoStreamPacketAnalyzer extends TransformStream {
+class DemoStreamPacketAnalyzer extends Transform {
     /**
      * @public
      * @constructor

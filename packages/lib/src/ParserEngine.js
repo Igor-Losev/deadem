@@ -1,11 +1,12 @@
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
-import WritableSinkStream from '#core/stream/WritableSinkStream.js';
+import WritableSink from '#core/stream/WritableSink.js';
 
 import Demo from '#data/Demo.js';
 
 import DemoSource from '#data/enums/DemoSource.js';
+import InterceptorStage from '#data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
@@ -139,6 +140,8 @@ class ParserEngine {
     abort() {
         if (this._pipeline !== null) {
             this._pipeline.abort();
+
+            this._pipeline = null;
         }
     }
 
@@ -156,7 +159,7 @@ class ParserEngine {
 
         this._disposed = true;
 
-        this._demo.reset();
+        this.reset(true);
 
         if (this._workerManager !== null) {
             await this._workerManager.terminate();
@@ -211,10 +214,10 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPost(stage, ...args) {
-        for (let i = 0; i < this._interceptors.post[stage.id].length; i++) {
-            const interceptor = this._interceptors.post[stage.id][i];
+        const interceptors = [...this._interceptors.post[stage.id]];
 
-            interceptor(...args);
+        for (let i = 0; i < interceptors.length; i++) {
+            interceptors[i](...args);
         }
     }
 
@@ -224,10 +227,10 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPre(stage, ...args) {
-        for (let i = 0; i < this._interceptors.pre[stage.id].length; i++) {
-            const interceptor = this._interceptors.pre[stage.id][i];
+        const interceptors = [...this._interceptors.pre[stage.id]];
 
-            interceptor(...args);
+        for (let i = 0; i < interceptors.length; i++) {
+            interceptors[i](...args);
         }
     }
 
@@ -258,7 +261,7 @@ class ParserEngine {
 
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            const collector = new WritableSinkStream((packet) => packets.push(packet));
+            const collector = new WritableSink((packet) => packets.push(packet));
 
             this._pipeline = new Pipeline(reader, chain, collector);
 
@@ -272,10 +275,10 @@ class ParserEngine {
 
             throw error;
         } finally {
-            this._pipeline = null;
             this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
 
             this._finished = true;
+            this._pipeline = null;
         }
     }
 
@@ -331,16 +334,101 @@ class ParserEngine {
 
             await this._pipeline.ready();
         } catch (error) {
-            this._logger.error('Parse failed', error);
+            if (error?.code !== 'ERR_STREAM_PREMATURE_CLOSE' && error?.name !== 'AbortError') {
+                this._logger.error('Parse failed', error);
+            }
 
             throw error;
         } finally {
-            this._pipeline = null;
             this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
             this._trackers.memory.off();
 
             this._finished = true;
+            this._pipeline = null;
         }
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     */
+    registerPostInterceptor(stage, interceptor) {
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        this._interceptors.post[stage.id].push(interceptor);
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     */
+    registerPreInterceptor(stage, interceptor) {
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        this._interceptors.pre[stage.id].push(interceptor);
+    }
+
+    /**
+     * Resets the demo state. Optionally clears all interceptors.
+     *
+     * @public
+     * @param {boolean} [interceptors=false]
+     */
+    reset(interceptors = false) {
+        this.abort();
+
+        this._demo.reset();
+
+        if (interceptors) {
+            this._interceptors.pre = [[], [], []];
+            this._interceptors.post = [[], [], []];
+        }
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     * @returns {boolean}
+     */
+    unregisterPostInterceptor(stage, interceptor) {
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        const index = this._interceptors.post[stage.id].findIndex(i => i === interceptor);
+
+        if (index === -1) {
+            return false;
+        }
+
+        this._interceptors.post[stage.id].splice(index, 1);
+
+        return true;
+    }
+
+    /**
+     * @public
+     * @param {InterceptorStage} stage
+     * @param {Function} interceptor
+     * @returns {boolean}
+     */
+    unregisterPreInterceptor(stage, interceptor) {
+        Assert.isTrue(stage instanceof InterceptorStage);
+        Assert.isTrue(typeof interceptor === 'function');
+
+        const index = this._interceptors.pre[stage.id].findIndex(i => i === interceptor);
+
+        if (index === -1) {
+            return false;
+        }
+
+        this._interceptors.pre[stage.id].splice(index, 1);
+
+        return true;
     }
 
     /**
@@ -357,7 +445,7 @@ class ParserEngine {
             throw new Error(`Unable to run parser: engine is already running`);
         }
 
-        this._demo.reset();
+        this.reset();
 
         if (this._workerManager !== null) {
             await this._workerManager.broadcast(new WorkerRequestDemoClear());

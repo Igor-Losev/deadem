@@ -1,12 +1,12 @@
 import Assert from '#core/Assert.js';
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).
  */
-class DemoStreamBufferSplitter extends TransformStream {
+class DemoStreamBufferSplitter extends Transform {
     /**
      * @public
      * @constructor
