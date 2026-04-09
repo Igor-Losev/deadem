@@ -63,13 +63,13 @@
       "node": "./src/core/stream/ReadableArray.node.js",
       "browser": "./src/core/stream/ReadableArray.browser.js"
     },
-    "#core/stream/TransformStream.js": {
-      "node": "./src/core/stream/TransformStream.node.js",
-      "browser": "./src/core/stream/TransformStream.browser.js"
+    "#core/stream/Transform.js": {
+      "node": "./src/core/stream/Transform.node.js",
+      "browser": "./src/core/stream/Transform.browser.js"
     },
-    "#core/stream/WritableSinkStream.js": {
-      "node": "./src/core/stream/WritableSinkStream.node.js",
-      "browser": "./src/core/stream/WritableSinkStream.browser.js"
+    "#core/stream/WritableSink.js": {
+      "node": "./src/core/stream/WritableSink.node.js",
+      "browser": "./src/core/stream/WritableSink.browser.js"
     },
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",

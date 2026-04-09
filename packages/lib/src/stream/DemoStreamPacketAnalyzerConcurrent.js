@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 
@@ -20,7 +20,7 @@ import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
 
-class DemoStreamPacketAnalyzerConcurrent extends TransformStream {
+class DemoStreamPacketAnalyzerConcurrent extends Transform {
     /**
      * @public
      * @constructor

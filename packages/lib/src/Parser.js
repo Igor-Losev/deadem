@@ -1,4 +1,3 @@
-import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 
 import DemoSource from '#data/enums/DemoSource.js';
@@ -21,9 +20,10 @@ class Parser {
      * Aborts the currently running pipeline, if any.
      *
      * @public
+     * @returns {void}
      */
     abort() {
-        this._engine.abort();
+        return this._engine.abort();
     }
 
     /**
@@ -35,6 +35,19 @@ class Parser {
      */
     dispose() {
         return this._engine.dispose();
+    }
+
+    /**
+     * Extracts raw packets from a demo stream without parsing them.
+     * This is a lightweight pass that only extracts {@link DemoPacketRaw} objects.
+     *
+     * @public
+     * @param {Stream.Readable|ReadableStream} reader
+     * @param {DemoSource} [source=DemoSource.REPLAY]
+     * @returns {Promise<Array<DemoPacketRaw>>}
+     */
+    extract(reader, source = DemoSource.REPLAY) {
+        return this._engine.extract(reader, source);
     }
 
     /**
@@ -74,19 +87,6 @@ class Parser {
     }
 
     /**
-     * Extracts raw packets from a demo stream without parsing them.
-     * This is a lightweight pass that only extracts {@link DemoPacketRaw} objects.
-     *
-     * @public
-     * @param {Stream.Readable|ReadableStream} reader
-     * @param {DemoSource} [source=DemoSource.REPLAY]
-     * @returns {Promise<Array<DemoPacketRaw>>}
-     */
-    extract(reader, source = DemoSource.REPLAY) {
-        return this._engine.extract(reader, source);
-    }
-
-    /**
      * @public
      * @param {Stream.Readable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
@@ -103,10 +103,7 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        this._engine.interceptors.post[stage.id].push(interceptor);
+        return this._engine.registerPostInterceptor(stage, interceptor);
     }
 
     /**
@@ -115,10 +112,17 @@ class Parser {
      * @param {Function} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
+        return this._engine.registerPreInterceptor(stage, interceptor);
+    }
 
-        this._engine.interceptors.pre[stage.id].push(interceptor);
+    /**
+     * Resets the demo state. Optionally clears all interceptors.
+     *
+     * @public
+     * @param {boolean} [interceptors=false]
+     */
+    reset(interceptors = false) {
+        return this._engine.reset(interceptors);
     }
 
     /**
@@ -128,18 +132,7 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const index = this._engine.interceptors.post[stage.id].findIndex(i => i === interceptor);
-
-        if (index === -1) {
-            return false;
-        }
-
-        this._engine.interceptors.post[stage.id].splice(index, 1);
-
-        return true;
+        return this._engine.unregisterPostInterceptor(stage, interceptor);
     }
 
     /**
@@ -149,18 +142,7 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const index = this._engine.interceptors.pre[stage.id].findIndex(i => i === interceptor);
-
-        if (index === -1) {
-            return false;
-        }
-
-        this._engine.interceptors.pre[stage.id].splice(index, 1);
-
-        return true;
+        return this._engine.unregisterPreInterceptor(stage, interceptor);
     }
 }
 

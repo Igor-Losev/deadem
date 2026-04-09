@@ -1,5 +1,5 @@
 import BinaryHeap from '#core/BinaryHeap.js';
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 
@@ -8,7 +8,7 @@ import DemoPacketRaw from '#data/DemoPacketRaw.js';
  *  - Filters out unparsed {@link DemoPacketRaw} packets.
  *  - Ensures that {@link DemoPacket} packets are passed through in the correct sequence order.
  */
-class DemoStreamPacketCoordinator extends TransformStream {
+class DemoStreamPacketCoordinator extends Transform {
     /**
      * @public
      * @constructor

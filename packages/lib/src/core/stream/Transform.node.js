@@ -1,6 +1,6 @@
 import Stream from 'node:stream';
 
-class TransformStreamNode extends Stream.Transform {
+class TransformNode extends Stream.Transform {
     constructor() {
         super({ objectMode: true });
     }
@@ -29,7 +29,7 @@ class TransformStreamNode extends Stream.Transform {
      * @returns {void}
      */
     async _handle() {
-        throw new Error('TransformStreamNode.handle() is not implemented');
+        throw new Error('TransformNode.handle() is not implemented');
     }
 
     /**
@@ -53,4 +53,4 @@ class TransformStreamNode extends Stream.Transform {
     }
 }
 
-export default TransformStreamNode;
+export default TransformNode;

@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 /**
  * Assigns sequential {@link DemoPacketRaw#ordinal} values (0, 1, 2, ...)
@@ -6,7 +6,7 @@ import TransformStream from '#core/stream/TransformStream.js';
  * to ensure the {@link DemoStreamPacketCoordinator} can reorder packets
  * correctly, regardless of their original {@link DemoPacketRaw#sequence}.
  */
-class DemoStreamPacketResequencer extends TransformStream {
+class DemoStreamPacketResequencer extends Transform {
     /**
      * @public
      * @constructor

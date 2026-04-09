@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DemoPacket from '#data/DemoPacket.js';
 import MessagePacket from '#data/MessagePacket.js';
@@ -17,7 +17,7 @@ import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
  * asynchronous worker threads. As a result, the order of the {@link DemoPacket}
  * or {@link DemoPacketRaw} instances is not guaranteed.
  */
-class DemoStreamPacketParserConcurrent extends TransformStream {
+class DemoStreamPacketParserConcurrent extends Transform {
     /**
      * @constructor
      * @public

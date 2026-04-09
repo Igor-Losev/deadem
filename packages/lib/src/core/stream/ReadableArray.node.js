@@ -34,16 +34,31 @@ class ReadableArrayNode extends Readable {
         this._semaphore.release();
     }
 
+    _destroy(error, callback) {
+        if (this._semaphore !== null) {
+            this._semaphore.destroy();
+        }
+
+        this._array = null;
+
+        callback(error);
+    }
+
     _read() {
-        if (this._index >= this._array.length) {
+        if (this._array === null || this._index >= this._array.length) {
             this.push(null);
+
             return;
         }
 
         if (this._semaphore) {
             this._semaphore.acquire().then(() => {
+                if (this.destroyed) {
+                    return;
+                }
+
                 this.push(this._array[this._index++]);
-            });
+            }).catch((_) => { });
         } else {
             this.push(this._array[this._index++]);
         }

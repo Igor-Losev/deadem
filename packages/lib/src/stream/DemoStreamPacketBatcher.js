@@ -1,5 +1,5 @@
 import Assert from '#core/Assert.js';
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 /**
  * Batches a stream of {@link DemoPacketRaw} into groups before passing them through.
@@ -7,7 +7,7 @@ import TransformStream from '#core/stream/TransformStream.js';
  *  1. The total byte size of the included messages. If it exceeds a threshold, the batch is passed through.
  *  2. The amount of time (in milliseconds) pending. If it exceeds a threshold, the batch is passed through.
  */
-class DemoStreamPacketBatcher extends TransformStream {
+class DemoStreamPacketBatcher extends Transform {
     /**
      * @public
      * @constructor

@@ -11,31 +11,56 @@ class ReadableArrayBrowser extends ReadableStream {
     constructor(array, gated = false) {
         Assert.isTrue(Array.isArray(array), 'array must be an array');
 
-        const semaphore = gated ? new Semaphore(0) : null;
-
-        let index = 0;
+        const state = {
+            array,
+            destroyed: false,
+            index: 0,
+            semaphore: gated ? new Semaphore(0) : null
+        };
 
         super({
             async pull(controller) {
-                if (index >= array.length) {
+                if (state.destroyed || state.index >= state.array.length) {
                     controller.close();
 
                     return;
                 }
 
-                if (semaphore) {
-                    await semaphore.acquire();
+                if (state.semaphore) {
+                    try {
+                        await state.semaphore.acquire();
+                    } catch {
+                        return;
+                    }
                 }
 
-                if (index < array.length) {
-                    controller.enqueue(array[index++]);
+                if (state.destroyed) {
+                    return;
+                }
+
+                if (state.index < state.array.length) {
+                    controller.enqueue(state.array[state.index++]);
                 } else {
                     controller.close();
                 }
             }
         });
 
-        this._semaphore = semaphore;
+        this._state = state;
+    }
+
+    /**
+     * Destroys the stream, releasing the array and unblocking any pending pull().
+     *
+     * @public
+     */
+    destroy() {
+        this._state.destroyed = true;
+        this._state.array = null;
+
+        if (this._state.semaphore !== null) {
+            this._state.semaphore.destroy();
+        }
     }
 
     /**
@@ -45,11 +70,11 @@ class ReadableArrayBrowser extends ReadableStream {
      * @public
      */
     release() {
-        if (this._semaphore === null) {
-            throw new Error(`release() can only be called on a gated ReadableArray`);
+        if (this._state.semaphore === null) {
+            throw new Error('release() can only be called on a gated ReadableArray');
         }
 
-        this._semaphore.release();
+        this._state.semaphore.release();
     }
 }
 

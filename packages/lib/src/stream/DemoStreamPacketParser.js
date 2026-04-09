@@ -1,4 +1,4 @@
-import TransformStream from '#core/stream/TransformStream.js';
+import Transform from '#core/stream/Transform.js';
 
 import DemoPacket from '#data/DemoPacket.js';
 import MessagePacket from '#data/MessagePacket.js';
@@ -9,7 +9,7 @@ import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.j
  * Given a stream of {@link DemoPacketRaw}, parses its payload.
  * Tracks unparsed demo and message packets.
  */
-class DemoStreamPacketParser extends TransformStream {
+class DemoStreamPacketParser extends Transform {
     /**
      * @constructor
      * @public
