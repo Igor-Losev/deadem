@@ -2,15 +2,17 @@ import assert from 'node:assert';
 
 import { Logger, InterceptorStage, Parser, ParserConfiguration, Printer } from 'deadem';
 
-import Semaphore from 'deadem/src/core/Semaphore.js';
+import DeferredPromise from 'deadem/src/data/DeferredPromise.js';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 
+const BATCH_SIZE = 1000;
+
 /**
  * This script tests event consistency between single threaded and multithreaded
- * parsers.
+ * parsers by pausing each engine every N demo packets and comparing batches.
  */
 (async () => {
     const demoFile = DemoFile.REPLAY_36126420;
@@ -28,150 +30,193 @@ import DemoProvider from '#root/providers/DemoProvider.js';
 
     const [ readable1, readable2 ] = await Promise.all([ DemoProvider.read(demoFile), DemoProvider.read(demoFile) ]);
 
-    const mutex1 = new Semaphore(0);
-    const mutex2 = new Semaphore(0);
+    const batch1 = [];
+    const batch2 = [];
 
-    const state1 = { s: null, d: null, m: null, e: null };
-    const state2 = { s: null, d: null, m: null, e: null };
+    let compared = 0;
+    let comparedMessages = 0;
+    let comparedEntities = 0;
 
-    const compare = () => {
-        // Stage
-
-        if (state1.s !== state2.s) {
-            throw new Error(`DemoPacket stage difference: [ ${state1.s.code} ] [ ${state2.s.code} ]`);
+    const compareBatches = () => {
+        if (batch1.length !== batch2.length) {
+            throw new Error(`Batch size mismatch at #${compared}: [ ${batch1.length} ] [ ${batch2.length} ]`);
         }
 
-        // DemoPacket
+        for (let b = 0; b < batch1.length; b++) {
+            const p1 = batch1[b];
+            const p2 = batch2[b];
 
-        if (state1.d.tick !== state2.d.tick) {
-            throw new Error(`DemoPacket tick difference: [ ${state1.d.tick} ] [ ${state2.d.tick} ]`);
-        }
-
-        if (state1.d.type !== state2.d.type) {
-            throw new Error(`DemoPacket type difference: [ ${state1.d.type.code} ] [ ${state2.d.type.code} ]`);
-        }
-
-        if (state1.d.sequence !== state2.d.sequence) {
-            throw new Error(`DemoPacket sequence difference: [ ${state1.d.sequence} ] [ ${state2.d.sequence} ]`);
-        }
-
-        // MessagePacket
-
-        if (state1.s === InterceptorStage.MESSAGE_PACKET || state1.s === InterceptorStage.ENTITY_PACKET) {
-            if (state1.m.type !== state2.m.type) {
-                throw new Error(`MessagePacket type difference: [ ${state1.m.type.code} ] [ ${state2.m.type.code} ]`);
-            }
-        }
-
-        // EntityPacket
-
-        if (state1.s === InterceptorStage.ENTITY_PACKET) {
-            if (state1.e.length !== state2.e.length) {
-                throw new Error(`Entity events different length: [ ${state1.e.length} ] [ ${state2.e.length} ]`);
+            if (p1.d.tick !== p2.d.tick) {
+                throw new Error(`DemoPacket tick difference at #${compared}: [ ${p1.d.tick} ] [ ${p2.d.tick} ]`);
             }
 
-            state1.e.forEach((event1, index) => {
-                const event2 = state2.e[index];
+            if (p1.d.type !== p2.d.type) {
+                throw new Error(`DemoPacket type difference at #${compared}: [ ${p1.d.type.code} ] [ ${p2.d.type.code} ]`);
+            }
 
-                if (event1.operation !== event2.operation) {
-                    throw new Error(`Entity events different operations: [ ${event1.operation.code} ] [ ${event2.operation.code} ]`);
+            if (p1.d.sequence !== p2.d.sequence) {
+                throw new Error(`DemoPacket sequence difference at #${compared}: [ ${p1.d.sequence} ] [ ${p2.d.sequence} ]`);
+            }
+
+            if (p1.messages.length !== p2.messages.length) {
+                throw new Error(`MessagePacket count difference at #${compared}: [ ${p1.messages.length} ] [ ${p2.messages.length} ]`);
+            }
+
+            for (let i = 0; i < p1.messages.length; i++) {
+                const m1 = p1.messages[i];
+                const m2 = p2.messages[i];
+
+                if (m1.type !== m2.type) {
+                    throw new Error(`MessagePacket type difference at #${compared}[${i}]: [ ${m1.type.code} ] [ ${m2.type.code} ]`);
                 }
 
-                if (event1.entity.index !== event2.entity.index) {
-                    throw new Error(`Entity events different indexes: [ ${event1.entity.index} ] [ ${event2.entity.index} ]`);
+                comparedMessages++;
+
+                if (m1.events === null && m2.events === null) {
+                    continue;
                 }
 
-                if (event1.entity.class.id !== event2.entity.class.id) {
-                    throw new Error(`Entity events different classes: [ ${event1.entity.class.id} ] [ ${event2.entity.class.id} ]`);
+                if (m1.events.length !== m2.events.length) {
+                    throw new Error(`Entity events length difference at #${compared}[${i}]: [ ${m1.events.length} ] [ ${m2.events.length} ]`);
                 }
 
-                if (event1.mutations.length !== event2.mutations.length) {
-                    throw new Error(`Entity events different mutations length: [ ${event1.mutations.length} ] [ ${event2.mutations.length} ]`);
-                }
+                comparedEntities += m1.events.length;
 
-                event1.mutations.forEach((mutation1, mutationIndex) => {
-                    const mutation2 = event2.mutations[mutationIndex];
+                for (let j = 0; j < m1.events.length; j++) {
+                    const e1 = m1.events[j];
+                    const e2 = m2.events[j];
 
-                    if (mutation1.fieldPath.code !== mutation2.fieldPath.code) {
-                        throw new Error(`Entity events different field path: [ ${mutation1.fieldPath.code} ] [ ${mutation2.fieldPath.code} ]`);
+                    if (e1.operation !== e2.operation) {
+                        throw new Error(`Entity operation difference at #${compared}[${i}][${j}]: [ ${e1.operation.code} ] [ ${e2.operation.code} ]`);
                     }
 
-                    assert.deepStrictEqual(mutation1.value, mutation2.value);
-                });
-            });
+                    if (e1.entity.index !== e2.entity.index) {
+                        throw new Error(`Entity index difference at #${compared}[${i}][${j}]: [ ${e1.entity.index} ] [ ${e2.entity.index} ]`);
+                    }
+
+                    if (e1.entity.class.id !== e2.entity.class.id) {
+                        throw new Error(`Entity class difference at #${compared}[${i}][${j}]: [ ${e1.entity.class.id} ] [ ${e2.entity.class.id} ]`);
+                    }
+
+                    if (e1.mutations.length !== e2.mutations.length) {
+                        throw new Error(`Mutations length difference at #${compared}[${i}][${j}]: [ ${e1.mutations.length} ] [ ${e2.mutations.length} ]`);
+                    }
+
+                    for (let k = 0; k < e1.mutations.length; k++) {
+                        if (e1.mutations[k].fieldPath.code !== e2.mutations[k].fieldPath.code) {
+                            throw new Error(`Field path difference at #${compared}[${i}][${j}][${k}]: [ ${e1.mutations[k].fieldPath.code} ] [ ${e2.mutations[k].fieldPath.code} ]`);
+                        }
+
+                        assert.deepStrictEqual(e1.mutations[k].value, e2.mutations[k].value);
+                    }
+                }
+            }
+
+            compared++;
         }
+
+        batch1.length = 0;
+        batch2.length = 0;
     };
 
-    const clean = (state) => {
-        state.s = null;
-        state.d = null;
-        state.m = null;
-        state.e = null;
+    let signal1 = new DeferredPromise();
+    let signal2 = new DeferredPromise();
+
+    const getCollector = (batch, parser, getSignal) => {
+        let current = null;
+
+        const preDemo = (demoPacket) => {
+            current = { d: demoPacket, messages: [] };
+        };
+
+        const postDemo = () => {
+            batch.push(current);
+
+            if (batch.length >= BATCH_SIZE) {
+                parser.pause();
+                getSignal().resolve('paused');
+            }
+        };
+
+        const postMessage = (demoPacket, messagePacket) => {
+            current.messages.push({ type: messagePacket.type, events: null });
+        };
+
+        const postEntity = (demoPacket, messagePacket, events) => {
+            current.messages[current.messages.length - 1].events = events;
+        };
+
+        return { preDemo, postDemo, postMessage, postEntity };
     };
 
-    const getIsReady = state => state.s !== null;
+    const c1 = getCollector(batch1, parser1, () => signal1);
+    const c2 = getCollector(batch2, parser2, () => signal2);
 
-    const getInterceptor = (stage, state1, state2, mutex1, mutex2) => async (demoPacket, messagePacket, events) => {
-        state1.s = stage;
-        state1.d = demoPacket;
-        state1.m = messagePacket || null;
-        state1.e = events || null;
+    parser1.registerPreInterceptor(InterceptorStage.DEMO_PACKET, c1.preDemo);
+    parser1.registerPostInterceptor(InterceptorStage.DEMO_PACKET, c1.postDemo);
+    parser1.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, c1.postMessage);
+    parser1.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, c1.postEntity);
 
-        if (!getIsReady(state2)) {
-            await wait(mutex1);
+    parser2.registerPreInterceptor(InterceptorStage.DEMO_PACKET, c2.preDemo);
+    parser2.registerPostInterceptor(InterceptorStage.DEMO_PACKET, c2.postDemo);
+    parser2.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, c2.postMessage);
+    parser2.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, c2.postEntity);
+
+    const parse1 = parser1.parse(readable1).then(() => {
+        if (!signal1.fulfilled) signal1.resolve('finished');
+    });
+
+    const parse2 = parser2.parse(readable2).then(() => {
+        if (!signal2.fulfilled) signal2.resolve('finished');
+    });
+
+    while (true) {
+        const [ s1, s2 ] = await Promise.all([ signal1.promise, signal2.promise ]);
+
+        if (s1 === 'finished' && s2 === 'finished') {
+            break;
+        }
+
+        const lastTick = batch1[batch1.length - 1].d.tick;
+
+        compareBatches();
+
+        logger.info(`Compared ${compared} demo packets, ${comparedMessages} message packets, ${comparedEntities} entity events (tick ${lastTick})`);
+
+        signal1 = new DeferredPromise();
+        signal2 = new DeferredPromise();
+
+        if (s1 === 'finished') {
+            signal1.resolve('finished');
         } else {
-            compare();
-
-            clean(state1);
-            clean(state2);
-
-            mutex2.release();
+            parse1.catch(() => {});
+            parser1.resume();
         }
-    };
 
-    const wait = async (mutex) => {
-        const promise = mutex.acquire();
+        if (s2 === 'finished') {
+            signal2.resolve('finished');
+        } else {
+            parse2.catch(() => {});
+            parser2.resume();
+        }
+    }
 
-        const timeoutId = setTimeout(() => {
-            throw new Error('Timed out: mutex idle');
-        }, 1000);
+    await Promise.all([ parse1, parse2 ]);
 
-        await promise;
-
-        clearTimeout(timeoutId);
-    };
-
-    const interceptor1Demo = getInterceptor(InterceptorStage.DEMO_PACKET, state1, state2, mutex1, mutex2);
-    const interceptor1Message = getInterceptor(InterceptorStage.MESSAGE_PACKET, state1, state2, mutex1, mutex2);
-    const interceptor1Entity = getInterceptor(InterceptorStage.ENTITY_PACKET, state1, state2, mutex1, mutex2);
-
-    const interceptor2Demo = getInterceptor(InterceptorStage.DEMO_PACKET, state2, state1, mutex2, mutex1);
-    const interceptor2Message = getInterceptor(InterceptorStage.MESSAGE_PACKET, state2, state1, mutex2, mutex1);
-    const interceptor2Entity = getInterceptor(InterceptorStage.ENTITY_PACKET, state2, state1, mutex2, mutex1);
-
-    parser1.registerPreInterceptor(InterceptorStage.DEMO_PACKET, interceptor1Demo);
-    parser1.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor1Demo);
-    parser1.registerPreInterceptor(InterceptorStage.MESSAGE_PACKET, interceptor1Message);
-    parser1.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, interceptor1Message);
-    parser1.registerPreInterceptor(InterceptorStage.ENTITY_PACKET, interceptor1Entity);
-    parser1.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, interceptor1Entity);
-
-    parser2.registerPreInterceptor(InterceptorStage.DEMO_PACKET, interceptor2Demo);
-    parser2.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor2Demo);
-    parser2.registerPreInterceptor(InterceptorStage.MESSAGE_PACKET, interceptor2Message);
-    parser2.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, interceptor2Message);
-    parser2.registerPreInterceptor(InterceptorStage.ENTITY_PACKET, interceptor2Entity);
-    parser2.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, interceptor2Entity);
-
-    await Promise.all([ parser1.parse(readable1), parser2.parse(readable2) ]);
+    if (batch1.length > 0 || batch2.length > 0) {
+        compareBatches();
+    }
 
     logger.info('--- Single thread results ---');
 
-    printer1.printPerformanceStats();
+    printer1.printPacketStats();
 
     logger.info('--- Multithreaded results ---');
 
-    printer2.printPerformanceStats();
+    printer2.printPacketStats();
 
-    logger.info('Success');
+    logger.info(`Compared ${compared} demo packets, ${comparedMessages} message packets, ${comparedEntities} entity events`);
+
+    await parser1.dispose();
+    await parser2.dispose();
 })();
