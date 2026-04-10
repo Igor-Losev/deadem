@@ -30,10 +30,15 @@ class DemoStreamPacketAnalyzer extends Transform {
     }
 
     /**
+     * @async
      * @protected
      * @param {DemoPacket} demoPacket
      */
-    _handle(demoPacket) {
+    async _handle(demoPacket) {
+        if (this._engine.paused) {
+            await this._engine.pausePromise.promise;
+        }
+
         this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_ANALYZER);
