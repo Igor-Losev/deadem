@@ -146,6 +146,10 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
      * @returns {Promise<void>}
      */
     async _handlePacket(demoPacket, deferred) {
+        if (this._engine.paused) {
+            await this._engine.pausePromise.promise;
+        }
+
         this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         switch (demoPacket.type) {
@@ -200,7 +204,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
                             let partialEvents;
 
                             if (deferred === null) {
-                                partialEvents = [ ];
+                                partialEvents = [];
                             } else {
                                 const response = await deferred.promise;
 
@@ -209,7 +213,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
 
                             const { events, lastIndex } = this._getEntityEvents(demoPacket, messagePacket, partialEvents);
 
-                            const created = [ ];
+                            const created = [];
 
                             for (let i = lastIndex; i < events.length; i++) {
                                 if (events[i].operation === EntityOperation.CREATE) {
@@ -281,7 +285,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
             };
         }
 
-        const events = [ ];
+        const events = [];
 
         let i = -1;
 
@@ -294,7 +298,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
                 break;
             }
 
-            const mutations = [ ];
+            const mutations = [];
 
             for (let j = 0; j < eventPartial.mutations.length; j += 2) {
                 const fieldPath = FieldPathBuilder.reconstruct(eventPartial.mutations[j]);
