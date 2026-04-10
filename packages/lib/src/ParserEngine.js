@@ -3,6 +3,7 @@ import Logger from '#core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
+import DeferredPromise from '#data/DeferredPromise.js';
 import Demo from '#data/Demo.js';
 
 import DemoSource from '#data/enums/DemoSource.js';
@@ -51,18 +52,7 @@ class ParserEngine {
             this._workerManager = new WorkerManager(configuration.parserThreads, logger);
         }
 
-        this._interceptors = {
-            pre: [
-                [],
-                [],
-                []
-            ],
-            post: [
-                [],
-                [],
-                []
-            ]
-        };
+        this._interceptors = this._createInterceptors();
 
         this._trackers = {
             memory: new MemoryTracker(),
@@ -74,6 +64,9 @@ class ParserEngine {
         this._finished = false;
         this._pipeline = null;
         this._started = false;
+
+        this._paused = false;
+        this._pausePromise = null;
     }
 
     /**
@@ -120,6 +113,22 @@ class ParserEngine {
      * @public
      * @returns {boolean}
      */
+    get paused() {
+        return this._paused;
+    }
+
+    /**
+     * @public
+     * @returns {DeferredPromise|null}
+     */
+    get pausePromise() {
+        return this._pausePromise;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
     get started() {
         return this._started;
     }
@@ -138,6 +147,8 @@ class ParserEngine {
      * @public
      */
     abort() {
+        this._validateAvailability();
+
         if (this._pipeline !== null) {
             this._pipeline.abort();
 
@@ -153,13 +164,16 @@ class ParserEngine {
      * @returns {Promise<void>}
      */
     async dispose() {
-        if (this._disposed) {
-            return;
-        }
+        this._validateAvailability();
+
+        this._unpause();
+
+        this.abort();
 
         this._disposed = true;
 
-        this.reset(true);
+        this._demo.reset();
+        this._interceptors = this._createInterceptors();
 
         if (this._workerManager !== null) {
             await this._workerManager.terminate();
@@ -244,7 +258,7 @@ class ParserEngine {
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
     async extract(reader, source) {
-        await this._validateAndReset();
+        this._validateReadiness();
 
         const packets = [];
 
@@ -290,7 +304,7 @@ class ParserEngine {
      * @returns {Promise<void>}
      */
     async parse(reader, source = DemoSource.REPLAY, objectMode = false) {
-        await this._validateAndReset();
+        this._validateReadiness();
 
         const chain = [];
 
@@ -349,6 +363,26 @@ class ParserEngine {
     }
 
     /**
+     * Pauses the pipeline after the current packet finishes processing.
+     *
+     * @public
+     */
+    pause() {
+        this._validateAvailability();
+
+        if (!this._started || this._finished) {
+            throw new Error('Unable to pause: engine is not running');
+        }
+
+        if (this._paused) {
+            throw new Error('Unable to pause: engine is already paused');
+        }
+
+        this._paused = true;
+        this._pausePromise = new DeferredPromise();
+    }
+
+    /**
      * @public
      * @param {InterceptorStage} stage
      * @param {Function} interceptor
@@ -373,20 +407,38 @@ class ParserEngine {
     }
 
     /**
-     * Resets the demo state. Optionally clears all interceptors.
+     * Resets the demo state.
      *
      * @public
-     * @param {boolean} [interceptors=false]
      */
-    reset(interceptors = false) {
+    async reset() {
         this.abort();
+
+        this._unpause();
 
         this._demo.reset();
 
-        if (interceptors) {
-            this._interceptors.pre = [[], [], []];
-            this._interceptors.post = [[], [], []];
+        this._finished = false;
+        this._started = false;
+
+        if (this._workerManager !== null) {
+            await this._workerManager.broadcast(new WorkerRequestDemoClear());
         }
+    }
+
+    /**
+     * Resumes a paused pipeline.
+     *
+     * @public
+     */
+    resume() {
+        this._validateAvailability();
+
+        if (!this._paused) {
+            throw new Error('Unable to resume: engine is not paused');
+        }
+
+        this._unpause();
     }
 
     /**
@@ -432,24 +484,61 @@ class ParserEngine {
     }
 
     /**
-     * Validates that the engine can be used and resets state for a new run.
+     * Resolves the pause promise and clears pause state.
      *
      * @protected
      */
-    async _validateAndReset() {
-        if (this._disposed) {
-            throw new Error(`Unable to run parser: engine has been disposed`);
+    _unpause() {
+        if (!this._paused) {
+            return;
         }
+
+        this._paused = false;
+        this._pausePromise.resolve();
+        this._pausePromise = null;
+    }
+
+    /**
+     * Throws if the engine has been disposed.
+     *
+     * @protected
+     */
+    _validateAvailability() {
+        if (this._disposed) {
+            throw new Error(`Parser is not available: engine has been disposed`);
+        }
+    }
+
+    /**
+     * Throws if the engine is disposed or already running.
+     *
+     * @protected
+     */
+    _validateReadiness() {
+        this._validateAvailability();
 
         if (this._started && !this._finished) {
             throw new Error(`Unable to run parser: engine is already running`);
         }
+    }
 
-        this.reset();
-
-        if (this._workerManager !== null) {
-            await this._workerManager.broadcast(new WorkerRequestDemoClear());
-        }
+    /**
+     * @private
+     * @returns {{pre: Array[], post: Array[]}}
+     */
+    _createInterceptors() {
+        return {
+            pre: [
+                [],
+                [],
+                []
+            ],
+            post: [
+                [],
+                [],
+                []
+            ]
+        };
     }
 }
 

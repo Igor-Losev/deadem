@@ -98,6 +98,16 @@ class Parser {
     }
 
     /**
+     *
+     * Pauses the engine after the current packet finishes processing.
+     *
+     * @public
+     */
+    pause() {
+        return this._engine.pause();
+    }
+
+    /**
      * @public
      * @param {InterceptorStage} stage
      * @param {Function} interceptor
@@ -116,13 +126,12 @@ class Parser {
     }
 
     /**
-     * Resets the demo state. Optionally clears all interceptors.
+     * Resumes a paused engine.
      *
      * @public
-     * @param {boolean} [interceptors=false]
      */
-    reset(interceptors = false) {
-        return this._engine.reset(interceptors);
+    resume() {
+        return this._engine.resume();
     }
 
     /**
