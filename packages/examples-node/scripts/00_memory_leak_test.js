@@ -11,7 +11,7 @@ const mem = () => {
 
     const m = process.memoryUsage();
 
-    console.log(`  heap: ${formatMB(m.heapUsed)} MB, rss: ${formatMB(m.rss)} MB, external: ${formatMB(m.external)} MB, arrayBuffers: ${formatMB(m.arrayBuffers)} MB`);
+    console.log(`heap: ${formatMB(m.heapUsed)} MB, rss: ${formatMB(m.rss)} MB, external: ${formatMB(m.external)} MB, arrayBuffers: ${formatMB(m.arrayBuffers)} MB`);
 };
 
 (async () => {
@@ -25,7 +25,7 @@ const mem = () => {
 
     mem();
 
-    const ITERATIONS = 50;
+    const ITERATIONS = 500;
     const SEEK_TICK = 40234;
 
     for (let i = 0; i < ITERATIONS; i++) {
