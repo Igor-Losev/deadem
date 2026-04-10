@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream';
 
 import Assert from '#core/Assert.js';
-import Semaphore from '#core/Semaphore.js';
+import Gate from '#core/Gate.js';
 
 class ReadableArrayNode extends Readable {
     /**
@@ -17,7 +17,7 @@ class ReadableArrayNode extends Readable {
 
         this._array = array;
         this._index = 0;
-        this._semaphore = gated ? new Semaphore(0) : null;
+        this._gate = gated ? new Gate() : null;
     }
 
     /**
@@ -27,32 +27,32 @@ class ReadableArrayNode extends Readable {
      * @public
      */
     release() {
-        if (this._semaphore === null) {
+        if (this._gate === null) {
             throw new Error(`release() can only be called on a gated ReadableArray`);
         }
 
-        this._semaphore.release();
+        this._gate.release();
     }
 
     _destroy(error, callback) {
-        if (this._semaphore !== null) {
-            this._semaphore.destroy();
+        if (this._gate !== null) {
+            this._gate.destroy();
         }
 
-        this._array = null;
+        this._array = [];
 
         callback(error);
     }
 
     _read() {
-        if (this._array === null || this._index >= this._array.length) {
+        if (this._index >= this._array.length) {
             this.push(null);
 
             return;
         }
 
-        if (this._semaphore) {
-            this._semaphore.acquire().then(() => {
+        if (this._gate !== null) {
+            this._gate.acquire().then(() => {
                 if (this.destroyed) {
                     return;
                 }
