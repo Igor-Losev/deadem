@@ -76,6 +76,14 @@ class Parser {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    getIsPaused() {
+        return this._engine.paused;
+    }
+
+    /**
+     * @public
      * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
      */
     getStats() {
