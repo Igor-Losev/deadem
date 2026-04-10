@@ -1,5 +1,5 @@
 import Assert from '#core/Assert.js';
-import Semaphore from '#core/Semaphore.js';
+import Gate from '#core/Gate.js';
 
 class ReadableArrayBrowser extends ReadableStream {
     /**
@@ -14,8 +14,8 @@ class ReadableArrayBrowser extends ReadableStream {
         const state = {
             array,
             destroyed: false,
-            index: 0,
-            semaphore: gated ? new Semaphore(0) : null
+            gate: gated ? new Gate() : null,
+            index: 0
         };
 
         super({
@@ -26,9 +26,9 @@ class ReadableArrayBrowser extends ReadableStream {
                     return;
                 }
 
-                if (state.semaphore) {
+                if (state.gate !== null) {
                     try {
-                        await state.semaphore.acquire();
+                        await state.gate.acquire();
                     } catch {
                         return;
                     }
@@ -56,10 +56,10 @@ class ReadableArrayBrowser extends ReadableStream {
      */
     destroy() {
         this._state.destroyed = true;
-        this._state.array = null;
+        this._state.array = [];
 
-        if (this._state.semaphore !== null) {
-            this._state.semaphore.destroy();
+        if (this._state.gate !== null) {
+            this._state.gate.destroy();
         }
     }
 
@@ -70,11 +70,11 @@ class ReadableArrayBrowser extends ReadableStream {
      * @public
      */
     release() {
-        if (this._state.semaphore === null) {
+        if (this._state.gate === null) {
             throw new Error('release() can only be called on a gated ReadableArray');
         }
 
-        this._state.semaphore.release();
+        this._state.gate.release();
     }
 }
 

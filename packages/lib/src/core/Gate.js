@@ -1,26 +1,23 @@
-import Assert from './Assert.js';
-
-class Semaphore {
+class Gate {
     /**
      * @public
      * @constructor
-     * @param {number} limit
      */
-    constructor(limit) {
-        Assert.isTrue(Number.isInteger(limit));
-
-        this._count = 0;
-        this._limit = limit;
-        this._queue = [ ];
+    constructor() {
+        this._tokens = 0;
+        this._queue = [];
     }
 
     /**
+     * Waits for a token to be available.
+     * If tokens have been pre-released, returns immediately.
+     *
      * @public
      * @returns {Promise<void>}
      */
     async acquire() {
-        if (this._count < this._limit) {
-            this._count += 1;
+        if (this._tokens > 0) {
+            this._tokens -= 1;
 
             return;
         }
@@ -39,11 +36,14 @@ class Semaphore {
         while (this._queue.length > 0) {
             const { reject } = this._queue.shift();
 
-            reject(new Error('Semaphore destroyed'));
+            reject(new Error('Gate destroyed'));
         }
     }
 
     /**
+     * Releases a token. If someone is waiting, unblocks them.
+     * Otherwise, stores the token for a future acquire.
+     *
      * @public
      */
     release() {
@@ -52,9 +52,9 @@ class Semaphore {
 
             resolve();
         } else {
-            this._count -= 1;
+            this._tokens += 1;
         }
     }
 }
 
-export default Semaphore;
+export default Gate;
