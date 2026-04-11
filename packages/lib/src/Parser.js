@@ -60,6 +60,14 @@ class Parser {
 
     /**
      * @public
+     * @returns {boolean} 
+     */
+    getIsDisposed() {
+        return this._engine.disposed;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     getIsFinished() {

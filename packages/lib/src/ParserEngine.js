@@ -149,6 +149,8 @@ class ParserEngine {
     abort() {
         this._validateAvailability();
 
+        this._unpause();
+
         if (this._pipeline !== null) {
             this._pipeline.abort();
 
@@ -165,8 +167,6 @@ class ParserEngine {
      */
     async dispose() {
         this._validateAvailability();
-
-        this._unpause();
 
         this.abort();
 
@@ -258,7 +258,7 @@ class ParserEngine {
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
     async extract(reader, source) {
-        this._validateReadiness();
+        await this._prepareRun();
 
         const packets = [];
 
@@ -268,7 +268,6 @@ class ParserEngine {
         ];
 
         this._started = true;
-        this._finished = false;
 
         try {
             this._logger.info('Extract started');
@@ -304,7 +303,7 @@ class ParserEngine {
      * @returns {Promise<void>}
      */
     async parse(reader, source = DemoSource.REPLAY, objectMode = false) {
-        this._validateReadiness();
+        await this._prepareRun();
 
         const chain = [];
 
@@ -336,7 +335,6 @@ class ParserEngine {
         }
 
         this._started = true;
-        this._finished = false;
 
         try {
             this._logger.info('Parse started');
@@ -407,26 +405,6 @@ class ParserEngine {
     }
 
     /**
-     * Resets the demo state.
-     *
-     * @public
-     */
-    async reset() {
-        this.abort();
-
-        this._unpause();
-
-        this._demo.reset();
-
-        this._finished = false;
-        this._started = false;
-
-        if (this._workerManager !== null) {
-            await this._workerManager.broadcast(new WorkerRequestDemoClear());
-        }
-    }
-
-    /**
      * Resumes a paused pipeline.
      *
      * @public
@@ -483,6 +461,28 @@ class ParserEngine {
         return true;
     }
 
+    /** 
+     * @protected
+     */
+    async _prepareRun() {
+        this._validateAvailability();
+
+        if (this._started && !this._finished) {
+            throw new Error(`Unable to run parser: engine is already running`);
+        }
+
+        this._unpause();
+
+        this._demo.reset();
+
+        this._started = false;
+        this._finished = false;
+
+        if (this._workerManager !== null) {
+            await this._workerManager.broadcast(new WorkerRequestDemoClear());
+        }
+    }
+
     /**
      * Resolves the pause promise and clears pause state.
      *
@@ -506,19 +506,6 @@ class ParserEngine {
     _validateAvailability() {
         if (this._disposed) {
             throw new Error(`Parser is not available: engine has been disposed`);
-        }
-    }
-
-    /**
-     * Throws if the engine is disposed or already running.
-     *
-     * @protected
-     */
-    _validateReadiness() {
-        this._validateAvailability();
-
-        if (this._started && !this._finished) {
-            throw new Error(`Unable to run parser: engine is already running`);
         }
     }
 
