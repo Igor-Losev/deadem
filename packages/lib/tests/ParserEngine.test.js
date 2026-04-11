@@ -97,8 +97,22 @@ describe('ParserEngine', () => {
         });
     });
 
-    describe('reset while paused', () => {
-        test('It should resolve pausePromise on reset', async () => {
+    describe('abort', () => {
+        test('It should throw when disposed', async () => {
+            const engine = createEngine();
+
+            await engine.dispose();
+
+            expect(() => engine.abort()).toThrow('disposed');
+        });
+
+        test('It should not throw when not running', () => {
+            const engine = createEngine();
+
+            expect(() => engine.abort()).not.toThrow();
+        });
+
+        test('It should resolve pausePromise on abort', async () => {
             const engine = createRunningEngine();
 
             engine.pause();
@@ -109,7 +123,7 @@ describe('ParserEngine', () => {
 
             promise.then(() => { resolved = true; });
 
-            await engine.reset();
+            engine.abort();
 
             await promise;
 
@@ -136,6 +150,20 @@ describe('ParserEngine', () => {
             await promise;
 
             expect(resolved).toBe(true);
+        });
+    });
+
+    describe('pause and resume cycle', () => {
+        test('It should allow re-pause after resume', () => {
+            const engine = createRunningEngine();
+
+            engine.pause();
+            engine.resume();
+
+            engine.pause();
+
+            expect(engine.paused).toBe(true);
+            expect(engine.pausePromise).not.toBeNull();
         });
     });
 
