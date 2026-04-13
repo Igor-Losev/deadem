@@ -3,13 +3,6 @@ import Assert from '#core/Assert.js';
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 
-const BOOTSTRAP_PACKET_TYPES = [
-    DemoPacketType.DEM_SEND_TABLES,
-    DemoPacketType.DEM_CLASS_INFO,
-    DemoPacketType.DEM_STRING_TABLES,
-    DemoPacketType.DEM_SIGNON_PACKET
-];
-
 class PlayerPacketIndex {
     /**
      * @public
@@ -24,6 +17,9 @@ class PlayerPacketIndex {
         this._bootstrap = [];
         this._keyframes = [];
         this._stringTableSnapshots = new Map();
+
+        this._uniqueTicks = null;
+        this._tickOffsets = null;
 
         this._build();
     }
@@ -46,6 +42,27 @@ class PlayerPacketIndex {
      */
     get length() {
         return this._packets.length;
+    }
+
+    /**
+     * Returns the next tick info from the given cursor position.
+     *
+     * @public
+     * @param {number} position - Current position in the unique ticks index.
+     * @returns {{tick: number, count: number, position: number}|null}
+     */
+    advance(position) {
+        const next = position + 1;
+
+        if (next >= this._uniqueTicks.length) {
+            return null;
+        }
+
+        return {
+            tick: this._uniqueTicks[next],
+            count: this._tickOffsets[next + 1] - this._tickOffsets[next],
+            position: next
+        };
     }
 
     /**
@@ -79,27 +96,6 @@ class PlayerPacketIndex {
     }
 
     /**
-     * @public
-     * @param {number} tick 
-     * @returns {number} 
-     */
-    getPacketCountForTick(tick) {
-        const start = this._findByTick(tick);
-
-        if (start === null || this._packets[start].tick.value !== tick) {
-            return 0;
-        }
-
-        let count = 0;
-
-        for (let i = start; i < this._packets.length && this._packets[i].tick.value === tick; i++) {
-            count++;
-        }
-
-        return count;
-    }
-
-    /**
      * Returns all data required to reconstruct the game state at the specified tick.
      *
      * @public
@@ -110,7 +106,8 @@ class PlayerPacketIndex {
         Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
 
         const keyframeIndex = this._findKeyframeBefore(tick);
-        const packetIndex = this._findAfterTick(tick) ?? this._packets.length - 1;
+        const afterTickPos = this._findTickPositionAfter(tick);
+        const packetIndex = afterTickPos !== -1 ? this._tickOffsets[afterTickPos] : this._packets.length - 1;
 
         const keyframePosition = this._keyframes.findIndex(ki => ki === keyframeIndex);
 
@@ -127,54 +124,73 @@ class PlayerPacketIndex {
     }
 
     /**
-     * Returns the tick value of the next distinct tick after the specified tick.
+     * Returns the position of the given tick in the unique ticks index.
+     * Uses binary search on _uniqueTicks (O(log u) where u = unique tick count).
      *
      * @public
      * @param {number} tick
-     * @returns {number|null} Next tick value or null if at the end.
+     * @returns {number} Position in _uniqueTicks, or -1 if not found.
      */
-    nextTick(tick) {
+    getTickPosition(tick) {
         Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
 
-        const index = this._findAfterTick(tick);
+        let left = 0;
+        let right = this._uniqueTicks.length;
 
-        if (index === null) {
-            return null;
-        }
+        while (left < right) {
+            const mid = (left + right) >>> 1;
 
-        return this._packets[index].tick.value;
-    }
-
-    /**
-     * Returns the tick value of the previous distinct tick before the specified tick.
-     *
-     * @public
-     * @param {number} tick
-     * @returns {number|null} Previous tick value or null if at the beginning.
-     */
-    prevTick(tick) {
-        Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
-
-        for (let i = this._packets.length - 1; i >= 0; i--) {
-            if (this._packets[i].tick.value < tick) {
-                return this._packets[i].tick.value;
+            if (this._uniqueTicks[mid] < tick) {
+                left = mid + 1;
+            } else {
+                right = mid;
             }
         }
 
-        return null;
+        if (left >= this._uniqueTicks.length || this._uniqueTicks[left] !== tick) {
+            return -1;
+        }
+
+        return left;
     }
 
     /**
-     * Builds the keyframe index.
+     * Returns the previous tick info from the given cursor position.
+     *
+     * @public
+     * @param {number} position - Current position in the unique ticks index.
+     * @returns {{tick: number, position: number}|null}
+     */
+    retreat(position) {
+        const prev = position - 1;
+
+        if (prev < 0) {
+            return null;
+        }
+
+        return {
+            tick: this._uniqueTicks[prev],
+            position: prev
+        };
+    }
+
+    /**
+     * Builds the keyframe index and unique tick lookup tables.
      *
      * @protected
      */
     _build() {
+        const uniqueTicks = [];
+        const tickOffsets = [];
+
+        let lastTick = null;
+
         for (let i = 0; i < this._packets.length; i++) {
             const packet = this._packets[i];
             const typeId = packet.getTypeId();
-
-            if (packet.getIsInitial() && BOOTSTRAP_PACKET_TYPES.some(packetType => packetType.id === typeId)) {
+            const tick = packet.tick.value;
+            
+            if (packet.getIsBootstrap()) {
                 this._bootstrap.push(i);
             }
 
@@ -189,46 +205,18 @@ class PlayerPacketIndex {
 
                 this._stringTableSnapshots.set(i, decoded.stringTable);
             }
-        }
-    }
 
-    /**
-     * Finds the first packet index with a tick strictly greater than the specified tick.
-     *
-     * @protected
-     * @param {number} tick
-     * @returns {number|null} Packet index or null if not found.
-     */
-    _findAfterTick(tick) {
-        Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
-
-        for (let i = 0; i < this._packets.length; i++) {
-            if (this._packets[i].tick.value > tick) {
-                return i;
+            if (tick !== lastTick) {
+                uniqueTicks.push(tick);
+                tickOffsets.push(i);
+                lastTick = tick;
             }
         }
 
-        return null;
-    }
+        tickOffsets.push(this._packets.length);
 
-    /**
-     * Finds the packet index for the specified tick.
-     * Returns the first packet with a tick >= the specified tick.
-     *
-     * @protected
-     * @param {number} tick
-     * @returns {number|null} Packet index or null if not found.
-     */
-    _findByTick(tick) {
-        Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
-
-        for (let i = 0; i < this._packets.length; i++) {
-            if (this._packets[i].tick.value >= tick) {
-                return i;
-            }
-        }
-
-        return null;
+        this._uniqueTicks = Int32Array.from(uniqueTicks);
+        this._tickOffsets = Int32Array.from(tickOffsets);
     }
 
     /**
@@ -259,6 +247,31 @@ class PlayerPacketIndex {
         }
 
         return this._keyframes[result];
+    }
+
+    /**
+     * Finds the first position in _uniqueTicks with a tick strictly greater than the specified tick.
+     * Binary search on _uniqueTicks (O(log u) where u = unique tick count).
+     *
+     * @protected
+     * @param {number} tick
+     * @returns {number} Position in _uniqueTicks, or -1 if not found.
+     */
+    _findTickPositionAfter(tick) {
+        let left = 0;
+        let right = this._uniqueTicks.length;
+
+        while (left < right) {
+            const mid = (left + right) >>> 1;
+
+            if (this._uniqueTicks[mid] <= tick) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        return left < this._uniqueTicks.length ? left : -1;
     }
 
     /**
