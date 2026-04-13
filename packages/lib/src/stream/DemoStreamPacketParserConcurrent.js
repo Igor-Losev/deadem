@@ -33,6 +33,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
             requests: 0
         };
 
+        this._messagePacketFilter = engine.getMessagePacketFilter();
         this._pendingRequests = [ ];
     }
 
@@ -67,7 +68,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
 
         if (other.length > 0) {
             other.forEach((demoPacketRaw) => {
-                const demoPacket = DemoPacket.parse(demoPacketRaw);
+                const demoPacket = DemoPacket.parse(demoPacketRaw, this._messagePacketFilter);
 
                 if (demoPacket === null) {
                     this._engine.getPacketTracker().handleDemoPacketRaw(demoPacketRaw);
@@ -125,6 +126,10 @@ class DemoStreamPacketParserConcurrent extends Transform {
                     const messagePackets = [ ];
 
                     batch.forEach((messagePacketRaw) => {
+                        if (!this._messagePacketFilter(messagePacketRaw.type)) {
+                            return;
+                        }
+
                         const messagePacket = MessagePacket.parse(messagePacketRaw);
 
                         if (messagePacket === null) {

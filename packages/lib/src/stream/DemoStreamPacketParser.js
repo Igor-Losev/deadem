@@ -19,6 +19,8 @@ class DemoStreamPacketParser extends Transform {
         super();
 
         this._engine = engine;
+
+        this._messagePacketFilter = engine.getMessagePacketFilter();
     }
 
     /**
@@ -28,7 +30,7 @@ class DemoStreamPacketParser extends Transform {
     async _handle(demoPacketRaw) {
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
 
-        const demoPacket = DemoPacket.parse(demoPacketRaw);
+        const demoPacket = DemoPacket.parse(demoPacketRaw, this._messagePacketFilter);
 
         if (demoPacket === null) {
             this._engine.getPacketTracker().handleDemoPacketRaw(demoPacketRaw);
