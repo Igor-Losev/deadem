@@ -7,7 +7,7 @@
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
   "homepage": "https://deadem.com",
   "engines": {
-    "node": ">=16.17.0"
+    "node": ">=18.0.0"
   },
   "repository": {
     "type": "git",
@@ -85,8 +85,7 @@
     }
   },
   "dependencies": {
-    "axios": "^1.11.0",
-    "buffer": "^6.0.3",
+"buffer": "^6.0.3",
     "protobufjs": "^7.5.0",
     "snappyjs": "^0.7.0"
   },
