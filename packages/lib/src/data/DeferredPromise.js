@@ -2,6 +2,7 @@ class DeferredPromise {
     constructor() {
         this._fulfilled = false;
         this._rejected = false;
+        this._settled = false;
 
         this._promise = new Promise((resolve, reject) => {
             this._resolve = resolve;
@@ -35,10 +36,19 @@ class DeferredPromise {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    get settled() {
+        return this._settled;
+    }
+
+    /**
+     * @public
      * @param {...any} args
      */
     resolve(...args) {
         this._fulfilled = true;
+        this._settled = true;
 
         this._resolve(...args);
     }
@@ -49,6 +59,7 @@ class DeferredPromise {
      */
     reject(...args) {
         this._rejected = true;
+        this._settled = true;
 
         this._reject(...args);
     }
