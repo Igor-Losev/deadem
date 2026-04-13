@@ -1,4 +1,5 @@
 import Assert from '#core/Assert.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 import DemoPacketRaw from '#data/DemoPacketRaw.js';
 import VarInt32 from '#data/VarInt32.js';
@@ -9,7 +10,7 @@ class DemoPacketRawBroadcastExtractor {
     /**
      * @public
      * @constructor
-     * @param {Buffer} buffer
+     * @param {Uint8Array} buffer
      */
     constructor(buffer) {
         this._buffer = buffer;
@@ -19,7 +20,7 @@ class DemoPacketRawBroadcastExtractor {
 
     /**
      * @public
-     * @returns {Buffer}
+     * @returns {Uint8Array}
      */
     get tail() {
         return this._tail;
@@ -51,7 +52,7 @@ class DemoPacketRawBroadcastExtractor {
             let tick;
 
             try {
-                tick = new VarInt32(this._tail.readUInt32LE(offset), 4);
+                tick = new VarInt32(BitBuffer.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
             } catch {
                 yield null;
 
@@ -66,7 +67,7 @@ class DemoPacketRawBroadcastExtractor {
             let frame;
 
             try {
-                frame = new VarInt32(this._tail.readUInt32LE(offset), 4);
+                frame = new VarInt32(BitBuffer.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
             } catch {
                 yield null;
 

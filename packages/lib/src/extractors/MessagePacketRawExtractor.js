@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer';
-
 import BitBuffer from '#core/BitBuffer.js';
 
 import MessagePacketRaw from '#data/MessagePacketRaw.js';
@@ -8,7 +6,7 @@ class MessagePacketRawExtractor {
     /**
      * @constructor
      * @public
-     * @param {Buffer} buffer
+     * @param {Uint8Array} buffer
      */
     constructor(buffer) {
         this._bitBuffer = new BitBuffer(buffer);
@@ -24,7 +22,7 @@ class MessagePacketRawExtractor {
         const extracted = [ ];
 
         const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
-        const buffer = Buffer.allocUnsafe(bytes);
+        const buffer = new Uint8Array(bytes);
 
         let bytesRead = 0;
 
@@ -53,7 +51,7 @@ class MessagePacketRawExtractor {
     allPacked() {
         const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
 
-        const buffer = Buffer.allocUnsafe(bytes);
+        const buffer = new Uint8Array(bytes);
         const meta = [ ];
 
         let pointer = 0;
@@ -81,7 +79,7 @@ class MessagePacketRawExtractor {
 }
 
 /**
- * @typedef {{ meta: Array<number>, buffer: Buffer }} MessagePacketRawPacked
+ * @typedef {{ meta: Array<number>, buffer: Uint8Array }} MessagePacketRawPacked
  */
 
 export default MessagePacketRawExtractor;

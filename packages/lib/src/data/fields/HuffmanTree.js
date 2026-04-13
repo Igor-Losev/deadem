@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer';
-
 import Assert from '#core/Assert.js';
 import BinaryHeap from '#core/BinaryHeap.js';
 
@@ -134,8 +132,8 @@ let PRECALCULATED_TABLE;
     }
 
     PRECALCULATED_TABLE = {
-        bits: Buffer.allocUnsafe(MAX_CODE),
-        operations: Buffer.allocUnsafe(MAX_CODE)
+        bits: new Uint8Array(MAX_CODE),
+        operations: new Uint8Array(MAX_CODE)
     };
 
     for (let code = 0; code < MAX_CODE; code++) {

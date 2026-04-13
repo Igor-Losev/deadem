@@ -1,4 +1,5 @@
 import Assert from '#core/Assert.js';
+import BitBuffer from '#core/BitBuffer.js';
 
 const registry = {
     byCode: new Map()
@@ -136,12 +137,12 @@ const pushOneLeftDeltaNRightNonZero = new FieldPathOperation('PUSH_1L_DN_R!0', '
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath() + 1);
 }));
 const pushOneLeftDeltaNRightNonZeroPack6Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P6B', 'PushOneLeftDeltaNRightNonZeroPack6Bits', 10530, 11, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.read(3).readUInt8() + 2);
-    fieldPathBuilder.push(bitBuffer.read(3).readUInt8() + 1);
+    fieldPathBuilder.add(BitBuffer.readUInt8(bitBuffer.read(3)) + 2);
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(3)) + 1);
 }));
 const pushOneLeftDeltaNRightNonZeroPack8Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P8B', 'PushOneLeftDeltaNRightNonZeroPack8Bits', 251, 12, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.read(4).readUInt8() + 2);
-    fieldPathBuilder.push(bitBuffer.read(4).readUInt8() + 1);
+    fieldPathBuilder.add(BitBuffer.readUInt8(bitBuffer.read(4)) + 2);
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(4)) + 1);
 }));
 
 const pushTwoLeftDeltaZero = new FieldPathOperation('PUSH_2L_D0', 'PushTwoLeftDeltaZero', 0, 13, executor((bitBuffer, fieldPathBuilder) => {
@@ -149,8 +150,8 @@ const pushTwoLeftDeltaZero = new FieldPathOperation('PUSH_2L_D0', 'PushTwoLeftDe
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushTwoPack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_2P5BL_D0', 'PushTwoPack5BitsLeftDeltaZero', 0, 14, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 const pushThreeLeftDeltaZero = new FieldPathOperation('PUSH_3L_D0', 'PushThreeLeftDeltaZero', 0, 15, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
@@ -158,9 +159,9 @@ const pushThreeLeftDeltaZero = new FieldPathOperation('PUSH_3L_D0', 'PushThreeLe
     fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
 }));
 const pushThreePack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_3P5BL_D0', 'PushThreePack5BitsLeftDeltaZero', 0, 16, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDeltaOne', 0, 17, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
@@ -169,8 +170,8 @@ const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDel
 }));
 const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D1', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 const pushThreeLeftDeltaOne = new FieldPathOperation('PUSH_3L_D1', 'PushThreeLeftDeltaOne', 0, 19, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
@@ -180,9 +181,9 @@ const pushThreeLeftDeltaOne = new FieldPathOperation('PUSH_3L_D1', 'PushThreeLef
 }));
 const pushThreePack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_3P5BL_D1', 'PushThreePack5BitsLeftDeltaOne', 0, 20, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 const pushTwoLeftDeltaN = new FieldPathOperation('PUSH_2L_DN', 'PushTwoLeftDeltaN', 0, 21, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
@@ -191,8 +192,8 @@ const pushTwoLeftDeltaN = new FieldPathOperation('PUSH_2L_DN', 'PushTwoLeftDelta
 }));
 const pushTwoPack5BitsLeftDeltaN = new FieldPathOperation('PUSH_2P5BL_DN', 'PushTwoPack5BitsLeftDeltaN', 0, 22, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 const pushThreeLeftDeltaN = new FieldPathOperation('PUSH_3L_DN', 'PushThreeLeftDeltaN', 0, 23, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
@@ -202,9 +203,9 @@ const pushThreeLeftDeltaN = new FieldPathOperation('PUSH_3L_DN', 'PushThreeLeftD
 }));
 const pushThreePack5BitsLeftDeltaN = new FieldPathOperation('PUSH_3P5BL_DN', 'PushThreePack5BitsLeftDeltaN', 0, 24, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
-    fieldPathBuilder.push(bitBuffer.read(5).readUInt8());
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
+    fieldPathBuilder.push(BitBuffer.readUInt8(bitBuffer.read(5)));
 }));
 
 const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitBuffer, fieldPathBuilder) => {
@@ -249,11 +250,11 @@ const popAllButOnePlusN = new FieldPathOperation('POP_ALL-1_PLUS_N', 'PopAllButO
 }));
 const popAllButOnePlusNPack3Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P3B', 'PopAllButOnePlusNPack3Bits', 300, 31, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
-    fieldPathBuilder.add(bitBuffer.read(3).readUInt8() + 1);
+    fieldPathBuilder.add(BitBuffer.readUInt8(bitBuffer.read(3)) + 1);
 }));
 const popAllButOnePlusNPack6Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P6B', 'PopAllButOnePlusNPack6Bits', 634, 32, executor((bitBuffer, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
-    fieldPathBuilder.add(bitBuffer.read(6).readUInt8() + 1);
+    fieldPathBuilder.add(BitBuffer.readUInt8(bitBuffer.read(6)) + 1);
 }));
 
 const popNPlusOne = new FieldPathOperation('POP_N_PLUS_1', 'PopNPlusOne', 0, 33, executor((bitBuffer, fieldPathBuilder) => {
@@ -287,7 +288,7 @@ const nonTopoPenultimatePlusOne = new FieldPathOperation('NON_TOPO_PEN_PLUS_1', 
 const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', 'NonTopoComplexPack4Bits', 99, 38, executor((bitBuffer, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
         if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.read(4).readUInt8() - 7, i);
+            fieldPathBuilder.add(BitBuffer.readUInt8(bitBuffer.read(4)) - 7, i);
         }
     }
 }));

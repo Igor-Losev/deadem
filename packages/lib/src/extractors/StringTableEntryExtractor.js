@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer';
-
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
@@ -13,12 +11,12 @@ class StringTableEntryExtractor {
     /**
      * @public
      * @constructor
-     * @param {Buffer|Uint8Array} buffer
+     * @param {Uint8Array} buffer
      * @param {StringTable} table
      * @param {number} entriesCount
      */
     constructor(buffer, table, entriesCount) {
-        Assert.isTrue(Buffer.isBuffer(buffer) || buffer instanceof Uint8Array);
+        Assert.isTrue(buffer instanceof Uint8Array);
         Assert.isTrue(table instanceof StringTable);
         Assert.isTrue(Number.isInteger(entriesCount));
 
@@ -52,8 +50,8 @@ class StringTableEntryExtractor {
                 const useHistory = this._bitBuffer.readBit();
 
                 if (useHistory) {
-                    const offset = this._bitBuffer.read(5).readUInt8();
-                    const size = this._bitBuffer.read(5).readUInt8();
+                    const offset = BitBuffer.readUInt8(this._bitBuffer.read(5));
+                    const size = BitBuffer.readUInt8(this._bitBuffer.read(5));
 
                     const historicalKey = history[i < MAX_HISTORY_ENTRIES ? offset : i - (MAX_HISTORY_ENTRIES - offset)];
 

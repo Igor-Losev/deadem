@@ -1,15 +1,13 @@
-import { Buffer }  from 'buffer';
-
 import Assert from '#core/Assert.js';
 
 import BroadcastFragmentType from '#data/enums/BroadcastFragmentType.js';
 import Protocol from '#data/enums/Protocol.js';
 
 class BroadcastGateway {
-    /** 
+    /**
     * @constructor
-    * @param {String} baseUrl  
-    * @param {Protocol} [protocol=Protocol.HTTPS]  
+    * @param {String} baseUrl
+    * @param {Protocol} [protocol=Protocol.HTTPS]
     */
     constructor(baseUrl, protocol = Protocol.HTTPS) {
         Assert.isTrue(typeof baseUrl === 'string');
@@ -22,9 +20,9 @@ class BroadcastGateway {
     /**
      * @public
      * @param {number} match
-     * @param {BroadcastFragmentType} fragmentType 
-     * @param {number} fragment 
-     * @returns {Promise<Buffer>}
+     * @param {BroadcastFragmentType} fragmentType
+     * @param {number} fragment
+     * @returns {Promise<Uint8Array>}
      */
     async getFragment(match, fragmentType, fragment) {
         Assert.isTrue(Number.isInteger(match) && match > 0);
@@ -33,12 +31,12 @@ class BroadcastGateway {
 
         const response = await fetch(`${this._protocol.scheme}://${this._baseUrl}/${match}/${fragment}/${fragmentType.endpoint}`);
 
-        return Buffer.from(await response.arrayBuffer());
+        return new Uint8Array(await response.arrayBuffer());
     }
 
     /**
     * @public
-    * @param {number} match 
+    * @param {number} match
     * @returns {Promise<SyncObject>}
     */
     async getSync(match) {
@@ -66,4 +64,3 @@ class BroadcastGateway {
  */
 
 export default BroadcastGateway;
-
