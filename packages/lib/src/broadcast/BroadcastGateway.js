@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Buffer }  from 'buffer';
 
 import Assert from '#core/Assert.js';
@@ -32,11 +31,9 @@ class BroadcastGateway {
         Assert.isTrue(fragmentType instanceof BroadcastFragmentType);
         Assert.isTrue(Number.isInteger(fragment) && fragment >= 0);
 
-        const response = await axios.get(`${this._protocol.scheme}://${this._baseUrl}/${match}/${fragment}/${fragmentType.endpoint}`, {
-            responseType: 'arraybuffer'
-        });
+        const response = await fetch(`${this._protocol.scheme}://${this._baseUrl}/${match}/${fragment}/${fragmentType.endpoint}`);
 
-        return Buffer.from(response.data);
+        return Buffer.from(await response.arrayBuffer());
     }
 
     /**
@@ -47,9 +44,9 @@ class BroadcastGateway {
     async getSync(match) {
         Assert.isTrue(Number.isInteger(match) && match > 0);
 
-        const response = await axios.get(`${this._protocol.scheme}://${this._baseUrl}/${match}/sync`);
+        const response = await fetch(`${this._protocol.scheme}://${this._baseUrl}/${match}/sync`);
 
-        return response.data;
+        return response.json();
     }
 }
 
