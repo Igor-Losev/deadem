@@ -90,13 +90,25 @@ class DemoPacketRaw {
     }
 
     /**
+     * Determines whether this is a bootstrap packet (initial + bootstrap type).
+     *
+     * @public
+     * @returns {boolean}
+     */
+    getIsBootstrap() {
+        const type = this.getType();
+
+        return this.getIsInitial() && type !== null && type.bootstrap;
+    }
+
+    /**
      * @public
      * @returns {boolean}
      */
     getIsCompressed() {
         return (this._type.value & 64) === 64;
     }
-
+ 
     /**
      * Determines whether this is an initial packet (tick === -1).
      *

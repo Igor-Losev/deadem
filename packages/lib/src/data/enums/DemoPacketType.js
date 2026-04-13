@@ -14,16 +14,19 @@ class DemoPacketType {
      * @param {number} id
      * @param {*|null} proto
      * @param {boolean} heavy
+     * @param {boolean} bootstrap
      */
-    constructor(code, id, proto, heavy) {
+    constructor(code, id, proto, heavy, bootstrap) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));
         Assert.isTrue(typeof heavy === 'boolean');
+        Assert.isTrue(typeof bootstrap === 'boolean');
 
         this._code = code;
         this._id = id;
         this._proto = proto;
         this._heavy = heavy;
+        this._bootstrap = bootstrap;
 
         registry.byCode.set(code, this);
         registry.byId.set(id, this);
@@ -51,6 +54,14 @@ class DemoPacketType {
      */
     get proto() {
         return this._proto;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get bootstrap() {
+        return this._bootstrap;
     }
 
     /**
@@ -122,25 +133,25 @@ const CDemoStringTables = ProtoProvider.DEMO.lookupType('CDemoStringTables');
 const CDemoSyncTick = ProtoProvider.DEMO.lookupType('CDemoSyncTick');
 const CDemoUserCmd = ProtoProvider.DEMO.lookupType('CDemoUserCmd');
 
-const demError = new DemoPacketType('DEM_Error', -1, null, false);
-const demStop = new DemoPacketType('DEM_Stop', 0, CDemoStop, false);
-const demFileHeader = new DemoPacketType('DEM_FileHeader', 1, CDemoFileHeader, false);
-const demFileInfo = new DemoPacketType('DEM_FileInfo', 2, CDemoFileInfo, false);
-const demSyncTick = new DemoPacketType('DEM_SyncTick', 3, CDemoSyncTick, false);
-const demSendTables = new DemoPacketType('DEM_SendTables', 4, CDemoSendTables, false);
-const demClassInfo = new DemoPacketType('DEM_ClassInfo', 5, CDemoClassInfo, false);
-const demStringTables = new DemoPacketType('DEM_StringTables', 6, CDemoStringTables, false);
-const demPacket = new DemoPacketType('DEM_Packet', 7, CDemoPacket, true);
-const demSignonPacket = new DemoPacketType('DEM_SignonPacket', 8, CDemoPacket, true);
-const demConsoleCmd = new DemoPacketType('DEM_ConsoleCmd', 9, CDemoConsoleCmd, false);
-const demCustomData = new DemoPacketType('DEM_CustomData', 10, CDemoCustomData, false);
-const demCustomDataCallbacks = new DemoPacketType('DEM_CustomDataCallbacks', 11, CDemoCustomDataCallbacks, false);
-const demUserCmd = new DemoPacketType('DEM_UserCmd', 12, CDemoUserCmd, false);
-const demFullPacket = new DemoPacketType('DEM_FullPacket', 13, CDemoFullPacket, true);
-const demSaveGame = new DemoPacketType('DEM_SaveGame', 14, CDemoSaveGame, false);
-const demSpawnGroups = new DemoPacketType('DEM_SpawnGroups', 15, CDemoSpawnGroups, false);
-const demAnimationData = new DemoPacketType('DEM_AnimationData', 16, CDemoAnimationData, false);
-const demAnimationHeader = new DemoPacketType('DEM_AnimationHeader', 17, CDemoAnimationHeader, false);
-const demRecovery = new DemoPacketType('DEM_Recovery', 18, CDemoRecovery, false);
+const demError = new DemoPacketType('DEM_Error', -1, null, false, false);
+const demStop = new DemoPacketType('DEM_Stop', 0, CDemoStop, false, false);
+const demFileHeader = new DemoPacketType('DEM_FileHeader', 1, CDemoFileHeader, false, false);
+const demFileInfo = new DemoPacketType('DEM_FileInfo', 2, CDemoFileInfo, false, false);
+const demSyncTick = new DemoPacketType('DEM_SyncTick', 3, CDemoSyncTick, false, false);
+const demSendTables = new DemoPacketType('DEM_SendTables', 4, CDemoSendTables, false, true);
+const demClassInfo = new DemoPacketType('DEM_ClassInfo', 5, CDemoClassInfo, false, true);
+const demStringTables = new DemoPacketType('DEM_StringTables', 6, CDemoStringTables, false, true);
+const demPacket = new DemoPacketType('DEM_Packet', 7, CDemoPacket, true, false);
+const demSignonPacket = new DemoPacketType('DEM_SignonPacket', 8, CDemoPacket, true, true);
+const demConsoleCmd = new DemoPacketType('DEM_ConsoleCmd', 9, CDemoConsoleCmd, false, false);
+const demCustomData = new DemoPacketType('DEM_CustomData', 10, CDemoCustomData, false, false);
+const demCustomDataCallbacks = new DemoPacketType('DEM_CustomDataCallbacks', 11, CDemoCustomDataCallbacks, false, false);
+const demUserCmd = new DemoPacketType('DEM_UserCmd', 12, CDemoUserCmd, false, false);
+const demFullPacket = new DemoPacketType('DEM_FullPacket', 13, CDemoFullPacket, true, false);
+const demSaveGame = new DemoPacketType('DEM_SaveGame', 14, CDemoSaveGame, false, false);
+const demSpawnGroups = new DemoPacketType('DEM_SpawnGroups', 15, CDemoSpawnGroups, false, false);
+const demAnimationData = new DemoPacketType('DEM_AnimationData', 16, CDemoAnimationData, false, false);
+const demAnimationHeader = new DemoPacketType('DEM_AnimationHeader', 17, CDemoAnimationHeader, false, false);
+const demRecovery = new DemoPacketType('DEM_Recovery', 18, CDemoRecovery, false, false);
 
 export default DemoPacketType;
