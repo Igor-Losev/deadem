@@ -95,9 +95,10 @@ class DemoPacket {
      * @static
      * @public
      * @param {DemoPacketRaw} demoPacketRaw
+     * @param {function(number): boolean} [messagePacketFilter]
      * @returns {DemoPacket|null}
      */
-    static parse(demoPacketRaw) {
+    static parse(demoPacketRaw, messagePacketFilter) {
         const demoPacketType = demoPacketRaw.getType();
 
         if (demoPacketType === null) {
@@ -122,6 +123,10 @@ class DemoPacket {
             } else {
                 messagePacketsRaw = new MessagePacketRawExtractor(decoded.data).all();
                 stringTables = null;
+            }
+
+            if (messagePacketFilter) {
+                messagePacketsRaw = messagePacketsRaw.filter(raw => messagePacketFilter(raw.type));
             }
 
             const messagePackets = messagePacketsRaw.map(messagePacketRaw => MessagePacket.parse(messagePacketRaw) || messagePacketRaw);

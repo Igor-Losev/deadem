@@ -184,6 +184,14 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    getIsMultiThreaded() {
+        return this._configuration.parserThreads > 0;
+    }
+
+    /**
+     * @public
      * @returns {MemoryTracker}
      */
     getMemoryTracker() {
@@ -192,10 +200,10 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {boolean}
+     * @returns {function(number): boolean}
      */
-    getIsMultiThreaded() {
-        return this._configuration.parserThreads > 0;
+    getMessagePacketFilter() {
+        return this._configuration.getIsMessagePacketTypeAllowed.bind(this._configuration);
     }
 
     /**
