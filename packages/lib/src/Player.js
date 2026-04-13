@@ -3,6 +3,7 @@ import Logger from '#core/Logger.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 import DemoSource from '#data/enums/DemoSource.js';
+import PlayerState from '#data/enums/PlayerState.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
@@ -21,21 +22,30 @@ class Player {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         this._engine = new ParserEngine(configuration, logger);
+        this._state = PlayerState.IDLE;
+
+        this._playback = {
+            deferred: null
+        };
 
         this._ticks = {
             current: -1,
             first: -1,
-            last: -1
+            last: -1,
+            position: -1
         };
 
-        this._disposed = false;
-        this._loaded = false;
-        this._seeking = false;
-
         this._index = null;
-        this._playback = null;
         this._session = null;
         this._source = null;
+    }
+
+    /**
+     * @public
+     * @returns {PlayerState} 
+     */
+    get state() {
+        return this._state;
     }
 
     /**
@@ -70,15 +80,11 @@ class Player {
      * @returns {Promise<void>}
      */
     async dispose() {
-        if (this._disposed) {
-            return;
-        }
-
-        this._disposed = true;
-
-        if (this._playback !== null) {
+        if (this._state === PlayerState.PLAYING) {
             this._stopPlayback();
         }
+
+        this._transition(PlayerState.DISPOSED);
 
         if (this._session !== null) {
             await this._session.close();
@@ -90,12 +96,17 @@ class Player {
 
         this._index = null;
         this._source = null;
-        this._loaded = false;
-        this._seeking = false;
+
+        if (this._playback.deferred !== null) {
+            this._playback.deferred.reject(new Error('Playback interrupted'));
+
+            this._playback.deferred = null;
+        }
 
         this._ticks.current = -1;
         this._ticks.first = -1;
         this._ticks.last = -1;
+        this._ticks.position = -1;
     }
 
     /**
@@ -129,11 +140,7 @@ class Player {
      * @returns {Promise<void>}
      */
     async load(reader, demoSource = DemoSource.REPLAY) {
-        // TODO: handle calling load multiple times (interruption)
-
-        if (this._disposed) {
-            throw new Error('Unable to load: player has been disposed');
-        }
+        this._requireState(PlayerState.IDLE, 'Unable to load');
 
         if (demoSource !== DemoSource.REPLAY) {
             throw new Error(`Unable to load: unsupported demo source, only REPLAY is supported`);
@@ -150,7 +157,7 @@ class Player {
         this._ticks.first = first.tick.value;
         this._ticks.last = last.tick.value;
 
-        this._loaded = true;
+        this._transition(PlayerState.LOADED);
 
         await this.seekToTick(first.tick.value);
     }
@@ -162,7 +169,7 @@ class Player {
      * @returns {Promise<boolean>} Returns false if there are no more ticks.
      */
     async nextTick() {
-        this._validate();
+        this._requireState(PlayerState.LOADED, 'Unable to advance tick');
 
         return this._advanceTick();
     }
@@ -174,7 +181,7 @@ class Player {
      * @public
      */
     pause() {
-        if (this._playback === null) {
+        if (this._state !== PlayerState.PLAYING) {
             return;
         }
 
@@ -191,23 +198,13 @@ class Player {
      * @returns {Promise<void>}
      */
     play(rate = 1.0) {
-        this._validate();
+        this._transition(PlayerState.PLAYING);
 
-        if (this._playback !== null) {
-            throw new Error('Unable to play: playback is already in progress');
-        }
-
-        const deferred = new DeferredPromise();
-
-        this._playback = {
-            cancelSleep: null,
-            deferred,
-            stopped: false
-        };
+        this._playback.deferred = new DeferredPromise();
 
         this._runPlayback(rate);
 
-        return deferred.promise;
+        return this._playback.deferred.promise;
     }
 
     /**
@@ -217,19 +214,15 @@ class Player {
      * @returns {Promise<boolean>} Returns false if already at the first tick.
      */
     async prevTick() {
-        this._validate();
+        this._requireState(PlayerState.LOADED, 'Unable to go to previous tick');
 
-        if (this._ticks.current <= this._ticks.first) {
+        const prev = this._index.retreat(this._ticks.position);
+
+        if (prev === null) {
             return false;
         }
 
-        const prevTickValue = this._index.prevTick(this._ticks.current);
-
-        if (prevTickValue === null) {
-            return false;
-        }
-
-        await this.seekToTick(prevTickValue);
+        await this.seekToTick(prev.tick);
 
         return true;
     }
@@ -261,13 +254,11 @@ class Player {
      * @returns {Promise<void>}
      */
     async seekToTick(tick) {
-        if (this._playback !== null) {
+        if (this._state === PlayerState.PLAYING) {
             this._stopPlayback();
         }
 
-        this._validate();
-
-        this._seeking = true;
+        this._transition(PlayerState.SEEKING);
 
         try {
             if (this._session !== null) {
@@ -275,9 +266,11 @@ class Player {
             }
 
             this._session = new ParserSession(this._engine, this._index, this._source);
+
             this._ticks.current = await this._session.seekToTick(tick);
+            this._ticks.position = this._index.getTickPosition(this._ticks.current);
         } finally {
-            this._seeking = false;
+            this._state = PlayerState.LOADED;
         }
     }
 
@@ -289,7 +282,7 @@ class Player {
      * @returns {Promise<void>}
      */
     async stop() {
-        if (this._playback === null) {
+        if (this._state !== PlayerState.PLAYING) {
             return;
         }
 
@@ -325,21 +318,27 @@ class Player {
      * @returns {Promise<boolean>} Returns false if there are no more ticks.
      */
     async _advanceTick() {
-        if (this._ticks.current >= this._ticks.last) {
+        const next = this._index.advance(this._ticks.position);
+
+        if (next === null) {
             return false;
         }
 
-        const nextTickValue = this._index.nextTick(this._ticks.current);
-
-        if (nextTickValue === null) {
-            return false;
-        }
-
-        const count = this._index.getPacketCountForTick(nextTickValue);
-
-        this._ticks.current = await this._session.process(count);
+        this._ticks.position = next.position;
+        this._ticks.current = await this._session.process(next.count);
 
         return true;
+    }
+
+    /**
+     * @protected
+     * @param {PlayerState} state
+     * @param {string} action
+     */
+    _requireState(state, action) {
+        if (this._state !== state) {
+            throw new Error(`${action}: player is ${this._state.code}`);
+        }
     }
 
     /**
@@ -350,19 +349,22 @@ class Player {
      * @param {number} rate
      */
     async _runPlayback(rate) {
-        const playback = this._playback;
         const msPerTick = (this._engine.demo.server.tickInterval / rate) * 1000;
 
         let anchor = performance.now();
         let ticksProcessed = 0;
 
-        while (!playback.stopped) {
+        const deferred = this._playback.deferred;
+
+        while (!deferred.settled) {
             const hasMore = await this._advanceTick();
 
             if (!hasMore) {
-                this._playback = null;
+                if (!deferred.settled) {
+                    this._transition(PlayerState.LOADED);
 
-                playback.deferred.resolve();
+                    deferred.resolve();
+                }
 
                 return;
             }
@@ -373,35 +375,21 @@ class Player {
             const delay = expectedTime - performance.now();
 
             if (delay > 1) {
-                await this._sleep(delay, playback);
+                await this._sleep(delay);
             }
         }
     }
 
     /**
-     * Returns a cancellable sleep promise. Stores cancel function
-     * on the playback object so _stopPlayback() can wake it up.
-     *
      * @protected
      * @param {number} ms
-     * @param {Object} playback
      * @returns {Promise<void>}
      */
-    _sleep(ms, playback) {
+    _sleep(ms) {
         return new Promise((resolve) => {
-            const timer = setTimeout(() => {
-                playback.cancelSleep = null;
-
+            setTimeout(() => {
                 resolve();
             }, ms);
-
-            playback.cancelSleep = () => {
-                clearTimeout(timer);
-
-                playback.cancelSleep = null;
-
-                resolve();
-            };
         });
     }
 
@@ -412,39 +400,23 @@ class Player {
      * @protected
      */
     _stopPlayback() {
-        const playback = this._playback;
+        this._transition(PlayerState.LOADED);
 
-        this._playback = null;
-
-        playback.stopped = true;
-
-        if (playback.cancelSleep !== null) {
-            playback.cancelSleep();
-        }
-
-        playback.deferred.reject(new Error('Playback interrupted'));
+        this._playback.deferred.reject(new Error('Playback interrupted'));
+        this._playback.deferred = null;
     }
 
     /**
      * @protected
+     * @param {PlayerState} next
      */
-    _validate() {
-        if (this._disposed) {
-            throw new Error('Unable to use player: player has been disposed');
+    _transition(next) {
+        if (!this._state.canTransitionTo(next)) {
+            throw new Error(`Invalid state transition: ${this._state.code} -> ${next.code}`);
         }
 
-        if (!this._loaded) {
-            throw new Error('Unable to use player: no demo loaded');
-        }
-
-        if (this._seeking) {
-            throw new Error('Unable to use player: seek is in progress');
-        }
-
-        if (this._playback !== null) {
-            throw new Error('Unable to use player: playback is in progress');
-        }
+        this._state = next;
     }
 }
 
-export default Player;
+export default Player
