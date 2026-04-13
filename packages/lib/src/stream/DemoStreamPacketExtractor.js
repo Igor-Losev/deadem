@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer';
-
 import Assert from '#core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
@@ -39,7 +37,7 @@ class DemoStreamPacketExtractor extends Transform {
             packets: 0
         };
 
-        this._tail = Buffer.alloc(0);
+        this._tail = new Uint8Array(0);
     }
 
     /**
@@ -62,7 +60,7 @@ class DemoStreamPacketExtractor extends Transform {
 
     /**
      * @protected
-     * @param {Buffer} chunk
+     * @param {Uint8Array} chunk
      */
     async _handle(chunk) {
         let buffer = chunk;
@@ -72,9 +70,14 @@ class DemoStreamPacketExtractor extends Transform {
         }
 
         if (this._tail.length !== 0) {
-            buffer = Buffer.concat([ this._tail, buffer ]);
+            const combined = new Uint8Array(this._tail.length + buffer.length);
 
-            this._tail = Buffer.alloc(0);
+            combined.set(this._tail);
+            combined.set(buffer, this._tail.length);
+
+            buffer = combined;
+
+            this._tail = new Uint8Array(0);
         }
 
         let extractor;

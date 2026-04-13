@@ -85,7 +85,6 @@
     }
   },
   "dependencies": {
-"buffer": "^6.0.3",
     "protobufjs": "^7.5.0",
     "snappyjs": "^0.7.0"
   },

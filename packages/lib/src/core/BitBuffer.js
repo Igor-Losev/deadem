@@ -1,14 +1,12 @@
-import { Buffer } from 'node:buffer';
-
 import VarInt32 from '#data/VarInt32.js';
 
 /**
- * A class for reading data at the bit level from {@link Buffer} or {@link Uint8Array}.
+ * A class for reading data at the bit level from {@link Uint8Array}.
  */
 class BitBuffer {
     /**
      * @constructor
-     * @param {Buffer|Uint8Array} buffer
+     * @param {Uint8Array} buffer
      */
     constructor(buffer) {
         this._buffer = buffer;
@@ -27,11 +25,35 @@ class BitBuffer {
     }
 
     /**
+     * Reads an unsigned 8-bit integer from the given buffer.
+     *
+     * @public
+     * @static
+     * @param {Uint8Array} buffer
+     * @returns {number}
+     */
+    static readUInt8(buffer) {
+        return buffer[0];
+    }
+
+    /**
+     * Reads an unsigned 16-bit integer (little-endian) from the given buffer.
+     *
+     * @public
+     * @static
+     * @param {Uint8Array} buffer
+     * @returns {number}
+     */
+    static readUInt16LE(buffer) {
+        return buffer[0] | (buffer[1] << 8);
+    }
+
+    /**
      * Reads an unsigned 32-bit integer from the given buffer, supporting buffers of length 1 to 4 bytes.
      *
      * @public
      * @static
-     * @param {Buffer} buffer - The buffer to read from. Must be between 1 and 4 bytes long.
+     * @param {Uint8Array} buffer - The buffer to read from. Must be between 1 and 4 bytes long.
      * @returns {number} - The unsigned integer read from the buffer.
      * @throws {Error} If the buffer size is not between 1 and 4 bytes.
      */
@@ -48,6 +70,39 @@ class BitBuffer {
             default:
                 throw new Error(`Unexpected buffer size [ ${buffer.byteLength} ]`);
         }
+    }
+
+    /**
+     * Reads a 32-bit float (little-endian) from the given buffer.
+     *
+     * @public
+     * @static
+     * @param {Uint8Array} buffer
+     * @returns {number}
+     */
+    static readFloatLE(buffer) {
+        dataView.setUint8(0, buffer[0]);
+        dataView.setUint8(1, buffer[1]);
+        dataView.setUint8(2, buffer[2]);
+        dataView.setUint8(3, buffer[3]);
+
+        return dataView.getFloat32(0, true);
+    }
+
+    /**
+     * Reads an unsigned 64-bit integer (little-endian) from the given buffer.
+     *
+     * @public
+     * @static
+     * @param {Uint8Array} buffer
+     * @returns {BigInt}
+     */
+    static readBigUInt64LE(buffer) {
+        for (let i = 0; i < 8; i++) {
+            dataView.setUint8(i, buffer[i]);
+        }
+
+        return dataView.getBigUint64(0, true);
     }
 
     /**
@@ -139,7 +194,7 @@ class BitBuffer {
      * @param {boolean} [allocateNew=false] - Whether to allocate a new memory for returning buffer.
      * If `true`, a new buffer is allocated.
      * If `false` (default), a reusable buffer may be returned, which can be overwritten in subsequent operations.
-     * @returns {Buffer|Uint8Array}
+     * @returns {Uint8Array}
      */
     read(numberOfBits, allocateNew = false) {
         const numberOfBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
@@ -147,7 +202,7 @@ class BitBuffer {
         if (!allocateNew && numberOfBytes <= REUSABLE_BUFFER_SIZE) {
             return this._read(numberOfBits, pool[numberOfBytes - 1]);
         } else {
-            return this._read(numberOfBits, Buffer.allocUnsafe(numberOfBytes));
+            return this._read(numberOfBits, new Uint8Array(numberOfBytes));
         }
     }
 
@@ -195,8 +250,8 @@ class BitBuffer {
      *
      * @public
      * @param {number} numberOfBits - The number of bits to read.
-     * @param {Buffer|Uint8Array} buffer - The buffer to write the results into.
-     * @returns {Buffer|Uint8Array}
+     * @param {Uint8Array} buffer - The buffer to write the results into.
+     * @returns {Uint8Array}
      */
     readInBuffer(numberOfBits, buffer) {
         return this._read(numberOfBits, buffer);
@@ -287,7 +342,7 @@ class BitBuffer {
     readFloat() {
         const buffer = this.read(32);
 
-        return buffer.readFloatLE();
+        return BitBuffer.readFloatLE(buffer);
     }
 
     /**
@@ -373,7 +428,7 @@ class BitBuffer {
             bytes.push(buffer[0]);
         }
 
-        return Buffer.from(bytes).toString();
+        return textDecoder.decode(new Uint8Array(bytes));
     }
 
     /**
@@ -550,8 +605,8 @@ class BitBuffer {
      *
      * @protected
      * @param {number} numberOfBits - The number of bits to read.
-     * @param {Buffer|Uint8Array} buffer - The buffer to write the results into.
-     * @returns {Buffer|Uint8Array} - A buffer containing the read data.
+     * @param {Uint8Array} buffer - The buffer to write the results into.
+     * @returns {Uint8Array} - A buffer containing the read data.
      */
     _read(numberOfBits, buffer) {
         const unread = this.getUnreadCount();
@@ -619,14 +674,18 @@ const BITS_PER_BYTE = 8;
 const MASK_LEFT = [ 255, 127, 63, 31, 15, 7, 3, 1 ];
 const MASK_RIGHT = [ 255, 254, 252, 248, 240, 224, 192, 128 ];
 
-const REUSABLE_BUFFER_SIZE = 4;
+const REUSABLE_BUFFER_SIZE = 8;
 
-const reusable = Buffer.allocUnsafe(REUSABLE_BUFFER_SIZE);
+const reusable = new Uint8Array(REUSABLE_BUFFER_SIZE);
 
 const pool = [ ];
 
 for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {
     pool.push(reusable.subarray(0, i + 1));
 }
+
+const textDecoder = new TextDecoder();
+const dataViewBuffer = new ArrayBuffer(8);
+const dataView = new DataView(dataViewBuffer);
 
 export default BitBuffer;

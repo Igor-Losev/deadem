@@ -5,19 +5,9 @@ const configuration = defineConfig((_) => {
         define: {
             global: 'globalThis'
         },
-        optimizeDeps: {
-            include: [
-                'buffer'
-            ]
-        },
         plugins: [
             protobufPatchPlugin
         ],
-        resolve: {
-            alias: {
-                'node:buffer': 'buffer'
-            }
-        },
         build: {
             lib: {
                 entry: './index.js',
