@@ -31,6 +31,11 @@ class FieldPathExtractor {
 
         for (;;) {
             const unread = bitBuffer.getUnreadCount();
+
+            if (unread === 0) {
+                break;
+            }
+
             const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
 
             const code = bitBuffer.readBitsAsUInt(bits);
@@ -50,35 +55,6 @@ class FieldPathExtractor {
         }
 
         return fieldPaths;
-    }
-
-    /**
-     * @generator
-     * @yields {FieldPath}
-     */
-    *retrieve() {
-        const bitBuffer = this._bitBuffer;
-        const builder = this._fieldPathBuilder;
-
-        for (;;) {
-            const unread = bitBuffer.getUnreadCount();
-            const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
-
-            const code = bitBuffer.readBitsAsUInt(bits);
-
-            const bitsUsed = BITS_TABLE[code];
-            const operation = OPERATIONS[OPS_TABLE[code]];
-
-            bitBuffer.moveBack(bits - bitsUsed);
-
-            if (operation === FieldPathOperation.FINISH) {
-                break;
-            }
-
-            operation._executor(bitBuffer, builder);
-
-            yield builder.build();
-        }
     }
 
     /**
