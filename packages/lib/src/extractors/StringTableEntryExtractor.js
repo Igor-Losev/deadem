@@ -31,6 +31,7 @@ class StringTableEntryExtractor {
         const history = [ ];
 
         let index = -1;
+        let cursor = 0;
 
         for (let i = 0; i < this._entriesCount; i++) {
             let key = '';
@@ -50,23 +51,25 @@ class StringTableEntryExtractor {
                 const useHistory = this._bitBuffer.readBit();
 
                 if (useHistory) {
+                    const base = cursor > MAX_HISTORY_ENTRIES ? cursor & (MAX_HISTORY_ENTRIES - 1) : 0;
+
                     const offset = BitBuffer.readUInt8(this._bitBuffer.read(5));
                     const size = BitBuffer.readUInt8(this._bitBuffer.read(5));
 
-                    const historicalKey = history[i < MAX_HISTORY_ENTRIES ? offset : i - (MAX_HISTORY_ENTRIES - offset)];
-
+                    const slot = (base + offset) & (MAX_HISTORY_ENTRIES - 1);
                     const portion = this._bitBuffer.readString();
 
-                    if (size > historicalKey.length) {
-                        key = historicalKey + portion;
+                    if (cursor < slot || !history[slot] || history[slot].length < size) {
+                        key = portion;
                     } else {
-                        key = historicalKey.slice(0, size) + portion;
+                        key = history[slot].slice(0, size) + portion;
                     }
                 } else {
                     key = this._bitBuffer.readString();
                 }
 
-                history[i] = key;
+                history[cursor & (MAX_HISTORY_ENTRIES - 1)] = key;
+                cursor += 1;
             }
 
             const hasValue = this._bitBuffer.readBit();
