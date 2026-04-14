@@ -21,7 +21,7 @@ class BroadcastAgent {
      */
     constructor(gateway, match, logger = Logger.CONSOLE_DEBUG) {
         Assert.isTrue(gateway instanceof BroadcastGateway);
-        Assert.isTrue(Number.isInteger(match));
+        Assert.isTrue(Number.isInteger(match) || typeof match === 'string');
         Assert.isTrue(logger instanceof Logger);
 
         this._gateway = gateway;
@@ -283,14 +283,14 @@ async function backoff(action, attempts, delay = 500) {
         } catch (error) {
             attempt += 1;
 
-            this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${error.status} ] [ ${error.message} ]`);
+            this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${error.message} ]`);
 
             if (attempt >= attempts) {
-                this._logger.error(error.response.data);
+                this._logger.error(error);
 
-                this._stop();
+                this.stop();
 
-                throw new Error(error.status);
+                throw error;
             }
 
             await wait(exponentialDelay);
