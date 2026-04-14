@@ -110,6 +110,8 @@ class DemoFile {
     static get REPLAY_51541762() { return replay51541762; }
     static get REPLAY_51543455() { return replay51543455; }
     static get REPLAY_51544119() { return replay51544119; }
+    static get REPLAY_75438101() { return replay75438101; }
+    static get REPLAY_75439032() { return replay75439032; }
     static get BROADCAST_38625795() { return broadcast38625795; }
 
     /**
@@ -164,6 +166,8 @@ const replay51541751 = new DemoFile(DemoSource.REPLAY, 51541751, 6140, { date: '
 const replay51541762 = new DemoFile(DemoSource.REPLAY, 51541762, 6140, { date: '2026-01-23', size: 556889541 });
 const replay51543455 = new DemoFile(DemoSource.REPLAY, 51543455, 6140, { date: '2026-01-23', mode: 'Street Brawl', size: 132056956 });
 const replay51544119 = new DemoFile(DemoSource.REPLAY, 51544119, 6140, { date: '2026-01-23', mode: 'Street Brawl', size: 104331564 });
+const replay75438101 = new DemoFile(DemoSource.REPLAY, 75438101, 6448, { date: '2026-04-13', size: 501038364 });
+const replay75439032 = new DemoFile(DemoSource.REPLAY, 75439032, 6448, { date: '2026-04-13', mode: 'Street Brawl', size: 143222996 });
 
 /**
  * @typedef {{ date?: string, mode?: string, size?: number }} metaObject
