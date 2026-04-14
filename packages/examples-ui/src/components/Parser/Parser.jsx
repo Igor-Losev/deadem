@@ -1,8 +1,7 @@
-import { Parser, ParserConfiguration } from 'deadem';
-
 import {
   Category as CategoryIcon,
   Email as EmailIcon,
+  Groups as GroupsIcon,
   Info as InfoIcon,
   ManageSearch as ManageSearchIcon,
   RocketLaunch as RocketLaunchIcon,
@@ -10,28 +9,37 @@ import {
   Assessment as AssessmentIcon
 } from '@mui/icons-material';
 import { Box, Chip, Divider, Link, List, ListItem, Paper, Typography } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Navigation from './../Navigation/Navigation';
 
 import BottomBar from './components/BottomBar/BottomBar';
+import MatchSummary from './components/MatchSummary/MatchSummary';
 import EntityExplorer from './components/EntityExplorer/EntityExplorer';
 import InfoExplorer from './components/InfoExplorer/InfoExplorer';
 import PacketExplorer from './components/PacketExplorer/PacketExplorer';
 import UploadForm from './components/UploadForm/UploadForm';
 
-import Player from './data/Player';
+import usePlayer from './hooks/usePlayer';
 
-const UI_MAX_HISTORY_PACKETS = 100;
-const UI_UPDATE_INTERVAL = 500;
+import { COLORS, FONT_SIZE } from './theme';
 
 const TABS = [
+  {
+    key: 'summary',
+    props: {
+      icon: <GroupsIcon />,
+      label: 'Summary',
+      sx: { fontSize: FONT_SIZE.md, minHeight: '50px' }
+    },
+    overflow: 'auto'
+  },
   {
     key: 'packets',
     props: {
       icon: <EmailIcon />,
       label: 'Packets',
-      sx: { fontSize: '0.8125rem', minHeight: '50px' }
+      sx: { fontSize: FONT_SIZE.md, minHeight: '50px' }
     },
     overflow: 'auto'
   },
@@ -40,7 +48,7 @@ const TABS = [
     props: {
       icon: <CategoryIcon />,
       label: 'Entities',
-      sx: { fontSize: '0.8125rem', minHeight: '50px' }
+      sx: { fontSize: FONT_SIZE.md, minHeight: '50px' }
     },
     overflow: null
   },
@@ -49,7 +57,7 @@ const TABS = [
     props: {
       icon: <InfoIcon />,
       label: 'Info',
-      sx: { fontSize: '0.8125rem', minHeight: '50px' }
+      sx: { fontSize: FONT_SIZE.md, minHeight: '50px' }
     },
     overflow: 'auto'
   }
@@ -63,180 +71,59 @@ const LINKS = [
 ];
 
 const FEATURES = [
-  { icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />, color: '#7c4dff', title: 'Inspect Packets', description: 'Step through demo packets, view their contents as JSON.' },
-  { icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />, color: '#00e5ff', title: 'Explore Entities', description: 'Browse game entities grouped by class and view their properties.' },
-  { icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />, color: '#69f0ae', title: 'View Game Info', description: 'Check tick rate, server settings, entity counts, and string tables.' },
+  { icon: <GroupsIcon sx={{ fontSize: '1.15rem' }} />, color: COLORS.accent, title: 'Live Scoreboard', description: 'Watch player stats update in real time as the replay plays — kills, deaths, net worth, damage, and more.' },
+  { icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />, color: COLORS.jsonBoolean, title: 'Packet Timeline', description: 'See the last 100 demo packets at the current position. Click any packet to inspect its full JSON payload.' },
+  { icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />, color: '#00e5ff', title: 'Entity Inspector', description: 'Browse all live game entities grouped by class. Select one to view its properties updated tick by tick.' },
+  { icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />, color: COLORS.jsonNumber, title: 'Server Info', description: 'Check tick rate, class counts, entity counts, and string table entries.' },
 ];
 
-function getInitialFileState() {
-  return null;
-}
-
-function getInitialGameState() {
-  return { clockGame: null, clockTotal: null, state: null, paused: null, tick: null };
-}
-
-function getInitialStatusState() {
-  return { done: false, processing: false };
-}
-
-function getInitialTabIndexState() {
-  return 0;
-}
-
 export default function ParserComponent() {
-  const demoPacketsRef = useRef([]);
-  const fileInputRef = useRef(null);
-  const historyRef = useRef([]);
+  const {
+    demo, fileName, game, playing, rate, seeking, ticks, contentVersion,
+    fileInputRef, historyRef,
+    handleFileChanged, handleResetClicked,
+    handlePlayClicked, handlePauseClicked, handleRateChange,
+    handleNextTick, handlePrevTick, handleSeek,
+    handleSeekToStart, handleSeekToEnd,
+  } = usePlayer();
 
-  const [file, setFile] = useState(getInitialFileState());
-  const [game, setGame] = useState(getInitialGameState());
-  const [status, setStatus] = useState(getInitialStatusState());
-  const [tabIndex, setTabIndex] = useState(getInitialTabIndexState());
-
-  const handleFileChanged = (event) => {
-    const file = event.target.files[0];
-
-    setFile(file);
-  };
-
-  const handlePacket = (demoPacket, leftCount) => {
-    demoPacketsRef.current.push(demoPacket);
-
-    if (leftCount === 0 || demoPacketsRef.current.length % UI_UPDATE_INTERVAL === 0) {
-      updateUI();
-
-      if (leftCount === 0) {
-        setStatus((previous) => ({
-          ...previous,
-          processing: false
-        }));
-      }
-    }
-  };
-
-  const handlePauseClicked = () => {
-    player.pause();
-
-    setStatus((previous) => ({
-      ...previous,
-      processing: false
-    }));
-
-    updateUI();
-  };
-
-  const handlePlayClicked = () => {
-    player.play();
-
-    setStatus((previous) => ({
-      ...previous,
-      processing: true
-    }));
-  };
-
-  const handlePlayNClicked = (count) => {
-    player.move(count);
-
-    setStatus((previous) => ({
-      ...previous,
-      processing: true
-    }));
-  };
-
-  const handleResetClicked = () => {
-    demoPacketsRef.current = [];
-    historyRef.current = [];
-
-    setFile(getInitialFileState());
-    setGame(getInitialGameState());
-    setStatus(getInitialStatusState());
-    setTabIndex(getInitialTabIndexState());
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
-    }
-  };
+  const [tabIndex, setTabIndex] = useState(0);
 
   const handleTabChanged = (event, newValue) => {
     setTabIndex(newValue);
   };
 
-  const updateUI = () => {
-    if (demoPacketsRef.current.length === 0) {
-      return;
+  const history = useMemo(() => [...historyRef.current], [contentVersion]);
+
+  const activeTab = useMemo(() => {
+    switch (tabIndex) {
+      case 0: return <MatchSummary demo={demo} />;
+      case 1: return <PacketExplorer history={history} />;
+      case 2: return <EntityExplorer demo={demo} contentVersion={contentVersion} />;
+      case 3: return <InfoExplorer demo={demo} />;
+      default: return null;
     }
+  }, [demo, tabIndex, contentVersion, history]);
 
-    const packets = demoPacketsRef.current.slice();
-
-    demoPacketsRef.current = [];
-
-    packets.reverse();
-
-    historyRef.current = [...packets, ...historyRef.current].slice(0, UI_MAX_HISTORY_PACKETS);
-
-    player.gameObserver.forceUpdate();
-
-    const gameFormatted = player.gameObserver.getGameFormatted();
-
-    setGame({
-      clockGame: gameFormatted.clockGame,
-      clockTotal: gameFormatted.clockTotal,
-      state: gameFormatted.state,
-      paused: gameFormatted.paused,
-      tick: gameFormatted.tick
-    });
+  const handleReset = () => {
+    handleResetClicked();
+    setTabIndex(0);
   };
 
-  const player = useMemo(() => {
-    if (file === null) {
-      return null;
-    }
-
-    const parserConfiguration = new ParserConfiguration({ parserThreads: 4 });
-    const parser = new Parser(parserConfiguration);
-    const player = new Player(parser, file);
-
-    player.onPacket(handlePacket);
-
-    player.finishPromise
-      .then(() => {
-        updateUI();
-
-        setStatus({ done: true, processing: false });
-      });
-
-    return player;
-  }, [file]);
-
-  useEffect(() => {
-    if (player !== null) {
-      setGame(player.gameObserver.getGameFormatted());
-    }
-  }, [player]);
-
-  const demo = player ? player.parser.getDemo() : null;
-
-  const tabComponents = [
-    <PacketExplorer history={historyRef.current} />,
-    <EntityExplorer demo={demo} />,
-    <InfoExplorer demo={demo} />
-  ];
-
-  const bottomBarHeight = '60px';
+  const bottomBarHeight = 60;
 
   return (
     <>
       <Box alignItems='center' display='flex' justifyContent='center'>
-        {file === null
+        {fileName === null
           ? <UploadForm ref={fileInputRef} onFileChange={handleFileChanged} />
-          : <Chip sx={{ fontSize: '0.875rem', mb: 2 }} label={file.name} onDelete={handleResetClicked} variant='outlined' />
+          : <Chip sx={{ fontSize: FONT_SIZE.lg, mb: 2 }} label={fileName} onDelete={handleReset} variant='outlined' />
         }
       </Box>
 
-      {file ? (
+      {fileName ? (
         <>
-          <Box component={Paper} display='flex' flexDirection='column' marginBottom={bottomBarHeight} minHeight={0}>
+          <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${bottomBarHeight + 20}px`} minHeight={0}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Navigation
                 active={tabIndex}
@@ -246,28 +133,32 @@ export default function ParserComponent() {
               />
             </Box>
 
-            {tabComponents.map((component, index) => (
-              tabIndex === index && (
-                <Box
-                  display={tabIndex === index ? 'flex' : 'none'}
-                  flexDirection='column'
-                  minHeight={0}
-                  key={index}
-                  overflow={TABS[index].overflow}
-                >
-                  {component}
-                </Box>
-              )
-            ))}
+            <Box
+              display='flex'
+              flexDirection='column'
+              minHeight={0}
+              overflow={TABS[tabIndex].overflow}
+            >
+              {activeTab}
+            </Box>
           </Box>
 
           <BottomBar
+            demo={demo}
             game={game}
             height={bottomBarHeight}
-            onIncrementClick={handlePlayNClicked}
+            onNextTick={handleNextTick}
             onPauseClick={handlePauseClicked}
             onPlayClick={handlePlayClicked}
-            status={status}
+            onPrevTick={handlePrevTick}
+            onRateChange={handleRateChange}
+            onSeek={handleSeek}
+            onSeekToEnd={handleSeekToEnd}
+            onSeekToStart={handleSeekToStart}
+            playing={playing}
+            rate={rate}
+            seeking={seeking}
+            ticks={ticks}
           />
         </>
       ) : (
@@ -282,25 +173,23 @@ export default function ParserComponent() {
             }}
           >
             <Box display='flex' alignItems='center' gap={1} mb={2}>
-              <RocketLaunchIcon sx={{ color: '#b388ff', fontSize: '1.25rem' }} />
+              <RocketLaunchIcon sx={{ color: COLORS.accent, fontSize: '1.25rem' }} />
               <Typography variant='subtitle1' fontWeight={600} color='text.primary'>
-                Getting Started
+                Deadem Explorer
               </Typography>
             </Box>
 
             <Divider />
 
             <Typography variant='body2' color='text.secondary' mt={2} paragraph>
-              <strong>Deadem</strong> is an open-source JavaScript library for parsing Deadlock demo files (<code>.dem</code>) built for Node.js and modern browsers.
+              A Deadlock replay viewer powered by <strong>deadem</strong> — an open-source JavaScript library for parsing Deadlock demo files (<code>.dem</code>) in Node.js and the browser.
+              Load any replay, control playback tick by tick, and watch the game state update in real time.
             </Typography>
             <Typography variant='body2' color='text.secondary' paragraph>
-              <strong>Deadem Explorer</strong> lets you open any Deadlock replay (<code>.dem</code>) and explore its contents right in the browser.
-              Upload your own file above or pick one from the <strong>Library</strong> tab.
+              Upload a <code>.dem</code> demo file above or pick one from the <strong>Library</strong> tab.
+              Use the player bar at the bottom to play, pause, seek, or step through ticks one by one.
             </Typography>
 
-            <Typography variant='body2' color='text.secondary' fontWeight={500} mt={2} mb={1.5}>
-              What you can do:
-            </Typography>
             <Box display='flex' flexDirection='column' gap={1.5}>
               {FEATURES.map((feature) => (
                 <Box key={feature.title} display='flex' gap={1.5} alignItems='flex-start'>

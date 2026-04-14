@@ -1,5 +1,6 @@
 import { defineConfig } from 'eslint/config';
 import react from 'eslint-plugin-react';
+import stylistic from '@stylistic/eslint-plugin';
 
 import globals from 'globals';
 
@@ -32,6 +33,13 @@ export default defineConfig([
     {
         files: [ 'src/**/*.{js,jsx}' ],
         ...react.configs.flat['jsx-runtime']
+    },
+    {
+        files: [ 'src/**/*.{js,jsx}' ],
+        plugins: { '@stylistic': stylistic },
+        rules: {
+            '@stylistic/indent': [ 'error', 2 ]
+        }
     }
 ]);
 

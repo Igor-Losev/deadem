@@ -15,7 +15,7 @@ const TABS = [
     props: {
       icon: <TroubleshootIcon />,
       label: 'Parser',
-      sx: { fontSize: '0.875rem', minHeight: '50px' }
+      sx: { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } }
     }
   },
   {
@@ -24,7 +24,7 @@ const TABS = [
     props: {
       icon: <FolderIcon />,
       label: 'Library',
-      sx: { fontSize: '0.875rem', minHeight: '50px' }
+      sx: { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } }
     }
   }
 ];
@@ -68,7 +68,7 @@ function App() {
         </Box>
 
         <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end' gap={0.5}>
-          <Typography color='text.secondary' fontSize='0.75rem'>v{packageJson.version}</Typography>
+          <Typography color='text.secondary' fontSize='0.875rem'>v{packageJson.version}</Typography>
           <IconButton
             aria-label='GitHub repository'
             href='https://github.com/Igor-Losev/deadem'
@@ -76,7 +76,7 @@ function App() {
             sx={{ '&:hover svg': { color: 'text.primary' } }}
             target='_blank'
           >
-            <GitHubIcon fontSize='small' />
+            <GitHubIcon sx={{ fontSize: '1.4rem' }} />
           </IconButton>
         </Box>
       </Box>
