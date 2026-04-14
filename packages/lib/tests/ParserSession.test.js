@@ -31,7 +31,7 @@ function createMockEngine() {
         },
 
         firePacket(demoPacket) {
-            [...interceptors].forEach(fn => fn(demoPacket));
+            [ ...interceptors ].forEach(fn => fn(demoPacket));
         }
     };
 }

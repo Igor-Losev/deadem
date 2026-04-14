@@ -236,7 +236,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPost(stage, ...args) {
-        const interceptors = [...this._interceptors.post[stage.id]];
+        const interceptors = [ ...this._interceptors.post[stage.id] ];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
@@ -249,7 +249,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPre(stage, ...args) {
-        const interceptors = [...this._interceptors.pre[stage.id]];
+        const interceptors = [ ...this._interceptors.pre[stage.id] ];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
@@ -324,7 +324,7 @@ class ParserEngine {
         } else {
             chain.push(
                 new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
-                new DemoStreamPacketExtractor(this, source),
+                new DemoStreamPacketExtractor(this, source)
             );
         }
 
@@ -482,7 +482,7 @@ class ParserEngine {
         this._validateAvailability();
 
         if (this._started && !this._finished) {
-            throw new Error(`Unable to run parser: engine is already running`);
+            throw new Error('Unable to run parser: engine is already running');
         }
 
         this._unpause();
@@ -519,7 +519,7 @@ class ParserEngine {
      */
     _validateAvailability() {
         if (this._disposed) {
-            throw new Error(`Parser is not available: engine has been disposed`);
+            throw new Error('Parser is not available: engine has been disposed');
         }
     }
 

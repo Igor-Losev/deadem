@@ -9,7 +9,7 @@ import DemoProvider from '#root/providers/DemoProvider.js';
 
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 3,
-        messagePacketTypesExclude: [MessagePacketType.SVC_PACKET_ENTITIES]
+        messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
     }));
 
     await parser.parse(reader);

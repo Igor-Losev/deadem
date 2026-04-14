@@ -100,9 +100,9 @@ const playing = new PlayerState('PLAYING');
 const seeking = new PlayerState('SEEKING');
 const disposed = new PlayerState('DISPOSED');
 
-idle._transitions = [loaded, disposed];
-loaded._transitions = [playing, seeking, disposed];
-playing._transitions = [loaded, disposed];
-seeking._transitions = [loaded, disposed];
+idle._transitions = [ loaded, disposed ];
+loaded._transitions = [ playing, seeking, disposed ];
+playing._transitions = [ loaded, disposed ];
+seeking._transitions = [ loaded, disposed ];
 
 export default PlayerState;

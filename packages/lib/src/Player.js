@@ -22,7 +22,7 @@ class Player {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         if (configuration.parserThreads > 0) {
-            throw new Error(`Player: parallel parsing is not supported yet`);
+            throw new Error('Player: parallel parsing is not supported yet');
         }
 
         this._engine = new ParserEngine(configuration, logger);
@@ -147,7 +147,7 @@ class Player {
         this._requireState(PlayerState.IDLE, 'Unable to load');
 
         if (demoSource !== DemoSource.REPLAY) {
-            throw new Error(`Unable to load: unsupported demo source, only REPLAY is supported`);
+            throw new Error('Unable to load: unsupported demo source, only REPLAY is supported');
         }
 
         const packets = await this._engine.extract(reader, demoSource);
@@ -355,7 +355,7 @@ class Player {
     async _runPlayback(rate) {
         const msPerTick = (this._engine.demo.server.tickInterval / rate) * 1000;
 
-        let anchor = performance.now();
+        const anchor = performance.now();
         let ticksProcessed = 0;
 
         const deferred = this._playback.deferred;
@@ -423,4 +423,4 @@ class Player {
     }
 }
 
-export default Player
+export default Player;

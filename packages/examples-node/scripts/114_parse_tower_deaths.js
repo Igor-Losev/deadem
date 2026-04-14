@@ -10,7 +10,7 @@ import DemoProvider from '#root/providers/DemoProvider.js';
 
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 0,
-        messagePacketTypes: [MessagePacketType.SVC_PACKET_ENTITIES, MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED]
+        messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES, MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED ]
     }));
     const printer = new Printer(parser);
 

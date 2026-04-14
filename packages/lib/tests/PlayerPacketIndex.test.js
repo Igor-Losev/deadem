@@ -32,7 +32,7 @@ function createIndex(ticks) {
 describe('PlayerPacketIndex', () => {
     describe('getTickPosition', () => {
         test('It should return the position of an existing tick', () => {
-            const index = createIndex([100, 200, 200, 300]);
+            const index = createIndex([ 100, 200, 200, 300 ]);
 
             expect(index.getTickPosition(100)).toBe(0);
             expect(index.getTickPosition(200)).toBe(1);
@@ -40,7 +40,7 @@ describe('PlayerPacketIndex', () => {
         });
 
         test('It should return -1 for a non-existing tick', () => {
-            const index = createIndex([100, 200, 300]);
+            const index = createIndex([ 100, 200, 300 ]);
 
             expect(index.getTickPosition(150)).toBe(-1);
             expect(index.getTickPosition(0)).toBe(-1);
@@ -50,7 +50,7 @@ describe('PlayerPacketIndex', () => {
 
     describe('advance', () => {
         test('It should return the next tick, count, and position', () => {
-            const index = createIndex([100, 200, 200, 300]);
+            const index = createIndex([ 100, 200, 200, 300 ]);
 
             const result = index.advance(0);
 
@@ -58,7 +58,7 @@ describe('PlayerPacketIndex', () => {
         });
 
         test('It should return correct count for single-packet tick', () => {
-            const index = createIndex([100, 200, 300]);
+            const index = createIndex([ 100, 200, 300 ]);
 
             const result = index.advance(0);
 
@@ -66,13 +66,13 @@ describe('PlayerPacketIndex', () => {
         });
 
         test('It should return null at the last position', () => {
-            const index = createIndex([100, 200, 300]);
+            const index = createIndex([ 100, 200, 300 ]);
 
             expect(index.advance(2)).toBe(null);
         });
 
         test('It should walk through all ticks sequentially', () => {
-            const index = createIndex([10, 10, 20, 30, 30, 30, 40]);
+            const index = createIndex([ 10, 10, 20, 30, 30, 30, 40 ]);
 
             const ticks = [];
             let pos = 0;
@@ -98,7 +98,7 @@ describe('PlayerPacketIndex', () => {
 
     describe('retreat', () => {
         test('It should return the previous tick and position', () => {
-            const index = createIndex([100, 200, 300]);
+            const index = createIndex([ 100, 200, 300 ]);
 
             const result = index.retreat(2);
 
@@ -106,13 +106,13 @@ describe('PlayerPacketIndex', () => {
         });
 
         test('It should return null at position 0', () => {
-            const index = createIndex([100, 200, 300]);
+            const index = createIndex([ 100, 200, 300 ]);
 
             expect(index.retreat(0)).toBe(null);
         });
 
         test('It should walk back through all ticks', () => {
-            const index = createIndex([10, 20, 30, 40]);
+            const index = createIndex([ 10, 20, 30, 40 ]);
 
             const ticks = [];
             let pos = 3;
@@ -128,13 +128,13 @@ describe('PlayerPacketIndex', () => {
                 pos = prev.position;
             }
 
-            expect(ticks).toEqual([30, 20, 10]);
+            expect(ticks).toEqual([ 30, 20, 10 ]);
         });
     });
 
     describe('advance + retreat roundtrip', () => {
         test('It should return to the original position', () => {
-            const index = createIndex([100, 200, 300, 400]);
+            const index = createIndex([ 100, 200, 300, 400 ]);
 
             const fwd = index.advance(1);
             const back = index.retreat(fwd.position);

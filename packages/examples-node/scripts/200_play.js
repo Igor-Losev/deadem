@@ -1,4 +1,4 @@
-import { Logger, ParserConfiguration, Player, Printer } from 'deadem';
+import { Logger, ParserConfiguration, Player } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 

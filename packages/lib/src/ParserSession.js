@@ -71,7 +71,7 @@ class ParserSession {
 
         this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
 
-        this._reader = new ReadableArray([...bootstrap, ...packets, ...remaining], true);
+        this._reader = new ReadableArray([ ...bootstrap, ...packets, ...remaining ], true);
         this._started = true;
         this._parsePromise = this._engine.parse(this._reader, this._source, true);
 

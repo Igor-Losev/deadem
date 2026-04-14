@@ -9,7 +9,7 @@ import DemoProvider from '#root/providers/DemoProvider.js';
 
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 3,
-        messagePacketTypes: [MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE, MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL] 
+        messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE, MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL ] 
     }));
 
     const players = new Map();
