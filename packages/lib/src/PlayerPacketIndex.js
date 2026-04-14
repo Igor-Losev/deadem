@@ -1,6 +1,5 @@
 import Assert from '#core/Assert.js';
 
-import DemoPacketRaw from '#data/DemoPacketRaw.js';
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 
 class PlayerPacketIndex {

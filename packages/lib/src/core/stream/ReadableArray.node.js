@@ -28,7 +28,7 @@ class ReadableArrayNode extends Readable {
      */
     release() {
         if (this._gate === null) {
-            throw new Error(`release() can only be called on a gated ReadableArray`);
+            throw new Error('release() can only be called on a gated ReadableArray');
         }
 
         this._gate.release();

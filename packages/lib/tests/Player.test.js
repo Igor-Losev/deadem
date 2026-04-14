@@ -62,7 +62,7 @@ function createLoadedPlayer() {
 
             player._session = {
                 close: vi.fn(async () => {}),
-                process: vi.fn(async (count) => {
+                process: vi.fn(async (_) => {
                     const next = player._index.advance(player._ticks.position);
 
                     return next ? next.tick : player._ticks.current;

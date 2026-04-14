@@ -178,9 +178,8 @@ class Worker {
 
     /**
      * @protected
-     * @param {WorkerRequestDemoClear} request
      */
-    _handleDemoClear(request) {
+    _handleDemoClear() {
         this._demo.reset();
 
         const response = new WorkerResponseDemoClear();

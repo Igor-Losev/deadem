@@ -1,7 +1,6 @@
 import Logger from '#core/Logger.js';
 
 import DemoSource from '#data/enums/DemoSource.js';
-import InterceptorStage from '#data/enums/InterceptorStage.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
