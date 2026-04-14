@@ -7,31 +7,13 @@ import {
 import { Box, Divider, IconButton, InputAdornment, TextField, Tooltip, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 
-const CLASS_COLOR = '#b388ff';
+import EmptyState from './../EmptyState';
+
+import { COLORS, FONT_SIZE } from './../../theme';
+import { HighlightedJson } from './../../utils';
 
 function getEntityId(entity) {
   return `${entity.class.id}-${entity.index}-${entity.serial}`;
-}
-
-function highlightJson(json) {
-  return json.replace(
-    /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g,
-    (match, str, colon, bool, num) => {
-      if (str && colon) {
-        return `<span style="color:#b388ff">${str}</span>:`;
-      }
-      if (str) {
-        return `<span style="color:#80cbc4">${str}</span>`;
-      }
-      if (bool) {
-        return `<span style="color:#7c4dff">${bool}</span>`;
-      }
-      if (num) {
-        return `<span style="color:#69f0ae">${num}</span>`;
-      }
-      return match;
-    }
-  );
 }
 
 const rowStyle = {
@@ -41,7 +23,7 @@ const rowStyle = {
   padding: '3px 8px',
   cursor: 'pointer',
   userSelect: 'none',
-  fontSize: '0.875rem',
+  fontSize: FONT_SIZE.lg,
   lineHeight: '24px',
 };
 
@@ -100,12 +82,12 @@ function EntityTree({ entityClasses, entityContainers, onEntityClick, selectedEn
               onClick={() => toggleExpand(classId)}
             >
               <ChevronIcon open={isExpanded} />
-              <span style={{ color: CLASS_COLOR, fontWeight: 600 }}>{entityClass.name}</span>
-              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>id {classId}</span>
+              <span style={{ color: COLORS.entityClass, fontWeight: 600 }}>{entityClass.name}</span>
+              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: FONT_SIZE.sm }}>id {classId}</span>
               <span style={{
-                backgroundColor: `${CLASS_COLOR}22`,
-                color: CLASS_COLOR,
-                fontSize: '0.6875rem',
+                backgroundColor: `${COLORS.entityClass}22`,
+                color: COLORS.entityClass,
+                fontSize: FONT_SIZE.xs,
                 fontWeight: 600,
                 padding: '0 5px',
                 borderRadius: 8,
@@ -140,11 +122,11 @@ function EntityTree({ entityClasses, entityContainers, onEntityClick, selectedEn
                         backgroundColor: entity.active ? '#69f0ae' : 'rgba(255,255,255,0.15)',
                         flexShrink: 0,
                       }} />
-                      <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8125rem' }}>#{entityIndex + 1}</span>
-                      <span style={{ fontSize: '0.8125rem' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: FONT_SIZE.md }}>#{entityIndex + 1}</span>
+                      <span style={{ fontSize: FONT_SIZE.md }}>
                         index=<span style={{ color: '#69f0ae' }}>{entity.index}</span>
                       </span>
-                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.8125rem' }}>
+                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: FONT_SIZE.md }}>
                         serial=<span style={{ color: 'rgba(255,255,255,0.55)' }}>{entity.serial}</span>
                       </span>
                     </div>
@@ -159,36 +141,10 @@ function EntityTree({ entityClasses, entityContainers, onEntityClick, selectedEn
   );
 }
 
-function EmptyState({ icon, text }) {
-  return (
-    <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' gap={1} flex={1} minHeight={140} width='100%'>
-      {icon}
-      <Typography color='text.disabled' fontSize='0.8125rem'>{text}</Typography>
-    </Box>
-  );
-}
-
-export default function EntityExplorer({ demo }) {
-  const [selectedEntity, setSelectedEntity] = useState(null);
+export default function EntityExplorer({ demo, contentVersion }) {
+  const [selectedEntityId, setSelectedEntityId] = useState(null);
   const [copied, setCopied] = useState(false);
   const [filter, setFilter] = useState('');
-
-  const unpackedEntity = useMemo(() => {
-    if (selectedEntity === null) {
-      return null;
-    }
-
-    return JSON.stringify(
-      selectedEntity.unpackFlattened(),
-      (key, value) => typeof value === 'bigint' ? value.toString() + 'n' : value,
-      2
-    );
-  }, [selectedEntity]);
-
-  const highlightedEntity = useMemo(() => {
-    if (!unpackedEntity) return '';
-    return highlightJson(unpackedEntity);
-  }, [unpackedEntity]);
 
   const entities = demo ? demo.getEntities() : [];
 
@@ -209,10 +165,25 @@ export default function EntityExplorer({ demo }) {
     return containers;
   }, { byClass: new Map(), byId: new Map() });
 
+  const selectedEntity = selectedEntityId !== null
+    ? entityContainers.byId.get(selectedEntityId) ?? null
+    : null;
+
+  const unpackedEntity = useMemo(() => {
+    if (selectedEntity === null) {
+      return null;
+    }
+
+    return JSON.stringify(
+      selectedEntity.unpackFlattened(),
+      (key, value) => typeof value === 'bigint' ? value.toString() + 'n' : value,
+      2
+    );
+  }, [selectedEntity, contentVersion]);
+
   const handleEntityClick = (entityId) => {
-    const entity = entityContainers.byId.get(entityId) || null;
-    if (entity === null) return;
-    setSelectedEntity(entity);
+    if (!entityContainers.byId.has(entityId)) return;
+    setSelectedEntityId(entityId);
     setCopied(false);
   };
 
@@ -234,8 +205,6 @@ export default function EntityExplorer({ demo }) {
     ? entityClasses.filter(c => c.name.toLowerCase().includes(filterLower))
     : entityClasses;
 
-  const selectedEntityId = selectedEntity ? getEntityId(selectedEntity) : null;
-
   const hasEntities = entityClasses.length > 0;
 
   return (
@@ -243,7 +212,7 @@ export default function EntityExplorer({ demo }) {
       {hasEntities ? (
         <>
           <Box flex={1} display='flex' flexDirection='column' overflow='hidden'>
-            <Box px={1} py={0.75}>
+            <Box px={1} display='flex' alignItems='center' sx={{ height: 44 }}>
               <TextField
                 size='small'
                 placeholder='Filter classes...'
@@ -257,14 +226,14 @@ export default function EntityExplorer({ demo }) {
                         <CategoryIcon sx={{ fontSize: '1rem', color: 'text.disabled' }} />
                       </InputAdornment>
                     ),
-                    sx: { fontSize: '0.8125rem', height: 32 },
+                    sx: { fontSize: FONT_SIZE.md, height: 32 },
                   }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
                     '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
-                    '&.Mui-focused fieldset': { borderColor: '#7c4dff' },
+                    '&.Mui-focused fieldset': { borderColor: COLORS.jsonBoolean },
                   },
                 }}
               />
@@ -292,16 +261,16 @@ export default function EntityExplorer({ demo }) {
           <Box display='flex' flexDirection='column' flex={1} minWidth={0}>
             {unpackedEntity ? (
               <>
-                <Box display='flex' alignItems='center' justifyContent='space-between' px={1.5} py={0.5} sx={{ minHeight: 36 }}>
-                  <Typography fontSize='0.75rem' color='text.secondary' noWrap>
+                <Box display='flex' alignItems='center' justifyContent='space-between' px={1} sx={{ height: 44 }}>
+                  <Typography fontSize={FONT_SIZE.sm} color='text.secondary' noWrap>
                     {selectedEntity.class.name}
-                    <Typography component='span' fontSize='0.75rem' color='text.disabled'>
+                    <Typography component='span' fontSize={FONT_SIZE.sm} color='text.disabled'>
                       {' '}/ index={selectedEntity.index}
                     </Typography>
                   </Typography>
                   <Tooltip title={copied ? 'Copied!' : 'Copy JSON'} arrow>
                     <IconButton onClick={handleCopyClicked} size='small'>
-                      <ContentCopyIcon sx={{ fontSize: '0.875rem' }} />
+                      <ContentCopyIcon sx={{ fontSize: FONT_SIZE.lg }} />
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -312,13 +281,14 @@ export default function EntityExplorer({ demo }) {
                   <pre
                     style={{
                       margin: 0,
-                      fontSize: '0.75rem',
+                      fontSize: FONT_SIZE.sm,
                       lineHeight: 1.65,
                       fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
                       color: 'rgba(255, 255, 255, 0.8)',
                     }}
-                    dangerouslySetInnerHTML={{ __html: highlightedEntity }}
-                  />
+                  >
+                    <HighlightedJson json={unpackedEntity} />
+                  </pre>
                 </Box>
               </>
             ) : (

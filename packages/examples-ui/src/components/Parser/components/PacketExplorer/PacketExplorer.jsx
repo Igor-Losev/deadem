@@ -1,46 +1,43 @@
-import { Box, Chip, Divider, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
-import { Close as CloseIcon, ContentCopy as ContentCopyIcon, ManageSearch as ManageSearchIcon } from '@mui/icons-material';
+import { Box, Chip, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from '@mui/material';
+import { Close as CloseIcon, ContentCopy as ContentCopyIcon, InboxOutlined as InboxOutlinedIcon, ManageSearch as ManageSearchIcon } from '@mui/icons-material';
 import { useCallback, useMemo, useState } from 'react';
+
+import EmptyState from './../EmptyState';
+
+import { COLORS, FONT_SIZE } from '../../theme';
+import { compare, HighlightedJson } from '../../utils';
 
 const COLUMNS = [
   {
     header: 'Sequence',
+    value: d => d.sequence,
     selector: d => d.sequence
   },
   {
     header: 'Tick',
+    value: d => d.tick,
     selector: d => d.tick
   },
   {
     header: 'Type',
+    value: d => d.type.code,
     selector: d => d.type.code
   }
 ];
 
-function highlightJson(json) {
-  return json.replace(
-    /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g,
-    (match, str, colon, bool, num) => {
-      if (str && colon) {
-        return `<span style="color:#b388ff">${str}</span>:`;
-      }
-      if (str) {
-        return `<span style="color:#80cbc4">${str}</span>`;
-      }
-      if (bool) {
-        return `<span style="color:#7c4dff">${bool}</span>`;
-      }
-      if (num) {
-        return `<span style="color:#69f0ae">${num}</span>`;
-      }
-      return match;
-    }
-  );
-}
-
 export default function PacketExplorer({ history }) {
   const [packet, setPacket] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [orderBy, setOrderBy] = useState('Tick');
+  const [order, setOrder] = useState('desc');
+
+  const sorted = useMemo(() => {
+    const column = COLUMNS.find(c => c.header === orderBy);
+    return [...history].sort((a, b) => {
+      const cmp = compare(column.value(a), column.value(b));
+      return order === 'asc' ? cmp : -cmp;
+    });
+  }, [history, orderBy, order]);
 
   const stringifiedPacket = useMemo(() => {
     if (packet === null) {
@@ -80,11 +77,6 @@ export default function PacketExplorer({ history }) {
     }, null, 2);
   }, [packet]);
 
-  const highlightedJson = useMemo(() => {
-    if (!stringifiedPacket) return '';
-    return highlightJson(stringifiedPacket);
-  }, [stringifiedPacket]);
-
   const handleDataClicked = (demoPacket) => {
     setPacket(demoPacket);
     setCopied(false);
@@ -101,20 +93,37 @@ export default function PacketExplorer({ history }) {
     });
   }, [stringifiedPacket]);
 
+  const handleSort = (header) => {
+    if (orderBy === header) {
+      setOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderBy(header);
+      setOrder('asc');
+    }
+  };
+
   return (
     <Table size='small' stickyHeader>
       <TableHead>
         <TableRow>
           {COLUMNS.map(column => (
-            <TableCell key={column.header} sx={{ fontWeight: 'bold' }}>{column.header}</TableCell>
+            <TableCell key={column.header} sx={{ fontWeight: 'bold' }}>
+              <TableSortLabel
+                active={orderBy === column.header}
+                direction={orderBy === column.header ? order : 'asc'}
+                onClick={() => handleSort(column.header)}
+              >
+                {column.header}
+              </TableSortLabel>
+            </TableCell>
           ))}
           <TableCell align='center' sx={{ fontWeight: 'bold' }}>Data</TableCell>
         </TableRow>
       </TableHead>
 
       <TableBody>
-        {history.length > 0 ? (
-          history.map(demoPacket => (
+        {sorted.length > 0 ? (
+          sorted.map(demoPacket => (
             <TableRow key={demoPacket.sequence}>
               {COLUMNS.map(column => (
                 <TableCell key={column.header}>{column.selector(demoPacket)}</TableCell>
@@ -128,8 +137,8 @@ export default function PacketExplorer({ history }) {
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={COLUMNS.length + 1} sx={{ height: '120px', textAlign: 'center' }}>
-              <Typography color='text.secondary' fontSize='0.875rem'>No data.</Typography>
+            <TableCell colSpan={COLUMNS.length + 1}>
+              <EmptyState icon={<InboxOutlinedIcon color='disabled' />} text='No data' />
             </TableCell>
           </TableRow>
         )}
@@ -180,20 +189,20 @@ export default function PacketExplorer({ history }) {
                   size='small'
                   sx={{
                     backgroundColor: 'rgba(124, 77, 255, 0.2)',
-                    color: '#b388ff',
-                    fontSize: '0.6875rem',
+                    color: COLORS.accent,
+                    fontSize: FONT_SIZE.xs,
                     fontWeight: 600,
                     height: 22,
                   }}
                 />
-                <Typography sx={{ color: 'text.secondary', fontSize: '0.6875rem' }}>
+                <Typography sx={{ color: 'text.secondary', fontSize: FONT_SIZE.xs }}>
                   seq {packet.sequence} / tick {packet.tick}
                 </Typography>
               </Box>
               <Box display='flex' alignItems='center' gap={0.25}>
                 <Tooltip title={copied ? 'Copied!' : 'Copy'} arrow>
                   <IconButton onClick={handleCopyClicked} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
-                    <ContentCopyIcon sx={{ fontSize: '0.875rem' }} />
+                    <ContentCopyIcon sx={{ fontSize: FONT_SIZE.lg }} />
                   </IconButton>
                 </Tooltip>
                 <IconButton onClick={handleModalClosed} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
@@ -214,13 +223,14 @@ export default function PacketExplorer({ history }) {
               <pre
                 style={{
                   margin: 0,
-                  fontSize: '0.75rem',
+                  fontSize: FONT_SIZE.sm,
                   lineHeight: 1.65,
                   fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
                   color: 'rgba(255, 255, 255, 0.8)',
                 }}
-                dangerouslySetInnerHTML={{ __html: highlightedJson }}
-              />
+              >
+                {stringifiedPacket && <HighlightedJson json={stringifiedPacket} />}
+              </pre>
             </Box>
           </Box>
         </Modal>

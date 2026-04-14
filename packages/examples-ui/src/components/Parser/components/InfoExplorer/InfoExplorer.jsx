@@ -58,16 +58,16 @@ export default function InfoExplorer({ demo }) {
     stringTables = null;
   }
 
-  const columnsForStringTables = (stringTables || [ ]).map((stringTable, i) => ({
+  const columnsForStringTables = (stringTables || []).map((stringTable, i) => ({
     label: stringTable.type.code,
     selector: stringTables => stringTables[i].getEntriesCount()
   }));
 
   return (
     <Grid padding={2} container spacing={3} justifyContent='space-around'>
-      { <Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='General' columns={ColumnsForGeneral} data={general} /></Grid> }
-      { <Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='Server' columns={ColumnsForServer} data={server} /></Grid> }
-      { <Grid size={{ md: 4, sm: 12, xs: 12 }}><Widget header='String Table Entries' columns={columnsForStringTables} data={stringTables} /></Grid> }
+      {<Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='General' columns={ColumnsForGeneral} data={general} /></Grid>}
+      {<Grid size={{ md: 4, sm: 6, xs: 12 }}><Widget header='Server' columns={ColumnsForServer} data={server} /></Grid>}
+      {<Grid size={{ md: 4, sm: 12, xs: 12 }}><Widget header='String Table Entries' columns={columnsForStringTables} data={stringTables} /></Grid>}
     </Grid>
   );
 }

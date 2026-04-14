@@ -1,6 +1,10 @@
 import { Box, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import EmptyState from './../EmptyState';
+
+import { COLORS, FONT_SIZE } from '../../theme';
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -13,7 +17,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function formatValue(value) {
   if (typeof value === 'number') {
     return (
-      <span style={{ color: '#69f0ae', fontFamily: "'SF Mono', 'Fira Code', Menlo, monospace", fontVariantNumeric: 'tabular-nums' }}>
+      <span style={{ color: COLORS.jsonNumber, fontFamily: "'SF Mono', 'Fira Code', Menlo, monospace", fontVariantNumeric: 'tabular-nums' }}>
         {value.toLocaleString('en-US')}
       </span>
     );
@@ -25,7 +29,7 @@ export default function Widget({ header, columns, data }) {
   return (
     <Box sx={{ border: 1, borderRadius: 1, borderColor: 'divider' }}>
       <Box paddingY={1} textAlign='center'>
-        <Typography component='div' sx={{ fontSize: '0.875rem', fontWeight: 600, color: '#b388ff' }}>{header}</Typography>
+        <Typography component='div' sx={{ fontSize: FONT_SIZE.lg, fontWeight: 600, color: COLORS.accent }}>{header}</Typography>
       </Box>
 
       <Divider />
@@ -36,16 +40,14 @@ export default function Widget({ header, columns, data }) {
             <TableBody>
               {columns.map((column) => (
                 <StyledTableRow key={column.label}>
-                  <TableCell sx={{ color: 'text.secondary', fontSize: '0.8125rem' }}>{column.label}</TableCell>
-                  <TableCell align='right' sx={{ fontSize: '0.8125rem' }}>{formatValue(column.selector(data))}</TableCell>
+                  <TableCell sx={{ color: 'text.secondary', fontSize: FONT_SIZE.md }}>{column.label}</TableCell>
+                  <TableCell align='right' sx={{ fontSize: FONT_SIZE.md }}>{formatValue(column.selector(data))}</TableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         ) : (
-          <Box alignItems='center' display='flex' justifyContent='center' minHeight={60}>
-            <Typography color='text.secondary' fontSize='0.875rem'>No data.</Typography>
-          </Box>
+          <EmptyState text='No data' />
         )
       }
     </Box>
