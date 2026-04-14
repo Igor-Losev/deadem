@@ -1,4 +1,4 @@
-import { BroadcastAgent, BroadcastGateway, DemoSource, InterceptorStage, Logger, Parser, ParserConfiguration, Printer } from 'deadem';
+import { BroadcastAgent, BroadcastGateway, DemoSource, Logger, Parser, ParserConfiguration, Printer } from 'deadem';
 
 (async () => {
     /**
