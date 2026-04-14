@@ -165,6 +165,7 @@ class MessagePacketType {
     static get CITADEL_USER_MESSAGE_HUD_GAME_ANNOUNCEMENT() { return citadelUserMessageHudGameAnnouncement; }
     static get CITADEL_USER_MESSAGE_ITEM_DRAFT_REACTION() { return citadelUserMessageItemDraftReaction; }
     static get CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED() { return citadelUserMessageImportantAbilityUsed; }
+    static get CITADEL_USER_MESSAGE_BANNED_HEROES() { return citadelUserMessageBannedHeroes; }
 
     static get TE_EFFECT_DISPATCH() { return TE_EffectDispatch; }
 
@@ -272,7 +273,8 @@ const CCitadelUserMessage_Damage = ProtoProvider.CITADEL_USER_MESSAGES.lookupTyp
     CCitadelUserMsg_StreetBrawlScoring = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_StreetBrawlScoring'),
     CCitadelUserMsg_HudGameAnnouncement = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_HudGameAnnouncement'),
     CCitadelUserMsg_ItemDraftReaction = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_ItemDraftReaction'),
-    CCitadelUserMessage_ImportantAbilityUsed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ImportantAbilityUsed');
+    CCitadelUserMessage_ImportantAbilityUsed = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMessage_ImportantAbilityUsed'),
+    CCitadelUserMsg_BannedHeroes = ProtoProvider.CITADEL_USER_MESSAGES.lookupType('CCitadelUserMsg_BannedHeroes');
 
 // Game Events
 const CMsgSource1LegacyGameEventList = ProtoProvider.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEventList'),
@@ -388,7 +390,8 @@ const citadelUserMessageDamage = new MessagePacketType('k_EUserMsg_Damage', ECit
     citadelUserMessageStreetBrawlScoring = new MessagePacketType('k_EUserMsg_StreetBrawlScoring', ECitadelUserMessageIds.k_EUserMsg_StreetBrawlScoring, CCitadelUserMsg_StreetBrawlScoring), // 362
     citadelUserMessageHudGameAnnouncement = new MessagePacketType('k_EUserMsg_HudGameAnnouncement', ECitadelUserMessageIds.k_EUserMsg_HudGameAnnouncement, CCitadelUserMsg_HudGameAnnouncement), // 363
     citadelUserMessageItemDraftReaction = new MessagePacketType('k_EUserMsg_ItemDraftReaction', ECitadelUserMessageIds.k_EUserMsg_ItemDraftReaction, CCitadelUserMsg_ItemDraftReaction), // 364
-    citadelUserMessageImportantAbilityUsed = new MessagePacketType('k_EUserMsg_ImportantAbilityUsed', ECitadelUserMessageIds.k_EUserMsg_ImportantAbilityUsed, CCitadelUserMessage_ImportantAbilityUsed); // 365
+    citadelUserMessageImportantAbilityUsed = new MessagePacketType('k_EUserMsg_ImportantAbilityUsed', ECitadelUserMessageIds.k_EUserMsg_ImportantAbilityUsed, CCitadelUserMessage_ImportantAbilityUsed), // 365
+    citadelUserMessageBannedHeroes = new MessagePacketType('k_EUserMsg_BannedHeroes', ECitadelUserMessageIds.k_EUserMsg_BannedHeroes, CCitadelUserMsg_BannedHeroes); // 366
 
 const TE_EffectDispatch = new MessagePacketType('TE_EffectDispatch', ETemporaryEntityIds.TE_EffectDispatchId, CMsgTEEffectDispatch); // 400
 
