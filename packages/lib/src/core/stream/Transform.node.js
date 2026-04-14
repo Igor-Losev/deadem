@@ -18,9 +18,13 @@ class TransformNode extends Stream.Transform {
      * @returns {Promise<void>}
      */
     async _flush(callback) {
-        await this._finalize();
+        try {
+            await this._finalize();
 
-        callback();
+            callback();
+        } catch (error) {
+            callback(error);
+        }
     }
 
     /**
@@ -47,9 +51,13 @@ class TransformNode extends Stream.Transform {
      * @param {TransformCallback} callback
      */
     async _transform(chunk, encoding, callback) {
-        await this._handle(chunk);
+        try {
+            await this._handle(chunk);
 
-        callback();
+            callback();
+        } catch (error) {
+            callback(error);
+        }
     }
 }
 

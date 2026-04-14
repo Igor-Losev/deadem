@@ -292,6 +292,10 @@ class ParserEngine {
 
             return packets;
         } catch (error) {
+            if (this._isAbortError(error)) {
+                return packets;
+            }
+
             this._logger.error('Extract failed', error);
 
             throw error;
@@ -354,9 +358,11 @@ class ParserEngine {
 
             await this._pipeline.ready();
         } catch (error) {
-            if (error?.code !== 'ERR_STREAM_PREMATURE_CLOSE' && error?.name !== 'AbortError') {
-                this._logger.error('Parse failed', error);
+            if (this._getIsAbortError(error)) {
+                return;
             }
+
+            this._logger.error('Parse failed', error);
 
             throw error;
         } finally {
@@ -534,6 +540,15 @@ class ParserEngine {
                 []
             ]
         };
+    }
+
+    /**
+     * @private
+     * @param {Error} error
+     * @returns {boolean}
+     */
+    _getIsAbortError(error) {
+        return error?.code === 'ERR_STREAM_PREMATURE_CLOSE' || error?.name === 'AbortError';
     }
 }
 
