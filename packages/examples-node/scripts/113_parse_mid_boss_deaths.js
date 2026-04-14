@@ -6,7 +6,7 @@ import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_75438101);
 
     const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
     const printer = new Printer(parser);
@@ -14,22 +14,30 @@ import DemoProvider from '#root/providers/DemoProvider.js';
     const gameObserver = new GameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED) {
+        const isBossMidSpawned = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED;
+        const isBossKilled = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED;
+
+        if (!isBossMidSpawned && !isBossKilled) {
             return;
         }
 
         gameObserver.forceUpdate();
 
-        const entity = getEntity(parser.getDemo(), messagePacket.data.entityKilled);
+        if (isBossMidSpawned) {
+            console.log(`[ ${gameObserver.getGameClockFormatted()} ]: Mid Boss Spawned`);
+        } else {
+            const entity = getEntity(parser.getDemo(), messagePacket.data.entityKilled);
 
-        const unpacked = entity.unpackFlattened();
+            const unpacked = entity.unpackFlattened();
 
-        if (unpacked.m_iTeamNum !== 4) {
-            console.log(`[ ${gameObserver.getGameClockFormatted()} ]: Tower Destroyed, Team [ ${messagePacket.data.objectiveTeam} ]`);
+            if (unpacked.m_iTeamNum === 4) {
+                console.log(`[ ${gameObserver.getGameClockFormatted()} ]: Mid Boss Killed`);
+            }
         }
     });
 
     await parser.parse(reader);
+    await parser.dispose();
 
     printer.printStats();
 })();

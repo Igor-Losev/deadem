@@ -6,7 +6,7 @@ import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_75438101);
 
     const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
     const printer = new Printer(parser);
@@ -70,6 +70,7 @@ import DemoProvider from '#root/providers/DemoProvider.js';
     });
 
     await parser.parse(reader);
+    await parser.dispose();
 
     printer.printStats();
 })();
@@ -119,7 +120,7 @@ function getEntityLog(demo, entity) {
 
             const data = ownerEntity.unpackFlattened();
 
-            log = `[ Team ${data.m_iTeamNum} ] [ ${ownerEntity.class.name} ] ${data.m_iszPlayerName}`;
+            log = `[ Team ${data.m_iTeamNum} ] ${data.m_iszPlayerName}`;
 
             break;
         }

@@ -1,17 +1,16 @@
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer, StringTableType } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
-import GameObserver from 'deadem-examples-common/data/GameObserver.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_38969017);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_75438101);
 
-    const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
-    const printer = new Printer(parser);
-
-    const gameObserver = new GameObserver(parser, Infinity);
+    const parser = new Parser(new ParserConfiguration({
+        parserThreads: 3,
+        messagePacketTypes: [MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE, MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL] 
+    }));
 
     const players = new Map();
 
@@ -37,18 +36,17 @@ import DemoProvider from '#root/providers/DemoProvider.js';
             return;
         }
 
-        gameObserver.forceUpdate();
-
-        const gameData = gameObserver.getGameFormatted();
-
         if (isChatMessage) {
-            console.log(`CHAT_MESSAGE [ ${gameData.state}|${gameData.clockGame} ]: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
+            console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
         } else {
-            console.log(`CHAT_WHEEL: [ ${gameData.state}|${gameData.clockGame} ]: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+            console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
         }
     });
 
     await parser.parse(reader);
+    await parser.dispose();
+
+    const printer = new Printer(parser);
 
     printer.printStats();
 })();

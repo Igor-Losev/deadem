@@ -9,7 +9,7 @@ const SECONDS_IN_MINUTE = 60;
 class GameObserver {
     /**
      * @constructor
-     * @param {Parser} parser
+     * @param {Parser|Player} parser
      * @param {number} [frequency=1]
      */
     constructor(parser, frequency = 1) {
@@ -18,6 +18,8 @@ class GameObserver {
 
         this._gameRulesEntityIndex = null;
         this._last = null;
+
+        this._pausedTicksAtSnapshot = 0;
 
         this._game = {
             clockGame: 0,
@@ -104,22 +106,34 @@ class GameObserver {
         const gamePaused = gameRulesData['m_pGameRules.m_bGamePaused'] || false;
         const gameState = GameState.parse(gameRulesData['m_pGameRules.m_eGameState']);
 
-        if (!gamePaused) {
-            const clockLastUpdatedAt = gameRulesData['m_pGameRules.m_flMatchClockAtLastUpdate'];
-            const clockLastUpdatedTick = gameRulesData['m_pGameRules.m_nMatchClockUpdateTick'];
+        const clockLastUpdatedAt = gameRulesData['m_pGameRules.m_flMatchClockAtLastUpdate'];
+        const clockLastUpdatedTick = gameRulesData['m_pGameRules.m_nMatchClockUpdateTick'];
 
-            let elapsed;
+        const tickInterval = demo.server.tickInterval;
 
-            if (gameState === GameState.POST_GAME) {
-                elapsed = 0;
-            } else {
-                elapsed = (gameTick - clockLastUpdatedTick) * demo.server.tickInterval;
-            }
+        if (gameState === GameState.POST_GAME) {
+            this._game.clockGame = Math.max(clockLastUpdatedAt, 0);
+            this._game.clockTotal = Math.max(gameTick * tickInterval, 0);
 
-            this._game.clockGame = Math.max(clockLastUpdatedAt + elapsed, 0);
+            return;
         }
 
-        this._game.clockTotal = Math.max(gameTick / demo.server.tickRate, 0);
+        if (!gamePaused) {
+            const pausedTicks = gameRulesData['m_pGameRules.m_nTotalPausedTicks'] || 0;
+            const pausedTicksDelta = pausedTicks - this._pausedTicksAtSnapshot;
+
+            const tickDeltaRaw = gameTick - clockLastUpdatedTick;
+            const tickDeltaCorrected = Math.max(tickDeltaRaw - pausedTicksDelta, 0);
+
+            const elapsed = tickDeltaCorrected * tickInterval;
+
+            this._game.clockGame = Math.max(clockLastUpdatedAt + elapsed, 0);
+
+            this._pausedTicksAtSnapshot = pausedTicks;
+        }
+
+        this._game.clockTotal = Math.max(gameTick * tickInterval, 0);
+
         this._game.paused = gamePaused;
         this._game.state = gameState;
     }

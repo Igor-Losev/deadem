@@ -1,4 +1,4 @@
-import { DemoSource, InterceptorStage, Parser, ParserConfiguration, Printer } from 'deadem';
+import { DemoSource, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 

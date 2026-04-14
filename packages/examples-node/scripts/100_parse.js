@@ -1,11 +1,11 @@
-import { InterceptorStage, Parser, ParserConfiguration, Printer } from 'deadem';
+import { Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.REPLAY_51541762);
+    const reader = await DemoProvider.read(DemoFile.REPLAY_75438101);
 
     const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
 
@@ -14,7 +14,5 @@ import DemoProvider from '#root/providers/DemoProvider.js';
 
     const printer = new Printer(parser);
 
-    printer.printMemoryStats();
-    printer.printPerformanceStats();
-    printer.printPacketStats();
+    printer.printStats();
 })();

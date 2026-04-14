@@ -15,7 +15,7 @@ const BATCH_SIZE = 1000;
  * parsers by pausing each engine every N demo packets and comparing batches.
  */
 (async () => {
-    const demoFile = DemoFile.REPLAY_36126420;
+    const demoFile = DemoFile.REPLAY_75438101;
 
     const logger = Logger.CONSOLE_INFO;
 
