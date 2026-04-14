@@ -5842,6 +5842,9 @@
     },
     "CNETMsg_SpawnGroup_ManifestUpdate": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 2048
+      },
       "fields": {
         "spawngrouphandle": {
           "type": "uint32",
@@ -7366,7 +7369,9 @@
         "k_ECitadelGameMode_Normal": 1,
         "k_ECitadelGameMode_1v1Test": 2,
         "k_ECitadelGameMode_Sandbox": 3,
-        "k_ECitadelGameMode_StreetBrawl": 4
+        "k_ECitadelGameMode_StreetBrawl": 4,
+        "k_ECitadelGameMode_ExploreNYC": 5,
+        "k_ECitadelGameMode_Internal": 6
       }
     },
     "ELobbyServerState": {
@@ -7573,6 +7578,11 @@
           "rule": "repeated",
           "type": ".CMsgHeroSelectionMatchInfo.Hero",
           "id": 1
+        },
+        "bannedHeroes": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2
         }
       },
       "nested": {
@@ -8317,6 +8327,10 @@
             "imbuedAbilityId": {
               "type": "uint32",
               "id": 6
+            },
+            "upgradeInfo": {
+              "type": "uint32",
+              "id": 7
             }
           }
         },
@@ -8721,10 +8735,6 @@
               "type": "uint32",
               "id": 15
             },
-            "party": {
-              "type": "uint32",
-              "id": 16
-            },
             "assignedLane": {
               "type": "uint32",
               "id": 17
@@ -9100,7 +9110,8 @@
             "k_eAbilityAssassinate": 9,
             "k_eItemTrophyCollector": 10,
             "k_eItemCultistSacrifice": 11,
-            "k_eBreakable": 12
+            "k_eBreakable": 12,
+            "k_eItemGooseEgg": 13
           }
         }
       }
@@ -9485,7 +9496,8 @@
         "k_EUserMsg_StreetBrawlScoring": 362,
         "k_EUserMsg_HudGameAnnouncement": 363,
         "k_EUserMsg_ItemDraftReaction": 364,
-        "k_EUserMsg_ImportantAbilityUsed": 365
+        "k_EUserMsg_ImportantAbilityUsed": 365,
+        "k_EUserMsg_BannedHeroes": 366
       }
     },
     "CitadelEntityMessageIds": {
@@ -10059,6 +10071,9 @@
     },
     "CCitadelUserMsg_RecentDamageSummary": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
       "fields": {
         "playerSlot": {
           "type": "int32",
@@ -11492,6 +11507,16 @@
         }
       }
     },
+    "CCitadelUserMsg_BannedHeroes": {
+      "edition": "proto2",
+      "fields": {
+        "bannedHeroIds": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1
+        }
+      }
+    },
     "EBaseGameEvents": {
       "edition": "proto2",
       "values": {
@@ -11620,7 +11645,7 @@
     "CMsgSource1LegacyGameEventList": {
       "edition": "proto2",
       "options": {
-        "(maximum_size_bytes)": 24576
+        "(maximum_size_bytes)": 32768
       },
       "fields": {
         "descriptors": {
@@ -12706,7 +12731,7 @@
     "CSVCMsg_ServerInfo": {
       "edition": "proto2",
       "options": {
-        "(maximum_size_bytes)": 102400
+        "(maximum_size_bytes)": 409600
       },
       "fields": {
         "protocol": {
@@ -12780,6 +12805,9 @@
     },
     "CSVCMsg_ClassInfo": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
       "fields": {
         "createOnClient": {
           "type": "bool",
@@ -12837,6 +12865,9 @@
     },
     "CSVCMsg_Print": {
       "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
       "fields": {
         "text": {
           "type": "string",
@@ -13358,7 +13389,7 @@
     "CSVCMsg_CreateStringTable": {
       "edition": "proto2",
       "options": {
-        "(maximum_size_bytes)": 49152
+        "(maximum_size_bytes)": 102400
       },
       "fields": {
         "name": {
@@ -15586,7 +15617,8 @@
         "GAME_PARTICLE_MANAGER_EVENT_ADD_FAN": 36,
         "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FAN": 37,
         "GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH": 38,
-        "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39
+        "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39,
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID": 40
       }
     },
     "EHapticPulseType": {
@@ -16422,6 +16454,10 @@
         "removeFan": {
           "type": ".CUserMsg_ParticleManager.RemoveFan",
           "id": 42
+        },
+        "createSmokeGrid": {
+          "type": ".CUserMsg_ParticleManager.CreateSmokeGrid",
+          "id": 43
         }
       },
       "extensions": [
@@ -16977,6 +17013,14 @@
         },
         "DestroyPhysicsSim": {
           "fields": {}
+        },
+        "CreateSmokeGrid": {
+          "fields": {
+            "vdataName": {
+              "type": "string",
+              "id": 1
+            }
+          }
         },
         "SetVData": {
           "fields": {
