@@ -182,7 +182,7 @@ export default function ParserComponent() {
             <Divider />
 
             <Typography variant='body2' color='text.secondary' mt={2} paragraph>
-              A Deadlock replay viewer powered by <strong>deadem</strong> — an open-source JavaScript library for parsing Deadlock demo files (<code>.dem</code>) in Node.js and the browser.
+              A Deadlock replay viewer powered by <strong>deadem</strong> — an open-source JavaScript library for parsing and playing back Deadlock demo files (<code>.dem</code>) in Node.js and the browser.
               Load any replay, control playback tick by tick, and watch the game state update in real time.
             </Typography>
             <Typography variant='body2' color='text.secondary' paragraph>
