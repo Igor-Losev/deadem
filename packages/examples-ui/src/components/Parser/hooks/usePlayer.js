@@ -1,4 +1,4 @@
-import { InterceptorStage, ParserConfiguration, Player } from 'deadem';
+import { InterceptorStage, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MAX_HISTORY = 100;
@@ -61,7 +61,8 @@ export default function usePlayer() {
     newPlayer.load(file.stream())
       .then(() => {
         setTicks({ current: newPlayer.getCurrentTick(), first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
-      });
+      })
+      .catch((err) => console.error('Player: load failed', err));
   };
 
   useEffect(() => {
@@ -112,7 +113,12 @@ export default function usePlayer() {
     p.play(playRate).then(() => {
       setPlaying(false);
       syncTicks();
-    }).catch(() => {});
+    }).catch((err) => {
+      if (!(err instanceof PlaybackInterruptedError)) {
+        setPlaying(false);
+        console.error('Player: playback error', err);
+      }
+    });
   }, [ syncTicks ]);
 
   const handlePauseClicked = useCallback(() => {
@@ -157,7 +163,8 @@ export default function usePlayer() {
 
     playerRef.current.nextTick().then(() => {
       syncTicks();
-    }).finally(() => setSeeking(false));
+    }).finally(() => setSeeking(false))
+      .catch((err) => console.error('Player: nextTick failed', err));
   }, [ syncTicks ]);
 
   const handlePrevTick = useCallback(() => {
@@ -170,7 +177,8 @@ export default function usePlayer() {
 
     playerRef.current.prevTick().then(() => {
       syncTicks();
-    }).finally(() => setSeeking(false));
+    }).finally(() => setSeeking(false))
+      .catch((err) => console.error('Player: prevTick failed', err));
   }, [ syncTicks ]);
 
   const seekTo = useCallback((tick) => {
@@ -193,7 +201,8 @@ export default function usePlayer() {
       if (wasPlaying) {
         startPlayback(rateRef.current);
       }
-    }).finally(() => setSeeking(false));
+    }).finally(() => setSeeking(false))
+      .catch((err) => console.error('Player: seekToTick failed', err));
   }, [ syncTicks, startPlayback ]);
 
   const handleSeekToStart = useCallback(() => seekTo(playerRef.current?.getFirstTick()), [ seekTo ]);

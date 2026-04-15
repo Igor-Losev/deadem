@@ -1,4 +1,4 @@
-import { Logger, ParserConfiguration, Player } from 'deadem';
+import { Logger, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 
 import DemoFile from 'deadem-examples-common/data/DemoFile.js';
 
@@ -33,8 +33,10 @@ const PLAYBACK_SPEED = 16;
     console.log(`Playing at speed [ ${PLAYBACK_SPEED}x ] ...`);
 
     const playPromise = player.play(PLAYBACK_SPEED)
-        .catch((_) => {
-            // ignore interruption
+        .catch((err) => {
+            if (!(err instanceof PlaybackInterruptedError)) {
+                throw err;
+            }
         });
 
     setTimeout(() => {

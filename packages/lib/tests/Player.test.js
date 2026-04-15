@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import Player from '#src/Player.js';
 
+import PlaybackInterruptedError from '#errors/PlaybackInterruptedError.js';
 import PlayerState from '#data/enums/PlayerState.js';
 
 /**
@@ -50,7 +51,7 @@ function createLoadedPlayer() {
     // Override seekToTick to avoid real ParserSession construction
     player.seekToTick = async (tick) => {
         if (player._state === PlayerState.PLAYING) {
-            player._stopPlayback();
+            player._stopPlayback(PlaybackInterruptedError.PAUSED);
         }
 
         player._state = PlayerState.SEEKING;
@@ -174,6 +175,19 @@ describe('Player', () => {
 
             expect(player.state).toBe(PlayerState.LOADED);
         });
+
+        test('It should interrupt play with PAUSED reason when seeking while playing', async () => {
+            player._session.process.mockReturnValue(new Promise(() => {}));
+
+            const promise = player.play();
+
+            await player.seekToTick(200);
+
+            const err = await promise.catch(e => e);
+
+            expect(err).toBeInstanceOf(PlaybackInterruptedError);
+            expect(err.reason).toBe(PlaybackInterruptedError.PAUSED);
+        });
     });
 
     describe('play', () => {
@@ -204,7 +218,10 @@ describe('Player', () => {
 
             player.pause();
 
-            await expect(promise).rejects.toThrow('Playback interrupted');
+            const err = await promise.catch(e => e);
+
+            expect(err).toBeInstanceOf(PlaybackInterruptedError);
+            expect(err.reason).toBe(PlaybackInterruptedError.PAUSED);
         });
     });
 
@@ -216,7 +233,10 @@ describe('Player', () => {
 
             player.pause();
 
-            await expect(promise).rejects.toThrow('Playback interrupted');
+            const err = await promise.catch(e => e);
+
+            expect(err).toBeInstanceOf(PlaybackInterruptedError);
+            expect(err.reason).toBe(PlaybackInterruptedError.PAUSED);
             expect(player.state).toBe(PlayerState.LOADED);
         });
 
@@ -235,7 +255,10 @@ describe('Player', () => {
 
             await player.stop();
 
-            await expect(promise).rejects.toThrow('Playback interrupted');
+            const err = await promise.catch(e => e);
+
+            expect(err).toBeInstanceOf(PlaybackInterruptedError);
+            expect(err.reason).toBe(PlaybackInterruptedError.STOPPED);
             expect(player.getCurrentTick()).toBe(100);
         });
 
@@ -280,7 +303,10 @@ describe('Player', () => {
 
             await player.dispose();
 
-            await expect(promise).rejects.toThrow('Playback interrupted');
+            const err = await promise.catch(e => e);
+
+            expect(err).toBeInstanceOf(PlaybackInterruptedError);
+            expect(err.reason).toBe(PlaybackInterruptedError.DISPOSED);
         });
     });
 });
