@@ -420,38 +420,34 @@ printer.printStats();
 
 ### Data Extraction
 
+**Interceptors** — use when you need to capture data *during* parsing, tick by tick:
+
 ```js
-...
-...
-// #1: Extraction of chat messages
+// Extracting chat messages as they appear
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
     if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE) {
         console.log(`CHAT_MESSAGE: player slot [ ${messagePacket.data.playerSlot} ], message [ ${messagePacket.data.text} ]`);
     }
 });
 
-const topDamageDealer = {
-    player: null,
-    damage: 0
-};
-
-// #2: Getting top hero-damage dealer 
-parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
-    events.forEach((event) => {
-        const entity = event.entity;
-        
-        if (entity.class.name === 'CCitadelPlayerController') {
-            const data = entity.unpackFlattened();
-            
-            if (data.m_iHeroDamage > topDamageDealer.damage) {
-                topDamageDealer.player = data.m_iszPlayerName;
-                topDamageDealer.damage = data.m_iHeroDamage;
-            }
-        }
-    });
-});
-
 await parser.parse(readable);
+```
+
+**Post-parse queries** — use when you only need the final game state:
+
+```js
+await parser.parse(readable);
+
+const demo = parser.getDemo();
+const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
+
+const topDamageDealer = entities.reduce((accumulator, entity) => {
+    const data = entity.unpackFlattened();
+
+    return data.m_iHeroDamage > accumulator.damage
+        ? { player: data.m_iszPlayerName, damage: data.m_iHeroDamage }
+        : accumulator;
+}, { player: null, damage: 0 });
 
 console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
 ```
