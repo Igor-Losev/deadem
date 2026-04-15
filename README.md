@@ -9,9 +9,9 @@ deadem
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6140-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6448-darkGreen" /></a>
 
-**Deadem** is a JavaScript parser for Deadlock (Valve Source 2 Engine) demo/replay files, compatible with Node.js and modern browsers.
+**Deadem** is a JavaScript library for parsing and playing back Deadlock (Valve Source 2 Engine) demo files, compatible with Node.js and modern browsers.
 <p align="center">
   ┌ Node.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Browser ┐
 </p>
@@ -36,7 +36,10 @@ deadem
   
   * [Understanding Parser](#understanding-parser)<br/>
     Parser internals and state management.
-  
+
+  * [Understanding Player](#understanding-player)<br/>
+    Replay playback with seek-to-tick support.
+
   * [Understanding Interceptors](#understanding-interceptors)<br/>
     Extracting data during parsing.
 
@@ -44,7 +47,7 @@ deadem
   Customizing parser options and behavior.
 
 * [Usage](#usage)<br/>
-  Basic usage example with real game data. 
+  Usage examples with real game data. 
   
   * [Demo File](#demo-file)<br/>
     Parsing demo using `.dem` file.
@@ -54,6 +57,9 @@ deadem
   
   * [Data Extraction](#data-extraction)<br/>
     Extracting data during parsing.
+
+  * [Player](#player)<br/>
+    Replay playback and tick-based seeking.
 
 * [Compatibility](#compatibility)<br/>
   Supported environments and versions.
@@ -85,7 +91,7 @@ import { Parser } from 'deadem';
 ### Browser
 
 ```js
-<script src="//cdn.jsdelivr.net/npm/deadem@1.X.X/dist/deadem.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/deadem@2.X.X/dist/deadem.min.js"></script>
 ```
 
 ```js
@@ -180,6 +186,75 @@ const demo = parser.getDemo();
 
 > Note: The parser overwrites the existing state with each tick and **does not** store past states.
 
+The parser also supports pausing and resuming mid-stream:
+
+```js
+parser.pause();   // pauses after the current packet finishes processing
+parser.resume();  // resumes from where it left off
+```
+
+Once parsing is complete, call `dispose()` to release internal resources (workers, allocated state):
+
+```js
+await parser.dispose();
+```
+
+### Understanding Player
+
+[Player](./packages/lib/src/Player.js) is a higher-level class built on top of the parser engine for **replay playback**. Unlike the parser, which processes a stream sequentially and discards past state, the player buffers the entire demo on `load()` and builds an internal packet index — enabling **seek-to-tick** in both directions.
+
+```js
+const player = new Player();
+
+await player.load(readable);              // buffer + index the replay
+await player.seekToTick(50000);           // jump to any tick
+await player.nextTick();                  // advance one tick
+await player.prevTick();                  // go back one tick
+await player.play(2.0).catch((err) => {   // rejects with PlaybackInterruptedError on pause() or stop()
+    if (!(err instanceof PlaybackInterruptedError)) throw err;
+});
+player.pause();                           // pause during play()
+await player.stop();                      // stop and reset to the first tick
+await player.dispose();                   // release all resources
+```
+
+The player follows a strict state machine:
+
+```text
+IDLE
+ ├── load()        → LOADED
+ └── dispose()     → DISPOSED
+
+LOADED
+ ├── play()        → PLAYING
+ ├── seekToTick()  → SEEKING → LOADED
+ └── dispose()     → DISPOSED
+
+PLAYING
+ ├── pause() / end of replay → LOADED
+ └── dispose()     → DISPOSED
+
+SEEKING
+ ├── (completes)   → LOADED
+ └── dispose()     → DISPOSED
+```
+
+| State      | Description                                                        |
+| ---------- | ------------------------------------------------------------------ |
+| `IDLE`     | Initial state. `load()` or `dispose()` can be called.             |
+| `LOADED`   | Demo is buffered and indexed. Ready for all operations.            |
+| `PLAYING`  | Continuous playback is running.                                    |
+| `SEEKING`  | A `seekToTick()` call is in progress.                              |
+| `DISPOSED` | Resources released. The player cannot be used further.             |
+
+The current state is exposed via `player.state` ([PlayerState](./packages/lib/src/data/enums/PlayerState.js)).
+
+The player exposes the same interceptor API as the parser (`registerPreInterceptor`, `registerPostInterceptor`, `unregisterPreInterceptor`, `unregisterPostInterceptor`) — see [Understanding Interceptors](#understanding-interceptors).
+
+> **Note**
+>
+> `Player` does not support `parserThreads > 0` — parallel parsing is not available in playback mode.
+
 ### Understanding Interceptors
 
 Interceptors are user-defined functions that hook into the parsing process **before** or **after** specific stages (called [InterceptorStage](./packages/lib/src/data/enums/InterceptorStage.js)).
@@ -237,8 +312,8 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 | `ENTITY_PACKET`   | `pre` / `post` | (demoPacket: [DemoPacket](./packages/lib/src/data/DemoPacket.js), messagePacket: [MessagePacket](./packages/lib/src/data/MessagePacket.js), events: Array<[EntityMutationEvent](./packages/lib/src/data/entity/EntityMutationEvent.js)>) => void |
 
 > ❗ **Important**
-> 
-> Interceptors hooks are **blocking** — the internal packet analyzer waits for hooks to complete before moving forward.
+>
+> Interceptor hooks are **not blocking** — the parser does not `await` async callbacks. If you pass an `async` function, it will be invoked but its returned promise will not be awaited, so async work runs concurrently with the parser. Use **synchronous** interceptors if you need data to be captured before the parser moves to the next packet.
 
 ## Configuration
 
@@ -246,10 +321,39 @@ Each interceptor receives different arguments depending on the `InterceptorStage
 
 Below is a list of available options that can be passed to the `ParserConfiguration`:
 
-| Option          | Description                                                                                                                                                               | Type   | Default |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- |
-| `breakInterval` | How often (in packets) to yield to the event loop to avoid blocking. The smaller the value, the more responsive the interface will be (may slow down parser performance). | number | `1000`  |
-| `parserThreads` | Number of **additional** threads used by the parser.                                                                                                                      | number | `0`     |
+| Option                       | Description                                                                                                                                                               | Type                              | Default |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | ------- |
+| `breakInterval`              | How often (in packets) to yield to the event loop to avoid blocking. The smaller the value, the more responsive the interface will be (may slow down parser performance). | `number`                          | `1000`  |
+| `messagePacketTypes`         | Allowlist of `MessagePacketType` values to process. Packets not in this list are skipped. Mutually exclusive with `messagePacketTypesExclude`. See note below.            | `Array<MessagePacketType>` \| `null` | `null`  |
+| `messagePacketTypesExclude`  | Blocklist of `MessagePacketType` values to skip. Mutually exclusive with `messagePacketTypes`. See note below.                                                            | `Array<MessagePacketType>` \| `null` | `null`  |
+| `parserThreads`              | Number of **additional** threads used by the parser.                                                                                                                      | `number`                          | `0`     |
+
+> **Note** — Critical packet types
+>
+> The following `MessagePacketType` values are always processed regardless of `messagePacketTypes` / `messagePacketTypesExclude`, because the parser requires them to maintain internal state:
+> `SVC_SERVER_INFO`, `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE`, `SVC_CLEAR_ALL_STRING_TABLES`.
+
+**Example — exclude entity packets for a faster parse when entity data is not needed:**
+
+```js
+import { MessagePacketType, Parser, ParserConfiguration } from 'deadem';
+
+const parser = new Parser(new ParserConfiguration({
+    messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
+}));
+```
+
+**Example — process only specific packet types:**
+
+```js
+import { MessagePacketType, Parser, ParserConfiguration } from 'deadem';
+
+const parser = new Parser(new ParserConfiguration({
+    messagePacketTypes: [
+        MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE
+    ]
+}));
+```
 
 ### Logging
 
@@ -260,9 +364,9 @@ The library provides a [Logger](./packages/lib/src/core/Logger.js) class with se
 ```js
 import { Logger, Parser, ParserConfiguration } from 'deadem';
 
-const configuration = new ParserConfiguration({ parserThreads: 2 }, Logger.CONSOLE_WARN);
+const configuration = new ParserConfiguration({ parserThreads: 2 });
 
-const parser = new Parser(configuration);
+const parser = new Parser(configuration, Logger.CONSOLE_WARN);
 ```
 
 ## Usage
@@ -280,6 +384,7 @@ const printer = new Printer(parser);
 const readable = createReadStream(PATH_TO_DEM_FILE);
 
 await parser.parse(readable);
+await parser.dispose();
 
 printer.printStats();
 ```
@@ -301,6 +406,7 @@ const printer = new Printer(parser);
 const readable = broadcastAgent.stream(FROM_BEGINNING);
 
 await parser.parse(readable, DemoSource.HTTP_BROADCAST);
+await parser.dispose();
 
 printer.printStats();
 ```
@@ -323,7 +429,7 @@ const topDamageDealer = {
 };
 
 // #2: Getting top hero-damage dealer 
-parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, async (demoPacket, messagePacket, events) => {
+parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
     events.forEach((event) => {
         const entity = event.entity;
         
@@ -343,11 +449,69 @@ await parser.parse(readable);
 console.log(`Top damage dealer is [ ${topDamageDealer.player} ] with [ ${topDamageDealer.damage} ] damage`);
 ```
 
+### Player
+
+`Player` buffers the entire replay on `load()` and builds a tick index, enabling seek-to-tick in both directions without re-reading the stream.
+
+**Inspecting game state at a specific tick:**
+
+```js
+import { createReadStream } from 'node:fs';
+
+import { InterceptorStage, Player } from 'deadem';
+
+const player = new Player();
+
+// Register interceptors before load() — they fire on every seekToTick() call
+player.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
+    // inspect events ...
+});
+
+const readable = createReadStream(PATH_TO_DEM_FILE);
+
+await player.load(readable);
+
+console.log(`Ticks: [ ${player.getFirstTick()} ] — [ ${player.getLastTick()} ]`);
+
+await player.seekToTick(player.getLastTick());
+
+const demo = player.getDemo();
+// ... inspect end-of-game state
+
+await player.dispose();
+```
+
+**Continuous playback:**
+
+```js
+import { createReadStream } from 'node:fs';
+
+import { PlaybackInterruptedError, Player } from 'deadem';
+
+const player = new Player();
+const readable = createReadStream(PATH_TO_DEM_FILE);
+
+await player.load(readable);
+
+// play() resolves when the replay ends, rejects with PlaybackInterruptedError on pause() or stop()
+const playback = player.play(2.0).catch((err) => {
+    if (!(err instanceof PlaybackInterruptedError)) {
+        throw err;
+    }
+});
+
+setTimeout(() => player.pause(), 3000);
+
+await playback;
+
+await player.dispose();
+```
+
 ## Compatibility
 
-Tested with Deadlock demo files from game build `6140` and below.
+Tested with Deadlock demo files from game build `6448` and below.
 
-* **Node.js:** v16.17.0 and above.
+* **Node.js:** v18.0.0 and above.
 * **Browsers:** All modern browsers, including the latest versions of Chrome, Firefox, Safari, Edge.
 
 ## Performance
@@ -407,4 +571,3 @@ This project was inspired by and built upon the work of the following repositori
 - [saul/demofile-net](https://github.com/saul/demofile-net) - CS2 / Deadlock replay parser in C#.
 
 Huge thanks to their authors and contributors!
-
