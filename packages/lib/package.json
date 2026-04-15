@@ -1,7 +1,7 @@
 {
   "name": "deadem",
   "version": "1.5.0",
-  "description": "JavaScript (Node.js & Browsers) parser for Deadlock (Valve Source 2 Engine) demo/replay files",
+  "description": "JavaScript (Node.js & Browsers) parser and player for Deadlock (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
@@ -19,6 +19,7 @@
     "demo",
     "demoparser",
     "parser",
+    "player",
     "replay"
   ],
   "type": "module",

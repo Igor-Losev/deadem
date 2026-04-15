@@ -175,6 +175,13 @@ Similarly, most [MessagePacket](./packages/lib/src/data/MessagePacket.js) types 
 >
 > You can retrieve detailed statistics about parsed and skipped packets by calling `parser.getStats()`.
 
+The [Demo](./packages/lib/src/data/Demo.js) object is updated tick by tick and exposes query methods for the current game state:
+
+- `demo.getEntities()` — all live entities.
+- `demo.getEntitiesByClassName(className)` — entities filtered by class name (e.g. `'CCitadelPlayerController'`).
+- `demo.getEntity(index)` — a single entity by index.
+- `demo.getClasses()` — all registered entity classes.
+
 ### Understanding Parser
 
 The parser accepts a readable stream and incrementally parses individual packets from it.
@@ -476,7 +483,12 @@ console.log(`Ticks: [ ${player.getFirstTick()} ] — [ ${player.getLastTick()} ]
 await player.seekToTick(player.getLastTick());
 
 const demo = player.getDemo();
-// ... inspect end-of-game state
+const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
+
+entities.forEach((entity) => {
+    const data = entity.unpackFlattened();
+    console.log(`${data.m_iszPlayerName}: ${data.m_iHeroDamage} hero damage`);
+});
 
 await player.dispose();
 ```
