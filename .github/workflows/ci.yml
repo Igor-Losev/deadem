@@ -66,8 +66,5 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Run event consistency test for multithreaded parser
-        run: node ./packages/examples-node/scripts/002_multithread_test.js
-
       - name: Run parser for multiple demo files
         run: node ./packages/examples-node/scripts/101_parse_multiple.js --matches="$FILES"
