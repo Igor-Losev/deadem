@@ -44,6 +44,7 @@
     "#broadcast/*.js": "./src/broadcast/*.js",
     "#core/*.js": "./src/core/*.js",
     "#data/*.js": "./src/data/*.js",
+    "#errors/*.js": "./src/errors/*.js",
     "#extractors/*.js": "./src/extractors/*.js",
     "#handlers/*.js": "./src/handlers/*.js",
     "#player/*.js": "./src/player/*.js",

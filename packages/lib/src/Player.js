@@ -3,6 +3,7 @@ import Logger from '#core/Logger.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 import DemoSource from '#data/enums/DemoSource.js';
+import PlaybackInterruptedError from '#errors/PlaybackInterruptedError.js';
 import PlayerState from '#data/enums/PlayerState.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
@@ -85,7 +86,7 @@ class Player {
      */
     async dispose() {
         if (this._state === PlayerState.PLAYING) {
-            this._stopPlayback();
+            this._stopPlayback(PlaybackInterruptedError.DISPOSED);
         }
 
         this._transition(PlayerState.DISPOSED);
@@ -102,7 +103,7 @@ class Player {
         this._source = null;
 
         if (this._playback.deferred !== null) {
-            this._playback.deferred.reject(new Error('Playback interrupted'));
+            this._playback.deferred.reject(new PlaybackInterruptedError(PlaybackInterruptedError.DISPOSED));
 
             this._playback.deferred = null;
         }
@@ -189,7 +190,7 @@ class Player {
             return;
         }
 
-        this._stopPlayback();
+        this._stopPlayback(PlaybackInterruptedError.PAUSED);
     }
 
     /**
@@ -259,7 +260,7 @@ class Player {
      */
     async seekToTick(tick) {
         if (this._state === PlayerState.PLAYING) {
-            this._stopPlayback();
+            this._stopPlayback(PlaybackInterruptedError.PAUSED);
         }
 
         this._transition(PlayerState.SEEKING);
@@ -290,7 +291,7 @@ class Player {
             return;
         }
 
-        this._stopPlayback();
+        this._stopPlayback(PlaybackInterruptedError.STOPPED);
 
         await this.seekToTick(this._ticks.first);
     }
@@ -403,10 +404,14 @@ class Player {
      *
      * @protected
      */
-    _stopPlayback() {
+    /**
+     * @protected
+     * @param {'paused'|'stopped'|'disposed'} reason
+     */
+    _stopPlayback(reason) {
         this._transition(PlayerState.LOADED);
 
-        this._playback.deferred.reject(new Error('Playback interrupted'));
+        this._playback.deferred.reject(new PlaybackInterruptedError(reason));
         this._playback.deferred = null;
     }
 
