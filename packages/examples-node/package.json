@@ -1,5 +1,5 @@
 {
-  "name": "deadem-examples-node",
+  "name": "@deadem/examples-node",
   "version": "2.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "deadem": "*",
-    "deadem-examples-common": "*"
+    "@deadem/engine": "*",
+    "@deadem/examples-common": "*"
   }
 }

@@ -2,9 +2,9 @@ import assert from 'node:assert';
 
 import { Logger, InterceptorStage, Parser, ParserConfiguration, Printer } from 'deadem';
 
-import DeferredPromise from 'deadem/src/data/DeferredPromise.js';
+import DeferredPromise from '@deadem/engine/src/data/DeferredPromise.js';
 
-import DemoFile from 'deadem-examples-common/data/DemoFile.js';
+import DemoFile from '@deadem/examples-common/data/DemoFile.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 

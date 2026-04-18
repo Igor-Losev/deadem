@@ -1,6 +1,6 @@
 import { Logger, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 
-import DemoFile from 'deadem-examples-common/data/DemoFile.js';
+import DemoFile from '@deadem/examples-common/data/DemoFile.js';
 
 import DemoProvider from '#root/providers/DemoProvider.js';
 

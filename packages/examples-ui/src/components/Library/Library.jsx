@@ -1,7 +1,7 @@
 import { Download as DownloadIcon } from '@mui/icons-material';
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 
-import DemoFile from 'deadem-examples-common/data/DemoFile.js';
+import DemoFile from '@deadem/examples-common/data/DemoFile.js';
 
 const FILES = DemoFile.getAll().reverse();
 

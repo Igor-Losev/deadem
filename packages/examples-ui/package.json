@@ -1,5 +1,5 @@
 {
-  "name": "deadem-examples-ui",
+  "name": "@deadem/examples-ui",
   "version": "2.0.0",
   "private": true,
   "type": "module",

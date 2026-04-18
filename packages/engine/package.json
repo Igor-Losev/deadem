@@ -1,0 +1,87 @@
+{
+  "name": "@deadem/engine",
+  "version": "2.0.0",
+  "author": "Igor Losev",
+  "license": "MIT",
+  "bugs": "https://github.com/Igor-Losev/deadem/issues",
+  "homepage": "https://deadem.com",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Igor-Losev/deadem.git"
+  },
+  "keywords": [
+    "deadem",
+    "deadlock",
+    "demo",
+    "demoparser",
+    "parser",
+    "player",
+    "replay"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint",
+    "prepublishOnly": "cp ./../../README.md ./README.md && cp ./../../LICENSE ./LICENSE",
+    "postpublish": "rm ./README.md && rm ./LICENSE",
+    "test": "vitest run"
+  },
+  "files": [
+    "index.js",
+    "proto/source/**",
+    "src/**"
+  ],
+  "imports": {
+    "#root/*.js": "./*.js",
+    "#src/*.js": "./src/*.js",
+    "#broadcast/*.js": "./src/broadcast/*.js",
+    "#core/*.js": "./src/core/*.js",
+    "#data/*.js": "./src/data/*.js",
+    "#errors/*.js": "./src/errors/*.js",
+    "#extractors/*.js": "./src/extractors/*.js",
+    "#handlers/*.js": "./src/handlers/*.js",
+    "#player/*.js": "./src/player/*.js",
+    "#providers/*.js": "./src/providers/*.js",
+    "#stream/*.js": "./src/stream/*.js",
+    "#trackers/*.js": "./src/trackers/*.js",
+    "#workers/*.js": "./src/workers/*.js",
+    "#broadcast/BroadcastReadStream.js": {
+      "node": "./src/broadcast/BroadcastReadStream.node.js",
+      "browser": "./src/broadcast/BroadcastReadStream.browser.js"
+    },
+    "#core/stream/Pipeline.js": {
+      "node": "./src/core/stream/Pipeline.node.js",
+      "browser": "./src/core/stream/Pipeline.browser.js"
+    },
+    "#core/stream/ReadableArray.js": {
+      "node": "./src/core/stream/ReadableArray.node.js",
+      "browser": "./src/core/stream/ReadableArray.browser.js"
+    },
+    "#core/stream/Transform.js": {
+      "node": "./src/core/stream/Transform.node.js",
+      "browser": "./src/core/stream/Transform.browser.js"
+    },
+    "#core/stream/WritableSink.js": {
+      "node": "./src/core/stream/WritableSink.node.js",
+      "browser": "./src/core/stream/WritableSink.browser.js"
+    },
+    "#trackers/MemoryTracker.js": {
+      "node": "./src/trackers/MemoryTracker.node.js",
+      "browser": "./src/trackers/MemoryTracker.browser.js"
+    },
+    "#workers/WorkerManager.js": {
+      "node": "./src/workers/WorkerManager.node.js",
+      "browser": "./src/workers/WorkerManager.browser.js"
+    }
+  },
+  "dependencies": {
+    "protobufjs": "^7.5.0",
+    "snappyjs": "^0.7.0"
+  },
+  "devDependencies": {
+    "protobufjs-cli": "^1.1.3"
+  }
+}

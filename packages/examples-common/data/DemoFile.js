@@ -1,6 +1,6 @@
-import { DemoSource } from 'deadem';
+import { DemoSource } from '@deadem/engine';
 
-import Assert from 'deadem/src/core/Assert.js';
+import Assert from '@deadem/engine/src/core/Assert.js';
 
 const EXTENSION_BIN = '.bin';
 const EXTENSION_DEM = '.dem';
