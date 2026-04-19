@@ -29,6 +29,7 @@ class FieldDecoderPicker {
         this._pool.set('CUtlString', retrieveString);
         this._pool.set('CUtlSymbolLarge', retrieveString);
 
+        this._pool.set('HeroID_t', retrieveVarInt32);
         this._pool.set('int8', retrieveVarInt32);
         this._pool.set('int16', retrieveVarInt32);
         this._pool.set('int32', retrieveVarInt32);
@@ -41,6 +42,7 @@ class FieldDecoderPicker {
 
         this._pool.set('uint64', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
         this._pool.set('CStrongHandle', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
+        this._pool.set('HeroFacetKey_t', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
         this._pool.set('ResourceId_t', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
 
         this._pool.set('Vector2D', f => fieldDecoderFactory.createVector(f.decoderInstructions, 2));

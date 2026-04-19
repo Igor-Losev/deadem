@@ -71,12 +71,12 @@ class StringTableContainer {
      * @param {CSVCMsg_CreateStringTable} createData
      */
     handleCreate(createData) {
-        const stringTableType = StringTableType.parseByName(createData.name);
+        let stringTableType = StringTableType.parseByName(createData.name);
 
         if (stringTableType === null) {
-            this._logger.warn(`Unable to identify table [ ${createData.name} ]`);
+            this._logger.warn(`Unknown StringTable [ ${createData.name} ], registering as raw`);
 
-            return;
+            stringTableType = StringTableType.register(createData.name);
         }
 
         const existing = this.getByName(stringTableType.name);
@@ -125,12 +125,12 @@ class StringTableContainer {
      */
     handleInstantiate(instantiateData) {
         instantiateData.tables.forEach((tableData) => {
-            const stringTableType = StringTableType.parseByName(tableData.tableName);
+            let stringTableType = StringTableType.parseByName(tableData.tableName);
 
             if (stringTableType === null) {
-                this._logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
+                this._logger.warn(`Unknown StringTable [ ${tableData.tableName} ], registering as raw`);
 
-                return;
+                stringTableType = StringTableType.register(tableData.tableName);
             }
 
             const existing = this.getByName(stringTableType.name);
@@ -164,16 +164,14 @@ class StringTableContainer {
         snapshotData.tables.forEach((tableData) => {
             const type = StringTableType.parseByName(tableData.tableName);
 
-            if (type === null) {
-                this._logger.warn(`Unable to identify table [ ${tableData.tableName} ]`);
+            let existingTable = null;
 
-                return;
+            if (type !== null) {
+                existingTable = this._registry.tableByName.get(type.name) || null;
             }
 
-            const existingTable = this._registry.tableByName.get(type.name) || null;
-
             if (existingTable === null) {
-                this._logger.warn(`Unable to find a table [ ${type.name} ]`);
+                this._logger.warn(`Unable to find a table [ ${tableData.tableName} ]`);
 
                 return;
             }

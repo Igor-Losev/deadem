@@ -1,0 +1,17 @@
+{
+  "name": "@deadem/examples-node-dota2",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "imports": {
+    "#root/*.js": "./*.js"
+  },
+  "dependencies": {
+    "@deadem/engine": "*",
+    "@deadem/examples-common": "*",
+    "dota2dem": "*"
+  }
+}

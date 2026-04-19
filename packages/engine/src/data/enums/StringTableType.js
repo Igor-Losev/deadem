@@ -10,13 +10,16 @@ class StringTableType {
      * @constructor
      * @param {String} code
      * @param {String} name
+     * @param {boolean} synthesized
      */
-    constructor(code, name) {
+    constructor(code, name, synthesized = false) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(typeof name === 'string' && name.length > 0);
+        Assert.isTrue(typeof synthesized === 'boolean');
 
         this._code = code;
         this._name = name;
+        this._synthesized = synthesized;
 
         registry.byCode.set(code, this);
         registry.byName.set(name, this);
@@ -40,6 +43,14 @@ class StringTableType {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    get synthesized() {
+        return this._synthesized;
+    }
+
+    /**
+     * @public
      * @static
      * @param {String} code
      * @returns {StringTableType|null}
@@ -56,6 +67,16 @@ class StringTableType {
      */
     static parseByName(name) {
         return registry.byName.get(name) || null;
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {String} name
+     * @returns {StringTableType}
+     */
+    static register(name) {
+        return new StringTableType(name.toUpperCase(), name, true);
     }
 
     /**

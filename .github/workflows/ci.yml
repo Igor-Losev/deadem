@@ -67,4 +67,4 @@ jobs:
         run: npm run test
 
       - name: Run parser for multiple demo files
-        run: node ./packages/examples-node/scripts/101_parse_multiple.js --matches="$FILES"
+        run: node ./packages/examples-node-deadlock/scripts/101_parse_multiple.js --matches="$FILES"

@@ -11,9 +11,9 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
-    "proto:json": "npm run proto:json --workspace=deadem",
+    "proto:json": "npm run proto:json --workspace=deadem && npm run proto:json --workspace=dota2dem",
     "release": "./release.sh",
-    "start": "npm run start --workspace=@deadem/examples-ui",
+    "start": "npm run start --workspace=@deadem/ui",
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {

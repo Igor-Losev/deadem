@@ -68,6 +68,7 @@ class Bootstrap {
         MessagePacketType.NET_SET_CON_VAR.proto = pp.NETWORK_BASE_TYPES.lookupType('CNETMsg_SetConVar');
         MessagePacketType.NET_SIGNON_STATE.proto = pp.NETWORK_BASE_TYPES.lookupType('CNETMsg_SignonState');
         MessagePacketType.NET_SPAWN_GROUP_LOAD.proto = pp.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_Load');
+        MessagePacketType.NET_SPAWN_GROUP_MANIFEST_UPDATE.proto = pp.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_ManifestUpdate');
         MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK.proto = pp.NET_MESSAGES.lookupType('CNETMsg_SpawnGroup_SetCreationTick');
 
         MessagePacketType.SVC_SERVER_INFO.proto = pp.NET_MESSAGES.lookupType('CSVCMsg_ServerInfo');
@@ -81,6 +82,8 @@ class Bootstrap {
         MessagePacketType.SVC_HLTV_STATUS.proto = pp.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus');
         MessagePacketType.SVC_USER_COMMANDS.proto = pp.NET_MESSAGES.lookupType('CSVCMsg_UserCommands');
 
+        MessagePacketType.USER_MESSAGE_VOICE_MASK.proto = pp.USER_MESSAGES.lookupType('CUserMessageVoiceMask');
+        MessagePacketType.USER_MESSAGE_SEND_AUDIO.proto = pp.USER_MESSAGES.lookupType('CUserMessageSendAudio');
         MessagePacketType.USER_MESSAGE_PARTICLE_MANAGER.proto = pp.USER_MESSAGES.lookupType('CUserMsg_ParticleManager');
         MessagePacketType.USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL.proto = pp.USER_MESSAGES.lookupType('CUserMessage_PlayResponseConditional');
 

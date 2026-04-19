@@ -87,6 +87,7 @@ class MessagePacketType {
     static get NET_SET_CON_VAR() { return netSetConVar; }
     static get NET_SIGNON_STATE() { return netSignonState; }
     static get NET_SPAWN_GROUP_LOAD() { return netSpawnGroupLoad; }
+    static get NET_SPAWN_GROUP_MANIFEST_UPDATE() { return netSpawnGroupManifestUpdate; }
     static get NET_SPAWN_GROUP_SET_CREATION_TICK() { return netSpawnGroupSetCreationTick; }
 
     static get SVC_SERVER_INFO() { return svcServerInfo; }
@@ -100,6 +101,8 @@ class MessagePacketType {
     static get SVC_HLTV_STATUS() { return svcHltvStatus; }
     static get SVC_USER_COMMANDS() { return svcUserCommands; }
 
+    static get USER_MESSAGE_VOICE_MASK() { return UMVoiceMask; }
+    static get USER_MESSAGE_SEND_AUDIO() { return UMSendAudio; }
     static get USER_MESSAGE_PARTICLE_MANAGER() { return UMParticleManager; }
     static get USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL() { return UMPlayResponseConditional; }
 
@@ -117,6 +120,7 @@ const netTick = new MessagePacketType('net_Tick', 4);
 const netSetConVar = new MessagePacketType('net_SetConVar', 6);
 const netSignonState = new MessagePacketType('net_SignonState', 7);
 const netSpawnGroupLoad = new MessagePacketType('net_SpawnGroup_Load', 8);
+const netSpawnGroupManifestUpdate = new MessagePacketType('net_SpawnGroup_ManifestUpdate', 9);
 const netSpawnGroupSetCreationTick = new MessagePacketType('net_SpawnGroup_SetCreationTick', 11);
 
 const svcServerInfo = new MessagePacketType('svc_ServerInfo', 40);
@@ -130,6 +134,8 @@ const svcPacketEntities = new MessagePacketType('svc_PacketEntities', 55);
 const svcHltvStatus = new MessagePacketType('svc_HLTVStatus', 62);
 const svcUserCommands = new MessagePacketType('svc_UserCmds', 76);
 
+const UMVoiceMask = new MessagePacketType('UM_VoiceMask', 128);
+const UMSendAudio = new MessagePacketType('UM_SendAudio', 130);
 const UMParticleManager = new MessagePacketType('UM_ParticleManager', 145);
 const UMPlayResponseConditional = new MessagePacketType('UM_PlayResponseConditional', 166);
 
