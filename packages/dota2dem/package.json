@@ -1,5 +1,5 @@
 {
-  "name": "dota2dem",
+  "name": "@deadem/dota2",
   "version": "0.1.0",
   "description": "JavaScript (Node.js & Browsers) parser and player for Dota 2 (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
@@ -28,8 +28,8 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "prepublishOnly": "cp ./../../README.md ./README.md && cp ./../../LICENSE ./LICENSE",
-    "postpublish": "rm ./README.md && rm ./LICENSE",
+    "prepublishOnly": "cp ./../../LICENSE ./LICENSE",
+    "postpublish": "rm ./LICENSE",
     "proto:json": "pbjs --path ./proto/source --path ./../engine/proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto ./../engine/proto/source/**/*.proto"
   },
   "files": [

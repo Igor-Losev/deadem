@@ -157,7 +157,7 @@ class Worker {
         const stringTables = [];
 
         request.payload.forEach((data) => {
-            const [typeId, sourceId, compressed, buffer] = data;
+            const [ typeId, sourceId, compressed, buffer ] = data;
 
             const demoPacketType = DemoPacketType.parseById(typeId);
             const demoSource = DemoSource.parseById(sourceId);

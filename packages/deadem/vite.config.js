@@ -12,8 +12,8 @@ const configuration = defineConfig((_) => {
             lib: {
                 entry: './index.js',
                 name: 'deadem',
-                fileName: () => 'deadem.min.js',
-                formats: [ 'umd' ]
+                fileName: (format) => format === 'es' ? 'deadem.esm.js' : 'deadem.min.js',
+                formats: [ 'umd', 'es' ]
             },
             emptyOutDir: true,
             sourcemap: true

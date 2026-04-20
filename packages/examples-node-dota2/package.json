@@ -12,6 +12,6 @@
   "dependencies": {
     "@deadem/engine": "*",
     "@deadem/examples-common": "*",
-    "dota2dem": "*"
+    "@deadem/dota2": "*"
   }
 }

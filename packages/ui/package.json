@@ -16,6 +16,7 @@
     "@mui/material": "^7.3.1",
     "@mui/x-tree-view": "^8.10.2",
     "buffer": "^6.0.3",
+    "@deadem/dota2": "*",
     "deadem": "*",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
