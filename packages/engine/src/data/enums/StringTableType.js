@@ -1,10 +1,5 @@
 import Assert from '#core/Assert.js';
 
-const registry = {
-    byCode: new Map(),
-    byName: new Map()
-};
-
 class StringTableType {
     /**
      * @constructor
@@ -20,9 +15,6 @@ class StringTableType {
         this._code = code;
         this._name = name;
         this._synthesized = synthesized;
-
-        registry.byCode.set(code, this);
-        registry.byName.set(name, this);
     }
 
     /**
@@ -50,169 +42,32 @@ class StringTableType {
     }
 
     /**
-     * @public
-     * @static
-     * @param {String} code
-     * @returns {StringTableType|null}
-     */
-    static parse(code) {
-        return registry.byCode.get(code) || null;
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {String} name
-     * @returns {StringTableType|null}
-     */
-    static parseByName(name) {
-        return registry.byName.get(name) || null;
-    }
-
-    /**
+     * Creates a runtime-synthesized type for a name not known at bootstrap time.
+     *
      * @public
      * @static
      * @param {String} name
      * @returns {StringTableType}
      */
-    static register(name) {
+    static synthesize(name) {
         return new StringTableType(name.toUpperCase(), name, true);
     }
 
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get ACTIVE_MODIFIERS() {
-        return activeModifiers;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get DECAL_PRE_CACHE() {
-        return decalPreCache;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get EFFECT_DISPATCH() {
-        return effectDispatch;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get ENTITY_NAMES() {
-        return entityNames;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get GENERIC_PRE_CACHE() {
-        return genericPreCache;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get INFO_PANEL() {
-        return infoPanel;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get INSTANCE_BASE_LINE() {
-        return instanceBaseLine;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get LIGHT_STYLES() {
-        return lightStyles;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get RESPONSE_KEYS() {
-        return responseKeys;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get SCENES() {
-        return scenes;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get SERVER_QUERY_INFO() {
-        return serverQueryInfo;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get USER_INFO() {
-        return userInfo;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get V_GUI_SCREEN() {
-        return vGuiScreen;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get ANIM_TASK_TYPES() {
-        return animTaskTypes;
-    }
-
-    /**
-     * @public
-     * @static
-     * @returns {StringTableType}
-     */
-    static get ANIM_ASSET_DATA() {
-        return animAssetData;
-    }
+    static get ACTIVE_MODIFIERS() { return activeModifiers; }
+    static get DECAL_PRE_CACHE() { return decalPreCache; }
+    static get EFFECT_DISPATCH() { return effectDispatch; }
+    static get ENTITY_NAMES() { return entityNames; }
+    static get GENERIC_PRE_CACHE() { return genericPreCache; }
+    static get INFO_PANEL() { return infoPanel; }
+    static get INSTANCE_BASE_LINE() { return instanceBaseLine; }
+    static get LIGHT_STYLES() { return lightStyles; }
+    static get RESPONSE_KEYS() { return responseKeys; }
+    static get SCENES() { return scenes; }
+    static get SERVER_QUERY_INFO() { return serverQueryInfo; }
+    static get USER_INFO() { return userInfo; }
+    static get V_GUI_SCREEN() { return vGuiScreen; }
+    static get ANIM_TASK_TYPES() { return animTaskTypes; }
+    static get ANIM_ASSET_DATA() { return animAssetData; }
 }
 
 const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');

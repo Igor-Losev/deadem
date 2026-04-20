@@ -1,10 +1,5 @@
 import Assert from '#core/Assert.js';
 
-const registry = {
-    byCode: new Map(),
-    byId: new Map()
-};
-
 class MessagePacketType {
     /**
      * @constructor
@@ -17,38 +12,6 @@ class MessagePacketType {
 
         this._code = code;
         this._id = id;
-        this._proto = null;
-
-        if (registry.byCode.has(code)) {
-            throw new Error(`MessagePacketType with code [ ${code} ] already exist`);
-        }
-
-        if (registry.byId.has(id)) {
-            throw new Error(`MessagePacketType with id [ ${id} ] already exist`);
-        }
-
-        registry.byCode.set(code, this);
-        registry.byId.set(id, this);
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {String} code
-     * @returns {MessagePacketType|null}
-     */
-    static parse(code) {
-        return registry.byCode.get(code) || null;
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {number} id
-     * @returns {MessagePacketType|null}
-     */
-    static parseById(id) {
-        return registry.byId.get(id) || null;
     }
 
     /**
@@ -65,22 +28,6 @@ class MessagePacketType {
      */
     get id() {
         return this._id;
-    }
-
-    /**
-     * @public
-     * @returns {protobuf.Type}
-     */
-    get proto() {
-        return this._proto;
-    }
-
-    /**
-     * @public
-     * @param {protobuf.Type} value
-     */
-    set proto(value) {
-        this._proto = value;
     }
 
     static get NET_TICK() { return netTick; }
