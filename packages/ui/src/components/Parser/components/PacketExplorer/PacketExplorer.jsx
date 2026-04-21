@@ -1,29 +1,50 @@
+import {
+  Close as CloseIcon,
+  ContentCopy as ContentCopyIcon,
+  InboxOutlined as InboxOutlinedIcon,
+  ManageSearch as ManageSearchIcon
+} from '@mui/icons-material';
 import { Box, Chip, IconButton, Modal, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from '@mui/material';
-import { Close as CloseIcon, ContentCopy as ContentCopyIcon, InboxOutlined as InboxOutlinedIcon, ManageSearch as ManageSearchIcon } from '@mui/icons-material';
 import { useCallback, useMemo, useState } from 'react';
 
 import EmptyState from './../EmptyState';
 
 import { COLORS, FONT_SIZE } from '../../theme';
-import { compare, HighlightedJson } from '../../utils';
+import { HighlightedJson, compare } from '../../utils';
 
 const COLUMNS = [
-  {
-    header: 'Sequence',
-    value: d => d.sequence,
-    selector: d => d.sequence
-  },
-  {
-    header: 'Tick',
-    value: d => d.tick,
-    selector: d => d.tick
-  },
-  {
-    header: 'Type',
-    value: d => d.type.code,
-    selector: d => d.type.code
-  }
+  { header: 'Sequence', value: (packet) => packet.sequence, selector: (packet) => packet.sequence },
+  { header: 'Tick', value: (packet) => packet.tick, selector: (packet) => packet.tick },
+  { header: 'Type', value: (packet) => packet.type.code, selector: (packet) => packet.type.code }
 ];
+
+function stringifyPacket(packet) {
+  let data;
+
+  if (packet.type.heavy) {
+    const hasMessages = Object.hasOwn(packet.data, 'messagePackets');
+    const hasStringTables = Object.hasOwn(packet.data, 'stringTables');
+
+    data = {
+      ...hasMessages && {
+        messagePackets: packet.data.messagePackets.map((message) => ({
+          type: message.type.code,
+          data: message.data
+        }))
+      },
+      ...hasStringTables && { stringTables: packet.data.stringTables }
+    };
+  } else {
+    data = packet.data;
+  }
+
+  return JSON.stringify({
+    sequence: packet.sequence,
+    tick: packet.tick,
+    type: packet.type.code,
+    data
+  }, null, 2);
+}
 
 export default function PacketExplorer({ history }) {
   const [packet, setPacket] = useState(null);
@@ -32,59 +53,23 @@ export default function PacketExplorer({ history }) {
   const [order, setOrder] = useState('desc');
 
   const sorted = useMemo(() => {
-    const column = COLUMNS.find(c => c.header === orderBy);
-    return [...history].sort((a, b) => {
-      const cmp = compare(column.value(a), column.value(b));
-      return order === 'asc' ? cmp : -cmp;
+    const column = COLUMNS.find((item) => item.header === orderBy);
+
+    return [...history].sort((left, right) => {
+      const comparison = compare(column.value(left), column.value(right));
+
+      return order === 'asc' ? comparison : -comparison;
     });
   }, [history, orderBy, order]);
 
-  const stringifiedPacket = useMemo(() => {
-    if (packet === null) {
-      return '';
-    }
-
-    let data;
-
-    if (packet.type.heavy) {
-      const hasMessages = packet.data.hasOwnProperty('messagePackets');
-      const hasStringTables = packet.data.hasOwnProperty('stringTables');
-
-      data = {
-        ...hasMessages
-          ? {
-            messagePackets: packet.data.messagePackets.map(message => ({
-              type: message.type.code,
-              data: message.data
-            }))
-          }
-          : {},
-        ...hasStringTables
-          ? {
-            stringTables: packet.data.stringTables
-          }
-          : {}
-      }
-    } else {
-      data = packet.data;
-    }
-
-    return JSON.stringify({
-      sequence: packet.sequence,
-      tick: packet.tick,
-      type: packet.type.code,
-      data
-    }, null, 2);
-  }, [packet]);
+  const stringifiedPacket = useMemo(() => packet === null ? '' : stringifyPacket(packet), [packet]);
 
   const handleDataClicked = (demoPacket) => {
     setPacket(demoPacket);
     setCopied(false);
   };
 
-  const handleModalClosed = () => {
-    setPacket(null);
-  };
+  const handleModalClosed = () => setPacket(null);
 
   const handleCopyClicked = useCallback(() => {
     navigator.clipboard.writeText(stringifiedPacket).then(() => {
@@ -95,18 +80,19 @@ export default function PacketExplorer({ history }) {
 
   const handleSort = (header) => {
     if (orderBy === header) {
-      setOrder(prev => prev === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(header);
-      setOrder('asc');
+      setOrder((previous) => previous === 'asc' ? 'desc' : 'asc');
+      return;
     }
+
+    setOrderBy(header);
+    setOrder('asc');
   };
 
   return (
     <Table size='small' stickyHeader>
       <TableHead>
         <TableRow>
-          {COLUMNS.map(column => (
+          {COLUMNS.map((column) => (
             <TableCell key={column.header} sx={{ fontWeight: 'bold' }}>
               <TableSortLabel
                 active={orderBy === column.header}
@@ -123,9 +109,9 @@ export default function PacketExplorer({ history }) {
 
       <TableBody>
         {sorted.length > 0 ? (
-          sorted.map(demoPacket => (
+          sorted.map((demoPacket) => (
             <TableRow key={demoPacket.sequence}>
-              {COLUMNS.map(column => (
+              {COLUMNS.map((column) => (
                 <TableCell key={column.header}>{column.selector(demoPacket)}</TableCell>
               ))}
               <TableCell align='center'>
@@ -142,45 +128,41 @@ export default function PacketExplorer({ history }) {
             </TableCell>
           </TableRow>
         )}
-
       </TableBody>
 
-      {packet &&
-        <Modal
-          open={true}
-          onClose={handleModalClosed}
-        >
+      {packet && (
+        <Modal open onClose={handleModalClosed}>
           <Box
             sx={{
               backgroundColor: '#151522',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               borderRadius: '8px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+              display: 'flex',
+              flexDirection: 'column',
               left: '50%',
               maxHeight: '80vh',
               maxWidth: '90vw',
-              width: 720,
-              minWidth: 320,
               minHeight: 200,
+              minWidth: 320,
               outline: 'none',
               overflow: 'hidden',
               position: 'absolute',
+              resize: 'both',
               top: '50%',
               transform: 'translate(-50%, -50%)',
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              resize: 'both',
+              width: 720
             }}
           >
             <Box
               sx={{
+                alignItems: 'center',
                 backgroundColor: '#1e1e2e',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'space-between',
                 px: 2,
-                py: 1,
+                py: 1
               }}
             >
               <Box display='flex' alignItems='center' gap={1}>
@@ -192,7 +174,7 @@ export default function PacketExplorer({ history }) {
                     color: COLORS.accent,
                     fontSize: FONT_SIZE.xs,
                     fontWeight: 600,
-                    height: 22,
+                    height: 22
                   }}
                 />
                 <Typography sx={{ color: 'text.secondary', fontSize: FONT_SIZE.xs }}>
@@ -201,32 +183,32 @@ export default function PacketExplorer({ history }) {
               </Box>
               <Box display='flex' alignItems='center' gap={0.25}>
                 <Tooltip title={copied ? 'Copied!' : 'Copy'} arrow>
-                  <IconButton onClick={handleCopyClicked} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
+                  <IconButton
+                    onClick={handleCopyClicked}
+                    size='small'
+                    sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}
+                  >
                     <ContentCopyIcon sx={{ fontSize: FONT_SIZE.lg }} />
                   </IconButton>
                 </Tooltip>
-                <IconButton onClick={handleModalClosed} size='small' sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}>
+                <IconButton
+                  onClick={handleModalClosed}
+                  size='small'
+                  sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}
+                >
                   <CloseIcon sx={{ fontSize: '0.95rem' }} />
                 </IconButton>
               </Box>
             </Box>
 
-            <Box
-              sx={{
-                backgroundColor: '#151522',
-                overflow: 'auto',
-                flex: 1,
-                px: 2.5,
-                py: 2,
-              }}
-            >
+            <Box sx={{ backgroundColor: '#151522', flex: 1, overflow: 'auto', px: 2.5, py: 2 }}>
               <pre
                 style={{
-                  margin: 0,
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
                   fontSize: FONT_SIZE.sm,
                   lineHeight: 1.65,
-                  fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
-                  color: 'rgba(255, 255, 255, 0.8)',
+                  margin: 0
                 }}
               >
                 {stringifiedPacket && <HighlightedJson json={stringifiedPacket} />}
@@ -234,7 +216,7 @@ export default function PacketExplorer({ history }) {
             </Box>
           </Box>
         </Modal>
-      }
+      )}
     </Table>
   );
 }

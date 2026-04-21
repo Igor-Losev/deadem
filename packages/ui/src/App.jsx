@@ -6,35 +6,33 @@ import Library from './components/Library/Library';
 import Navigation from './components/Navigation/Navigation';
 import Parser from './components/Parser/Parser';
 
+import { LIBRARIES, getLibraryByKey } from './libraries';
+
 import packageJson from './../package.json';
 
-const TABS = [
-  {
-    component: <Parser />,
-    key: 'parser',
-    props: {
-      icon: <TroubleshootIcon />,
-      label: 'Parser',
-      sx: { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } }
-    }
-  },
-  {
-    component: <Library />,
-    key: 'library',
-    props: {
-      icon: <FolderIcon />,
-      label: 'Library',
-      sx: { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } }
-    }
-  }
-];
+const TAB_SX = { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } };
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
+  const [libraryKey, setLibraryKey] = useState(LIBRARIES[0].key);
 
-  const handleTabChanged = (event, newValue) => {
-    setTabIndex(newValue);
-  };
+  const activeLibrary = getLibraryByKey(libraryKey);
+
+  const handleTabChanged = (event, newValue) => setTabIndex(newValue);
+  const handleLibraryChanged = (event) => setLibraryKey(event.target.value);
+
+  const tabs = [
+    {
+      key: 'parser',
+      component: <Parser library={activeLibrary} onLibraryChange={handleLibraryChanged} />,
+      props: { icon: <TroubleshootIcon />, label: 'Parser', sx: TAB_SX }
+    },
+    {
+      key: 'library',
+      component: <Library />,
+      props: { icon: <FolderIcon />, label: 'Library', sx: TAB_SX }
+    }
+  ];
 
   return (
     <Container
@@ -42,12 +40,13 @@ function App() {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
-        maxWidth: '1200px', width: '100%',
-        overflow: 'hidden'
-      }}>
-
+        maxWidth: '1200px',
+        overflow: 'hidden',
+        width: '100%'
+      }}
+    >
       <Box component='header' display='flex' alignItems='center' sx={{ minHeight: '56px' }}>
-        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-start' gap={1}>
+        <Box alignItems='center' display='flex' flex={1} gap={1} justifyContent='flex-start'>
           <TroubleshootIcon sx={{ color: '#b388ff', fontSize: '1.5rem' }} />
           <Typography
             component='h1'
@@ -64,10 +63,10 @@ function App() {
         </Box>
 
         <Box component='nav'>
-          <Navigation active={tabIndex} onChange={handleTabChanged} tabs={TABS} tabsProps={{ centered: true }} />
+          <Navigation active={tabIndex} onChange={handleTabChanged} tabs={tabs} tabsProps={{ centered: true }} />
         </Box>
 
-        <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end' gap={0.5}>
+        <Box alignItems='center' display='flex' flex={1} gap={1.5} justifyContent='flex-end'>
           <Typography color='text.secondary' fontSize='0.875rem'>v{packageJson.version}</Typography>
           <IconButton
             aria-label='GitHub repository'
@@ -81,8 +80,8 @@ function App() {
         </Box>
       </Box>
 
-      <Box component='main' display='flex' flexDirection='column' flex={1} minHeight={0}>
-        {TABS.map((tab, index) => (
+      <Box component='main' display='flex' flex={1} flexDirection='column' minHeight={0}>
+        {tabs.map((tab, index) => (
           <Box
             key={tab.key}
             sx={{

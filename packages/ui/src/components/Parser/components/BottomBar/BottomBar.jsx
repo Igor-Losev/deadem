@@ -1,54 +1,41 @@
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Pause as PauseIcon, PlayCircle as PlayCircleIcon, SkipNext as SkipNextIcon, SkipPrevious as SkipPreviousIcon } from '@mui/icons-material';
-import { Box, Button, Container, Divider, IconButton, Paper, Popover, Slider, TextField, Tooltip, Typography } from '@mui/material';
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Pause as PauseIcon,
+  PlayCircle as PlayCircleIcon,
+  SkipNext as SkipNextIcon,
+  SkipPrevious as SkipPreviousIcon
+} from '@mui/icons-material';
+import { Box, Button, Container, IconButton, Paper, Popover, Slider, TextField, Tooltip, Typography } from '@mui/material';
 import { memo, useCallback, useRef, useState } from 'react';
 
 import { FONT_SIZE } from '../../theme';
 
 const CONTROL_ICON_SIZE = '32px';
+const DEFAULT_TICKS = { current: -1, first: -1, last: -1 };
 
 function formatTime(seconds) {
-  if (seconds == null || !isFinite(seconds) || seconds < 0) return '—';
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, '0')}`;
+  if (seconds == null || !isFinite(seconds) || seconds < 0) {
+    return '—';
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remaining = Math.floor(seconds % 60);
+
+  return `${minutes}:${remaining.toString().padStart(2, '0')}`;
 }
 
-export default memo(function BottomBar({
-  demo,
-  game: { clockGame, clockTotal, paused, tick, state },
-  height,
-  onNextTick,
-  onPauseClick,
-  onPlayClick,
-  onPrevTick,
-  onRateChange,
-  onSeek,
-  onSeekToEnd,
-  onSeekToStart,
-  playing = false,
-  rate = 1,
-  seeking = false,
-  ticks = { current: -1, first: -1, last: -1 }
-}) {
-  const handlePauseClicked = () => {
-    if (typeof onPauseClick === 'function') {
-      onPauseClick();
-    }
-  }
-
-  const handlePlayClicked = () => {
-    if (typeof onPlayClick === 'function') {
-      onPlayClick();
-    }
-  }
-
+function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
+  const containerRef = useRef(null);
   const [dragValue, setDragValue] = useState(null);
+  const [hoverTick, setHoverTick] = useState(null);
+  const [hoverX, setHoverX] = useState(0);
 
-  const handleSeekChange = (event, value) => {
-    setDragValue(value);
-  };
+  const loaded = ticks.last > ticks.first;
 
-  const handleSeekCommitted = (event, value) => {
+  const handleChange = (event, value) => setDragValue(value);
+
+  const handleChangeCommitted = (event, value) => {
     setDragValue(null);
 
     if (typeof onSeek === 'function') {
@@ -56,14 +43,10 @@ export default memo(function BottomBar({
     }
   };
 
-  const sliderRef = useRef(null);
-  const [hoverTick, setHoverTick] = useState(null);
-  const [hoverX, setHoverX] = useState(0);
+  const handleMouseMove = useCallback((event) => {
+    const rail = containerRef.current?.querySelector('.MuiSlider-rail');
 
-  const handleSliderMouseMove = useCallback((event) => {
-    const rail = sliderRef.current?.querySelector('.MuiSlider-rail');
-
-    if (!rail || ticks.last <= ticks.first) {
+    if (!rail || !loaded) {
       return;
     }
 
@@ -79,63 +62,225 @@ export default memo(function BottomBar({
     const tick = Math.round(ticks.first + ratio * (ticks.last - ticks.first));
 
     setHoverTick(tick);
-    setHoverX(event.clientX - sliderRef.current.getBoundingClientRect().left);
-  }, [ticks]);
+    setHoverX(event.clientX - containerRef.current.getBoundingClientRect().left);
+  }, [ticks, loaded]);
 
-  const handleSliderMouseLeave = useCallback(() => {
-    setHoverTick(null);
-  }, []);
+  const handleMouseLeave = useCallback(() => setHoverTick(null), []);
 
-  const [seekAnchor, setSeekAnchor] = useState(null);
-  const [seekValue, setSeekValue] = useState('');
+  const sliderValue = dragValue ?? (loaded ? Math.max(ticks.current, ticks.first) : 0);
 
-  const handleSeekOpen = (event) => {
-    setSeekValue(String(ticks.current));
-    setSeekAnchor(event.currentTarget);
+  return (
+    <Box
+      ref={containerRef}
+      onMouseMove={loaded ? handleMouseMove : undefined}
+      onMouseLeave={loaded ? handleMouseLeave : undefined}
+      sx={{ position: 'relative', px: 2 }}
+    >
+      <Slider
+        disabled={disabled}
+        min={loaded ? ticks.first : 0}
+        max={loaded ? ticks.last : 1}
+        onChange={handleChange}
+        onChangeCommitted={handleChangeCommitted}
+        size='small'
+        value={sliderValue}
+        sx={{
+          borderRadius: 0,
+          cursor: loaded ? 'pointer' : 'default',
+          height: 3,
+          padding: '8px 0',
+          marginBottom: '-8px',
+          transition: 'height 0.15s',
+          '&:hover': { height: loaded ? 5 : 3 },
+          '& .MuiSlider-thumb': {
+            height: 0,
+            width: 0,
+            transition: 'height 0.15s, width 0.15s',
+            '&:hover, &.Mui-focusVisible, &.Mui-active': { boxShadow: 'none' }
+          },
+          '&:hover .MuiSlider-thumb': {
+            height: loaded ? 14 : 0,
+            width: loaded ? 14 : 0
+          },
+          '& .MuiSlider-track': { transition: 'none' },
+          '& .MuiSlider-rail': { opacity: 0.3 }
+        }}
+      />
+
+      {hoverTick !== null && (
+        <Box
+          sx={{
+            position: 'absolute',
+            left: hoverX,
+            top: -28,
+            transform: 'translateX(-50%)',
+            backgroundColor: 'grey.800',
+            borderRadius: '4px',
+            color: 'common.white',
+            fontSize: FONT_SIZE.sm,
+            fontVariantNumeric: 'tabular-nums',
+            lineHeight: 1,
+            padding: '4px 6px',
+            pointerEvents: 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {tickInterval !== null ? `${formatTime(hoverTick * tickInterval)} / ` : ''}{hoverTick}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+function TickJumper({ ticks, loaded, onSeek }) {
+  const [anchor, setAnchor] = useState(null);
+  const [value, setValue] = useState('');
+
+  const handleOpen = (event) => {
+    setValue(String(ticks.current));
+    setAnchor(event.currentTarget);
   };
 
-  const handleSeekClose = () => {
-    setSeekAnchor(null);
-  };
+  const handleClose = () => setAnchor(null);
 
-  const handleSeekApply = () => {
-    const tick = parseInt(seekValue, 10);
+  const handleApply = () => {
+    const tick = parseInt(value, 10);
 
     if (!isNaN(tick) && typeof onSeek === 'function') {
       onSeek(Math.max(ticks.first, Math.min(ticks.last, tick)));
     }
 
-    setSeekAnchor(null);
+    setAnchor(null);
   };
 
-  const labels = [
-    {
-      key: 'state',
-      value: state,
-      tooltip: 'Game State'
-    },
-    {
-      key: 'paused',
-      value: paused,
-      tooltip: 'Pause'
-    },
-    {
-      key: 'tick',
-      value: tick,
-      tooltip: 'Tick'
-    },
-    {
-      key: 'clockGame',
-      value: clockGame,
-      tooltip: 'In-Game Time'
-    },
-    {
-      key: 'clockTotal',
-      value: clockTotal,
-      tooltip: 'Total Time'
-    }
-  ];
+  return (
+    <>
+      <Typography
+        color='text.secondary'
+        fontSize={FONT_SIZE.lg}
+        onClick={loaded ? handleOpen : undefined}
+        sx={{
+          fontVariantNumeric: 'tabular-nums',
+          cursor: loaded ? 'pointer' : 'default',
+          borderBottom: loaded ? '1px dashed' : 'none',
+          borderColor: 'text.disabled'
+        }}
+      >
+        {loaded ? ticks.current : '—'}
+      </Typography>
+      <Typography color='text.secondary' fontSize={FONT_SIZE.lg} sx={{ fontVariantNumeric: 'tabular-nums' }}>
+        &nbsp;/ {loaded ? ticks.last : '—'}
+      </Typography>
 
+      <Popover
+        anchorEl={anchor}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={handleClose}
+        open={Boolean(anchor)}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Box display='flex' alignItems='center' gap={1} p={1}>
+          <TextField
+            autoFocus
+            size='small'
+            label='Tick'
+            value={value}
+            onChange={(event) => setValue(event.target.value.replace(/[^0-9-]/g, ''))}
+            onKeyDown={(event) => { if (event.key === 'Enter') { handleApply(); } }}
+            sx={{ width: 110 }}
+            inputProps={{ style: { fontVariantNumeric: 'tabular-nums', fontSize: FONT_SIZE.md } }}
+            InputLabelProps={{ style: { fontSize: FONT_SIZE.md } }}
+          />
+          <Button variant='contained' size='small' onClick={handleApply} sx={{ fontSize: FONT_SIZE.sm }}>
+            OK
+          </Button>
+        </Box>
+      </Popover>
+    </>
+  );
+}
+
+function Controls({
+  disabled,
+  loaded,
+  onNextTick,
+  onPauseClick,
+  onPlayClick,
+  onPrevTick,
+  onRateChange,
+  onSeekToEnd,
+  onSeekToStart,
+  playing,
+  rate,
+  seeking
+}) {
+  return (
+    <Box alignItems='center' display='flex' gap={0.5}>
+      <Tooltip arrow title='Skip to Start'>
+        <IconButton disabled={!loaded || seeking} onClick={onSeekToStart}>
+          <SkipPreviousIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip arrow title='Previous Tick'>
+        <IconButton disabled={disabled} onClick={onPrevTick}>
+          <ChevronLeftIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+        </IconButton>
+      </Tooltip>
+
+      {playing ? (
+        <Tooltip arrow title='Pause'>
+          <IconButton onClick={onPauseClick}>
+            <PauseIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip arrow title='Play'>
+          <IconButton disabled={disabled} onClick={onPlayClick}>
+            <PlayCircleIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+          </IconButton>
+        </Tooltip>
+      )}
+
+      <Tooltip arrow title='Next Tick'>
+        <IconButton disabled={disabled} onClick={onNextTick}>
+          <ChevronRightIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip arrow title='Skip to End'>
+        <IconButton disabled={!loaded || seeking} onClick={onSeekToEnd}>
+          <SkipNextIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip arrow title='Playback Speed'>
+        <IconButton disabled={!loaded || seeking} onClick={onRateChange}>
+          <Typography sx={{ fontSize: FONT_SIZE.md, fontWeight: 600, height: CONTROL_ICON_SIZE, lineHeight: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }}>
+            {rate}x
+          </Typography>
+        </IconButton>
+      </Tooltip>
+    </Box>
+  );
+}
+
+function BottomBar({
+  demo,
+  height,
+  onNextTick,
+  onPauseClick,
+  onPlayClick,
+  onPrevTick,
+  onRateChange,
+  onSeek,
+  onSeekToEnd,
+  onSeekToStart,
+  playing = false,
+  rate = 1,
+  seeking = false,
+  ticks = DEFAULT_TICKS
+}) {
   const loaded = ticks.last > ticks.first;
   const disabled = !loaded || playing || seeking;
   const tickInterval = demo?.server?.tickInterval ?? null;
@@ -154,73 +299,7 @@ export default memo(function BottomBar({
           flexDirection: 'column'
         }}
       >
-        <Box
-          ref={sliderRef}
-          onMouseMove={loaded ? handleSliderMouseMove : undefined}
-          onMouseLeave={loaded ? handleSliderMouseLeave : undefined}
-          sx={{ position: 'relative', px: 2 }}
-        >
-          <Slider
-            disabled={!loaded}
-            min={loaded ? ticks.first : 0}
-            max={loaded ? ticks.last : 1}
-            onChange={handleSeekChange}
-            onChangeCommitted={handleSeekCommitted}
-            size='small'
-            value={dragValue ?? (loaded ? (ticks.current >= ticks.first ? ticks.current : ticks.first) : 0)}
-            sx={{
-              borderRadius: 0,
-              cursor: loaded ? 'pointer' : 'default',
-              height: 3,
-              padding: '8px 0',
-              marginBottom: '-8px',
-              transition: 'height 0.15s',
-              '&:hover': {
-                height: loaded ? 5 : 3
-              },
-              '& .MuiSlider-thumb': {
-                height: 0,
-                width: 0,
-                transition: 'height 0.15s, width 0.15s',
-                '&:hover, &.Mui-focusVisible, &.Mui-active': {
-                  boxShadow: 'none'
-                }
-              },
-              '&:hover .MuiSlider-thumb': {
-                height: loaded ? 14 : 0,
-                width: loaded ? 14 : 0
-              },
-              '& .MuiSlider-track': {
-                transition: 'none'
-              },
-              '& .MuiSlider-rail': {
-                opacity: 0.3
-              }
-            }}
-          />
-
-          {hoverTick !== null && (
-            <Box
-              sx={{
-                position: 'absolute',
-                left: hoverX,
-                top: -28,
-                transform: 'translateX(-50%)',
-                backgroundColor: 'grey.800',
-                borderRadius: '4px',
-                color: 'common.white',
-                fontSize: FONT_SIZE.sm,
-                fontVariantNumeric: 'tabular-nums',
-                lineHeight: 1,
-                padding: '4px 6px',
-                pointerEvents: 'none',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {tickInterval !== null ? `${formatTime(hoverTick * tickInterval)} / ` : ''}{hoverTick}
-            </Box>
-          )}
-        </Box>
+        <SeekBar ticks={ticks} tickInterval={tickInterval} disabled={!loaded} onSeek={onSeek} />
 
         <Box
           sx={{
@@ -232,117 +311,25 @@ export default memo(function BottomBar({
           }}
         >
           <Box alignItems='baseline' display='flex' flex={1} justifyContent='flex-end' sx={{ mr: 1 }}>
-            <Typography
-              color='text.secondary'
-              fontSize={FONT_SIZE.lg}
-              onClick={loaded ? handleSeekOpen : undefined}
-              sx={{
-                fontVariantNumeric: 'tabular-nums',
-                cursor: loaded ? 'pointer' : 'default',
-                borderBottom: loaded ? '1px dashed' : 'none',
-                borderColor: 'text.disabled'
-              }}
-            >
-              {loaded ? ticks.current : '—'}
-            </Typography>
-            <Typography
-              color='text.secondary'
-              fontSize={FONT_SIZE.lg}
-              sx={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              &nbsp;/ {loaded ? ticks.last : '—'}
-            </Typography>
-
-            <Popover
-              open={Boolean(seekAnchor)}
-              anchorEl={seekAnchor}
-              onClose={handleSeekClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            >
-              <Box display='flex' alignItems='center' gap={1} p={1}>
-                <TextField
-                  autoFocus
-                  size='small'
-                  label='Tick'
-                  value={seekValue}
-                  onChange={(e) => setSeekValue(e.target.value.replace(/[^0-9-]/g, ''))}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleSeekApply(); }}
-                  sx={{ width: 110 }}
-                  inputProps={{ style: { fontVariantNumeric: 'tabular-nums', fontSize: FONT_SIZE.md } }}
-                  InputLabelProps={{ style: { fontSize: FONT_SIZE.md } }}
-                />
-                <Button variant='contained' size='small' onClick={handleSeekApply} sx={{ fontSize: FONT_SIZE.sm }}>
-                  OK
-                </Button>
-              </Box>
-            </Popover>
+            <TickJumper ticks={ticks} loaded={loaded} onSeek={onSeek} />
           </Box>
 
-          <Box alignItems='center' display='flex' gap={0.5}>
-            <Tooltip arrow title='Skip to Start'>
-              <IconButton disabled={!loaded || seeking} onClick={onSeekToStart}>
-                <SkipPreviousIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip arrow title='Previous Tick'>
-              <IconButton disabled={disabled} onClick={onPrevTick}>
-                <ChevronLeftIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-              </IconButton>
-            </Tooltip>
-
-            {!playing ? (
-              <Tooltip arrow title='Play'>
-                <IconButton disabled={disabled} onClick={handlePlayClicked}>
-                  <PlayCircleIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              <Tooltip arrow title='Pause'>
-                <IconButton onClick={handlePauseClicked}>
-                  <PauseIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-                </IconButton>
-              </Tooltip>
-            )}
-
-            <Tooltip arrow title='Next Tick'>
-              <IconButton disabled={disabled} onClick={onNextTick}>
-                <ChevronRightIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip arrow title='Skip to End'>
-              <IconButton disabled={!loaded || seeking} onClick={onSeekToEnd}>
-                <SkipNextIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
-              </IconButton>
-            </Tooltip>
-
-            <Tooltip arrow title='Playback Speed'>
-              <IconButton disabled={!loaded || seeking} onClick={onRateChange}>
-                <Typography sx={{ fontSize: FONT_SIZE.md, fontWeight: 600, height: CONTROL_ICON_SIZE, lineHeight: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }}>
-                  {rate}x
-                </Typography>
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <Controls
+            disabled={disabled}
+            loaded={loaded}
+            onNextTick={onNextTick}
+            onPauseClick={onPauseClick}
+            onPlayClick={onPlayClick}
+            onPrevTick={onPrevTick}
+            onRateChange={onRateChange}
+            onSeekToEnd={onSeekToEnd}
+            onSeekToStart={onSeekToStart}
+            playing={playing}
+            rate={rate}
+            seeking={seeking}
+          />
 
           <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end'>
-            {labels.map((label, index) => (
-              <Box key={label.key} display='flex' alignItems='center'>
-                <Tooltip title={label.tooltip} arrow>
-                  <Typography
-                    color='text.secondary'
-                    fontSize={FONT_SIZE.lg}
-                    marginX={1}
-                    sx={{ fontVariantNumeric: 'tabular-nums' }}
-                  >
-                    {label.value}
-                  </Typography>
-                </Tooltip>
-                <Divider orientation='vertical' flexItem sx={{ my: 2 }} />
-              </Box>
-            ))}
             <Tooltip title='Demo timeline (not in-game clock)' arrow>
               <Typography
                 color='text.primary'
@@ -361,4 +348,6 @@ export default memo(function BottomBar({
       </Box>
     </Container>
   );
-})
+}
+
+export default memo(BottomBar);

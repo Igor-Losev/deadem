@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 
 export default function Navigation({ active, onChange, tabs, tabsProps }) {
   return (
@@ -7,8 +7,8 @@ export default function Navigation({ active, onChange, tabs, tabsProps }) {
         {tabs.map((tab, index) => (
           <Tab
             aria-controls={`tabpanel-${index}`}
-            id={tab.key}
             iconPosition='start'
+            id={tab.key}
             key={tab.key}
             {...tab.props}
             value={index}
@@ -18,4 +18,3 @@ export default function Navigation({ active, onChange, tabs, tabsProps }) {
     </Box>
   );
 }
-

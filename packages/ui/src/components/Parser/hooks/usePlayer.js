@@ -1,69 +1,157 @@
-import { InterceptorStage, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { loadLibraryModule } from '../../../libraries';
+
 const MAX_HISTORY = 100;
+const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
+const CONTENT_TICK_INTERVAL = 256;
 
-function getInitialGameState() {
-  return { clockGame: null, clockTotal: null, state: null, paused: null, tick: null };
-}
+const INITIAL_TICKS = { current: -1, first: -1, last: -1 };
 
-export default function usePlayer() {
+export default function usePlayer(library) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
+  const loadRequestIdRef = useRef(0);
 
   const [ fileName, setFileName ] = useState(null);
-  const [ game, setGame ] = useState(getInitialGameState);
   const [ seeking, setSeeking ] = useState(false);
-
   const [ player, setPlayer ] = useState(null);
   const [ playing, setPlaying ] = useState(false);
   const [ rate, setRate ] = useState(1);
-  const [ ticks, setTicks ] = useState({ current: -1, first: -1, last: -1 });
-
+  const [ ticks, setTicks ] = useState(INITIAL_TICKS);
   const [ contentVersion, setContentVersion ] = useState(0);
-  const lastContentTickRef = useRef(-1);
 
+  const lastContentTickRef = useRef(-1);
   const playerRef = useRef(null);
   const playingRef = useRef(false);
   const seekingRef = useRef(false);
   const rateRef = useRef(1);
+  const runtimeErrorsRef = useRef({ PlaybackInterruptedError: null });
 
   playerRef.current = player;
   playingRef.current = playing;
   seekingRef.current = seeking;
   rateRef.current = rate;
 
-  const handleFileChanged = (event) => {
-    const file = event.target.files[0];
+  const resetPlayer = useCallback(() => {
+    const currentPlayer = playerRef.current;
 
-    if (player) {
-      player.dispose();
+    if (currentPlayer) {
+      currentPlayer.dispose();
     }
 
-    const parserConfiguration = new ParserConfiguration({
-      breakInterval: 100,
-      parserThreads: 0
-    });
-    const newPlayer = new Player(parserConfiguration);
-    newPlayer.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
-      const h = historyRef.current;
+    historyRef.current = [];
+    lastContentTickRef.current = -1;
+    runtimeErrorsRef.current = { PlaybackInterruptedError: null };
 
-      h.push(demoPacket);
+    setPlayer(null);
+    setFileName(null);
+    setPlaying(false);
+    setRate(1);
+    setSeeking(false);
+    setTicks(INITIAL_TICKS);
+    setContentVersion(0);
 
-      if (h.length > MAX_HISTORY) {
-        h.splice(0, h.length - MAX_HISTORY);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+  }, []);
+
+  const syncTicks = useCallback(() => {
+    const currentPlayer = playerRef.current;
+
+    if (currentPlayer === null) {
+      return;
+    }
+
+    setTicks({ current: currentPlayer.getCurrentTick(), first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
+    setContentVersion((version) => version + 1);
+  }, []);
+
+  const startPlayback = useCallback((playRate) => {
+    const currentPlayer = playerRef.current;
+
+    if (currentPlayer === null) {
+      return;
+    }
+
+    setPlaying(true);
+
+    currentPlayer.play(playRate).then(() => {
+      setPlaying(false);
+      syncTicks();
+    }).catch((err) => {
+      const { PlaybackInterruptedError } = runtimeErrorsRef.current;
+
+      if (!PlaybackInterruptedError || !(err instanceof PlaybackInterruptedError)) {
+        setPlaying(false);
+        console.error('Player: playback error', err);
       }
     });
+  }, [ syncTicks ]);
 
+  const handleFileChanged = async (event) => {
+    const file = event.target.files[0];
+    const requestId = loadRequestIdRef.current + 1;
+
+    loadRequestIdRef.current = requestId;
+
+    if (!file) {
+      return;
+    }
+
+    resetPlayer();
     setFileName(file.name);
-    setPlayer(newPlayer);
 
-    newPlayer.load(file.stream())
-      .then(() => {
-        setTicks({ current: newPlayer.getCurrentTick(), first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
-      })
-      .catch((err) => console.error('Player: load failed', err));
+    try {
+      const runtimeLibrary = await loadLibraryModule(library);
+
+      if (loadRequestIdRef.current !== requestId) {
+        return;
+      }
+
+      const { InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
+      const parserConfiguration = new ParserConfiguration({
+        breakInterval: 100,
+        parserThreads: 0
+      });
+      const newPlayer = new Player(parserConfiguration);
+
+      runtimeErrorsRef.current = { PlaybackInterruptedError };
+
+      newPlayer.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
+        const history = historyRef.current;
+
+        history.push(demoPacket);
+
+        if (history.length > MAX_HISTORY) {
+          history.splice(0, history.length - MAX_HISTORY);
+        }
+      });
+
+      setPlayer(newPlayer);
+
+      await newPlayer.load(file.stream());
+
+      if (loadRequestIdRef.current !== requestId) {
+        newPlayer.dispose();
+        return;
+      }
+
+      setTicks({ current: newPlayer.getCurrentTick(), first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
+    } catch (err) {
+      if (loadRequestIdRef.current === requestId) {
+        setFileName(null);
+      }
+
+      console.error('Player: load failed', err);
+    }
   };
+
+  useEffect(() => {
+    loadRequestIdRef.current += 1;
+    resetPlayer();
+  }, [ library.key, resetPlayer ]);
 
   useEffect(() => {
     if (!playing || !player) {
@@ -72,64 +160,32 @@ export default function usePlayer() {
 
     let rafId;
 
-    const tick = () => {
+    const pump = () => {
       const current = player.getCurrentTick();
 
-      setTicks((prev) => prev.current === current ? prev : { current, first: prev.first, last: prev.last });
+      setTicks((prev) => prev.current === current ? prev : { ...prev, current });
 
-      if (Math.abs(current - lastContentTickRef.current) >= 256) {
+      if (Math.abs(current - lastContentTickRef.current) >= CONTENT_TICK_INTERVAL) {
         lastContentTickRef.current = current;
-        setContentVersion((v) => v + 1);
+        setContentVersion((version) => version + 1);
       }
 
-      rafId = requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(pump);
     };
 
-    rafId = requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(pump);
 
     return () => cancelAnimationFrame(rafId);
   }, [ playing, player ]);
 
-  const syncTicks = useCallback(() => {
-    const p = playerRef.current;
-
-    if (p === null) {
-      return;
-    }
-
-    setTicks({ current: p.getCurrentTick(), first: p.getFirstTick(), last: p.getLastTick() });
-    setContentVersion((v) => v + 1);
-  }, []);
-
-  const startPlayback = useCallback((playRate) => {
-    const p = playerRef.current;
-
-    if (p === null) {
-      return;
-    }
-
-    setPlaying(true);
-
-    p.play(playRate).then(() => {
-      setPlaying(false);
-      syncTicks();
-    }).catch((err) => {
-      if (!(err instanceof PlaybackInterruptedError)) {
-        setPlaying(false);
-        console.error('Player: playback error', err);
-      }
-    });
-  }, [ syncTicks ]);
-
   const handlePauseClicked = useCallback(() => {
-    const p = playerRef.current;
+    const currentPlayer = playerRef.current;
 
-    if (!p || !playingRef.current) {
+    if (!currentPlayer || !playingRef.current) {
       return;
     }
 
-    p.pause();
-
+    currentPlayer.pause();
     setPlaying(false);
     syncTicks();
   }, [ syncTicks ]);
@@ -143,8 +199,7 @@ export default function usePlayer() {
   }, [ startPlayback ]);
 
   const handleRateChange = useCallback(() => {
-    const rates = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
-    const next = rates[(rates.indexOf(rateRef.current) + 1) % rates.length];
+    const next = PLAYBACK_RATES[(PLAYBACK_RATES.indexOf(rateRef.current) + 1) % PLAYBACK_RATES.length];
 
     setRate(next);
 
@@ -161,10 +216,10 @@ export default function usePlayer() {
 
     setSeeking(true);
 
-    playerRef.current.nextTick().then(() => {
-      syncTicks();
-    }).finally(() => setSeeking(false))
-      .catch((err) => console.error('Player: nextTick failed', err));
+    playerRef.current.nextTick()
+      .then(() => syncTicks())
+      .catch((err) => console.error('Player: nextTick failed', err))
+      .finally(() => setSeeking(false));
   }, [ syncTicks ]);
 
   const handlePrevTick = useCallback(() => {
@@ -175,16 +230,16 @@ export default function usePlayer() {
     historyRef.current = [];
     setSeeking(true);
 
-    playerRef.current.prevTick().then(() => {
-      syncTicks();
-    }).finally(() => setSeeking(false))
-      .catch((err) => console.error('Player: prevTick failed', err));
+    playerRef.current.prevTick()
+      .then(() => syncTicks())
+      .catch((err) => console.error('Player: prevTick failed', err))
+      .finally(() => setSeeking(false));
   }, [ syncTicks ]);
 
   const seekTo = useCallback((tick) => {
-    const p = playerRef.current;
+    const currentPlayer = playerRef.current;
 
-    if (p === null || seekingRef.current) {
+    if (currentPlayer === null || seekingRef.current || tick === undefined) {
       return;
     }
 
@@ -195,44 +250,29 @@ export default function usePlayer() {
     setSeeking(true);
     setTicks((prev) => ({ ...prev, current: tick }));
 
-    p.seekToTick(tick).then(() => {
+    currentPlayer.seekToTick(tick).then(() => {
       syncTicks();
 
       if (wasPlaying) {
         startPlayback(rateRef.current);
       }
-    }).finally(() => setSeeking(false))
-      .catch((err) => console.error('Player: seekToTick failed', err));
+    }).catch((err) => console.error('Player: seekToTick failed', err))
+      .finally(() => setSeeking(false));
   }, [ syncTicks, startPlayback ]);
 
   const handleSeekToStart = useCallback(() => seekTo(playerRef.current?.getFirstTick()), [ seekTo ]);
   const handleSeekToEnd = useCallback(() => seekTo(playerRef.current?.getLastTick()), [ seekTo ]);
   const handleSeek = useCallback((tick) => seekTo(tick), [ seekTo ]);
 
-  const handleResetClicked = () => {
-    if (player) {
-      player.dispose();
-    }
-
-    historyRef.current = [];
-
-    setPlayer(null);
-    setFileName(null);
-    setGame(getInitialGameState);
-    setPlaying(false);
-    setRate(1);
-    setSeeking(false);
-    setTicks({ current: -1, first: -1, last: -1 });
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
-    }
-  };
+  const handleResetClicked = useCallback(() => {
+    loadRequestIdRef.current += 1;
+    resetPlayer();
+  }, [ resetPlayer ]);
 
   const demo = player?.getDemo() ?? null;
 
   return {
-    player, demo, fileName, game, playing, rate, seeking, ticks, contentVersion,
+    demo, fileName, playing, rate, seeking, ticks, contentVersion,
     fileInputRef, historyRef,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,

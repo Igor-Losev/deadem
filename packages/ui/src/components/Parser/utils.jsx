@@ -2,27 +2,6 @@ import { COLORS } from './theme';
 
 const TOKEN_RE = /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g;
 
-export function highlightJson(json) {
-  return json.replace(
-    TOKEN_RE,
-    (match, str, colon, bool, num) => {
-      if (str && colon) {
-        return `<span style="color:${COLORS.jsonKey}">${str}</span>:`;
-      }
-      if (str) {
-        return `<span style="color:${COLORS.jsonString}">${str}</span>`;
-      }
-      if (bool) {
-        return `<span style="color:${COLORS.jsonBoolean}">${bool}</span>`;
-      }
-      if (num) {
-        return `<span style="color:${COLORS.jsonNumber}">${num}</span>`;
-      }
-      return match;
-    }
-  );
-}
-
 export function HighlightedJson({ json }) {
   const parts = [];
   let lastIndex = 0;
@@ -58,6 +37,9 @@ export function HighlightedJson({ json }) {
 }
 
 export function compare(a, b) {
-  if (typeof a === 'string') return a.localeCompare(b);
+  if (typeof a === 'string') {
+    return a.localeCompare(b);
+  }
+
   return a - b;
 }
