@@ -1,4 +1,4 @@
-import { InterceptorStage, ParserConfiguration, PlaybackInterruptedError, Player } from 'dota2dem';
+import { InterceptorStage, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MAX_HISTORY = 100;

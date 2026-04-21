@@ -62,7 +62,7 @@ class ParserSession {
         const interceptor = (demoPacket) => {
             if (demoPacket.sequence === bootstrap[bootstrap.length - 1].sequence) {
                 stringTableSnapshots.forEach((snapshot) => {
-                    this._engine.demo.stringTableContainer.handleSnapshot(snapshot);
+                    this._engine.getStringTableHandler().handleSnapshot(snapshot);
                 });
 
                 this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);

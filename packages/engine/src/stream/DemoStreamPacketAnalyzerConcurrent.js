@@ -12,10 +12,6 @@ import MessagePacketType from '#data/enums/MessagePacketType.js';
 
 import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
 
-import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
-import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
-import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
-
 import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js';
 import WorkerRequestSvcCreatedEntities from '#workers/requests/WorkerRequestSvcCreatedEntities.js';
 import WorkerRequestSvcUpdatedEntities from '#workers/requests/WorkerRequestSvcUpdatedEntities.js';
@@ -30,10 +26,6 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
         super();
 
         this._engine = engine;
-
-        this._demoEntityHandler = new DemoEntityHandler(engine.demo);
-        this._demoMessageHandler = new DemoMessageHandler(engine.demo);
-        this._demoPacketHandler = new DemoPacketHandler(engine.demo);
 
         this._queue = [ ];
     }
@@ -154,26 +146,26 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
 
         switch (demoPacket.type) {
             case DemoPacketType.DEM_SEND_TABLES:
-                this._demoPacketHandler.handleDemSendTables(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemSendTables(demoPacket);
 
                 await this._engine.workerManager.broadcast(new WorkerRequestDPacketSync(demoPacket));
 
                 break;
             case DemoPacketType.DEM_CLASS_INFO:
-                this._demoPacketHandler.handleDemClassInfo(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemClassInfo(demoPacket);
 
                 await this._engine.workerManager.broadcast(new WorkerRequestDPacketSync(demoPacket));
 
                 break;
             case DemoPacketType.DEM_STRING_TABLES:
-                this._demoPacketHandler.handleDemStringTables(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemStringTables(demoPacket);
 
                 break;
             case DemoPacketType.DEM_FULL_PACKET:
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET: {
                 if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
-                    this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
+                    this._engine.getDemoPacketHandler().handleDemFullPacketTables(demoPacket);
                 }
 
                 const messagePackets = demoPacket.data.messagePackets;
@@ -185,19 +177,19 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
 
                     switch (messagePacket.type) {
                         case MessagePacketType.SVC_SERVER_INFO:
-                            this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+                            this._engine.getDemoMessageHandler().handleSvcServerInfo(messagePacket);
 
                             break;
                         case MessagePacketType.SVC_CREATE_STRING_TABLE:
-                            this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+                            this._engine.getDemoMessageHandler().handleSvcCreateStringTable(messagePacket);
 
                             break;
                         case MessagePacketType.SVC_UPDATE_STRING_TABLE:
-                            this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+                            this._engine.getDemoMessageHandler().handleSvcUpdateStringTable(messagePacket);
 
                             break;
                         case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
-                            this._demoMessageHandler.handleSvcClearAllStringTables();
+                            this._engine.getDemoMessageHandler().handleSvcClearAllStringTables();
 
                             break;
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
@@ -227,7 +219,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
 
                             this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
-                            this._demoEntityHandler.handleEntityEvents(events);
+                            this._engine.getDemoEntityHandler().handleEntityEvents(events);
 
                             this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
@@ -280,7 +272,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
     _getEntityEvents(demoPacket, messagePacket, partial) {
         if (partial.length === 0) {
             return {
-                events: this._demoMessageHandler.handleSvcPacketEntities(messagePacket),
+                events: this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket),
                 lastIndex: 0
             };
         }
@@ -311,7 +303,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
 
         if (i < 0) {
             return {
-                events: this._demoMessageHandler.handleSvcPacketEntities(messagePacket),
+                events: this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket),
                 lastIndex: 0
             };
         }
@@ -321,7 +313,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
         return {
             events: [
                 ...events,
-                ...this._demoMessageHandler.handleSvcPacketEntities(messagePacket, last.bitPointer, i + 1, last.entityIndex)
+                ...this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket, last.bitPointer, i + 1, last.entityIndex)
             ],
             lastIndex: i
         };

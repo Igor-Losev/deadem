@@ -17,10 +17,11 @@ class WorkerRequestDPacketSync extends WorkerRequest {
      * @public
      * @static
      * @param {DemoPacketObject} raw
+     * @param {SchemaRegistry} registry
      * @returns {WorkerRequestDPacketSync}
      */
-    static deserialize(raw) {
-        return new WorkerRequestDPacketSync(DemoPacket.fromObject(raw));
+    static deserialize(raw, registry) {
+        return new WorkerRequestDPacketSync(DemoPacket.fromObject(raw, registry));
     }
 
     /**

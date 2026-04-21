@@ -12,15 +12,25 @@ import EntityOperation from '#data/enums/EntityOperation.js';
 
 import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
 
+import StringTableHandler from '#handlers/StringTableHandler.js';
+
+import SchemaRegistry from '#src/SchemaRegistry.js';
+
 class DemoMessageHandler {
     /**
      * @constructor
+     * @param {SchemaRegistry} registry
      * @param {Demo} demo
+     * @param {StringTableHandler} stringTableHandler
      */
-    constructor(demo) {
+    constructor(registry, demo, stringTableHandler) {
+        Assert.isTrue(registry instanceof SchemaRegistry);
         Assert.isTrue(demo instanceof Demo);
+        Assert.isTrue(stringTableHandler instanceof StringTableHandler);
 
+        this._registry = registry;
         this._demo = demo;
+        this._stringTableHandler = stringTableHandler;
     }
 
     /**
@@ -44,7 +54,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcCreateStringTable(messagePacket) {
-        this._demo.stringTableContainer.handleCreate(messagePacket.data);
+        this._stringTableHandler.handleCreate(messagePacket.data);
     }
 
     /**
@@ -54,7 +64,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcUpdateStringTable(messagePacket) {
-        this._demo.stringTableContainer.handleUpdate(messagePacket.data);
+        this._stringTableHandler.handleUpdate(messagePacket.data);
     }
 
     /**
@@ -64,7 +74,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcClearAllStringTables() {
-        this._demo.stringTableContainer.handleClear();
+        this._stringTableHandler.handleClear();
     }
 
     /**

@@ -9,10 +9,8 @@ function createMockEngine() {
     const interceptors = [];
 
     return {
-        demo: {
-            stringTableContainer: {
-                handleSnapshot: vi.fn()
-            }
+        stringTableHandler: {
+            handleSnapshot: vi.fn()
         },
         abort: vi.fn(),
         parse: vi.fn(async () => {}),

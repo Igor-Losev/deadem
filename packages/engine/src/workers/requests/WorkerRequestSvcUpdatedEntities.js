@@ -22,10 +22,11 @@ class WorkerRequestSvcUpdatedEntities extends WorkerRequest {
      * @public
      * @static
      * @param {MessagePacketObject} raw
+     * @param {SchemaRegistry} registry
      * @returns {WorkerRequestSvcUpdatedEntities}
      */
-    static deserialize(raw) {
-        return new WorkerRequestSvcUpdatedEntities(MessagePacket.fromObject(raw));
+    static deserialize(raw, registry) {
+        return new WorkerRequestSvcUpdatedEntities(MessagePacket.fromObject(raw, registry));
     }
 
     /**

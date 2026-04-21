@@ -10,6 +10,11 @@ import DemoSource from '#data/enums/DemoSource.js';
 import InterceptorStage from '#data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
+import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
+import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
+import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
+import StringTableHandler from '#handlers/StringTableHandler.js';
+
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from '#stream/DemoStreamEventLoopBreaker.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
@@ -30,23 +35,37 @@ import WorkerRequestBootstrap from '#workers/requests/WorkerRequestBootstrap.js'
 import WorkerRequestDemoClear from '#workers/requests/WorkerRequestDemoClear.js';
 import WorkerManager from '#workers/WorkerManager.js';
 
-import Bootstrap from './Bootstrap.js';
+import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
+import SchemaRegistry from './SchemaRegistry.js';
 
 class ParserEngine {
     /**
      * @public
+     * @param {SchemaRegistry} registry
      * @param {ParserConfiguration} configuration
      * @param {Logger} logger
      */
-    constructor(configuration, logger) {
+    constructor(registry, configuration, logger) {
+        Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        this._registry = registry;
         this._configuration = configuration;
         this._logger = logger;
 
-        this._demo = new Demo(logger);
+        this._codec = new PacketCodec(registry);
+        this._demo = new Demo();
+
+        const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
+
+        this._handlers = {
+            demoEntity: new DemoEntityHandler(this._demo),
+            demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler),
+            demoPacket: new DemoPacketHandler(registry, this._demo, stringTableHandler),
+            stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
+        };
 
         if (configuration.parserThreads === 0) {
             this._workerManager = null;
@@ -58,7 +77,7 @@ class ParserEngine {
 
         this._trackers = {
             memory: new MemoryTracker(),
-            packet: new PacketTracker(),
+            packet: new PacketTracker(registry),
             performance: new PerformanceTracker()
         };
 
@@ -71,6 +90,14 @@ class ParserEngine {
 
         this._paused = false;
         this._pausePromise = null;
+    }
+
+    /**
+     * @public
+     * @returns {PacketCodec}
+     */
+    get codec() {
+        return this._codec;
     }
 
     /**
@@ -131,12 +158,20 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {SchemaRegistry}
+     */
+    get registry() {
+        return this._registry;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     get started() {
         return this._started;
     }
-
+ 
     /**
      * @public
      * @returns {WorkerManager|null}
@@ -188,6 +223,30 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {DemoEntityHandler}
+     */
+    getDemoEntityHandler() {
+        return this._handlers.demoEntity;
+    }
+
+    /**
+     * @public
+     * @returns {DemoMessageHandler}
+     */
+    getDemoMessageHandler() {
+        return this._handlers.demoMessage;
+    }
+
+    /**
+     * @public
+     * @returns {DemoPacketHandler}
+     */
+    getDemoPacketHandler() {
+        return this._handlers.demoPacket;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     getIsMultiThreaded() {
@@ -204,14 +263,6 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {function(number): boolean}
-     */
-    getMessagePacketFilter() {
-        return this._configuration.getIsMessagePacketTypeAllowed.bind(this._configuration);
-    }
-
-    /**
-     * @public
      * @returns {PacketTracker}
      */
     getPacketTracker() {
@@ -224,6 +275,14 @@ class ParserEngine {
      */
     getPerformanceTracker() {
         return this._trackers.performance;
+    }
+
+    /**
+     * @public
+     * @returns {StringTableHandler}
+     */
+    getStringTableHandler() {
+        return this._handlers.stringTable;
     }
 
     /**
@@ -322,6 +381,7 @@ class ParserEngine {
         await this._prepareRun();
 
         const chain = [];
+        const messagePacketFilter = this._configuration.getIsMessagePacketTypeAllowed.bind(this._configuration);
 
         if (objectMode) {
             chain.push(new DemoStreamPacketResequencer(this));
@@ -337,14 +397,14 @@ class ParserEngine {
         if (this.getIsMultiThreaded()) {
             chain.push(
                 new DemoStreamPacketBatcher(this, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
-                new DemoStreamPacketParserConcurrent(this),
+                new DemoStreamPacketParserConcurrent(this, messagePacketFilter),
                 new DemoStreamPacketCoordinator(this),
                 new DemoStreamPacketPrioritizer(this),
                 new DemoStreamPacketAnalyzerConcurrent(this)
             );
         } else {
             chain.push(
-                new DemoStreamPacketParser(this),
+                new DemoStreamPacketParser(this, messagePacketFilter),
                 new DemoStreamPacketPrioritizer(this),
                 new DemoStreamPacketAnalyzer(this)
             );
@@ -498,7 +558,9 @@ class ParserEngine {
 
         if (this._workerManager !== null) {
             if (!this._workersBootstrapped) {
-                await this._workerManager.broadcast(new WorkerRequestBootstrap(Bootstrap.protoProvider.schema));
+                const snapshot = this._registry.export();
+
+                await this._workerManager.broadcast(new WorkerRequestBootstrap(snapshot));
 
                 this._workersBootstrapped = true;
             }
@@ -563,4 +625,3 @@ class ParserEngine {
 }
 
 export default ParserEngine;
-

@@ -10,28 +10,27 @@ import FieldDefinition from '#data/fields/FieldDefinition.js';
 import Serializer from '#data/fields/Serializer.js';
 import SerializerKey from '#data/fields/SerializerKey.js';
 
-let CSVCMsg_FlattenedSerializer;
+import StringTableHandler from '#handlers/StringTableHandler.js';
+
+import SchemaRegistry from '#src/SchemaRegistry.js';
 
 class DemoPacketHandler {
     /**
      * @constructor
+     * @param {SchemaRegistry} registry
      * @param {Demo} demo
+     * @param {StringTableHandler} stringTableHandler
      */
-    constructor(demo) {
+    constructor(registry, demo, stringTableHandler) {
+        Assert.isTrue(registry instanceof SchemaRegistry);
         Assert.isTrue(demo instanceof Demo);
+        Assert.isTrue(stringTableHandler instanceof StringTableHandler);
 
+        this._registry = registry;
         this._demo = demo;
+        this._stringTableHandler = stringTableHandler;
 
         this._instructionsFactory = new FieldDecoderInstructionsFactory();
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {protobuf.Type} value
-     */
-    static set flattenedSerializer(value) {
-        CSVCMsg_FlattenedSerializer = value;
     }
 
     /**
@@ -48,7 +47,7 @@ class DemoPacketHandler {
         const size = bitBuffer.readUVarInt32();
         const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
 
-        const decoded = CSVCMsg_FlattenedSerializer.decode(payload);
+        const decoded = this._registry.getSendTablesSerializerDecoder().decode(payload);
 
         const fields = new Map();
         const symbols = decoded.symbols;
@@ -176,7 +175,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemStringTables(demoPacket) {
-        this._demo.stringTableContainer.handleInstantiate(demoPacket.data);
+        this._stringTableHandler.handleInstantiate(demoPacket.data);
     }
 
     /**
@@ -186,7 +185,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemFullPacketTables(demoPacket) {
-        this._demo.stringTableContainer.handleSnapshot(demoPacket.data.stringTables);
+        this._stringTableHandler.handleSnapshot(demoPacket.data.stringTables);
     }
 }
 

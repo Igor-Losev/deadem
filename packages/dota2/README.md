@@ -97,10 +97,9 @@ If no local demo file is found, the scripts will automatically download the requ
 
 #### Parsing
 
-| №                                                                                                                           | Description                                 | Commands                                                                   |
-| --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------- |
-| [100](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js)                    | Parse a single replay file                  | `node ./packages/examples-node-dota2/scripts/100_parse.js`                 |
-| [101](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_selective.js)          | Parse with selective packet filtering       | `node ./packages/examples-node-dota2/scripts/101_parse_selective.js`       |
+| №                                                                                                                           | Description                | Commands                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------- | -------------------------- | -------------------------------------------------------------------------- |
+| [100](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js)                    | Parse a single replay file | `node ./packages/examples-node-dota2/scripts/100_parse.js`                 |
 
 ## Overview
 

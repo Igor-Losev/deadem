@@ -1,9 +1,6 @@
 import Transform from '#core/stream/Transform.js';
 
 import DemoPacket from '#data/DemoPacket.js';
-import MessagePacket from '#data/MessagePacket.js';
-
-import DemoPacketType from '#data/enums/DemoPacketType.js';
 
 import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js';
 
@@ -22,8 +19,9 @@ class DemoStreamPacketParserConcurrent extends Transform {
      * @constructor
      * @public
      * @param {ParserEngine} engine
+     * @param {function(number): boolean} messagePacketFilter
      */
-    constructor(engine) {
+    constructor(engine, messagePacketFilter) {
         super();
 
         this._engine = engine;
@@ -33,7 +31,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
             requests: 0
         };
 
-        this._messagePacketFilter = engine.getMessagePacketFilter();
+        this._messagePacketFilter = messagePacketFilter;
         this._pendingRequests = [ ];
     }
 
@@ -60,7 +58,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
     async _handle(batch) {
         this._counts.batches += 1;
 
-        const getIsHeavy = demoPacketRaw => DemoPacketType.parseById(demoPacketRaw.getTypeId())?.heavy;
+        const getIsHeavy = demoPacketRaw => this._engine.codec.getDemoType(demoPacketRaw)?.heavy;
         const getIsOther = demoPacketRaw => !getIsHeavy(demoPacketRaw);
 
         const heavy = batch.filter(getIsHeavy);
@@ -68,7 +66,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
 
         if (other.length > 0) {
             other.forEach((demoPacketRaw) => {
-                const demoPacket = DemoPacket.parse(demoPacketRaw, this._messagePacketFilter);
+                const demoPacket = this._engine.codec.parseDemoPacket(demoPacketRaw, this._messagePacketFilter);
 
                 if (demoPacket === null) {
                     this._engine.getPacketTracker().handleDemoPacketRaw(demoPacketRaw);
@@ -130,7 +128,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
                             return;
                         }
 
-                        const messagePacket = MessagePacket.parse(messagePacketRaw);
+                        const messagePacket = this._engine.codec.parseMessagePacket(messagePacketRaw);
 
                         if (messagePacket === null) {
                             this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
@@ -139,7 +137,7 @@ class DemoStreamPacketParserConcurrent extends Transform {
                         }
                     });
 
-                    const demoPacketType = DemoPacketType.parseById(demoPacketRaw.getTypeId());
+                    const demoPacketType = this._engine.codec.getDemoType(demoPacketRaw);
                     const demoTick = demoPacketRaw.tick.value;
 
                     const demoPacket = new DemoPacket(demoPacketRaw.sequence, demoPacketType, demoTick, createDemoPacketData(messagePackets, stringTables));
@@ -178,4 +176,3 @@ function createDemoPacketData(messagePackets, stringTables = null) {
 }
 
 export default DemoStreamPacketParserConcurrent;
-

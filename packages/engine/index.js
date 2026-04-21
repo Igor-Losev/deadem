@@ -1,5 +1,4 @@
-export { default as Bootstrap } from './src/Bootstrap.js';
-
+export { default as Bootstrap } from './src/bootstrap/Bootstrap.js';
 export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastGateway } from './src/broadcast/BroadcastGateway.js';
 export { default as DeferredPromise } from './src/data/DeferredPromise.js';
@@ -16,5 +15,5 @@ export { default as Player } from './src/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/Printer.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
+export { default as SchemaRegistry } from './src/SchemaRegistry.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
-

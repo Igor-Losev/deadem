@@ -1,6 +1,6 @@
 {
   "name": "@deadem/dota2",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "JavaScript (Node.js & Browsers) parser and player for Dota 2 (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
@@ -40,6 +40,7 @@
   ],
   "imports": {
     "#src/*.js": "./src/*.js",
+    "#bootstrap/*.js": "./src/bootstrap/*.js",
     "#data/*.js": "./src/data/*.js",
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",

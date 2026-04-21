@@ -1,16 +1,20 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import Player from '#src/Player.js';
+import ProtoProvider from '#providers/ProtoProvider.js';
+import SchemaRegistry from '#src/SchemaRegistry.js';
 
 import PlaybackInterruptedError from '#errors/PlaybackInterruptedError.js';
 import PlayerState from '#data/enums/PlayerState.js';
+
+const registry = new SchemaRegistry(new ProtoProvider({}));
 
 /**
  * Creates a loaded Player with mocked internals.
  * Simulates 3 ticks (100, 200, 300) with 1 packet each, at positions 0, 1, 2.
  */
 function createLoadedPlayer() {
-    const player = new Player();
+    const player = new Player(registry);
 
     player._engine = {
         demo: { server: { tickInterval: 0.015625 } },

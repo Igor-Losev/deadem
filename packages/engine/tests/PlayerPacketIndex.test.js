@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 
+import PacketCodec from '#src/PacketCodec.js';
 import PlayerPacketIndex from '#src/PlayerPacketIndex.js';
 
 /**
@@ -9,16 +10,26 @@ import PlayerPacketIndex from '#src/PlayerPacketIndex.js';
  *
  * @param {number} tick
  * @param {number} [typeId=7] - DEM_Packet by default.
- * @param {boolean} [initial=false]
  */
-function createPacket(tick, typeId = DemoPacketType.DEM_PACKET.id, initial = false, bootstrap = false) {
+function createPacket(tick, typeId = DemoPacketType.DEM_PACKET.id) {
     return {
         tick: { value: tick },
-        getTypeId: () => typeId,
-        getIsBootstrap: () => bootstrap,
-        getIsInitial: () => initial,
-        decode: () => null
+        getTypeId: () => typeId
     };
+}
+
+/**
+ * Creates a codec stub that returns predetermined answers for each packet.
+ *
+ * @param {Map<object, {isBootstrap?: boolean, decoded?: *}>} answers
+ */
+function createCodec(answers = new Map()) {
+    const stub = Object.create(PacketCodec.prototype);
+
+    stub.getIsBootstrap = packet => answers.get(packet)?.isBootstrap === true;
+    stub.decodeRaw = packet => answers.get(packet)?.decoded ?? null;
+
+    return stub;
 }
 
 /**
@@ -26,7 +37,7 @@ function createPacket(tick, typeId = DemoPacketType.DEM_PACKET.id, initial = fal
  * Each tick produces one DEM_Packet (typeId=7).
  */
 function createIndex(ticks) {
-    return new PlayerPacketIndex(ticks.map(t => createPacket(t)));
+    return new PlayerPacketIndex(createCodec(), ticks.map(t => createPacket(t)));
 }
 
 describe('PlayerPacketIndex', () => {
@@ -147,16 +158,17 @@ describe('PlayerPacketIndex', () => {
     describe('getPacketsForTick', () => {
         test('It should return packets for a given tick', () => {
             const packets = [
-                createPacket(100),
+                createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
                 createPacket(200),
                 createPacket(200),
                 createPacket(300)
             ];
 
-            packets[0].getTypeId = () => DemoPacketType.DEM_FULL_PACKET.id;
-            packets[0].decode = () => ({ stringTable: 'snapshot0' });
+            const stub = createCodec(new Map([
+                [ packets[0], { decoded: { stringTable: 'snapshot0' } } ]
+            ]));
 
-            const index = new PlayerPacketIndex(packets);
+            const index = new PlayerPacketIndex(stub, packets);
 
             const result = index.getPacketsForTick(200);
 

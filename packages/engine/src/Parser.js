@@ -8,11 +8,12 @@ import ParserEngine from './ParserEngine.js';
 class Parser {
     /**
      * @constructor
+     * @param {SchemaRegistry} registry
      * @param {ParserConfiguration=} configuration
      * @param {Logger=} logger
      */
-    constructor(configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
-        this._engine = new ParserEngine(configuration, logger);
+    constructor(registry, configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
+        this._engine = new ParserEngine(registry, configuration, logger);
     }
 
     /**

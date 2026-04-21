@@ -5,6 +5,9 @@ import stylistic from '@stylistic/eslint-plugin';
 
 export default defineConfig([
     {
+        ignores: [ 'dist/**' ]
+    },
+    {
         files: [ '**/*.js' ],
         extends: [ 'js/recommended' ],
         languageOptions: {

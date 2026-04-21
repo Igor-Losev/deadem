@@ -1,214 +1,114 @@
 import Assert from '#core/Assert.js';
 import EventEmitter from '#core/EventEmitter.js';
-import Logger from '#core/Logger.js';
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import StringTableEvent from '#data/enums/StringTableEvent.js';
-import StringTableType from '#data/enums/StringTableType.js';
-
-import StringTableEntryExtractor from '#extractors/StringTableEntryExtractor.js';
 
 import StringTable from './StringTable.js';
-import StringTableEntry from './StringTableEntry.js';
-import StringTableInstructions from './StringTableInstructions.js';
 
+/**
+ * Pure data container for string tables. Owns id/name lookups and a
+ * {@link EventEmitter} for lifecycle events.
+ */
 class StringTableContainer {
     /**
      * @public
      * @constructor
-     * @param {Logger} logger
      */
-    constructor(logger) {
-        Assert.isTrue(logger instanceof Logger);
-
+    constructor() {
         this._eventEmitter = new EventEmitter(this);
 
-        this._registry = {
-            tableById: new Map(),
-            tableByName: new Map()
-        };
-
-        this._logger = logger;
+        this._tableById = new Map();
+        this._tableByName = new Map();
     }
 
     /**
      * @public
-     *
+     * @returns {number}
+     */
+    get size() {
+        return this._tableById.size;
+    }
+
+    /**
+     * @public
      * @param {number} id
-     * @returns {StringTable}
+     * @returns {StringTable|null}
      */
     getById(id) {
-        return this._registry.tableById.get(id) || null;
+        return this._tableById.get(id) || null;
     }
 
     /**
      * @public
-     *
      * @param {String} name
-     * @returns {StringTable}
+     * @returns {StringTable|null}
      */
     getByName(name) {
-        return this._registry.tableByName.get(name) || null;
+        return this._tableByName.get(name) || null;
     }
 
     /**
      * @public
-     * @returns {Array<StringTable>} 
+     * @returns {Array<StringTable>}
      */
     getTables() {
-        return Array.from(this._registry.tableById.values());
+        return Array.from(this._tableById.values());
     }
 
     /**
+     * Inserts a table into the container. Replaces any existing table
+     * with the same id or name. Fires TABLE_CREATED + TABLE_CHANGED.
+     *
      * @public
+     * @param {StringTable} stringTable
      */
-    handleClear() {
-        this._clear();
-    }
+    register(stringTable) {
+        Assert.isTrue(stringTable instanceof StringTable);
 
-    /**
-     * @public
-     * @param {CSVCMsg_CreateStringTable} createData
-     */
-    handleCreate(createData) {
-        let stringTableType = StringTableType.parseByName(createData.name);
-
-        if (stringTableType === null) {
-            this._logger.warn(`Unknown StringTable [ ${createData.name} ], registering as raw`);
-
-            stringTableType = StringTableType.register(createData.name);
-        }
-
-        const existing = this.getByName(stringTableType.name);
-
-        if (existing !== null) {
-            this._logger.warn(`StringTable [ ${stringTableType.name} ] exists in the registry. Overwriting`);
-        }
-
-        const instructions = new StringTableInstructions(createData.userDataSizeBits, createData.userDataFixedSize, createData.usingVarintBitcounts);
-
-        let payload;
-
-        if (createData.dataCompressed) {
-            payload = SnappyDecompressor.decompress(createData.stringData);
-        } else {
-            payload = createData.stringData;
-        }
-
-        let tableId;
-
-        if (existing !== null) {
-            tableId = existing.id;
-        } else {
-            tableId = this._registry.tableById.size;
-        }
-
-        const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions);
-
-        this._register(stringTable);
-
-        const entryExtractor = new StringTableEntryExtractor(payload, stringTable, createData.numEntries);
-
-        const extractor = entryExtractor.retrieve();
-
-        for (const entry of extractor) {
-            stringTable.updateEntry(entry);
-        }
+        this._tableById.set(stringTable.id, stringTable);
+        this._tableByName.set(stringTable.type.name, stringTable);
 
         this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
         this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
     }
 
     /**
+     * Signals that a table's entries were mutated. Fires TABLE_UPDATED + TABLE_CHANGED.
+     *
      * @public
-     * @param {CDemoStringTables} instantiateData
+     * @param {StringTable} stringTable
      */
-    handleInstantiate(instantiateData) {
-        instantiateData.tables.forEach((tableData) => {
-            let stringTableType = StringTableType.parseByName(tableData.tableName);
-
-            if (stringTableType === null) {
-                this._logger.warn(`Unknown StringTable [ ${tableData.tableName} ], registering as raw`);
-
-                stringTableType = StringTableType.register(tableData.tableName);
-            }
-
-            const existing = this.getByName(stringTableType.name);
-
-            let stringTable;
-
-            if (existing !== null) {
-                stringTable = new StringTable(existing.id, stringTableType, tableData.tableFlags, existing.instructions);
-            } else {
-                stringTable = new StringTable(this._registry.tableById.size, stringTableType, tableData.tableFlags, null);
-            }
-
-            tableData.items.forEach((entryData, index) => {
-                const entry = StringTableEntry.fromBuffer(entryData.data, stringTable.type, index, entryData.str);
-
-                stringTable.updateEntry(entry);
-            });
-
-            this._register(stringTable);
-
-            this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
-            this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
-        });
-    }
-
-    /**
-    * @public
-    * @param {*} snapshotData 
-    */
-    handleSnapshot(snapshotData) {
-        snapshotData.tables.forEach((tableData) => {
-            const type = StringTableType.parseByName(tableData.tableName);
-
-            let existingTable = null;
-
-            if (type !== null) {
-                existingTable = this._registry.tableByName.get(type.name) || null;
-            }
-
-            if (existingTable === null) {
-                this._logger.warn(`Unable to find a table [ ${tableData.tableName} ]`);
-
-                return;
-            }
-
-            tableData.items.forEach((entryData, index) => {
-                const entry = StringTableEntry.fromBuffer(entryData.data || null, existingTable.type, index, entryData.str);
-
-                existingTable.updateEntry(entry);
-            });
-
-            this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, existingTable);
-        });
-    }
-
-    /**
-     * @public
-     * @param {CSVCMsg_UpdateStringTable} updateData
-     */
-    handleUpdate(updateData) {
-        const stringTable = this._registry.tableById.get(updateData.tableId) || null;
-
-        if (stringTable === null) {
-            throw new Error(`Unknown StringTable [ ${updateData.tableId} ]`);
-        }
-
-        this._logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
-
-        const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries);
-
-        const extractor = entryExtractor.retrieve();
-
-        for (const entry of extractor) {
-            stringTable.updateEntry(entry);
-        }
+    markUpdated(stringTable) {
+        Assert.isTrue(stringTable instanceof StringTable);
 
         this._eventEmitter.fire(StringTableEvent.TABLE_UPDATED.name, stringTable);
         this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+    }
+
+    /**
+     * Signals that a table's state changed without an explicit update. Fires TABLE_CHANGED.
+     *
+     * @public
+     * @param {StringTable} stringTable
+     */
+    markChanged(stringTable) {
+        Assert.isTrue(stringTable instanceof StringTable);
+
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+    }
+
+    /**
+     * Removes all tables. Fires TABLE_REMOVED for each one before clearing.
+     *
+     * @public
+     */
+    clear() {
+        this._tableById.forEach((stringTable) => {
+            this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable);
+        });
+
+        this._tableById.clear();
+        this._tableByName.clear();
     }
 
     /**
@@ -233,40 +133,6 @@ class StringTableContainer {
         Assert.isTrue(typeof callback === 'function');
 
         this._eventEmitter.unregister(event.name, callback);
-    }
-
-    /**
-     * @private
-     */
-    _clear() {
-        this._logger.debug('Clearing StringTable registry');
-
-        this._registry.tableById.forEach((stringTable) => {
-            this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable);
-        });
-
-        this._registry.tableByName.clear();
-        this._registry.tableById.clear();
-    }
-
-    /**
-     * @private
-     * @param {StringTable} stringTable
-     */
-    _register(stringTable) {
-        this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
-
-        this._registry.tableByName.set(stringTable.type.name, stringTable);
-        this._registry.tableById.set(stringTable.id, stringTable);
-    }
-
-    /**
-     * @private
-     * @param {StringTable} stringTable
-     */  
-    _unregister(stringTable) {
-        this._registry.tableById.delete(stringTable.id);
-        this._registry.tableByName.delete(stringTable.type.name);
     }
 }
 

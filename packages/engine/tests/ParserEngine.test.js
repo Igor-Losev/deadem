@@ -2,11 +2,15 @@ import { describe, expect, test } from 'vitest';
 
 import ParserEngine from '#src/ParserEngine.js';
 import ParserConfiguration from '#src/ParserConfiguration.js';
+import ProtoProvider from '#providers/ProtoProvider.js';
+import SchemaRegistry from '#src/SchemaRegistry.js';
 
 import Logger from '#core/Logger.js';
 
+const registry = new SchemaRegistry(new ProtoProvider({}));
+
 function createEngine() {
-    return new ParserEngine(ParserConfiguration.DEFAULT, Logger.NOOP);
+    return new ParserEngine(registry, ParserConfiguration.DEFAULT, Logger.NOOP);
 }
 
 function createRunningEngine() {

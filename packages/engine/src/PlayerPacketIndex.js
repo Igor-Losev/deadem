@@ -2,15 +2,20 @@ import Assert from '#core/Assert.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 
+import PacketCodec from '#src/PacketCodec.js';
+
 class PlayerPacketIndex {
     /**
      * @public
      * @constructor
+     * @param {PacketCodec} codec
      * @param {Array<DemoPacketRaw>} packets
      */
-    constructor(packets) {
+    constructor(codec, packets) {
+        Assert.isTrue(codec instanceof PacketCodec, 'Invalid codec: expected an instance of PacketCodec');
         Assert.isTrue(Array.isArray(packets), 'packets must be an array');
 
+        this._codec = codec;
         this._packets = packets;
 
         this._bootstrap = [];
@@ -189,14 +194,14 @@ class PlayerPacketIndex {
             const typeId = packet.getTypeId();
             const tick = packet.tick.value;
             
-            if (packet.getIsBootstrap()) {
+            if (this._codec.getIsBootstrap(packet)) {
                 this._bootstrap.push(i);
             }
 
             if (typeId === DemoPacketType.DEM_FULL_PACKET.id) {
                 this._keyframes.push(i);
 
-                const decoded = packet.decode();
+                const decoded = this._codec.decodeRaw(packet);
 
                 if (decoded === null) {
                     continue;

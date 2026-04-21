@@ -2,8 +2,6 @@ import Assert from '#core/Assert.js';
 
 import StringTableType from '#data/enums/StringTableType.js';
 
-const decoders = new Map();
-
 class StringTableEntry {
     /**
      * @public
@@ -55,27 +53,17 @@ class StringTableEntry {
     /**
      * @public
      * @static
-     * @param {StringTableType} type
-     * @param {*} protoType
-     */
-    static registerDecoder(type, protoType) {
-        decoders.set(type, protoType);
-    }
-
-    /**
-     * @public
-     * @static
+     * @param {protobuf.Type|null} decoder
      * @param {Buffer|Uint8Array|null} buffer
      * @param {StringTableType} type
      * @param {number} id
      * @param {String} key
      */
-    static fromBuffer(buffer, type, id, key) {
+    static fromBuffer(decoder, buffer, type, id, key) {
         if (buffer === null) {
             return new StringTableEntry(type, id, key, null);
         }
 
-        const decoder = decoders.get(type);
         const value = decoder ? decoder.decode(buffer) : buffer;
 
         return new StringTableEntry(type, id, key, value);

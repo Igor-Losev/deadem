@@ -1,6 +1,5 @@
 import Transform from '#core/stream/Transform.js';
 
-import DemoPacket from '#data/DemoPacket.js';
 import MessagePacket from '#data/MessagePacket.js';
 
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
@@ -14,13 +13,13 @@ class DemoStreamPacketParser extends Transform {
      * @constructor
      * @public
      * @param {ParserEngine} engine
+     * @param {function(number): boolean} messagePacketFilter
      */
-    constructor(engine) {
+    constructor(engine, messagePacketFilter) {
         super();
 
         this._engine = engine;
-
-        this._messagePacketFilter = engine.getMessagePacketFilter();
+        this._messagePacketFilter = messagePacketFilter;
     }
 
     /**
@@ -30,7 +29,7 @@ class DemoStreamPacketParser extends Transform {
     async _handle(demoPacketRaw) {
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
 
-        const demoPacket = DemoPacket.parse(demoPacketRaw, this._messagePacketFilter);
+        const demoPacket = this._engine.codec.parseDemoPacket(demoPacketRaw, this._messagePacketFilter);
 
         if (demoPacket === null) {
             this._engine.getPacketTracker().handleDemoPacketRaw(demoPacketRaw);

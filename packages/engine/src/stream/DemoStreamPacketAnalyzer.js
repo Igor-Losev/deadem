@@ -5,10 +5,6 @@ import InterceptorStage from '#data/enums/InterceptorStage.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 
-import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
-import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
-import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
-
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,
  * updating the state of the {@link Demo} accordingly.
@@ -23,10 +19,6 @@ class DemoStreamPacketAnalyzer extends Transform {
         super();
 
         this._engine = engine;
-
-        this._demoEntityHandler = new DemoEntityHandler(engine.demo);
-        this._demoMessageHandler = new DemoMessageHandler(engine.demo);
-        this._demoPacketHandler = new DemoPacketHandler(engine.demo);
     }
 
     /**
@@ -45,17 +37,17 @@ class DemoStreamPacketAnalyzer extends Transform {
 
         switch (demoPacket.type) {
             case DemoPacketType.DEM_SEND_TABLES: {
-                this._demoPacketHandler.handleDemSendTables(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemSendTables(demoPacket);
 
                 break;
             }
             case DemoPacketType.DEM_CLASS_INFO: {
-                this._demoPacketHandler.handleDemClassInfo(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemClassInfo(demoPacket);
 
                 break;
             }
             case DemoPacketType.DEM_STRING_TABLES: {
-                this._demoPacketHandler.handleDemStringTables(demoPacket);
+                this._engine.getDemoPacketHandler().handleDemStringTables(demoPacket);
 
                 break;
             }
@@ -63,7 +55,7 @@ class DemoStreamPacketAnalyzer extends Transform {
             case DemoPacketType.DEM_SIGNON_PACKET:
             case DemoPacketType.DEM_FULL_PACKET: {
                 if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
-                    this._demoPacketHandler.handleDemFullPacketTables(demoPacket);
+                    this._engine.getDemoPacketHandler().handleDemFullPacketTables(demoPacket);
                 }
 
                 this._handleMessagePackets(demoPacket, demoPacket.data.messagePackets);
@@ -92,31 +84,31 @@ class DemoStreamPacketAnalyzer extends Transform {
 
             switch (messagePacket.type) {
                 case MessagePacketType.SVC_SERVER_INFO: {
-                    this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+                    this._engine.getDemoMessageHandler().handleSvcServerInfo(messagePacket);
 
                     break;
                 }
                 case MessagePacketType.SVC_CREATE_STRING_TABLE: {
-                    this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+                    this._engine.getDemoMessageHandler().handleSvcCreateStringTable(messagePacket);
 
                     break;
                 }
                 case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
-                    this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+                    this._engine.getDemoMessageHandler().handleSvcUpdateStringTable(messagePacket);
 
                     break;
                 }
                 case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
-                    this._demoMessageHandler.handleSvcClearAllStringTables();
+                    this._engine.getDemoMessageHandler().handleSvcClearAllStringTables();
 
                     break;
                 }
                 case MessagePacketType.SVC_PACKET_ENTITIES: {
-                    const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket);
+                    const events = this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket);
 
                     this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
-                    this._demoEntityHandler.handleEntityEvents(events);
+                    this._engine.getDemoEntityHandler().handleEntityEvents(events);
 
                     this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 

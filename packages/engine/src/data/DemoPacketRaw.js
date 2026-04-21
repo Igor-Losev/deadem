@@ -1,8 +1,3 @@
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
-
-import DemoPacketType from '#data/enums/DemoPacketType.js';
-import DemoSource from '#data/enums/DemoSource.js';
-
 class DemoPacketRaw {
     /**
      * @public
@@ -59,7 +54,7 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {DemoSource} 
+     * @returns {DemoSource}
      */
     get source() {
         return this._source;
@@ -90,25 +85,13 @@ class DemoPacketRaw {
     }
 
     /**
-     * Determines whether this is a bootstrap packet (initial + bootstrap type).
-     *
-     * @public
-     * @returns {boolean}
-     */
-    getIsBootstrap() {
-        const type = this.getType();
-
-        return this.getIsInitial() && type !== null && type.bootstrap;
-    }
-
-    /**
      * @public
      * @returns {boolean}
      */
     getIsCompressed() {
         return (this._type.value & 64) === 64;
     }
- 
+
     /**
      * Determines whether this is an initial packet (tick === -1).
      *
@@ -129,60 +112,11 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {DemoPacketType|null} 
-     */
-    getType() {
-        return DemoPacketType.parseById(this.getTypeId());
-    }
-
-    /**
-     * @public
      * @returns {number}
      */
     getTypeId() {
-        return getTypeId.call(this);
+        return this._type.value & ~64;
     }
-
-    /**
-     * Decompresses and decodes the protobuf payload.
-     *
-     * @public
-     * @returns {*|null}
-     */
-    decode() {
-        const demoPacketType = this.getType();
-
-        if (demoPacketType === null) {
-            return null;
-        }
-
-        let decompressed;
-
-        if (this.getIsCompressed()) {
-            decompressed = SnappyDecompressor.decompress(this._payload);
-        } else {
-            decompressed = this._payload;
-        }
-
-        let decoded;
-
-        if (this._source === DemoSource.HTTP_BROADCAST && (demoPacketType.heavy || demoPacketType === DemoPacketType.DEM_SPAWN_GROUPS)) {
-            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
-                throw new Error('Unhandled [ DEM_FULL_PACKET ] packet for source [ HTTP_BROADCAST ]');
-            }
-
-            decoded = { data: decompressed };
-        } else {
-            decoded = demoPacketType.proto.decode(decompressed);
-        }
-
-        return decoded;
-    }
-}
-
-function getTypeId() {
-    return this._type.value & ~64;
 }
 
 export default DemoPacketRaw;
-

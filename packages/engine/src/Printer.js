@@ -1,8 +1,5 @@
 import Logger from '#core/Logger.js';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
-import MessagePacketType from '#data/enums/MessagePacketType.js';
-
 class Printer {
     /**
      * @constructor
@@ -131,20 +128,12 @@ class Printer {
         const getColumnForCount = count => `${count}`.padStart(10, ' ');
 
         partition.forEach((parent) => {
-            const demoPacketType = DemoPacketType.parseById(parent.type) || null;
-
-            const parentCode = demoPacketType === null ? 'Unknown' : demoPacketType.code;
-
             const indent = this._indent(1);
 
-            this._log(`[ ${getColumnForType(parent.type)} ] ${indent}[ ${getColumnForCode(parentCode)} ]: [ ${getColumnForCount(this._formatNumber(parent.count))} ] packet(s)`);
+            this._log(`[ ${getColumnForType(parent.type)} ] ${indent}[ ${getColumnForCode(parent.code)} ]: [ ${getColumnForCount(this._formatNumber(parent.count))} ] packet(s)`);
 
             parent.children.forEach((child) => {
-                const messagePacketType = MessagePacketType.parseById(child.type) || null;
-
-                const childCode = messagePacketType === null ? 'Unknown' : messagePacketType.code;
-
-                this._logger.info(`${indent}[ ${getColumnForType(child.type)} ] [ ${getColumnForCode(childCode)} ]: [ ${getColumnForCount(this._formatNumber(child.count))} ] packet(s)`);
+                this._logger.info(`${indent}[ ${getColumnForType(child.type)} ] [ ${getColumnForCode(child.code)} ]: [ ${getColumnForCount(this._formatNumber(child.count))} ] packet(s)`);
             });
         });
     }

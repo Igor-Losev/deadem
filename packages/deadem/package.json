@@ -39,6 +39,7 @@
   ],
   "imports": {
     "#src/*.js": "./src/*.js",
+    "#bootstrap/*.js": "./src/bootstrap/*.js",
     "#data/*.js": "./src/data/*.js",
     "#providers/ProtoProvider.instance.js": {
       "node": "./src/providers/ProtoProvider.node.instance.js",

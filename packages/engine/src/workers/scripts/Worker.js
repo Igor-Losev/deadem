@@ -1,5 +1,4 @@
-import Bootstrap from '#root/src/Bootstrap.js';
-
+import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
 import Demo from '#data/Demo.js';
@@ -14,8 +13,9 @@ import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js'
 
 import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
+import StringTableHandler from '#handlers/StringTableHandler.js';
 
-import ProtoProvider from '#providers/ProtoProvider.js';
+import SchemaRegistry from '#src/SchemaRegistry.js';
 
 import WorkerResponseBootstrap from '#workers/responses/WorkerResponseBootstrap.js';
 import WorkerResponseDemoClear from '#workers/responses/WorkerResponseDemoClear.js';
@@ -35,8 +35,13 @@ class Worker {
     constructor() {
         this._demo = new Demo();
 
-        this._demoMessageHandler = new DemoMessageHandler(this._demo);
-        this._demoPacketHandler = new DemoPacketHandler(this._demo);
+        this._registry = null;
+
+        this._handlers = {
+            demoPacket: null,
+            demoMessage: null,
+            stringTable: null
+        };
     }
 
     /**
@@ -52,8 +57,7 @@ class Worker {
      */
     _route(requestRaw) {
         const workerRequestClass = WorkerMessageBridge.resolveRequestClass(requestRaw);
-
-        const request = workerRequestClass.deserialize(requestRaw.payload);
+        const request = workerRequestClass.deserialize(requestRaw.payload, this._registry);
 
         switch (request.type) {
             case WorkerMessageType.BOOTSTRAP: {
@@ -74,16 +78,16 @@ class Worker {
             case WorkerMessageType.DEMO_PACKET_SYNC: {
                 const demoPacket = request.payload;
 
-                switch (demoPacket.type) {
-                    case DemoPacketType.DEM_CLASS_INFO:
+                switch (demoPacket.type.id) {
+                    case DemoPacketType.DEM_CLASS_INFO.id:
                         this._handleClassInfo(request);
 
                         break;
-                    case DemoPacketType.DEM_SEND_TABLES:
+                    case DemoPacketType.DEM_SEND_TABLES.id:
                         this._handleSendTables(request);
 
                         break;
-                    case DemoPacketType.DEM_STRING_TABLES:
+                    case DemoPacketType.DEM_STRING_TABLES.id:
                         this._handleStringTables(request);
 
                         break;
@@ -96,20 +100,20 @@ class Worker {
             case WorkerMessageType.MESSAGE_PACKET_SYNC: {
                 const messagePacket = request.payload;
 
-                switch (messagePacket.type) {
-                    case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES:
+                switch (messagePacket.type.id) {
+                    case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES.id:
                         this._handleSvcClearAllStringTables(request);
 
                         break;
-                    case MessagePacketType.SVC_CREATE_STRING_TABLE:
+                    case MessagePacketType.SVC_CREATE_STRING_TABLE.id:
                         this._handleSvcCreateStringTable(request);
 
                         break;
-                    case MessagePacketType.SVC_UPDATE_STRING_TABLE:
+                    case MessagePacketType.SVC_UPDATE_STRING_TABLE.id:
                         this._handleSvcUpdateStringTable(request);
 
                         break;
-                    case MessagePacketType.SVC_SERVER_INFO:
+                    case MessagePacketType.SVC_SERVER_INFO.id:
                         this._handleSvcServerInfo(request);
 
                         break;
@@ -139,12 +143,18 @@ class Worker {
      * @param {WorkerRequestBootstrap} request
      */
     _handleBootstrap(request) {
-        const protoProvider = new ProtoProvider(request.payload);
+        const snapshot = request.payload.registrySnapshot;
 
-        Bootstrap.run(protoProvider);
+        const registry = SchemaRegistry.reconstruct(snapshot);
+
+        this._registry = registry;
+
+        this._handlers.stringTable = new StringTableHandler(registry, this._demo.stringTableContainer, Logger.NOOP);
+        this._handlers.demoPacket = new DemoPacketHandler(registry, this._demo, this._handlers.stringTable);
+        this._handlers.demoMessage = new DemoMessageHandler(registry, this._demo, this._handlers.stringTable);
 
         const response = new WorkerResponseBootstrap();
-
+        
         this._respond(response);
     }
 
@@ -158,9 +168,12 @@ class Worker {
 
         request.payload.forEach((data) => {
             const [ typeId, sourceId, compressed, buffer ] = data;
-
-            const demoPacketType = DemoPacketType.parseById(typeId);
+            const demoPacketType = this._registry.resolveDemoType(typeId);
             const demoSource = DemoSource.parseById(sourceId);
+
+            if (demoPacketType === null) {
+                return;
+            }
 
             let decompressed;
 
@@ -175,12 +188,18 @@ class Worker {
             if (demoSource === DemoSource.HTTP_BROADCAST) {
                 decoded = { data: decompressed };
             } else {
-                decoded = demoPacketType.proto.decode(decompressed);
+                const proto = this._registry.getDemoProto(demoPacketType);
+
+                if (proto === null) {
+                    return;
+                }
+
+                decoded = proto.decode(decompressed);
             }
 
             let extractor;
 
-            if (demoPacketType === DemoPacketType.DEM_FULL_PACKET) {
+            if (demoPacketType.id === DemoPacketType.DEM_FULL_PACKET.id) {
                 extractor = new MessagePacketRawExtractor(decoded.packet.data);
 
                 stringTables.push(decoded.stringTable);
@@ -202,8 +221,9 @@ class Worker {
 
     /**
      * @protected
+     * @param {WorkerRequestDemoClear} _
      */
-    _handleDemoClear() {
+    _handleDemoClear(_) {
         this._demo.reset();
 
         const response = new WorkerResponseDemoClear();
@@ -218,7 +238,7 @@ class Worker {
     _handleClassInfo(request) {
         const demoPacket = request.payload;
 
-        this._demoPacketHandler.handleDemClassInfo(demoPacket);
+        this._handlers.demoPacket.handleDemClassInfo(demoPacket);
 
         const response = new WorkerResponseDPacketSync();
 
@@ -232,7 +252,7 @@ class Worker {
     _handleSendTables(request) {
         const demoPacket = request.payload;
 
-        this._demoPacketHandler.handleDemSendTables(demoPacket);
+        this._handlers.demoPacket.handleDemSendTables(demoPacket);
 
         const response = new WorkerResponseDPacketSync();
 
@@ -246,7 +266,7 @@ class Worker {
     _handleStringTables(request) {
         const demoPacket = request.payload;
 
-        this._demoPacketHandler.handleDemStringTables(demoPacket);
+        this._handlers.demoPacket.handleDemStringTables(demoPacket);
 
         const response = new WorkerResponseDPacketSync();
 
@@ -260,7 +280,7 @@ class Worker {
     _handleSvcClearAllStringTables(request) {
         const messagePacket = request.payload;
 
-        this._demoMessageHandler.handleSvcClearAllStringTables(messagePacket);
+        this._handlers.demoMessage.handleSvcClearAllStringTables(messagePacket);
 
         const response = new WorkerResponseMPacketSync();
 
@@ -274,7 +294,7 @@ class Worker {
     _handleSvcCreateStringTable(request) {
         const messagePacket = request.payload;
 
-        this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+        this._handlers.demoMessage.handleSvcCreateStringTable(messagePacket);
 
         const response = new WorkerResponseMPacketSync();
 
@@ -288,7 +308,7 @@ class Worker {
     _handleSvcUpdateStringTable(request) {
         const messagePacket = request.payload;
 
-        this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+        this._handlers.demoMessage.handleSvcUpdateStringTable(messagePacket);
 
         const response = new WorkerResponseMPacketSync();
 
@@ -302,7 +322,7 @@ class Worker {
     _handleSvcServerInfo(request) {
         const messagePacket = request.payload;
 
-        this._demoMessageHandler.handleSvcServerInfo(messagePacket);
+        this._handlers.demoMessage.handleSvcServerInfo(messagePacket);
 
         const response = new WorkerResponseMPacketSync();
 
@@ -345,7 +365,7 @@ class Worker {
         let events;
 
         try {
-            events = this._demoMessageHandler.handleSvcPacketEntitiesPartial(messagePacket);
+            events = this._handlers.demoMessage.handleSvcPacketEntitiesPartial(messagePacket);
         } catch {
             events = [];
         }

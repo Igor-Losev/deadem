@@ -15,10 +15,11 @@ class Player {
     /**
      * @public
      * @constructor
+     * @param {SchemaRegistry} registry
      * @param {ParserConfiguration} [configuration=ParserConfiguration.DEFAULT]
      * @param {Logger} [logger=Logger.CONSOLE_INFO]
      */
-    constructor(configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
+    constructor(registry, configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
@@ -26,7 +27,7 @@ class Player {
             throw new Error('Player: parallel parsing is not supported yet');
         }
 
-        this._engine = new ParserEngine(configuration, logger);
+        this._engine = new ParserEngine(registry, configuration, logger);
         this._state = PlayerState.IDLE;
 
         this._playback = {
@@ -153,7 +154,7 @@ class Player {
 
         const packets = await this._engine.extract(reader, demoSource);
 
-        this._index = new PlayerPacketIndex(packets);
+        this._index = new PlayerPacketIndex(this._engine.codec, packets);
         this._source = demoSource;
 
         const first = this._index.getOrFail(0);

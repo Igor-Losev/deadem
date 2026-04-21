@@ -23,6 +23,14 @@ class ProtoProvider {
      * @public
      * @returns {protobuf.Root}
      */
+    get root() {
+        return this._root;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get DEMO() {
         return this._root;
     }

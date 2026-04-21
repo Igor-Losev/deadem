@@ -1,5 +1,3 @@
-import MessagePacketType from '#data/enums/MessagePacketType.js';
-
 class MessagePacket {
     /**
      * @public
@@ -28,40 +26,6 @@ class MessagePacket {
     }
 
     /**
-     * @static
-     * @public
-     * @param {MessagePacketObject} object
-     * @returns {MessagePacket}
-     */
-    static fromObject(object) {
-        return new MessagePacket(MessagePacketType.parse(object.type), object.data);
-    }
-
-    /**
-     * @static
-     * @public
-     * @param {MessagePacketRaw} messagePacketRaw
-     * @returns {MessagePacket|null}
-     */
-    static parse(messagePacketRaw) {
-        const messagePacketType = MessagePacketType.parseById(messagePacketRaw.type) || null;
-
-        if (messagePacketType === null) {
-            return null;
-        }
-
-        let data;
-
-        try {
-            data = messagePacketType.proto.decode(messagePacketRaw.payload);
-        } catch {
-            return null;
-        }
-
-        return new MessagePacket(messagePacketType, data);
-    }
-
-    /**
      * @public
      * @returns {MessagePacketObject}
      */
@@ -70,6 +34,23 @@ class MessagePacket {
             type: this._type.code,
             data: this._data
         };
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {MessagePacketObject} raw
+     * @param {SchemaRegistry} registry
+     * @returns {MessagePacket}
+     */
+    static fromObject(raw, registry) {
+        const type = registry.resolveMessageTypeByCode(raw.type);
+
+        if (type === null) {
+            throw new Error(`Unknown MessagePacketType [ ${raw.type} ]`);
+        }
+
+        return new MessagePacket(type, raw.data);
     }
 }
 

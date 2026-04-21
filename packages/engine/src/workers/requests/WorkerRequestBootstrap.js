@@ -5,20 +5,20 @@ import WorkerRequest from './WorkerRequest.js';
 class WorkerRequestBootstrap extends WorkerRequest {
     /**
      * @constructor
-     * @param {Object} protoSchema
+     * @param {Object} registrySnapshot
      */
-    constructor(protoSchema) {
-        super(WorkerMessageType.BOOTSTRAP, protoSchema, []);
+    constructor(registrySnapshot) {
+        super(WorkerMessageType.BOOTSTRAP, { registrySnapshot }, []);
     }
 
     /**
      * @public
      * @static
-     * @param {Object} protoSchema
+     * @param {{registrySnapshot: Object}} payload
      * @returns {WorkerRequestBootstrap}
      */
-    static deserialize(protoSchema) {
-        return new WorkerRequestBootstrap(protoSchema);
+    static deserialize(payload) {
+        return new WorkerRequestBootstrap(payload.registrySnapshot);
     }
 
     /**

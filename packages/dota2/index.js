@@ -49,8 +49,8 @@ export { default as PlaybackInterruptedError } from '@deadem/engine/src/errors/P
 export { default as PlayerState } from '@deadem/engine/src/data/enums/PlayerState.js';
 export { default as Printer } from '@deadem/engine/src/Printer.js';
 export { default as Protocol } from '@deadem/engine/src/data/enums/Protocol.js';
-export { default as StringTableType } from '@deadem/engine/src/data/enums/StringTableType.js';
 
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
+export { default as StringTableType } from './src/data/enums/StringTableType.js';
 
 export { Parser, Player };

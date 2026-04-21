@@ -1,5 +1,4 @@
 import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
 
 import Class from './Class.js';
 import Server from './Server.js';
@@ -18,11 +17,8 @@ class Demo {
     /**
      * @public
      * @constructor
-     * @param {Logger} logger
      */
-    constructor(logger = Logger.CONSOLE_INFO) {
-        Assert.isTrue(logger instanceof Logger);
-
+    constructor() {
         this._classBaselines = new Map();
 
         this._classes = {
@@ -35,7 +31,7 @@ class Demo {
         this._serializers = new Map();
         this._server = null;
 
-        this._stringTableContainer = new StringTableContainer(logger);
+        this._stringTableContainer = new StringTableContainer();
 
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
@@ -231,7 +227,7 @@ class Demo {
         this._entities.clear();
         this._serializers.clear();
         this._server = null;
-        this._stringTableContainer.handleClear();
+        this._stringTableContainer.clear();
     }
 
     /**
