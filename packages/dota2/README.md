@@ -81,11 +81,11 @@ import { Parser } from '@deadem/dota2';
 ### Browser
 
 ```js
-<script src="//cdn.jsdelivr.net/npm/@deadem/dota2@0.X.X/dist/dota2dem.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@deadem/dota2@0.X.X/dist/deadem-dota2.min.js"></script>
 ```
 
 ```js
-const { Parser } = window.dota2dem;
+const { Parser } = window.deademDota2;
 ```
 
 ## Examples
@@ -111,7 +111,7 @@ Each packet represents a type defined in [DemoPacketType](https://github.com/Igo
 Most [DemoPacket](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js) types, once parsed, become plain JavaScript objects containing structured data. However,
 some packet types — such as `DemoPacketType.DEM_PACKET`, `DemoPacketType.DEM_SIGNON_PACKET`, and
 `DemoPacketType.DEM_FULL_PACKET` — encapsulate an array of inner packets, referred to in this project as [MessagePacket](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js). These inner packets
-correspond to message types defined in [MessagePacketType](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2dem/src/data/enums/MessagePacketType.js).
+correspond to message types defined in [MessagePacketType](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/MessagePacketType.js).
 
 Similarly, most [MessagePacket](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js) types also parse into regular data objects. There are two notable exceptions that require additional parsing:
   1. **Entities** ([Developer Wiki](https://developer.valvesoftware.com/wiki/Networking_Entities)) - `MessagePacketType.SVC_PACKET_ENTITIES`: contains granular (or full) updates to existing entities (i.e. game world objects).

@@ -11,9 +11,9 @@ const configuration = defineConfig((_) => {
         build: {
             lib: {
                 entry: './index.js',
-                name: 'dota2dem',
-                fileName: () => 'dota2dem.min.js',
-                formats: [ 'umd' ]
+                name: 'deademDota2',
+                fileName: (format) => format === 'es' ? 'deadem-dota2.esm.js' : 'deadem-dota2.min.js',
+                formats: [ 'umd', 'es' ]
             },
             emptyOutDir: true,
             sourcemap: true
@@ -24,7 +24,7 @@ const configuration = defineConfig((_) => {
             ],
             rollupOptions: {
                 output: {
-                    file: 'dota2dem-worker.min.js'
+                    file: 'deadem-dota2-worker.min.js'
                 }
             }
         }
