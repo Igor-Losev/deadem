@@ -1,7 +1,7 @@
 {
   "name": "@deademx/dota2",
   "version": "2.1.0-alpha.5",
-  "description": "JavaScript (Node.js & Browsers) parser and player for Dota 2 (Valve Source 2 Engine) demo/replay files",
+  "description": "Dota 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
@@ -17,11 +17,15 @@
     "deadem",
     "dota2",
     "dota",
+    "source2",
     "demo",
-    "demoparser",
+    "replay",
     "parser",
     "player",
-    "replay"
+    "demo-parser",
+    "demoparser",
+    "replay-parser",
+    "replayparser"
   ],
   "type": "module",
   "main": "index.js",

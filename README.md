@@ -13,8 +13,8 @@ deadem
 
 The parsing stack relies on two external dependencies:
 
-- [`protobufjs`](https://www.npmjs.com/package/protobufjs) for protobuf decoding
-- [`snappyjs`](https://www.npmjs.com/package/snappyjs) for Snappy decompression
+- [`protobufjs`](https://www.npmjs.com/package/protobufjs) for protobuf decoding.
+- [`snappyjs`](https://www.npmjs.com/package/snappyjs) for Snappy decompression.
 
 ## Packages
 

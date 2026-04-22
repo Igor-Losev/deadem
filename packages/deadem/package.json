@@ -1,7 +1,7 @@
 {
   "name": "deadem",
   "version": "2.1.0-alpha.5",
-  "description": "JavaScript (Node.js & Browsers) parser and player for Deadlock (Valve Source 2 Engine) demo/replay files",
+  "description": "Deadlock (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
@@ -16,11 +16,15 @@
   "keywords": [
     "deadem",
     "deadlock",
+    "source2",
     "demo",
-    "demoparser",
+    "replay",
     "parser",
     "player",
-    "replay"
+    "demo-parser",
+    "demoparser",
+    "replay-parser",
+    "replayparser"
   ],
   "type": "module",
   "main": "index.js",
