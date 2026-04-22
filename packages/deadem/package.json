@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "2.0.0",
+  "version": "2.1.0-alpha.0",
   "description": "JavaScript (Node.js & Browsers) parser and player for Deadlock (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
@@ -27,8 +27,6 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "prepublishOnly": "cp ./../../LICENSE ./LICENSE",
-    "postpublish": "rm ./LICENSE",
     "proto:json": "pbjs --path ./proto/source --path ./../engine/proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto ./../engine/proto/source/**/*.proto"
   },
   "files": [
@@ -47,10 +45,6 @@
     }
   },
   "dependencies": {
-    "@deadem/engine": "*",
-    "protobufjs": "^7.5.0"
-  },
-  "devDependencies": {
-    "protobufjs-cli": "^1.1.3"
+    "@deadem/engine": "2.1.0-alpha.0"
   }
 }

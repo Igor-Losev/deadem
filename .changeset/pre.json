@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "deadem": "2.0.0",
+    "@deadem/dota2": "2.0.0",
+    "@deadem/engine": "2.0.0",
+    "@deadem/examples-common": "2.0.0",
+    "@deadem/examples-node-deadem": "2.0.0",
+    "@deadem/examples-node-dota2": "0.1.0",
+    "@deadem/ui": "2.0.0"
+  },
+  "changesets": [
+    "yummy-hairs-attack"
+  ]
+}
