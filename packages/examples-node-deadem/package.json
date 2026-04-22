@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-deadem",
-  "version": "2.1.0-alpha.4",
+  "version": "2.1.0-alpha.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/engine": "2.1.0-alpha.4",
-    "@deademx/examples-common": "2.1.0-alpha.4"
+    "@deademx/engine": "2.1.0-alpha.5",
+    "@deademx/examples-common": "2.1.0-alpha.5"
   }
 }

@@ -1,14 +1,14 @@
 {
-  "mode": "exit",
+  "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "deadem": "2.1.0-alpha.3",
-    "@deademx/dota2": "2.1.0-alpha.3",
-    "@deademx/engine": "2.1.0-alpha.3",
-    "@deademx/examples-common": "2.1.0-alpha.3",
-    "@deademx/examples-node-deadem": "2.1.0-alpha.3",
-    "@deademx/examples-node-dota2": "2.1.0-alpha.3",
-    "@deademx/ui": "2.1.0-alpha.3"
+    "deadem": "2.1.0-alpha.4",
+    "@deademx/dota2": "2.1.0-alpha.4",
+    "@deademx/engine": "2.1.0-alpha.4",
+    "@deademx/examples-common": "2.1.0-alpha.4",
+    "@deademx/examples-node-deadem": "2.1.0-alpha.4",
+    "@deademx/examples-node-dota2": "2.1.0-alpha.4",
+    "@deademx/ui": "2.1.0-alpha.4"
   },
   "changesets": [
     "all-plums-count",
@@ -16,6 +16,7 @@
     "chatty-weeks-yawn",
     "pretty-candies-unite",
     "shaggy-bars-fetch",
+    "slimy-experts-send",
     "yummy-hairs-attack"
   ]
 }
