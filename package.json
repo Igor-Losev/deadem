@@ -12,7 +12,6 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
     "proto:json": "npm run proto:json --workspace=deadem && npm run proto:json --workspace=@deadem/dota2",
-    "release": "./release.sh",
     "start": "npm run start --workspace=@deadem/ui",
     "test": "npm run test --workspaces --if-present"
   },
