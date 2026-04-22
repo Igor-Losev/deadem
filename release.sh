@@ -1,8 +1,18 @@
 #!/usr/bin/env sh
 set -eu
 
+usage() {
+    cat <<'EOF'
+Usage:
+  ./release.sh build
+  ./release.sh add
+  ./release.sh bump [tag]
+  ./release.sh publish
+EOF
+}
+
 require_clean_git_status() {
-    if [ -n "$(git status --porcelain)" ]; then
+    if [ -n "$(git status --porcelain --untracked-files=all)" ]; then
         echo "Git worktree is not clean" >&2
         git status --short >&2
         exit 1
@@ -26,10 +36,14 @@ build() {
     npm run build
 }
 
+add() {
+    require_clean_git_status
+
+    npx changeset add
+}
+
 bump() {
     PRE_TAG="${1:-}"
-
-    require_clean_git_status
 
     if [ -n "$PRE_TAG" ]; then
         npx changeset pre enter "$PRE_TAG"
@@ -37,7 +51,6 @@ bump() {
         npx changeset pre exit
     fi
 
-    npx changeset add
     npx changeset version
 
     if [ -n "$PRE_TAG" ]; then
@@ -69,6 +82,9 @@ fi
 case "$1" in
     build)
         build
+        ;;
+    add)
+        add
         ;;
     bump)
         bump "${2:-}"
