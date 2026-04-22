@@ -6,7 +6,9 @@ import DemoFile from '@deadem/examples-common/data/DemoFile.js';
 
 const FILES = DemoFile.getAll().reverse();
 
-const S3_BUCKET_URL = 'https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos';
+function getDemoFileUrl(file) {
+  return `https://deadem.s3.us-east-1.amazonaws.com/${file.game.code}/demos/${file.getFileName()}`;
+}
 
 function formatSize(bytes) {
   if (!bytes) {
@@ -101,7 +103,7 @@ export default function Library() {
               <TableCell align='center'>
                 <Tooltip title='Download .dem file' arrow>
                   <IconButton
-                    href={`${S3_BUCKET_URL}/${file.getFileName()}`}
+                    href={getDemoFileUrl(file)}
                     size='small'
                     target='_blank'
                   >

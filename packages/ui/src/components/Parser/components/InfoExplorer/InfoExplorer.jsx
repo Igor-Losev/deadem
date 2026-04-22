@@ -1,6 +1,14 @@
 import { Grid } from '@mui/material';
 
-import Widget from './../Widget/Widget';
+import Widget, { formatValue } from './../Widget/Widget';
+
+function formatFixedNumber(value, digits) {
+  if (typeof value !== 'number') {
+    return value;
+  }
+
+  return formatValue(Number(value.toFixed(digits)));
+}
 
 const GENERAL_COLUMNS = [
   { label: 'Class Baselines', selector: (stats) => stats.classBaselines },
@@ -12,7 +20,7 @@ const GENERAL_COLUMNS = [
 const SERVER_COLUMNS = [
   { label: 'Max Clients', selector: (server) => server.maxClients },
   { label: 'Class ID Size (bits)', selector: (server) => server.classIdSizeBits },
-  { label: 'Tick Interval', selector: (server) => server.tickInterval },
+  { label: 'Tick Interval', selector: (server) => server.tickInterval, format: (value) => formatFixedNumber(value, 5) },
   { label: 'Tick Rate', selector: (server) => server.tickRate }
 ];
 

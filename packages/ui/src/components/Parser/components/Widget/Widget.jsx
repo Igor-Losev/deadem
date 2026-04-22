@@ -32,6 +32,8 @@ function formatValue(value) {
   );
 }
 
+export { formatValue };
+
 export default function Widget({ header, columns, data }) {
   return (
     <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1 }}>
@@ -50,7 +52,9 @@ export default function Widget({ header, columns, data }) {
               <StyledTableRow key={column.label}>
                 <TableCell sx={{ color: 'text.secondary', fontSize: FONT_SIZE.md }}>{column.label}</TableCell>
                 <TableCell align='right' sx={{ fontSize: FONT_SIZE.md }}>
-                  {formatValue(column.selector(data))}
+                  {column.format
+                    ? column.format(column.selector(data))
+                    : formatValue(column.selector(data))}
                 </TableCell>
               </StyledTableRow>
             ))}
