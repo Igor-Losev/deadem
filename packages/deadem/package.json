@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "2.1.0-alpha.0",
+  "version": "2.1.0-alpha.1",
   "description": "JavaScript (Node.js & Browsers) parser and player for Deadlock (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
   "license": "MIT",
@@ -45,6 +45,6 @@
     }
   },
   "dependencies": {
-    "@deademx/engine": "2.1.0-alpha.0"
+    "@deademx/engine": "2.1.0-alpha.1"
   }
 }

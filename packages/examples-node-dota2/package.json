@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-dota2",
-  "version": "2.1.0-alpha.0",
+  "version": "2.1.0-alpha.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,8 +10,8 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/engine": "2.1.0-alpha.0",
-    "@deademx/examples-common": "2.1.0-alpha.0",
-    "@deademx/dota2": "2.1.0-alpha.0"
+    "@deademx/engine": "2.1.0-alpha.1",
+    "@deademx/examples-common": "2.1.0-alpha.1",
+    "@deademx/dota2": "2.1.0-alpha.1"
   }
 }

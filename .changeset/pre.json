@@ -11,6 +11,7 @@
     "@deademx/ui": "2.0.0"
   },
   "changesets": [
+    "all-plums-count",
     "yummy-hairs-attack"
   ]
 }
