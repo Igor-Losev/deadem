@@ -10,63 +10,63 @@
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine" /></a>
 
-**@deademx/engine** is the shared parsing and playback engine used by the `deadem` and `@deademx/dota2` packages.
+**@deademx/engine** is the shared low-level Source 2 parsing and replay playback engine that powers the `deadem` and `@deademx/dota2` packages.
 
-It provides the common Source 2 parsing pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast support, and core configuration primitives.
+It provides the common packet parsing pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast support, and parser configuration primitives used across game-specific implementations.
 
-This package is intentionally low-level: `Parser` and `Player` require a prepared `SchemaRegistry`. If you want a ready-to-run package, use [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md).
+This package does not include game-specific schemas or message registrations. `Parser` and `Player` require a prepared `SchemaRegistry`. If you want a ready-to-run package, use [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2).
+
+## Contents
+
+- Implementations
+  Game-specific packages built on top of the shared engine.
+
+- Overview
+  Core concepts and architecture of the parsing and playback engine.
+
+  - Understanding Demo
+    Structure and content of Source 2 demo packets.
+
+  - Understanding Parser
+    Parser lifecycle, mutable state, and stream processing model.
+
+  - Understanding Player
+    Replay playback model, seeking, and player state transitions.
+
+  - Understanding Interceptors
+    Hook points for inspecting and extracting data during parsing.
+
+- Configuration
+  Parser configuration options and logging strategies.
+
+  - Parsing
+    Packet filtering, worker settings, and parser tuning options.
+
+  - Logging
+    Built-in logger strategies and usage examples.
+
+- Usage
+  Common usage patterns for replay parsing, broadcast parsing, and playback.
+
+  - Demo File
+    Parsing a replay from a `.dem` file.
+
+  - Broadcast Stream
+    Parsing Source 2 HTTP Broadcast data from a live stream.
+
+  - Data Extraction
+    Capturing data during parsing or querying final demo state.
+
+  - Player
+    Seeking through buffered replay state and running continuous playback.
+
+- License
+  Project licensing information.
 
 ## Implementations
 
-- [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) for Deadlock-specific packet types, examples, and compatibility notes
-- [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) for Dota 2-specific packet types and examples
-
-## Installation
-
-### Node.js
-
-```shell
-npm install @deademx/engine --save
-```
-
-```js
-import { Parser, Player, SchemaRegistry } from '@deademx/engine';
-```
-
-### Browser
-
-Use one of the game packages if you need a ready-to-run implementation with game-specific schemas and message types.
-
-## Bootstrapping
-
-`@deademx/engine` does not ship a game schema. Consumers are expected to create and populate a `SchemaRegistry` before constructing `Parser` or `Player`.
-
-Typical flow:
-
-1. Load protobuf schema JSON for your game
-2. Create a `ProtoProvider`
-3. Create a `SchemaRegistry`
-4. Run the engine bootstrap, then your game bootstrap
-5. Pass the registry into `Parser` or `Player`
-
-```js
-import {
-    Parser,
-    Player,
-    SchemaRegistry
-} from '@deademx/engine';
-import EngineBootstrap from '@deademx/engine/src/bootstrap/Bootstrap.js';
-import ProtoProvider from '@deademx/engine/src/providers/ProtoProvider.js';
-
-const protoProvider = new ProtoProvider(PROTO_JSON);
-const registry = new SchemaRegistry(protoProvider);
-
-EngineBootstrap.run(registry);
-GameBootstrap.run(registry);
-
-const parser = new Parser(registry);
-const player = new Player(registry);
-```
+- [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) for Deadlock-specific packet types, schemas, examples, and compatibility notes
+- [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) for Dota 2-specific packet types, schemas, and examples
 
 ## Overview
 
@@ -125,7 +125,7 @@ await parser.dispose();
 Unlike `Parser`, which processes a stream sequentially and discards past state, `Player` buffers the entire demo on `load()` and builds an internal packet index, enabling seek-to-tick in both directions.
 
 ```js
-const player = new Player();
+const player = new Player(registry);
 
 await player.load(readable);
 await player.seekToTick(50000);
