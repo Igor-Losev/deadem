@@ -38,7 +38,7 @@ class PerformanceTrackerRecord {
      */
     start() {
         if (this._started) {
-            throw new Error(`Unable to start tracking of [ ${this._category.code} ]`);
+            return;
         }
 
         this._started = true;
@@ -50,7 +50,7 @@ class PerformanceTrackerRecord {
      */
     end() {
         if (!this._started) {
-            throw new Error(`Unable to end tracking of [ ${this._category.code} ]`);
+            return;
         }
 
         const difference = Date.now() - this._startedAt;
