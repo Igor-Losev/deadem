@@ -15,6 +15,10 @@ function formatPlayerError(operationLabel, error) {
   return details ? `${operationLabel}: ${details}` : operationLabel;
 }
 
+function getIsPlaybackInterruptedError(error) {
+  return error instanceof Error && error.name === 'PlaybackInterruptedError';
+}
+
 export default function usePlayer(library) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
@@ -99,9 +103,7 @@ export default function usePlayer(library) {
       setPlaying(false);
       syncTicks();
     }).catch((err) => {
-      const { PlaybackInterruptedError } = runtimeErrorsRef.current;
-
-      if (!PlaybackInterruptedError || !(err instanceof PlaybackInterruptedError)) {
+      if (!getIsPlaybackInterruptedError(err)) {
         setPlaying(false);
         reportPlayerError('Playback failed', err);
       }
