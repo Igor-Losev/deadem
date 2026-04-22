@@ -8,8 +8,10 @@ deadem
 </h1>
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
+<a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
+<a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 
-**deadem** is a family of JavaScript packages for parsing and playing back Valve Source 2 demo/replay data in Node.js and modern browsers.
+**deadem** is a collection of JavaScript packages for parsing and playing back Valve Source 2 demo/replay data in Node.js and modern browsers.
 
 The parsing stack relies on two external dependencies:
 
@@ -20,27 +22,27 @@ The parsing stack relies on two external dependencies:
 
 ### Published
 
-- [`@deademx/engine`](./packages/engine/README.md)
+- [`@deademx/engine`](./packages/engine)
   Shared engine with the game-agnostic parser, player, interceptor pipeline, broadcast support, and core configuration model.
 
-- [`deadem`](./packages/deadem/README.md)
+- [`deadem`](./packages/deadem)
   Original Deadlock implementation built on top of `@deademx/engine`, with Deadlock-specific message types, examples, and package docs.
 
-- [`@deademx/dota2`](./packages/dota2/README.md)
+- [`@deademx/dota2`](./packages/dota2)
   Dota 2 implementation built on top of `@deademx/engine`, with Dota 2-specific message types, examples, and package docs.
 
 ### Internal
 
-- `@deademx/examples-common`
+- [`@deademx/examples-common`](./packages/examples-common)
   Shared helpers, fixtures, and support code used by the example packages.
 
-- `@deademx/examples-node-deadem`
+- [`@deademx/examples-node-deadem`](./packages/examples-node-deadem)
   Node.js example scripts, benchmarks, and diagnostics for the `deadem` package.
 
-- `@deademx/examples-node-dota2`
+- [`@deademx/examples-node-dota2`](./packages/examples-node-dota2)
   Node.js example scripts, benchmarks, and diagnostics for the `@deademx/dota2` package.
 
-- `@deademx/ui`
+- [`@deademx/ui`](./packages/ui)
   Published page on [deadem.com](https://deadem.com) used to demonstrate the capabilities of the published libraries.
 
 ## Documentation
@@ -48,4 +50,3 @@ The parsing stack relies on two external dependencies:
 - Start with [`@deademx/engine`](./packages/engine/README.md) for the shared parsing model and engine concepts.
 - Use [`deadem`](./packages/deadem/README.md) for Deadlock-specific installation, examples, compatibility, and performance notes.
 - Use [`@deademx/dota2`](./packages/dota2/README.md) for Dota 2-specific installation, examples, compatibility, and performance notes.
-
