@@ -53,10 +53,6 @@ bump() {
 
     npx changeset version
 
-    if [ -n "$PRE_TAG" ]; then
-        npx changeset pre exit
-    fi
-
     VERSION="$(get_version)"
     TAG="v$VERSION"
 
