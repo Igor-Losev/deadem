@@ -4,7 +4,7 @@ import {
   Groups as GroupsIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
-import { Box, Chip, Paper } from '@mui/material';
+import { Alert, Box, Chip, Paper, Snackbar } from '@mui/material';
 import { useMemo, useState } from 'react';
 
 import Navigation from './../Navigation/Navigation';
@@ -50,8 +50,9 @@ const TABS = [
 
 export default function Parser({ library, onLibraryChange }) {
   const {
-    demo, fileName, playing, rate, seeking, ticks, contentVersion,
+    demo, fileName, playing, rate, seeking, ticks, contentVersion, playerError,
     fileInputRef, historyRef,
+    clearPlayerError,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,
@@ -81,6 +82,23 @@ export default function Parser({ library, onLibraryChange }) {
 
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        autoHideDuration={5000}
+        key={playerError?.id}
+        onClose={clearPlayerError}
+        open={Boolean(playerError)}
+      >
+        <Alert
+          onClose={clearPlayerError}
+          severity='error'
+          sx={{ alignItems: 'center', width: '100%' }}
+          variant='filled'
+        >
+          {playerError?.message}
+        </Alert>
+      </Snackbar>
+
       <Box alignItems='center' display='flex' justifyContent='center' mb={2}>
         <Box alignItems='center' display='flex' gap={1.5}>
           {fileName === null

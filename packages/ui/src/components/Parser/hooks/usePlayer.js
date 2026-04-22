@@ -7,6 +7,13 @@ const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
 const CONTENT_TICK_INTERVAL = 256;
 
 const INITIAL_TICKS = { current: -1, first: -1, last: -1 };
+const INITIAL_PLAYER_ERROR = null;
+
+function formatPlayerError(operationLabel, error) {
+  const details = error instanceof Error ? error.message : null;
+
+  return details ? `${operationLabel}: ${details}` : operationLabel;
+}
 
 export default function usePlayer(library) {
   const fileInputRef = useRef(null);
@@ -20,6 +27,7 @@ export default function usePlayer(library) {
   const [ rate, setRate ] = useState(1);
   const [ ticks, setTicks ] = useState(INITIAL_TICKS);
   const [ contentVersion, setContentVersion ] = useState(0);
+  const [ playerError, setPlayerError ] = useState(INITIAL_PLAYER_ERROR);
 
   const lastContentTickRef = useRef(-1);
   const playerRef = useRef(null);
@@ -51,6 +59,7 @@ export default function usePlayer(library) {
     setSeeking(false);
     setTicks(INITIAL_TICKS);
     setContentVersion(0);
+    setPlayerError(INITIAL_PLAYER_ERROR);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
@@ -66,6 +75,15 @@ export default function usePlayer(library) {
 
     setTicks({ current: currentPlayer.getCurrentTick(), first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
     setContentVersion((version) => version + 1);
+  }, []);
+
+  const clearPlayerError = useCallback(() => setPlayerError(INITIAL_PLAYER_ERROR), []);
+
+  const reportPlayerError = useCallback((operationLabel, error) => {
+    setPlayerError({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      message: formatPlayerError(operationLabel, error)
+    });
   }, []);
 
   const startPlayback = useCallback((playRate) => {
@@ -85,10 +103,10 @@ export default function usePlayer(library) {
 
       if (!PlaybackInterruptedError || !(err instanceof PlaybackInterruptedError)) {
         setPlaying(false);
-        console.error('Player: playback error', err);
+        reportPlayerError('Playback failed', err);
       }
     });
-  }, [ syncTicks ]);
+  }, [ reportPlayerError, syncTicks ]);
 
   const handleFileChanged = async (event) => {
     const file = event.target.files[0];
@@ -144,7 +162,7 @@ export default function usePlayer(library) {
         setFileName(null);
       }
 
-      console.error('Player: load failed', err);
+      reportPlayerError('Load failed', err);
     }
   };
 
@@ -218,9 +236,9 @@ export default function usePlayer(library) {
 
     playerRef.current.nextTick()
       .then(() => syncTicks())
-      .catch((err) => console.error('Player: nextTick failed', err))
+      .catch((err) => reportPlayerError('Next tick failed', err))
       .finally(() => setSeeking(false));
-  }, [ syncTicks ]);
+  }, [ reportPlayerError, syncTicks ]);
 
   const handlePrevTick = useCallback(() => {
     if (playerRef.current === null || seekingRef.current) {
@@ -232,9 +250,9 @@ export default function usePlayer(library) {
 
     playerRef.current.prevTick()
       .then(() => syncTicks())
-      .catch((err) => console.error('Player: prevTick failed', err))
+      .catch((err) => reportPlayerError('Previous tick failed', err))
       .finally(() => setSeeking(false));
-  }, [ syncTicks ]);
+  }, [ reportPlayerError, syncTicks ]);
 
   const seekTo = useCallback((tick) => {
     const currentPlayer = playerRef.current;
@@ -256,9 +274,9 @@ export default function usePlayer(library) {
       if (wasPlaying) {
         startPlayback(rateRef.current);
       }
-    }).catch((err) => console.error('Player: seekToTick failed', err))
+    }).catch((err) => reportPlayerError('Seek failed', err))
       .finally(() => setSeeking(false));
-  }, [ syncTicks, startPlayback ]);
+  }, [ reportPlayerError, syncTicks, startPlayback ]);
 
   const handleSeekToStart = useCallback(() => seekTo(playerRef.current?.getFirstTick()), [ seekTo ]);
   const handleSeekToEnd = useCallback(() => seekTo(playerRef.current?.getLastTick()), [ seekTo ]);
@@ -272,8 +290,9 @@ export default function usePlayer(library) {
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, playing, rate, seeking, ticks, contentVersion,
+    demo, fileName, playing, rate, seeking, ticks, contentVersion, playerError,
     fileInputRef, historyRef,
+    clearPlayerError,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,
