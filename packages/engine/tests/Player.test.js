@@ -136,6 +136,22 @@ describe('Player', () => {
 
             expect(result).toBe(false);
         });
+
+        test('It should reject when session.process rejects', async () => {
+            const error = new Error('parse failed');
+
+            player._session.process.mockRejectedValue(error);
+
+            await expect(player.nextTick()).rejects.toBe(error);
+        });
+
+        test('It should leave the player in LOADED state after a session failure', async () => {
+            player._session.process.mockRejectedValue(new Error('parse failed'));
+
+            await expect(player.nextTick()).rejects.toThrow();
+
+            expect(player.state).toBe(PlayerState.LOADED);
+        });
     });
 
     describe('prevTick', () => {
@@ -156,6 +172,24 @@ describe('Player', () => {
 
             expect(result).toBe(false);
         });
+
+        test('It should reject when underlying seek (session) fails', async () => {
+            player._ticks.current = 200;
+            player._ticks.position = 1;
+
+            const error = new Error('parse failed');
+
+            player.seekToTick = vi.fn(async () => {
+                try {
+                    throw error;
+                } finally {
+                    player._state = PlayerState.LOADED;
+                }
+            });
+
+            await expect(player.prevTick()).rejects.toBe(error);
+            expect(player.state).toBe(PlayerState.LOADED);
+        });
     });
 
     describe('seekToTick', () => {
@@ -172,7 +206,7 @@ describe('Player', () => {
             expect(player.state).toBe(PlayerState.LOADED);
         });
 
-        test('It should return to LOADED state on error', async () => {
+        test('It should return to LOADED state on close error', async () => {
             player._session.close.mockRejectedValue(new Error('fail'));
 
             await expect(player.seekToTick(200)).rejects.toThrow('fail');
@@ -226,6 +260,39 @@ describe('Player', () => {
 
             expect(err).toBeInstanceOf(PlaybackInterruptedError);
             expect(err.reason).toBe(PlaybackInterruptedError.PAUSED);
+        });
+
+        test('It should reject the play promise when session.process rejects mid-loop', async () => {
+            const error = new Error('parse failed');
+            let call = 0;
+
+            player._session.process.mockImplementation(async () => {
+                call++;
+
+                if (call === 1) return 200;
+
+                throw error;
+            });
+
+            await expect(player.play(100000)).rejects.toBe(error);
+            expect(player.state).toBe(PlayerState.LOADED);
+        });
+
+        test('It should reject the play promise when session.process rejects on first advance', async () => {
+            const error = new Error('parse failed');
+
+            player._session.process.mockRejectedValue(error);
+
+            await expect(player.play(100000)).rejects.toBe(error);
+            expect(player.state).toBe(PlayerState.LOADED);
+        });
+
+        test('It should clear the playback deferred after a pipeline error', async () => {
+            player._session.process.mockRejectedValue(new Error('parse failed'));
+
+            await player.play(100000).catch(() => {});
+
+            expect(player._playback.deferred).toBe(null);
         });
     });
 

@@ -18,10 +18,13 @@ class ParserSession {
         this._source = source;
 
         this._closed = false;
+        this._error = null;
         this._started = false;
 
         this._reader = null;
         this._parsePromise = null;
+
+        this._pending = new Set();
     }
 
     /**
@@ -30,6 +33,14 @@ class ParserSession {
      */
     get closed() {
         return this._closed;
+    }
+
+    /**
+     * @public
+     * @returns {Error|null}
+     */
+    get error() {
+        return this._error;
     }
 
     /**
@@ -59,21 +70,29 @@ class ParserSession {
 
         const { bootstrap, stringTableSnapshots, packets, remaining } = this._index.getPacketsForTick(tick);
 
-        const interceptor = (demoPacket) => {
+        const bootstrapInterceptor = (demoPacket) => {
             if (demoPacket.sequence === bootstrap[bootstrap.length - 1].sequence) {
                 stringTableSnapshots.forEach((snapshot) => {
                     this._engine.getStringTableHandler().handleSnapshot(snapshot);
                 });
 
-                this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+                bootstrapTeardown();
             }
         };
 
-        this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+        const bootstrapTeardown = () => {
+            this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
+            this._pending.delete(bootstrapTeardown);
+        };
+
+        this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
+        this._pending.add(bootstrapTeardown);
 
         this._reader = new ReadableArray([ ...bootstrap, ...packets, ...remaining ], true);
         this._started = true;
+
         this._parsePromise = this._engine.parse(this._reader, this._source, true);
+        this._parsePromise.catch((error) => this._onParseError(error));
 
         return this.process(bootstrap.length + packets.length);
     }
@@ -100,9 +119,15 @@ class ParserSession {
         try {
             await this._parsePromise;
         } catch (error) {
-            if (error?.code !== 'ERR_STREAM_PREMATURE_CLOSE' && error?.name !== 'AbortError') {
-                throw error;
+            if (ParserSession._getIsAbortError(error)) {
+                return;
             }
+
+            if (this._error !== null) {
+                return;
+            }
+
+            throw error;
         }
     }
 
@@ -123,6 +148,10 @@ class ParserSession {
             throw new Error('Session has been closed');
         }
 
+        if (this._error !== null) {
+            return Promise.reject(this._error);
+        }
+
         const deferred = new DeferredPromise();
 
         let processed = 0;
@@ -134,13 +163,23 @@ class ParserSession {
             tick = demoPacket.tick;
 
             if (processed === count) {
-                this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+                teardown();
 
                 deferred.resolve(tick);
             }
         };
 
+        const teardown = (error) => {
+            this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+            this._pending.delete(teardown);
+
+            if (error !== undefined) {
+                deferred.reject(error);
+            }
+        };
+
         this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+        this._pending.add(teardown);
 
         for (let i = 0; i < count; i++) {
             this._reader.release();
@@ -164,11 +203,57 @@ class ParserSession {
             throw new Error('Session has been closed');
         }
 
+        if (this._error !== null) {
+            throw this._error;
+        }
+
         for (let i = 0; i < count; i++) {
             this._reader.release();
         }
     }
 
+    /**
+     * Handles a failure in the parse pipeline. Latches the error,
+     * tears down every pending operation, and rejects associated deferreds.
+     * Abort-related errors and post-close errors are ignored, since those
+     * indicate a clean shutdown rather than a pipeline failure.
+     *
+     * @protected
+     * @param {Error} error
+     */
+    _onParseError(error) {
+        if (this._closed) {
+            return;
+        }
+
+        if (ParserSession._getIsAbortError(error)) {
+            return;
+        }
+
+        if (this._error !== null) {
+            return;
+        }
+
+        this._error = error;
+
+        const pending = [ ...this._pending ];
+
+        this._pending.clear();
+
+        for (const teardown of pending) {
+            teardown(error);
+        }
+    }
+
+    /**
+     * @private
+     * @static
+     * @param {Error} error
+     * @returns {boolean}
+     */
+    static _getIsAbortError(error) {
+        return error?.code === 'ERR_STREAM_PREMATURE_CLOSE' || error?.name === 'AbortError';
+    }
 }
 
 export default ParserSession;

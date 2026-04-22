@@ -197,7 +197,8 @@ class Player {
     /**
      * Starts continuous playback at the specified rate.
      * Resolves when playback reaches the end of the demo.
-     * Rejects if playback is interrupted by {@link Player#pause} or {@link Player#stop}.
+     * Rejects if playback is interrupted by {@link Player#pause} or {@link Player#stop},
+     * or if the underlying parser pipeline fails.
      *
      * @public
      * @param {number} [rate=1.0] Playback rate multiplier (1.0 = normal speed).
@@ -206,11 +207,23 @@ class Player {
     play(rate = 1.0) {
         this._transition(PlayerState.PLAYING);
 
-        this._playback.deferred = new DeferredPromise();
+        const deferred = new DeferredPromise();
 
-        this._runPlayback(rate);
+        this._playback.deferred = deferred;
 
-        return this._playback.deferred.promise;
+        this._runPlayback(rate).catch((error) => {
+            if (deferred.settled) {
+                return;
+            }
+
+            this._transition(PlayerState.LOADED);
+
+            this._playback.deferred = null;
+
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
     }
 
     /**
