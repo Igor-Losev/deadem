@@ -18,50 +18,50 @@ This package does not include game-specific schemas or message registrations. `P
 
 ## Contents
 
-- Implementations
-  Game-specific packages built on top of the shared engine.
+  * [Implementations](#implementations)<br/>
+    Game-specific packages built on top of the shared engine.
 
-- Overview
-  Core concepts and architecture of the parsing and playback engine.
+  * [Overview](#overview)<br/>
+    Core concepts and architecture of the parsing and playback engine.
 
-  - Understanding Demo
-    Structure and content of Source 2 demo packets.
+    * [Understanding Demo](#understanding-demo)<br/>
+      Structure and content of Source 2 demo packets.
 
-  - Understanding Parser
-    Parser lifecycle, mutable state, and stream processing model.
+    * [Understanding Parser](#understanding-parser)<br/>
+      Parser lifecycle, mutable state, and stream processing model.
 
-  - Understanding Player
-    Replay playback model, seeking, and player state transitions.
+    * [Understanding Player](#understanding-player)<br/>
+      Replay playback model, seeking, and player state transitions.
 
-  - Understanding Interceptors
-    Hook points for inspecting and extracting data during parsing.
+    * [Understanding Interceptors](#understanding-interceptors)<br/>
+      Hook points for inspecting and extracting data during parsing.
 
-- Configuration
-  Parser configuration options and logging strategies.
+  * [Configuration](#configuration)<br/>
+    Parser configuration options and logging strategies.
 
-  - Parsing
-    Packet filtering, worker settings, and parser tuning options.
+    * [Parsing](#parsing)<br/>
+      Packet filtering, worker settings, and parser tuning options.
 
-  - Logging
-    Built-in logger strategies and usage examples.
+    * [Logging](#logging)<br/>
+      Built-in logger strategies and usage examples.
 
-- Usage
-  Common usage patterns for replay parsing, broadcast parsing, and playback.
+  * [Usage](#usage)<br/>
+    Common usage patterns for replay parsing, broadcast parsing, and playback.
 
-  - Demo File
-    Parsing a replay from a `.dem` file.
+    * [Demo File](#demo-file)<br/>
+      Parsing a replay from a `.dem` file.
 
-  - Broadcast Stream
-    Parsing Source 2 HTTP Broadcast data from a live stream.
+    * [Broadcast Stream](#broadcast-stream)<br/>
+      Parsing Source 2 HTTP Broadcast data from a live stream.
 
-  - Data Extraction
-    Capturing data during parsing or querying final demo state.
+    * [Data Extraction](#data-extraction)<br/>
+      Capturing data during parsing or querying final demo state.
 
-  - Player
-    Seeking through buffered replay state and running continuous playback.
+    * [Player](#player)<br/>
+      Seeking through buffered replay state and running continuous playback.
 
-- License
-  Project licensing information.
+  * [License](#license)<br/>
+    Project licensing information.
 
 ## Implementations
 
