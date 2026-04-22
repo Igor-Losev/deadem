@@ -1,6 +1,6 @@
-import { DemoSource } from '@deadem/engine';
+import { DemoSource } from '@deademx/engine';
 
-import Assert from '@deadem/engine/src/core/Assert.js';
+import Assert from '@deademx/engine/src/core/Assert.js';
 
 import Game from './Game.js';
 

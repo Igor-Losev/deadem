@@ -2,11 +2,11 @@ import assert from 'node:assert';
 
 import { Logger, InterceptorStage, Parser, ParserConfiguration, Printer } from 'deadem';
 
-import DeferredPromise from '@deadem/engine/src/data/DeferredPromise.js';
+import DeferredPromise from '@deademx/engine/src/data/DeferredPromise.js';
 
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
-import DemoProvider from '@deadem/examples-common/data/DemoProvider.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 const BATCH_SIZE = 1000;
 

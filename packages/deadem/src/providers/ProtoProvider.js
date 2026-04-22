@@ -1,4 +1,4 @@
-import EngineProtoProvider from '@deadem/engine/src/providers/ProtoProvider.js';
+import EngineProtoProvider from '@deademx/engine/src/providers/ProtoProvider.js';
 
 class ProtoProvider extends EngineProtoProvider {
     /**

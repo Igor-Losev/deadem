@@ -1,4 +1,4 @@
-import EngineBootstrap from '@deadem/engine/src/bootstrap/Bootstrap.js';
+import EngineBootstrap from '@deademx/engine/src/bootstrap/Bootstrap.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';

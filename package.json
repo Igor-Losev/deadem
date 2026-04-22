@@ -11,9 +11,9 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
-    "proto:json": "npm run proto:json --workspace=deadem && npm run proto:json --workspace=@deadem/dota2",
-    "release:publish": "npm publish --workspace=@deadem/engine --access public && npm publish --workspace=deadem --access public && npm publish --workspace=@deadem/dota2 --access public",
-    "start": "npm run start --workspace=@deadem/ui",
+    "proto:json": "npm run proto:json --workspace=deadem && npm run proto:json --workspace=@deademx/dota2",
+    "release:publish": "npm publish --workspace=@deademx/engine --access public && npm publish --workspace=deadem --access public && npm publish --workspace=@deademx/dota2 --access public",
+    "start": "npm run start --workspace=@deademx/ui",
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {

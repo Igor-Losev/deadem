@@ -11,9 +11,9 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6448-darkGreen" /></a>
 
-**deadem** is the original Deadlock implementation built on top of [`@deadem/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**deadem** is the original Deadlock implementation built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
-For the shared parser model, player lifecycle, interceptors, and engine configuration, see the [`@deadem/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+For the shared parser model, player lifecycle, interceptors, and engine configuration, see the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 ## Installation
 

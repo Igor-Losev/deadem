@@ -45,6 +45,6 @@
     }
   },
   "dependencies": {
-    "@deadem/engine": "2.1.0-alpha.0"
+    "@deademx/engine": "2.1.0-alpha.0"
   }
 }

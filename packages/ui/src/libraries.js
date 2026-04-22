@@ -23,13 +23,13 @@ export const LIBRARIES = [
     gameCode: 'dota2',
     gameLabel: 'Dota 2',
     globalName: 'deademDota2',
-    npmPackageName: '@deadem/dota2',
+    npmPackageName: '@deademx/dota2',
     scriptFileName: 'deadem-dota2.min.js',
-    devImportSpecifier: '@deadem/dota2',
+    devImportSpecifier: '@deademx/dota2',
     title: 'Deadem Explorer',
     description: 'A web replay viewer powered by deadem for parsing and playing back Deadlock and Dota 2 demo files (.dem) in Node.js and the browser.',
     documentationUrl: 'https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md',
-    npmUrl: 'https://www.npmjs.com/package/@deadem/dota2',
+    npmUrl: 'https://www.npmjs.com/package/@deademx/dota2',
     issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
     releasesUrl: 'https://github.com/Igor-Losev/deadem/releases'
   }
@@ -97,7 +97,7 @@ export async function loadLibraryModule(library) {
       case 'deadlock':
         return import('deadem');
       case 'dota2':
-        return import('@deadem/dota2');
+        return import('@deademx/dota2');
       default:
         throw new Error(`Unsupported library key: ${library.key}`);
     }

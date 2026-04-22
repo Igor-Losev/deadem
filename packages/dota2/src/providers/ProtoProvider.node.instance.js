@@ -1,4 +1,4 @@
-import FileSystem from '@deadem/engine/src/core/FileSystem.js';
+import FileSystem from '@deademx/engine/src/core/FileSystem.js';
 
 import ProtoProvider from './ProtoProvider.js';
 

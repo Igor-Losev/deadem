@@ -3,34 +3,34 @@
 <img alt="deadem" src="https://deadem.com/logo80.svg" height="80" />
 </a>
 <br/>
-@deadem/engine
+@deademx/engine
 <br/>
 </h1>
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
-<a href="https://www.npmjs.com/package/@deadem/engine" alt=""><img src="https://img.shields.io/npm/v/%40deadem%2Fengine" /></a>
+<a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine" /></a>
 
-**@deadem/engine** is the shared parsing and playback engine used by the `deadem` and `@deadem/dota2` packages.
+**@deademx/engine** is the shared parsing and playback engine used by the `deadem` and `@deademx/dota2` packages.
 
 It provides the common Source 2 parsing pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast support, and core configuration primitives.
 
-This package is intentionally low-level: `Parser` and `Player` require a prepared `SchemaRegistry`. If you want a ready-to-run package, use [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) or [`@deadem/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md).
+This package is intentionally low-level: `Parser` and `Player` require a prepared `SchemaRegistry`. If you want a ready-to-run package, use [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md).
 
 ## Implementations
 
 - [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) for Deadlock-specific packet types, examples, and compatibility notes
-- [`@deadem/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) for Dota 2-specific packet types and examples
+- [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) for Dota 2-specific packet types and examples
 
 ## Installation
 
 ### Node.js
 
 ```shell
-npm install @deadem/engine --save
+npm install @deademx/engine --save
 ```
 
 ```js
-import { Parser, Player, SchemaRegistry } from '@deadem/engine';
+import { Parser, Player, SchemaRegistry } from '@deademx/engine';
 ```
 
 ### Browser
@@ -39,7 +39,7 @@ Use one of the game packages if you need a ready-to-run implementation with game
 
 ## Bootstrapping
 
-`@deadem/engine` does not ship a game schema. Consumers are expected to create and populate a `SchemaRegistry` before constructing `Parser` or `Player`.
+`@deademx/engine` does not ship a game schema. Consumers are expected to create and populate a `SchemaRegistry` before constructing `Parser` or `Player`.
 
 Typical flow:
 
@@ -54,9 +54,9 @@ import {
     Parser,
     Player,
     SchemaRegistry
-} from '@deadem/engine';
-import EngineBootstrap from '@deadem/engine/src/bootstrap/Bootstrap.js';
-import ProtoProvider from '@deadem/engine/src/providers/ProtoProvider.js';
+} from '@deademx/engine';
+import EngineBootstrap from '@deademx/engine/src/bootstrap/Bootstrap.js';
+import ProtoProvider from '@deademx/engine/src/providers/ProtoProvider.js';
 
 const protoProvider = new ProtoProvider(PROTO_JSON);
 const registry = new SchemaRegistry(protoProvider);
@@ -257,7 +257,7 @@ Critical packet types are always processed even when filtered, because the engin
 Example: skip entity packets when entity data is not needed:
 
 ```js
-import { MessagePacketType, Parser, ParserConfiguration } from '@deadem/engine';
+import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine';
 
 const parser = new Parser(registry, new ParserConfiguration({
     messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
@@ -272,7 +272,7 @@ The library provides a `Logger` class with predefined logging strategies:
 - `Logger.NOOP` to disable logging
 
 ```js
-import { Logger, Parser, ParserConfiguration } from '@deadem/engine';
+import { Logger, Parser, ParserConfiguration } from '@deademx/engine';
 
 const configuration = new ParserConfiguration({ parserThreads: 2 });
 
@@ -286,7 +286,7 @@ const parser = new Parser(registry, configuration, Logger.CONSOLE_WARN);
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, Printer } from '@deadem/engine';
+import { Parser, Printer } from '@deademx/engine';
 
 const parser = new Parser(registry);
 const printer = new Printer(parser);
@@ -301,7 +301,7 @@ printer.printStats();
 ### Broadcast Stream
 
 ```js
-import { BroadcastAgent, BroadcastGateway, DemoSource, Parser, Printer } from '@deadem/engine';
+import { BroadcastAgent, BroadcastGateway, DemoSource, Parser, Printer } from '@deademx/engine';
 
 const FROM_BEGINNING = false;
 const MATCH_ID = 'MATCH_IDENTIFIER';
@@ -323,7 +323,7 @@ printer.printStats();
 Use interceptors when data must be captured during parsing:
 
 ```js
-import { InterceptorStage, Parser } from '@deadem/engine';
+import { InterceptorStage, Parser } from '@deademx/engine';
 
 const parser = new Parser(registry);
 
@@ -350,7 +350,7 @@ Inspect game state at a specific tick:
 ```js
 import { createReadStream } from 'node:fs';
 
-import { InterceptorStage, Player } from '@deadem/engine';
+import { InterceptorStage, Player } from '@deademx/engine';
 
 const player = new Player(registry);
 
@@ -377,7 +377,7 @@ Continuous playback:
 ```js
 import { createReadStream } from 'node:fs';
 
-import { PlaybackInterruptedError, Player } from '@deadem/engine';
+import { PlaybackInterruptedError, Player } from '@deademx/engine';
 
 const player = new Player(registry);
 const readable = createReadStream(PATH_TO_DEMO_FILE);

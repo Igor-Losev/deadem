@@ -1,4 +1,4 @@
-import EngineMessagePacketType from '@deadem/engine/src/data/enums/MessagePacketType.js';
+import EngineMessagePacketType from '@deademx/engine/src/data/enums/MessagePacketType.js';
 
 class MessagePacketType extends EngineMessagePacketType {
     static get DOTA_UM_AI_DEBUG_LINE() { return dotaUmAiDebugLine; }

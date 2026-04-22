@@ -2,7 +2,7 @@ import { Download as DownloadIcon } from '@mui/icons-material';
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip } from '@mui/material';
 import { useMemo, useState } from 'react';
 
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
 const FILES = DemoFile.getAll().reverse();
 

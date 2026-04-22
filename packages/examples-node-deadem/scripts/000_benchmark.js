@@ -1,9 +1,9 @@
 import { Logger, Parser, ParserConfiguration } from 'deadem';
 
-import Benchmark from '@deadem/examples-common/data/Benchmark.js';
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
+import Benchmark from '@deademx/examples-common/data/Benchmark.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
-import DemoProvider from '@deadem/examples-common/data/DemoProvider.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 const CONFIG = {
     DEMOS: [ DemoFile.DEADLOCK_REPLAY_75438101 ],

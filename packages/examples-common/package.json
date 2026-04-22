@@ -1,5 +1,5 @@
 {
-  "name": "@deadem/examples-common",
+  "name": "@deademx/examples-common",
   "version": "2.1.0-alpha.0",
   "private": true,
   "type": "module",
@@ -7,6 +7,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@deadem/engine": "2.1.0-alpha.0"
+    "@deademx/engine": "2.1.0-alpha.0"
   }
 }

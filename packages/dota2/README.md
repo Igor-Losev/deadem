@@ -3,33 +3,33 @@
 <img alt="deadem" src="https://deadem.com/logo80.svg" height="80" />
 </a>
 <br/>
-@deadem/dota2
+@deademx/dota2
 <br/>
 </h1>
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
-<a href="https://www.npmjs.com/package/@deadem/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deadem%2Fdota2" /></a>
+<a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 
-**@deadem/dota2** is the Dota 2 implementation built on top of [`@deadem/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/dota2** is the Dota 2 implementation built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
-For the shared parser model, player lifecycle, interceptors, and engine configuration, see the [`@deadem/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+For the shared parser model, player lifecycle, interceptors, and engine configuration, see the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 ## Installation
 
 ### Node.js
 
 ```shell
-npm install @deadem/dota2 --save
+npm install @deademx/dota2 --save
 ```
 
 ```js
-import { Parser } from '@deadem/dota2';
+import { Parser } from '@deademx/dota2';
 ```
 
 ### Browser
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/@deadem/dota2@0.X.X/dist/deadem-dota2.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@deademx/dota2@0.X.X/dist/deadem-dota2.min.js"></script>
 ```
 
 ```js
@@ -52,7 +52,7 @@ The example scripts look for demo files in `/demos`. If a local demo file is mis
 ### Demo File
 
 ```js
-import { Parser, ParserConfiguration, Printer } from '@deadem/dota2';
+import { Parser, ParserConfiguration, Printer } from '@deademx/dota2';
 
 const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
 const printer = new Printer(parser);
@@ -68,7 +68,7 @@ printer.printStats();
 Extract Dota 2 chat messages:
 
 ```js
-import { InterceptorStage, MessagePacketType, Parser } from '@deadem/dota2';
+import { InterceptorStage, MessagePacketType, Parser } from '@deademx/dota2';
 
 const parser = new Parser();
 
@@ -97,7 +97,7 @@ Inspect Dota 2 state at a specific tick:
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Player } from '@deadem/dota2';
+import { Player } from '@deademx/dota2';
 
 const player = new Player();
 const readable = createReadStream(PATH_TO_DEM_FILE);

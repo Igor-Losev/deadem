@@ -4,13 +4,13 @@
   "commit": false,
   "fixed": [
     [
-      "@deadem/engine",
+      "@deademx/engine",
       "deadem",
-      "@deadem/dota2",
-      "@deadem/examples-common",
-      "@deadem/examples-node-deadem",
-      "@deadem/examples-node-dota2",
-      "@deadem/ui"
+      "@deademx/dota2",
+      "@deademx/examples-common",
+      "@deademx/examples-node-deadem",
+      "@deademx/examples-node-dota2",
+      "@deademx/ui"
     ]
   ],
   "linked": [],

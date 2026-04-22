@@ -1,7 +1,7 @@
 ---
 "deadem": minor
-"@deadem/engine": minor
-"@deadem/dota2": minor
+"@deademx/engine": minor
+"@deademx/dota2": minor
 ---
 
 -

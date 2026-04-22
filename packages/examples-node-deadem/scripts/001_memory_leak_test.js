@@ -1,8 +1,8 @@
 import { ParserConfiguration, Player } from 'deadem';
 
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
-import DemoProvider from '@deadem/examples-common/data/DemoProvider.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 const formatMB = (bytes) => (bytes / 1024 / 1024).toFixed(1);
 

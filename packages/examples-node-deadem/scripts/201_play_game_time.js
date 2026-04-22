@@ -1,9 +1,9 @@
 import { Player } from 'deadem';
 
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
-import GameObserver from '@deadem/examples-common/data/GameObserver.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
+import GameObserver from '@deademx/examples-common/data/GameObserver.js';
 
-import DemoProvider from '@deadem/examples-common/data/DemoProvider.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
     const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);

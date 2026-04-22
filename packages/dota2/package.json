@@ -1,5 +1,5 @@
 {
-  "name": "@deadem/dota2",
+  "name": "@deademx/dota2",
   "version": "2.1.0-alpha.0",
   "description": "JavaScript (Node.js & Browsers) parser and player for Dota 2 (Valve Source 2 Engine) demo/replay files",
   "author": "Igor Losev",
@@ -46,6 +46,6 @@
     }
   },
   "dependencies": {
-    "@deadem/engine": "2.1.0-alpha.0"
+    "@deademx/engine": "2.1.0-alpha.0"
   }
 }

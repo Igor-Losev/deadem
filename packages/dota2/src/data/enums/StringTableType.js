@@ -1,4 +1,4 @@
-import EngineStringTableType from '@deadem/engine/src/data/enums/StringTableType.js';
+import EngineStringTableType from '@deademx/engine/src/data/enums/StringTableType.js';
 
 class StringTableType extends EngineStringTableType {
     static get MODIFIER_NAMES() { return modifierNames; }

@@ -1,8 +1,8 @@
 import { Logger, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 
-import DemoFile from '@deadem/examples-common/data/DemoFile.js';
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
-import DemoProvider from '@deadem/examples-common/data/DemoProvider.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 const PLAYBACK_SPEED = 16;
 
