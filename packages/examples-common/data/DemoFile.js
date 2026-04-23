@@ -15,14 +15,14 @@ class DemoFile {
      * @param {DemoSource} source
      * @param {number} id
      * @param {Game} game
-     * @param {number|null} [gameBuild=null]
+     * @param {string|number|null} [gameBuild=null]
      * @param {metaObject|null} [meta=null]
      */
     constructor(source, id, game, gameBuild = null, meta = null) {
         Assert.isTrue(source instanceof DemoSource);
         Assert.isTrue(Number.isInteger(id));
         Assert.isTrue(game instanceof Game);
-        Assert.isTrue(gameBuild === null || Number.isInteger(gameBuild));
+        Assert.isTrue(gameBuild === null || Number.isInteger(gameBuild) || typeof gameBuild === 'string');
 
         this._id = id;
         this._game = game;
@@ -61,7 +61,7 @@ class DemoFile {
 
     /**
      * @public
-     * @returns {number|null}
+     * @returns {string|number|null}
      */
     get gameBuild() {
         return this._gameBuild;
@@ -132,6 +132,8 @@ class DemoFile {
     // === DOTA2 ===
     static get DOTA2_REPLAY_8773493455() { return dota2Replay8773493455; }
     static get DOTA2_REPLAY_8777738576() { return dota2Replay8777738576; }
+    static get DOTA2_REPLAY_8783006717() { return dota2Replay8783006717; }
+    static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
 
     /**
      * @public
@@ -140,7 +142,7 @@ class DemoFile {
     getFileName() {
         let filename = this._id.toString();
 
-        if (this._gameBuild !== null) {
+        if (Number.isInteger(this._gameBuild)) {
             filename = `${filename}-${this._gameBuild}`;
         }
 
@@ -190,8 +192,10 @@ const deadlockReplay75438101 = new DemoFile(DemoSource.REPLAY, 75438101, Game.DE
 const deadlockReplay75439032 = new DemoFile(DemoSource.REPLAY, 75439032, Game.DEADLOCK, 6448, { date: '2026-04-13', mode: 'Street Brawl', size: 143222996 });
 
 // === DOTA2 ===
-const dota2Replay8773493455 = new DemoFile(DemoSource.REPLAY, 8773493455, Game.DOTA2, null, { date: '2026-04-13', size: 77016661 });
-const dota2Replay8777738576 = new DemoFile(DemoSource.REPLAY, 8777738576, Game.DOTA2, null, { date: '2026-04-19', size: 138711012 });
+const dota2Replay8773493455 = new DemoFile(DemoSource.REPLAY, 8773493455, Game.DOTA2, '7.41b', { date: '2026-04-16', mode: 'Captains Mode', size: 77016661 });
+const dota2Replay8777738576 = new DemoFile(DemoSource.REPLAY, 8777738576, Game.DOTA2, '7.41b', { date: '2026-04-19', mode: 'Captains Mode', size: 138711012 });
+const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'Captains Mode', size: 172651462 });
+const dota2Replay8783086929 = new DemoFile(DemoSource.REPLAY, 8783086929, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'All Draft', size: 77530595 });
 
 /**
  * @typedef {{ date?: string, mode?: string, size?: number }} metaObject

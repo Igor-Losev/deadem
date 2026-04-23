@@ -1,4 +1,4 @@
-import { Parser, ParserConfiguration, Printer } from 'deadem';
+import { Parser, ParserConfiguration, Printer } from '@deademx/dota2';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
@@ -21,10 +21,11 @@ const MATCHES_ARGUMENT_PREFIX = '--matches=';
     for (const demo of demos) {
         const reader = await DemoProvider.read(demo);
         const parser = new Parser(ParserConfiguration.DEFAULT);
-        const printer = new Printer(parser);
 
         await parser.parse(reader);
         await parser.dispose();
+
+        const printer = new Printer(parser);
 
         printer.printStats();
     }
@@ -36,7 +37,7 @@ const MATCHES_ARGUMENT_PREFIX = '--matches=';
  */
 function parseMatches(value) {
     if (value.toLowerCase() === 'all') {
-        return DemoFile.getAll().filter(demo => demo.game === Game.DEADLOCK && demo.getFileName().endsWith('.dem'));
+        return DemoFile.getAll().filter(demo => demo.game === Game.DOTA2 && demo.getFileName().endsWith('.dem'));
     }
 
     const demos = value
@@ -44,7 +45,7 @@ function parseMatches(value) {
         .filter(Boolean)
         .map(match => match.replace(/-\S+$/, ''))
         .map(matchId => Number.parseInt(matchId, 10))
-        .map(matchId => DemoFile.parse(matchId, Game.DEADLOCK));
+        .map(matchId => DemoFile.parse(matchId, Game.DOTA2));
 
     if (demos.length === 0 || demos.some(demo => demo === null)) {
         throw new Error('Argument --matches contains unknown matchId');

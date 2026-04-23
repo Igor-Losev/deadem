@@ -18,10 +18,22 @@ function formatSize(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(0)} MB`;
 }
 
+function getGameBuildSortValue(file) {
+  if (typeof file.gameBuild === 'number') {
+    return `0:${file.gameBuild.toString().padStart(10, '0')}`;
+  }
+
+  if (typeof file.gameBuild === 'string') {
+    return `1:${file.gameBuild}`;
+  }
+
+  return '2:';
+}
+
 const COLUMNS = [
   { key: 'id', label: 'Match', getValue: (file) => file.id },
   { key: 'game', label: 'Game', getValue: (file) => file.game.code, renderValue: (file) => file.game.code.toUpperCase() },
-  { key: 'gameBuild', label: 'Game Build', getValue: (file) => file.gameBuild ?? -1, renderValue: (file) => file.gameBuild ?? '-' },
+  { key: 'gameBuild', label: 'Game Build', getValue: (file) => getGameBuildSortValue(file), renderValue: (file) => file.gameBuild ?? '-' },
   { key: 'source', label: 'Source', getValue: (file) => file.source.code, renderValue: (file) => file.source.code },
   { key: 'date', label: 'Date', getValue: (file) => file.meta?.date ?? '', renderValue: (file) => file.meta?.date ?? '-' },
   { key: 'mode', label: 'Mode', getValue: (file) => file.meta?.mode ?? 'Normal', renderValue: (file) => file.meta?.mode ?? 'Normal' },

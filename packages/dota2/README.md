@@ -40,12 +40,13 @@ const { Parser } = window.deademDota2;
 
 ### Node.js
 
-The example scripts look for demo files in `/demos`. If a local demo file is missing, the example helpers download it automatically from the public S3 bucket.
+Replay example scripts look for demo files in `/demos`. If a local demo file is missing, the example helpers download it automatically from the public S3 bucket. HTTP Broadcast examples require a valid match identifier or a previously saved `.bin` stream file.
 
 | No. | Description | Link | Command |
 | --- | --- | --- | --- |
 | 100 | Parse a single replay file | [100_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js) | `node ./packages/examples-node-dota2/scripts/100_parse.js` |
-| 101 | Parse selected packet types | [101_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/101_parse_selective.js` |
+| 101 | Parse multiple replay files | [101_parse_multiple.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_multiple.js) | `node ./packages/examples-node-dota2/scripts/101_parse_multiple.js --matches="8773493455,8777738576"` |
+| 102 | Parse selected packet types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
 
 ## Usage
 
