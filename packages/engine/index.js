@@ -1,7 +1,6 @@
 export { default as Bootstrap } from './src/bootstrap/Bootstrap.js';
 export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastGateway } from './src/broadcast/BroadcastGateway.js';
-export { default as DeferredPromise } from './src/data/DeferredPromise.js';
 export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
 export { default as DemoSource } from './src/data/enums/DemoSource.js';
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
