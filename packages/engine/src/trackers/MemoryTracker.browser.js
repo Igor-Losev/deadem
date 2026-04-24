@@ -5,13 +5,17 @@ class MemoryTrackerBrowser extends MemoryTracker {
         super();
 
         this._stats = {
-            maxMemoryUsage: null
+            maxArrayBufferUsage: null,
+            maxExternalUsage: null,
+            maxHeapUsed: null,
+            maxMemoryUsage: null,
+            maxResidentSetSize: null
         };
     }
 
     /**
      * @public
-     * @returns {{maxMemoryUsage: number|null}}
+     * @returns {MemoryTrackerStats}
      */
     getStats() {
         return {

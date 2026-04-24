@@ -25,7 +25,13 @@ class MemoryTracker extends Tracker {
 }
 
 /**
- * @typedef {{maxMemoryUsage: number|null}} MemoryTrackerStats
+ * @typedef {{
+ *   maxArrayBufferUsage: number|null,
+ *   maxExternalUsage: number|null,
+ *   maxHeapUsed: number|null,
+ *   maxMemoryUsage: number|null,
+ *   maxResidentSetSize: number|null
+ * }} MemoryTrackerStats
  */
 
 export default MemoryTracker;

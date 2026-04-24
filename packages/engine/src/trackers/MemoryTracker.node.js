@@ -12,7 +12,11 @@ class MemoryTrackerNode extends MemoryTracker {
         this._intervalId = null;
 
         this._stats = {
-            maxMemoryUsage: null
+            maxArrayBufferUsage: null,
+            maxExternalUsage: null,
+            maxHeapUsed: null,
+            maxMemoryUsage: null,
+            maxResidentSetSize: null
         };
     }
 
@@ -34,6 +38,8 @@ class MemoryTrackerNode extends MemoryTracker {
             throw new Error('Unable to call MemoryTracker.off()');
         }
 
+        this._sample();
+
         clearInterval(this._intervalId);
 
         this._intervalId = null;
@@ -47,13 +53,36 @@ class MemoryTrackerNode extends MemoryTracker {
             throw new Error('Unable to call MemoryTracker.on()');
         }
 
-        this._intervalId = setInterval(() => {
-            const memoryUsage = process.memoryUsage.rss();
+        this._sample();
 
-            if (this._stats.maxMemoryUsage === null || memoryUsage > this._stats.maxMemoryUsage) {
-                this._stats.maxMemoryUsage = memoryUsage;
-            }
+        this._intervalId = setInterval(() => {
+            this._sample();
         }, this._intervalMilliseconds);
+    }
+
+    /**
+     * @protected
+     */
+    _sample() {
+        const memoryUsage = process.memoryUsage();
+        const combinedMemoryUsage = memoryUsage.heapUsed + memoryUsage.external;
+
+        updateMax(this._stats, 'maxArrayBufferUsage', memoryUsage.arrayBuffers);
+        updateMax(this._stats, 'maxExternalUsage', memoryUsage.external);
+        updateMax(this._stats, 'maxHeapUsed', memoryUsage.heapUsed);
+        updateMax(this._stats, 'maxMemoryUsage', combinedMemoryUsage);
+        updateMax(this._stats, 'maxResidentSetSize', memoryUsage.rss);
+    }
+}
+
+/**
+ * @param {MemoryTrackerStats} stats
+ * @param {keyof MemoryTrackerStats} key
+ * @param {number} value
+ */
+function updateMax(stats, key, value) {
+    if (stats[key] === null || value > stats[key]) {
+        stats[key] = value;
     }
 }
 

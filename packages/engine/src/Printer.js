@@ -91,7 +91,11 @@ class Printer {
     _printMemoryStats(memoryStats) {
         this._log(this._highlight('<Memory>'));
 
-        this._logger.info(`Max Memory Usage: [ ${this._formatNumber(bytesToMegabytes(memoryStats.maxMemoryUsage))} ] MB`);
+        this._logger.info(`Max Memory Usage: [ ${formatMegabytes(this._formatNumber.bind(this), memoryStats.maxMemoryUsage)} ] MB`);
+        this._logger.info(`Max Heap Used: [ ${formatMegabytes(this._formatNumber.bind(this), memoryStats.maxHeapUsed)} ] MB`);
+        this._logger.info(`Max External Usage: [ ${formatMegabytes(this._formatNumber.bind(this), memoryStats.maxExternalUsage)} ] MB`);
+        this._logger.info(`Max ArrayBuffer Usage: [ ${formatMegabytes(this._formatNumber.bind(this), memoryStats.maxArrayBufferUsage)} ] MB`);
+        this._logger.info(`Max RSS: [ ${formatMegabytes(this._formatNumber.bind(this), memoryStats.maxResidentSetSize)} ] MB`);
 
         this._log(this._highlight('</Memory>'));
     }
@@ -167,6 +171,19 @@ class Printer {
 
 function bytesToMegabytes(bytes) {
     return bytes / (1024 * 1024);
+}
+
+/**
+ * @param {(n: number) => string} formatNumber
+ * @param {number|null} bytes
+ * @returns {string}
+ */
+function formatMegabytes(formatNumber, bytes) {
+    if (bytes === null) {
+        return 'N/A';
+    }
+
+    return formatNumber(bytesToMegabytes(bytes));
 }
 
 export default Printer;
