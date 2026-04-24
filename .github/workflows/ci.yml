@@ -6,13 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
-
-    env:
-      FILES: "36126255-5637 51543455-6140 75438101-6448 75439032-6448"
-      S3: "https://deadem.s3.us-east-1.amazonaws.com"
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -21,44 +21,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: List versions
         run: node -v && npm -v
 
       - name: Install dependencies
-        run: rm -rf node_modules && rm package-lock.json && npm i
-
-      - name: Generate cache key
-        id: hash
-        run: |
-          echo "key=$(echo $FILES | sha256sum | cut -c1-16)" >> $GITHUB_OUTPUT
-
-      - name: Restore cache
-        id: cache
-        uses: actions/cache/restore@v4
-        with:
-          path: demos
-          key: s3-demos-${{ steps.hash.outputs.key }}
-
-      - name: Download demos from S3
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p demos
-          for file in $FILES; do
-            echo "Downloading $file.dem"
-            curl -L -o demos/$file.dem $S3/deadlock/demos/$file.dem
-            echo "Downloaded $file.dem"
-          done
-
-      - name: List demo files
-        run: ls -lh demos
-
-      - name: Save cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: demos
-          key: s3-demos-${{ steps.hash.outputs.key }}
+        run: npm ci --no-audit --no-fund
 
       - name: Run lint
         run: npm run lint
@@ -66,5 +36,71 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Run parser for multiple demo files
-        run: node ./packages/examples-node-deadlock/scripts/101_parse_multiple.js --matches="$FILES"
+  replay-regression:
+    name: Replay Regression (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    needs: ci
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: deadlock
+            demo_dir: demos/deadlock
+            demo_files: |
+              36126255-5637
+              51543455-6140
+              75438101-6448
+              75439032-6448
+            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos
+            parser_script: ./packages/examples-node-deadem/scripts/101_parse_multiple.js
+          - name: dota2
+            demo_dir: demos/dota2
+            demo_files: |
+              8773493455
+              8777738576
+              8783006717
+              8783086929
+            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/dota2/demos
+            parser_script: ./packages/examples-node-dota2/scripts/101_parse_multiple.js
+
+    env:
+      DEMO_DIR: ${{ matrix.demo_dir }}
+      DEMO_FILES: ${{ matrix.demo_files }}
+      DEMO_S3_PREFIX: ${{ matrix.demo_s3_prefix }}
+      PARSER_SCRIPT: ${{ matrix.parser_script }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Demo Cache Key
+        id: demo-cache-key
+        run: echo "key=$(bash ./.github/scripts/demo-fixtures.sh cache-key)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Demo Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DEMO_DIR }}
+          key: replay-demos-v1-${{ matrix.name }}-${{ steps.demo-cache-key.outputs.key }}
+          restore-keys: |
+            replay-demos-v1-${{ matrix.name }}-
+
+      - name: Ensure Demo Fixtures
+        run: bash ./.github/scripts/demo-fixtures.sh ensure
+
+      - name: List demo files
+        run: ls -lh "$DEMO_DIR"
+
+      - name: Run Replay Regression
+        run: node "$PARSER_SCRIPT" --matches="$(bash ./.github/scripts/demo-fixtures.sh matches)"
