@@ -36,6 +36,10 @@ build() {
     npm run build
 }
 
+refresh_lockfiles() {
+    npm install --package-lock-only
+}
+
 add() {
     require_clean_git_status
 
@@ -45,6 +49,8 @@ add() {
 bump() {
     PRE_TAG="${1:-}"
 
+    require_clean_git_status
+
     if [ -n "$PRE_TAG" ]; then
         npx changeset pre enter "$PRE_TAG"
     elif has_pre_state && [ "$(get_pre_mode)" = "pre" ]; then
@@ -52,6 +58,7 @@ bump() {
     fi
 
     npx changeset version
+    refresh_lockfiles
 
     VERSION="$(get_version)"
     TAG="v$VERSION"
