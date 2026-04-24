@@ -438,6 +438,10 @@ class BitBuffer {
      * @returns {number} The read unsigned integer (0–255).
      */
     readUInt8() {
+        if (this._pBit === 0) {
+            return this._buffer[this._pByte++] >>> 0;
+        }
+
         const buffer = this.read(BITS_PER_BYTE);
 
         return buffer[0] >>> 0;
@@ -616,6 +620,30 @@ class BitBuffer {
         }
 
         const numberOfRequestedBytes = Math.ceil(numberOfBits / BITS_PER_BYTE);
+
+        if (this._pBit === 0 && numberOfBits % BITS_PER_BYTE === 0) {
+            buffer.set(this._buffer.subarray(this._pByte, this._pByte + numberOfRequestedBytes));
+
+            this._pByte += numberOfRequestedBytes;
+
+            return buffer;
+        }
+
+        if (numberOfBits % BITS_PER_BYTE === 0) {
+            const mask = MASK_LEFT[BITS_PER_BYTE - this._pBit];
+
+            for (let i = 0; i < numberOfRequestedBytes; i++) {
+                const current = this._buffer[this._pByte + i];
+                const next = this._buffer[this._pByte + i + 1];
+
+                buffer[i] = (current >>> this._pBit) | ((next & mask) << (BITS_PER_BYTE - this._pBit));
+            }
+
+            this._pByte += numberOfRequestedBytes;
+
+            return buffer;
+        }
+
         const numberOfAffectedBytes = Math.ceil((this._pBit + numberOfBits) / BITS_PER_BYTE);
 
         let extraByte;
