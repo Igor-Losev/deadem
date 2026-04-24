@@ -181,13 +181,13 @@ See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/mai
 
 ### Single-threaded (`parserThreads = 0`)
 
-Memory below reports the sampled peak of `heapUsed + external`.
+Memory below reports the sampled peak RSS from isolated runs.
 
 | # | Scenario | Runtime | Ticks/sec | Game seconds/sec (tick rate 30) | 30-min replay, sec | Max memory, MB |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | All packet types (entities included) | Node.js v22.14.0 | 16 987 +- 2.14% | 566.25 +- 2.14% | ~3.18 | 254 +- 5.55% |
-| 2 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 85 042 +- 1.69% | 2 834.74 +- 1.69% | ~0.63 | 82 +- 12.27% |
-| 3 | Single `MessagePacketType` only | Node.js v22.14.0 | 126 327 +- 1.57% | 4 210.89 +- 1.57% | ~0.43 | 79 +- 5.26% |
+| 1 | All packet types (entities included) | Node.js v22.14.0 | 16 987 +- 2.14% | 566.25 +- 2.14% | ~3.18 | 390 +- 3.41% |
+| 2 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 85 042 +- 1.69% | 2 834.74 +- 1.69% | ~0.63 | 213 +- 4.84% |
+| 3 | Single `MessagePacketType` only | Node.js v22.14.0 | 126 327 +- 1.57% | 4 210.89 +- 1.57% | ~0.43 | 235 +- 3.34% |
 
 ## License
 

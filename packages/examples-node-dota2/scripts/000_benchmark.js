@@ -7,10 +7,11 @@ import StatsAccumulator from '@deademx/examples-common/data/StatsAccumulator.js'
 
 const DEFAULT_REPEATS = 10;
 const REPEATS_ARGUMENT_PREFIX = '--repeats=';
-const RUNTIME = `Node.js ${process.version}`;
 
-const repeatsArgument = process.argv.find((arg) => arg.startsWith(REPEATS_ARGUMENT_PREFIX));
-const repeats = repeatsArgument ? Number.parseInt(repeatsArgument.slice(REPEATS_ARGUMENT_PREFIX.length), 10) : DEFAULT_REPEATS;
+const repeatsArgument = process.argv.find((value) => value.startsWith(REPEATS_ARGUMENT_PREFIX));
+const repeats = repeatsArgument
+    ? Number.parseInt(repeatsArgument.slice(REPEATS_ARGUMENT_PREFIX.length), 10)
+    : DEFAULT_REPEATS;
 
 if (!Number.isInteger(repeats) || repeats <= 0) {
     throw new Error('Argument --repeats must be a positive integer');
@@ -40,38 +41,45 @@ const CASES = [
     }
 ];
 
-(async () => {
-    if (typeof global.gc !== 'function') {
-        throw new Error('Run node with --expose-gc');
-    }
+if (typeof global.gc !== 'function') {
+    throw new Error('Run node with --expose-gc');
+}
 
-    const logger = Logger.CONSOLE_INFO;
-    const rows = [];
+const logger = Logger.CONSOLE_INFO;
+const rows = [];
 
-    for (const benchmarkCase of CASES) {
-        logger.info(`Running benchmark case [ ${benchmarkCase.id} ]: ${benchmarkCase.label}`);
+logger.info(`Repeats per case: [ ${CONFIG.REPEATS} ]`);
 
-        const result = await runBenchmarkCase(benchmarkCase);
+for (const benchmarkCase of CASES) {
+    logger.info(`Running benchmark case [ ${benchmarkCase.id} ]: ${benchmarkCase.label}`);
 
-        rows.push({
-            id: benchmarkCase.id,
-            label: benchmarkCase.label,
-            ...result
-        });
+    const result = await runBenchmarkCase(benchmarkCase);
 
-        logger.info(`Finished benchmark case [ ${benchmarkCase.id} ]`);
-        logger.info(`Runtime: ${result.runtime}`);
-        logger.info(`Ticks/sec: ${formatMeasured(result.tps.mean, result.tps.std, 0)}`);
-        logger.info(`Game seconds/sec: ${formatMeasured(result.gps.mean, result.gps.std, 2)}`);
-        logger.info(`30-min replay, sec: ${result.replay30Formatted}`);
-        logger.info(`Max memory, MB: ${formatMeasured(result.memory.mean, result.memory.std, 0)}`);
-        logger.info(`Memory breakdown, MB: heap=${formatMeasured(result.memoryHeap.mean, result.memoryHeap.std, 0)}, external=${formatMeasured(result.memoryExternal.mean, result.memoryExternal.std, 0)}, arrayBuffers=${formatMeasured(result.memoryArrayBuffers.mean, result.memoryArrayBuffers.std, 0)}, rss=${formatMeasured(result.memoryRss.mean, result.memoryRss.std, 0)}`);
-    }
-})();
+    rows.push({
+        id: benchmarkCase.id,
+        label: benchmarkCase.label,
+        ...result
+    });
+
+    logger.info(`Finished benchmark case [ ${benchmarkCase.id} ]`);
+    logger.info(`Runtime: ${result.runtime}`);
+    logger.info(`Ticks/sec: ${formatMeasured(result.tps.mean, result.tps.std, 0)}`);
+    logger.info(`Game seconds/sec: ${formatMeasured(result.gps.mean, result.gps.std, 2)}`);
+    logger.info(`30-min replay, sec: ${result.replay30Formatted}`);
+    logger.info(`Max memory, MB: ${formatMeasured(result.memory.mean, result.memory.std, 0)}`);
+    logger.info(`Memory breakdown, MB: heap=${formatMeasured(result.memoryHeap.mean, result.memoryHeap.std, 0)}, external=${formatMeasured(result.memoryExternal.mean, result.memoryExternal.std, 0)}, arrayBuffers=${formatMeasured(result.memoryArrayBuffers.mean, result.memoryArrayBuffers.std, 0)}, rss=${formatMeasured(result.memoryRss.mean, result.memoryRss.std, 0)}`);
+}
+
+console.log('');
+console.log('Markdown table rows:');
+
+for (const row of rows) {
+    console.log(`| ${row.id} | ${row.label} | ${row.runtime} | ${formatMeasured(row.tps.mean, row.tps.std, 0)} | ${formatMeasured(row.gps.mean, row.gps.std, 2)} | ${row.replay30Formatted} | ${formatMeasured(row.memory.mean, row.memory.std, 0)} |`);
+}
 
 /**
  * @param {{id: number, label: string, configuration: ParserConfiguration}} benchmarkCase
- * @returns {Promise<{gps: StatsAccumulatorResult, memory: StatsAccumulatorResult, memoryArrayBuffers: StatsAccumulatorResult, memoryExternal: StatsAccumulatorResult, memoryHeap: StatsAccumulatorResult, memoryRss: StatsAccumulatorResult, replay30Formatted: string, runtime: string, tps: StatsAccumulatorResult}>}
+ * @returns {Promise<BenchmarkCaseResult>}
  */
 async function runBenchmarkCase(benchmarkCase) {
     const benchmark = new Benchmark();
@@ -94,7 +102,6 @@ async function runBenchmarkCase(benchmarkCase) {
         pushMegabytes(memoryRss, stats.memory.maxResidentSetSize);
 
         await parser.dispose();
-
         await pause(50);
 
         global.gc();
@@ -116,7 +123,7 @@ async function runBenchmarkCase(benchmarkCase) {
         memoryHeap: memoryHeap.getResult(),
         memoryRss: memoryRss.getResult(),
         replay30Formatted: formatReplayDuration(gps.mean),
-        runtime: RUNTIME,
+        runtime: `Node.js ${process.version}`,
         tps: result.demo.tps
     };
 }
@@ -126,9 +133,11 @@ async function runBenchmarkCase(benchmarkCase) {
  * @param {number|null} bytes
  */
 function pushMegabytes(accumulator, bytes) {
-    if (bytes !== null) {
-        accumulator.push(bytes / (1024 * 1024));
+    if (bytes === null) {
+        return;
     }
+
+    accumulator.push(bytes / (1024 * 1024));
 }
 
 /**
@@ -186,3 +195,17 @@ function pause(ms = 50) {
         setTimeout(resolve, ms);
     });
 }
+
+/**
+ * @typedef {{
+ *   gps: StatsAccumulatorResult,
+ *   memory: StatsAccumulatorResult,
+ *   memoryArrayBuffers: StatsAccumulatorResult,
+ *   memoryExternal: StatsAccumulatorResult,
+ *   memoryHeap: StatsAccumulatorResult,
+ *   memoryRss: StatsAccumulatorResult,
+ *   replay30Formatted: string,
+ *   runtime: string,
+ *   tps: StatsAccumulatorResult
+ * }} BenchmarkCaseResult
+ */
