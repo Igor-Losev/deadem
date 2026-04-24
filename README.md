@@ -8,10 +8,11 @@ deadem
 </h1>
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
-<a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
-<a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
+<a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine?label=%40deademx%2Fengine" /></a>
+<a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem?label=deadem" /></a>
+<a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2?label=%40deademx%2Fdota2" /></a>
 
-**deadem** is a collection of JavaScript packages for parsing and playing back Valve Source 2 demo and replay data in Node.js and modern browsers.
+Collection of JavaScript packages for parsing and playing back Valve Source 2 demo / replay data in Node.js and modern browsers.
 
 The parsing stack depends only on:
 
