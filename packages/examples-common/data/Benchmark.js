@@ -1,4 +1,4 @@
-import { InterceptorStage, MessagePacketType } from 'deadem';
+import { InterceptorStage } from '@deademx/engine';
 
 import StatsAccumulator from './StatsAccumulator.js';
 import StatsAccumulatorTiming from './StatsAccumulatorTiming.js';
@@ -64,9 +64,9 @@ class Benchmark {
         });
         */
 
-        parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-            if (messagePacket.type === MessagePacketType.NET_TICK) {
-                lastTick = messagePacket.data.tick;
+        parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
+            if (Number.isInteger(demoPacket.tick) && demoPacket.tick > lastTick) {
+                lastTick = demoPacket.tick;
             }
         });
 

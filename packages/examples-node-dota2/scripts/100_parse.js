@@ -4,7 +4,7 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.DOTA2_REPLAY_8777738576);
+    const reader = await DemoProvider.read(DemoFile.DOTA2_REPLAY_8783006717);
 
     const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
 

@@ -7,7 +7,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@deademx/engine": "2.1.0-alpha.5",
-    "deadem": "2.1.0-alpha.5"
+    "@deademx/engine": "2.1.0-alpha.5"
   }
 }

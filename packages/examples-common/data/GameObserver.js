@@ -1,4 +1,4 @@
-import { InterceptorStage } from 'deadem';
+import { InterceptorStage } from '@deademx/engine';
 
 import GameState from './GameState.js';
 
