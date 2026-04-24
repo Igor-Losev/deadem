@@ -22,7 +22,7 @@ For the shared parser model, player lifecycle, interceptors, configuration, and 
 - [Quick start](#quick-start)<br/>
   Minimal example to parse a Dota 2 demo file.
 - [Examples](#examples)<br/>
-  Runnable example scripts covering parsing.
+  Runnable example scripts covering parsing and player.
 - [Usage](#usage)<br/>
   Dota 2-specific usage patterns.
   - [Replay file](#replay-file)<br/>
@@ -82,11 +82,20 @@ printer.printStats();
 
 All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
 
+### Parsing
+
 | # | Description | Source | Command |
 | --- | --- | --- | --- |
 | 100 | Parse a single replay file | [100_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js) | `node ./packages/examples-node-dota2/scripts/100_parse.js` |
 | 101 | Parse multiple replay files | [101_parse_multiple.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_multiple.js) | `node ./packages/examples-node-dota2/scripts/101_parse_multiple.js --matches="8773493455,8777738576"` |
 | 102 | Parse selected message types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
+| 103 | Print Dota 2 chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
+
+### Player
+
+| # | Description | Source | Command |
+| --- | --- | --- | --- |
+| 200 | Load, seek, play, and pause a replay | [200_play.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js) | `node ./packages/examples-node-dota2/scripts/200_play.js` |
 
 ## Usage
 
