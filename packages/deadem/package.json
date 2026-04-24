@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "2.1.0-alpha.5",
+  "version": "2.1.0-alpha.6",
   "description": "Deadlock (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -49,6 +49,6 @@
     }
   },
   "dependencies": {
-    "@deademx/engine": "2.1.0-alpha.5"
+    "@deademx/engine": "2.1.0-alpha.6"
   }
 }
