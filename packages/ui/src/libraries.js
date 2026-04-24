@@ -1,6 +1,7 @@
 import packageJson from './../package.json';
 
 const loadedLibraryPromises = new Map();
+const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 
 export const LIBRARIES = [
   {
@@ -13,7 +14,7 @@ export const LIBRARIES = [
     devImportSpecifier: 'deadem',
     title: 'Deadem Explorer',
     description: 'A web replay viewer powered by deadem for parsing and playing back Deadlock and Dota 2 demo files (.dem) in Node.js and the browser.',
-    documentationUrl: 'https://github.com/Igor-Losev/deadem/blob/main/README.md',
+    documentationUrl: PROJECT_DOCUMENTATION_URL,
     npmUrl: 'https://www.npmjs.com/package/deadem',
     issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
     releasesUrl: 'https://github.com/Igor-Losev/deadem/releases'
@@ -28,7 +29,7 @@ export const LIBRARIES = [
     devImportSpecifier: '@deademx/dota2',
     title: 'Deadem Explorer',
     description: 'A web replay viewer powered by deadem for parsing and playing back Deadlock and Dota 2 demo files (.dem) in Node.js and the browser.',
-    documentationUrl: 'https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md',
+    documentationUrl: PROJECT_DOCUMENTATION_URL,
     npmUrl: 'https://www.npmjs.com/package/@deademx/dota2',
     issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
     releasesUrl: 'https://github.com/Igor-Losev/deadem/releases'
