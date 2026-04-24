@@ -10,130 +10,105 @@
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine" /></a>
 
-**@deademx/engine** is the shared low-level Source 2 parsing and replay playback engine that powers the `deadem` and `@deademx/dota2` packages.
+**@deademx/engine** is the shared, game-agnostic Source 2 parsing and replay playback engine that powers [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) (Deadlock) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) (Dota 2).
 
-It provides the common packet parsing pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast support, and parser configuration primitives used across game-specific implementations.
-
-This package does not include game-specific schemas or message registrations. `Parser` and `Player` require a prepared `SchemaRegistry`. If you want a ready-to-run package, use [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2).
-
-## Contents
-
-  * [Implementations](#implementations)<br/>
-    Game-specific packages built on top of the shared engine.
-
-  * [Overview](#overview)<br/>
-    Core concepts and architecture of the parsing and playback engine.
-
-    * [Understanding Demo](#understanding-demo)<br/>
-      Structure and content of Source 2 demo packets.
-
-    * [Understanding Parser](#understanding-parser)<br/>
-      Parser lifecycle, mutable state, and stream processing model.
-
-    * [Understanding Player](#understanding-player)<br/>
-      Replay playback model, seeking, and player state transitions.
-
-    * [Understanding Interceptors](#understanding-interceptors)<br/>
-      Hook points for inspecting and extracting data during parsing.
-
-  * [Configuration](#configuration)<br/>
-    Parser configuration options and logging strategies.
-
-    * [Parsing](#parsing)<br/>
-      Packet filtering, worker settings, and parser tuning options.
-
-    * [Logging](#logging)<br/>
-      Built-in logger strategies and usage examples.
-
-  * [Usage](#usage)<br/>
-    Common usage patterns for replay parsing, broadcast parsing, and playback.
-
-    * [Demo File](#demo-file)<br/>
-      Parsing a replay from a `.dem` file.
-
-    * [Broadcast Stream](#broadcast-stream)<br/>
-      Parsing Source 2 HTTP Broadcast data from a live stream.
-
-    * [Data Extraction](#data-extraction)<br/>
-      Capturing data during parsing or querying final demo state.
-
-    * [Player](#player)<br/>
-      Seeking through buffered replay state and running continuous playback.
-
-  * [License](#license)<br/>
-    Project licensing information.
+It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. For a ready-to-run package, install one of the implementations below.
 
 ## Implementations
 
-- [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) for Deadlock-specific packet types, schemas, examples, and compatibility notes
-- [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) for Dota 2-specific packet types, schemas, and examples
+| Package | Game | Links |
+| --- | --- | --- |
+| `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
+| `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
 
-## Overview
+## Contents
 
-### Understanding Demo
+- [Concepts](#concepts)
+  - [Demo](#demo)
+  - [Parser](#parser)
+  - [Player](#player)
+  - [Interceptors](#interceptors)
+- [Configuration](#configuration)
+  - [Parser options](#parser-options)
+  - [Logging](#logging)
+- [API reference](#api-reference)
+- [Usage](#usage)
+  - [Replay file](#replay-file)
+  - [HTTP broadcast](#http-broadcast)
+  - [Data extraction](#data-extraction)
+  - [Playback and seeking](#playback-and-seeking)
+- [License](#license)
 
-The demo file consists of a sequential stream of outer packets, referred to in this project as `DemoPacket`.
-Each packet represents a type defined in `DemoPacketType`.
+## Concepts
 
-Most `DemoPacket` types, once parsed, become plain JavaScript objects containing structured data. Some packet types, such as `DEM_PACKET`, `DEM_SIGNON_PACKET`, and `DEM_FULL_PACKET`, encapsulate an array of inner packets, referred to in this project as `MessagePacket`.
+### Demo
 
-Similarly, most `MessagePacket` types also parse into regular data objects. There are two notable exceptions that require additional parsing:
+A Source 2 demo is a sequential stream of outer packets, called `DemoPacket` in this project. Each has a type from `DemoPacketType`.
 
-1. **Entities**: `MessagePacketType.SVC_PACKET_ENTITIES` contains granular or full updates to existing entities.
-2. **String Tables**: `MessagePacketType.SVC_CREATE_STRING_TABLE`, `MessagePacketType.SVC_UPDATE_STRING_TABLE`, and `MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES` update existing string tables.
+Most `DemoPacket` types parse into plain objects. Three types carry an array of inner `MessagePacket` values:
 
-> Warning
->
-> Demo files contain only the minimal data required for visual playback. Not all game state information is preserved or available, and the parser may skip packets it cannot decode.
->
-> You can retrieve detailed statistics about parsed and skipped packets by calling `parser.getStats()`.
+- `DEM_PACKET`
+- `DEM_SIGNON_PACKET`
+- `DEM_FULL_PACKET`
 
-The `Demo` object is updated tick by tick and exposes query methods for the current game state:
+Two `MessagePacket` categories require additional decoding and drive the internal game state:
 
-- `demo.getEntities()` for all live entities
-- `demo.getEntitiesByClassName(className)` for class-filtered entities
-- `demo.getEntity(index)` for a single entity by index
-- `demo.getClasses()` for registered entity classes
+- **Entities** — `SVC_PACKET_ENTITIES` contains creates, updates, and deletes.
+- **String tables** — `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE`, `SVC_CLEAR_ALL_STRING_TABLES`.
 
-### Understanding Parser
+The engine maintains a mutable `Demo` object that is updated tick by tick. Query it for the current state:
 
-The parser accepts a readable stream and incrementally parses individual packets from it.
-It maintains an internal, mutable `Demo` instance representing the current state of the game.
+| Method | Returns |
+| --- | --- |
+| `demo.getEntities()` | All live entities |
+| `demo.getEntitiesByClassName(name)` | Entities filtered by class name |
+| `demo.getEntity(index)` | Entity by index |
+| `demo.getEntityByHandle(handle)` | Entity by handle |
+| `demo.getClasses()` | All registered entity classes |
+| `demo.getClassByName(name)` | Entity class by name |
+| `demo.stringTableContainer.getByName(name)` | String table by name |
+| `demo.server` | Server metadata (`tickInterval`, `tickRate`, `maxClients`, `maxClasses`) |
+
+Entities expose raw state via `entity.state` and a cached flattened view via `entity.unpackFlattened()`, which lazily materializes a plain object keyed by field name and reuses snapshots between ticks.
+
+> [!WARNING]
+> Demos carry only the minimal data required for visual playback. Not all game state is preserved, and the parser may skip packets it cannot decode. Call `parser.getStats()` (or `player.getStats()`) for detailed per-packet statistics.
+
+### Parser
+
+`Parser` consumes a readable stream and incrementally parses packets into an internal `Demo` instance. It overwrites past state as ticks advance and does not buffer snapshots.
 
 ```js
-const demo = parser.getDemo();
+const parser = new Parser(registry);
+
+await parser.parse(readable);
+await parser.dispose();
 ```
 
-The parser overwrites existing state as ticks advance and does not store past snapshots.
-
-The parser also supports pausing and resuming mid-stream:
+Parsing can be paused and resumed mid-stream:
 
 ```js
 parser.pause();
 parser.resume();
 ```
 
-Once parsing is complete, call `dispose()` to release internal resources:
+### Player
 
-```js
-await parser.dispose();
-```
-
-### Understanding Player
-
-`Player` is a higher-level class built on top of the parser engine for replay playback.
-Unlike `Parser`, which processes a stream sequentially and discards past state, `Player` buffers the entire demo on `load()` and builds an internal packet index, enabling seek-to-tick in both directions.
+`Player` is a higher-level class built on top of the same engine. Unlike `Parser`, it buffers the entire demo on `load()` and builds a packet index, enabling forward and backward seeks.
 
 ```js
 const player = new Player(registry);
 
 await player.load(readable);
 await player.seekToTick(50000);
+
 await player.nextTick();
 await player.prevTick();
+
 await player.play(2.0).catch((err) => {
     if (!(err instanceof PlaybackInterruptedError)) throw err;
 });
+
 player.pause();
 await player.stop();
 await player.dispose();
@@ -152,7 +127,7 @@ LOADED
  └── dispose()     → DISPOSED
 
 PLAYING
- ├── pause() / end of replay → LOADED
+ ├── pause() / end → LOADED
  └── dispose()     → DISPOSED
 
 SEEKING
@@ -162,46 +137,43 @@ SEEKING
 
 | State | Description |
 | --- | --- |
-| `IDLE` | Initial state. `load()` or `dispose()` can be called. |
-| `LOADED` | Demo is buffered and indexed. Ready for all operations. |
+| `IDLE` | Initial state. Only `load()` or `dispose()` is allowed. |
+| `LOADED` | Demo is buffered and indexed. Ready for seek and playback. |
 | `PLAYING` | Continuous playback is running. |
 | `SEEKING` | A `seekToTick()` call is in progress. |
 | `DISPOSED` | Resources released. The player cannot be used further. |
 
 The current state is exposed via `player.state`.
 
-The player exposes the same interceptor API as the parser: `registerPreInterceptor`, `registerPostInterceptor`, `unregisterPreInterceptor`, and `unregisterPostInterceptor`.
+> [!NOTE]
+> `Player` does not support `parserThreads > 0`. Constructing a player with parallel parsing throws immediately.
 
-> Note
->
-> `Player` does not support `parserThreads > 0`.
+### Interceptors
 
-### Understanding Interceptors
+Interceptors are user-defined hooks that run before or after specific parsing stages. They are the primary way to extract data during parsing.
 
-Interceptors are user-defined hooks that run before or after specific parsing stages.
-They allow you to inspect and extract data while parsing.
+`Parser` and `Player` expose the same registration API:
 
-Currently, there are three supported stages:
+- `registerPreInterceptor(stage, fn)`
+- `registerPostInterceptor(stage, fn)`
+- `unregisterPreInterceptor(stage, fn)`
+- `unregisterPostInterceptor(stage, fn)`
 
-- `InterceptorStage.DEMO_PACKET`
-- `InterceptorStage.MESSAGE_PACKET`
-- `InterceptorStage.ENTITY_PACKET`
+Three stages are supported via `InterceptorStage`:
 
-Register hooks with:
+| Stage | Hook signature |
+| --- | --- |
+| `DEMO_PACKET` | `(demoPacket) => void` |
+| `MESSAGE_PACKET` | `(demoPacket, messagePacket) => void` |
+| `ENTITY_PACKET` | `(demoPacket, messagePacket, events) => void` |
 
-- `parser.registerPreInterceptor(InterceptorStage.DEMO_PACKET, hookFn)`
-- `parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, hookFn)`
+For `ENTITY_PACKET`, `events` is an array of `EntityMutationEvent` values with `{ operation, entity, mutations }`, where `operation` is an `EntityOperation` (`CREATE`, `UPDATE`, `LEAVE`, `DELETE`).
 
-The parsing timeline looks like this:
+The parse timeline:
 
 ```text
-...
 PRE DEMO_PACKET
  └─ DEM_FILE_HEADER
-POST DEMO_PACKET
-...
-PRE DEMO_PACKET
- └─ DEM_SEND_TABLES
 POST DEMO_PACKET
 ...
 PRE DEMO_PACKET
@@ -210,51 +182,39 @@ PRE DEMO_PACKET
      │   └─ NET_TICK
      └─ POST MESSAGE_PACKET
      ├─ PRE MESSAGE_PACKET
-     │   └─ SVC_ENTITIES
+     │   └─ SVC_PACKET_ENTITIES
      │       ├─ PRE ENTITY_PACKET
      │       │   └─ ENTITY_1
      │       └─ POST ENTITY_PACKET
-     │       ├─ PRE ENTITY_PACKET
-     │       │   └─ ENTITY_2
-     │       └─ POST ENTITY_PACKET
+     │       └─ ...
      └─ POST MESSAGE_PACKET
 POST DEMO_PACKET
-...
 ```
 
-Each interceptor receives different arguments depending on `InterceptorStage`:
-
-| Interceptor Stage | Hook Type | Hook Signature |
-| --- | --- | --- |
-| `DEMO_PACKET` | `pre` / `post` | `(demoPacket) => void` |
-| `MESSAGE_PACKET` | `pre` / `post` | `(demoPacket, messagePacket) => void` |
-| `ENTITY_PACKET` | `pre` / `post` | `(demoPacket, messagePacket, events) => void` |
-
-> Important
->
-> Interceptor hooks are not blocking. The parser does not `await` async callbacks, so use synchronous interceptors when data must be captured before parsing continues.
+> [!IMPORTANT]
+> Interceptor callbacks are not awaited. Use synchronous callbacks when data must be captured before the parser advances.
 
 ## Configuration
 
-### Parsing
+### Parser options
 
-Below is a list of options accepted by `ParserConfiguration`:
+`ParserConfiguration` controls packet filtering and parser tuning:
 
 | Option | Description | Type | Default |
 | --- | --- | --- | --- |
-| `breakInterval` | How often, in packets, to yield to the event loop. Lower values improve responsiveness but may reduce throughput. | `number` | `1000` |
-| `messagePacketTypes` | Allowlist of `MessagePacketType` values to process. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
-| `messagePacketTypesExclude` | Blocklist of `MessagePacketType` values to skip. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
-| `parserThreads` | Number of additional worker threads used by the parser. | `number` | `0` |
+| `breakInterval` | How often, in packets, to yield to the event loop. Lower values improve responsiveness, higher values improve throughput. | `number` | `1000` |
+| `messagePacketTypes` | Allowlist of `MessagePacketType` values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
+| `messagePacketTypesExclude` | Blocklist of `MessagePacketType` values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
+| `parserThreads` | Number of additional worker threads. Not supported by `Player`. | `number` | `0` |
 
-Critical packet types are always processed even when filtered, because the engine requires them to maintain internal state:
+The engine always processes the following message types regardless of filters, because they drive internal state:
 
 - `SVC_SERVER_INFO`
 - `SVC_CREATE_STRING_TABLE`
 - `SVC_UPDATE_STRING_TABLE`
 - `SVC_CLEAR_ALL_STRING_TABLES`
 
-Example: skip entity packets when entity data is not needed:
+Example — skip entity packets when entity data is not needed:
 
 ```js
 import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine';
@@ -266,22 +226,55 @@ const parser = new Parser(registry, new ParserConfiguration({
 
 ### Logging
 
-The library provides a `Logger` class with predefined logging strategies:
+`Logger` ships with predefined strategies:
 
-- `Logger.CONSOLE_WARN` for warnings and errors
-- `Logger.NOOP` to disable logging
+| Strategy | Levels emitted |
+| --- | --- |
+| `Logger.CONSOLE_TRACE` | trace, debug, info, warn, error |
+| `Logger.CONSOLE_DEBUG` | debug, info, warn, error |
+| `Logger.CONSOLE_INFO` *(default)* | info, warn, error |
+| `Logger.CONSOLE_WARN` | warn, error |
+| `Logger.NOOP` | (nothing) |
 
 ```js
 import { Logger, Parser, ParserConfiguration } from '@deademx/engine';
 
-const configuration = new ParserConfiguration({ parserThreads: 2 });
-
-const parser = new Parser(registry, configuration, Logger.CONSOLE_WARN);
+const parser = new Parser(registry, ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 ```
+
+## API reference
+
+| Export | Purpose |
+| --- | --- |
+| `Parser` | Streaming parser over a `Readable`. |
+| `Player` | Buffered replay player with seek and playback. |
+| `ParserConfiguration` | Parser options (filters, threads, break interval). |
+| `SchemaRegistry` | Registry of protobuf types. Required by `Parser` and `Player`. |
+| `Bootstrap` | Populates a `SchemaRegistry` with engine-level types. |
+| `BroadcastAgent` | Polls Source 2 HTTP broadcast fragments. |
+| `BroadcastGateway` | Low-level HTTP client for broadcast endpoints. |
+| `Printer` | Prints parser stats (memory, packets, performance). |
+| `Logger` | Logging strategy (see above). |
+| `PlaybackInterruptedError` | Raised when `Player.play()` is interrupted. Exposes `reason`. |
+| `DemoPacketType` | Enum of outer packet types (`DEM_PACKET`, `DEM_FULL_PACKET`, …). |
+| `MessagePacketType` | Enum of inner message types (`NET_TICK`, `SVC_PACKET_ENTITIES`, …). |
+| `StringTableType` | Enum of string tables (`USER_INFO`, `INSTANCE_BASE_LINE`, …). |
+| `EntityOperation` | `CREATE`, `UPDATE`, `LEAVE`, `DELETE`. |
+| `InterceptorStage` | `DEMO_PACKET`, `MESSAGE_PACKET`, `ENTITY_PACKET`. |
+| `PlayerState` | `IDLE`, `LOADED`, `PLAYING`, `SEEKING`, `DISPOSED`. |
+| `DemoSource` | `REPLAY`, `HTTP_BROADCAST`. |
+| `Protocol` | `HTTP`, `HTTPS`. |
+| `DeferredPromise` | Utility promise with external `resolve`/`reject`. |
+
+Key methods on `Parser`: `parse(reader, source?, objectMode?)`, `extract(reader, source?)`, `pause()`, `resume()`, `abort()`, `dispose()`, `getDemo()`, `getStats()`, `getIsStarted()`, `getIsPaused()`, `getIsFinished()`, `getIsDisposed()`, plus the interceptor registration API.
+
+Key methods on `Player`: `load(reader, source?)`, `seekToTick(tick)`, `nextTick()`, `prevTick()`, `play(rate?)`, `pause()`, `stop()`, `dispose()`, `getDemo()`, `getCurrentTick()`, `getFirstTick()`, `getLastTick()`, `getStats()`, `state`, plus the interceptor registration API.
 
 ## Usage
 
-### Demo File
+All examples assume `registry` is a populated `SchemaRegistry`. When using a game-specific package (`deadem`, `@deademx/dota2`), the registry is built automatically inside the subclassed `Parser` and `Player` — there is nothing to wire up. When consuming `@deademx/engine` directly, you must supply both a `ProtoProvider` and a bootstrap routine that layers game-specific types on top of `Bootstrap.run(registry)`.
+
+### Replay file
 
 ```js
 import { createReadStream } from 'node:fs';
@@ -298,29 +291,26 @@ await parser.dispose();
 printer.printStats();
 ```
 
-### Broadcast Stream
+### HTTP broadcast
 
 ```js
-import { BroadcastAgent, BroadcastGateway, DemoSource, Parser, Printer } from '@deademx/engine';
+import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from '@deademx/engine';
 
 const FROM_BEGINNING = false;
 const MATCH_ID = 'MATCH_IDENTIFIER';
 
-const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
-const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID);
+const gateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
+const agent = new BroadcastAgent(gateway, MATCH_ID);
 
 const parser = new Parser(registry);
-const printer = new Printer(parser);
 
-await parser.parse(broadcastAgent.stream(FROM_BEGINNING), DemoSource.HTTP_BROADCAST);
+await parser.parse(agent.stream(FROM_BEGINNING), DemoSource.HTTP_BROADCAST);
 await parser.dispose();
-
-printer.printStats();
 ```
 
-### Data Extraction
+### Data extraction
 
-Use interceptors when data must be captured during parsing:
+Use interceptors when data must be captured *during* parsing:
 
 ```js
 import { InterceptorStage, Parser } from '@deademx/engine';
@@ -328,7 +318,7 @@ import { InterceptorStage, Parser } from '@deademx/engine';
 const parser = new Parser(registry);
 
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-    console.log(messagePacket.type, messagePacket.data);
+    console.log(messagePacket.type.code, messagePacket.data);
 });
 
 await parser.parse(readable);
@@ -343,27 +333,19 @@ const demo = parser.getDemo();
 const entities = demo.getEntities();
 ```
 
-### Player
+### Playback and seeking
 
-Inspect game state at a specific tick:
+Inspect state at a specific tick:
 
 ```js
 import { createReadStream } from 'node:fs';
 
-import { InterceptorStage, Player } from '@deademx/engine';
+import { Player } from '@deademx/engine';
 
 const player = new Player(registry);
-
-player.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
-    console.log(events.length);
-});
-
 const readable = createReadStream(PATH_TO_DEMO_FILE);
 
 await player.load(readable);
-
-console.log(`Ticks: [ ${player.getFirstTick()} ] - [ ${player.getLastTick()} ]`);
-
 await player.seekToTick(player.getLastTick());
 
 const demo = player.getDemo();
@@ -372,28 +354,22 @@ const entities = demo.getEntities();
 await player.dispose();
 ```
 
-Continuous playback:
+Continuous playback at 2× speed, paused after 3 seconds:
 
 ```js
-import { createReadStream } from 'node:fs';
-
 import { PlaybackInterruptedError, Player } from '@deademx/engine';
 
 const player = new Player(registry);
-const readable = createReadStream(PATH_TO_DEMO_FILE);
 
 await player.load(readable);
 
 const playback = player.play(2.0).catch((err) => {
-    if (!(err instanceof PlaybackInterruptedError)) {
-        throw err;
-    }
+    if (!(err instanceof PlaybackInterruptedError)) throw err;
 });
 
 setTimeout(() => player.pause(), 3000);
 
 await playback;
-
 await player.dispose();
 ```
 
