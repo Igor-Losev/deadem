@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-dota2",
-  "version": "2.1.0-alpha.6",
+  "version": "2.1.0-alpha.7",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "2.1.0-alpha.6",
-    "@deademx/dota2": "2.1.0-alpha.6"
+    "@deademx/examples-common": "2.1.0-alpha.7",
+    "@deademx/dota2": "2.1.0-alpha.7"
   }
 }

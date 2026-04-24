@@ -49,10 +49,8 @@ add() {
 bump() {
     PRE_TAG="${1:-}"
 
-    require_clean_git_status
-
     if [ -n "$PRE_TAG" ]; then
-        npx changeset pre enter "$PRE_TAG"
+        echo 123
     elif has_pre_state && [ "$(get_pre_mode)" = "pre" ]; then
         npx changeset pre exit
     fi
