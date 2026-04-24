@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
+  "changelog": false,
+  "commit": false,
+  "fixed": [
+    [
+      "@deademx/engine",
+      "deadem",
+      "@deademx/dota2",
+      "@deademx/examples-common",
+      "@deademx/examples-node-deadem",
+      "@deademx/examples-node-dota2",
+      "@deademx/ui"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [],
+  "privatePackages": {
+    "version": true,
+    "tag": false
+  }
+}

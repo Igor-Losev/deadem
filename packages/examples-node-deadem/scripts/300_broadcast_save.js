@@ -1,0 +1,17 @@
+import { BroadcastAgent, BroadcastGateway, Logger } from 'deadem';
+
+import FileSystem from '@deademx/engine/src/core/FileSystem.js';
+
+(async () => {
+    const FROM_BEGINNING = true;
+    const MATCH_ID = '75637129_201673668';
+
+    const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
+    const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);
+
+    const readable = broadcastAgent.stream(FROM_BEGINNING);
+    const writable = FileSystem.createWriteStream(`./${MATCH_ID}.bin`);
+
+    readable.pipe(writable);
+})();
+

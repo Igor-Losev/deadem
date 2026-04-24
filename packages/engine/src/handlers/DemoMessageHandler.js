@@ -1,0 +1,266 @@
+import Assert from '#core/Assert.js';
+import BitBuffer from '#core/BitBuffer.js';
+
+import Demo from '#data/Demo.js';
+import Server from '#data/Server.js';
+
+import Entity from '#data/entity/Entity.js';
+import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
+import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
+
+import EntityOperation from '#data/enums/EntityOperation.js';
+
+import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
+
+import StringTableHandler from '#handlers/StringTableHandler.js';
+
+import SchemaRegistry from '#src/SchemaRegistry.js';
+
+class DemoMessageHandler {
+    /**
+     * @constructor
+     * @param {SchemaRegistry} registry
+     * @param {Demo} demo
+     * @param {StringTableHandler} stringTableHandler
+     */
+    constructor(registry, demo, stringTableHandler) {
+        Assert.isTrue(registry instanceof SchemaRegistry);
+        Assert.isTrue(demo instanceof Demo);
+        Assert.isTrue(stringTableHandler instanceof StringTableHandler);
+
+        this._registry = registry;
+        this._demo = demo;
+        this._stringTableHandler = stringTableHandler;
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_SERVER_INFO} (ID = 40).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     */
+    handleSvcServerInfo(messagePacket) {
+        const message = messagePacket.data;
+
+        const server = new Server(message.maxClasses, message.maxClients, message.tickInterval);
+
+        this._demo.registerServer(server);
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_CREATE_STRING_TABLE} (ID = 44).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     */
+    handleSvcCreateStringTable(messagePacket) {
+        this._stringTableHandler.handleCreate(messagePacket.data);
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_UPDATE_STRING_TABLE} (ID = 45).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     */
+    handleSvcUpdateStringTable(messagePacket) {
+        this._stringTableHandler.handleUpdate(messagePacket.data);
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES} (ID = 51).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     */
+    handleSvcClearAllStringTables() {
+        this._stringTableHandler.handleClear();
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     * @param {number} [startPointer=0]
+     * @param {number} [startLoop=0]
+     * @param {number} [startIndex=-1]
+     * @returns {Array<EntityMutationEvent>}
+     */
+    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1) {
+        const message = messagePacket.data;
+
+        if (message.updateBaseline) {
+            throw new Error('Unhandled CSVCMsg_PacketEntities.updateBaseline === true');
+        }
+
+        if (this._demo.server === null) {
+            throw new Error('CSVCMsg_PacketEntities found, but server data is missing');
+        }
+
+        const bitBuffer = new BitBuffer(message.entityData);
+
+        bitBuffer.move(startPointer);
+
+        const events = [ ];
+
+        let index = startIndex;
+
+        for (let i = startLoop; i < message.updatedEntries; i++) {
+            index += bitBuffer.readUVarInt() + 1;
+
+            const command = bitBuffer.read(2)[0];
+
+            switch (command) {
+                case EntityOperation.UPDATE.id: {
+                    const entity = this._demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                    const mutations = extractor.all();
+
+                    const event = new EntityMutationEvent(EntityOperation.UPDATE, entity, mutations);
+
+                    events.push(event);
+
+                    break;
+                }
+                case EntityOperation.LEAVE.id: {
+                    const entity = this._demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    if (!entity.active) {
+                        throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
+                    }
+
+                    const event = new EntityMutationEvent(EntityOperation.LEAVE, entity, [ ]);
+
+                    events.push(event);
+
+                    break;
+                }
+                case EntityOperation.CREATE.id: {
+                    const classIdSizeBits = this._demo.server.classIdSizeBits;
+
+                    const classId = BitBuffer.readUInt32LE(bitBuffer.read(classIdSizeBits));
+                    const serial = BitBuffer.readUInt32LE(bitBuffer.read(17));
+
+                    bitBuffer.readUVarInt32();
+
+                    const clazz = this._demo.getClassById(classId);
+
+                    if (clazz === null) {
+                        throw new Error(`Class not found [ ${classId} ]`);
+                    }
+
+                    const baseline = this._demo.getClassBaselineById(classId);
+
+                    if (baseline === null) {
+                        throw new Error(`Baseline not found [ ${classId} ]`);
+                    }
+
+                    const entity = new Entity(index, serial, clazz);
+
+                    this._demo.registerEntity(entity);
+
+                    const extractorForBaseline = new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer);
+                    const extractorForPacket = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                    const mutationsFromBaseline = extractorForBaseline.all();
+                    const mutationsFromPacket = extractorForPacket.all();
+
+                    const event = new EntityMutationEvent(EntityOperation.CREATE, entity, mutationsFromBaseline.concat(mutationsFromPacket));
+
+                    events.push(event);
+
+                    break;
+                }
+                case EntityOperation.DELETE.id: {
+                    const entity = this._demo.getEntity(index);
+
+                    if (entity === null) {
+                        throw new Error(`Unable to find an entity with index [ ${index} ]`);
+                    }
+
+                    if (!entity.active) {
+                        throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
+                    }
+
+                    const deleted = this._demo.deleteEntity(index);
+
+                    if (deleted === null) {
+                        throw new Error(`Received delete entity command. However, entity with index [ ${index} ] doesn't exist`);
+                    }
+
+                    const event = new EntityMutationEvent(EntityOperation.DELETE, entity, [ ]);
+
+                    events.push(event);
+
+                    break;
+                }
+            }
+        }
+
+        return events;
+    }
+
+    /**
+     * Handles a partial of the {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     * @returns {Array<EntityMutationPartialEvent>}
+     */
+    handleSvcPacketEntitiesPartial(messagePacket) {
+        const message = messagePacket.data;
+
+        const events = [ ];
+
+        const bitBuffer = new BitBuffer(message.entityData);
+
+        let index = -1;
+
+        for (let i = 0; i < message.updatedEntries; i++) {
+            index += bitBuffer.readUVarInt() + 1;
+
+            const command = bitBuffer.read(2)[0];
+
+            switch (command) {
+                case EntityOperation.UPDATE.id: {
+                    const entity = this._demo.getEntity(index);
+
+                    if (entity === null) {
+                        return events;
+                    }
+
+                    try {
+                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+
+                        const mutations = extractor.allPacked();
+
+                        const event = new EntityMutationPartialEvent(bitBuffer.getReadCount(), index, entity.class.id, mutations);
+
+                        events.push(event);
+                    } catch {
+                        return events;
+                    }
+
+                    break;
+                }
+                default:
+                    return events;
+            }
+        }
+
+        return events;
+    }
+}
+
+export default DemoMessageHandler;

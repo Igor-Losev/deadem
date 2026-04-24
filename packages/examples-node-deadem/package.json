@@ -1,0 +1,17 @@
+{
+  "name": "@deademx/examples-node-deadem",
+  "version": "2.1.0-alpha.7",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "node --expose-gc ./scripts/000_benchmark.js",
+    "lint": "eslint"
+  },
+  "imports": {
+    "#root/*.js": "./*.js"
+  },
+  "dependencies": {
+    "@deademx/examples-common": "2.1.0-alpha.7",
+    "deadem": "2.1.0-alpha.7"
+  }
+}

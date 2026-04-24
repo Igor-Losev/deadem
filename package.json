@@ -1,6 +1,5 @@
 {
   "name": "deadem-monorepo",
-  "version": "2.0.0",
   "author": "Igor Losev",
   "license": "MIT",
   "private": true,
@@ -11,16 +10,17 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
-    "proto:json": "npm run proto:json --workspace=deadem",
-    "release": "./release.sh",
-    "start": "npm run start --workspace=deadem-examples-ui",
+    "proto:json": "npm run proto:json --workspaces --if-present",
+    "start": "npm run start --workspace=@deademx/ui",
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "eslint": "^9.27.0",
     "globals": "^16.2.0",
+    "protobufjs-cli": "^1.1.3",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
   }

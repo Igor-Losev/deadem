@@ -1,0 +1,54 @@
+{
+  "name": "deadem",
+  "version": "2.1.0-alpha.7",
+  "description": "Deadlock (Source 2) demo and replay parser with playback support for Node.js and browsers",
+  "author": "Igor Losev",
+  "license": "MIT",
+  "bugs": "https://github.com/Igor-Losev/deadem/issues",
+  "homepage": "https://deadem.com",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Igor-Losev/deadem.git"
+  },
+  "keywords": [
+    "deadem",
+    "deadlock",
+    "source2",
+    "demo",
+    "replay",
+    "parser",
+    "player",
+    "demo-parser",
+    "demoparser",
+    "replay-parser",
+    "replayparser"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "lint": "eslint",
+    "proto:json": "pbjs --path ./proto/source --path ./../engine/proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto ./../engine/proto/source/**/*.proto"
+  },
+  "files": [
+    "dist/**",
+    "index.js",
+    "proto/compiled/**",
+    "src/**"
+  ],
+  "imports": {
+    "#src/*.js": "./src/*.js",
+    "#bootstrap/*.js": "./src/bootstrap/*.js",
+    "#data/*.js": "./src/data/*.js",
+    "#providers/ProtoProvider.instance.js": {
+      "node": "./src/providers/ProtoProvider.node.instance.js",
+      "browser": "./src/providers/ProtoProvider.browser.instance.js"
+    }
+  },
+  "dependencies": {
+    "@deademx/engine": "2.1.0-alpha.7"
+  }
+}

@@ -1,12 +1,12 @@
 {
-  "name": "deadem-examples-common",
-  "version": "2.0.0",
+  "name": "@deademx/examples-common",
+  "version": "2.1.0-alpha.7",
   "private": true,
   "type": "module",
   "scripts": {
     "lint": "eslint"
   },
   "dependencies": {
-    "deadem": "*"
+    "@deademx/engine": "2.1.0-alpha.7"
   }
 }

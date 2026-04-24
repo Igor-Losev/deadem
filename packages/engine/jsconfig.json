@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+        "#root/*": [ "./*" ],
+        "#src/*": [ "./src/*" ],
+        "#broadcast/*": [ "./src/broadcast/*" ],
+        "#core/*": [ "./src/core/*" ],
+        "#data/*": [ "./src/data/*" ],
+        "#errors/*": [ "./src/errors/*" ],
+        "#extractors/*": [ "./src/extractors/*" ],
+        "#handlers/*": [ "./src/handlers/*" ],
+        "#player/*": [ "./src/player/*" ],
+        "#providers/*": [ "./src/providers/*" ],
+        "#stream/*": [ "./src/stream/*" ],
+        "#trackers/*": [ "./src/trackers/*" ],
+        "#workers/*": [ "./src/workers/*" ]
+    },
+    "moduleResolution": "nodenext",
+    "checkJs": true,
+    "module": "nodenext",
+    "strictNullChecks": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [ "node_modules" ]
+}
+

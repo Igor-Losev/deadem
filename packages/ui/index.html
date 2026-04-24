@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Dota 2 and Deadlock Demo Parser | Deadem Explorer</title>
+    <meta name="description" content="Web-based tool for parsing and analyzing Deadlock and Dota 2 .dem replay files. Inspect packets, entities, server info, and game state in your browser.">
+    <meta name="keywords" content="Dota 2, Deadlock, Dota 2 replay parser, Deadlock replay parser, Dota 2 demo parser, Deadlock demo parser, demo parser, .dem parser, Source 2 parser, Valve, replay analysis, JavaScript demo parser, browser-based replay analyzer, free online replay tool, deadem, packets, entities">
+    <meta name="author" content="Igor Losev">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dota 2 and Deadlock Demo Parser | Deadem Explorer">
+    <meta property="og:description" content="Web-based tool for parsing and analyzing Deadlock and Dota 2 .dem replay files. Inspect packets, entities, server info, and game state in your browser.">
+    <meta property="og:url" content="https://deadem.com">
+    <meta property="og:site_name" content="Deadem Explorer">
+    <meta property="og:image" content="https://deadem.com/banner.jpg">
+    <meta property="og:image:alt" content="Deadem Explorer demo parser interface for Dota 2 and Deadlock replay analysis">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://deadem.com/banner.jpg">
+    <meta name="twitter:image:alt" content="Deadem Explorer demo parser interface for Dota 2 and Deadlock replay analysis">
+    <meta name="twitter:title" content="Dota 2 and Deadlock Demo Parser | Deadem Explorer">
+    <meta name="twitter:description" content="Web-based tool for parsing and analyzing Deadlock and Dota 2 .dem replay files. Inspect packets, entities, server info, and game state in your browser.">
+
+    <link rel="canonical" href="https://deadem.com">
+    <link rel="icon" type="image/svg+xml" href="https://deadem.com/favicon.svg">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Deadem Explorer",
+      "alternateName": ["Deadlock Demo Parser", "Dota 2 Demo Parser"],
+      "description": "Web-based tool for parsing and analyzing Deadlock and Dota 2 .dem replay files",
+      "url": "https://deadem.com",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "author": {
+        "@type": "Person",
+        "name": "Igor Losev"
+      },
+      "sameAs": [
+        "https://github.com/Igor-Losev/deadem",
+        "https://www.npmjs.com/package/@deademx/engine",
+        "https://www.npmjs.com/package/deadem",
+        "https://www.npmjs.com/package/@deademx/dota2"
+      ],
+      "featureList": [
+        "Parse Deadlock replay files (.dem)",
+        "Parse Dota 2 replay files (.dem)",
+        "Inspect demo packets and message packets",
+        "Browse game entities and classes",
+        "View server info, tick rate, and string tables"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <noscript>
+      <h1>Deadem Explorer — Dota 2 and Deadlock Demo Parser</h1>
+      <p>Deadem Explorer is a free online tool and open-source JavaScript demo parser for analyzing Dota 2 and Deadlock replay files (.dem) directly in your browser.</p>
+      <p>Upload a .dem file or choose one from the library to inspect packets, browse game entities, and view server info, tick rate, and string tables without uploading your replay to a server.</p>
+      <h2>Features</h2>
+      <ul>
+        <li>Parse Deadlock and Dota 2 replay files (.dem) in the browser</li>
+        <li>Inspect demo packets and message packets in JSON form</li>
+        <li>Browse live game entities and classes as the replay updates</li>
+        <li>View server info, tick rate, entity counts, and string tables</li>
+        <li>Use the same parser libraries in Node.js and modern browsers</li>
+      </ul>
+      <p>Built with the <a href="https://www.npmjs.com/package/@deademx/engine">@deademx/engine</a>, <a href="https://www.npmjs.com/package/deadem">deadem</a>, and <a href="https://www.npmjs.com/package/@deademx/dota2">@deademx/dota2</a> JavaScript libraries. The app runs locally in the browser for private replay inspection.</p>
+      <p><a href="https://github.com/Igor-Losev/deadem">View on GitHub</a></p>
+    </noscript>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
