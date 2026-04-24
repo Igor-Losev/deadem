@@ -129,7 +129,6 @@ class PlayerPacketIndex {
 
     /**
      * Returns the position of the given tick in the unique ticks index.
-     * Uses binary search on _uniqueTicks (O(log u) where u = unique tick count).
      *
      * @public
      * @param {number} tick
@@ -255,7 +254,6 @@ class PlayerPacketIndex {
 
     /**
      * Finds the first position in _uniqueTicks with a tick strictly greater than the specified tick.
-     * Binary search on _uniqueTicks (O(log u) where u = unique tick count).
      *
      * @protected
      * @param {number} tick
