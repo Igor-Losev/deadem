@@ -1,6 +1,6 @@
 {
   "name": "@deademx/ui",
-  "version": "2.1.0-alpha.7",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,8 +15,8 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@mui/x-tree-view": "^8.10.2",
-    "@deademx/dota2": "2.1.0-alpha.7",
-    "deadem": "2.1.0-alpha.7",
+    "@deademx/dota2": "2.1.0",
+    "deadem": "2.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

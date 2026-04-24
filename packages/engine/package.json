@@ -1,6 +1,6 @@
 {
   "name": "@deademx/engine",
-  "version": "2.1.0-alpha.7",
+  "version": "2.1.0",
   "description": "Shared Source 2 demo parsing and replay playback engine for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
