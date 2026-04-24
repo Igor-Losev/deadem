@@ -14,6 +14,43 @@
 
 It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. For a ready-to-run package, install one of the implementations below.
 
+## Contents
+
+- [Implementations](#implementations)<br/>
+  Game-specific packages built on top of the shared engine.
+- [Concepts](#concepts)<br/>
+  Core concepts of the parsing and playback engine.
+  - [Demo](#demo)<br/>
+    Structure and content of Source 2 demo packets.
+  - [Parser](#parser)<br/>
+    Parser lifecycle and stream processing model.
+  - [Player](#player)<br/>
+    Replay playback, seeking, and player state transitions.
+  - [Interceptors](#interceptors)<br/>
+    Hook points for inspecting and extracting data during parsing.
+- [Configuration](#configuration)<br/>
+  Parser configuration options and logging strategies.
+  - [Parser options](#parser-options)<br/>
+    Packet filtering, worker settings, and parser tuning.
+  - [Logging](#logging)<br/>
+    Built-in logger strategies.
+- [API reference](#api-reference)<br/>
+  Summary of all public exports and key methods.
+- [Usage](#usage)<br/>
+  Common usage patterns for replay parsing, broadcast parsing, and playback.
+  - [Replay file](#replay-file)<br/>
+    Parse a replay from a `.dem` file.
+  - [HTTP broadcast](#http-broadcast)<br/>
+    Parse a live Source 2 HTTP broadcast stream.
+  - [Data extraction](#data-extraction)<br/>
+    Capture data during parsing or query the final state.
+  - [Playback and seeking](#playback-and-seeking)<br/>
+    Seek through buffered state and run continuous playback.
+- [Performance](#performance)<br/>
+  How configuration choices affect parser throughput.
+- [License](#license)<br/>
+  Project licensing information.
+
 ## Implementations
 
 | Package | Game | Links |
@@ -21,29 +58,11 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
 | `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
 | `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
 
-## Contents
-
-- [Concepts](#concepts)
-  - [Demo](#demo)
-  - [Parser](#parser)
-  - [Player](#player)
-  - [Interceptors](#interceptors)
-- [Configuration](#configuration)
-  - [Parser options](#parser-options)
-  - [Logging](#logging)
-- [API reference](#api-reference)
-- [Usage](#usage)
-  - [Replay file](#replay-file)
-  - [HTTP broadcast](#http-broadcast)
-  - [Data extraction](#data-extraction)
-  - [Playback and seeking](#playback-and-seeking)
-- [License](#license)
-
 ## Concepts
 
 ### Demo
 
-A Source 2 demo is a sequential stream of outer packets, called `DemoPacket` in this project. Each has a type from `DemoPacketType`.
+A Source 2 demo is a sequential stream of outer packets, called `DemoPacket` in this project. Each has a type from [`DemoPacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js).
 
 Most `DemoPacket` types parse into plain objects. Three types carry an array of inner `MessagePacket` values:
 
@@ -51,7 +70,7 @@ Most `DemoPacket` types parse into plain objects. Three types carry an array of 
 - `DEM_SIGNON_PACKET`
 - `DEM_FULL_PACKET`
 
-Two `MessagePacket` categories require additional decoding and drive the internal game state:
+Two [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) categories require additional decoding and drive the internal game state:
 
 - **Entities** — `SVC_PACKET_ENTITIES` contains creates, updates, and deletes.
 - **String tables** — `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE`, `SVC_CLEAR_ALL_STRING_TABLES`.
@@ -203,8 +222,8 @@ POST DEMO_PACKET
 | Option | Description | Type | Default |
 | --- | --- | --- | --- |
 | `breakInterval` | How often, in packets, to yield to the event loop. Lower values improve responsiveness, higher values improve throughput. | `number` | `1000` |
-| `messagePacketTypes` | Allowlist of `MessagePacketType` values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
-| `messagePacketTypesExclude` | Blocklist of `MessagePacketType` values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
+| `messagePacketTypes` | Allowlist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
+| `messagePacketTypesExclude` | Blocklist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
 | `parserThreads` | Number of additional worker threads. Not supported by `Player`. | `number` | `0` |
 
 The engine always processes the following message types regardless of filters, because they drive internal state:
@@ -256,9 +275,9 @@ const parser = new Parser(registry, ParserConfiguration.DEFAULT, Logger.CONSOLE_
 | `Printer` | Prints parser stats (memory, packets, performance). |
 | `Logger` | Logging strategy (see above). |
 | `PlaybackInterruptedError` | Raised when `Player.play()` is interrupted. Exposes `reason`. |
-| `DemoPacketType` | Enum of outer packet types (`DEM_PACKET`, `DEM_FULL_PACKET`, …). |
-| `MessagePacketType` | Enum of inner message types (`NET_TICK`, `SVC_PACKET_ENTITIES`, …). |
-| `StringTableType` | Enum of string tables (`USER_INFO`, `INSTANCE_BASE_LINE`, …). |
+| [`DemoPacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js) | Enum of outer packet types (`DEM_PACKET`, `DEM_FULL_PACKET`, …). |
+| [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) | Enum of inner message types (`NET_TICK`, `SVC_PACKET_ENTITIES`, …). |
+| [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableType.js) | Enum of string tables (`USER_INFO`, `INSTANCE_BASE_LINE`, …). |
 | `EntityOperation` | `CREATE`, `UPDATE`, `LEAVE`, `DELETE`. |
 | `InterceptorStage` | `DEMO_PACKET`, `MESSAGE_PACKET`, `ENTITY_PACKET`. |
 | `PlayerState` | `IDLE`, `LOADED`, `PLAYING`, `SEEKING`, `DISPOSED`. |
@@ -372,6 +391,20 @@ setTimeout(() => player.pause(), 3000);
 await playback;
 await player.dispose();
 ```
+
+## Performance
+
+Parser throughput depends on the replay contents, the packet filters you apply, and how often you unpack entity state. The table below summarizes the impact of each choice:
+
+| Scenario | Expected impact | Notes |
+| --- | --- | --- |
+| Parse all packet types | Highest coverage, higher CPU and memory cost | Best when you need complete replay state. |
+| Filter [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) via `ParserConfiguration` | Lower parse cost | Useful for chat-only or event-focused extraction. |
+| Exclude `SVC_PACKET_ENTITIES` | Skips entity decoding entirely | Entities are typically the most expensive packets. |
+| Call `entity.unpackFlattened()` frequently | Higher per-entity overhead | Prefer targeted reads over unpacking every entity. |
+| Increase `parserThreads` (Parser only) | Higher throughput at the cost of memory | Not supported by `Player`. |
+
+For concrete benchmarks, see the [`deadem` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance).
 
 ## License
 

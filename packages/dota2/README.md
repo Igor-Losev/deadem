@@ -9,6 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41b-darkGreen" /></a>
 
 **@deademx/dota2** is a Dota 2 (Source 2) demo parser and replay player for Node.js and modern browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
@@ -16,17 +17,26 @@ For the shared parser model, player lifecycle, interceptors, configuration, and 
 
 ## Contents
 
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [Examples](#examples)
-- [Usage](#usage)
-  - [Replay file](#replay-file)
-  - [Data extraction](#data-extraction)
-  - [Playback and seeking](#playback-and-seeking)
-- [Compatibility](#compatibility)
-- [Performance](#performance)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+- [Installation](#installation)<br/>
+  Install for Node.js or use the browser bundle.
+- [Quick start](#quick-start)<br/>
+  Minimal example to parse a Dota 2 demo file.
+- [Examples](#examples)<br/>
+  Runnable example scripts covering parsing.
+- [Usage](#usage)<br/>
+  Dota 2-specific usage patterns.
+  - [Replay file](#replay-file)<br/>
+    Parse a Dota 2 replay from a `.dem` file.
+  - [Data extraction](#data-extraction)<br/>
+    Extract Dota 2 chat and query entities.
+  - [Playback and seeking](#playback-and-seeking)<br/>
+    Inspect Dota 2 state at a specific tick.
+- [Compatibility](#compatibility)<br/>
+  Supported game patch and runtimes.
+- [Performance](#performance)<br/>
+  Measured throughput benchmarks.
+- [License](#license)<br/>
+  Project licensing information.
 
 ## Installation
 
@@ -98,7 +108,7 @@ printer.printStats();
 
 ### Data extraction
 
-Dota 2-specific message types are exposed via the extended `MessagePacketType` — for example, `DOTA_UM_CHAT_MESSAGE`, `DOTA_UM_CHAT_EVENT`, `DOTA_UM_OVERHEAD_EVENT`, `DOTA_UM_COMBAT_LOG_DATA_HLTV`, and more. Dota 2-specific string tables (`MODIFIER_NAMES`, `COMBAT_LOG_NAMES`, `ECON_ITEMS`, …) are exposed via the extended `StringTableType`.
+Dota 2-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/MessagePacketType.js) — for example, `DOTA_UM_CHAT_MESSAGE`, `DOTA_UM_CHAT_EVENT`, `DOTA_UM_OVERHEAD_EVENT`, `DOTA_UM_COMBAT_LOG_DATA_HLTV`, and more. Dota 2-specific string tables (`MODIFIER_NAMES`, `COMBAT_LOG_NAMES`, `ECON_ITEMS`, …) are exposed via the extended [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/StringTableType.js).
 
 Filter and extract chat messages:
 
@@ -152,27 +162,24 @@ await player.dispose();
 
 ## Compatibility
 
+- **Game patch:** tested with Dota 2 demos from patch `7.41b` and below.
 - **Node.js:** v18.0.0 and above.
 - **Browsers:** latest Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
-Performance depends on the replay, selected packet filters, and how often entity data is unpacked.
+See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for how configuration choices affect parser throughput in general.
 
-| Scenario | Expected impact | Notes |
-| --- | --- | --- |
-| Parse all packet types | Highest coverage, higher CPU and memory cost | Use when you need complete replay state |
-| Filter `MessagePacketType` via `ParserConfiguration` | Lower parse cost | Useful for chat-only or event-focused extraction |
-| Call `entity.unpackFlattened()` frequently | Higher per-entity overhead | Prefer targeted reads over unpacking every entity |
-| Keep `parserThreads = 0` | Lowest coordination overhead | Good default for smaller workloads and browser usage |
+### Single-threaded (`parserThreads = 0`)
+
+Measured on Node.js v22.14.0.
+
+| # | Scenario | Ticks/sec | Game seconds/sec (tick rate 30) | Max memory, MB |
+| --- | --- | --- | --- | --- |
+| 1 | All packet types (entities included) | — | — | — |
+| 2 | All packet types, `SVC_PACKET_ENTITIES` excluded | — | — | — |
+| 3 | Single `MessagePacketType` only | — | — | — |
 
 ## License
 
 This project is licensed under the [MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE) License.
-
-## Acknowledgements
-
-Inspired by and built upon the work of:
-
-- [dotabuff/manta](https://github.com/dotabuff/manta) — Dotabuff's Dota 2 replay parser in Go
-- [saul/demofile-net](https://github.com/saul/demofile-net) — CS2 / Deadlock replay parser in C#

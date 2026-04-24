@@ -17,18 +17,28 @@ For the shared parser model, player lifecycle, interceptors, configuration, and 
 
 ## Contents
 
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [Examples](#examples)
-- [Usage](#usage)
-  - [Replay file](#replay-file)
-  - [HTTP broadcast](#http-broadcast)
-  - [Data extraction](#data-extraction)
-  - [Playback and seeking](#playback-and-seeking)
-- [Compatibility](#compatibility)
-- [Performance](#performance)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
+- [Installation](#installation)<br/>
+  Install for Node.js or use the browser bundle.
+- [Quick start](#quick-start)<br/>
+  Minimal example to parse a Deadlock demo file.
+- [Examples](#examples)<br/>
+  Runnable example scripts covering parsing, player, and broadcast.
+- [Usage](#usage)<br/>
+  Deadlock-specific usage patterns.
+  - [Replay file](#replay-file)<br/>
+    Parse a Deadlock replay from a `.dem` file.
+  - [HTTP broadcast](#http-broadcast)<br/>
+    Parse a live Deadlock HTTP broadcast stream.
+  - [Data extraction](#data-extraction)<br/>
+    Extract chat messages and query Deadlock entities.
+  - [Playback and seeking](#playback-and-seeking)<br/>
+    Inspect Deadlock state at a specific tick.
+- [Compatibility](#compatibility)<br/>
+  Supported game builds and runtimes.
+- [Performance](#performance)<br/>
+  Measured throughput and memory usage.
+- [License](#license)<br/>
+  Project licensing information.
 
 ## Installation
 
@@ -147,7 +157,7 @@ await parser.dispose();
 
 ### Data extraction
 
-Deadlock-specific message types are exposed via the extended `MessagePacketType` — for example, `CITADEL_USER_MESSAGE_CHAT_MESSAGE`, `CITADEL_USER_MESSAGE_HERO_KILLED`, `CITADEL_USER_MESSAGE_BOSS_KILLED`, `CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED`, and more.
+Deadlock-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js) — for example, `CITADEL_USER_MESSAGE_CHAT_MESSAGE`, `CITADEL_USER_MESSAGE_HERO_KILLED`, `CITADEL_USER_MESSAGE_BOSS_KILLED`, `CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED`, and more.
 
 Extract chat messages paired with player names from the `USER_INFO` string table:
 
@@ -228,7 +238,7 @@ await player.dispose();
 
 ## Performance
 
-Entities are parsed but not unpacked by default. Parser throughput scales with how often `entity.unpackFlattened()` is called.
+Entities are parsed but not unpacked by default. Parser throughput scales with how often `entity.unpackFlattened()` is called. See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for how configuration choices affect throughput in general.
 
 All measurements below were taken on a MacBook Pro (M3) without any `entity.unpackFlattened()` calls.
 
@@ -253,10 +263,3 @@ All measurements below were taken on a MacBook Pro (M3) without any `entity.unpa
 ## License
 
 This project is licensed under the [MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE) License.
-
-## Acknowledgements
-
-Inspired by and built upon the work of:
-
-- [dotabuff/manta](https://github.com/dotabuff/manta) — Dotabuff's Dota 2 replay parser in Go
-- [saul/demofile-net](https://github.com/saul/demofile-net) — CS2 / Deadlock replay parser in C#
