@@ -55,8 +55,8 @@ class StringTableEntryExtractor {
                 if (useHistory) {
                     const base = cursor > MAX_HISTORY_ENTRIES ? cursor & (MAX_HISTORY_ENTRIES - 1) : 0;
 
-                    const offset = BitBuffer.readUInt8(this._bitBuffer.read(5));
-                    const size = BitBuffer.readUInt8(this._bitBuffer.read(5));
+                    const offset = this._bitBuffer.readBitsAsUInt(5);
+                    const size = this._bitBuffer.readBitsAsUInt(5);
 
                     const slot = (base + offset) & (MAX_HISTORY_ENTRIES - 1);
                     const portion = this._bitBuffer.readString();
@@ -90,9 +90,7 @@ class StringTableEntryExtractor {
                     if (this._table.instructions.usingVarintBitcounts) {
                         bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
                     } else {
-                        const bitSizeBuffer = this._bitBuffer.read(17);
-
-                        bitSize = BitBuffer.readUInt32LE(bitSizeBuffer) * BitBuffer.BITS_PER_BYTE;
+                        bitSize = this._bitBuffer.readBitsAsUInt(17) * BitBuffer.BITS_PER_BYTE;
                     }
                 }
 

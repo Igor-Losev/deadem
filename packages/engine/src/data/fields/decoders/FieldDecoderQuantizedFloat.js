@@ -1,5 +1,4 @@
 import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
 
 import FieldDecoder from './FieldDecoder.js';
 import FieldDecoderInstructions from './../FieldDecoderInstructions.js';
@@ -136,7 +135,7 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
             return 0;
         }
 
-        const value = BitBuffer.readUInt32LE(bitBuffer.read(this._bitCount));
+        const value = this._bitCount === 32 ? bitBuffer.readUInt32() : bitBuffer.readBitsAsUInt(this._bitCount);
 
         return this._low + (this._high - this._low) * value * this._dequantizationStep;
     }

@@ -25,30 +25,6 @@ class BitBuffer {
     }
 
     /**
-     * Reads an unsigned 8-bit integer from the given buffer.
-     *
-     * @public
-     * @static
-     * @param {Uint8Array} buffer
-     * @returns {number}
-     */
-    static readUInt8(buffer) {
-        return buffer[0];
-    }
-
-    /**
-     * Reads an unsigned 16-bit integer (little-endian) from the given buffer.
-     *
-     * @public
-     * @static
-     * @param {Uint8Array} buffer
-     * @returns {number}
-     */
-    static readUInt16LE(buffer) {
-        return buffer[0] | (buffer[1] << 8);
-    }
-
-    /**
      * Reads an unsigned 32-bit integer from the given buffer, supporting buffers of length 1 to 4 bytes.
      *
      * @public
@@ -70,39 +46,6 @@ class BitBuffer {
             default:
                 throw new Error(`Unexpected buffer size [ ${buffer.byteLength} ]`);
         }
-    }
-
-    /**
-     * Reads a 32-bit float (little-endian) from the given buffer.
-     *
-     * @public
-     * @static
-     * @param {Uint8Array} buffer
-     * @returns {number}
-     */
-    static readFloatLE(buffer) {
-        dataView.setUint8(0, buffer[0]);
-        dataView.setUint8(1, buffer[1]);
-        dataView.setUint8(2, buffer[2]);
-        dataView.setUint8(3, buffer[3]);
-
-        return dataView.getFloat32(0, true);
-    }
-
-    /**
-     * Reads an unsigned 64-bit integer (little-endian) from the given buffer.
-     *
-     * @public
-     * @static
-     * @param {Uint8Array} buffer
-     * @returns {BigInt}
-     */
-    static readBigUInt64LE(buffer) {
-        for (let i = 0; i < 8; i++) {
-            dataView.setUint8(i, buffer[i]);
-        }
-
-        return dataView.getBigUint64(0, true);
     }
 
     /**
@@ -334,15 +277,17 @@ class BitBuffer {
     }
 
     /**
-     * Reads 32 bits from the buffer and converts them to a float using little-endian format.
+     * Reads 32 bits from the buffer and interprets them as a little-endian float.
      *
      * @public
-     * @returns {number} The float value interpreted from the 32-bit buffer.
+     * @returns {number}
      */
-    readFloat() {
-        const buffer = this.read(32);
+    readFloat32() {
+        const u32 = this.readUInt32();
 
-        return BitBuffer.readFloatLE(buffer);
+        dataView.setUint32(0, u32, true);
+
+        return dataView.getFloat32(0, true);
     }
 
     /**
@@ -445,6 +390,47 @@ class BitBuffer {
         const buffer = this.read(BITS_PER_BYTE);
 
         return buffer[0] >>> 0;
+    }
+
+    /**
+     * Reads exactly 32 bits as an unsigned integer (little-endian).
+     *
+     * @public
+     * @returns {number}
+     */
+    readUInt32() {
+        const buf = this._buffer;
+        const pBit = this._pBit;
+        const pByte = this._pByte;
+
+        if (pBit === 0) {
+            this._pByte = pByte + 4;
+
+            return (buf[pByte] | (buf[pByte + 1] << 8) | (buf[pByte + 2] << 16) | (buf[pByte + 3] << 24)) >>> 0;
+        }
+
+        const lo = (buf[pByte] | (buf[pByte + 1] << 8) | (buf[pByte + 2] << 16) | (buf[pByte + 3] << 24)) >>> 0;
+        const hi = buf[pByte + 4];
+
+        this._pByte = pByte + 4;
+
+        return (((lo >>> pBit) | (hi << (32 - pBit))) >>> 0);
+    }
+
+    /**
+     * Reads exactly 64 bits as an unsigned BigInt (little-endian).
+     *
+     * @public
+     * @returns {BigInt}
+     */
+    readUInt64() {
+        const lo = this.readUInt32();
+        const hi = this.readUInt32();
+
+        dataView.setUint32(0, lo, true);
+        dataView.setUint32(4, hi, true);
+
+        return dataView.getBigUint64(0, true);
     }
 
     /**

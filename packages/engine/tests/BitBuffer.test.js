@@ -9,25 +9,11 @@ describe('BitBuffer.read()', () => {
 
             const reader = new BitBuffer(buffer);
 
-            let result = reader.read(6);
-
-            expect(BitBuffer.readUInt8(result)).toBe(17);
-
-            result = reader.read(4);
-
-            expect(BitBuffer.readUInt8(result)).toBe(5);
-
-            result = reader.read(3);
-
-            expect(BitBuffer.readUInt8(result)).toBe(1);
-
-            result = reader.read(1);
-
-            expect(BitBuffer.readUInt8(result)).toBe(0);
-
-            result = reader.read(2);
-
-            expect(BitBuffer.readUInt8(result)).toBe(2);
+            expect(reader.read(6)[0]).toBe(17);
+            expect(reader.read(4)[0]).toBe(5);
+            expect(reader.read(3)[0]).toBe(1);
+            expect(reader.read(1)[0]).toBe(0);
+            expect(reader.read(2)[0]).toBe(2);
         });
     });
 
@@ -37,13 +23,11 @@ describe('BitBuffer.read()', () => {
 
             const reader = new BitBuffer(buffer);
 
-            let result = reader.read(10);
+            const first = reader.read(10);
 
-            expect(BitBuffer.readUInt16LE(result)).toBe(337);
+            expect(first[0] | (first[1] << 8)).toBe(337);
 
-            result = reader.read(6);
-
-            expect(BitBuffer.readUInt8(result)).toBe(33);
+            expect(reader.read(6)[0]).toBe(33);
         });
     });
 
@@ -53,17 +37,13 @@ describe('BitBuffer.read()', () => {
 
             const reader = new BitBuffer(buffer);
 
-            let result = reader.read(3);
+            expect(reader.read(3)[0]).toBe(4);
 
-            expect(BitBuffer.readUInt8(result)).toBe(4);
+            const middle = reader.read(11);
 
-            result = reader.read(11);
+            expect(middle[0] | (middle[1] << 8)).toBe(442);
 
-            expect(BitBuffer.readUInt16LE(result)).toBe(442);
-
-            result = reader.read(2);
-
-            expect(BitBuffer.readUInt8(result)).toBe(2);
+            expect(reader.read(2)[0]).toBe(2);
         });
     });
 });
@@ -86,7 +66,7 @@ describe('BitBuffer.readBit()', () => {
     });
 });
 
-describe('BitBuffer.readFloat()', () => {
+describe('BitBuffer.readFloat32()', () => {
     const isNegativeZero = x => x === 0 && (1 / x) === -Infinity;
     const isPositiveZero = x => x === 0 && (1 / x) === +Infinity;
 
@@ -102,7 +82,7 @@ describe('BitBuffer.readFloat()', () => {
 
     describe('When reading float from [ 0x00, 0x00, 0x00, 0x00 ]', () => {
         test('It should return a positive zero 0.0', () => {
-            const value = reader.readFloat();
+            const value = reader.readFloat32();
 
             expect(value).toBeCloseTo(0.0, 5);
             expect(isPositiveZero(value)).toBe(true);
@@ -111,7 +91,7 @@ describe('BitBuffer.readFloat()', () => {
 
     describe('When reading float from [ 0x00, 0x00, 0x00, 0x80 ]', () => {
         test('It should return a negative zero -0.0', () => {
-            const value = reader.readFloat();
+            const value = reader.readFloat32();
 
             expect(value).toBeCloseTo(-0.0, 5);
             expect(isNegativeZero(value)).toBe(true);
@@ -120,7 +100,7 @@ describe('BitBuffer.readFloat()', () => {
 
     describe('When reading float from [ 0x00, 0x00, 0x80, 0x3f ]', () => {
         test('It should return 1.0', () => {
-            const value = reader.readFloat();
+            const value = reader.readFloat32();
 
             expect(value).toBeCloseTo(1.0, 5);
         });
@@ -128,7 +108,7 @@ describe('BitBuffer.readFloat()', () => {
 
     describe('When reading float from [ 0xdb, 0x0f, 0x49, 0x40 ]', () => {
         test('It should return 3.1415927', () => {
-            const value = reader.readFloat();
+            const value = reader.readFloat32();
 
             expect(value).toBeCloseTo(3.1415927, 5);
         });
@@ -136,7 +116,7 @@ describe('BitBuffer.readFloat()', () => {
 
     describe('When reading float from [ 0xff, 0xff, 0x7f, 0x7f ]', () => {
         test('It should return 3.4028234663852886e+38', () => {
-            const value = reader.readFloat();
+            const value = reader.readFloat32();
 
             expect(value).toBeCloseTo(3.4028234663852886e+38, 5);
         });

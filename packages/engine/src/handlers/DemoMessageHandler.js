@@ -109,7 +109,7 @@ class DemoMessageHandler {
         for (let i = startLoop; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
 
-            const command = bitBuffer.read(2)[0];
+            const command = bitBuffer.readBitsAsUInt(2);
 
             switch (command) {
                 case EntityOperation.UPDATE.id: {
@@ -149,8 +149,8 @@ class DemoMessageHandler {
                 case EntityOperation.CREATE.id: {
                     const classIdSizeBits = this._demo.server.classIdSizeBits;
 
-                    const classId = BitBuffer.readUInt32LE(bitBuffer.read(classIdSizeBits));
-                    const serial = BitBuffer.readUInt32LE(bitBuffer.read(17));
+                    const classId = bitBuffer.readBitsAsUInt(classIdSizeBits);
+                    const serial = bitBuffer.readBitsAsUInt(17);
 
                     bitBuffer.readUVarInt32();
 
@@ -230,7 +230,7 @@ class DemoMessageHandler {
         for (let i = 0; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
 
-            const command = bitBuffer.read(2)[0];
+            const command = bitBuffer.readBitsAsUInt(2);
 
             switch (command) {
                 case EntityOperation.UPDATE.id: {

@@ -1,5 +1,4 @@
 import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
 
 import FieldDecoderQuantizedFloat from './decoders/FieldDecoderQuantizedFloat.js';
 
@@ -328,10 +327,10 @@ class FieldDecoderFactory {
 const decodeBoolean = bitBuffer => bitBuffer.readBit();
 const decodeCoordinate = bitBuffer => bitBuffer.readCoordinate();
 const decodeNormalVector = bitBuffer => bitBuffer.readNormalVector();
-const decodeNoScale = bitBuffer => BitBuffer.readFloatLE(bitBuffer.read(32));
+const decodeNoScale = bitBuffer => bitBuffer.readFloat32();
 const decodeSimulationTime = bitBuffer => bitBuffer.readUVarInt32();
 const decodeString = bitBuffer => bitBuffer.readString();
-const decodeUInt64 = bitBuffer => BitBuffer.readBigUInt64LE(bitBuffer.read(64));
+const decodeUInt64 = bitBuffer => bitBuffer.readUInt64();
 const decodeUVarInt32 = bitBuffer => bitBuffer.readUVarInt32();
 const decodeUVarInt64 = bitBuffer => bitBuffer.readUVarInt64();
 const decodeVarInt32 = bitBuffer => bitBuffer.readVarInt32();
