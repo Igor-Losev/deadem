@@ -63,6 +63,23 @@ class EntityMutationExtractor {
 
         return mutations;
     }
+
+    /**
+     * Advances the buffer past one entity's worth of mutations without
+     * producing {@link EntityMutation} objects. Decoders still run so the
+     * bit-stream stays correctly aligned for subsequent entities.
+     *
+     * @public
+     */
+    skip() {
+        const fieldPaths = new FieldPathExtractor(this._bitBuffer).all();
+
+        for (let i = 0; i < fieldPaths.length; i++) {
+            const decoder = this._serializer.getDecoderForFieldPath(fieldPaths[i]);
+
+            decoder(this._bitBuffer);
+        }
+    }
 }
 
 export default EntityMutationExtractor;
