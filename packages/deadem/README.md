@@ -96,6 +96,7 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 | 105 | Extract ability usage events | [105_parse_ability_feed.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/105_parse_ability_feed.js) | `node ./packages/examples-node-deadem/scripts/105_parse_ability_feed.js` |
 | 106 | Parse mid boss spawn and kill events | [106_parse_mid_boss_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js) | `node ./packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js` |
 | 107 | Parse tower destruction events | [107_parse_tower_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/107_parse_tower_deaths.js) | `node ./packages/examples-node-deadem/scripts/107_parse_tower_deaths.js` |
+| 108 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [108_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js) | `node ./packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js` |
 
 ### Player
 
@@ -158,6 +159,8 @@ await parser.dispose();
 ### Data extraction
 
 Deadlock-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js) — for example, `CITADEL_USER_MESSAGE_CHAT_MESSAGE`, `CITADEL_USER_MESSAGE_HERO_KILLED`, `CITADEL_USER_MESSAGE_BOSS_KILLED`, `CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED`, and more.
+
+Several Deadlock-oriented example scripts also use helper utilities from `@deademx/examples-common`, such as `DeadlockGameObserver` and `DeadlockGameState`, to derive match clock and state from `CCitadelGameRulesProxy`.
 
 Extract chat messages paired with player names from the `USER_INFO` string table:
 
@@ -240,25 +243,16 @@ await player.dispose();
 
 Entities are parsed but not unpacked by default. Parser throughput scales with how often `entity.unpackFlattened()` is called. See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for how configuration choices affect throughput in general.
 
-All measurements below were taken on a MacBook Pro (M3) without any `entity.unpackFlattened()` calls.
-
 ### Single-threaded (`parserThreads = 0`)
 
-| # | Runtime | Ticks/sec | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max memory, MB |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Node.js v22.14.0 | 8 542 ± 1.30% | 133.47 ± 1.30% | ~13.53 | 329 ± 6.21% |
-| 2 | Chrome v133.0 | 7 650 ± 0.59% | 119.53 ± 0.59% | ~15.06 | — |
-| 3 | Node.js v16.20.2 | 5 405 ± 0.61% | 84.45 ± 0.26% | ~21.31 | 270 ± 6.98% |
-| 4 | Safari v18.3 | 5 295 ± 1.27% | 82.73 ± 1.27% | ~21.76 | — |
+Memory below reports the sampled peak RSS from isolated runs.
 
-### Multi-threaded (`parserThreads = 3`)
-
-| # | Runtime | Ticks/sec | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max memory, MB | Gain vs 0 threads |
+| # | Scenario | Runtime | Ticks/sec | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max memory, MB |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Node.js v22.14.0 | 11 292 ± 0.26% | 176.44 ± 0.26% | ~10.20 | 639.16 ± 4.94% | +32.19% |
-| 2 | Chrome v133.0 | 9 560 ± 0.43% | 149.38 ± 0.43% | ~12.05 | — | +24.97% |
-| 3 | Node.js v16.20.2 | 8 696 ± 0.26% | 135.86 ± 0.26% | ~13.25 | 497.86 ± 6.57% | +60.89% |
-| 4 | Safari v18.3 | 7 073 ± 0.44% | 110.52 ± 0.44% | ~16.29 | — | +33.58% |
+| 1 | All packet types (entities included) | Node.js v22.14.0 | 9 400 +- 2.46% | 146.87 +- 2.46% | ~12.26 | 335 +- 2.55% |
+| 2 | All packet types, single entity class only (`CCitadelPlayerController`) | Node.js v22.14.0 | 38 875 +- 2.63% | 607.42 +- 2.63% | ~2.96 | 77 +- 9.88% |
+| 3 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 54 495 +- 0.54% | 851.48 +- 0.54% | ~2.11 | 101 +- 6.00% |
+| 4 | Single `MessagePacketType` only | Node.js v22.14.0 | 73 706 +- 9.03% | 1 151.66 +- 9.03% | ~1.56 | 83 +- 11.58% |
 
 ## License
 

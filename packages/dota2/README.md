@@ -90,6 +90,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | 101 | Parse multiple replay files | [101_parse_multiple.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_multiple.js) | `node ./packages/examples-node-dota2/scripts/101_parse_multiple.js --matches="8773493455,8777738576"` |
 | 102 | Parse selected message types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
 | 103 | Print Dota 2 chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
+| 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
 
 ### Player
 
@@ -185,9 +186,10 @@ Memory below reports the sampled peak RSS from isolated runs.
 
 | # | Scenario | Runtime | Ticks/sec | Game seconds/sec (tick rate 30) | 30-min replay, sec | Max memory, MB |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | All packet types (entities included) | Node.js v22.14.0 | 16 987 +- 2.14% | 566.25 +- 2.14% | ~3.18 | 390 +- 3.41% |
-| 2 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 85 042 +- 1.69% | 2 834.74 +- 1.69% | ~0.63 | 213 +- 4.84% |
-| 3 | Single `MessagePacketType` only | Node.js v22.14.0 | 126 327 +- 1.57% | 4 210.89 +- 1.57% | ~0.43 | 235 +- 3.34% |
+| 1 | All packet types (entities included) | Node.js v22.14.0 | 17 950 +- 3.20% | 598.33 +- 3.20% | ~3.01 | 301 +- 7.87% |
+| 2 | All packet types, single entity class only (`CDOTAPlayerController`) | Node.js v22.14.0 | 59 966 +- 1.97% | 1 998.87 +- 1.97% | ~0.90 | 88 +- 22.95% |
+| 3 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 102 163 +- 3.15% | 3 405.42 +- 3.15% | ~0.53 | 111 +- 10.29% |
+| 4 | Single `MessagePacketType` only | Node.js v22.14.0 | 161 765 +- 3.85% | 5 392.16 +- 3.85% | ~0.33 | 80 +- 10.53% |
 
 ## License
 

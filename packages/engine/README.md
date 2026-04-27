@@ -188,6 +188,22 @@ Three stages are supported via `InterceptorStage`:
 
 For `ENTITY_PACKET`, `events` is an array of `EntityMutationEvent` values with `{ operation, entity, mutations }`, where `operation` is an `EntityOperation` (`CREATE`, `UPDATE`, `LEAVE`, `DELETE`).
 
+```js
+import { EntityOperation, InterceptorStage, Parser } from '@deademx/engine';
+
+parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
+    for (const event of events) {
+        if (event.operation !== EntityOperation.UPDATE) continue;
+
+        const changes = event.getChanges();
+
+        if ('m_iHealth' in changes) {
+            console.log(event.entity.class.name, changes.m_iHealth);
+        }
+    }
+});
+```
+
 The parse timeline:
 
 ```text
@@ -222,6 +238,7 @@ POST DEMO_PACKET
 | Option | Description | Type | Default |
 | --- | --- | --- | --- |
 | `breakInterval` | How often, in packets, to yield to the event loop. Lower values improve responsiveness, higher values improve throughput. | `number` | `1000` |
+| `entityClasses` | Allowlist of entity class names to decode from `SVC_PACKET_ENTITIES`. | `Array<string> \| null` | `null` |
 | `messagePacketTypes` | Allowlist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
 | `messagePacketTypesExclude` | Blocklist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
 | `parserThreads` | Number of additional worker threads. Not supported by `Player`. | `number` | `0` |
@@ -240,6 +257,17 @@ import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine'
 
 const parser = new Parser(registry, new ParserConfiguration({
     messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
+}));
+```
+
+Example - decoding only a subset of entity classes:
+
+```js
+import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine';
+
+const parser = new Parser(registry, new ParserConfiguration({
+    messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
+    entityClasses: [ 'CExampleEntityA', 'CExampleEntityB' ]
 }));
 ```
 
@@ -401,10 +429,11 @@ Parser throughput depends on the replay contents, the packet filters you apply, 
 | Parse all packet types | Highest coverage, higher CPU and memory cost | Best when you need complete replay state. |
 | Filter [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) via `ParserConfiguration` | Lower parse cost | Useful for chat-only or event-focused extraction. |
 | Exclude `SVC_PACKET_ENTITIES` | Skips entity decoding entirely | Entities are typically the most expensive packets. |
+| Use `entityClasses` | Lower entity decode cost while keeping the rest of the replay intact | Useful when you only need a few classes such as player controllers or game rules proxies. |
 | Call `entity.unpackFlattened()` frequently | Higher per-entity overhead | Prefer targeted reads over unpacking every entity. |
 | Increase `parserThreads` (Parser only) | Higher throughput at the cost of memory | Not supported by `Player`. |
 
-For concrete benchmarks, see the [`deadem` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance).
+For concrete benchmarks, see the [`deadem` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance) or the [`@deadem/dota2` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance).
 
 ## License
 
