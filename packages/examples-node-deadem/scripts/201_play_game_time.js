@@ -1,7 +1,7 @@
 import { Player } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
-import GameObserver from '@deademx/examples-common/data/GameObserver.js';
+import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObserver.js';
 
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
@@ -9,7 +9,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);
 
     const player = new Player();
-    const gameObserver = new GameObserver(player);
+    const gameObserver = new DeadlockGameObserver(player);
 
     await player.load(reader);
     await player.seekToTick(player.getLastTick());

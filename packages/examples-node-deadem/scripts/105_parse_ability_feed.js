@@ -1,99 +1,63 @@
-import { InterceptorStage, MessagePacketType, Parser, Printer } from 'deadem';
+import { InterceptorStage, Logger, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
-
+import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObserver.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
     const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);
+    const parser = new Parser(new ParserConfiguration({
+        parserThreads: 0,
+        messagePacketTypes: [
+            MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED,
+            MessagePacketType.SVC_PACKET_ENTITIES
+        ],
+        entityClasses: [ 'CCitadelGameRulesProxy', 'CCitadelPlayerController', 'CCitadelPlayerPawn' ]
+    }), Logger.CONSOLE_WARN);
 
-    const parser = new Parser();
     const printer = new Printer(parser);
-
-    let descriptor = null;
+    const gameObserver = new DeadlockGameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
-        switch (messagePacket.type) {
-            case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST: {
-                descriptor = messagePacket.data.descriptors.find(d => d.name === 'player_used_ability');
-
-                break;
-            }
-            case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT: {
-                if (descriptor === null) {
-                    throw new Error('GE_SOURCE1_LEGACY_GAME_EVENT is fired, however, descriptor is [ null ]');
-                }
-
-                if (messagePacket.data.eventid !== descriptor.eventid) {
-                    break;
-                }
-
-                const keyAbilityIndex = descriptor.keys.findIndex(k => k.name === 'abilityname');
-                const keyEntityIndex = descriptor.keys.findIndex(k => k.name === 'entindex_player');
-
-                if (keyAbilityIndex === -1 || keyEntityIndex === -1) {
-                    throw new Error('Unable to find keys [ abilityname ] and/or [ entindex_player ]');
-                }
-
-                const demo = parser.getDemo();
-
-                const abilityName = messagePacket.data.keys[keyAbilityIndex].valString;
-                const entityIndex = messagePacket.data.keys[keyEntityIndex].valLong;
-
-                const entity = getEntity(demo, entityIndex);
-
-                if (entity.class.name !== 'CCitadelPlayerPawn') {
-                    console.warn(`Unhandled entity class: [ ${entity.class.name} ]`);
-
-                    break;
-                }
-
-                const ownerEntity = getEntityOwner(demo, entity);
-                const data = ownerEntity.unpackFlattened();
-
-                console.log(`[ Team ${data.m_iTeamNum} ] [ ${ownerEntity.class.name} ] ${data.m_iszPlayerName} - ${abilityName}`);
-
-                break;
-            }
-            default: {
-                break;
-            }
+        if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED) {
+            return;
         }
+
+        gameObserver.forceUpdate();
+
+        const caster = getCasterLog(parser.getDemo(), messagePacket.data.caster);
+
+        console.log(`[ ${gameObserver.getGameClockFormatted()} ] ${caster} | ${messagePacket.data.abilityName}`);
     });
 
     await parser.parse(reader);
-    await parser.dispose();
-
     printer.printStats();
+    await parser.dispose();
 })();
 
 /**
  * @param {Demo} demo
- * @param {number} entityIndex
- * @returns {Entity|null}
+ * @param {number} handle
+ * @returns {string}
  */
-function getEntity(demo, entityIndex) {
-    const entity = demo.getEntity(entityIndex);
+function getCasterLog(demo, handle) {
+    const entity = demo.getEntityByHandle(handle);
 
     if (entity === null) {
-        throw new Error(`Unable to get entity with index [ ${entityIndex} ]`);
+        return `[ handle ${handle} ]`;
     }
 
-    return entity;
-}
-
-/**
- * @param {Demo} demo
- * @param {Entity} entity
- * @returns {Entity|null}
- */
-function getEntityOwner(demo, entity) {
-    const ownerEntityHandle = entity.unpackFlattened().m_hOwnerEntity;
-    const ownerEntity = demo.getEntityByHandle(ownerEntityHandle);
-
-    if (ownerEntity === null) {
-        throw new Error(`Unable to get owner entity by handle [ ${ownerEntityHandle} ]`);
+    if (entity.class.name !== 'CCitadelPlayerPawn') {
+        return `[ ${entity.class.name} #${entity.index} ]`;
     }
 
-    return ownerEntity;
+    const owner = demo.getEntityByHandle(entity.unpackFlattened().m_hOwnerEntity);
+
+    if (owner === null) {
+        return `[ CCitadelPlayerPawn #${entity.index} ]`;
+    }
+
+    const data = owner.unpackFlattened();
+
+    return `[ Team ${data.m_iTeamNum} ] ${data.m_iszPlayerName} (#${entity.index})`;
 }

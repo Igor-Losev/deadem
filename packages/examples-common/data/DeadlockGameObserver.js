@@ -1,12 +1,12 @@
-import { InterceptorStage } from '@deademx/engine';
+import { InterceptorStage, MessagePacketType } from '@deademx/engine';
 
-import GameState from './GameState.js';
+import DeadlockGameState from './DeadlockGameState.js';
 
 const GAME_RULES_CLASS_NAME = 'CCitadelGameRulesProxy';
 const NOT_AVAILABLE = 'N/A';
 const SECONDS_IN_MINUTE = 60;
 
-class GameObserver {
+class DeadlockGameObserver {
     /**
      * @constructor
      * @param {Parser|Player} parser
@@ -18,8 +18,7 @@ class GameObserver {
 
         this._gameRulesEntityIndex = null;
         this._last = null;
-
-        this._pausedTicksAtSnapshot = 0;
+        this._currentGameTick = null;
 
         this._game = {
             clockGame: 0,
@@ -86,7 +85,8 @@ class GameObserver {
             return;
         }
 
-        const gameTick = this._last.tick;
+        const demoTick = this._last.tick;
+        const gameTick = this._currentGameTick ?? demoTick;
 
         this._game.tick = gameTick;
 
@@ -104,35 +104,23 @@ class GameObserver {
         const gameRulesData = gameRules.unpackFlattened();
 
         const gamePaused = gameRulesData['m_pGameRules.m_bGamePaused'] || false;
-        const gameState = GameState.parse(gameRulesData['m_pGameRules.m_eGameState']);
+        const gameState = DeadlockGameState.parse(gameRulesData['m_pGameRules.m_eGameState']);
 
         const clockLastUpdatedAt = gameRulesData['m_pGameRules.m_flMatchClockAtLastUpdate'];
         const clockLastUpdatedTick = gameRulesData['m_pGameRules.m_nMatchClockUpdateTick'];
 
         const tickInterval = demo.server.tickInterval;
 
-        if (gameState === GameState.POST_GAME) {
+        if (gameState === DeadlockGameState.POST_GAME || gamePaused) {
             this._game.clockGame = Math.max(clockLastUpdatedAt, 0);
-            this._game.clockTotal = Math.max(gameTick * tickInterval, 0);
-
-            return;
-        }
-
-        if (!gamePaused) {
-            const pausedTicks = gameRulesData['m_pGameRules.m_nTotalPausedTicks'] || 0;
-            const pausedTicksDelta = pausedTicks - this._pausedTicksAtSnapshot;
-
-            const tickDeltaRaw = gameTick - clockLastUpdatedTick;
-            const tickDeltaCorrected = Math.max(tickDeltaRaw - pausedTicksDelta, 0);
-
-            const elapsed = tickDeltaCorrected * tickInterval;
+        } else {
+            const tickDelta = Math.max(gameTick - clockLastUpdatedTick, 0);
+            const elapsed = tickDelta * tickInterval;
 
             this._game.clockGame = Math.max(clockLastUpdatedAt + elapsed, 0);
-
-            this._pausedTicksAtSnapshot = pausedTicks;
         }
 
-        this._game.clockTotal = Math.max(gameTick * tickInterval, 0);
+        this._game.clockTotal = Math.max(demoTick * tickInterval, 0);
 
         this._game.paused = gamePaused;
         this._game.state = gameState;
@@ -156,7 +144,17 @@ class GameObserver {
 
         const unregisterInterceptorForInitialization = () => this._parser.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptorForInitialization);
 
-        const interceptorForGameData = (demoPacket) => {
+        const interceptorForGameDataPre = (demoPacket) => {
+            this._last = demoPacket;
+
+            const gameTick = getGameTick(demoPacket);
+
+            if (gameTick !== null) {
+                this._currentGameTick = gameTick;
+            }
+        };
+
+        const interceptorForGameDataPost = (demoPacket) => {
             this._last = demoPacket;
 
             if (demoPacket.sequence % this._frequency === 0) {
@@ -164,8 +162,9 @@ class GameObserver {
             }
         };
 
+        this._parser.registerPreInterceptor(InterceptorStage.DEMO_PACKET, interceptorForGameDataPre);
         this._parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptorForInitialization);
-        this._parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptorForGameData);
+        this._parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptorForGameDataPost);
     }
 }
 
@@ -187,11 +186,31 @@ function formatClock(clock) {
 }
 
 /**
+ * @param {DemoPacket} demoPacket
+ * @returns {number|null}
+ */
+function getGameTick(demoPacket) {
+    const messagePackets = demoPacket.data?.messagePackets;
+
+    if (!Array.isArray(messagePackets)) {
+        return null;
+    }
+
+    const packetEntities = messagePackets.findLast(messagePacket => messagePacket.type === MessagePacketType.SVC_PACKET_ENTITIES);
+
+    if (packetEntities === undefined) {
+        return null;
+    }
+
+    return packetEntities.data.serverTick;
+}
+
+/**
  * @typedef {Object} Game
  * @property {number} clockGame
  * @property {number} clockTotal
  * @property {boolean} paused
- * @property {GameState|null} state
+ * @property {DeadlockGameState|null} state
  * @property {number|null} tick
  */
 
@@ -204,4 +223,4 @@ function formatClock(clock) {
  * @property {string} tick
  */
 
-export default GameObserver;
+export default DeadlockGameObserver;

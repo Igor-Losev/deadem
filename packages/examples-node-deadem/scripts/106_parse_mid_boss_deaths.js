@@ -1,17 +1,34 @@
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
-import GameObserver from '@deademx/examples-common/data/GameObserver.js';
+import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObserver.js';
 
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
     const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);
 
-    const parser = new Parser(new ParserConfiguration({ parserThreads: 4 }));
+    const parser = new Parser(new ParserConfiguration({
+        parserThreads: 0,
+        messagePacketTypes: [
+            MessagePacketType.CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED,
+            MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED,
+            MessagePacketType.SVC_PACKET_ENTITIES
+        ],
+        entityClasses: [
+            'CCitadelGameRulesProxy',
+            'CCitadel_Destroyable_Building',
+            'CNPC_BarrackBoss',
+            'CNPC_Boss_Tier2',
+            'CNPC_Boss_Tier3',
+            'CNPC_MidBoss',
+            'CNPC_TrooperBoss'
+        ]
+    }));
+
     const printer = new Printer(parser);
 
-    const gameObserver = new GameObserver(parser, Infinity);
+    const gameObserver = new DeadlockGameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
         const isBossMidSpawned = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED;
