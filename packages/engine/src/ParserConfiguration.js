@@ -6,6 +6,7 @@ const OPTIONS = {
     BATCHER_CHUNK_SIZE: 'batcherChunkSize',
     BATCHER_THRESHOLD_MILLISECONDS: 'batcherThresholdMilliseconds',
     BREAK_INTERVAL: 'breakInterval',
+    ENTITY_CLASSES: 'entityClasses',
     MESSAGE_PACKET_TYPES: 'messagePacketTypes',
     MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude',
     PARSER_THREADS: 'parserThreads',
@@ -23,6 +24,7 @@ const DEFAULTS = {
     [OPTIONS.BREAK_INTERVAL]: 1000,
     [OPTIONS.BATCHER_CHUNK_SIZE]: 100 * 1024,
     [OPTIONS.BATCHER_THRESHOLD_MILLISECONDS]: 50,
+    [OPTIONS.ENTITY_CLASSES]: null,
     [OPTIONS.MESSAGE_PACKET_TYPES]: null,
     [OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE]: null,
     [OPTIONS.PARSER_THREADS]: 0,
@@ -32,7 +34,7 @@ const DEFAULTS = {
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ batcherChunkSize?: number, batcherThresholdMilliseconds?: number, breakInterval?: number, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, parserThreads?: number, splitterChunkSize?: number }} options
+     * @param {{ batcherChunkSize?: number, batcherThresholdMilliseconds?: number, breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, parserThreads?: number, splitterChunkSize?: number }} options
      */
     constructor(options) {
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
@@ -40,6 +42,7 @@ class ParserConfiguration {
         const batcherChunkSize = getOption(OPTIONS.BATCHER_CHUNK_SIZE);
         const batcherThresholdMilliseconds = getOption(OPTIONS.BATCHER_THRESHOLD_MILLISECONDS);
         const breakInterval = getOption(OPTIONS.BREAK_INTERVAL);
+        const entityClasses = getOption(OPTIONS.ENTITY_CLASSES);
         const messagePacketTypes = getOption(OPTIONS.MESSAGE_PACKET_TYPES);
         const messagePacketTypesExclude = getOption(OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE);
         const parserThreads = getOption(OPTIONS.PARSER_THREADS);
@@ -48,6 +51,7 @@ class ParserConfiguration {
         Assert.isTrue(Number.isInteger(batcherChunkSize) && batcherChunkSize > 0, 'options.batcherChunkSize must be a positive integer');
         Assert.isTrue(Number.isInteger(batcherThresholdMilliseconds) && batcherThresholdMilliseconds > 0, 'options.batcherThresholdMilliseconds must be a positive integer');
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0, 'options.breakInterval must be a positive integer');
+        Assert.isTrue(entityClasses === null || (Array.isArray(entityClasses) && entityClasses.every(c => typeof c === 'string' && c.length > 0)), 'options.entityClasses must be an array of non-empty strings or null');
         Assert.isTrue(messagePacketTypes === null || Array.isArray(messagePacketTypes), 'options.messagePacketTypes must be an array or null');
         Assert.isTrue(messagePacketTypesExclude === null || Array.isArray(messagePacketTypesExclude), 'options.messagePacketTypesExclude must be an array or null');
         Assert.isTrue(messagePacketTypes === null || messagePacketTypesExclude === null, 'options.messagePacketTypes and options.messagePacketTypesExclude are mutually exclusive');
@@ -60,7 +64,12 @@ class ParserConfiguration {
         this._parserThreads = parserThreads;
         this._splitterChunkSize = splitterChunkSize;
 
+        this._entityClassFilter = buildEntityClassFilter(entityClasses);
         this._messagePacketFilter = buildMessagePacketFilter(messagePacketTypes, messagePacketTypesExclude);
+
+        if (entityClasses !== null && this._messagePacketFilter !== null) {
+            Assert.isTrue(this._messagePacketFilter(MessagePacketType.SVC_PACKET_ENTITIES.id), 'options.entityClasses requires MessagePacketType.SVC_PACKET_ENTITIES to be enabled by options.messagePacketTypes/options.messagePacketTypesExclude');
+        }
     }
 
     /**
@@ -112,21 +121,49 @@ class ParserConfiguration {
     }
 
     /**
+     * Returns whether mutations of a given entity class should be processed.
+     * Returns `true` when no `entityClasses` filter was configured.
+     *
+     * @public
+     * @param {string} className
+     * @returns {boolean}
+     */
+    getIsEntityClassAllowed(className) {
+        return this._entityClassFilter === null || this._entityClassFilter(className);
+    }
+
+    /**
      * Returns whether a given message packet type ID should be processed.
+     * Returns `true` when no `messagePacketTypes` / `messagePacketTypesExclude`
+     * filter was configured.
      *
      * @public
      * @param {number} messagePacketTypeId
      * @returns {boolean}
      */
     getIsMessagePacketTypeAllowed(messagePacketTypeId) {
-        return this._messagePacketFilter(messagePacketTypeId);
+        return this._messagePacketFilter === null || this._messagePacketFilter(messagePacketTypeId);
     }
+}
+
+/**
+ * @param {Array<string>|null} include
+ * @returns {(function(string): boolean)|null}
+ */
+function buildEntityClassFilter(include) {
+    if (include === null) {
+        return null;
+    }
+
+    const allowed = new Set(include);
+
+    return (className) => allowed.has(className);
 }
 
 /**
  * @param {Array<MessagePacketType>|null} include
  * @param {Array<MessagePacketType>|null} exclude
- * @returns {function(number): boolean}
+ * @returns {(function(number): boolean)|null}
  */
 function buildMessagePacketFilter(include, exclude) {
     if (include !== null) {
@@ -149,7 +186,7 @@ function buildMessagePacketFilter(include, exclude) {
         return (id) => !denied.has(id);
     }
 
-    return () => true;
+    return null;
 }
 
 const defaultConfiguration = new ParserConfiguration({ ...DEFAULTS });

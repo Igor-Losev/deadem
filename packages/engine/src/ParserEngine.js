@@ -60,9 +60,14 @@ class ParserEngine {
 
         const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
 
+        this._filters = {
+            entity: configuration.getIsEntityClassAllowed.bind(configuration),
+            message: configuration.getIsMessagePacketTypeAllowed.bind(configuration)
+        };
+
         this._handlers = {
             demoEntity: new DemoEntityHandler(this._demo),
-            demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler),
+            demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
             demoPacket: new DemoPacketHandler(registry, this._demo, stringTableHandler),
             stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
         };
@@ -381,7 +386,6 @@ class ParserEngine {
         await this._prepareRun();
 
         const chain = [];
-        const messagePacketFilter = this._configuration.getIsMessagePacketTypeAllowed.bind(this._configuration);
 
         if (objectMode) {
             chain.push(new DemoStreamPacketResequencer(this));
@@ -397,14 +401,14 @@ class ParserEngine {
         if (this.getIsMultiThreaded()) {
             chain.push(
                 new DemoStreamPacketBatcher(this, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
-                new DemoStreamPacketParserConcurrent(this, messagePacketFilter),
+                new DemoStreamPacketParserConcurrent(this, this._filters.message),
                 new DemoStreamPacketCoordinator(this),
                 new DemoStreamPacketPrioritizer(this),
                 new DemoStreamPacketAnalyzerConcurrent(this)
             );
         } else {
             chain.push(
-                new DemoStreamPacketParser(this, messagePacketFilter),
+                new DemoStreamPacketParser(this, this._filters.message),
                 new DemoStreamPacketPrioritizer(this),
                 new DemoStreamPacketAnalyzer(this)
             );
