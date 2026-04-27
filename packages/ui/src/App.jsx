@@ -11,17 +11,6 @@ import { LIBRARIES, getLibraryByKey } from './libraries';
 import packageJson from './../package.json';
 
 const TAB_SX = { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': { fontSize: '1.4rem' } };
-const VISUALLY_HIDDEN_SX = {
-  border: 0,
-  clip: 'rect(0 0 0 0)',
-  height: 1,
-  margin: -1,
-  overflow: 'hidden',
-  padding: 0,
-  position: 'absolute',
-  whiteSpace: 'nowrap',
-  width: 1
-};
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -60,7 +49,7 @@ function App() {
         <Box alignItems='center' display='flex' flex={1} gap={1} justifyContent='flex-start'>
           <TroubleshootIcon sx={{ color: '#b388ff', fontSize: '1.5rem' }} />
           <Typography
-            aria-label='Deadem Explorer - Dota 2 and Deadlock Demo Parser'
+            aria-label='Deadem Explorer - Deadlock and Dota 2 Demo Parser'
             component='h1'
             sx={{
               color: 'text.primary',
@@ -71,9 +60,6 @@ function App() {
             }}
           >
             Deadem Explorer
-            <Box component='span' sx={VISUALLY_HIDDEN_SX}>
-              {' - Dota 2 and Deadlock Demo Parser'}
-            </Box>
           </Typography>
         </Box>
 
