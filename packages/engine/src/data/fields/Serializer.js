@@ -22,6 +22,7 @@ class Serializer {
         this._fields = fields;
 
         this._decoderCache = [];
+        this._nameCache = [];
     }
 
     /**
@@ -120,6 +121,20 @@ class Serializer {
      * @returns {string}
      */
     getNameForFieldPath(fieldPath, fieldPathIndex = 0) {
+        if (fieldPathIndex === 0) {
+            const cached = this._nameCache[fieldPath.id] ?? null;
+
+            if (cached !== null) {
+                return cached;
+            }
+
+            const name = this._fields[fieldPath.get(0)].getNameForFieldPath(fieldPath, 1);
+
+            this._nameCache[fieldPath.id] = name;
+
+            return name;
+        }
+
         return this._fields[fieldPath.get(fieldPathIndex)].getNameForFieldPath(fieldPath, fieldPathIndex + 1);
     }
 
