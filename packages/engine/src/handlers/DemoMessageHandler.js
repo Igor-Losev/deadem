@@ -179,8 +179,6 @@ class DemoMessageHandler {
                     const allowed = !hasFilter || this._entityClassFilter(clazz.name);
                     const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
 
-                    let mutations = null;
-
                     if (allowed) {
                         const baseline = this._demo.getClassBaselineById(classId);
 
@@ -194,17 +192,17 @@ class DemoMessageHandler {
                         const mutationsFromBaseline = extractorForBaseline.all();
                         const mutationsFromPacket = extractorForPacket.all();
 
-                        mutations = mutationsFromBaseline.concat(mutationsFromPacket);
-                    } else if (payloadBits !== null) {
-                        bitBuffer.move(payloadBits);
-                    } else {
-                        new EntityMutationExtractor(bitBuffer, entity.class.serializer).skip();
-                    }
+                        const mutations = mutationsFromBaseline.concat(mutationsFromPacket);
 
-                    this._demo.registerEntity(entity);
-
-                    if (mutations !== null) {
                         events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, mutations));
+                    } else {
+                        this._demo.registerEntity(entity);
+
+                        if (payloadBits !== null) {
+                            bitBuffer.move(payloadBits);
+                        } else {
+                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).skip();
+                        }
                     }
 
                     break;
@@ -220,14 +218,10 @@ class DemoMessageHandler {
                         throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
-                    const deleted = this._demo.deleteEntity(index);
-
-                    if (deleted === null) {
-                        throw new Error(`Received delete entity command. However, entity with index [ ${index} ] doesn't exist`);
-                    }
-
                     if (!hasFilter || this._entityClassFilter(entity.class.name)) {
                         events.push(new EntityMutationEvent(EntityOperation.DELETE, entity, []));
+                    } else {
+                        this._demo.deleteEntity(index);
                     }
 
                     break;

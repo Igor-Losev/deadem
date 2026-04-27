@@ -22,6 +22,15 @@ class DemoEntityHandler {
 
             switch (event.operation) {
                 case EntityOperation.CREATE:
+                    this._demo.registerEntity(entity);
+
+                    for (let j = 0; j < event.mutations.length; j++) {
+                        const mutation = event.mutations[j];
+
+                        entity.updateByFieldPath(mutation.fieldPath, mutation.value);
+                    }
+
+                    break;
                 case EntityOperation.UPDATE:
                     if (!entity.active) {
                         entity.activate();
