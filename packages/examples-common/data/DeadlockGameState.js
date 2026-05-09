@@ -142,8 +142,6 @@ const stateUnknown3 = new DeadlockGameState(3, 'UNKNOWN_3');
 const statePreGame = new DeadlockGameState(4, 'PRE_GAME');
 const stateGameInProgress = new DeadlockGameState(5, 'GAME_IN_PROGRESS');
 const statePostGame = new DeadlockGameState(6, 'POST_GAME');
-
-// Placeholder states observed in Deadlock data but not identified yet.
 const stateUnknown7 = new DeadlockGameState(7, 'UNKNOWN_7');
 const stateUnknown8 = new DeadlockGameState(8, 'UNKNOWN_8');
 const stateUnknown11 = new DeadlockGameState(11, 'UNKNOWN_11');
