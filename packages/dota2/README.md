@@ -178,18 +178,15 @@ await player.dispose();
 
 ## Performance
 
-See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for how configuration choices affect parser throughput in general.
+For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-### Single-threaded (`parserThreads = 0`)
+| # | Configuration                                                  | Ticks/sec        | Game seconds/sec (tick rate 30) | 30-min replay, sec | Max RSS, MB    |
+| - | ---                                                            | ---              | ---                             | ---                | ---            |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 17 630 +- 2.68%  | 587.66 +- 2.68%                 | ~3.06              | 449 +- 3.98%   |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 168 694 +- 1.75% | 5 623.14 +- 1.75%               | ~0.32              | 276 +- 10.55%  |
+| 3 | `entityClasses` allowlist                                      | 81 859 +- 1.83%  | 2 728.62 +- 1.83%               | ~0.66              | 293 +- 5.55%   |
 
-Memory below reports the sampled peak RSS from isolated runs.
-
-| # | Scenario | Runtime | Ticks/sec | Game seconds/sec (tick rate 30) | 30-min replay, sec | Max memory, MB |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | All packet types (entities included) | Node.js v22.14.0 | 17 950 +- 3.20% | 598.33 +- 3.20% | ~3.01 | 301 +- 7.87% |
-| 2 | All packet types, single entity class only (`CDOTAPlayerController`) | Node.js v22.14.0 | 59 966 +- 1.97% | 1 998.87 +- 1.97% | ~0.90 | 88 +- 22.95% |
-| 3 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 102 163 +- 3.15% | 3 405.42 +- 3.15% | ~0.53 | 111 +- 10.29% |
-| 4 | Single `MessagePacketType` only | Node.js v22.14.0 | 161 765 +- 3.85% | 5 392.16 +- 3.85% | ~0.33 | 80 +- 10.53% |
+Runtime: Node.js v22.14.0.
 
 ## License
 

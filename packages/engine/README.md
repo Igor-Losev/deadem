@@ -422,18 +422,15 @@ await player.dispose();
 
 ## Performance
 
-Parser throughput depends on the replay contents, the packet filters you apply, and how often you unpack entity state. The table below summarizes the impact of each choice:
+Entity-packet decoding (`MessagePacketType.SVC_PACKET_ENTITIES`) accounts for most of the parser's work — everything else combined is under ~20%. Three configurations cover typical use cases:
 
-| Scenario | Expected impact | Notes |
-| --- | --- | --- |
-| Parse all packet types | Highest coverage, higher CPU and memory cost | Best when you need complete replay state. |
-| Filter [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) via `ParserConfiguration` | Lower parse cost | Useful for chat-only or event-focused extraction. |
-| Exclude `SVC_PACKET_ENTITIES` | Skips entity decoding entirely | Entities are typically the most expensive packets. |
-| Use `entityClasses` | Lower entity decode cost while keeping the rest of the replay intact | Useful when you only need a few classes such as player controllers or game rules proxies. |
-| Call `entity.unpackFlattened()` frequently | Higher per-entity overhead | Prefer targeted reads over unpacking every entity. |
-| Increase `parserThreads` (Parser only) | Higher throughput at the cost of memory | Not supported by `Player`. |
+| # | Configuration                                                  | Speedup vs default | Use case                                      |
+| - | ---                                                            | ---                | ---                                           |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 1× (baseline)      | Full replay state.                            |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | ~6–8×              | Non-entity packets only.                      |
+| 3 | `entityClasses` allowlist                                      | ~4–6×              | Entity consumers with a known set of classes. |
 
-For concrete benchmarks, see the [`deadem` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance) or the [`@deadem/dota2` performance section](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance).
+The engine itself is game-agnostic. For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
 
 ## License
 

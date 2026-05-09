@@ -160,8 +160,6 @@ await parser.dispose();
 
 Deadlock-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js) — for example, `CITADEL_USER_MESSAGE_CHAT_MESSAGE`, `CITADEL_USER_MESSAGE_HERO_KILLED`, `CITADEL_USER_MESSAGE_BOSS_KILLED`, `CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED`, and more.
 
-Several Deadlock-oriented example scripts also use helper utilities from `@deademx/examples-common`, such as `DeadlockGameObserver` and `DeadlockGameState`, to derive match clock and state from `CCitadelGameRulesProxy`.
-
 Extract chat messages paired with player names from the `USER_INFO` string table:
 
 ```js
@@ -241,18 +239,15 @@ await player.dispose();
 
 ## Performance
 
-Entities are parsed but not unpacked by default. Parser throughput scales with how often `entity.unpackFlattened()` is called. See the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for how configuration choices affect throughput in general.
+For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-### Single-threaded (`parserThreads = 0`)
+| # | Configuration                                                  | Ticks/sec       | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max RSS, MB    |
+| - | ---                                                            | ---             | ---                             | ---                | ---            |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 9 164 +- 5.79%  | 143.19 +- 5.79%                 | ~12.57             | 470 +- 6.58%   |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 76 948 +- 4.07% | 1 202.31 +- 4.07%               | ~1.50              | 279 +- 9.11%   |
+| 3 | `entityClasses` allowlist                                      | 55 002 +- 2.19% | 859.40 +- 2.19%                 | ~2.09              | 314 +- 3.94%   |
 
-Memory below reports the sampled peak RSS from isolated runs.
-
-| # | Scenario | Runtime | Ticks/sec | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max memory, MB |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | All packet types (entities included) | Node.js v22.14.0 | 9 400 +- 2.46% | 146.87 +- 2.46% | ~12.26 | 335 +- 2.55% |
-| 2 | All packet types, single entity class only (`CCitadelPlayerController`) | Node.js v22.14.0 | 38 875 +- 2.63% | 607.42 +- 2.63% | ~2.96 | 77 +- 9.88% |
-| 3 | All packet types, `SVC_PACKET_ENTITIES` excluded | Node.js v22.14.0 | 54 495 +- 0.54% | 851.48 +- 0.54% | ~2.11 | 101 +- 6.00% |
-| 4 | Single `MessagePacketType` only | Node.js v22.14.0 | 73 706 +- 9.03% | 1 151.66 +- 9.03% | ~1.56 | 83 +- 11.58% |
+Runtime: Node.js v22.14.0.
 
 ## License
 
