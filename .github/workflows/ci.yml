@@ -89,7 +89,7 @@ jobs:
         run: echo "key=$(bash ./.github/scripts/demo-fixtures.sh cache-key)" >> "$GITHUB_OUTPUT"
 
       - name: Restore Demo Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DEMO_DIR }}
           key: replay-demos-v1-${{ matrix.name }}-${{ steps.demo-cache-key.outputs.key }}
