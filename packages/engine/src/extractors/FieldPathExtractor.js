@@ -32,7 +32,7 @@ class FieldPathExtractor {
         for (;;) {
             const unread = bitBuffer.getUnreadCount();
 
-            if (unread === 0) {
+            if (unread <= 0) {
                 break;
             }
 

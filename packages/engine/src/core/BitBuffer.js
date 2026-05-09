@@ -123,6 +123,10 @@ class BitBuffer {
      * @param {number} count - Non-negative number of bits to move back.
      */
     moveBack(count) {
+        if (count < 0) {
+            return;
+        }
+
         const total = this._pByte * BITS_PER_BYTE + this._pBit - count;
 
         this._pByte = total >>> 3;
