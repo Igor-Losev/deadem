@@ -360,7 +360,7 @@ class ParserEngine {
 
             return packets;
         } catch (error) {
-            if (this._isAbortError(error)) {
+            if (this._getIsAbortError(error)) {
                 return packets;
             }
 
