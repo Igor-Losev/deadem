@@ -45,7 +45,7 @@ jobs:
         run: npm run proto:json -w @deademx/dota2
 
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: auto/proto-sync
           title: 'Proto Synchronization (Auto)'
