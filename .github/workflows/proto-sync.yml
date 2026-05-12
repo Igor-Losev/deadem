@@ -1,0 +1,59 @@
+name: Proto Synchronization
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: proto-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.repository == 'Igor-Losev/deadlock'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Sync proto sources (deadem + engine)
+        run: node .github/scripts/proto-sync.mjs deadem
+
+      - name: Sync proto sources (dota2)
+        run: node .github/scripts/proto-sync.mjs dota2
+
+      - name: Compile proto JSON (deadem)
+        run: npm run proto:json -w deadem
+
+      - name: Compile proto JSON (dota2)
+        run: npm run proto:json -w @deademx/dota2
+
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: auto/proto-sync
+          title: 'Proto Synchronization (Auto)'
+          commit-message: 'Proto Synchronization (Auto)'
+          body: |
+            Automated sync of `.proto` files from `SteamDatabase/Protobufs`:
+            - `packages/deadem/proto/source/` and `packages/engine/proto/source/` from `deadlock/`
+            - `packages/dota2/proto/source/` from `dota2/`
+
+            Includes regenerated `proto/compiled/proto.json` for both packages.
+          labels: proto-sync
