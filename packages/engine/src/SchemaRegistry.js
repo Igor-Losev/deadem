@@ -4,6 +4,8 @@ import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';
 
+import FieldRuleRegistry from '#data/fields/decoding/FieldRuleRegistry.js';
+
 import ProtoProvider from '#providers/ProtoProvider.js';
 
 /**
@@ -42,6 +44,8 @@ class SchemaRegistry {
         this._serializers = {
             sendTables: null
         };
+
+        this._fieldRules = new FieldRuleRegistry();
     }
 
     /**
@@ -102,6 +106,7 @@ class SchemaRegistry {
             messageTypes,
             stringTableTypes,
             stringTableDecoders,
+            fieldRules: this._fieldRules.export(),
             sendTablesSerializerDecoder: this._serializers.sendTables ? this._serializers.sendTables.fullName : null
         };
     }
@@ -113,6 +118,14 @@ class SchemaRegistry {
      */
     getDemoProto(type) {
         return this._protos.demo.get(type.id) || null;
+    }
+
+    /**
+     * @public
+     * @returns {FieldRuleRegistry}
+     */
+    getFieldRuleRegistry() {
+        return this._fieldRules;
     }
 
     /**
@@ -162,6 +175,41 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @param {String} name
+     * @param {FieldDecoderDescriptor} descriptor
+     */
+    registerFieldDecoderOverride(name, descriptor) {
+        this._fieldRules.registerFieldDecoderOverride(name, descriptor);
+    }
+
+    /**
+     * @public
+     * @param {String} name
+     * @param {String} encoder
+     */
+    registerFieldEncoderOverride(name, encoder) {
+        this._fieldRules.registerFieldEncoderOverride(name, encoder);
+    }
+
+    /**
+     * @public
+     * @param {String} baseType
+     * @param {FieldDecoderDescriptor} descriptor
+     */
+    registerFieldTypeDecoder(baseType, descriptor) {
+        this._fieldRules.registerFieldTypeDecoder(baseType, descriptor);
+    }
+
+    /**
+     * @public
+     * @param {String} baseType
+     */
+    registerFixedTableType(baseType) {
+        this._fieldRules.registerFixedTableType(baseType);
+    }
+
+    /**
+     * @public
      * @param {MessagePacketType} type
      * @param {protobuf.Type} proto
      */
@@ -186,6 +234,14 @@ class SchemaRegistry {
      */
     registerStringTableType(type) {
         this._types.stringTableByName.set(type.name, type);
+    }
+
+    /**
+     * @public
+     * @param {String} baseType
+     */
+    registerVariableArrayType(baseType) {
+        this._fieldRules.registerVariableArrayType(baseType);
     }
 
     /**
@@ -253,6 +309,8 @@ class SchemaRegistry {
         const protoProvider = new ProtoProvider(snapshot.protoJson);
 
         const registry = new SchemaRegistry(protoProvider);
+
+        registry._fieldRules = FieldRuleRegistry.reconstruct(snapshot.fieldRules || null);
 
         snapshot.demoTypes.forEach(({ id, code, heavy, bootstrap, protoName }) => {
             const type = new DemoPacketType(code, id, heavy, bootstrap);
