@@ -9,6 +9,7 @@ import FieldDecoderDescriptor from './FieldDecoderDescriptor.js';
 
 class FieldDecoderCatalog {
     /**
+     * @public
      * @constructor
      */
     constructor() {
@@ -18,11 +19,12 @@ class FieldDecoderCatalog {
     /**
      * @public
      * @param {FieldDecoderDescriptor} descriptor
-     * @param {Field|null} [field=null]
-     * @returns {Decoder}
+     * @param {FieldDecoderInstructions} decoderInstructions
+     * @returns {Function}
      */
-    resolve(descriptor, field = null) {
+    resolve(descriptor, decoderInstructions) {
         Assert.isTrue(descriptor instanceof FieldDecoderDescriptor);
+        Assert.isTrue(decoderInstructions instanceof FieldDecoderInstructions);
 
         const decoder = registry.get(descriptor.type) || null;
 
@@ -32,15 +34,15 @@ class FieldDecoderCatalog {
 
         switch (descriptor.type) {
             case FieldDecoderType.DYNAMIC_FLOAT_32:
-                return this._factory.createFloat32(getDecoderInstructions(field));
+                return this._factory.createFloat32(decoderInstructions);
             case FieldDecoderType.DYNAMIC_UINT_64:
-                return this._factory.createUInt64(getDecoderInstructions(field));
+                return this._factory.createUInt64(decoderInstructions);
             case FieldDecoderType.QANGLE:
-                return this._factory.createQAngle(getDecoderInstructions(field));
+                return this._factory.createQAngle(decoderInstructions);
             case FieldDecoderType.QUANTIZED_FLOAT:
-                return this._factory.createQuantizedFloat(getDecoderInstructions(field));
+                return this._factory.createQuantizedFloat(decoderInstructions);
             case FieldDecoderType.VECTOR:
-                return this._factory.createVector(getDecoderInstructions(field), getVectorDimension(descriptor));
+                return this._factory.createVector(decoderInstructions, descriptor.options.dimension);
             default:
                 throw new Error(`Unhandled field decoder type [ ${descriptor.type.code} ]`);
         }
@@ -49,9 +51,7 @@ class FieldDecoderCatalog {
 
 /**
  * @typedef {(bitBuffer: BitBuffer) => *} Decoder
- */
-
-/**
+ *
  * @type {Map<FieldDecoderType, Decoder>}
  */
 const registry = new Map();
@@ -67,19 +67,5 @@ registry.set(FieldDecoderType.VAR_INT_32, FieldDecoderFactory.VAR_INT_32);
 registry.set(FieldDecoderType.VAR_INT_64, FieldDecoderFactory.VAR_INT_64);
 registry.set(FieldDecoderType.VAR_UINT_32, FieldDecoderFactory.U_VAR_INT_32);
 registry.set(FieldDecoderType.VAR_UINT_64, FieldDecoderFactory.U_VAR_INT_64);
-
-function getDecoderInstructions(field) {
-    Assert.isTrue(field !== null && field.decoderInstructions instanceof FieldDecoderInstructions);
-
-    return field.decoderInstructions;
-}
-
-function getVectorDimension(descriptor) {
-    const { dimension } = descriptor.options;
-
-    Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
-
-    return dimension;
-}
 
 export default FieldDecoderCatalog;

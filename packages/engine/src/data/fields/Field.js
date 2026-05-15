@@ -41,8 +41,6 @@ class Field {
 
     /**
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} [index=0]
      * @returns {String}
      */
     getNameForFieldPath() {

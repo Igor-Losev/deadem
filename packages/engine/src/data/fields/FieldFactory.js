@@ -4,9 +4,9 @@ import FieldModel from '#data/enums/FieldModel.js';
 
 import FieldDecoderFactory from './FieldDecoderFactory.js';
 import FieldDecoderInstructionsFactory from './FieldDecoderInstructionsFactory.js';
-import FieldDecoderPicker from './FieldDecoderPicker.instance.js';
 import FieldDefinition from './FieldDefinition.js';
 
+import FieldDecoderCatalog from './decoding/FieldDecoderCatalog.js';
 import FieldRuleRegistry from './decoding/FieldRuleRegistry.js';
 
 import ArrayFixedField from './models/ArrayFixedField.js';
@@ -24,6 +24,8 @@ class FieldFactory {
         Assert.isTrue(fieldRuleRegistry instanceof FieldRuleRegistry);
 
         this._fieldRuleRegistry = fieldRuleRegistry;
+
+        this._decoderCatalog = new FieldDecoderCatalog();
         this._instructionsFactory = new FieldDecoderInstructionsFactory();
     }
 
@@ -55,9 +57,9 @@ class FieldFactory {
 
         switch (model) {
             case FieldModel.SIMPLE:
-                return new SimpleField(name, sendNode, FieldDecoderPicker.pick(definition.baseType, decoderInstructions));
+                return new SimpleField(name, sendNode, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
-                return new ArrayFixedField(name, sendNode, FieldDecoderPicker.pick(definition.baseType, decoderInstructions));
+                return new ArrayFixedField(name, sendNode, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
@@ -65,7 +67,7 @@ class FieldFactory {
                     name,
                     sendNode,
                     FieldDecoderFactory.U_VAR_INT_32,
-                    FieldDecoderPicker.pick(definition.generic.baseType, decoderInstructions)
+                    this._resolveDecoder(name, definition.generic.baseType, decoderInstructions)
                 );
             case FieldModel.TABLE_FIXED:
                 return new TableFixedField(name, sendNode, serializer, FieldDecoderFactory.BOOLEAN);
@@ -100,6 +102,29 @@ class FieldFactory {
         }
 
         return FieldModel.SIMPLE;
+    }
+
+    /**
+     * @protected
+     * @param {String} name
+     * @param {String} baseType
+     * @param {FieldDecoderInstructions} decoderInstructions
+     * @returns {Function}
+     */
+    _resolveDecoder(name, baseType, decoderInstructions) {
+        const override = this._fieldRuleRegistry.getFieldDecoderOverride(name);
+
+        if (override !== null) {
+            return this._decoderCatalog.resolve(override, decoderInstructions);
+        }
+
+        const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(baseType);
+
+        if (descriptor === null) {
+            return FieldDecoderFactory.U_VAR_INT_32;
+        }
+
+        return this._decoderCatalog.resolve(descriptor, decoderInstructions);
     }
 }
 
