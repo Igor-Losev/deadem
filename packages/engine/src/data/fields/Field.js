@@ -41,6 +41,16 @@ class Field {
 
     /**
      * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {Function}
+     */
+    getDecoderForFieldPath() {
+        throw new Error('Abstract: getDecoderForFieldPath()');
+    }
+
+    /**
+     * @public
      * @returns {String}
      */
     getNameForFieldPath() {

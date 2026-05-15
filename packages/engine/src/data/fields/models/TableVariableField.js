@@ -51,6 +51,20 @@ class TableVariableField extends Field {
     /**
      * @public
      * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {Function}
+     */
+    getDecoderForFieldPath(fieldPath, index) {
+        if (fieldPath.length - 1 >= index + 1) {
+            return this._serializer.getDecoderForFieldPath(fieldPath, index + 1);
+        }
+
+        return this._decoderBase;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
      * @param {number} [index=0]
      * @returns {String}
      */

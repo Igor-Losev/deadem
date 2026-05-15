@@ -38,8 +38,14 @@ class SimpleField extends Field {
 
     /**
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} [index=0]
+     * @returns {Function}
+     */
+    getDecoderForFieldPath() {
+        return this._decoder;
+    }
+
+    /**
+     * @public
      * @returns {String}
      */
     getNameForFieldPath() {

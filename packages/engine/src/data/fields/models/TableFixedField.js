@@ -51,6 +51,20 @@ class TableFixedField extends Field {
     /**
      * @public
      * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {Function}
+     */
+    getDecoderForFieldPath(fieldPath, index) {
+        if (fieldPath.length === index) {
+            return this._decoderBase;
+        }
+
+        return this._serializer.getDecoderForFieldPath(fieldPath, index);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
      * @param {number} [index=0]
      * @returns {String}
      */

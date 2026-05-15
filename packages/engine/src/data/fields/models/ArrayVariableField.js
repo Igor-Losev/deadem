@@ -50,6 +50,16 @@ class ArrayVariableField extends Field {
     /**
      * @public
      * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {Function}
+     */
+    getDecoderForFieldPath(fieldPath, index) {
+        return fieldPath.length - 1 === index ? this._decoderChild : this._decoderBase;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
      * @param {number} [index=0]
      * @returns {String}
      */

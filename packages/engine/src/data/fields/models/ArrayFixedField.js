@@ -38,6 +38,14 @@ class ArrayFixedField extends Field {
 
     /**
      * @public
+     * @returns {Function}
+     */
+    getDecoderForFieldPath() {
+        return this._decoder;
+    }
+
+    /**
+     * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
      * @returns {String}

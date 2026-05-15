@@ -1,7 +1,5 @@
 import Assert from '#core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
-
 import Field from './Field.js';
 import SerializerKey from './SerializerKey.js';
 
@@ -58,54 +56,8 @@ class Serializer {
             }
         }
 
-        let serializer = this;
-        let idx = fieldPathIndex;
-        let decoder;
-
-        for (;;) {
-            const field = serializer.fields[fieldPath.path[idx]];
-
-            idx++;
-
-            if (field.model === FieldModel.SIMPLE || field.model === FieldModel.ARRAY_FIXED) {
-                decoder = field.decoder;
-
-                break;
-            }
-
-            if (field.model === FieldModel.ARRAY_VARIABLE) {
-                decoder = (fieldPath.length - 1 === idx) ? field.decoderChild : field.decoderBase;
-
-                break;
-            }
-
-            if (field.model === FieldModel.TABLE_FIXED) {
-                if (fieldPath.length === idx) {
-                    decoder = field.decoderBase;
-
-                    break;
-                }
-
-                serializer = field.serializer;
-
-                continue;
-            }
-
-            if (field.model === FieldModel.TABLE_VARIABLE) {
-                if (fieldPath.length - 1 >= idx + 1) {
-                    serializer = field.serializer;
-                    idx++;
-
-                    continue;
-                }
-
-                decoder = field.decoderBase;
-
-                break;
-            }
-
-            throw new Error(`Unhandled model [ ${field.model} ]`);
-        }
+        const field = this._fields[fieldPath.get(fieldPathIndex)];
+        const decoder = field.getDecoderForFieldPath(fieldPath, fieldPathIndex + 1);
 
         if (fieldPathIndex === 0) {
             this._decoderCache[fieldPath.id] = decoder;
