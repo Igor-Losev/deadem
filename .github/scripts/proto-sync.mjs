@@ -7,43 +7,65 @@ import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), '../../..');
 
-const UPSTREAM_BASE = 'https://raw.githubusercontent.com/SteamDatabase/Protobufs/master';
-
-const ENGINE_FILES = [
-    'base_gcmessages.proto',
-    'demo.proto',
-    'gameevents.proto',
-    'gcsdk_gcmessages.proto',
-    'netmessages.proto',
-    'network_connection.proto',
-    'networkbasetypes.proto',
-    'source2_steam_stats.proto',
-    'steammessages.proto',
-    'steammessages_steamlearn.steamworkssdk.proto',
-    'steammessages_unified_base.steamworkssdk.proto',
-    'te.proto',
-    'usermessages.proto',
-    'valveextensions.proto'
-];
-
 const TARGETS = {
     deadem: {
-        upstreamDir: 'deadlock',
+        upstream: 'https://raw.githubusercontent.com/SteamTracking/GameTracking-Deadlock/master/Protobufs',
+        localDir: 'packages/deadem/proto/source',
         files: [
-            { upstream: 'base_modifier.proto', local: 'packages/deadem/proto/source/base_modifier.proto' },
-            { upstream: 'citadel_gameevents.proto', local: 'packages/deadem/proto/source/citadel_gameevents.proto' },
-            { upstream: 'citadel_gcmessages_common.proto', local: 'packages/deadem/proto/source/citadel_gcmessages_common.proto' },
-            { upstream: 'citadel_usermessages.proto', local: 'packages/deadem/proto/source/citadel_usermessages.proto' },
-            ...ENGINE_FILES.map((f) => ({ upstream: f, local: `packages/engine/proto/source/${f}` }))
+            'base_gcmessages.proto',
+            'citadel_gameevents.proto',
+            'citadel_gcmessages_common.proto',
+            'citadel_usermessages.proto',
+            'demo.proto',
+            'gameevents.proto',
+            'gcsdk_gcmessages.proto',
+            'netmessages.proto',
+            'network_connection.proto',
+            'networkbasetypes.proto',
+            'source2_steam_stats.proto',
+            'steammessages.proto',
+            'steammessages_steamlearn.steamworkssdk.proto',
+            'steammessages_unified_base.steamworkssdk.proto',
+            'te.proto',
+            'usermessages.proto',
+            'valveextensions.proto'
         ]
     },
     dota2: {
-        upstreamDir: 'dota2',
+        upstream: 'https://raw.githubusercontent.com/SteamTracking/GameTracking-Dota2/master/Protobufs',
+        localDir: 'packages/dota2/proto/source',
         files: [
-            { upstream: 'dota_commonmessages.proto', local: 'packages/dota2/proto/source/dota_commonmessages.proto' },
-            { upstream: 'dota_modifiers.proto', local: 'packages/dota2/proto/source/dota_modifiers.proto' },
-            { upstream: 'dota_shared_enums.proto', local: 'packages/dota2/proto/source/dota_shared_enums.proto' },
-            { upstream: 'dota_usermessages.proto', local: 'packages/dota2/proto/source/dota_usermessages.proto' }
+            'demo.proto',
+            'dota_commonmessages.proto',
+            'dota_shared_enums.proto',
+            'dota_usermessages.proto',
+            'gameevents.proto',
+            'netmessages.proto',
+            'network_connection.proto',
+            'networkbasetypes.proto',
+            'source2_steam_stats.proto',
+            'te.proto',
+            'usermessages.proto'
+        ]
+    },
+    cs2: {
+        upstream: 'https://raw.githubusercontent.com/SteamTracking/GameTracking-CS2/master/Protobufs',
+        localDir: 'packages/cs2/proto/source',
+        files: [
+            'cs_gameevents.proto',
+            'cstrike15_gcmessages.proto',
+            'cstrike15_usermessages.proto',
+            'demo.proto',
+            'engine_gcmessages.proto',
+            'gameevents.proto',
+            'gcsdk_gcmessages.proto',
+            'netmessages.proto',
+            'network_connection.proto',
+            'networkbasetypes.proto',
+            'source2_steam_stats.proto',
+            'steammessages.proto',
+            'te.proto',
+            'usermessages.proto'
         ]
     }
 };
@@ -57,8 +79,8 @@ if (!config) {
     process.exit(1);
 }
 
-async function fetchProto({ upstream, local }) {
-    const url = `${UPSTREAM_BASE}/${config.upstreamDir}/${upstream}`;
+async function fetchProto(file) {
+    const url = `${config.upstream}/${file}`;
 
     const response = await fetch(url);
 
@@ -66,17 +88,17 @@ async function fetchProto({ upstream, local }) {
         throw new Error(`${url}: HTTP ${response.status} ${response.statusText}`);
     }
 
-    return { local, remote: Buffer.from(await response.arrayBuffer()) };
+    return { file, remote: Buffer.from(await response.arrayBuffer()) };
 }
 
-console.log(`Syncing ${config.files.length} file(s) from ${config.upstreamDir}/ ...`);
+console.log(`Syncing ${config.files.length} file(s) for ${target} from ${config.upstream} ...`);
 
 const downloads = await Promise.all(config.files.map(fetchProto));
 
 const changed = [ ];
 
-for (const { local, remote } of downloads) {
-    const localPath = resolve(REPO_ROOT, local);
+for (const { file, remote } of downloads) {
+    const localPath = resolve(REPO_ROOT, config.localDir, file);
     const current = existsSync(localPath) ? await readFile(localPath) : null;
 
     if (current !== null && current.equals(remote)) {
@@ -86,9 +108,9 @@ for (const { local, remote } of downloads) {
     await mkdir(dirname(localPath), { recursive: true });
     await writeFile(localPath, remote);
 
-    changed.push(local);
+    changed.push(`${config.localDir}/${file}`);
 
-    console.log(`Updated ${local}`);
+    console.log(`Updated ${config.localDir}/${file}`);
 }
 
 console.log(`\n${changed.length} of ${downloads.length} file(s) changed`);
