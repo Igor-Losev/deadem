@@ -1,10 +1,12 @@
-import { Bootstrap as EngineBootstrap } from '@deademx/engine';
+import { Bootstrap as EngineBootstrap, FieldDecoderDescriptor } from '@deademx/engine';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
+import StringTableType from '#data/enums/StringTableType.js';
 
 /**
  * Populates a {@link SchemaRegistry} with engine-level types and then layers
- * Deadlock-specific (Citadel) user messages and game events on top.
+ * Deadlock-specific (Citadel) field rules, user messages, game events, and
+ * string table types on top.
  */
 class Bootstrap {
     /**
@@ -15,8 +17,21 @@ class Bootstrap {
     static run(registry) {
         EngineBootstrap.run(registry);
 
+        Bootstrap._registerCitadelFieldRules(registry);
         Bootstrap._registerCitadelUserMessages(registry);
         Bootstrap._registerCitadelGameEvents(registry);
+        Bootstrap._registerStringTableTypes(registry);
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerCitadelFieldRules(registry) {
+        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
+
+        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**
@@ -109,6 +124,15 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.GE_DISABLE_SAT_VOLUME_EVENT, ge.lookupType('CMsgDisableSatVolumesEvent'));
         registry.registerMessageType(MessagePacketType.GE_REMOVE_SAT_VOLUME_EVENT, ge.lookupType('CMsgRemoveSatVolumeEvent'));
         registry.registerMessageType(MessagePacketType.GE_REMOVE_BULLET, ge.lookupType('CMsgRemoveBullet'));
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerStringTableTypes(registry) {
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
     }
 }
 

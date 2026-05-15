@@ -1,11 +1,11 @@
-import { Bootstrap as EngineBootstrap } from '@deademx/engine';
+import { Bootstrap as EngineBootstrap, FieldDecoderDescriptor } from '@deademx/engine';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';
 
 /**
  * Populates a {@link SchemaRegistry} with engine-level types and then layers
- * Dota 2-specific user messages on top.
+ * Dota 2-specific field rules, user messages, and string table types on top.
  */
 class Bootstrap {
     /**
@@ -16,8 +16,19 @@ class Bootstrap {
     static run(registry) {
         EngineBootstrap.run(registry);
 
+        Bootstrap._registerDotaFieldRules(registry);
         Bootstrap._registerDotaUserMessages(registry);
         Bootstrap._registerStringTableTypes(registry);
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerDotaFieldRules(registry) {
+        registry.registerFieldTypeDecoder('HeroFacetKey_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
     }
 
     /**
@@ -196,6 +207,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerStringTableTypes(registry) {
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
         registry.registerStringTableType(StringTableType.MODIFIER_NAMES);
         registry.registerStringTableType(StringTableType.COOLDOWN_NAMES);
         registry.registerStringTableType(StringTableType.ECON_ITEMS);

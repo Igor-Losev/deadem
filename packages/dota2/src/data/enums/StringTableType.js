@@ -1,6 +1,7 @@
 import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
 class StringTableType extends EngineStringTableType {
+    static get ACTIVE_MODIFIERS() { return activeModifiers; }
     static get MODIFIER_NAMES() { return modifierNames; }
     static get COOLDOWN_NAMES() { return cooldownNames; }
     static get ECON_ITEMS() { return econItems; }
@@ -9,6 +10,7 @@ class StringTableType extends EngineStringTableType {
     static get PARTICLE_ASSETS() { return particleAssets; }
 }
 
+const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
 const modifierNames = new StringTableType('MODIFIER_NAMES', 'ModifierNames');
 const cooldownNames = new StringTableType('COOLDOWN_NAMES', 'CooldownNames');
 const econItems = new StringTableType('ECON_ITEMS', 'EconItems');

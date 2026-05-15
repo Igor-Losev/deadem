@@ -7,9 +7,6 @@ import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor
 /**
  * Populates a {@link SchemaRegistry} with engine-level protobuf types
  * (demo packets, message packets, string table decoders, send tables serializer decoder).
- *
- * Game-specific bootstraps call {@link EngineBootstrap.run} first, then layer
- * their own registrations on top of the same registry.
  */
 class Bootstrap {
     /**
@@ -75,18 +72,19 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('CUtlString', FieldDecoderDescriptor.STRING);
         registry.registerFieldTypeDecoder('CUtlSymbolLarge', FieldDecoderDescriptor.STRING);
 
-        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
         registry.registerFieldTypeDecoder('int8', FieldDecoderDescriptor.VAR_INT_32);
         registry.registerFieldTypeDecoder('int16', FieldDecoderDescriptor.VAR_INT_32);
         registry.registerFieldTypeDecoder('int32', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('int64', FieldDecoderDescriptor.VAR_INT_64);
 
         registry.registerFieldTypeDecoder('float32', FieldDecoderDescriptor.DYNAMIC_FLOAT_32);
+
         registry.registerFieldTypeDecoder('QAngle', FieldDecoderDescriptor.QANGLE);
+
         registry.registerFieldTypeDecoder('CNetworkedQuantizedFloat', FieldDecoderDescriptor.QUANTIZED_FLOAT);
 
         registry.registerFieldTypeDecoder('uint64', FieldDecoderDescriptor.DYNAMIC_UINT_64);
         registry.registerFieldTypeDecoder('CStrongHandle', FieldDecoderDescriptor.DYNAMIC_UINT_64);
-        registry.registerFieldTypeDecoder('HeroFacetKey_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
         registry.registerFieldTypeDecoder('ResourceId_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
 
         registry.registerFieldTypeDecoder('Vector2D', FieldDecoderDescriptor.createVector(2));
@@ -107,7 +105,6 @@ class Bootstrap {
         registry.registerVariableArrayType('CNetworkUtlVectorBase');
 
         registry.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
-        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**
@@ -168,7 +165,6 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
         registry.registerStringTableType(StringTableType.DECAL_PRE_CACHE);
         registry.registerStringTableType(StringTableType.EFFECT_DISPATCH);
         registry.registerStringTableType(StringTableType.ENTITY_NAMES);

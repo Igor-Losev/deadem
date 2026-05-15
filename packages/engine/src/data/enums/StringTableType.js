@@ -53,7 +53,6 @@ class StringTableType {
         return new StringTableType(name.toUpperCase(), name, true);
     }
 
-    static get ACTIVE_MODIFIERS() { return activeModifiers; }
     static get DECAL_PRE_CACHE() { return decalPreCache; }
     static get EFFECT_DISPATCH() { return effectDispatch; }
     static get ENTITY_NAMES() { return entityNames; }
@@ -70,7 +69,6 @@ class StringTableType {
     static get ANIM_ASSET_DATA() { return animAssetData; }
 }
 
-const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
 const decalPreCache = new StringTableType('DECAL_PRE_CACHE', 'decalprecache');
 const effectDispatch = new StringTableType('EFFECT_DISPATCH', 'EffectDispatch');
 const entityNames = new StringTableType('ENTITY_NAMES', 'EntityNames');
