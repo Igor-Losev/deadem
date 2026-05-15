@@ -202,6 +202,10 @@
         "isKill": {
           "type": "bool",
           "id": 7
+        },
+        "throughSmoke": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
@@ -5694,6 +5698,15 @@
         "iteminfo": {
           "type": ".CEconItemPreviewDataBlock",
           "id": 6
+        }
+      }
+    },
+    "CMsgItemAcknowledged": {
+      "edition": "proto2",
+      "fields": {
+        "iteminfo": {
+          "type": ".CEconItemPreviewDataBlock",
+          "id": 1
         }
       }
     },

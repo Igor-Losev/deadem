@@ -956,10 +956,9 @@ message CMsgGCCStrike15_v2_MatchEndRewardDropsNotification {
 	optional .CEconItemPreviewDataBlock iteminfo = 6;
 }
 
-// CMsgItemAcknowledged elided: name collides with the engine-shared
-// base_gcmessages.proto definition. The CS2-flavored variant is not referenced
-// by anything in this package, so removing it avoids a pbjs duplicate-name
-// error without affecting demo parsing.
+message CMsgItemAcknowledged {
+	optional .CEconItemPreviewDataBlock iteminfo = 1;
+}
 
 message CMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockRequest {
 	optional uint64 param_s = 1;
