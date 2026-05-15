@@ -4,6 +4,8 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
+const BOMB_EVENTS = new Set([ 'bomb_pickup', 'bomb_dropped', 'bomb_planted', 'bomb_defused', 'bomb_exploded' ]);
+
 (async () => {
     const reader = await DemoProvider.read(DemoFile.CS2_REPLAY_SAMPLE);
 
@@ -11,35 +13,25 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         parserThreads: 0,
         messagePacketTypes: [
             MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST,
-            MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT
-        ]
+            MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT,
+            MessagePacketType.SVC_PACKET_ENTITIES
+        ],
+        entityClasses: [ 'CCSPlayerController', 'CCSPlayerPawn' ]
     }));
 
     const descriptors = new Map();
     const players = new Map();
-    const stats = new Map();
+    const counts = new Map();
 
     parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, async (demoPacket) => {
-        if (players.size > 0 || demoPacket.getIsInitial()) {
-            return;
-        }
+        if (players.size === 0 && !demoPacket.getIsInitial()) {
+            const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
 
-        const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
-
-        for (const entry of userInfo.getEntries()) {
-            if (!Number.isInteger(entry.value.userid)) {
-                continue;
+            for (const entry of userInfo.getEntries()) {
+                if (Number.isInteger(entry.value.userid)) {
+                    players.set(entry.value.userid, entry.value.name);
+                }
             }
-
-            players.set(entry.value.userid, entry.value.name);
-
-            stats.set(entry.value.userid, {
-                name: entry.value.name,
-                hits: 0,
-                damage: 0,
-                headHits: 0,
-                byWeapon: new Map()
-            });
         }
     });
 
@@ -58,53 +50,38 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
         const descriptor = descriptors.get(messagePacket.data.eventid);
 
-        if (descriptor === undefined || descriptor.name !== 'player_hurt') {
+        if (descriptor === undefined || !BOMB_EVENTS.has(descriptor.name)) {
             return;
         }
+
+        counts.set(descriptor.name, (counts.get(descriptor.name) || 0) + 1);
 
         const event = zip(descriptor, messagePacket.data.keys);
 
-        if (event.attacker === event.userid) {
-            return;
+        let who;
+
+        if (event.userid !== undefined) {
+            who = getName(players, event.userid);
+        } else {
+            who = resolvePawn(parser.getDemo(), event.userid_pawn);
         }
 
-        const row = stats.get(event.attacker);
+        let site = '';
 
-        if (row === undefined) {
-            return;
+        if (event.site !== undefined) {
+            site = ` site=${event.site}`;
         }
 
-        row.hits += 1;
-        row.damage += event.dmg_health;
-
-        if (event.hitgroup === 1) {
-            row.headHits += 1;
-        }
-
-        row.byWeapon.set(event.weapon, (row.byWeapon.get(event.weapon) || 0) + event.dmg_health);
+        console.log(`${descriptor.name.padEnd(16)} ${who}${site}`);
     });
 
     await parser.parse(reader);
     await parser.dispose();
 
-    const ranked = [ ...stats.values() ]
-        .filter(row => row.hits > 0)
-        .sort((a, b) => b.damage - a.damage);
+    console.log('\n=== Summary ===');
 
-    console.log('\n=== Damage dealt ===');
-    console.log(`${'Player'.padEnd(20)} ${'Hits'.padStart(5)} ${'Dmg'.padStart(6)} ${'HS%'.padStart(5)} ${'Avg/Hit'.padStart(8)}  Top weapons`);
-
-    for (const row of ranked) {
-        const headshotPct = `${Math.round(100 * row.headHits / row.hits)}%`;
-        const avgPerHit = (row.damage / row.hits).toFixed(1);
-
-        const topWeapons = [ ...row.byWeapon.entries() ]
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
-            .map(([ weapon, damage ]) => `${weapon}:${damage}`)
-            .join(', ');
-
-        console.log(`${row.name.padEnd(20)} ${String(row.hits).padStart(5)} ${String(row.damage).padStart(6)} ${headshotPct.padStart(5)} ${avgPerHit.padStart(8)}  ${topWeapons}`);
+    for (const name of BOMB_EVENTS) {
+        console.log(`  ${name.padEnd(16)} ${counts.get(name) || 0}`);
     }
 
     const printer = new Printer(parser);
@@ -148,4 +125,35 @@ function valueOf(key) {
         case 9: return key.valShort;
         default: return null;
     }
+}
+
+/**
+ * @param {Map<number, string>} players
+ * @param {number} userid
+ * @returns {string}
+ */
+function getName(players, userid) {
+    return players.get(userid) || `userid=${userid}`;
+}
+
+/**
+ * @param {Demo} demo
+ * @param {number} pawnHandle
+ * @returns {string}
+ */
+function resolvePawn(demo, pawnHandle) {
+    const pawn = demo.getEntityByHandle(pawnHandle);
+
+    if (pawn === null) {
+        return `pawn=${pawnHandle}`;
+    }
+
+    const controllerHandle = pawn.unpackFlattened().m_hController;
+    const controller = demo.getEntityByHandle(controllerHandle);
+
+    if (controller === null) {
+        return `pawn=${pawnHandle}`;
+    }
+
+    return controller.unpackFlattened().m_iszPlayerName;
 }
