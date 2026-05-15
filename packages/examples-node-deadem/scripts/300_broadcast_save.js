@@ -14,4 +14,3 @@ import FileSystem from '@deademx/engine/src/core/FileSystem.js';
 
     readable.pipe(writable);
 })();
-

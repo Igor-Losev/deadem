@@ -4,6 +4,8 @@ export { default as BroadcastGateway } from './src/broadcast/BroadcastGateway.js
 export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
 export { default as DemoSource } from './src/data/enums/DemoSource.js';
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
+export { default as FieldDecoderDescriptor } from './src/data/fields/decoding/FieldDecoderDescriptor.js';
+export { default as FieldDecoderType } from './src/data/enums/FieldDecoderType.js';
 export { default as InterceptorStage } from './src/data/enums/InterceptorStage.js';
 export { default as Logger } from './src/core/Logger.js';
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
@@ -13,6 +15,7 @@ export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterr
 export { default as Player } from './src/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/Printer.js';
+export { default as ProtoProvider } from './src/providers/ProtoProvider.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
 export { default as SchemaRegistry } from './src/SchemaRegistry.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';

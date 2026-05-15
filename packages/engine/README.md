@@ -298,6 +298,9 @@ const parser = new Parser(registry, ParserConfiguration.DEFAULT, Logger.CONSOLE_
 | `ParserConfiguration` | Parser options (filters, threads, break interval). |
 | `SchemaRegistry` | Registry of protobuf types. Required by `Parser` and `Player`. |
 | `Bootstrap` | Populates a `SchemaRegistry` with engine-level types. |
+| `ProtoProvider` | Base protobuf schema provider for game-specific packages. |
+| `FieldDecoderDescriptor` | Field decoder descriptors used by game-specific bootstrap rules. |
+| `FieldDecoderType` | Enum of supported field decoder descriptor types. |
 | `BroadcastAgent` | Polls Source 2 HTTP broadcast fragments. |
 | `BroadcastGateway` | Low-level HTTP client for broadcast endpoints. |
 | `Printer` | Prints parser stats (memory, packets, performance). |
@@ -311,7 +314,6 @@ const parser = new Parser(registry, ParserConfiguration.DEFAULT, Logger.CONSOLE_
 | `PlayerState` | `IDLE`, `LOADED`, `PLAYING`, `SEEKING`, `DISPOSED`. |
 | `DemoSource` | `REPLAY`, `HTTP_BROADCAST`. |
 | `Protocol` | `HTTP`, `HTTPS`. |
-| `DeferredPromise` | Utility promise with external `resolve`/`reject`. |
 
 Key methods on `Parser`: `parse(reader, source?, objectMode?)`, `extract(reader, source?)`, `pause()`, `resume()`, `abort()`, `dispose()`, `getDemo()`, `getStats()`, `getIsStarted()`, `getIsPaused()`, `getIsFinished()`, `getIsDisposed()`, plus the interceptor registration API.
 

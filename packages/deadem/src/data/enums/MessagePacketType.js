@@ -1,4 +1,4 @@
-import EngineMessagePacketType from '@deademx/engine/src/data/enums/MessagePacketType.js';
+import { MessagePacketType as EngineMessagePacketType } from '@deademx/engine';
 
 class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_DAMAGE() { return citadelUserMessageDamage; }

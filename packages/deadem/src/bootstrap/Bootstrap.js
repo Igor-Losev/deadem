@@ -1,4 +1,4 @@
-import EngineBootstrap from '@deademx/engine/src/bootstrap/Bootstrap.js';
+import { Bootstrap as EngineBootstrap } from '@deademx/engine';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 
