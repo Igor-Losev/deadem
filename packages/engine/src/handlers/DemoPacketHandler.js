@@ -4,9 +4,8 @@ import BitBuffer from '#core/BitBuffer.js';
 import Class from '#data/Class.js';
 import Demo from '#data/Demo.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoderInstructionsFactory from '#data/fields/FieldDecoderInstructionsFactory.js';
 import FieldDefinition from '#data/fields/FieldDefinition.js';
+import FieldFactory from '#data/fields/FieldFactory.js';
 import Serializer from '#data/fields/Serializer.js';
 import SerializerKey from '#data/fields/SerializerKey.js';
 
@@ -30,7 +29,7 @@ class DemoPacketHandler {
         this._demo = demo;
         this._stringTableHandler = stringTableHandler;
 
-        this._instructionsFactory = new FieldDecoderInstructionsFactory();
+        this._fieldFactory = new FieldFactory(registry.getFieldRuleRegistry());
     }
 
     /**
@@ -108,34 +107,19 @@ class DemoPacketHandler {
                     const name = symbols[varNameSym];
                     const definition = FieldDefinition.parse(symbols[varTypeSym]);
 
-                    let encoder;
-
-                    if (name === 'm_flSimulationTime' || name === 'm_flAnimTime') {
-                        encoder = 'simtime';
-                    } else if (typeof symbols[varEncoderSym] === 'string') {
-                        encoder = symbols[varEncoderSym];
-                    } else {
-                        encoder = null;
-                    }
-
-                    const encodeFlags = Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null;
-                    const bitCount = Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null;
-                    const lowValue = typeof fieldRaw.lowValue === 'number' ? fieldRaw.lowValue : null;
-                    const highValue = typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null;
-
-                    const decoderInstructions = this._instructionsFactory.build(
-                        encoder,
-                        encodeFlags,
-                        bitCount,
-                        lowValue,
-                        highValue
-                    );
+                    const instructionsRaw = {
+                        encoder: typeof symbols[varEncoderSym] === 'string' ? symbols[varEncoderSym] : null,
+                        encoderFlags: Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null,
+                        bitCount: Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null,
+                        valueLow: typeof fieldRaw.lowValue === 'number' ? fieldRaw.lowValue : null,
+                        valueHigh: typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null
+                    };
 
                     const sendNode = symbols[sendNodeSym].split('.').filter(s => s.length > 0);
 
                     // TODO: polymorphic types
 
-                    field = new Field(name, definition, sendNode, decoderInstructions, fieldSerializer);
+                    field = this._fieldFactory.create(name, definition, sendNode, instructionsRaw, fieldSerializer);
                 }
 
                 serializer.push(field);

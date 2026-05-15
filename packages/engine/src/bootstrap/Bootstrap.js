@@ -2,6 +2,8 @@ import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';
 
+import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js';
+
 /**
  * Populates a {@link SchemaRegistry} with engine-level protobuf types
  * (demo packets, message packets, string table decoders, send tables serializer decoder).
@@ -17,6 +19,7 @@ class Bootstrap {
      */
     static run(registry) {
         Bootstrap._registerDemoPacketTypes(registry);
+        Bootstrap._registerFieldRules(registry);
         Bootstrap._registerMessagePacketTypes(registry);
         Bootstrap._registerStringTableTypes(registry);
         Bootstrap._registerStringTableDecoders(registry);
@@ -53,6 +56,58 @@ class Bootstrap {
         registry.registerDemoType(DemoPacketType.DEM_ANIMATION_DATA, pp.DEMO.lookupType('CDemoAnimationData'));
         registry.registerDemoType(DemoPacketType.DEM_ANIMATION_HEADER, pp.DEMO.lookupType('CDemoAnimationHeader'));
         registry.registerDemoType(DemoPacketType.DEM_RECOVERY, pp.DEMO.lookupType('CDemoRecovery'));
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerFieldRules(registry) {
+        registry.registerFieldTypeDecoder('bool', FieldDecoderDescriptor.BOOLEAN);
+        registry.registerFieldTypeDecoder('CBodyComponent', FieldDecoderDescriptor.BOOLEAN);
+        registry.registerFieldTypeDecoder('CPhysicsComponent', FieldDecoderDescriptor.BOOLEAN);
+        registry.registerFieldTypeDecoder('CRenderComponent', FieldDecoderDescriptor.BOOLEAN);
+
+        registry.registerFieldTypeDecoder('GameTime_t', FieldDecoderDescriptor.NO_SCALE);
+
+        registry.registerFieldTypeDecoder('char', FieldDecoderDescriptor.STRING);
+        registry.registerFieldTypeDecoder('CUtlString', FieldDecoderDescriptor.STRING);
+        registry.registerFieldTypeDecoder('CUtlSymbolLarge', FieldDecoderDescriptor.STRING);
+
+        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('int8', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('int16', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('int32', FieldDecoderDescriptor.VAR_INT_32);
+
+        registry.registerFieldTypeDecoder('float32', FieldDecoderDescriptor.DYNAMIC_FLOAT_32);
+        registry.registerFieldTypeDecoder('QAngle', FieldDecoderDescriptor.QANGLE);
+        registry.registerFieldTypeDecoder('CNetworkedQuantizedFloat', FieldDecoderDescriptor.QUANTIZED_FLOAT);
+
+        registry.registerFieldTypeDecoder('uint64', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('CStrongHandle', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('HeroFacetKey_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('ResourceId_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+
+        registry.registerFieldTypeDecoder('Vector2D', FieldDecoderDescriptor.createVector(2));
+        registry.registerFieldTypeDecoder('Vector', FieldDecoderDescriptor.createVector(3));
+        registry.registerFieldTypeDecoder('VectorWS', FieldDecoderDescriptor.createVector(3));
+        registry.registerFieldTypeDecoder('Vector4D', FieldDecoderDescriptor.createVector(4));
+
+        registry.registerFixedTableType('CBodyComponent');
+        registry.registerFixedTableType('CEntityComponent');
+        registry.registerFixedTableType('CEntityIdentity');
+        registry.registerFixedTableType('CEntityInstance');
+        registry.registerFixedTableType('CPhysicsComponent');
+        registry.registerFixedTableType('CRenderComponent');
+        registry.registerFixedTableType('CScriptComponent');
+
+        registry.registerVariableArrayType('CUtlVector');
+        registry.registerVariableArrayType('CUtlVectorEmbeddedNetworkVar');
+        registry.registerVariableArrayType('CNetworkUtlVectorBase');
+
+        registry.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
+        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**
