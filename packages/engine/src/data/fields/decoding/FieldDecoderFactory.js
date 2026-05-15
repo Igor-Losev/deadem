@@ -75,7 +75,7 @@ class FieldDecoderFactory {
      * @static
      * @returns {(BitBuffer) => BigInt}
      */
-    static get U_INT_64() {
+    static get FIXED_UINT_64() {
         return decodeUInt64;
     }
 
@@ -84,7 +84,7 @@ class FieldDecoderFactory {
      * @static
      * @returns {(BitBuffer) => number}
      */
-    static get U_VAR_INT_32() {
+    static get VAR_UINT_32() {
         return decodeUVarInt32;
     }
 
@@ -93,7 +93,7 @@ class FieldDecoderFactory {
      * @static
      * @returns {(BitBuffer) => BigInt}
      */
-    static get U_VAR_INT_64() {
+    static get VAR_UINT_64() {
         return decodeUVarInt64;
     }
 
@@ -271,9 +271,9 @@ class FieldDecoderFactory {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         if (instructions.encoder === 'fixed64') {
-            return FieldDecoderFactory.U_INT_64;
+            return FieldDecoderFactory.FIXED_UINT_64;
         } else {
-            return FieldDecoderFactory.U_VAR_INT_64;
+            return FieldDecoderFactory.VAR_UINT_64;
         }
     }
 

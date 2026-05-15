@@ -67,13 +67,13 @@ class FieldFactory {
                 return new FieldArrayVariable(
                     name,
                     sendNode,
-                    FieldDecoderFactory.U_VAR_INT_32,
+                    FieldDecoderFactory.VAR_UINT_32,
                     this._resolveDecoder(name, definition.generic.baseType, decoderInstructions)
                 );
             case FieldModel.TABLE_FIXED:
                 return new FieldTableFixed(name, sendNode, serializer, FieldDecoderFactory.BOOLEAN);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, serializer, FieldDecoderFactory.U_VAR_INT_32);
+                return new FieldTableVariable(name, sendNode, serializer, FieldDecoderFactory.VAR_UINT_32);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }
@@ -122,7 +122,7 @@ class FieldFactory {
         const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(baseType);
 
         if (descriptor === null) {
-            return FieldDecoderFactory.U_VAR_INT_32;
+            return FieldDecoderFactory.VAR_UINT_32;
         }
 
         return this._decoderCatalog.resolve(descriptor, decoderInstructions);
