@@ -18,7 +18,7 @@ class Bootstrap {
 
         Bootstrap._registerDotaFieldRules(registry);
         Bootstrap._registerDotaUserMessages(registry);
-        Bootstrap._registerStringTableTypes(registry);
+        Bootstrap._registerDotaStringTableTypes(registry);
     }
 
     /**
@@ -206,7 +206,7 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerStringTableTypes(registry) {
+    static _registerDotaStringTableTypes(registry) {
         registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
         registry.registerStringTableType(StringTableType.MODIFIER_NAMES);
         registry.registerStringTableType(StringTableType.COOLDOWN_NAMES);

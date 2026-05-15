@@ -1,6 +1,7 @@
 import { Bootstrap as EngineBootstrap, FieldDecoderDescriptor } from '@deademx/engine';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
+import StringTableType from '#data/enums/StringTableType.js';
 
 /**
  * Populates a {@link SchemaRegistry} with engine-level types and then layers
@@ -18,6 +19,7 @@ class Bootstrap {
         Bootstrap._registerCs2FieldRules(registry);
         Bootstrap._registerCs2UserMessages(registry);
         Bootstrap._registerCs2GameEvents(registry);
+        Bootstrap._registerCs2StringTableTypes(registry);
     }
 
     /**
@@ -81,6 +83,15 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.GE_RADIO_ICON_EVENT, ge.lookupType('CMsgTERadioIcon'));
         registry.registerMessageType(MessagePacketType.GE_FIRE_BULLETS, ge.lookupType('CMsgTEFireBullets'));
         registry.registerMessageType(MessagePacketType.GE_PLAYER_BULLET_HIT, ge.lookupType('CMsgPlayerBulletHit'));
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerCs2StringTableTypes(registry) {
+        registry.registerStringTableType(StringTableType.SERVER_AVATAR_OVERRIDES);
     }
 }
 

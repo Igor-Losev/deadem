@@ -20,7 +20,7 @@ class Bootstrap {
         Bootstrap._registerCitadelFieldRules(registry);
         Bootstrap._registerCitadelUserMessages(registry);
         Bootstrap._registerCitadelGameEvents(registry);
-        Bootstrap._registerStringTableTypes(registry);
+        Bootstrap._registerCitadelStringTableTypes(registry);
     }
 
     /**
@@ -131,7 +131,7 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerStringTableTypes(registry) {
+    static _registerCitadelStringTableTypes(registry) {
         registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
     }
 }

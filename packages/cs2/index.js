@@ -50,10 +50,10 @@ export {
     PlaybackInterruptedError,
     PlayerState,
     Printer,
-    Protocol,
-    StringTableType
+    Protocol
 } from '@deademx/engine';
 
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
+export { default as StringTableType } from './src/data/enums/StringTableType.js';
 
 export { Parser, Player };
