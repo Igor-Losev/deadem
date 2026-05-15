@@ -1,10 +1,19 @@
 import Assert from '#core/Assert.js';
 
-import Field from './Field.js';
+import FieldModel from '#data/enums/FieldModel.js';
+
+import FieldDecoderFactory from './FieldDecoderFactory.js';
 import FieldDecoderInstructionsFactory from './FieldDecoderInstructionsFactory.js';
+import FieldDecoderPicker from './FieldDecoderPicker.instance.js';
 import FieldDefinition from './FieldDefinition.js';
 
 import FieldRuleRegistry from './decoding/FieldRuleRegistry.js';
+
+import ArrayFixedField from './models/ArrayFixedField.js';
+import ArrayVariableField from './models/ArrayVariableField.js';
+import SimpleField from './models/SimpleField.js';
+import TableFixedField from './models/TableFixedField.js';
+import TableVariableField from './models/TableVariableField.js';
 
 class FieldFactory {
     /**
@@ -42,7 +51,55 @@ class FieldFactory {
             instructionsRaw.valueHigh
         );
 
-        return new Field(name, definition, sendNode, decoderInstructions, serializer);
+        const model = this._classify(definition, serializer);
+
+        switch (model) {
+            case FieldModel.SIMPLE:
+                return new SimpleField(name, sendNode, FieldDecoderPicker.pick(definition.baseType, decoderInstructions));
+            case FieldModel.ARRAY_FIXED:
+                return new ArrayFixedField(name, sendNode, FieldDecoderPicker.pick(definition.baseType, decoderInstructions));
+            case FieldModel.ARRAY_VARIABLE:
+                Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
+
+                return new ArrayVariableField(
+                    name,
+                    sendNode,
+                    FieldDecoderFactory.U_VAR_INT_32,
+                    FieldDecoderPicker.pick(definition.generic.baseType, decoderInstructions)
+                );
+            case FieldModel.TABLE_FIXED:
+                return new TableFixedField(name, sendNode, serializer, FieldDecoderFactory.BOOLEAN);
+            case FieldModel.TABLE_VARIABLE:
+                return new TableVariableField(name, sendNode, serializer, FieldDecoderFactory.U_VAR_INT_32);
+            default:
+                throw new Error(`Unhandled field model [ ${model.code} ]`);
+        }
+    }
+
+    /**
+     * @protected
+     * @param {FieldDefinition} definition
+     * @param {Serializer|null} serializer
+     * @returns {FieldModel}
+     */
+    _classify(definition, serializer) {
+        if (serializer !== null) {
+            if (definition.pointer || this._fieldRuleRegistry.getIsFixedTableType(definition.baseType)) {
+                return FieldModel.TABLE_FIXED;
+            }
+
+            return FieldModel.TABLE_VARIABLE;
+        }
+
+        if (definition.count > 0 && definition.baseType !== 'char') {
+            return FieldModel.ARRAY_FIXED;
+        }
+
+        if (this._fieldRuleRegistry.getIsVariableArrayType(definition.baseType)) {
+            return FieldModel.ARRAY_VARIABLE;
+        }
+
+        return FieldModel.SIMPLE;
     }
 }
 

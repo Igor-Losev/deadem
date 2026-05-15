@@ -8,7 +8,7 @@ class FieldDecoderPicker {
 
         /**
          * @typedef {(bitBuffer: BitBuffer) => *} Decoder
-         * @typedef {(field: Field) => Decoder} Picker
+         * @typedef {(decoderInstructions: FieldDecoderInstructions) => Decoder} Picker
          * @type {Map<string, Picker>}
          */
         this._pool = new Map();
@@ -34,21 +34,21 @@ class FieldDecoderPicker {
         this._pool.set('int16', retrieveVarInt32);
         this._pool.set('int32', retrieveVarInt32);
 
-        this._pool.set('float32', f => fieldDecoderFactory.createFloat32(f.decoderInstructions));
+        this._pool.set('float32', i => fieldDecoderFactory.createFloat32(i));
 
-        this._pool.set('QAngle', f => fieldDecoderFactory.createQAngle(f.decoderInstructions));
+        this._pool.set('QAngle', i => fieldDecoderFactory.createQAngle(i));
 
-        this._pool.set('CNetworkedQuantizedFloat', f => fieldDecoderFactory.createQuantizedFloat(f.decoderInstructions));
+        this._pool.set('CNetworkedQuantizedFloat', i => fieldDecoderFactory.createQuantizedFloat(i));
 
-        this._pool.set('uint64', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
-        this._pool.set('CStrongHandle', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
-        this._pool.set('HeroFacetKey_t', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
-        this._pool.set('ResourceId_t', f => fieldDecoderFactory.createUInt64(f.decoderInstructions));
+        this._pool.set('uint64', i => fieldDecoderFactory.createUInt64(i));
+        this._pool.set('CStrongHandle', i => fieldDecoderFactory.createUInt64(i));
+        this._pool.set('HeroFacetKey_t', i => fieldDecoderFactory.createUInt64(i));
+        this._pool.set('ResourceId_t', i => fieldDecoderFactory.createUInt64(i));
 
-        this._pool.set('Vector2D', f => fieldDecoderFactory.createVector(f.decoderInstructions, 2));
-        this._pool.set('Vector', f => fieldDecoderFactory.createVector(f.decoderInstructions, 3));
-        this._pool.set('VectorWS', f => fieldDecoderFactory.createVector(f.decoderInstructions, 3));
-        this._pool.set('Vector4D', f => fieldDecoderFactory.createVector(f.decoderInstructions, 4));
+        this._pool.set('Vector2D', i => fieldDecoderFactory.createVector(i, 2));
+        this._pool.set('Vector', i => fieldDecoderFactory.createVector(i, 3));
+        this._pool.set('VectorWS', i => fieldDecoderFactory.createVector(i, 3));
+        this._pool.set('Vector4D', i => fieldDecoderFactory.createVector(i, 4));
     }
 
     static instance = new FieldDecoderPicker();
@@ -56,10 +56,10 @@ class FieldDecoderPicker {
     /**
      * @public
      * @param {String} code
-     * @param {Field=} field
+     * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {Decoder}
      */
-    pick(code, field) {
+    pick(code, decoderInstructions) {
         Assert.isTrue(typeof code === 'string');
 
         let decoder;
@@ -67,7 +67,7 @@ class FieldDecoderPicker {
         if (this._pool.has(code)) {
             const retrieve = this._pool.get(code);
 
-            decoder = retrieve(field);
+            decoder = retrieve(decoderInstructions);
         } else {
             decoder = FieldDecoderFactory.U_VAR_INT_32;
         }
