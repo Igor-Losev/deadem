@@ -67,11 +67,13 @@ class FieldDecoderDescriptor {
         return new FieldDecoderDescriptor(FieldDecoderType.parse(data.type), data.options || {});
     }
 
+    static get BINARY_BLOCK() { return binaryBlock; }
     static get BOOLEAN() { return boolean; }
     static get COORDINATE() { return coordinate; }
     static get DYNAMIC_FLOAT_32() { return dynamicFloat32; }
     static get DYNAMIC_UINT_64() { return dynamicUint64; }
     static get FIXED_UINT_64() { return fixedUint64; }
+    static get GAME_MODE_RULES() { return gameModeRules; }
     static get NO_SCALE() { return noScale; }
     static get NORMAL_VECTOR() { return normalVector; }
     static get QANGLE() { return qAngle; }
@@ -84,11 +86,13 @@ class FieldDecoderDescriptor {
     static get VAR_UINT_64() { return varUint64; }
 }
 
+const binaryBlock = new FieldDecoderDescriptor(FieldDecoderType.BINARY_BLOCK);
 const boolean = new FieldDecoderDescriptor(FieldDecoderType.BOOLEAN);
 const coordinate = new FieldDecoderDescriptor(FieldDecoderType.COORDINATE);
 const dynamicFloat32 = new FieldDecoderDescriptor(FieldDecoderType.DYNAMIC_FLOAT_32);
 const dynamicUint64 = new FieldDecoderDescriptor(FieldDecoderType.DYNAMIC_UINT_64);
 const fixedUint64 = new FieldDecoderDescriptor(FieldDecoderType.FIXED_UINT_64);
+const gameModeRules = new FieldDecoderDescriptor(FieldDecoderType.GAME_MODE_RULES);
 const noScale = new FieldDecoderDescriptor(FieldDecoderType.NO_SCALE);
 const normalVector = new FieldDecoderDescriptor(FieldDecoderType.NORMAL_VECTOR);
 const qAngle = new FieldDecoderDescriptor(FieldDecoderType.QANGLE);

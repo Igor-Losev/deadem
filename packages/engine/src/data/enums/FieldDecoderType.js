@@ -42,11 +42,13 @@ class FieldDecoderType {
         return type;
     }
 
+    static get BINARY_BLOCK() { return binaryBlock; }
     static get BOOLEAN() { return boolean; }
     static get COORDINATE() { return coordinate; }
     static get DYNAMIC_FLOAT_32() { return dynamicFloat32; }
     static get DYNAMIC_UINT_64() { return dynamicUint64; }
     static get FIXED_UINT_64() { return fixedUint64; }
+    static get GAME_MODE_RULES() { return gameModeRules; }
     static get NO_SCALE() { return noScale; }
     static get NORMAL_VECTOR() { return normalVector; }
     static get QANGLE() { return qAngle; }
@@ -60,11 +62,13 @@ class FieldDecoderType {
     static get VECTOR() { return vector; }
 }
 
+const binaryBlock = new FieldDecoderType('BINARY_BLOCK');
 const boolean = new FieldDecoderType('BOOLEAN');
 const coordinate = new FieldDecoderType('COORDINATE');
 const dynamicFloat32 = new FieldDecoderType('DYNAMIC_FLOAT_32');
 const dynamicUint64 = new FieldDecoderType('DYNAMIC_UINT_64');
 const fixedUint64 = new FieldDecoderType('FIXED_UINT_64');
+const gameModeRules = new FieldDecoderType('GAME_MODE_RULES');
 const noScale = new FieldDecoderType('NO_SCALE');
 const normalVector = new FieldDecoderType('NORMAL_VECTOR');
 const qAngle = new FieldDecoderType('QANGLE');

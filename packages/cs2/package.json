@@ -1,7 +1,7 @@
 {
-  "name": "@deademx/dota2",
-  "version": "2.3.0",
-  "description": "Dota 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
+  "name": "@deademx/cs2",
+  "version": "2.2.0",
+  "description": "Counter-Strike 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
@@ -15,8 +15,8 @@
   },
   "keywords": [
     "deadem",
-    "dota2",
-    "dota",
+    "cs2",
+    "counter-strike",
     "source2",
     "demo",
     "replay",
@@ -50,6 +50,6 @@
     }
   },
   "dependencies": {
-    "@deademx/engine": "2.3.0"
+    "@deademx/engine": "2.2.0"
   }
 }

@@ -48,11 +48,16 @@ class MessagePacketType {
     static get SVC_HLTV_STATUS() { return svcHltvStatus; }
     static get SVC_USER_COMMANDS() { return svcUserCommands; }
 
+    static get USER_MESSAGE_SAY_TEXT_2() { return UMSayText2; }
+    static get USER_MESSAGE_TEXT_MSG() { return UMTextMsg; }
     static get USER_MESSAGE_VOICE_MASK() { return UMVoiceMask; }
     static get USER_MESSAGE_SEND_AUDIO() { return UMSendAudio; }
     static get USER_MESSAGE_PARTICLE_MANAGER() { return UMParticleManager; }
     static get USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL() { return UMPlayResponseConditional; }
 
+    static get ENTITY_MESSAGE_REMOVE_ALL_DECALS() { return EMRemoveAllDecals; }
+
+    static get GE_PLACE_DECAL_EVENT() { return GE_PlaceDecalEvent; }
     static get GE_SOURCE1_LEGACY_GAME_EVENT_LIST() { return GESource1LegacyGameEventList; }
     static get GE_SOURCE1_LEGACY_GAME_EVENT() { return GE_Source1LegacyGameEvent; }
     static get GE_SOS_START_SOUND_EVENT() { return GE_SosStartSoundEvent; }
@@ -81,11 +86,16 @@ const svcPacketEntities = new MessagePacketType('svc_PacketEntities', 55);
 const svcHltvStatus = new MessagePacketType('svc_HLTVStatus', 62);
 const svcUserCommands = new MessagePacketType('svc_UserCmds', 76);
 
+const UMSayText2 = new MessagePacketType('UM_SayText2', 118);
+const UMTextMsg = new MessagePacketType('UM_TextMsg', 124);
 const UMVoiceMask = new MessagePacketType('UM_VoiceMask', 128);
 const UMSendAudio = new MessagePacketType('UM_SendAudio', 130);
 const UMParticleManager = new MessagePacketType('UM_ParticleManager', 145);
 const UMPlayResponseConditional = new MessagePacketType('UM_PlayResponseConditional', 166);
 
+const EMRemoveAllDecals = new MessagePacketType('EM_RemoveAllDecals', 138);
+
+const GE_PlaceDecalEvent = new MessagePacketType('GE_PlaceDecalEvent', 201);
 const GESource1LegacyGameEventList = new MessagePacketType('GE_Source1LegacyGameEventList', 205);
 const GE_Source1LegacyGameEvent = new MessagePacketType('GE_Source1LegacyGameEvent', 207);
 const GE_SosStartSoundEvent = new MessagePacketType('GE_SosStartSoundEvent', 208);

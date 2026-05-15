@@ -1,0 +1,16 @@
+{
+  "name": "@deademx/examples-node-cs2",
+  "version": "2.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "imports": {
+    "#root/*.js": "./*.js"
+  },
+  "dependencies": {
+    "@deademx/examples-common": "2.2.0",
+    "@deademx/cs2": "2.2.0"
+  }
+}

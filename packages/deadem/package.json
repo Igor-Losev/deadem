@@ -31,7 +31,7 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "pbjs --path ./proto/source --path ./../engine/proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto ./../engine/proto/source/**/*.proto"
+    "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto"
   },
   "files": [
     "dist/**",

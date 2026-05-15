@@ -135,6 +135,9 @@ class DemoFile {
     static get DOTA2_REPLAY_8783006717() { return dota2Replay8783006717; }
     static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
 
+    // === CS2 ===
+    static get CS2_REPLAY_SAMPLE() { return cs2ReplaySample; }
+
     /**
      * @public
      * @returns {string}
@@ -196,6 +199,9 @@ const dota2Replay8773493455 = new DemoFile(DemoSource.REPLAY, 8773493455, Game.D
 const dota2Replay8777738576 = new DemoFile(DemoSource.REPLAY, 8777738576, Game.DOTA2, '7.41b', { date: '2026-04-19', mode: 'Captains Mode', size: 138711012 });
 const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'Captains Mode', size: 172651462 });
 const dota2Replay8783086929 = new DemoFile(DemoSource.REPLAY, 8783086929, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'All Draft', size: 77530595 });
+
+// === CS2 ===
+const cs2ReplaySample = new DemoFile(DemoSource.REPLAY, 1, Game.CS2, 'Unknown', { date: '2026-05-11' });
 
 /**
  * @typedef {{ date?: string, mode?: string, size?: number }} metaObject

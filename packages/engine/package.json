@@ -33,7 +33,6 @@
   },
   "files": [
     "index.js",
-    "proto/source/**",
     "src/**"
   ],
   "imports": {
