@@ -1,8 +1,7 @@
 import Assert from '#core/Assert.js';
 
-import FieldDecoderQuantizedFloat from './decoders/FieldDecoderQuantizedFloat.js';
-
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
+import FieldDecoderQuantizedFloat from './FieldDecoderQuantizedFloat.js';
 
 class FieldDecoderFactory {
     constructor() {

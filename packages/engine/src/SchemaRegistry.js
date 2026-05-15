@@ -4,7 +4,7 @@ import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';
 
-import FieldRuleRegistry from '#data/fields/decoding/FieldRuleRegistry.js';
+import FieldRuleRegistry from '#data/fields/FieldRuleRegistry.js';
 
 import ProtoProvider from '#providers/ProtoProvider.js';
 

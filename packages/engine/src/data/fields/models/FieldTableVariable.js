@@ -5,7 +5,7 @@ import FieldModel from '#data/enums/FieldModel.js';
 import Field from '../Field.js';
 import Serializer from '../Serializer.js';
 
-class TableFixedField extends Field {
+class FieldTableVariable extends Field {
     /**
      * @public
      * @constructor
@@ -37,7 +37,7 @@ class TableFixedField extends Field {
      * @returns {FieldModel}
      */
     get model() {
-        return FieldModel.TABLE_FIXED;
+        return FieldModel.TABLE_VARIABLE;
     }
 
     /**
@@ -55,11 +55,11 @@ class TableFixedField extends Field {
      * @returns {Function}
      */
     getDecoderForFieldPath(fieldPath, index) {
-        if (fieldPath.length === index) {
-            return this._decoderBase;
+        if (fieldPath.length - 1 >= index + 1) {
+            return this._serializer.getDecoderForFieldPath(fieldPath, index + 1);
         }
 
-        return this._serializer.getDecoderForFieldPath(fieldPath, index);
+        return this._decoderBase;
     }
 
     /**
@@ -69,12 +69,18 @@ class TableFixedField extends Field {
      * @returns {String}
      */
     getNameForFieldPath(fieldPath, index = 0) {
-        if (fieldPath.length - 1 >= index) {
-            return `${this._name}.${this._serializer.getNameForFieldPath(fieldPath, index)}`;
+        if (fieldPath.length - 1 !== index - 1) {
+            const parts = [ this._name, String(fieldPath.get(index)).padStart(4, '0') ];
+
+            if (fieldPath.length - 1 !== index) {
+                parts.push(this._serializer.getNameForFieldPath(fieldPath, index + 1));
+            }
+
+            return parts.join('.');
         }
 
         return this._name;
     }
 }
 
-export default TableFixedField;
+export default FieldTableVariable;

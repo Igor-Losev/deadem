@@ -1,4 +1,4 @@
-import FieldDecoderInstructions from '#data/fields/FieldDecoderInstructions.js';
+import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 
 /**
  * Constructs and caches unique {@link FieldDecoderInstructions} instances.

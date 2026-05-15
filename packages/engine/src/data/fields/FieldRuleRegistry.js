@@ -1,6 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import FieldDecoderDescriptor from './FieldDecoderDescriptor.js';
+import FieldDecoderDescriptor from './decoding/FieldDecoderDescriptor.js';
 
 class FieldRuleRegistry {
     /**

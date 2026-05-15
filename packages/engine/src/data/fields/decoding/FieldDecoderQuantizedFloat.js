@@ -1,7 +1,6 @@
 import Assert from '#core/Assert.js';
 
-import FieldDecoder from './FieldDecoder.js';
-import FieldDecoderInstructions from './../FieldDecoderInstructions.js';
+import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 
 const DEFAULT_BIT_COUNT = 0;
 const DEFAULT_VALUE_LOW = 0;
@@ -13,14 +12,12 @@ const FLAG_ROUND_UP = 1 << 1;
 const FLAG_ENCODE_ZERO = 1 << 2;
 const FLAG_ENCODE_INTEGERS = 1 << 3;
 
-class FieldDecoderQuantizedFloat extends FieldDecoder {
+class FieldDecoderQuantizedFloat {
     /**
      * @constructor
      * @param {FieldDecoderInstructions} instructions
      */
     constructor(instructions) {
-        super();
-
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         this._low = typeof instructions.valueLow === 'number' ? instructions.valueLow : DEFAULT_VALUE_LOW;
@@ -91,6 +88,29 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
     }
 
     /**
+     * @public
+     * @param {BitBuffer} bitBuffer
+     * @returns {number}
+     */
+    decode(bitBuffer) {
+        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
+            return this._low;
+        }
+
+        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
+            return this._high;
+        }
+
+        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
+            return 0;
+        }
+
+        const value = this._bitCount === 32 ? bitBuffer.readUInt32() : bitBuffer.readBitsAsUInt(this._bitCount);
+
+        return this._low + (this._high - this._low) * value * this._dequantizationStep;
+    }
+
+    /**
      * Maps a float value within the [low, high] range to a discrete quantized value.
      *
      * @public
@@ -115,29 +135,6 @@ class FieldDecoderQuantizedFloat extends FieldDecoder {
         const integer = Math.floor((number - this._low) * this._quantizationMultiplier);
 
         return this._low + (this._high - this._low) * integer * this._dequantizationStep;
-    }
-
-    /**
-     * @protected
-     * @param {BitBuffer} bitBuffer
-     * @returns {number}
-     */
-    _decode(bitBuffer) {
-        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
-            return this._low;
-        }
-
-        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
-            return this._high;
-        }
-
-        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
-            return 0;
-        }
-
-        const value = this._bitCount === 32 ? bitBuffer.readUInt32() : bitBuffer.readBitsAsUInt(this._bitCount);
-
-        return this._low + (this._high - this._low) * value * this._dequantizationStep;
     }
 }
 

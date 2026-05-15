@@ -2,10 +2,9 @@ import Assert from '#core/Assert.js';
 
 import FieldDecoderType from '#data/enums/FieldDecoderType.js';
 
-import FieldDecoderFactory from '#data/fields/FieldDecoderFactory.js';
-import FieldDecoderInstructions from '#data/fields/FieldDecoderInstructions.js';
-
 import FieldDecoderDescriptor from './FieldDecoderDescriptor.js';
+import FieldDecoderFactory from './FieldDecoderFactory.js';
+import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 
 class FieldDecoderCatalog {
     /**

@@ -4,39 +4,28 @@ import FieldModel from '#data/enums/FieldModel.js';
 
 import Field from '../Field.js';
 
-class ArrayVariableField extends Field {
+class FieldArrayFixed extends Field {
     /**
      * @public
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
-     * @param {Function} decoderBase
-     * @param {Function} decoderChild
+     * @param {Function} decoder
      */
-    constructor(name, sendNode, decoderBase, decoderChild) {
+    constructor(name, sendNode, decoder) {
         super(name, sendNode);
 
-        Assert.isTrue(typeof decoderBase === 'function');
-        Assert.isTrue(typeof decoderChild === 'function');
+        Assert.isTrue(typeof decoder === 'function');
 
-        this._decoderBase = decoderBase;
-        this._decoderChild = decoderChild;
+        this._decoder = decoder;
     }
 
     /**
      * @public
      * @returns {Function}
      */
-    get decoderBase() {
-        return this._decoderBase;
-    }
-
-    /**
-     * @public
-     * @returns {Function}
-     */
-    get decoderChild() {
-        return this._decoderChild;
+    get decoder() {
+        return this._decoder;
     }
 
     /**
@@ -44,17 +33,15 @@ class ArrayVariableField extends Field {
      * @returns {FieldModel}
      */
     get model() {
-        return FieldModel.ARRAY_VARIABLE;
+        return FieldModel.ARRAY_FIXED;
     }
 
     /**
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} index
      * @returns {Function}
      */
-    getDecoderForFieldPath(fieldPath, index) {
-        return fieldPath.length - 1 === index ? this._decoderChild : this._decoderBase;
+    getDecoderForFieldPath() {
+        return this._decoder;
     }
 
     /**
@@ -72,4 +59,4 @@ class ArrayVariableField extends Field {
     }
 }
 
-export default ArrayVariableField;
+export default FieldArrayFixed;

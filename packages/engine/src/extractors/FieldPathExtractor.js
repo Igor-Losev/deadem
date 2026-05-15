@@ -1,6 +1,6 @@
 import FieldPathOperation from '#data/enums/FieldPathOperation.js';
 
-import HuffmanTree from '#data/fields/HuffmanTree.js';
+import HuffmanTree from '#data/fields/path/HuffmanTree.js';
 import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
 
 const HUFFMAN_TREE_DEPTH = HuffmanTree.DEPTH;

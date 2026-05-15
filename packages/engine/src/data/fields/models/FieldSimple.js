@@ -4,7 +4,7 @@ import FieldModel from '#data/enums/FieldModel.js';
 
 import Field from '../Field.js';
 
-class SimpleField extends Field {
+class FieldSimple extends Field {
     /**
      * @public
      * @constructor
@@ -53,4 +53,4 @@ class SimpleField extends Field {
     }
 }
 
-export default SimpleField;
+export default FieldSimple;
