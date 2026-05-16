@@ -76,7 +76,7 @@ class DemoPacketType {
 
 const demError = new DemoPacketType('DEM_Error', -1, false, false);
 const demStop = new DemoPacketType('DEM_Stop', 0, false, false);
-const demFileHeader = new DemoPacketType('DEM_FileHeader', 1, false, false);
+const demFileHeader = new DemoPacketType('DEM_FileHeader', 1, false, true);
 const demFileInfo = new DemoPacketType('DEM_FileInfo', 2, false, false);
 const demSyncTick = new DemoPacketType('DEM_SyncTick', 3, false, false);
 const demSendTables = new DemoPacketType('DEM_SendTables', 4, false, true);
