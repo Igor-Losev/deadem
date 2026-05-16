@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-cs2",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "2.2.0",
-    "@deademx/cs2": "2.2.0"
+    "@deademx/examples-common": "2.3.0",
+    "@deademx/cs2": "2.3.0"
   }
 }
