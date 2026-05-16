@@ -3,6 +3,8 @@ import packageJson from './../package.json';
 const loadedLibraryPromises = new Map();
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 
+const SHARED_DESCRIPTION = 'A web replay viewer powered by deadem for parsing and playing back Source 2 demo files (.dem) in Node.js and the browser.';
+
 export const LIBRARIES = [
   {
     key: 'deadlock',
@@ -13,7 +15,7 @@ export const LIBRARIES = [
     scriptFileName: 'deadem.min.js',
     devImportSpecifier: 'deadem',
     title: 'Deadem Explorer',
-    description: 'A web replay viewer powered by deadem for parsing and playing back Deadlock and Dota 2 demo files (.dem) in Node.js and the browser.',
+    description: SHARED_DESCRIPTION,
     documentationUrl: PROJECT_DOCUMENTATION_URL,
     npmUrl: 'https://www.npmjs.com/package/deadem',
     issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
@@ -28,9 +30,24 @@ export const LIBRARIES = [
     scriptFileName: 'deadem-dota2.min.js',
     devImportSpecifier: '@deademx/dota2',
     title: 'Deadem Explorer',
-    description: 'A web replay viewer powered by deadem for parsing and playing back Deadlock and Dota 2 demo files (.dem) in Node.js and the browser.',
+    description: SHARED_DESCRIPTION,
     documentationUrl: PROJECT_DOCUMENTATION_URL,
     npmUrl: 'https://www.npmjs.com/package/@deademx/dota2',
+    issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
+    releasesUrl: 'https://github.com/Igor-Losev/deadem/releases'
+  },
+  {
+    key: 'cs2',
+    gameCode: 'cs2',
+    gameLabel: 'CS2',
+    globalName: 'deademCs2',
+    npmPackageName: '@deademx/cs2',
+    scriptFileName: 'deadem-cs2.min.js',
+    devImportSpecifier: '@deademx/cs2',
+    title: 'Deadem Explorer',
+    description: SHARED_DESCRIPTION,
+    documentationUrl: PROJECT_DOCUMENTATION_URL,
+    npmUrl: 'https://www.npmjs.com/package/@deademx/cs2',
     issuesUrl: 'https://github.com/Igor-Losev/deadem/issues',
     releasesUrl: 'https://github.com/Igor-Losev/deadem/releases'
   }
@@ -99,6 +116,8 @@ export async function loadLibraryModule(library) {
         return import('deadem');
       case 'dota2':
         return import('@deademx/dota2');
+      case 'cs2':
+        return import('@deademx/cs2');
       default:
         throw new Error(`Unsupported library key: ${library.key}`);
     }
