@@ -3197,7 +3197,8 @@
         "DOTA_BOT_MODE_BOT_CHALLENGE_ENDGAME": 27,
         "DOTA_BOT_MODE_WATCHER": 28,
         "DOTA_BOT_MODE_WISDOM_SHRINE": 29,
-        "DOTA_BOT_MODE_LOTUS_POOL": 30
+        "DOTA_BOT_MODE_LOTUS_POOL": 30,
+        "DOTA_BOT_MODE_DEWARD": 31
       }
     },
     "MatchLanguages": {
@@ -3996,6 +3997,10 @@
         "modifierPurgedDuration": {
           "type": "float",
           "id": 81
+        },
+        "healFromRegen": {
+          "type": "bool",
+          "id": 82
         }
       }
     },
