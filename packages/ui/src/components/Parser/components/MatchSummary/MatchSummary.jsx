@@ -6,6 +6,7 @@ import EmptyState from './../EmptyState';
 
 import { compare } from './../../utils';
 
+import { CS2_COLUMNS, getCs2PlayerKey, getCs2Players, getCs2Team } from './helpers/cs2Players';
 import { DEADLOCK_COLUMNS, getDeadlockPlayerKey, getDeadlockPlayers, getDeadlockTeam } from './helpers/deadlockPlayers';
 import { DOTA_COLUMNS, getDotaPlayerKey, getDotaPlayers, getDotaTeam } from './helpers/dotaPlayers';
 
@@ -30,8 +31,19 @@ const DEADLOCK_ADAPTER = {
   getKey: getDeadlockPlayerKey
 };
 
+const CS2_ADAPTER = {
+  columns: CS2_COLUMNS,
+  getPlayers: getCs2Players,
+  getTeam: getCs2Team,
+  getKey: getCs2PlayerKey
+};
+
 function getAdapter(library) {
-  return library?.gameCode === 'dota2' ? DOTA_ADAPTER : DEADLOCK_ADAPTER;
+  switch (library?.gameCode) {
+    case 'dota2': return DOTA_ADAPTER;
+    case 'cs2': return CS2_ADAPTER;
+    default: return DEADLOCK_ADAPTER;
+  }
 }
 
 export default function MatchSummary({ demo, library }) {
@@ -69,7 +81,7 @@ export default function MatchSummary({ demo, library }) {
       <TableHead>
         <TableRow>
           {adapter.columns.map((column) => (
-            <TableCell key={column.header} align={column.align} sx={{ fontWeight: 'bold' }}>
+            <TableCell key={column.header} align={column.align} sx={{ fontWeight: 'bold', width: column.width }}>
               <TableSortLabel
                 active={orderBy === column.header}
                 direction={orderBy === column.header ? order : 'asc'}
@@ -105,7 +117,8 @@ export default function MatchSummary({ demo, library }) {
                   align={column.align}
                   sx={{
                     borderLeft: column.header === 'Player' ? `3px solid ${color.border}` : undefined,
-                    color: column.color
+                    color: column.color,
+                    width: column.width
                   }}
                 >
                   {column.selector(player)}
