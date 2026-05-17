@@ -1,11 +1,14 @@
 import {
   AccountTree as AccountTreeIcon,
+  Article as ArticleIcon,
   Assessment as AssessmentIcon,
+  BugReport as BugReportIcon,
   Groups as GroupsIcon,
   ManageSearch as ManageSearchIcon,
+  NewReleases as NewReleasesIcon,
   RocketLaunch as RocketLaunchIcon
 } from '@mui/icons-material';
-import { Box, Divider, Link, List, ListItem, Paper, Typography } from '@mui/material';
+import { Box, Divider, Link, Paper, Typography } from '@mui/material';
 
 import { COLORS } from '../../theme';
 
@@ -159,9 +162,9 @@ function PackageLink({ description, href, label }) {
 
 export default function ParserLanding({ library }) {
   const resourceLinks = [
-    { label: 'Documentation', href: library?.documentationUrl ?? PROJECT_DOCUMENTATION_URL },
-    { label: 'Issues', href: library?.issuesUrl ?? PROJECT_ISSUES_URL },
-    { label: 'Releases', href: library?.releasesUrl ?? PROJECT_RELEASES_URL }
+    { icon: ArticleIcon, label: 'Documentation', href: library?.documentationUrl ?? PROJECT_DOCUMENTATION_URL },
+    { icon: BugReportIcon, label: 'Issues', href: library?.issuesUrl ?? PROJECT_ISSUES_URL },
+    { icon: NewReleasesIcon, label: 'Releases', href: library?.releasesUrl ?? PROJECT_RELEASES_URL }
   ];
 
   return (
@@ -209,15 +212,47 @@ export default function ParserLanding({ library }) {
         </Box>
 
         <SectionHeading label='Project' />
-        <List sx={{ listStyleType: 'disc', pl: 4, pt: 0 }}>
-          {resourceLinks.map((link) => (
-            <ListItem key={link.label} sx={{ display: 'list-item', p: 0, pb: 0.25 }}>
-              <Link href={link.href} target='_blank' underline='hover' variant='body2'>
+        <Box display='flex' flexWrap='wrap' gap={1}>
+          {resourceLinks.map((link) => {
+            const ResourceIcon = link.icon;
+
+            return (
+              <Link
+                key={link.label}
+                color='text.secondary'
+                href={link.href}
+                sx={{
+                  alignItems: 'center',
+                  borderRadius: 1.5,
+                  display: 'inline-flex',
+                  fontSize: '0.8125rem',
+                  fontWeight: 600,
+                  gap: 0.75,
+                  minHeight: 32,
+                  px: 1,
+                  transition: 'background-color 140ms ease, color 140ms ease, transform 140ms ease',
+                  whiteSpace: 'nowrap',
+                  '&:hover': {
+                    backgroundColor: `${COLORS.accent}14`,
+                    color: COLORS.accent,
+                    transform: 'translateY(-1px)'
+                  },
+                  '&:focus-visible': {
+                    backgroundColor: `${COLORS.accent}14`,
+                    color: COLORS.accent,
+                    outline: `1px solid ${COLORS.accent}`,
+                    outlineOffset: 2
+                  }
+                }}
+                target='_blank'
+                underline='none'
+              >
+                <ResourceIcon sx={{ fontSize: '1rem' }} />
                 {link.label}
               </Link>
-            </ListItem>
-          ))}
-        </List>
+            );
+          })}
+        </Box>
       </Paper>
     </Box>
   );

@@ -1,7 +1,8 @@
 import { Folder as FolderIcon, GitHub as GitHubIcon, Troubleshoot as TroubleshootIcon } from '@mui/icons-material';
-import { Box, Container, IconButton, Typography } from '@mui/material';
+import { Box, Container, IconButton, Link, Typography } from '@mui/material';
 import { useState } from 'react';
 
+import Dancer from './components/Dancer/Dancer';
 import Library from './components/Library/Library';
 import Navigation from './components/Navigation/Navigation';
 import Parser from './components/Parser/Parser';
@@ -15,6 +16,7 @@ const TAB_SX = { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': {
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
   const [libraryKey, setLibraryKey] = useState('');
+  const [githubActive, setGithubActive] = useState(false);
 
   const activeLibrary = getLibraryByKey(libraryKey);
 
@@ -67,13 +69,42 @@ function App() {
           <Navigation active={tabIndex} onChange={handleTabChanged} tabs={tabs} tabsProps={{ centered: true }} />
         </Box>
 
-        <Box alignItems='center' display='flex' flex={1} gap={1.5} justifyContent='flex-end'>
-          <Typography color='text.secondary' fontSize='0.875rem'>v{packageJson.version}</Typography>
+        <Box alignItems='center' display='flex' flex={1} gap={1} justifyContent='flex-end'>
+          <Dancer active={githubActive} />
+          <Link
+            color='text.secondary'
+            fontSize='0.875rem'
+            href='https://github.com/Igor-Losev/deadem/releases'
+            onBlur={() => setGithubActive(false)}
+            onFocus={() => setGithubActive(true)}
+            onMouseEnter={() => setGithubActive(true)}
+            onMouseLeave={() => setGithubActive(false)}
+            sx={{
+              '&:hover': { color: 'text.primary' },
+              transition: 'color 120ms ease',
+              whiteSpace: 'nowrap'
+            }}
+            target='_blank'
+            underline='none'
+          >
+            v{packageJson.version}
+          </Link>
           <IconButton
             aria-label='GitHub repository'
             href='https://github.com/Igor-Losev/deadem'
+            onBlur={() => setGithubActive(false)}
+            onFocus={() => setGithubActive(true)}
+            onMouseEnter={() => setGithubActive(true)}
+            onMouseLeave={() => setGithubActive(false)}
             size='small'
-            sx={{ '&:hover svg': { color: 'text.primary' } }}
+            sx={{
+              height: 36,
+              width: 36,
+              '& svg': { transition: 'color 120ms ease' },
+              '&:hover svg, &:focus-visible svg': {
+                color: 'text.primary'
+              }
+            }}
             target='_blank'
           >
             <GitHubIcon sx={{ fontSize: '1.4rem' }} />
