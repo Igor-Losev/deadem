@@ -39,7 +39,7 @@ export const LIBRARIES = [
   {
     key: 'cs2',
     gameCode: 'cs2',
-    gameLabel: 'CS2',
+    gameLabel: 'Counter-Strike 2',
     globalName: 'deademCs2',
     npmPackageName: '@deademx/cs2',
     scriptFileName: 'deadem-cs2.min.js',
@@ -54,7 +54,7 @@ export const LIBRARIES = [
 ];
 
 export function getLibraryByKey(key) {
-  return LIBRARIES.find((library) => library.key === key) ?? LIBRARIES[0];
+  return LIBRARIES.find((library) => library.key === key) ?? null;
 }
 
 function getLibraryScriptUrl(library) {

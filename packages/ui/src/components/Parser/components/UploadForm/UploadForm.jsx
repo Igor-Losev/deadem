@@ -4,7 +4,9 @@ import { forwardRef, useRef, useState } from 'react';
 
 import { LIBRARIES } from '../../../../libraries';
 
-const BUTTON_WIDTH = 132;
+const BUTTON_WIDTH = 172;
+const BUTTON_HEIGHT = 36;
+const SELECT_GAME_LABEL = 'Select a Game';
 
 const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) => {
   const anchorRef = useRef(null);
@@ -26,14 +28,18 @@ const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) 
   };
 
   return (
-    <Tooltip title='.dem file' arrow>
+    <Tooltip title={library ? '.dem file' : 'Select a game first'} arrow>
       <ClickAwayListener onClickAway={handleClose}>
         <Box display='flex'>
           <ButtonGroup ref={anchorRef} variant='contained'>
             <Button
               component='label'
+              disabled={!library}
               startIcon={<UploadFileIcon />}
-              sx={{ width: BUTTON_WIDTH }}
+              sx={{
+                minHeight: BUTTON_HEIGHT,
+                width: BUTTON_WIDTH
+              }}
               tabIndex={-1}
             >
               Analyze
@@ -56,13 +62,16 @@ const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) 
                 gap: 0.25,
                 justifyContent: 'center',
                 lineHeight: 1.75,
-                minHeight: 36.5,
-                px: 1.25,
+                minHeight: BUTTON_HEIGHT,
+                px: 1.5,
+                whiteSpace: 'nowrap',
                 width: BUTTON_WIDTH
               }}
             >
-              {library.gameLabel}
-              <ArrowDropDownIcon />
+              <Box component='span' sx={{ flex: 1, minWidth: 0, overflow: 'hidden', textAlign: 'center', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {library?.gameLabel ?? SELECT_GAME_LABEL}
+              </Box>
+              <ArrowDropDownIcon sx={{ flexShrink: 0 }} />
             </Button>
           </ButtonGroup>
 
@@ -79,11 +88,17 @@ const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) 
               <Grow {...TransitionProps}>
                 <Paper>
                   <MenuList autoFocusItem id='library-menu'>
+                    <MenuItem
+                      onClick={() => handleLibrarySelected('')}
+                      selected={!library}
+                    >
+                      {SELECT_GAME_LABEL}
+                    </MenuItem>
                     {LIBRARIES.map((item) => (
                       <MenuItem
                         key={item.key}
                         onClick={() => handleLibrarySelected(item.key)}
-                        selected={item.key === library.key}
+                        selected={item.key === library?.key}
                       >
                         {item.gameLabel}
                       </MenuItem>

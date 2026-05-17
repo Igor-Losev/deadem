@@ -6,7 +6,7 @@ import Library from './components/Library/Library';
 import Navigation from './components/Navigation/Navigation';
 import Parser from './components/Parser/Parser';
 
-import { LIBRARIES, getLibraryByKey } from './libraries';
+import { getLibraryByKey } from './libraries';
 
 import packageJson from './../package.json';
 
@@ -14,7 +14,7 @@ const TAB_SX = { fontSize: '1rem', minHeight: '50px', '& .MuiTab-iconWrapper': {
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
-  const [libraryKey, setLibraryKey] = useState(LIBRARIES[0].key);
+  const [libraryKey, setLibraryKey] = useState('');
 
   const activeLibrary = getLibraryByKey(libraryKey);
 

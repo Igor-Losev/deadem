@@ -122,6 +122,11 @@ export default function usePlayer(library) {
       return;
     }
 
+    if (!library) {
+      reportPlayerError('Select a game before loading a demo');
+      return;
+    }
+
     resetPlayer();
     setFileName(file.name);
 
@@ -177,7 +182,7 @@ export default function usePlayer(library) {
   useEffect(() => {
     loadRequestIdRef.current += 1;
     resetPlayer();
-  }, [ library.key, resetPlayer ]);
+  }, [ library?.key, resetPlayer ]);
 
   useEffect(() => {
     if (!playing || !player) {

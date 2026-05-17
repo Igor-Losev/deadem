@@ -9,6 +9,11 @@ import { Box, Divider, Link, List, ListItem, Paper, Typography } from '@mui/mate
 
 import { COLORS } from '../../theme';
 
+const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
+const PROJECT_ISSUES_URL = 'https://github.com/Igor-Losev/deadem/issues';
+const PROJECT_RELEASES_URL = 'https://github.com/Igor-Losev/deadem/releases';
+const PROJECT_DESCRIPTION = 'A web replay viewer powered by deadem for parsing and playing back Source 2 demo files (.dem) in Node.js and the browser.';
+
 const FEATURES = [
   {
     color: COLORS.accent,
@@ -154,9 +159,9 @@ function PackageLink({ description, href, label }) {
 
 export default function ParserLanding({ library }) {
   const resourceLinks = [
-    { label: 'Documentation', href: library.documentationUrl },
-    { label: 'Issues', href: library.issuesUrl },
-    { label: 'Releases', href: library.releasesUrl }
+    { label: 'Documentation', href: library?.documentationUrl ?? PROJECT_DOCUMENTATION_URL },
+    { label: 'Issues', href: library?.issuesUrl ?? PROJECT_ISSUES_URL },
+    { label: 'Releases', href: library?.releasesUrl ?? PROJECT_RELEASES_URL }
   ];
 
   return (
@@ -165,14 +170,14 @@ export default function ParserLanding({ library }) {
         <Box display='flex' alignItems='center' gap={1} mb={2}>
           <RocketLaunchIcon sx={{ color: COLORS.accent, fontSize: '1.25rem' }} />
           <Typography component='h2' variant='subtitle1' fontWeight={600} color='text.primary'>
-            {library.title}
+            {library?.title ?? 'Deadem Explorer'}
           </Typography>
         </Box>
 
         <Divider />
 
         <Typography variant='body2' color='text.secondary' mt={2} paragraph>
-          {library.description}
+          {library?.description ?? PROJECT_DESCRIPTION}
           &nbsp;Load any replay, control playback tick by tick, and watch the game state update in real time.
         </Typography>
         <Typography variant='body2' color='text.secondary' paragraph>
