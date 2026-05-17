@@ -25,6 +25,7 @@ export default function usePlayer(library) {
   const loadRequestIdRef = useRef(0);
 
   const [ fileName, setFileName ] = useState(null);
+  const [ mapName, setMapName ] = useState(null);
   const [ seeking, setSeeking ] = useState(false);
   const [ player, setPlayer ] = useState(null);
   const [ playing, setPlaying ] = useState(false);
@@ -58,6 +59,7 @@ export default function usePlayer(library) {
 
     setPlayer(null);
     setFileName(null);
+    setMapName(null);
     setPlaying(false);
     setRate(1);
     setSeeking(false);
@@ -130,7 +132,7 @@ export default function usePlayer(library) {
         return;
       }
 
-      const { InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
+      const { DemoPacketType, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
         breakInterval: 100,
         parserThreads: 0
@@ -140,6 +142,10 @@ export default function usePlayer(library) {
       runtimeErrorsRef.current = { PlaybackInterruptedError };
 
       newPlayer.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
+        if (demoPacket.type === DemoPacketType.DEM_FILE_HEADER) {
+          setMapName(demoPacket.data.mapName || null);
+        }
+
         const history = historyRef.current;
 
         history.push(demoPacket);
@@ -292,7 +298,7 @@ export default function usePlayer(library) {
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, playing, rate, seeking, ticks, contentVersion, playerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
     fileInputRef, historyRef,
     clearPlayerError,
     handleFileChanged, handleResetClicked,
