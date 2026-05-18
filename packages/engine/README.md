@@ -10,7 +10,7 @@
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine" /></a>
 
-**@deademx/engine** is the shared, game-agnostic Source 2 parsing and replay playback engine that powers [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) (Deadlock) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) (Dota 2).
+**@deademx/engine** is the shared, game-agnostic Source 2 parsing and replay playback engine that powers [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) (Deadlock), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) (Counter-Strike 2), and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) (Dota 2).
 
 It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. For a ready-to-run package, install one of the implementations below.
 
@@ -56,6 +56,7 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
 | Package | Game | Links |
 | --- | --- | --- |
 | `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
+| `@deademx/cs2` | Counter-Strike 2 | [npm](https://www.npmjs.com/package/@deademx/cs2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) |
 | `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
 
 ## Concepts
@@ -321,7 +322,7 @@ Key methods on `Player`: `load(reader, source?)`, `seekToTick(tick)`, `nextTick(
 
 ## Usage
 
-All examples assume `registry` is a populated `SchemaRegistry`. When using a game-specific package (`deadem`, `@deademx/dota2`), the registry is built automatically inside the subclassed `Parser` and `Player` — there is nothing to wire up. When consuming `@deademx/engine` directly, you must supply both a `ProtoProvider` and a bootstrap routine that layers game-specific types on top of `Bootstrap.run(registry)`.
+All examples assume `registry` is a populated `SchemaRegistry`. When using a game-specific package (`deadem`, `@deademx/cs2`, `@deademx/dota2`), the registry is built automatically inside the subclassed `Parser` and `Player` — there is nothing to wire up. When consuming `@deademx/engine` directly, you must supply both a `ProtoProvider` and a bootstrap routine that layers game-specific types on top of `Bootstrap.run(registry)`.
 
 ### Replay file
 
@@ -432,7 +433,7 @@ Entity-packet decoding (`MessagePacketType.SVC_PACKET_ENTITIES`) accounts for mo
 | 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | ~6–8×              | Non-entity packets only.                      |
 | 3 | `entityClasses` allowlist                                      | ~4–6×              | Entity consumers with a known set of classes. |
 
-The engine itself is game-agnostic. For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance) or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
+The engine itself is game-agnostic. For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance), or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
 
 ## License
 
