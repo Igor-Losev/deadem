@@ -56,14 +56,14 @@ const PACKAGE_LINKS = [
     label: 'deadem'
   },
   {
-    description: 'Dota 2 parser and replay player',
-    href: 'https://www.npmjs.com/package/@deademx/dota2',
-    label: '@deademx/dota2'
-  },
-  {
     description: 'Counter-Strike 2 parser and replay player',
     href: 'https://www.npmjs.com/package/@deademx/cs2',
     label: '@deademx/cs2'
+  },
+  {
+    description: 'Dota 2 parser and replay player',
+    href: 'https://www.npmjs.com/package/@deademx/dota2',
+    label: '@deademx/dota2'
   }
 ];
 
