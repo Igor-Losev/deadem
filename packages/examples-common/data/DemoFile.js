@@ -13,14 +13,14 @@ class DemoFile {
     /**
      * @constructor
      * @param {DemoSource} source
-     * @param {number} id
+     * @param {number|string} id
      * @param {Game} game
      * @param {string|number|null} [gameBuild=null]
      * @param {metaObject|null} [meta=null]
      */
     constructor(source, id, game, gameBuild = null, meta = null) {
         Assert.isTrue(source instanceof DemoSource);
-        Assert.isTrue(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id) || (typeof id === 'string' && id.length > 0));
         Assert.isTrue(game instanceof Game);
         Assert.isTrue(gameBuild === null || Number.isInteger(gameBuild) || typeof gameBuild === 'string');
 
@@ -45,7 +45,7 @@ class DemoFile {
 
     /**
      * @public
-     * @returns {number}
+     * @returns {number|string}
      */
     get id() {
         return this._id;
@@ -136,7 +136,10 @@ class DemoFile {
     static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
 
     // === CS2 ===
-    static get CS2_REPLAY_SAMPLE() { return cs2ReplaySample; }
+    static get CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2() { return cs2Replay20260511FuriaVsSpiritM1Dust2; }
+    static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M1_DUST2() { return cs2Replay20260515NatusVincereVsVitalityM1Dust2; }
+    static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M2_ANUBIS() { return cs2Replay20260515NatusVincereVsVitalityM2Anubis; }
+    static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M3_INFERNO() { return cs2Replay20260515NatusVincereVsVitalityM3Inferno; }
 
     /**
      * @public
@@ -201,10 +204,30 @@ const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.D
 const dota2Replay8783086929 = new DemoFile(DemoSource.REPLAY, 8783086929, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'All Draft', size: 77530595 });
 
 // === CS2 ===
-const cs2ReplaySample = new DemoFile(DemoSource.REPLAY, 1, Game.CS2, 'Unknown', { date: '2026-05-11' });
+const cs2Replay20260511FuriaVsSpiritM1Dust2 = new DemoFile(DemoSource.REPLAY, '2026-05-11-furia-vs-spirit-m1-dust2', Game.CS2, '1.41.6.0', {
+    date: '2026-05-11',
+    size: 495042178,
+    match: { team1: 'FURIA', team2: 'Spirit', event: 'PGL Astana 2026', map: 'Dust2', mapNumber: 1 }
+});
+const cs2Replay20260515NatusVincereVsVitalityM1Dust2 = new DemoFile(DemoSource.REPLAY, '2026-05-15-natus-vincere-vs-vitality-m1-dust2', Game.CS2, '1.41.6.0', {
+    date: '2026-05-15',
+    size: 484790842,
+    match: { team1: 'Natus Vincere', team2: 'Vitality', event: 'IEM Atlanta 2026', map: 'Dust2', mapNumber: 1 }
+});
+const cs2Replay20260515NatusVincereVsVitalityM2Anubis = new DemoFile(DemoSource.REPLAY, '2026-05-15-natus-vincere-vs-vitality-m2-anubis', Game.CS2, '1.41.6.0', {
+    date: '2026-05-15',
+    size: 566044726,
+    match: { team1: 'Natus Vincere', team2: 'Vitality', event: 'IEM Atlanta 2026', map: 'Anubis', mapNumber: 2 }
+});
+const cs2Replay20260515NatusVincereVsVitalityM3Inferno = new DemoFile(DemoSource.REPLAY, '2026-05-15-natus-vincere-vs-vitality-m3-inferno', Game.CS2, '1.41.6.0', {
+    date: '2026-05-15',
+    size: 398503687,
+    match: { team1: 'Natus Vincere', team2: 'Vitality', event: 'IEM Atlanta 2026', map: 'Inferno', mapNumber: 3 }
+});
 
 /**
- * @typedef {{ date?: string, mode?: string, size?: number }} metaObject
+ * @typedef {{ date?: string, mode?: string, size?: number, match?: matchObject }} metaObject
+ * @typedef {{ team1: string, team2: string, event?: string, map?: string, mapNumber?: number }} matchObject
  */
 
 export default DemoFile;

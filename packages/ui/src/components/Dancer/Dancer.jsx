@@ -1,14 +1,17 @@
 import { Box } from '@mui/material';
 import { useState } from 'react';
 
-import { COLORS } from '../Parser/theme';
+import { COLORS } from './../Parser/theme';
+
 import DancerAnimation from './DancerAnimation';
+
 import { useDancerAnimationFrame } from './animation-ai-rocket-science';
 
 const VIDEO_URL = 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ==';
 
 export default function Dancer({ active = false }) {
   const [hovered, setHovered] = useState(false);
+
   const activeDancing = active || hovered;
   const frame = useDancerAnimationFrame(activeDancing);
 

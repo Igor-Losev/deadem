@@ -7,7 +7,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 const BOMB_EVENTS = new Set([ 'bomb_pickup', 'bomb_dropped', 'bomb_planted', 'bomb_defused', 'bomb_exploded' ]);
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.CS2_REPLAY_SAMPLE);
+    const reader = await DemoProvider.read(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
 
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 0,

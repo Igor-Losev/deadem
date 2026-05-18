@@ -35,7 +35,7 @@ if (cases.length === 0) {
 
 await BenchmarkRunner({
     Parser,
-    demoFile: DemoFile.CS2_REPLAY_SAMPLE,
+    demoFile: DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2,
     tickRate: 64,
     cases,
     repeats: args.repeats
