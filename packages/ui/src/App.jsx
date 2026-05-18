@@ -51,7 +51,7 @@ function App() {
         <Box alignItems='center' display='flex' flex={1} gap={1} justifyContent='flex-start'>
           <TroubleshootIcon sx={{ color: '#b388ff', fontSize: '1.5rem' }} />
           <Typography
-            aria-label='Deadem Explorer - Deadlock and Dota 2 Demo Parser'
+            aria-label='Deadem Explorer - Deadlock, Dota 2 and Counter-Strike 2 Demo Parser Libraries'
             component='h1'
             sx={{
               color: 'text.primary',

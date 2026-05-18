@@ -3,7 +3,7 @@ import packageJson from './../package.json';
 const loadedLibraryPromises = new Map();
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 
-const SHARED_DESCRIPTION = 'A web replay viewer powered by deadem for parsing and playing back Source 2 demo files (.dem) in Node.js and the browser.';
+const SHARED_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
 
 export const LIBRARIES = [
   {

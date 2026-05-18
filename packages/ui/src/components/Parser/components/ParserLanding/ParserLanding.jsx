@@ -15,14 +15,14 @@ import { COLORS } from '../../theme';
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 const PROJECT_ISSUES_URL = 'https://github.com/Igor-Losev/deadem/issues';
 const PROJECT_RELEASES_URL = 'https://github.com/Igor-Losev/deadem/releases';
-const PROJECT_DESCRIPTION = 'A web replay viewer powered by deadem for parsing and playing back Source 2 demo files (.dem) in Node.js and the browser.';
+const PROJECT_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
 
 const FEATURES = [
   {
     color: COLORS.accent,
-    description: 'Watch player stats update in real time as the replay plays — kills, deaths, net worth, damage, and more.',
+    description: 'Player stats parsed tick by tick from the demo — kills, deaths, net worth, damage. A working example of what the libraries expose.',
     icon: <GroupsIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Live Scoreboard'
+    title: 'Live Match Summary'
   },
   {
     color: COLORS.jsonBoolean,
