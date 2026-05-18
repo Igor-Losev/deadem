@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-deadem",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Node.js example scripts, benchmarks, and diagnostics for the Deadlock parser (deadem)",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "2.3.0",
-    "deadem": "2.3.0"
+    "@deademx/examples-common": "3.0.0",
+    "deadem": "3.0.0"
   }
 }
