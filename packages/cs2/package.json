@@ -11,13 +11,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Igor-Losev/deadem.git"
+    "url": "git+https://github.com/Igor-Losev/deadem.git",
+    "directory": "packages/cs2"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "deadem",
     "cs2",
     "counter-strike",
+    "counter-strike-2",
+    "cs2-parser",
+    "cs2-demo-parser",
+    "cs2-replay-parser",
+    "valve",
+    "source-2",
     "source2",
+    "dem",
     "demo",
     "replay",
     "parser",
@@ -25,7 +36,9 @@
     "demo-parser",
     "demoparser",
     "replay-parser",
-    "replayparser"
+    "replayparser",
+    "nodejs",
+    "browser"
   ],
   "type": "module",
   "main": "index.js",

@@ -1,6 +1,7 @@
 {
   "name": "@deademx/examples-common",
   "version": "2.3.0",
+  "description": "Shared helpers, fixtures, and support code for deadem example packages",
   "private": true,
   "type": "module",
   "scripts": {

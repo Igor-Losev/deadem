@@ -11,11 +11,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Igor-Losev/deadem.git"
+    "url": "git+https://github.com/Igor-Losev/deadem.git",
+    "directory": "packages/engine"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "deadem",
+    "valve",
+    "source-2",
     "source2",
+    "dem",
     "demo",
     "replay",
     "parser",
@@ -23,7 +30,9 @@
     "demo-parser",
     "demoparser",
     "replay-parser",
-    "replayparser"
+    "replayparser",
+    "nodejs",
+    "browser"
   ],
   "type": "module",
   "main": "index.js",

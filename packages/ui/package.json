@@ -1,6 +1,7 @@
 {
   "name": "@deademx/ui",
   "version": "2.3.0",
+  "description": "Deadem Explorer — live in-browser demo of the deadem parser libraries",
   "private": true,
   "type": "module",
   "scripts": {

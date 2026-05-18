@@ -1,9 +1,11 @@
 {
   "name": "@deademx/examples-node-cs2",
   "version": "2.3.0",
+  "description": "Node.js example scripts, benchmarks, and diagnostics for @deademx/cs2",
   "private": true,
   "type": "module",
   "scripts": {
+    "benchmark": "node --expose-gc ./scripts/000_benchmark.js",
     "lint": "eslint"
   },
   "imports": {
