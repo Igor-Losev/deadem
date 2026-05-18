@@ -55,7 +55,7 @@ import { Parser, Player } from '@deademx/cs2';
 ### Browser
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/@deademx/cs2@0.X.X/dist/deadem-cs2.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@deademx/cs2@3.X.X/dist/deadem-cs2.min.js"></script>
 ```
 
 ```js

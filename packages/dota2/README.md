@@ -55,7 +55,7 @@ import { Parser, Player } from '@deademx/dota2';
 ### Browser
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/@deademx/dota2@0.X.X/dist/deadem-dota2.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@deademx/dota2@3.X.X/dist/deadem-dota2.min.js"></script>
 ```
 
 ```js
