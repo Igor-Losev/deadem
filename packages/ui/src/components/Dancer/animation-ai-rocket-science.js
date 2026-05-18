@@ -178,7 +178,7 @@ function getLoopFrameCount(animation) {
 const LOOP_FRAMES = getLoopFrameCount(dancerAnimation);
 
 export function useDancerAnimationFrame(active) {
-  const [frame, setFrame] = useState(dancerAnimation.ip);
+  const [ frame, setFrame ] = useState(dancerAnimation.ip);
 
   useEffect(() => {
     if (!active) {
