@@ -11,13 +11,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Igor-Losev/deadem.git"
+    "url": "git+https://github.com/Igor-Losev/deadem.git",
+    "directory": "packages/dota2"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "deadem",
     "dota2",
     "dota",
+    "dota-2",
+    "dota2-parser",
+    "dota2-demo-parser",
+    "dota2-replay-parser",
+    "valve",
+    "source-2",
     "source2",
+    "dem",
     "demo",
     "replay",
     "parser",
@@ -25,14 +36,16 @@
     "demo-parser",
     "demoparser",
     "replay-parser",
-    "replayparser"
+    "replayparser",
+    "nodejs",
+    "browser"
   ],
   "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "pbjs --path ./proto/source --path ./../engine/proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto ./../engine/proto/source/**/*.proto"
+    "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto"
   },
   "files": [
     "dist/**",

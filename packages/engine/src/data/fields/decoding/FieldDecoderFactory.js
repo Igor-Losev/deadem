@@ -19,6 +19,15 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
+     * @returns {(BitBuffer) => string}
+     */
+    static get BINARY_BLOCK() {
+        return decodeBinaryBlock;
+    }
+
+    /**
+     * @public
+     * @static
      * @returns {(BitBuffer) => boolean}
      */
     static get BOOLEAN() {
@@ -32,6 +41,15 @@ class FieldDecoderFactory {
      */
     static get COORDINATE() {
         return decodeCoordinate;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {(BitBuffer) => boolean}
+     */
+    static get GAME_MODE_RULES() {
+        return decodeGameModeRules;
     }
 
     /**
@@ -323,8 +341,23 @@ class FieldDecoderFactory {
     }
 }
 
+const textDecoder = new TextDecoder('utf-8', { fatal: false });
+
+const decodeBinaryBlock = (bitBuffer) => {
+    const length = bitBuffer.readUVarInt32();
+    const bytes = bitBuffer.read(length * 8, true);
+
+    return textDecoder.decode(bytes.subarray(0, length));
+};
 const decodeBoolean = bitBuffer => bitBuffer.readBit();
 const decodeCoordinate = bitBuffer => bitBuffer.readCoordinate();
+const decodeGameModeRules = (bitBuffer) => {
+    const value = bitBuffer.readBit();
+
+    bitBuffer.readUVarInt();
+
+    return value;
+};
 const decodeNormalVector = bitBuffer => bitBuffer.readNormalVector();
 const decodeNoScale = bitBuffer => bitBuffer.readFloat32();
 const decodeSimulationTime = bitBuffer => bitBuffer.readUVarInt32();

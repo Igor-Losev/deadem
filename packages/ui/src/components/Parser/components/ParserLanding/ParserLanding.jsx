@@ -1,20 +1,28 @@
 import {
   AccountTree as AccountTreeIcon,
+  Article as ArticleIcon,
   Assessment as AssessmentIcon,
+  BugReport as BugReportIcon,
   Groups as GroupsIcon,
   ManageSearch as ManageSearchIcon,
+  NewReleases as NewReleasesIcon,
   RocketLaunch as RocketLaunchIcon
 } from '@mui/icons-material';
-import { Box, Divider, Link, List, ListItem, Paper, Typography } from '@mui/material';
+import { Box, Divider, Link, Paper, Typography } from '@mui/material';
 
 import { COLORS } from '../../theme';
+
+const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
+const PROJECT_ISSUES_URL = 'https://github.com/Igor-Losev/deadem/issues';
+const PROJECT_RELEASES_URL = 'https://github.com/Igor-Losev/deadem/releases';
+const PROJECT_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
 
 const FEATURES = [
   {
     color: COLORS.accent,
-    description: 'Watch player stats update in real time as the replay plays — kills, deaths, net worth, damage, and more.',
+    description: 'Player stats parsed tick by tick from the demo — kills, deaths, net worth, damage. A working example of what the libraries expose.',
     icon: <GroupsIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Live Scoreboard'
+    title: 'Live Match Summary'
   },
   {
     color: COLORS.jsonBoolean,
@@ -46,6 +54,11 @@ const PACKAGE_LINKS = [
     description: 'Deadlock parser and replay player',
     href: 'https://www.npmjs.com/package/deadem',
     label: 'deadem'
+  },
+  {
+    description: 'Counter-Strike 2 parser and replay player',
+    href: 'https://www.npmjs.com/package/@deademx/cs2',
+    label: '@deademx/cs2'
   },
   {
     description: 'Dota 2 parser and replay player',
@@ -149,9 +162,9 @@ function PackageLink({ description, href, label }) {
 
 export default function ParserLanding({ library }) {
   const resourceLinks = [
-    { label: 'Documentation', href: library.documentationUrl },
-    { label: 'Issues', href: library.issuesUrl },
-    { label: 'Releases', href: library.releasesUrl }
+    { icon: ArticleIcon, label: 'Documentation', href: library?.documentationUrl ?? PROJECT_DOCUMENTATION_URL },
+    { icon: BugReportIcon, label: 'Issues', href: library?.issuesUrl ?? PROJECT_ISSUES_URL },
+    { icon: NewReleasesIcon, label: 'Releases', href: library?.releasesUrl ?? PROJECT_RELEASES_URL }
   ];
 
   return (
@@ -160,14 +173,14 @@ export default function ParserLanding({ library }) {
         <Box display='flex' alignItems='center' gap={1} mb={2}>
           <RocketLaunchIcon sx={{ color: COLORS.accent, fontSize: '1.25rem' }} />
           <Typography component='h2' variant='subtitle1' fontWeight={600} color='text.primary'>
-            {library.title}
+            {library?.title ?? 'Deadem Explorer'}
           </Typography>
         </Box>
 
         <Divider />
 
         <Typography variant='body2' color='text.secondary' mt={2} paragraph>
-          {library.description}
+          {library?.description ?? PROJECT_DESCRIPTION}
           &nbsp;Load any replay, control playback tick by tick, and watch the game state update in real time.
         </Typography>
         <Typography variant='body2' color='text.secondary' paragraph>
@@ -199,15 +212,47 @@ export default function ParserLanding({ library }) {
         </Box>
 
         <SectionHeading label='Project' />
-        <List sx={{ listStyleType: 'disc', pl: 4, pt: 0 }}>
-          {resourceLinks.map((link) => (
-            <ListItem key={link.label} sx={{ display: 'list-item', p: 0, pb: 0.25 }}>
-              <Link href={link.href} target='_blank' underline='hover' variant='body2'>
+        <Box display='flex' flexWrap='wrap' gap={1}>
+          {resourceLinks.map((link) => {
+            const ResourceIcon = link.icon;
+
+            return (
+              <Link
+                key={link.label}
+                color='text.secondary'
+                href={link.href}
+                sx={{
+                  alignItems: 'center',
+                  borderRadius: 1.5,
+                  display: 'inline-flex',
+                  fontSize: '0.8125rem',
+                  fontWeight: 600,
+                  gap: 0.75,
+                  minHeight: 32,
+                  px: 1,
+                  transition: 'background-color 140ms ease, color 140ms ease, transform 140ms ease',
+                  whiteSpace: 'nowrap',
+                  '&:hover': {
+                    backgroundColor: `${COLORS.accent}14`,
+                    color: COLORS.accent,
+                    transform: 'translateY(-1px)'
+                  },
+                  '&:focus-visible': {
+                    backgroundColor: `${COLORS.accent}14`,
+                    color: COLORS.accent,
+                    outline: `1px solid ${COLORS.accent}`,
+                    outlineOffset: 2
+                  }
+                }}
+                target='_blank'
+                underline='none'
+              >
+                <ResourceIcon sx={{ fontSize: '1rem' }} />
                 {link.label}
               </Link>
-            </ListItem>
-          ))}
-        </List>
+            );
+          })}
+        </Box>
       </Paper>
     </Box>
   );

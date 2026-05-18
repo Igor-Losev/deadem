@@ -133,11 +133,16 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.SVC_HLTV_STATUS, pp.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus'));
         registry.registerMessageType(MessagePacketType.SVC_USER_COMMANDS, pp.NET_MESSAGES.lookupType('CSVCMsg_UserCommands'));
 
+        registry.registerMessageType(MessagePacketType.USER_MESSAGE_SAY_TEXT_2, pp.USER_MESSAGES.lookupType('CUserMessageSayText2'));
+        registry.registerMessageType(MessagePacketType.USER_MESSAGE_TEXT_MSG, pp.USER_MESSAGES.lookupType('CUserMessageTextMsg'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_VOICE_MASK, pp.USER_MESSAGES.lookupType('CUserMessageVoiceMask'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_SEND_AUDIO, pp.USER_MESSAGES.lookupType('CUserMessageSendAudio'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_PARTICLE_MANAGER, pp.USER_MESSAGES.lookupType('CUserMsg_ParticleManager'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL, pp.USER_MESSAGES.lookupType('CUserMessage_PlayResponseConditional'));
 
+        registry.registerMessageType(MessagePacketType.ENTITY_MESSAGE_REMOVE_ALL_DECALS, pp.USER_MESSAGES.lookupType('CEntityMessageRemoveAllDecals'));
+
+        registry.registerMessageType(MessagePacketType.GE_PLACE_DECAL_EVENT, pp.GAME_EVENTS.lookupType('CMsgPlaceDecalEvent'));
         registry.registerMessageType(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST, pp.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEventList'));
         registry.registerMessageType(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT, pp.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEvent'));
         registry.registerMessageType(MessagePacketType.GE_SOS_START_SOUND_EVENT, pp.GAME_EVENTS.lookupType('CMsgSosStartSoundEvent'));

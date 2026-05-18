@@ -55,6 +55,13 @@ jobs:
               75439032-6448
             demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos
             parser_script: ./packages/examples-node-deadem/scripts/101_parse_multiple.js
+          - name: cs2
+            demo_dir: demos/cs2
+            demo_files: |
+              2026-05-11-furia-vs-spirit-m1-dust2
+              2026-05-15-natus-vincere-vs-vitality-m3-inferno
+            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/cs2/demos
+            parser_script: ./packages/examples-node-cs2/scripts/101_parse_multiple.js
           - name: dota2
             demo_dir: demos/dota2
             demo_files: |

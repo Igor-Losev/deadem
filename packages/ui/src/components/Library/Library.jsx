@@ -1,5 +1,5 @@
 import { Download as DownloadIcon } from '@mui/icons-material';
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip } from '@mui/material';
+import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -30,8 +30,54 @@ function getGameBuildSortValue(file) {
   return '2:';
 }
 
+function getMatchSortValue(file) {
+  const match = file.meta?.match;
+
+  if (match) {
+    return `${match.team1} vs ${match.team2}`;
+  }
+
+  return file.id.toString();
+}
+
+function renderMatch(file) {
+  const match = file.meta?.match;
+
+  if (!match) {
+    return file.id;
+  }
+
+  const subtitleParts = [];
+
+  if (match.mapNumber) {
+    subtitleParts.push(`m${match.mapNumber}`);
+  }
+
+  if (match.map) {
+    subtitleParts.push(match.map);
+  }
+
+  if (match.event) {
+    subtitleParts.push(match.event);
+  }
+
+  const subtitle = subtitleParts.join(' · ');
+  const title = `${match.team1} vs ${match.team2}`;
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+      <span>{title}</span>
+      {subtitle && (
+        <Typography component='span' variant='caption' sx={{ color: 'text.secondary' }}>
+          {subtitle}
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
 const COLUMNS = [
-  { key: 'id', label: 'Match', getValue: (file) => file.id },
+  { key: 'id', label: 'Match', getValue: (file) => getMatchSortValue(file), renderValue: (file) => renderMatch(file) },
   { key: 'game', label: 'Game', getValue: (file) => file.game.code, renderValue: (file) => file.game.code.toUpperCase() },
   { key: 'gameBuild', label: 'Game Build', getValue: (file) => getGameBuildSortValue(file), renderValue: (file) => file.gameBuild ?? '-' },
   { key: 'source', label: 'Source', getValue: (file) => file.source.code, renderValue: (file) => file.source.code },
@@ -64,7 +110,7 @@ export default function Library() {
         return 1 * direction;
       }
 
-      return right.id - left.id;
+      return String(right.id).localeCompare(String(left.id));
     });
   }, [sortBy, sortDirection]);
 

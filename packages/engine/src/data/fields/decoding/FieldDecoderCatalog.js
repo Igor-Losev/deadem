@@ -55,9 +55,11 @@ class FieldDecoderCatalog {
  */
 const registry = new Map();
 
+registry.set(FieldDecoderType.BINARY_BLOCK, FieldDecoderFactory.BINARY_BLOCK);
 registry.set(FieldDecoderType.BOOLEAN, FieldDecoderFactory.BOOLEAN);
 registry.set(FieldDecoderType.COORDINATE, FieldDecoderFactory.COORDINATE);
 registry.set(FieldDecoderType.FIXED_UINT_64, FieldDecoderFactory.FIXED_UINT_64);
+registry.set(FieldDecoderType.GAME_MODE_RULES, FieldDecoderFactory.GAME_MODE_RULES);
 registry.set(FieldDecoderType.NO_SCALE, FieldDecoderFactory.NO_SCALE);
 registry.set(FieldDecoderType.NORMAL_VECTOR, FieldDecoderFactory.NORMAL_VECTOR);
 registry.set(FieldDecoderType.SIMULATION_TIME, FieldDecoderFactory.SIMULATION_TIME);

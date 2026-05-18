@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react';
 import Navigation from './../Navigation/Navigation';
 
 import BottomBar from './components/BottomBar/BottomBar';
+import Cs2GameInfo from './components/BottomBar/Cs2GameInfo';
 import EntityExplorer from './components/EntityExplorer/EntityExplorer';
 import InfoExplorer from './components/InfoExplorer/InfoExplorer';
 import MatchSummary from './components/MatchSummary/MatchSummary';
@@ -22,6 +23,7 @@ import usePlayer from './hooks/usePlayer';
 import { FONT_SIZE } from './theme';
 
 const BOTTOM_BAR_HEIGHT = 60;
+const CS2_GAME_INFO_HEIGHT = 32;
 
 const TAB_STYLE = { fontSize: FONT_SIZE.md, minHeight: '50px' };
 
@@ -50,7 +52,7 @@ const TABS = [
 
 export default function Parser({ library, onLibraryChange }) {
   const {
-    demo, fileName, playing, rate, seeking, ticks, contentVersion, playerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
     fileInputRef, historyRef,
     clearPlayerError,
     handleFileChanged, handleResetClicked,
@@ -60,6 +62,9 @@ export default function Parser({ library, onLibraryChange }) {
   } = usePlayer(library);
 
   const [tabIndex, setTabIndex] = useState(0);
+
+  const isCs2 = library?.gameCode === 'cs2';
+  const bottomBarOffset = BOTTOM_BAR_HEIGHT + (isCs2 ? CS2_GAME_INFO_HEIGHT : 0);
 
   const handleTabChanged = (event, newValue) => setTabIndex(newValue);
 
@@ -110,7 +115,7 @@ export default function Parser({ library, onLibraryChange }) {
 
       {fileName ? (
         <>
-          <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${BOTTOM_BAR_HEIGHT + 20}px`} minHeight={0}>
+          <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${bottomBarOffset + 20}px`} minHeight={0}>
             <Navigation
               active={tabIndex}
               onChange={handleTabChanged}
@@ -125,6 +130,7 @@ export default function Parser({ library, onLibraryChange }) {
 
           <BottomBar
             demo={demo}
+            gameInfo={isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null}
             height={BOTTOM_BAR_HEIGHT}
             onNextTick={handleNextTick}
             onPauseClick={handlePauseClicked}

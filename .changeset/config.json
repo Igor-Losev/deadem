@@ -6,9 +6,11 @@
     [
       "@deademx/engine",
       "deadem",
+      "@deademx/cs2",
       "@deademx/dota2",
       "@deademx/examples-common",
       "@deademx/examples-node-deadem",
+      "@deademx/examples-node-cs2",
       "@deademx/examples-node-dota2",
       "@deademx/ui"
     ]

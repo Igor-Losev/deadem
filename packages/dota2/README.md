@@ -15,6 +15,8 @@
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Dota 2-specific usage only.
 
+Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2).
+
 ## Contents
 
 - [Installation](#installation)<br/>
@@ -105,9 +107,9 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, ParserConfiguration, Printer } from '@deademx/dota2';
+import { Parser, Printer } from '@deademx/dota2';
 
-const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
+const parser = new Parser();
 const printer = new Printer(parser);
 
 await parser.parse(createReadStream(PATH_TO_DEM_FILE));

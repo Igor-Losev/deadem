@@ -207,11 +207,9 @@ function Controls({
   onPauseClick,
   onPlayClick,
   onPrevTick,
-  onRateChange,
   onSeekToEnd,
   onSeekToStart,
   playing,
-  rate,
   seeking
 }) {
   return (
@@ -253,20 +251,25 @@ function Controls({
           <SkipNextIcon sx={{ height: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }} />
         </IconButton>
       </Tooltip>
-
-      <Tooltip arrow title='Playback Speed'>
-        <IconButton disabled={!loaded || seeking} onClick={onRateChange}>
-          <Typography sx={{ fontSize: FONT_SIZE.md, fontWeight: 600, height: CONTROL_ICON_SIZE, lineHeight: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }}>
-            {rate}x
-          </Typography>
-        </IconButton>
-      </Tooltip>
     </Box>
+  );
+}
+
+function PlaybackSpeed({ disabled, onRateChange, rate }) {
+  return (
+    <Tooltip arrow title='Playback Speed'>
+      <IconButton disabled={disabled} onClick={onRateChange} sx={{ marginLeft: '4px' }}>
+        <Typography sx={{ fontSize: FONT_SIZE.md, fontWeight: 600, height: CONTROL_ICON_SIZE, lineHeight: CONTROL_ICON_SIZE, width: CONTROL_ICON_SIZE }}>
+          {rate}x
+        </Typography>
+      </IconButton>
+    </Tooltip>
   );
 }
 
 function BottomBar({
   demo,
+  gameInfo = null,
   height,
   onNextTick,
   onPauseClick,
@@ -299,6 +302,8 @@ function BottomBar({
           flexDirection: 'column'
         }}
       >
+        {gameInfo}
+
         <SeekBar ticks={ticks} tickInterval={tickInterval} disabled={!loaded} onSeek={onSeek} />
 
         <Box
@@ -321,15 +326,15 @@ function BottomBar({
             onPauseClick={onPauseClick}
             onPlayClick={onPlayClick}
             onPrevTick={onPrevTick}
-            onRateChange={onRateChange}
             onSeekToEnd={onSeekToEnd}
             onSeekToStart={onSeekToStart}
             playing={playing}
-            rate={rate}
             seeking={seeking}
           />
 
-          <Box alignItems='center' display='flex' flex={1} justifyContent='flex-end'>
+          <Box alignItems='center' display='flex' flex={1} gap={0.5} justifyContent='space-between'>
+            <PlaybackSpeed disabled={!loaded || seeking} onRateChange={onRateChange} rate={rate} />
+
             <Tooltip title='Demo timeline (not in-game clock)' arrow>
               <Typography
                 color='text.primary'

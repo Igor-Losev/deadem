@@ -9,15 +9,29 @@ permissions:
   contents: write
   pull-requests: write
 
-concurrency:
-  group: proto-sync
-  cancel-in-progress: true
-
 jobs:
   sync:
     if: github.repository == 'Igor-Losev/deadem'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: deadem
+            workspace: deadem
+            repo: GameTracking-Deadlock
+          - target: dota2
+            workspace: '@deademx/dota2'
+            repo: GameTracking-Dota2
+          - target: cs2
+            workspace: '@deademx/cs2'
+            repo: GameTracking-CS2
+
+    concurrency:
+      group: proto-sync-${{ matrix.target }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v5
@@ -32,28 +46,21 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Sync proto sources (deadem + engine)
-        run: node .github/scripts/proto-sync.mjs deadem
+      - name: Sync proto sources
+        run: node .github/scripts/proto-sync.mjs ${{ matrix.target }}
 
-      - name: Sync proto sources (dota2)
-        run: node .github/scripts/proto-sync.mjs dota2
-
-      - name: Compile proto JSON (deadem)
-        run: npm run proto:json -w deadem
-
-      - name: Compile proto JSON (dota2)
-        run: npm run proto:json -w @deademx/dota2
+      - name: Compile proto JSON
+        run: npm run proto:json -w ${{ matrix.workspace }}
 
       - name: Create or update pull request
         uses: peter-evans/create-pull-request@v8
         with:
-          branch: auto/proto-sync
-          title: 'Proto Synchronization (Auto)'
-          commit-message: 'Proto Synchronization (Auto)'
+          branch: auto/proto-sync-${{ matrix.target }}
+          title: 'Proto Synchronization — ${{ matrix.target }} (Auto)'
+          commit-message: 'Proto Synchronization — ${{ matrix.target }} (Auto)'
           body: |
-            Automated sync of `.proto` files from `SteamDatabase/Protobufs`:
-            - `packages/deadem/proto/source/` and `packages/engine/proto/source/` from `deadlock/`
-            - `packages/dota2/proto/source/` from `dota2/`
+            Automated sync of `.proto` files from `SteamTracking/${{ matrix.repo }}`:
+            - `packages/${{ matrix.target }}/proto/source/`
 
-            Includes regenerated `proto/compiled/proto.json` for both packages.
+            Includes regenerated `proto/compiled/proto.json`.
           labels: proto-sync

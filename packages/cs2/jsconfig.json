@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+        "#src/*": [ "./src/*" ],
+        "#bootstrap/*.js": [ "./src/bootstrap/*.js" ],
+        "#data/*": [ "./src/data/*" ],
+        "#providers/*": [ "./src/providers/*" ]
+    },
+    "moduleResolution": "nodenext",
+    "checkJs": true,
+    "module": "nodenext",
+    "strictNullChecks": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [ "node_modules" ]
+}

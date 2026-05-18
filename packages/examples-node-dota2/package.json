@@ -1,6 +1,7 @@
 {
   "name": "@deademx/examples-node-dota2",
   "version": "2.3.0",
+  "description": "Node.js example scripts, benchmarks, and diagnostics for @deademx/dota2",
   "private": true,
   "type": "module",
   "scripts": {
