@@ -24,7 +24,7 @@ class Entity {
 
         this._state = new Map();
 
-        this._changed = new Set();
+        this._changed = null;
         this._snapshot = null;
     }
 
@@ -101,14 +101,27 @@ class Entity {
      * @returns {*}
      */
     unpackFlattened() {
-        const unpacked = this._snapshot || { };
         const serializer = this._class.serializer;
+
+        if (this._snapshot === null) {
+            const unpacked = { };
+
+            this._state.forEach((value, fieldPath) => {
+                unpacked[serializer.getNameForFieldPath(fieldPath)] = value;
+            });
+
+            this._snapshot = unpacked;
+            this._changed = new Set();
+
+            return unpacked;
+        }
+
+        const unpacked = this._snapshot;
 
         this._changed.forEach((fieldPath) => {
             unpacked[serializer.getNameForFieldPath(fieldPath)] = this._state.get(fieldPath);
         });
 
-        this._snapshot = unpacked;
         this._changed.clear();
 
         return unpacked;
@@ -121,7 +134,10 @@ class Entity {
      */
     updateByFieldPath(fieldPath, value) {
         this._state.set(fieldPath, value);
-        this._changed.add(fieldPath);
+
+        if (this._changed !== null) {
+            this._changed.add(fieldPath);
+        }
     }
 }
 
