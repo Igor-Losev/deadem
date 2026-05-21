@@ -22,7 +22,6 @@ class Entity {
 
         this._active = true;
 
-        this._names = new Map();
         this._state = new Map();
 
         this._changed = new Set();
@@ -103,19 +102,10 @@ class Entity {
      */
     unpackFlattened() {
         const unpacked = this._snapshot || { };
+        const serializer = this._class.serializer;
 
         this._changed.forEach((fieldPath) => {
-            const value = this._state.get(fieldPath);
-
-            let name = this._names.get(fieldPath) || null;
-
-            if (name === null) {
-                name = this._class.serializer.getNameForFieldPath(fieldPath);
-
-                this._names.set(fieldPath, name);
-            }
-
-            unpacked[name] = value;
+            unpacked[serializer.getNameForFieldPath(fieldPath)] = this._state.get(fieldPath);
         });
 
         this._snapshot = unpacked;
