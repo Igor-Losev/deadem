@@ -22,16 +22,16 @@ class EntityMutationExtractor {
      */
     all() {
         const fieldPathExtractor = new FieldPathExtractor(this._bitBuffer);
-        const fieldPaths = fieldPathExtractor.all();
+        const fieldPathIds = fieldPathExtractor.allIds();
 
-        const ids = new Uint32Array(fieldPaths.length);
-        const values = new Array(fieldPaths.length);
+        const ids = new Uint32Array(fieldPathIds.length);
+        const values = new Array(fieldPathIds.length);
 
-        for (let i = 0; i < fieldPaths.length; i++) {
-            const fieldPath = fieldPaths[i];
+        for (let i = 0; i < fieldPathIds.length; i++) {
+            const id = fieldPathIds[i];
 
-            ids[i] = fieldPath.id;
-            values[i] = this._serializer.getDecoderForFieldPath(fieldPath)(this._bitBuffer);
+            ids[i] = id;
+            values[i] = this._serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
         }
 
         return new EntityMutationBatch(ids, values);
@@ -70,10 +70,10 @@ class EntityMutationExtractor {
      * @public
      */
     skip() {
-        const fieldPaths = new FieldPathExtractor(this._bitBuffer).all();
+        const ids = new FieldPathExtractor(this._bitBuffer).allIds();
 
-        for (let i = 0; i < fieldPaths.length; i++) {
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPaths[i]);
+        for (let i = 0; i < ids.length; i++) {
+            const decoder = this._serializer.getDecoderForFieldPathId(ids[i]);
 
             decoder(this._bitBuffer);
         }
