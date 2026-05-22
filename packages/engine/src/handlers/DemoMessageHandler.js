@@ -90,9 +90,10 @@ class DemoMessageHandler {
      * @param {number} [startPointer=0]
      * @param {number} [startLoop=0]
      * @param {number} [startIndex=-1]
-     * @returns {Array<EntityMutationEvent>}
+     * @param {boolean} [direct=false]
+     * @returns {Array<EntityMutationEvent>|null}
      */
-    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1) {
+    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1, direct = false) {
         const message = messagePacket.data;
 
         if (message.updateBaseline) {
@@ -110,7 +111,7 @@ class DemoMessageHandler {
         const hasFilter = this._entityClassFilter !== null;
         const payloadSizes = hasFilter ? createPayloadIterator(message, startLoop) : null;
 
-        const events = [];
+        const events = direct ? null : [ ];
 
         let index = startIndex;
 
@@ -131,9 +132,17 @@ class DemoMessageHandler {
                     const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
 
                     if (allowed) {
-                        const batch = new EntityMutationExtractor(bitBuffer, entity.class.serializer).all();
+                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
 
-                        events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, batch));
+                        if (direct) {
+                            if (!entity.active) {
+                                entity.activate();
+                            }
+
+                            extractor.applyTo(entity);
+                        } else {
+                            events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, extractor.all()));
+                        }
                     } else if (payloadBits !== null) {
                         bitBuffer.move(payloadBits);
                     } else {
@@ -153,7 +162,9 @@ class DemoMessageHandler {
                         throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (!hasFilter || this._entityClassFilter(entity.class.name)) {
+                    if (direct) {
+                        entity.deactivate();
+                    } else if (!hasFilter || this._entityClassFilter(entity.class.name)) {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
                     } else {
                         entity.deactivate();
@@ -187,12 +198,19 @@ class DemoMessageHandler {
                             throw new Error(`Baseline not found [ ${classId} ]`);
                         }
 
-                        const batch = EntityMutationBatch.concat([
-                            new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).all(),
-                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).all()
-                        ]);
+                        if (direct) {
+                            this._demo.registerEntity(entity);
 
-                        events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, batch));
+                            new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).applyTo(entity);
+                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).applyTo(entity);
+                        } else {
+                            const batch = EntityMutationBatch.concat([
+                                new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).all(),
+                                new EntityMutationExtractor(bitBuffer, entity.class.serializer).all()
+                            ]);
+
+                            events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, batch));
+                        }
                     } else {
                         this._demo.registerEntity(entity);
 
@@ -216,7 +234,9 @@ class DemoMessageHandler {
                         throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (!hasFilter || this._entityClassFilter(entity.class.name)) {
+                    if (direct) {
+                        this._demo.deleteEntity(index);
+                    } else if (!hasFilter || this._entityClassFilter(entity.class.name)) {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
                     } else {
                         this._demo.deleteEntity(index);

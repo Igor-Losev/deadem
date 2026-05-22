@@ -104,13 +104,17 @@ class DemoStreamPacketAnalyzer extends Transform {
                     break;
                 }
                 case MessagePacketType.SVC_PACKET_ENTITIES: {
-                    const events = this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket);
+                    const direct = !this._engine.getIsInterceptorRegistered(InterceptorStage.ENTITY_PACKET);
 
-                    this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+                    const events = this._engine.getDemoMessageHandler().handleSvcPacketEntities(messagePacket, 0, 0, -1, direct);
 
-                    this._engine.getDemoEntityHandler().handleEntityEvents(events);
+                    if (events !== null) {
+                        this._engine.interceptPre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
 
-                    this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+                        this._engine.getDemoEntityHandler().handleEntityEvents(events);
+
+                        this._engine.interceptPost(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);
+                    }
 
                     break;
                 }

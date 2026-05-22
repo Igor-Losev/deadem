@@ -1,5 +1,7 @@
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 
+import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+
 import FieldPathExtractor from './FieldPathExtractor.js';
 
 class EntityMutationExtractor {
@@ -60,6 +62,23 @@ class EntityMutationExtractor {
         }
 
         return mutations;
+    }
+
+    /**
+     * Decodes all entity mutations and applies them directly to the entity.
+     *
+     * @public
+     * @param {Entity} entity
+     */
+    applyTo(entity) {
+        const ids = new FieldPathExtractor(this._bitBuffer).allIds();
+
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i];
+            const value = this._serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
+
+            entity.updateByFieldPath(FieldPathBuilder.getById(id), value);
+        }
     }
 
     /**

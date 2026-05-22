@@ -176,7 +176,7 @@ class ParserEngine {
     get started() {
         return this._started;
     }
- 
+
     /**
      * @public
      * @returns {WorkerManager|null}
@@ -252,6 +252,16 @@ class ParserEngine {
 
     /**
      * @public
+     * @param {InterceptorStage} stage
+     * @returns {boolean}
+     */
+    getIsInterceptorRegistered(stage) {
+        return this._interceptors.pre[stage.id].length > 0 ||
+            this._interceptors.post[stage.id].length > 0;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     getIsMultiThreaded() {
@@ -304,7 +314,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPost(stage, ...args) {
-        const interceptors = [ ...this._interceptors.post[stage.id] ];
+        const interceptors = [...this._interceptors.post[stage.id]];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
@@ -317,7 +327,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPre(stage, ...args) {
-        const interceptors = [ ...this._interceptors.pre[stage.id] ];
+        const interceptors = [...this._interceptors.pre[stage.id]];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
