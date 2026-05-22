@@ -45,6 +45,18 @@ class FieldPathBuilder {
     }
 
     /**
+     * Returns the cached {@link FieldPath} with the given sequential id.
+     *
+     * @public
+     * @static
+     * @param {number} id
+     * @returns {FieldPath}
+     */
+    static getById(id) {
+        return cache.byId[id];
+    }
+
+    /**
      * Given a path builds an appropriate {@link FieldPath};
      *
      * @public

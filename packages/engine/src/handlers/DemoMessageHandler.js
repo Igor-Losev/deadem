@@ -5,6 +5,7 @@ import Demo from '#data/Demo.js';
 import Server from '#data/Server.js';
 
 import Entity from '#data/entity/Entity.js';
+import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
 import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
 
@@ -130,9 +131,9 @@ class DemoMessageHandler {
                     const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
 
                     if (allowed) {
-                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+                        const batch = new EntityMutationExtractor(bitBuffer, entity.class.serializer).all();
 
-                        events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, extractor.all()));
+                        events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, batch));
                     } else if (payloadBits !== null) {
                         bitBuffer.move(payloadBits);
                     } else {
@@ -153,7 +154,7 @@ class DemoMessageHandler {
                     }
 
                     if (!hasFilter || this._entityClassFilter(entity.class.name)) {
-                        events.push(new EntityMutationEvent(EntityOperation.LEAVE, entity, []));
+                        events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
                     } else {
                         entity.deactivate();
                     }
@@ -186,15 +187,12 @@ class DemoMessageHandler {
                             throw new Error(`Baseline not found [ ${classId} ]`);
                         }
 
-                        const extractorForBaseline = new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer);
-                        const extractorForPacket = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+                        const batch = EntityMutationBatch.concat([
+                            new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).all(),
+                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).all()
+                        ]);
 
-                        const mutationsFromBaseline = extractorForBaseline.all();
-                        const mutationsFromPacket = extractorForPacket.all();
-
-                        const mutations = mutationsFromBaseline.concat(mutationsFromPacket);
-
-                        events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, mutations));
+                        events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, batch));
                     } else {
                         this._demo.registerEntity(entity);
 
@@ -219,7 +217,7 @@ class DemoMessageHandler {
                     }
 
                     if (!hasFilter || this._entityClassFilter(entity.class.name)) {
-                        events.push(new EntityMutationEvent(EntityOperation.DELETE, entity, []));
+                        events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
                     } else {
                         this._demo.deleteEntity(index);
                     }

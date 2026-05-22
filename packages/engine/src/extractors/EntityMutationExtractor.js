@@ -1,4 +1,4 @@
-import EntityMutation from '#data/entity/EntityMutation.js';
+import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 
 import FieldPathExtractor from './FieldPathExtractor.js';
 
@@ -15,33 +15,31 @@ class EntityMutationExtractor {
     }
 
     /**
-     * Extracts and returns all entity mutations from the buffer.
+     * Extracts all entity mutations from the buffer as a {@link EntityMutationBatch}.
      *
      * @public
-     * @returns {Array<EntityMutation>}
+     * @returns {EntityMutationBatch}
      */
     all() {
         const fieldPathExtractor = new FieldPathExtractor(this._bitBuffer);
         const fieldPaths = fieldPathExtractor.all();
 
-        const mutations = [ ];
+        const ids = new Uint32Array(fieldPaths.length);
+        const values = new Array(fieldPaths.length);
 
         for (let i = 0; i < fieldPaths.length; i++) {
             const fieldPath = fieldPaths[i];
 
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
-            const value = decoder(this._bitBuffer);
-
-            mutations.push(new EntityMutation(fieldPath, value));
+            ids[i] = fieldPath.id;
+            values[i] = this._serializer.getDecoderForFieldPath(fieldPath)(this._bitBuffer);
         }
 
-        return mutations;
+        return new EntityMutationBatch(ids, values);
     }
 
     /**
-     * Extracts and returns all entity mutations from the buffer
-     * in a packed (transferable) format, suitable for transmission
-     * between threads.
+     * Extracts mutations in a packed (transferable) format suitable for
+     * transmission between threads.
      *
      * @public
      * @returns {Array<bigint|*>}
@@ -66,8 +64,8 @@ class EntityMutationExtractor {
 
     /**
      * Advances the buffer past one entity's worth of mutations without
-     * producing {@link EntityMutation} objects. Decoders still run so the
-     * bit-stream stays correctly aligned for subsequent entities.
+     * producing any output. Decoders still run so the bit-stream stays
+     * correctly aligned for subsequent entities.
      *
      * @public
      */
