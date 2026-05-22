@@ -1,6 +1,7 @@
 import Assert from '#core/Assert.js';
 
 import Field from './Field.js';
+import FieldPathBuilder from './path/FieldPathBuilder.js';
 import SerializerKey from './SerializerKey.js';
 
 class Serializer {
@@ -64,6 +65,23 @@ class Serializer {
         }
 
         return decoder;
+    }
+
+    /**
+     * Resolves the decoder function for a cached field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {FieldDecoder}
+     */
+    getDecoderForFieldPathId(fieldPathId) {
+        const cached = this._decoderCache[fieldPathId] ?? null;
+
+        if (cached !== null) {
+            return cached;
+        }
+
+        return this.getDecoderForFieldPath(FieldPathBuilder.getById(fieldPathId));
     }
 
     /**
