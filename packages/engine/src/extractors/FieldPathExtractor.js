@@ -28,6 +28,8 @@ class FieldPathExtractor {
         const bitBuffer = this._bitBuffer;
         const builder = this._fieldPathBuilder;
 
+        builder.reset();
+
         const fieldPaths = [ ];
 
         for (;;) {
@@ -65,6 +67,8 @@ class FieldPathExtractor {
     allIds() {
         const bitBuffer = this._bitBuffer;
         const builder = this._fieldPathBuilder;
+
+        builder.reset();
 
         const ids = [ ];
 

@@ -110,8 +110,8 @@ class DemoMessageHandler {
 
         const hasFilter = this._entityClassFilter !== null;
         const payloadSizes = hasFilter ? createPayloadIterator(message, startLoop) : null;
-
-        const events = direct ? null : [ ];
+        const events = direct ? null : [];
+        const extractor = new EntityMutationExtractor(bitBuffer);
 
         let index = startIndex;
 
@@ -128,13 +128,13 @@ class DemoMessageHandler {
                         throw new Error(`Unable to find an entity with index [ ${index} ]`);
                     }
 
+                    extractor.serializer = entity.class.serializer;
+
                     const allowed = !hasFilter || this._entityClassFilter(entity.class.name);
                     const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
 
                     if (allowed) {
-                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
-
-                        if (direct) {
+                        if (events === null) {
                             if (!entity.active) {
                                 entity.activate();
                             }
@@ -146,7 +146,7 @@ class DemoMessageHandler {
                     } else if (payloadBits !== null) {
                         bitBuffer.move(payloadBits);
                     } else {
-                        new EntityMutationExtractor(bitBuffer, entity.class.serializer).skip();
+                        extractor.skip();
                     }
 
                     break;
@@ -162,12 +162,10 @@ class DemoMessageHandler {
                         throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (direct) {
+                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
                         entity.deactivate();
-                    } else if (!hasFilter || this._entityClassFilter(entity.class.name)) {
-                        events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
                     } else {
-                        entity.deactivate();
+                        events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
                     }
 
                     break;
@@ -191,6 +189,8 @@ class DemoMessageHandler {
                     const allowed = !hasFilter || this._entityClassFilter(clazz.name);
                     const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
 
+                    extractor.serializer = entity.class.serializer;
+
                     if (allowed) {
                         const baseline = this._demo.getClassBaselineById(classId);
 
@@ -198,18 +198,22 @@ class DemoMessageHandler {
                             throw new Error(`Baseline not found [ ${classId} ]`);
                         }
 
-                        if (direct) {
+                        const baselineExtractor = new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer);
+
+                        if (events === null) {
                             this._demo.registerEntity(entity);
 
-                            new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).applyTo(entity);
-                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).applyTo(entity);
+                            baselineExtractor.applyTo(entity);
+                            extractor.applyTo(entity);
                         } else {
-                            const batch = EntityMutationBatch.concat([
-                                new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer).all(),
-                                new EntityMutationExtractor(bitBuffer, entity.class.serializer).all()
-                            ]);
+                            const baselineBatch = baselineExtractor.all();
+                            const packetBatch = extractor.all();
 
-                            events.push(new EntityMutationEvent(EntityOperation.CREATE, entity, batch));
+                            events.push(new EntityMutationEvent(
+                                EntityOperation.CREATE,
+                                entity,
+                                EntityMutationBatch.concat([ baselineBatch, packetBatch ])
+                            ));
                         }
                     } else {
                         this._demo.registerEntity(entity);
@@ -217,7 +221,7 @@ class DemoMessageHandler {
                         if (payloadBits !== null) {
                             bitBuffer.move(payloadBits);
                         } else {
-                            new EntityMutationExtractor(bitBuffer, entity.class.serializer).skip();
+                            extractor.skip();
                         }
                     }
 
@@ -234,12 +238,10 @@ class DemoMessageHandler {
                         throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (direct) {
+                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
                         this._demo.deleteEntity(index);
-                    } else if (!hasFilter || this._entityClassFilter(entity.class.name)) {
-                        events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
                     } else {
-                        this._demo.deleteEntity(index);
+                        events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
                     }
 
                     break;
