@@ -6,14 +6,6 @@ const MASK = (1 << BITS_PER_ELEMENT) - 1;
 const MASK_BIG = BigInt(MASK);
 const MAX_LENGTH = 7;
 
-/**
- * Unified cache for {@link FieldPath} instances.
- *
- * byCode    — BigInt code → FieldPath (all paths)
- * byId      — numeric id → FieldPath (all paths)
- * bySingle  — path[0] → FieldPath (length-1 fast lookup)
- * byPair    — (path[0] + path[1] * 0x10000) → FieldPath (length-2 fast lookup)
- */
 const cache = {
     byCode: new Map(),
     byId: [ ],
@@ -21,12 +13,6 @@ const cache = {
     byPair: new Map()
 };
 
-/**
- * Constructs and caches unique {@link FieldPath} instances.
- * Ensures that no two FieldPath instances with identical
- * paths are duplicated. If a {@link FieldPath} with the same
- * values has already been created, it returns the existing instance.
- */
 class FieldPathBuilder {
     /**
      * @public
@@ -45,19 +31,7 @@ class FieldPathBuilder {
     }
 
     /**
-     * Returns the cached {@link FieldPath} with the given sequential id.
-     *
-     * @public
-     * @static
-     * @param {number} id
-     * @returns {FieldPath}
-     */
-    static getById(id) {
-        return cache.byId[id];
-    }
-
-    /**
-     * Given a path builds an appropriate {@link FieldPath};
+     * Returns the cached {@link FieldPath} for the given path, creating it on miss.
      *
      * @public
      * @static
@@ -76,8 +50,7 @@ class FieldPathBuilder {
         }
 
         if (path.length === 2) {
-            const key = toPairKey(path[0], path[1]);
-            const existing = cache.byPair.get(key);
+            const existing = cache.byPair.get(toPairKey(path[0], path[1]));
 
             if (existing !== undefined) {
                 return existing;
@@ -86,10 +59,9 @@ class FieldPathBuilder {
             return createAndCache(path);
         }
 
-        const code = toCode(path);
-        const existing = cache.byCode.get(code);
+        const existing = cache.byCode.get(toCode(path));
 
-        if (existing) {
+        if (existing !== undefined) {
             return existing;
         }
 
@@ -97,8 +69,19 @@ class FieldPathBuilder {
     }
 
     /**
-     * Given a code of the {@link FieldPath} - reconstructs the instance.
-     * Accepts either a BigInt code or a Number transferCode.
+     * Returns the cached {@link FieldPath} with the given id.
+     *
+     * @public
+     * @static
+     * @param {number} id
+     * @returns {FieldPath}
+     */
+    static getById(id) {
+        return cache.byId[id];
+    }
+
+    /**
+     * Reconstructs a {@link FieldPath} from a BigInt code or a Number transferCode.
      *
      * @public
      * @static
@@ -107,21 +90,39 @@ class FieldPathBuilder {
      */
     static reconstruct(code) {
         if (typeof code === 'number') {
-            return reconstructFromTransferCode(code);
+            const { length, p0, p1 } = FieldPath.decodeTransferCode(code);
+
+            if (length === 1) {
+                const existing = cache.bySingle[p0];
+
+                if (existing !== undefined) {
+                    return existing;
+                }
+
+                return FieldPathBuilder.build([ p0 ]);
+            }
+
+            const existing = cache.byPair.get(toPairKey(p0, p1));
+
+            if (existing !== undefined) {
+                return existing;
+            }
+
+            return FieldPathBuilder.build([ p0, p1 ]);
         }
 
         const existing = cache.byCode.get(code);
 
-        if (existing) {
+        if (existing !== undefined) {
             return existing;
         }
 
-        const path = fromCode(code);
-
-        return createAndCache(path);
+        return createAndCache(fromCode(code));
     }
 
     /**
+     * Increments the value at the given index.
+     *
      * @public
      * @param {number} value
      * @param {number=} index
@@ -139,6 +140,8 @@ class FieldPathBuilder {
     }
 
     /**
+     * Builds the {@link FieldPath} from the current state.
+     *
      * @public
      * @returns {FieldPath}
      */
@@ -147,6 +150,8 @@ class FieldPathBuilder {
     }
 
     /**
+     * Drops the last `count` elements.
+     *
      * @public
      * @param {number} count
      */
@@ -159,6 +164,8 @@ class FieldPathBuilder {
     }
 
     /**
+     * Appends a value to the path.
+     *
      * @public
      * @param {number} value
      */
@@ -171,6 +178,8 @@ class FieldPathBuilder {
     }
 
     /**
+     * Resets the builder to its initial state.
+     *
      * @public
      */
     reset() {
@@ -179,6 +188,8 @@ class FieldPathBuilder {
     }
 
     /**
+     * Sets the value at the given index.
+     *
      * @public
      * @param {number} value
      * @param {number} index
@@ -198,8 +209,6 @@ function toPairKey(p0, p1) {
 }
 
 /**
- * Creates a new FieldPath and registers it in all caches.
- *
  * @param {Array<number>} path
  * @returns {FieldPath}
  */
@@ -220,35 +229,6 @@ function createAndCache(path) {
 }
 
 /**
- * Reconstructs a FieldPath from a Number-encoded transferCode.
- *
- * @param {number} transferCode
- * @returns {FieldPath}
- */
-function reconstructFromTransferCode(transferCode) {
-    const { length, p0, p1 } = FieldPath.decodeTransferCode(transferCode);
-
-    if (length === 1) {
-        const existing = cache.bySingle[p0];
-
-        if (existing !== undefined) {
-            return existing;
-        }
-
-        return FieldPathBuilder.build([ p0 ]);
-    }
-
-    const key = toPairKey(p0, p1);
-    const existing = cache.byPair.get(key);
-
-    if (existing !== undefined) {
-        return existing;
-    }
-
-    return FieldPathBuilder.build([ p0, p1 ]);
-}
-
-/**
  * @param {bigint} code
  * @returns {Array<number>}
  */
@@ -262,9 +242,7 @@ function fromCode(code) {
     for (let i = 1; i <= length; i++) {
         remainder = remainder >> BITS_PER_ELEMENT_BIG;
 
-        const value = remainder & MASK_BIG;
-
-        path.push(Number(value));
+        path.push(Number(remainder & MASK_BIG));
     }
 
     return path;

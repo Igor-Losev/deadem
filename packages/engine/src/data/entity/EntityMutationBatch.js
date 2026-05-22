@@ -1,7 +1,5 @@
 import Assert from '#core/Assert.js';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
-
 class EntityMutationBatch {
     /**
      * @public
@@ -28,18 +26,18 @@ class EntityMutationBatch {
 
     /**
      * @public
-     * @returns {Readonly<Array<*>>} 
-     */
-    get values() {
-        return this._values;
-    }
-
-    /**
-     * @public
      * @returns {number}
      */
     get length() {
         return this._ids.length;
+    }
+
+    /**
+     * @public
+     * @returns {Readonly<Array<*>>} 
+     */
+    get values() {
+        return this._values;
     }
 
     /**
