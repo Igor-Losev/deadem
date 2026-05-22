@@ -7,8 +7,8 @@ const MASK_BIG = BigInt(MASK);
 const MAX_LENGTH = 7;
 
 const cache = {
-    byCode: new Map(),
     byId: [ ],
+    byPath: new Map(),
     bySingle: [ ],
     byPair: new Map()
 };
@@ -59,7 +59,7 @@ class FieldPathBuilder {
             return createAndCache(path);
         }
 
-        const existing = cache.byCode.get(toCode(path));
+        const existing = getByPath(path);
 
         if (existing !== undefined) {
             return existing;
@@ -111,13 +111,14 @@ class FieldPathBuilder {
             return FieldPathBuilder.build([ p0, p1 ]);
         }
 
-        const existing = cache.byCode.get(code);
+        const path = fromCode(code);
+        const existing = getByPath(path);
 
         if (existing !== undefined) {
             return existing;
         }
 
-        return createAndCache(fromCode(code));
+        return createAndCache(path);
     }
 
     /**
@@ -213,19 +214,61 @@ function toPairKey(p0, p1) {
  * @returns {FieldPath}
  */
 function createAndCache(path) {
-    const code = toCode(path);
-    const fieldPath = new FieldPath(path.slice(), code, cache.byId.length);
+    const fieldPath = new FieldPath(path.slice(), toCode(path), cache.byId.length);
 
-    cache.byCode.set(code, fieldPath);
     cache.byId[fieldPath.id] = fieldPath;
 
     if (path.length === 1) {
         cache.bySingle[path[0]] = fieldPath;
     } else if (path.length === 2) {
         cache.byPair.set(toPairKey(path[0], path[1]), fieldPath);
+    } else {
+        setByPath(path, fieldPath);
     }
 
     return fieldPath;
+}
+
+/**
+ * @param {Array<number>} path
+ * @returns {FieldPath|undefined}
+ */
+function getByPath(path) {
+    let node = cache.byPath;
+
+    for (let i = 0; i < path.length; i++) {
+        node = node.get(path[i]);
+
+        if (node === undefined) {
+            return undefined;
+        }
+    }
+
+    return node.fieldPath;
+}
+
+/**
+ * @param {Array<number>} path
+ * @param {FieldPath} fieldPath
+ */
+function setByPath(path, fieldPath) {
+    let node = cache.byPath;
+
+    for (let i = 0; i < path.length; i++) {
+        const value = path[i];
+
+        let next = node.get(value);
+
+        if (next === undefined) {
+            next = new Map();
+
+            node.set(value, next);
+        }
+
+        node = next;
+    }
+
+    node.fieldPath = fieldPath;
 }
 
 /**
