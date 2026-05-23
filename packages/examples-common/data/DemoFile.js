@@ -1,6 +1,5 @@
-import { DemoSource } from '@deademx/engine';
-
 import Assert from '@deademx/engine/src/core/Assert.js';
+import DemoSource from '@deademx/engine/src/data/enums/DemoSource.js';
 
 import Game from './Game.js';
 
