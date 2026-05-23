@@ -45,7 +45,7 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "pbjs --path ./proto/source -t json -o ./proto/compiled/proto.json ./proto/source/**/*.proto"
+    "proto:json": "node ../../scripts/ProtoSchemaBuilder.js"
   },
   "files": [
     "dist/**",
