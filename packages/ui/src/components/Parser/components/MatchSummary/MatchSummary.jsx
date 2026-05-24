@@ -1,6 +1,6 @@
 import { PeopleOutline as PeopleOutlineIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import EmptyState from './../EmptyState';
 
@@ -46,23 +46,22 @@ function getAdapter(library) {
   }
 }
 
-export default function MatchSummary({ demo, library }) {
+export default function MatchSummary({ demo, library, contentVersion }) {
   const [orderBy, setOrderBy] = useState('Team');
   const [order, setOrder] = useState('asc');
 
-  const adapter = getAdapter(library);
-  const players = adapter.getPlayers(demo);
+  const adapter = useMemo(() => getAdapter(library), [library]);
+  const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, contentVersion]);
 
-  if (!players.length) {
-    return <EmptyState icon={<PeopleOutlineIcon color='disabled' />} text='No player data available' />;
-  }
+  const sortedPlayers = useMemo(() => {
+    const activeColumn = adapter.columns.find((column) => column.header === orderBy) ?? adapter.columns[0];
 
-  const activeColumn = adapter.columns.find((column) => column.header === orderBy) ?? adapter.columns[0];
-  const sortedPlayers = [...players].sort((left, right) => {
-    const comparison = compare(activeColumn.value(left), activeColumn.value(right));
+    return [...players].sort((left, right) => {
+      const comparison = compare(activeColumn.value(left), activeColumn.value(right));
 
-    return order === 'asc' ? comparison : -comparison;
-  });
+      return order === 'asc' ? comparison : -comparison;
+    });
+  }, [players, adapter, orderBy, order]);
 
   const handleSort = (header) => {
     if (orderBy === header) {
@@ -73,6 +72,10 @@ export default function MatchSummary({ demo, library }) {
     setOrderBy(header);
     setOrder('asc');
   };
+
+  if (!players.length) {
+    return <EmptyState icon={<PeopleOutlineIcon color='disabled' />} text='No player data available' />;
+  }
 
   let previousTeam = null;
 
