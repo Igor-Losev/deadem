@@ -1,15 +1,12 @@
-import { Box, Container, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Container, Paper } from '@mui/material';
 import { memo } from 'react';
-
-import { FONT_SIZE } from '../../theme';
 
 import Controls, { PlaybackSpeed } from './Controls';
 import SeekBar from './SeekBar';
 import TickJumper from './TickJumper';
+import TimeDisplay from './TimeDisplay';
 
-import { formatTime } from './formatTime';
-
-const DEFAULT_TICKS = { current: -1, first: -1, last: -1 };
+const DEFAULT_TICKS = { first: -1, last: -1 };
 
 function BottomBar({
   demo,
@@ -26,6 +23,7 @@ function BottomBar({
   playing = false,
   rate = 1,
   seeking = false,
+  tickStore,
   ticks = DEFAULT_TICKS
 }) {
   const loaded = ticks.last > ticks.first;
@@ -48,7 +46,7 @@ function BottomBar({
       >
         {gameInfo}
 
-        <SeekBar ticks={ticks} tickInterval={tickInterval} disabled={!loaded} onSeek={onSeek} />
+        <SeekBar ticks={ticks} tickStore={tickStore} tickInterval={tickInterval} disabled={!loaded} onSeek={onSeek} />
 
         <Box
           sx={{
@@ -60,7 +58,7 @@ function BottomBar({
           }}
         >
           <Box alignItems='baseline' display='flex' flex={1} justifyContent='flex-end' sx={{ mr: 1 }}>
-            <TickJumper ticks={ticks} loaded={loaded} onSeek={onSeek} />
+            <TickJumper ticks={ticks} tickStore={tickStore} loaded={loaded} onSeek={onSeek} />
           </Box>
 
           <Controls
@@ -79,19 +77,7 @@ function BottomBar({
           <Box alignItems='center' display='flex' flex={1} gap={0.5} justifyContent='space-between'>
             <PlaybackSpeed disabled={!loaded || seeking} onRateChange={onRateChange} rate={rate} />
 
-            <Tooltip title='Demo timeline (not in-game clock)' arrow>
-              <Typography
-                color='text.primary'
-                fontSize={FONT_SIZE.lg}
-                marginX={1}
-                sx={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
-              >
-                {loaded && tickInterval !== null ? formatTime(ticks.current * tickInterval) : '—'}
-                <Typography component='span' color='text.secondary' fontSize={FONT_SIZE.lg}>
-                  {' / '}{loaded && tickInterval !== null ? formatTime(ticks.last * tickInterval) : '—'}
-                </Typography>
-              </Typography>
-            </Tooltip>
+            <TimeDisplay tickStore={tickStore} tickInterval={tickInterval} loaded={loaded} last={ticks.last} />
           </Box>
         </Box>
       </Box>

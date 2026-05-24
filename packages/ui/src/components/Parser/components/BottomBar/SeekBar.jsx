@@ -2,17 +2,19 @@ import { Box, Slider } from '@mui/material';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { FONT_SIZE } from '../../theme';
+import { useCurrentTick } from '../../tickStore';
 
 import { formatTime } from './formatTime';
 
 const CONTAINER_SX = { position: 'relative', px: 2 };
 
-export default function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
+export default function SeekBar({ ticks, tickStore, tickInterval, disabled, onSeek }) {
   const containerRef = useRef(null);
   const [dragValue, setDragValue] = useState(null);
   const [hoverTick, setHoverTick] = useState(null);
   const [hoverX, setHoverX] = useState(0);
 
+  const current = useCurrentTick(tickStore);
   const loaded = ticks.last > ticks.first;
 
   const handleChange = (event, value) => setDragValue(value);
@@ -49,7 +51,7 @@ export default function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
 
   const handleMouseLeave = useCallback(() => setHoverTick(null), []);
 
-  const sliderValue = dragValue ?? (loaded ? Math.max(ticks.current, ticks.first) : 0);
+  const sliderValue = dragValue ?? (loaded ? Math.max(current, ticks.first) : 0);
 
   const sliderSx = useMemo(() => ({
     borderRadius: 0,

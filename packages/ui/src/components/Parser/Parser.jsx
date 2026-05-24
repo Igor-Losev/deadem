@@ -52,7 +52,7 @@ const TABS = [
 
 export default function Parser({ library, onLibraryChange }) {
   const {
-    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError,
     fileInputRef, historyRef,
     clearPlayerError,
     handleFileChanged, handleResetClicked,
@@ -149,6 +149,7 @@ export default function Parser({ library, onLibraryChange }) {
             rate={rate}
             seeking={seeking}
             ticks={ticks}
+            tickStore={tickStore}
           />
         </>
       ) : (

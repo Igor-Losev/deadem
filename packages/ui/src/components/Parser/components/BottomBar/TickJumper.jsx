@@ -2,13 +2,16 @@ import { Box, Button, Popover, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 
 import { FONT_SIZE } from '../../theme';
+import { useCurrentTick } from '../../tickStore';
 
-export default function TickJumper({ ticks, loaded, onSeek }) {
+export default function TickJumper({ ticks, tickStore, loaded, onSeek }) {
   const [anchor, setAnchor] = useState(null);
   const [value, setValue] = useState('');
 
+  const current = useCurrentTick(tickStore);
+
   const handleOpen = (event) => {
-    setValue(String(ticks.current));
+    setValue(String(current));
     setAnchor(event.currentTarget);
   };
 
@@ -37,7 +40,7 @@ export default function TickJumper({ ticks, loaded, onSeek }) {
           borderColor: 'text.disabled'
         }}
       >
-        {loaded ? ticks.current : '—'}
+        {loaded ? current : '—'}
       </Typography>
       <Typography color='text.secondary' fontSize={FONT_SIZE.lg} sx={{ fontVariantNumeric: 'tabular-nums' }}>
         &nbsp;/ {loaded ? ticks.last : '—'}

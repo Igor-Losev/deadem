@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { loadLibraryModule } from '../../../libraries';
 
+import { createTickStore } from '../tickStore';
+
 const MAX_HISTORY = 100;
 const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
 const CONTENT_TICK_INTERVAL = 256;
 
-const INITIAL_TICKS = { current: -1, first: -1, last: -1 };
+const INITIAL_TICKS = { first: -1, last: -1 };
 const INITIAL_PLAYER_ERROR = null;
 
 function formatPlayerError(operationLabel, error) {
@@ -23,6 +25,9 @@ export default function usePlayer(library) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
   const loadRequestIdRef = useRef(0);
+  const tickStoreRef = useRef(null);
+
+  tickStoreRef.current ??= createTickStore();
 
   const [ fileName, setFileName ] = useState(null);
   const [ mapName, setMapName ] = useState(null);
@@ -57,6 +62,8 @@ export default function usePlayer(library) {
     lastContentTickRef.current = -1;
     runtimeErrorsRef.current = { PlaybackInterruptedError: null };
 
+    tickStoreRef.current.setCurrent(-1);
+
     setPlayer(null);
     setFileName(null);
     setMapName(null);
@@ -79,7 +86,8 @@ export default function usePlayer(library) {
       return;
     }
 
-    setTicks({ current: currentPlayer.getCurrentTick(), first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
+    tickStoreRef.current.setCurrent(currentPlayer.getCurrentTick());
+    setTicks({ first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
     setContentVersion((version) => version + 1);
   }, []);
 
@@ -169,7 +177,8 @@ export default function usePlayer(library) {
         return;
       }
 
-      setTicks({ current: newPlayer.getCurrentTick(), first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
+      tickStoreRef.current.setCurrent(newPlayer.getCurrentTick());
+      setTicks({ first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
     } catch (err) {
       if (loadRequestIdRef.current === requestId) {
         setFileName(null);
@@ -194,7 +203,7 @@ export default function usePlayer(library) {
     const pump = () => {
       const current = player.getCurrentTick();
 
-      setTicks((prev) => prev.current === current ? prev : { ...prev, current });
+      tickStoreRef.current.setCurrent(current);
 
       if (Math.abs(current - lastContentTickRef.current) >= CONTENT_TICK_INTERVAL) {
         lastContentTickRef.current = current;
@@ -279,7 +288,7 @@ export default function usePlayer(library) {
     historyRef.current = [];
     setPlaying(false);
     setSeeking(true);
-    setTicks((prev) => ({ ...prev, current: tick }));
+    tickStoreRef.current.setCurrent(tick);
 
     currentPlayer.seekToTick(tick).then(() => {
       syncTicks();
@@ -303,7 +312,7 @@ export default function usePlayer(library) {
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError,
     fileInputRef, historyRef,
     clearPlayerError,
     handleFileChanged, handleResetClicked,
