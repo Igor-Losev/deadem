@@ -1,9 +1,11 @@
 import { Box, Slider } from '@mui/material';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import { FONT_SIZE } from '../../theme';
 
 import { formatTime } from './formatTime';
+
+const CONTAINER_SX = { position: 'relative', px: 2 };
 
 export default function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
   const containerRef = useRef(null);
@@ -49,12 +51,34 @@ export default function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
 
   const sliderValue = dragValue ?? (loaded ? Math.max(ticks.current, ticks.first) : 0);
 
+  const sliderSx = useMemo(() => ({
+    borderRadius: 0,
+    cursor: loaded ? 'pointer' : 'default',
+    height: 3,
+    padding: '8px 0',
+    marginBottom: '-8px',
+    transition: 'height 0.15s',
+    '&:hover': { height: loaded ? 5 : 3 },
+    '& .MuiSlider-thumb': {
+      height: 0,
+      width: 0,
+      transition: 'height 0.15s, width 0.15s',
+      '&:hover, &.Mui-focusVisible, &.Mui-active': { boxShadow: 'none' }
+    },
+    '&:hover .MuiSlider-thumb': {
+      height: loaded ? 14 : 0,
+      width: loaded ? 14 : 0
+    },
+    '& .MuiSlider-track': { transition: 'none' },
+    '& .MuiSlider-rail': { opacity: 0.3 }
+  }), [loaded]);
+
   return (
     <Box
       ref={containerRef}
       onMouseMove={loaded ? handleMouseMove : undefined}
       onMouseLeave={loaded ? handleMouseLeave : undefined}
-      sx={{ position: 'relative', px: 2 }}
+      sx={CONTAINER_SX}
     >
       <Slider
         disabled={disabled}
@@ -64,27 +88,7 @@ export default function SeekBar({ ticks, tickInterval, disabled, onSeek }) {
         onChangeCommitted={handleChangeCommitted}
         size='small'
         value={sliderValue}
-        sx={{
-          borderRadius: 0,
-          cursor: loaded ? 'pointer' : 'default',
-          height: 3,
-          padding: '8px 0',
-          marginBottom: '-8px',
-          transition: 'height 0.15s',
-          '&:hover': { height: loaded ? 5 : 3 },
-          '& .MuiSlider-thumb': {
-            height: 0,
-            width: 0,
-            transition: 'height 0.15s, width 0.15s',
-            '&:hover, &.Mui-focusVisible, &.Mui-active': { boxShadow: 'none' }
-          },
-          '&:hover .MuiSlider-thumb': {
-            height: loaded ? 14 : 0,
-            width: loaded ? 14 : 0
-          },
-          '& .MuiSlider-track': { transition: 'none' },
-          '& .MuiSlider-rail': { opacity: 0.3 }
-        }}
+        sx={sliderSx}
       />
 
       {hoverTick !== null && (
