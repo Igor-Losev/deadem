@@ -12,6 +12,7 @@ import { COLORS, FONT_SIZE } from './../../theme';
 
 import EntityDetails from './EntityDetails';
 import EntityTree from './EntityTree';
+
 import { groupEntities, stringifyEntity } from './entities';
 
 export default function EntityExplorer({ demo, contentVersion }) {
