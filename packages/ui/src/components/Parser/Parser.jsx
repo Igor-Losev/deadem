@@ -72,13 +72,18 @@ export default function Parser({ library, onLibraryChange }) {
 
   const activeTab = useMemo(() => {
     switch (tabIndex) {
-      case 0: return <MatchSummary demo={demo} library={library} />;
+      case 0: return <MatchSummary demo={demo} library={library} contentVersion={contentVersion} />;
       case 1: return <PacketExplorer history={history} />;
       case 2: return <EntityExplorer demo={demo} contentVersion={contentVersion} />;
       case 3: return <InfoExplorer demo={demo} />;
       default: return null;
     }
   }, [demo, library, tabIndex, contentVersion, history]);
+
+  const gameInfo = useMemo(
+    () => isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null,
+    [isCs2, demo, mapName, contentVersion]
+  );
 
   const handleReset = () => {
     handleResetClicked();
@@ -130,7 +135,7 @@ export default function Parser({ library, onLibraryChange }) {
 
           <BottomBar
             demo={demo}
-            gameInfo={isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null}
+            gameInfo={gameInfo}
             height={BOTTOM_BAR_HEIGHT}
             onNextTick={handleNextTick}
             onPauseClick={handlePauseClicked}
