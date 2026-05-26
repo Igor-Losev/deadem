@@ -35,13 +35,13 @@ async function runParent({ cases, repeats }) {
 
         rows.push({ id: c.id, label: c.label, ...r });
 
-        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, rss=${fmt(r.memoryRss)} MB`);
+        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeap)} MB, rss=${fmt(r.memoryRss)} MB, arrayBuffers=${fmt(r.memoryArrayBuffers)} MB`);
     }
 
     console.log('\nMarkdown rows:');
 
     for (const r of rows) {
-        console.log(`| ${r.id} | ${r.label} | ${r.runtime} | ${fmt(r.tps)} | ${fmt(r.gps, 2)} | ${r.replay30Formatted} | ${fmt(r.memoryRss)} |`);
+        console.log(`| ${r.id} | ${r.label} | ${r.runtime} | ${fmt(r.tps)} | ${fmt(r.gps, 2)} | ${r.replay30Formatted} | ${fmt(r.memoryHeap)} | ${fmt(r.memoryRss)} | ${fmt(r.memoryArrayBuffers)} |`);
     }
 }
 
