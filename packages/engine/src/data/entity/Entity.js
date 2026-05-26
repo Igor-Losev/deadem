@@ -4,6 +4,11 @@ import Class from '#data/Class.js';
 
 import FieldStorageType from '#data/enums/FieldStorageType.js';
 
+const STORAGE_FLOAT = FieldStorageType.FLOAT;
+const STORAGE_INT = FieldStorageType.INT;
+const STORAGE_VECTOR = FieldStorageType.VECTOR;
+const STORAGE_MISC = FieldStorageType.MISC;
+
 const INITIAL_TYPED_ARRAY_SIZE = 8;
 
 class Entity {
@@ -111,7 +116,7 @@ class Entity {
         for (let i = 0; i < metas.length; i++) {
             const meta = metas[i];
 
-            if (meta.storage !== FieldStorageType.MISC && this._getIsPresent(meta)) {
+            if (meta.storage !== STORAGE_MISC && this._getIsPresent(meta)) {
                 size++;
             }
         }
@@ -178,7 +183,7 @@ class Entity {
     updateByFieldPathId(fieldPathId, value) {
         const meta = this._class.layout.resolve(fieldPathId);
 
-        if (meta.storage === FieldStorageType.FLOAT) {
+        if (meta.storage === STORAGE_FLOAT) {
             const offset = meta.offset;
 
             if (offset >= this._state.float32.length) {
@@ -188,7 +193,7 @@ class Entity {
             this._state.float32[offset] = value;
 
             this._markPresence(meta.present);
-        } else if (meta.storage === FieldStorageType.INT) {
+        } else if (meta.storage === STORAGE_INT) {
             const offset = meta.offset;
 
             if (offset >= this._state.int32.length) {
@@ -198,7 +203,7 @@ class Entity {
             this._state.int32[offset] = value;
 
             this._markPresence(meta.present);
-        } else if (meta.storage === FieldStorageType.VECTOR) {
+        } else if (meta.storage === STORAGE_VECTOR) {
             const offset = meta.offset;
             const end = offset + meta.dim;
 
@@ -230,7 +235,7 @@ class Entity {
      * @returns {boolean}
      */
     _getIsPresent(meta) {
-        if (meta.storage === FieldStorageType.MISC) {
+        if (meta.storage === STORAGE_MISC) {
             return this._state.misc !== null && this._state.misc.has(meta.id);
         }
 
@@ -255,11 +260,11 @@ class Entity {
      * @returns {*}
      */
     _read(meta) {
-        if (meta.storage === FieldStorageType.FLOAT) {
+        if (meta.storage === STORAGE_FLOAT) {
             return this._state.float32[meta.offset];
         }
 
-        if (meta.storage === FieldStorageType.INT) {
+        if (meta.storage === STORAGE_INT) {
             const value = this._state.int32[meta.offset];
 
             if (meta.bool) {
@@ -269,7 +274,7 @@ class Entity {
             return meta.signed ? value : value >>> 0;
         }
 
-        if (meta.storage === FieldStorageType.VECTOR) {
+        if (meta.storage === STORAGE_VECTOR) {
             const vector = new Float32Array(meta.dim);
 
             for (let i = 0; i < meta.dim; i++) {
