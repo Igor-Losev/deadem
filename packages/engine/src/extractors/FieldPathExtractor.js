@@ -18,9 +18,12 @@ class FieldPathExtractor {
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
+        this._ids = [ ];
     }
 
     /**
+     * @deprecated
+     *
      * @public
      * @returns {Array<FieldPath>}
      */
@@ -67,10 +70,11 @@ class FieldPathExtractor {
     allIds() {
         const bitBuffer = this._bitBuffer;
         const builder = this._fieldPathBuilder;
+        const ids = this._ids;
 
         builder.reset();
 
-        const ids = [ ];
+        let count = 0;
 
         for (;;) {
             const unread = bitBuffer.getUnreadCount();
@@ -94,8 +98,10 @@ class FieldPathExtractor {
 
             operation._executor(bitBuffer, builder);
 
-            ids.push(builder.build().id);
+            ids[count++] = builder.build().id;
         }
+
+        ids.length = count;
 
         return ids;
     }
