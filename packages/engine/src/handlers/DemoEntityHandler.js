@@ -3,7 +3,6 @@ import Assert from '#core/Assert.js';
 import Demo from '#data/Demo.js';
 
 import EntityOperation from '#data/enums/EntityOperation.js';
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
 
 class DemoEntityHandler {
     constructor(demo) {
@@ -26,7 +25,7 @@ class DemoEntityHandler {
                     this._demo.registerEntity(entity);
 
                     for (let i = 0; i < event.batch.length; i++) {
-                        entity.updateByFieldPath(FieldPathBuilder.getById(event.batch.ids[i]), event.batch.values[i]);
+                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
                     }
 
                     break;
@@ -36,7 +35,7 @@ class DemoEntityHandler {
                     }
 
                     for (let i = 0; i < event.batch.length; i++) {
-                        entity.updateByFieldPath(FieldPathBuilder.getById(event.batch.ids[i]), event.batch.values[i]);
+                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
                     }
 
                     break;

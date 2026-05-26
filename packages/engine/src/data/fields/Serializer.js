@@ -22,6 +22,7 @@ class Serializer {
 
         this._decoderCache = [];
         this._nameCache = [];
+        this._storageCache = [];
     }
 
     /**
@@ -106,6 +107,67 @@ class Serializer {
         }
 
         return this._fields[fieldPath.get(fieldPathIndex)].getNameForFieldPath(fieldPath, fieldPathIndex + 1);
+    }
+
+    /**
+     * Resolves the flattened field name for a cached field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {string}
+     */
+    getNameForFieldPathId(fieldPathId) {
+        const cached = this._nameCache[fieldPathId] ?? null;
+
+        if (cached !== null) {
+            return cached;
+        }
+
+        return this.getNameForFieldPath(FieldPathBuilder.getById(fieldPathId));
+    }
+
+    /**
+     * Resolves the storage descriptor for a given field path.
+     *
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number=} fieldPathIndex
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath(fieldPath, fieldPathIndex = 0) {
+        if (fieldPathIndex === 0) {
+            const cached = this._storageCache[fieldPath.id] ?? null;
+
+            if (cached !== null) {
+                return cached;
+            }
+        }
+
+        const field = this._fields[fieldPath.get(fieldPathIndex)];
+        const storage = field.getStorageForFieldPath(fieldPath, fieldPathIndex + 1);
+
+        if (fieldPathIndex === 0) {
+            this._storageCache[fieldPath.id] = storage;
+        }
+
+        return storage;
+    }
+
+    /**
+     * Resolves the storage descriptor for a cached field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPathId(fieldPathId) {
+        const cached = this._storageCache[fieldPathId] ?? null;
+
+        if (cached !== null) {
+            return cached;
+        }
+
+        return this.getStorageForFieldPath(FieldPathBuilder.getById(fieldPathId));
     }
 
     /**

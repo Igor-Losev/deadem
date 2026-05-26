@@ -2,7 +2,8 @@ import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
 
-import Field from '../Field.js';
+import Field from '#data/fields/Field.js';
+import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
 
 class FieldSimple extends Field {
     /**
@@ -10,22 +11,14 @@ class FieldSimple extends Field {
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
-     * @param {Function} decoder
+     * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, decoder) {
+    constructor(name, sendNode, fieldDecoder) {
         super(name, sendNode);
 
-        Assert.isTrue(typeof decoder === 'function');
+        Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 
-        this._decoder = decoder;
-    }
-
-    /**
-     * @public
-     * @returns {Function}
-     */
-    get decoder() {
-        return this._decoder;
+        this._fieldDecoder = fieldDecoder;
     }
 
     /**
@@ -41,7 +34,15 @@ class FieldSimple extends Field {
      * @returns {Function}
      */
     getDecoderForFieldPath() {
-        return this._decoder;
+        return this._fieldDecoder.fn;
+    }
+
+    /**
+     * @public
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath() {
+        return this._fieldDecoder.storage;
     }
 
     /**

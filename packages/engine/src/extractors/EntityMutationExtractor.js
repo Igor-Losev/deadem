@@ -1,7 +1,5 @@
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
-
 import FieldPathExtractor from './FieldPathExtractor.js';
 
 class EntityMutationExtractor {
@@ -85,7 +83,7 @@ class EntityMutationExtractor {
             const id = ids[i];
             const value = this._serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
 
-            entity.updateByFieldPath(FieldPathBuilder.getById(id), value);
+            entity.updateByFieldPathId(id, value);
         }
     }
  
