@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
+import BitBuffer from '#core/BitBuffer.js';
+
 import FieldDecoderInstructions from '#data/fields/decoding/FieldDecoderInstructions.js';
 import FieldDecoderQuantizedFloat from '#data/fields/decoding/FieldDecoderQuantizedFloat.js';
 
@@ -27,6 +29,22 @@ describe('FieldDecoderQuantizedFloat.quantize()', () => {
 
         test('It should throw for -0.1 (low value reached)', () => {
             expect(() => decoder.quantize(-0.1)).toThrowError();
+        });
+    });
+});
+
+describe('FieldDecoderQuantizedFloat.decode()', () => {
+    describe('When bitCount is 32', () => {
+        test('It should decode the payload as an unscaled float32', () => {
+            const bytes = new Uint8Array(4);
+            const view = new DataView(bytes.buffer);
+
+            view.setFloat32(0, 850.125, true);
+
+            const instructions = new FieldDecoderInstructions(null, 0, 32, 0, 0);
+            const decoder = new FieldDecoderQuantizedFloat(instructions);
+
+            expect(decoder.decode(new BitBuffer(bytes))).toBe(850.125);
         });
     });
 });

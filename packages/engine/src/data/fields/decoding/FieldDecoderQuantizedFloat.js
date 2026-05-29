@@ -93,6 +93,10 @@ class FieldDecoderQuantizedFloat {
      * @returns {number}
      */
     decode(bitBuffer) {
+        if (this._bitCount === 32) {
+            return bitBuffer.readFloat32();
+        }
+
         if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
             return this._low;
         }
@@ -105,7 +109,7 @@ class FieldDecoderQuantizedFloat {
             return 0;
         }
 
-        const value = this._bitCount === 32 ? bitBuffer.readUInt32() : bitBuffer.readBitsAsUInt(this._bitCount);
+        const value = bitBuffer.readBitsAsUInt(this._bitCount);
 
         return this._low + (this._high - this._low) * value * this._dequantizationStep;
     }
