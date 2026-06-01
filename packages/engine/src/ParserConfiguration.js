@@ -10,7 +10,8 @@ const OPTIONS = {
     MESSAGE_PACKET_TYPES: 'messagePacketTypes',
     MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude',
     PARSER_THREADS: 'parserThreads',
-    SPLITTER_CHUNK_SIZE: 'splitterChunkSize'
+    SPLITTER_CHUNK_SIZE: 'splitterChunkSize',
+    STREAM_HIGH_WATER_MARK: 'streamHighWaterMark'
 };
 
 const CRITICAL_MESSAGE_PACKET_TYPES = new Set([
@@ -28,13 +29,14 @@ const DEFAULTS = {
     [OPTIONS.MESSAGE_PACKET_TYPES]: null,
     [OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE]: null,
     [OPTIONS.PARSER_THREADS]: 0,
-    [OPTIONS.SPLITTER_CHUNK_SIZE]: 200 * 1024
+    [OPTIONS.SPLITTER_CHUNK_SIZE]: 200 * 1024,
+    [OPTIONS.STREAM_HIGH_WATER_MARK]: 6
 };
 
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ batcherChunkSize?: number, batcherThresholdMilliseconds?: number, breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, parserThreads?: number, splitterChunkSize?: number }} options
+     * @param {{ batcherChunkSize?: number, batcherThresholdMilliseconds?: number, breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, parserThreads?: number, splitterChunkSize?: number, streamHighWaterMark?: number }} options
      */
     constructor(options) {
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
@@ -47,6 +49,7 @@ class ParserConfiguration {
         const messagePacketTypesExclude = getOption(OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE);
         const parserThreads = getOption(OPTIONS.PARSER_THREADS);
         const splitterChunkSize = getOption(OPTIONS.SPLITTER_CHUNK_SIZE);
+        const streamHighWaterMark = getOption(OPTIONS.STREAM_HIGH_WATER_MARK);
 
         Assert.isTrue(Number.isInteger(batcherChunkSize) && batcherChunkSize > 0, 'options.batcherChunkSize must be a positive integer');
         Assert.isTrue(Number.isInteger(batcherThresholdMilliseconds) && batcherThresholdMilliseconds > 0, 'options.batcherThresholdMilliseconds must be a positive integer');
@@ -57,12 +60,14 @@ class ParserConfiguration {
         Assert.isTrue(messagePacketTypes === null || messagePacketTypesExclude === null, 'options.messagePacketTypes and options.messagePacketTypesExclude are mutually exclusive');
         Assert.isTrue(Number.isInteger(parserThreads) && parserThreads >= 0, 'options.parserThreads must be a not negative integer');
         Assert.isTrue(Number.isInteger(splitterChunkSize) && splitterChunkSize > 0, 'options.splitterChunkSize must be a positive integer');
+        Assert.isTrue(Number.isInteger(streamHighWaterMark) && streamHighWaterMark > 0, 'options.streamHighWaterMark must be a positive integer');
 
         this._batcherChunkSize = batcherChunkSize;
         this._batcherThresholdMilliseconds = batcherThresholdMilliseconds;
         this._breakInterval = breakInterval;
         this._parserThreads = parserThreads;
         this._splitterChunkSize = splitterChunkSize;
+        this._streamHighWaterMark = streamHighWaterMark;
 
         this._entityClassFilter = buildEntityClassFilter(entityClasses);
         this._messagePacketFilter = buildMessagePacketFilter(messagePacketTypes, messagePacketTypesExclude);
@@ -118,6 +123,14 @@ class ParserConfiguration {
      */
     get splitterChunkSize() {
         return this._splitterChunkSize;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    get streamHighWaterMark() {
+        return this._streamHighWaterMark;
     }
 
     /**

@@ -21,10 +21,11 @@ class DemoStreamPacketExtractor extends Transform {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      * @param {DemoSource} source
      */
-    constructor(engine, source) {
-        super();
+    constructor(engine, highWaterMark, source) {
+        super(highWaterMark);
 
         Assert.isTrue(source instanceof DemoSource);
 

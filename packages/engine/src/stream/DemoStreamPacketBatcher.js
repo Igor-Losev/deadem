@@ -13,11 +13,12 @@ class DemoStreamPacketBatcher extends Transform {
      * @constructor
      *
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      * @param {number} thresholdSizeBytes - The threshold for the total byte size of the messages in the batch.
      * @param {number} thresholdWaitMilliseconds - The threshold for the amount of time (in milliseconds) that the batch has been pending.
      */
-    constructor(engine, thresholdSizeBytes, thresholdWaitMilliseconds) {
-        super();
+    constructor(engine, highWaterMark, thresholdSizeBytes, thresholdWaitMilliseconds) {
+        super(highWaterMark);
 
         Assert.isTrue(Number.isInteger(thresholdSizeBytes));
         Assert.isTrue(Number.isInteger(thresholdWaitMilliseconds));

@@ -19,10 +19,11 @@ class DemoStreamPacketParserConcurrent extends Transform {
      * @constructor
      * @public
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      * @param {function(number): boolean} messagePacketFilter
      */
-    constructor(engine, messagePacketFilter) {
-        super();
+    constructor(engine, highWaterMark, messagePacketFilter) {
+        super(highWaterMark);
 
         this._engine = engine;
 

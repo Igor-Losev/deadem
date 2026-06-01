@@ -349,8 +349,8 @@ class ParserEngine {
         const packets = [];
 
         const chain = [
-            new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
-            new DemoStreamPacketExtractor(this, source)
+            new DemoStreamBufferSplitter(this, this._configuration.streamHighWaterMark, this._configuration.splitterChunkSize),
+            new DemoStreamPacketExtractor(this, this._configuration.streamHighWaterMark, source)
         ];
 
         this._started = true;
@@ -395,32 +395,34 @@ class ParserEngine {
     async parse(reader, source = DemoSource.REPLAY, objectMode = false) {
         await this._prepareRun();
 
+        const highWaterMark = this._configuration.streamHighWaterMark;
+
         const chain = [];
 
         if (objectMode) {
-            chain.push(new DemoStreamPacketResequencer(this));
+            chain.push(new DemoStreamPacketResequencer(this, highWaterMark));
         } else {
             chain.push(
-                new DemoStreamBufferSplitter(this, this._configuration.splitterChunkSize),
-                new DemoStreamPacketExtractor(this, source)
+                new DemoStreamBufferSplitter(this, highWaterMark, this._configuration.splitterChunkSize),
+                new DemoStreamPacketExtractor(this, highWaterMark, source)
             );
         }
 
-        chain.push(new DemoStreamEventLoopBreaker(this, this._configuration.breakInterval));
+        chain.push(new DemoStreamEventLoopBreaker(this, highWaterMark, this._configuration.breakInterval));
 
         if (this.getIsMultiThreaded()) {
             chain.push(
-                new DemoStreamPacketBatcher(this, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
-                new DemoStreamPacketParserConcurrent(this, this._filters.message),
-                new DemoStreamPacketCoordinator(this),
-                new DemoStreamPacketPrioritizer(this),
-                new DemoStreamPacketAnalyzerConcurrent(this)
+                new DemoStreamPacketBatcher(this, highWaterMark, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
+                new DemoStreamPacketParserConcurrent(this, highWaterMark, this._filters.message),
+                new DemoStreamPacketCoordinator(this, highWaterMark),
+                new DemoStreamPacketPrioritizer(this, highWaterMark),
+                new DemoStreamPacketAnalyzerConcurrent(this, highWaterMark)
             );
         } else {
             chain.push(
-                new DemoStreamPacketParser(this, this._filters.message),
-                new DemoStreamPacketPrioritizer(this),
-                new DemoStreamPacketAnalyzer(this)
+                new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
+                new DemoStreamPacketPrioritizer(this, highWaterMark),
+                new DemoStreamPacketAnalyzer(this, highWaterMark)
             );
         }
 

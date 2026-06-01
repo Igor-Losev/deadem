@@ -12,10 +12,11 @@ class DemoStreamEventLoopBreaker extends Transform {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      * @param {number} breakInterval
      */
-    constructor(engine, breakInterval) {
-        super();
+    constructor(engine, highWaterMark, breakInterval) {
+        super(highWaterMark);
 
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0);
 

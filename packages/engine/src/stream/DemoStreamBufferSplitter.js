@@ -11,10 +11,11 @@ class DemoStreamBufferSplitter extends Transform {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      * @param {number} maxChunkSize - The maximum size of each chunk in bytes.
      */
-    constructor(engine, maxChunkSize) {
-        super();
+    constructor(engine, highWaterMark, maxChunkSize) {
+        super(highWaterMark);
 
         Assert.isTrue(Number.isInteger(maxChunkSize));
 
