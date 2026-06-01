@@ -1,3 +1,5 @@
+import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+
 import EntityMutation from './EntityMutation.js';
 import EntityMutationBatch from './EntityMutationBatch.js';
 
@@ -43,6 +45,8 @@ class EntityMutationEvent {
     }
 
     /**
+     * (Lazy).
+     *
      * @public
      * @returns {Array<EntityMutation>}
      */
@@ -51,12 +55,12 @@ class EntityMutationEvent {
             return this._mutations;
         }
 
-        const mutations = new Array(this._batch.length);
-        let i = 0;
+        const batch = this._batch;
+        const mutations = new Array(batch.length);
 
-        this._batch.forEach((fieldPath, value) => {
-            mutations[i++] = new EntityMutation(fieldPath, value);
-        });
+        for (let i = 0; i < batch.length; i++) {
+            mutations[i] = new EntityMutation(FieldPathBuilder.getById(batch.ids[i]), batch.values[i]);
+        }
 
         this._mutations = mutations;
 
@@ -77,7 +81,7 @@ class EntityMutationEvent {
     }
 
     /**
-     * Resolves the per-event delta as an object keyed by field name.
+     * (Lazy). Resolves the per-event delta as an object keyed by field name.
      *
      * @public
      * @returns {Object<string, *>}
@@ -87,12 +91,14 @@ class EntityMutationEvent {
             return this._changes;
         }
 
-        const changes = { };
-        const serializer = this._entity.class.serializer;
+        const changes = {};
 
-        this._batch.forEach((fieldPath, value) => {
-            changes[serializer.getNameForFieldPath(fieldPath)] = value;
-        });
+        const serializer = this._entity.class.serializer;
+        const batch = this._batch;
+
+        for (let i = 0; i < batch.length; i++) {
+            changes[serializer.getNameForFieldPathId(batch.ids[i])] = batch.values[i];
+        }
 
         this._changes = changes;
 
