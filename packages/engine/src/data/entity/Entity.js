@@ -11,6 +11,9 @@ const STORAGE_MISC = FieldStorageType.MISC;
 
 const INITIAL_TYPED_ARRAY_SIZE = 8;
 
+const ENTITY_INDEX_BITS = 14;
+const ENTITY_INDEX_MAX = 1 << ENTITY_INDEX_BITS;
+
 class Entity {
     /**
      * @constructor
@@ -19,7 +22,7 @@ class Entity {
      * @param {Class} clazz
      */
     constructor(index, serial, clazz) {
-        Assert.isTrue(Number.isInteger(index));
+        Assert.isTrue(Number.isInteger(index) && index >= 0 && index < ENTITY_INDEX_MAX, 'entity index out of range');
         Assert.isTrue(Number.isInteger(serial));
         Assert.isTrue(clazz instanceof Class);
 
@@ -27,7 +30,7 @@ class Entity {
         this._serial = serial;
         this._class = clazz;
 
-        this._handle = ((serial << 14) | index) >>> 0;
+        this._handle = ((serial << ENTITY_INDEX_BITS) | index) >>> 0;
 
         this._active = true;
 
@@ -108,7 +111,7 @@ class Entity {
      * @public
      * @returns {number}
      */
-    getStateSize() {
+    getFieldCount() {
         const metas = this._class.layout.getMetas();
 
         let size = 0;
@@ -126,6 +129,97 @@ class Entity {
         }
 
         return size;
+    }
+
+    /**
+     * Reads a single field by its flattened name (e.g. `'CBodyComponent.m_cellX'`).
+     *
+     * @public
+     * @param {string} name
+     * @returns {*}
+     */
+    getField(name) {
+        const fieldPathId = this._class.getFieldPathId(name);
+
+        if (fieldPathId === null) {
+            return undefined;
+        }
+
+        return this.getFieldById(fieldPathId);
+    }
+
+    /**
+     * Reads a single field by its field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {*}
+     */
+    getFieldById(fieldPathId) {
+        const meta = this._class.layout.peek(fieldPathId);
+
+        if (meta === null || !this._getIsPresent(meta)) {
+            return undefined;
+        }
+
+        return this._read(meta);
+    }
+
+    /**
+     * Iterates `[ name, value ]` pairs for all fields currently present.
+     *
+     * @public
+     * @returns {IterableIterator<[ string, * ]>}
+     */
+    * fieldEntries() {
+        const metas = this._class.layout.getMetas();
+        const serializer = this._class.serializer;
+
+        for (let i = 0; i < metas.length; i++) {
+            const meta = metas[i];
+
+            if (this._getIsPresent(meta)) {
+                yield [ serializer.getNameForFieldPathId(meta.id), this._read(meta) ];
+            }
+        }
+    }
+
+    /**
+     * Iterates the flattened names of all fields currently present.
+     *
+     * @public
+     * @returns {IterableIterator<string>}
+     */
+    * fieldNames() {
+        const metas = this._class.layout.getMetas();
+        const serializer = this._class.serializer;
+
+        for (let i = 0; i < metas.length; i++) {
+            const meta = metas[i];
+
+            if (this._getIsPresent(meta)) {
+                yield serializer.getNameForFieldPathId(meta.id);
+            }
+        }
+    }
+
+    /**
+     * Returns whether the named field is currently present on this entity.
+     *
+     * @public
+     * @param {string} name
+     * @returns {boolean}
+     */
+    hasField(name) {
+        const fieldPathId = this._class.getFieldPathId(name);
+
+        if (fieldPathId === null) {
+            return false;
+        }
+
+        const meta = this._class.layout.peek(fieldPathId);
+
+        return meta !== null && this._getIsPresent(meta);
     }
 
     /**
@@ -158,7 +252,7 @@ class Entity {
         const unpacked = this._snapshot;
 
         this._changed.forEach((id) => {
-            unpacked[serializer.getNameForFieldPathId(id)] = this._read(layout.resolve(id));
+            unpacked[serializer.getNameForFieldPathId(id)] = this._read(layout.peekOrAssign(id));
         });
 
         this._changed.clear();
@@ -167,6 +261,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {FieldPath} fieldPath
      * @param {*} value
@@ -176,12 +271,13 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} fieldPathId
      * @param {*} value
      */
     updateByFieldPathId(fieldPathId, value) {
-        const meta = this._class.layout.resolve(fieldPathId);
+        const meta = this._class.layout.peekOrAssign(fieldPathId);
 
         if (meta.storage === STORAGE_FLOAT) {
             const offset = meta.offset;

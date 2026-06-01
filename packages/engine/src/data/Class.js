@@ -56,6 +56,17 @@ class Class {
     get layout() {
         return this._layout;
     }
+
+    /**
+     * Resolves a flattened field name to its field path id for this class.
+     *
+     * @public
+     * @param {string} name
+     * @returns {number|null}
+     */
+    getFieldPathId(name) {
+        return this._layout.getFieldPathId(name);
+    }
 }
 
 export default Class;

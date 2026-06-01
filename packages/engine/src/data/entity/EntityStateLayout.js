@@ -18,6 +18,11 @@ class EntityStateLayout {
 
         this._serializer = serializer;
 
+        this._fieldPathIds = {
+            byName: new Map(),
+            count: 0
+        };
+
         this._lengths = {
             float: 0,
             int: 0,
@@ -28,6 +33,28 @@ class EntityStateLayout {
             byId: new Map(),
             order: [ ]
         };
+    }
+
+    /**
+     * Resolves a flattened field name (e.g. `'CBodyComponent.m_cellX'`) to its
+     * field path id.
+     *
+     * @public
+     * @param {string} name
+     * @returns {number|null}
+     */
+    getFieldPathId(name) {
+        const metas = this._metas.order;
+
+        for (let i = this._fieldPathIds.count; i < metas.length; i++) {
+            const id = metas[i].id;
+
+            this._fieldPathIds.byName.set(this._serializer.getNameForFieldPathId(id), id);
+        }
+
+        this._fieldPathIds.count = metas.length;
+
+        return this._fieldPathIds.byName.get(name) ?? null;
     }
 
     /**
@@ -71,6 +98,17 @@ class EntityStateLayout {
     }
 
     /**
+     * Returns the meta for an already-classified field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {Object|null}
+     */
+    peek(fieldPathId) {
+        return this._metas.byId.get(fieldPathId) || null;
+    }
+
+    /**
      * Returns the meta for a field path id, classifying and assigning a slot on
      * first sighting.
      *
@@ -78,8 +116,8 @@ class EntityStateLayout {
      * @param {number} fieldPathId
      * @returns {Object}
      */
-    resolve(fieldPathId) {
-        const existing = this._metas.byId.get(fieldPathId) || null;
+    peekOrAssign(fieldPathId) {
+        const existing = this.peek(fieldPathId);
 
         if (existing !== null) {
             return existing;
