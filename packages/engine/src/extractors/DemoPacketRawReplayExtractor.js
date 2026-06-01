@@ -69,7 +69,7 @@ class DemoPacketRawReplayExtractor {
             offset += frame.size;
 
             if (this._tail.length - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, type, DemoSource.REPLAY, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
+                yield new DemoPacketRaw(sequence, type, DemoSource.REPLAY, tick, frame, this._tail.subarray(offset, offset + frame.value));
 
                 offset += frame.value;
 
