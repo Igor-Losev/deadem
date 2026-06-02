@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { loadLibraryModule } from '../../../libraries';
 
+import {
+  PACKET_HISTORY_SIZE,
+  PLAYBACK_RATES,
+  REFRESH_INTERVAL_CONTENT_TICKS,
+  REFRESH_INTERVAL_PLAYER_TICK_MS
+} from '../config';
 import { createTickStore } from '../tickStore';
-
-const MAX_HISTORY = 100;
-const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
-const CONTENT_TICK_INTERVAL = 256;
 
 const INITIAL_TICKS = { first: -1, last: -1 };
 const INITIAL_PLAYER_ERROR = null;
@@ -21,7 +23,7 @@ function getIsPlaybackInterruptedError(error) {
   return error instanceof Error && error.name === 'PlaybackInterruptedError';
 }
 
-export default function usePlayer(library) {
+export default function usePlayer(library, updatesEnabled = true) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
   const loadRequestIdRef = useRef(0);
@@ -86,10 +88,20 @@ export default function usePlayer(library) {
       return;
     }
 
-    tickStoreRef.current.setCurrent(currentPlayer.getCurrentTick());
+    const current = currentPlayer.getCurrentTick();
+
+    tickStoreRef.current.setCurrent(current);
+    lastContentTickRef.current = current;
+
     setTicks({ first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
     setContentVersion((version) => version + 1);
   }, []);
+
+  useEffect(() => {
+    if (updatesEnabled) {
+      syncTicks();
+    }
+  }, [ updatesEnabled, syncTicks ]);
 
   const clearPlayerError = useCallback(() => setPlayerError(INITIAL_PLAYER_ERROR), []);
 
@@ -163,8 +175,8 @@ export default function usePlayer(library) {
 
         history.push(demoPacket);
 
-        if (history.length > MAX_HISTORY) {
-          history.splice(0, history.length - MAX_HISTORY);
+        if (history.length > PACKET_HISTORY_SIZE) {
+          history.splice(0, history.length - PACKET_HISTORY_SIZE);
         }
       });
 
@@ -177,7 +189,11 @@ export default function usePlayer(library) {
         return;
       }
 
-      tickStoreRef.current.setCurrent(newPlayer.getCurrentTick());
+      const current = newPlayer.getCurrentTick();
+
+      tickStoreRef.current.setCurrent(current);
+      lastContentTickRef.current = current;
+
       setTicks({ first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
     } catch (err) {
       if (loadRequestIdRef.current === requestId) {
@@ -194,29 +210,27 @@ export default function usePlayer(library) {
   }, [ library?.key, resetPlayer ]);
 
   useEffect(() => {
-    if (!playing || !player) {
+    if (!playing || !player || !updatesEnabled) {
       return;
     }
-
-    let rafId;
 
     const pump = () => {
       const current = player.getCurrentTick();
 
       tickStoreRef.current.setCurrent(current);
 
-      if (Math.abs(current - lastContentTickRef.current) >= CONTENT_TICK_INTERVAL) {
+      if (Math.abs(current - lastContentTickRef.current) >= REFRESH_INTERVAL_CONTENT_TICKS) {
         lastContentTickRef.current = current;
+
         setContentVersion((version) => version + 1);
       }
-
-      rafId = requestAnimationFrame(pump);
     };
 
-    rafId = requestAnimationFrame(pump);
+    pump();
+    const intervalId = setInterval(pump, REFRESH_INTERVAL_PLAYER_TICK_MS);
 
-    return () => cancelAnimationFrame(rafId);
-  }, [ playing, player ]);
+    return () => clearInterval(intervalId);
+  }, [ playing, player, updatesEnabled ]);
 
   const handlePauseClicked = useCallback(() => {
     const currentPlayer = playerRef.current;

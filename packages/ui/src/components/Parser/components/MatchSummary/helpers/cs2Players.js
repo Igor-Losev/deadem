@@ -8,6 +8,18 @@ const TEAM_LABELS = {
 
 const STAT = (key) => (player) => player[`m_pActionTrackingServices.${key}`] ?? 0;
 
+const PLAYER_FIELDS = [
+  'm_iMVPs',
+  'm_iTeamNum',
+  'm_iszPlayerName',
+  'm_pActionTrackingServices.m_iAssists',
+  'm_pActionTrackingServices.m_iDamage',
+  'm_pActionTrackingServices.m_iDeaths',
+  'm_pActionTrackingServices.m_iHeadShotKills',
+  'm_pActionTrackingServices.m_iKills',
+  'm_pActionTrackingServices.m_iUtilityDamage'
+];
+
 export const CS2_COLUMNS = [
   { header: 'Player', value: (player) => player.m_iszPlayerName ?? '', selector: (player) => player.m_iszPlayerName },
   { header: 'Team', value: (player) => player.m_iTeamNum ?? 0, selector: (player) => TEAM_LABELS[player.m_iTeamNum] ?? '-', align: 'right' },
@@ -22,7 +34,7 @@ export const CS2_COLUMNS = [
 ];
 
 function resolveActiveWeapon(demo, controller) {
-  const pawnHandle = controller.m_hPlayerPawn;
+  const pawnHandle = controller.getField('m_hPlayerPawn');
 
   if (!Number.isInteger(pawnHandle)) {
     return null;
@@ -34,7 +46,7 @@ function resolveActiveWeapon(demo, controller) {
     return null;
   }
 
-  const weaponHandle = pawn.unpackFlattened()['m_pWeaponServices.m_hActiveWeapon'];
+  const weaponHandle = pawn.getField('m_pWeaponServices.m_hActiveWeapon');
 
   if (!Number.isInteger(weaponHandle)) {
     return null;
@@ -49,17 +61,35 @@ function resolveActiveWeapon(demo, controller) {
   return weapon.class.name.replace(/^CWeapon/, '').replace(/^C/, '');
 }
 
-export function getCs2Players(demo) {
-  const entities = demo?.getEntitiesByClassName('CCSPlayerController');
+function readPlayer(demo, entity) {
+  const player = { weapon: resolveActiveWeapon(demo, entity) };
 
-  if (!entities?.length) {
+  for (const field of PLAYER_FIELDS) {
+    player[field] = entity.getField(field);
+  }
+
+  return player;
+}
+
+export function getCs2Players(demo) {
+  if (!demo) {
     return [];
   }
 
-  return entities
-    .map((entity) => entity.unpackFlattened())
-    .filter((player) => Boolean(player.m_iszPlayerName) && (player.m_iTeamNum === TEAM_T || player.m_iTeamNum === TEAM_CT))
-    .map((player) => ({ ...player, weapon: resolveActiveWeapon(demo, player) }));
+  const players = [];
+
+  for (const entity of demo.getEntitiesByClassNameIterator('CCSPlayerController')) {
+    const name = entity.getField('m_iszPlayerName');
+    const team = entity.getField('m_iTeamNum');
+
+    if (!name || (team !== TEAM_T && team !== TEAM_CT)) {
+      continue;
+    }
+
+    players.push(readPlayer(demo, entity));
+  }
+
+  return players;
 }
 
 export function getCs2Team(player) {

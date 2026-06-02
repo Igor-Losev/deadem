@@ -1,21 +1,43 @@
 import { Box, Slider } from '@mui/material';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { REFRESH_INTERVAL_SEEK_BAR_MS } from '../../config';
 import { FONT_SIZE } from '../../theme';
-import { useCurrentTick } from '../../tickStore';
 
 import { formatTime } from './formatTime';
 
 const CONTAINER_SX = { position: 'relative', px: 2 };
 
-export default function SeekBar({ ticks, tickStore, tickInterval, disabled, onSeek }) {
+export default function SeekBar({ ticks, tickStore, tickInterval, disabled, onSeek, playing }) {
   const containerRef = useRef(null);
+  const lastProgressUpdateRef = useRef(0);
+
   const [dragValue, setDragValue] = useState(null);
   const [hoverTick, setHoverTick] = useState(null);
   const [hoverX, setHoverX] = useState(0);
+  const [current, setCurrent] = useState(() => tickStore.getCurrent());
 
-  const current = useCurrentTick(tickStore);
   const loaded = ticks.last > ticks.first;
+
+  useEffect(() => {
+    const updateCurrent = (force = false) => {
+      const next = tickStore.getCurrent();
+      const now = performance.now();
+
+      if (
+        force ||
+        !playing ||
+        now - lastProgressUpdateRef.current >= REFRESH_INTERVAL_SEEK_BAR_MS
+      ) {
+        lastProgressUpdateRef.current = now;
+        setCurrent(next);
+      }
+    };
+
+    updateCurrent(true);
+
+    return tickStore.subscribe(() => updateCurrent(false));
+  }, [playing, tickStore]);
 
   const handleChange = (event, value) => setDragValue(value);
 
@@ -42,12 +64,12 @@ export default function SeekBar({ ticks, tickStore, tickInterval, disabled, onSe
       return;
     }
 
-    const ratio = x / rect.width;
+    const ratio = rect.width === 0 ? 0 : x / rect.width;
     const tick = Math.round(ticks.first + ratio * (ticks.last - ticks.first));
 
     setHoverTick(tick);
     setHoverX(event.clientX - containerRef.current.getBoundingClientRect().left);
-  }, [ticks, loaded]);
+  }, [loaded, ticks.first, ticks.last]);
 
   const handleMouseLeave = useCallback(() => setHoverTick(null), []);
 

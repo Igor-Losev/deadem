@@ -46,7 +46,14 @@ function BottomBar({
       >
         {gameInfo}
 
-        <SeekBar ticks={ticks} tickStore={tickStore} tickInterval={tickInterval} disabled={!loaded} onSeek={onSeek} />
+        <SeekBar
+          ticks={ticks}
+          tickStore={tickStore}
+          tickInterval={tickInterval}
+          disabled={!loaded}
+          onSeek={onSeek}
+          playing={playing}
+        />
 
         <Box
           sx={{
@@ -58,7 +65,12 @@ function BottomBar({
           }}
         >
           <Box alignItems='baseline' display='flex' flex={1} justifyContent='flex-end' sx={{ mr: 1 }}>
-            <TickJumper ticks={ticks} tickStore={tickStore} loaded={loaded} onSeek={onSeek} />
+            <TickJumper
+              ticks={ticks}
+              tickStore={tickStore}
+              loaded={loaded}
+              onSeek={onSeek}
+            />
           </Box>
 
           <Controls
@@ -77,7 +89,14 @@ function BottomBar({
           <Box alignItems='center' display='flex' flex={1} gap={0.5} justifyContent='space-between'>
             <PlaybackSpeed disabled={!loaded || seeking} onRateChange={onRateChange} rate={rate} />
 
-            <TimeDisplay tickStore={tickStore} tickInterval={tickInterval} loaded={loaded} last={ticks.last} />
+            <Box alignItems='baseline' display='flex'>
+              <TimeDisplay
+                tickStore={tickStore}
+                tickInterval={tickInterval}
+                loaded={loaded}
+                last={ticks.last}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

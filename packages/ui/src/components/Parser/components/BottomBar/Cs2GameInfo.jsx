@@ -8,21 +8,36 @@ const TEAM_CT = 3;
 const COLOR_T = '#ffa726';
 const COLOR_CT = '#42a5f5';
 
+function readTeam(entity) {
+  return {
+    m_iScore: entity.getField('m_iScore'),
+    m_szClanTeamname: entity.getField('m_szClanTeamname')
+  };
+}
+
 function readTeams(demo) {
   if (!demo) {
     return null;
   }
 
-  const teams = demo.getEntitiesByClassName('CCSTeam').map((entity) => entity.unpackFlattened());
+  let teamT = null;
+  let teamCT = null;
 
-  const teamT = teams.find((team) => team.m_iTeamNum === TEAM_T);
-  const teamCT = teams.find((team) => team.m_iTeamNum === TEAM_CT);
+  for (const entity of demo.getEntitiesByClassNameIterator('CCSTeam')) {
+    const team = entity.getField('m_iTeamNum');
 
-  if (!teamT || !teamCT) {
+    if (team === TEAM_T) {
+      teamT = entity;
+    } else if (team === TEAM_CT) {
+      teamCT = entity;
+    }
+  }
+
+  if (teamT === null || teamCT === null) {
     return null;
   }
 
-  return { teamT, teamCT };
+  return { teamT: readTeam(teamT), teamCT: readTeam(teamCT) };
 }
 
 function TeamLabel({ color, mirrored = false, name, score }) {

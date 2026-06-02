@@ -50,7 +50,11 @@ const TABS = [
   }
 ];
 
-export default function Parser({ library, onLibraryChange }) {
+export default function Parser({ isVisible = true, library, onLibraryChange }) {
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const isCs2 = library?.gameCode === 'cs2';
+
   const {
     demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError,
     fileInputRef, historyRef,
@@ -59,16 +63,16 @@ export default function Parser({ library, onLibraryChange }) {
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,
     handleSeekToStart, handleSeekToEnd
-  } = usePlayer(library);
+  } = usePlayer(library, isVisible);
 
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const isCs2 = library?.gameCode === 'cs2';
   const bottomBarOffset = BOTTOM_BAR_HEIGHT + (isCs2 ? CS2_GAME_INFO_HEIGHT : 0);
 
   const handleTabChanged = (event, newValue) => setTabIndex(newValue);
 
-  const history = useMemo(() => [...historyRef.current], [contentVersion]);
+  const history = useMemo(
+    () => tabIndex === 1 ? [...historyRef.current] : [],
+    [tabIndex, contentVersion]
+  );
 
   const activeTab = useMemo(() => {
     switch (tabIndex) {

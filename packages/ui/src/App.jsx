@@ -25,7 +25,7 @@ function App() {
   const tabs = [
     {
       key: 'parser',
-      component: <Parser library={activeLibrary} onLibraryChange={handleLibraryChanged} />,
+      component: <Parser isVisible={tabIndex === 0} library={activeLibrary} onLibraryChange={handleLibraryChanged} />,
       props: { icon: <TroubleshootIcon />, label: 'Parser', sx: TAB_SX }
     },
     {
