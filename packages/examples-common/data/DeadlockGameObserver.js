@@ -101,13 +101,12 @@ class DeadlockGameObserver {
         }
 
         const gameRules = demo.getEntity(this._gameRulesEntityIndex);
-        const gameRulesData = gameRules.unpackFlattened();
 
-        const gamePaused = gameRulesData['m_pGameRules.m_bGamePaused'] || false;
-        const gameState = DeadlockGameState.parse(gameRulesData['m_pGameRules.m_eGameState']);
+        const gamePaused = gameRules.getField('m_pGameRules.m_bGamePaused') || false;
+        const gameState = DeadlockGameState.parse(gameRules.getField('m_pGameRules.m_eGameState'));
 
-        const clockLastUpdatedAt = gameRulesData['m_pGameRules.m_flMatchClockAtLastUpdate'];
-        const clockLastUpdatedTick = gameRulesData['m_pGameRules.m_nMatchClockUpdateTick'];
+        const clockLastUpdatedAt = gameRules.getField('m_pGameRules.m_flMatchClockAtLastUpdate');
+        const clockLastUpdatedTick = gameRules.getField('m_pGameRules.m_nMatchClockUpdateTick');
 
         const tickInterval = demo.server.tickInterval;
 

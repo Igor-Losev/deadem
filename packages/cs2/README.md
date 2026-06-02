@@ -192,11 +192,11 @@ await player.dispose();
 
 For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-| # | Configuration                                                  | Ticks/sec        | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max heap, MB   | Max RSS, MB    | Max ArrayBuffers, MB |
-| - | ---                                                            | ---              | ---                             | ---                | ---            | ---            | ---                  |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 23 800 +- 1.95%  | 371.87 +- 1.95%                 | ~4.84              | 37 +- 2.13%    | 234 +- 2.16%   | 29 +- 14.84%         |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 72 505 +- 2.27%  | 1 132.89 +- 2.27%               | ~1.59              | 27 +- 4.57%    | 266 +- 5.44%   | 53 +- 11.16%         |
-| 3 | `entityClasses` allowlist                                      | 52 348 +- 3.64%  | 817.94 +- 3.64%                 | ~2.20              | 30 +- 2.93%    | 238 +- 3.54%   | 42 +- 20.18%         |
+| # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 24 165 +- 0.88% | ~4.77              | 38 +- 4.99%  | 21 +- 18.99%         | 209 +- 5.59% |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 71 858 +- 1.40% | ~1.60              | 27 +- 6.44%  | 37 +- 7.55%          | 239 +- 7.29% |
+| 3 | `entityClasses` allowlist                                      | 54 103 +- 2.37% | ~2.13              | 30 +- 9.73%  | 26 +- 2.66%          | 241 +- 6.35% |
 
 Runtime: Node.js v22.14.0.
 

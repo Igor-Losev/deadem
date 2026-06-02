@@ -78,7 +78,7 @@ async function runChildGc({ Parser, demoFile }) {
         let totalStateSize = 0;
 
         for (const entity of entities) {
-            totalStateSize += entity.getStateSize();
+            totalStateSize += entity.getFieldCount();
         }
 
         summary = {

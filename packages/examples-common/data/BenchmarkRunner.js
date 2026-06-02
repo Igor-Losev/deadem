@@ -35,13 +35,13 @@ async function runParent({ cases, repeats }) {
 
         rows.push({ id: c.id, label: c.label, ...r });
 
-        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeap)} MB, rss=${fmt(r.memoryRss)} MB, arrayBuffers=${fmt(r.memoryArrayBuffers)} MB`);
+        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
     }
 
     console.log('\nMarkdown rows:');
 
     for (const r of rows) {
-        console.log(`| ${r.id} | ${r.label} | ${r.runtime} | ${fmt(r.tps)} | ${fmt(r.gps, 2)} | ${r.replay30Formatted} | ${fmt(r.memoryHeap)} | ${fmt(r.memoryRss)} | ${fmt(r.memoryArrayBuffers)} |`);
+        console.log(`| ${r.id} | ${r.label} | ${fmt(r.tps)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
     }
 }
 
@@ -81,10 +81,10 @@ function runIsolatedCase(scriptPath, caseId) {
 
 async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repeats) {
     const benchmark = new Benchmark();
-    const heap = new StatsAccumulator();
-    const external = new StatsAccumulator();
-    const arrayBuffers = new StatsAccumulator();
-    const rss = new StatsAccumulator();
+
+    const heapPeak = new StatsAccumulator();
+    const arrayBuffersPeak = new StatsAccumulator();
+    const rssPeak = new StatsAccumulator();
 
     for (let i = 0; i < repeats; i++) {
         const readable = await DemoProvider.read(demoFile);
@@ -94,10 +94,9 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
 
         const m = parser.getStats().memory;
 
-        push(heap, m.maxHeapUsed);
-        push(external, m.maxExternalUsage);
-        push(arrayBuffers, m.maxArrayBufferUsage);
-        push(rss, m.maxResidentSetSize);
+        push(heapPeak, m.maxHeapUsed);
+        push(arrayBuffersPeak, m.maxArrayBufferUsage);
+        push(rssPeak, m.maxResidentSetSize);
 
         await parser.dispose();
         await new Promise(r => setTimeout(r, 50));
@@ -105,7 +104,7 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
         global.gc();
     }
 
-    [ heap, external, arrayBuffers, rss ].forEach(s => s.calculate());
+    [ heapPeak, arrayBuffersPeak, rssPeak ].forEach(s => s.calculate());
 
     const result = benchmark.getResult();
     const tps = result.demo.tps;
@@ -120,10 +119,9 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
     return {
         gps,
         memory: result.demo.memory,
-        memoryArrayBuffers: arrayBuffers.getResult(),
-        memoryExternal: external.getResult(),
-        memoryHeap: heap.getResult(),
-        memoryRss: rss.getResult(),
+        memoryArrayBuffersPeak: arrayBuffersPeak.getResult(),
+        memoryHeapPeak: heapPeak.getResult(),
+        memoryRssPeak: rssPeak.getResult(),
         replay30Formatted: `~${(30 * 60 / gps.mean).toFixed(2)}`,
         runtime: `Node.js ${process.version}`,
         tps
