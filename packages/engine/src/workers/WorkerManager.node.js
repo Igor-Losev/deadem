@@ -4,7 +4,7 @@ import FileSystem from '#core/FileSystem.js';
 
 import WorkerThread from '#workers/WorkerThread.node.js';
 
-import WorkerManager from './WorkerManager.js';
+import WorkerManager from './WorkerManager.base.js';
 
 const WORKER_SCRIPT_PATH = FileSystem.getAbsolutePath(import.meta.url, './scripts/Worker.node.js');
 

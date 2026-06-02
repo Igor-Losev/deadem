@@ -1,4 +1,4 @@
-import MemoryTracker from './MemoryTracker.js';
+import MemoryTracker from './MemoryTracker.base.js';
 
 class MemoryTrackerBrowser extends MemoryTracker {
     constructor() {
