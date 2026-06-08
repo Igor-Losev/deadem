@@ -70,6 +70,24 @@ const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#252238',
+          border: '1px solid rgba(179, 136, 255, 0.28)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45)',
+          color: 'rgba(255, 255, 255, 0.88)',
+          fontSize: '0.75rem',
+        },
+        arrow: {
+          color: '#252238',
+          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35))',
+          '&:before': {
+            border: '1px solid rgba(179, 136, 255, 0.28)',
+          },
+        },
+      },
+    },
   },
 });
 
