@@ -34,8 +34,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: 'rgba(255, 255, 255, 0.06)',
-          backdropFilter: 'blur(12px)',
+          backgroundColor: 'rgba(26, 26, 46, 0.85)',
           border: '1px solid rgba(255, 255, 255, 0.08)',
         },
       },
