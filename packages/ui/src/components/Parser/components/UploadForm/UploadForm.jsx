@@ -42,7 +42,7 @@ const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) 
               }}
               tabIndex={-1}
             >
-              Analyze
+              Inspect
               <input
                 accept='.dem'
                 hidden
