@@ -7,6 +7,19 @@ import { LIBRARIES } from '../../../../libraries';
 const BUTTON_WIDTH = 172;
 const BUTTON_HEIGHT = 36;
 const SELECT_GAME_LABEL = 'Select a Game';
+const BUTTON_GROUP_SX = {
+  borderRadius: '8px',
+  boxShadow: '0 10px 28px rgba(0, 0, 0, 0.2)',
+  overflow: 'hidden',
+  '& .MuiButtonGroup-grouped:hover': {
+    backgroundColor: '#895cff',
+    boxShadow: 'none'
+  },
+  '& .MuiButtonGroup-grouped.Mui-disabled': {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    color: 'rgba(255, 255, 255, 0.28)'
+  }
+};
 
 const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) => {
   const anchorRef = useRef(null);
@@ -31,7 +44,7 @@ const UploadForm = forwardRef(({ library, onFileChange, onLibraryChange }, ref) 
     <Tooltip title={library ? '.dem file' : 'Select a game first'} arrow>
       <ClickAwayListener onClickAway={handleClose}>
         <Box display='flex'>
-          <ButtonGroup ref={anchorRef} variant='contained'>
+          <ButtonGroup ref={anchorRef} sx={BUTTON_GROUP_SX} variant='contained'>
             <Button
               component='label'
               disabled={!library}

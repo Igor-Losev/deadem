@@ -5,7 +5,6 @@ import { loadLibraryModule } from '../../../libraries';
 import {
   PACKET_HISTORY_SIZE,
   PLAYBACK_RATES,
-  REFRESH_INTERVAL_CONTENT_TICKS,
   REFRESH_INTERVAL_PLAYER_TICK_MS
 } from '../config';
 import { createTickStore } from '../tickStore';
@@ -26,6 +25,7 @@ function getIsPlaybackInterruptedError(error) {
 export default function usePlayer(library, updatesEnabled = true) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
+  const entityDiffRef = useRef({ events: [], fullSnapshot: false, prevTick: -1, tick: -1 });
   const loadRequestIdRef = useRef(0);
   const tickStoreRef = useRef(null);
 
@@ -40,8 +40,8 @@ export default function usePlayer(library, updatesEnabled = true) {
   const [ ticks, setTicks ] = useState(INITIAL_TICKS);
   const [ contentVersion, setContentVersion ] = useState(0);
   const [ playerError, setPlayerError ] = useState(INITIAL_PLAYER_ERROR);
+  const [ frozen, setFrozen ] = useState(false);
 
-  const lastContentTickRef = useRef(-1);
   const playerRef = useRef(null);
   const playingRef = useRef(false);
   const seekingRef = useRef(false);
@@ -61,7 +61,7 @@ export default function usePlayer(library, updatesEnabled = true) {
     }
 
     historyRef.current = [];
-    lastContentTickRef.current = -1;
+    entityDiffRef.current = { events: [], fullSnapshot: false, prevTick: -1, tick: -1 };
     runtimeErrorsRef.current = { PlaybackInterruptedError: null };
 
     tickStoreRef.current.setCurrent(-1);
@@ -91,7 +91,6 @@ export default function usePlayer(library, updatesEnabled = true) {
     const current = currentPlayer.getCurrentTick();
 
     tickStoreRef.current.setCurrent(current);
-    lastContentTickRef.current = current;
 
     setTicks({ first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
     setContentVersion((version) => version + 1);
@@ -157,7 +156,7 @@ export default function usePlayer(library, updatesEnabled = true) {
         return;
       }
 
-      const { DemoPacketType, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
+      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
         breakInterval: 100,
         parserThreads: 0
@@ -180,6 +179,56 @@ export default function usePlayer(library, updatesEnabled = true) {
         }
       });
 
+      newPlayer.registerPreInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
+        const buffer = entityDiffRef.current;
+
+        if (demoPacket.tick !== buffer.tick) {
+          buffer.prevTick = buffer.tick;
+          buffer.tick = demoPacket.tick;
+          buffer.events = [];
+          buffer.fullSnapshot = false;
+        }
+
+        if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
+          buffer.fullSnapshot = true;
+          buffer.events = [];
+
+          return;
+        }
+
+        for (let i = 0; i < events.length; i++) {
+          const event = events[i];
+          const entity = event.entity;
+          const operation = event.operation;
+
+          const fields = [];
+
+          if (operation === EntityOperation.UPDATE || operation === EntityOperation.CREATE) {
+            const isCreate = operation === EntityOperation.CREATE;
+            const batch = event.batch;
+            const serializer = entity.class.serializer;
+
+            for (let j = 0; j < batch.length; j++) {
+              const id = batch.ids[j];
+
+              fields.push({
+                name: serializer.getNameForFieldPathId(id),
+                next: batch.values[j],
+                previous: isCreate ? undefined : entity.getFieldById(id)
+              });
+            }
+          }
+
+          buffer.events.push({
+            className: entity.class.name,
+            fields,
+            index: entity.index,
+            operation: operation.code,
+            serial: entity.serial
+          });
+        }
+      });
+
       setPlayer(newPlayer);
 
       await newPlayer.load(file.stream());
@@ -192,7 +241,6 @@ export default function usePlayer(library, updatesEnabled = true) {
       const current = newPlayer.getCurrentTick();
 
       tickStoreRef.current.setCurrent(current);
-      lastContentTickRef.current = current;
 
       setTicks({ first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
     } catch (err) {
@@ -210,27 +258,18 @@ export default function usePlayer(library, updatesEnabled = true) {
   }, [ library?.key, resetPlayer ]);
 
   useEffect(() => {
-    if (!playing || !player || !updatesEnabled) {
+    if (!playing || !player || !updatesEnabled || frozen) {
       return;
     }
 
-    const pump = () => {
-      const current = player.getCurrentTick();
-
-      tickStoreRef.current.setCurrent(current);
-
-      if (Math.abs(current - lastContentTickRef.current) >= REFRESH_INTERVAL_CONTENT_TICKS) {
-        lastContentTickRef.current = current;
-
-        setContentVersion((version) => version + 1);
-      }
-    };
+    const pump = () => tickStoreRef.current.setCurrent(player.getCurrentTick());
 
     pump();
+
     const intervalId = setInterval(pump, REFRESH_INTERVAL_PLAYER_TICK_MS);
 
     return () => clearInterval(intervalId);
-  }, [ playing, player, updatesEnabled ]);
+  }, [ playing, player, updatesEnabled, frozen ]);
 
   const handlePauseClicked = useCallback(() => {
     const currentPlayer = playerRef.current;
@@ -323,12 +362,14 @@ export default function usePlayer(library, updatesEnabled = true) {
     resetPlayer();
   }, [ resetPlayer ]);
 
+  const toggleFrozen = useCallback(() => setFrozen((value) => !value), []);
+
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError,
-    fileInputRef, historyRef,
-    clearPlayerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError, frozen,
+    fileInputRef, historyRef, entityDiffRef,
+    clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,

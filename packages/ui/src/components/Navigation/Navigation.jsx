@@ -1,9 +1,9 @@
 import { Box, Tab, Tabs } from '@mui/material';
 
-export default function Navigation({ active, onChange, tabs, tabsProps }) {
+export default function Navigation({ active, actions = null, onChange, tabs, tabsProps }) {
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={active} onChange={onChange} {...tabsProps}>
+    <Box alignItems='center' display='flex' sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Tabs onChange={onChange} value={active} {...tabsProps} sx={{ flex: 1, minWidth: 0, ...tabsProps?.sx }}>
         {tabs.map((tab, index) => (
           <Tab
             aria-controls={`tabpanel-${index}`}
@@ -15,6 +15,7 @@ export default function Navigation({ active, onChange, tabs, tabsProps }) {
           />
         ))}
       </Tabs>
+      {actions}
     </Box>
   );
 }

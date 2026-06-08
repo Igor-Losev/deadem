@@ -1,5 +1,6 @@
 import {
   Category as CategoryIcon,
+  CompareArrows as CompareArrowsIcon,
   Email as EmailIcon,
   Groups as GroupsIcon,
   Info as InfoIcon
@@ -11,7 +12,9 @@ import Navigation from './../Navigation/Navigation';
 
 import BottomBar from './components/BottomBar/BottomBar';
 import Cs2GameInfo from './components/BottomBar/Cs2GameInfo';
+import EntityDiff from './components/EntityDiff/EntityDiff';
 import EntityExplorer from './components/EntityExplorer/EntityExplorer';
+import FreezeToggle from './components/FreezeToggle/FreezeToggle';
 import InfoExplorer from './components/InfoExplorer/InfoExplorer';
 import MatchSummary from './components/MatchSummary/MatchSummary';
 import PacketExplorer from './components/PacketExplorer/PacketExplorer';
@@ -44,6 +47,11 @@ const TABS = [
     props: { icon: <CategoryIcon />, label: 'Entities', sx: TAB_STYLE }
   },
   {
+    key: 'diff',
+    overflow: null,
+    props: { icon: <CompareArrowsIcon />, label: 'Diff', sx: TAB_STYLE }
+  },
+  {
     key: 'info',
     overflow: 'auto',
     props: { icon: <InfoIcon />, label: 'Info', sx: TAB_STYLE }
@@ -56,9 +64,9 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
   const isCs2 = library?.gameCode === 'cs2';
 
   const {
-    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError,
-    fileInputRef, historyRef,
-    clearPlayerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
+    fileInputRef, historyRef, entityDiffRef,
+    clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,
@@ -69,20 +77,14 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
 
   const handleTabChanged = (event, newValue) => setTabIndex(newValue);
 
-  const history = useMemo(
-    () => tabIndex === 1 ? [...historyRef.current] : [],
-    [tabIndex, contentVersion]
-  );
+  const history = useMemo(() => [...historyRef.current], [contentVersion]);
 
-  const activeTab = useMemo(() => {
-    switch (tabIndex) {
-      case 0: return <MatchSummary demo={demo} library={library} contentVersion={contentVersion} />;
-      case 1: return <PacketExplorer history={history} />;
-      case 2: return <EntityExplorer demo={demo} contentVersion={contentVersion} />;
-      case 3: return <InfoExplorer demo={demo} />;
-      default: return null;
-    }
-  }, [demo, library, tabIndex, contentVersion, history]);
+  const diff = useMemo(() => ({
+    events: [...entityDiffRef.current.events],
+    fullSnapshot: entityDiffRef.current.fullSnapshot,
+    prevTick: entityDiffRef.current.prevTick,
+    tick: entityDiffRef.current.tick
+  }), [contentVersion]);
 
   const gameInfo = useMemo(
     () => isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null,
@@ -126,14 +128,29 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
         <>
           <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${bottomBarOffset + 20}px`} minHeight={0}>
             <Navigation
+              actions={<FreezeToggle frozen={frozen} onToggle={toggleFrozen} />}
               active={tabIndex}
               onChange={handleTabChanged}
               tabs={TABS}
-              tabsProps={{ indicatorColor: 'secondary', sx: { minHeight: '50px' }, textColor: 'secondary' }}
+              tabsProps={{ allowScrollButtonsMobile: true, indicatorColor: 'secondary', scrollButtons: 'auto', sx: { minHeight: '50px' }, textColor: 'secondary', variant: 'scrollable' }}
             />
 
             <Box display='flex' flexDirection='column' minHeight={0} overflow={TABS[tabIndex].overflow}>
-              {activeTab}
+              <Box display={tabIndex === 0 ? 'contents' : 'none'}>
+                <MatchSummary demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
+              </Box>
+              <Box display={tabIndex === 1 ? 'contents' : 'none'}>
+                <PacketExplorer history={history} />
+              </Box>
+              <Box display={tabIndex === 2 ? 'contents' : 'none'}>
+                <EntityExplorer demo={demo} contentVersion={contentVersion} />
+              </Box>
+              <Box display={tabIndex === 3 ? 'contents' : 'none'}>
+                <EntityDiff diff={diff} />
+              </Box>
+              <Box display={tabIndex === 4 ? 'contents' : 'none'}>
+                <InfoExplorer demo={demo} />
+              </Box>
             </Box>
           </Box>
 

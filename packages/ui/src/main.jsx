@@ -34,8 +34,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: 'rgba(26, 26, 46, 0.85)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: 'rgba(36, 36, 58, 0.84)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 18px 45px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         },
       },
     },

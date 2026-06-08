@@ -6,6 +6,8 @@ import EmptyState from './../EmptyState';
 
 import { compare } from './../../utils';
 
+import { useCurrentTick } from './../../tickStore';
+
 import { CS2_COLUMNS, getCs2PlayerKey, getCs2Players, getCs2Team } from './helpers/cs2Players';
 import { DEADLOCK_COLUMNS, getDeadlockPlayerKey, getDeadlockPlayers, getDeadlockTeam } from './helpers/deadlockPlayers';
 import { DOTA_COLUMNS, getDotaPlayerKey, getDotaPlayers, getDotaTeam } from './helpers/dotaPlayers';
@@ -46,12 +48,14 @@ function getAdapter(library) {
   }
 }
 
-export default function MatchSummary({ demo, library, contentVersion }) {
+export default function MatchSummary({ demo, library, tickStore, contentVersion }) {
   const [orderBy, setOrderBy] = useState('Team');
   const [order, setOrder] = useState('asc');
 
+  const tick = useCurrentTick(tickStore);
+
   const adapter = useMemo(() => getAdapter(library), [library]);
-  const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, contentVersion]);
+  const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, tick, contentVersion]);
 
   const sortedPlayers = useMemo(() => {
     const activeColumn = adapter.columns.find((column) => column.header === orderBy) ?? adapter.columns[0];
