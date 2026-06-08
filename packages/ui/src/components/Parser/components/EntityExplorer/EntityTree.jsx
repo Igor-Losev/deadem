@@ -79,7 +79,7 @@ function EntityRow({ entity, index, isSelected, onClick }) {
   );
 }
 
-export default function EntityTree({ entityClasses, entityContainers, onEntityClick, selectedEntityId }) {
+export default function EntityTree({ entityClasses, entityContainers, indexFilter = null, onEntityClick, selectedEntityId }) {
   const [expanded, setExpanded] = useState(new Set());
 
   const toggleExpand = (classId) => {
@@ -99,9 +99,13 @@ export default function EntityTree({ entityClasses, entityContainers, onEntityCl
   return (
     <div style={{ padding: '4px 0' }}>
       {entityClasses.map((entityClass) => {
-        const entities = entityContainers.byClass.get(entityClass);
+        const allEntities = entityContainers.byClass.get(entityClass);
+
+        const entities = indexFilter !== null
+          ? allEntities.filter((entity) => String(entity.index).startsWith(indexFilter))
+          : allEntities;
         const classId = entityClass.id;
-        const isExpanded = expanded.has(classId);
+        const isExpanded = indexFilter !== null || expanded.has(classId);
 
         return (
           <div key={classId}>

@@ -15,6 +15,8 @@ import EntityTree from './EntityTree';
 
 import { groupEntities, stringifyEntity } from './entities';
 
+const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
+
 export default function EntityExplorer({ demo, contentVersion }) {
   const [selectedEntityId, setSelectedEntityId] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -62,15 +64,23 @@ export default function EntityExplorer({ demo, contentVersion }) {
     return classes;
   }, [entityContainers]);
 
-  const filteredClasses = useMemo(() => {
-    const trimmed = filter.trim().toLowerCase();
+  const trimmedFilter = filter.trim();
+  const indexFilter = /^\d+$/.test(trimmedFilter) ? trimmedFilter : null;
 
-    if (!trimmed) {
+  const filteredClasses = useMemo(() => {
+    if (!trimmedFilter) {
       return entityClasses;
     }
 
-    return entityClasses.filter((entityClass) => entityClass.name.toLowerCase().includes(trimmed));
-  }, [entityClasses, filter]);
+    if (indexFilter !== null) {
+      return entityClasses.filter((entityClass) =>
+        entityContainers.byClass.get(entityClass).some((entity) => String(entity.index).startsWith(indexFilter)));
+    }
+
+    const lower = trimmedFilter.toLowerCase();
+
+    return entityClasses.filter((entityClass) => entityClass.name.toLowerCase().includes(lower));
+  }, [entityClasses, entityContainers, trimmedFilter, indexFilter]);
 
   const hasEntities = entityClasses.length > 0;
 
@@ -88,11 +98,11 @@ export default function EntityExplorer({ demo, contentVersion }) {
   return (
     <Box color='text.primary' display='flex' minHeight={0}>
       <Box display='flex' flex={1} flexDirection='column' overflow='hidden'>
-        <Box alignItems='center' display='flex' px={1} sx={{ height: 44 }}>
+        <Box alignItems='center' display='flex' px={1} sx={HEADER_SURFACE_SX}>
           <TextField
             fullWidth
             onChange={(event) => setFilter(event.target.value)}
-            placeholder='Filter classes...'
+            placeholder='Filter by class or index...'
             size='small'
             slotProps={{
               input: {
@@ -120,6 +130,7 @@ export default function EntityExplorer({ demo, contentVersion }) {
             <EntityTree
               entityClasses={filteredClasses}
               entityContainers={entityContainers}
+              indexFilter={indexFilter}
               onEntityClick={handleEntityClick}
               selectedEntityId={selectedEntityId}
             />

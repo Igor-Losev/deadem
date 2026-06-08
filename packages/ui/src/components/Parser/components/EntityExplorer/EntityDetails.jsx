@@ -4,10 +4,12 @@ import { Box, Divider, IconButton, Tooltip, Typography } from '@mui/material';
 import { FONT_SIZE } from './../../theme';
 import { HighlightedJson } from './../../utils';
 
+const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
+
 export default function EntityDetails({ entity, json, copied, onCopy }) {
   return (
     <>
-      <Box alignItems='center' display='flex' justifyContent='space-between' px={1} sx={{ height: 44 }}>
+      <Box alignItems='center' display='flex' justifyContent='space-between' px={1} sx={HEADER_SURFACE_SX}>
         <Typography color='text.secondary' fontSize={FONT_SIZE.sm} noWrap>
           {entity.class.name}
           <Typography component='span' color='text.disabled' fontSize={FONT_SIZE.sm}>
