@@ -15,7 +15,7 @@ const mem = () => {
 };
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_51541762);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_51541762);
 
     const player = new Player(new ParserConfiguration({ parserThreads: 0 }));
 

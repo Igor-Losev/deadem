@@ -5,7 +5,7 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_51541762);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_51541762);
 
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 3,
