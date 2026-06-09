@@ -10,7 +10,7 @@ const logger = Logger.CONSOLE_DEBUG;
 const DEFAULT_HIGH_WATER_MARK = 256 * 1024;
 const DEMO_ARGUMENT_PREFIX = '--demo=';
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../../demos');
-const S3_BASE_URL = 'https://deadem.s3.us-east-1.amazonaws.com';
+const CDN_BASE_URL = 'https://deadem.com';
 
 class DemoProvider {
     /**
@@ -29,9 +29,9 @@ class DemoProvider {
 
             return DemoProvider.readFile(demoFile);
         } else {
-            logger.debug(`Couldn't find a file [ ${path} ]. Reading demo [ ${demoFile.getFileName()} ] from S3...`);
+            logger.debug(`Couldn't find a file [ ${path} ]. Reading demo [ ${demoFile.getFileName()} ] from CDN...`);
 
-            return DemoProvider.readS3(demoFile);
+            return DemoProvider.readCdn(demoFile);
         }
     }
 
@@ -53,15 +53,15 @@ class DemoProvider {
      * @param {DemoFile} demoFile
      * @returns {Promise<ReadableStream>}
      */
-    static async readS3(demoFile) {
-        const url = `${S3_BASE_URL}/${demoFile.game.code}/demos/${demoFile.getFileName()}`;
+    static async readCdn(demoFile) {
+        const url = `${CDN_BASE_URL}/demos/${demoFile.game.code}/${demoFile.getFileName()}`;
 
         return new Promise((resolve, reject) => {
             https.get(url, (response) => {
                 if (response.statusCode !== 200) {
                     response.resume();
 
-                    reject(new Error(`Error reading from s3, status code [ ${response.statusCode} ]`));
+                    reject(new Error(`Error reading from CDN, status code [ ${response.statusCode} ]`));
                 } else {
                     resolve(response);
                 }
@@ -71,7 +71,7 @@ class DemoProvider {
 
     /**
      * Reads the demo passed via the `--demo=<path>` CLI argument, if present;
-     * otherwise falls back to the bundled [demoFile] (local file system or S3).
+     * otherwise falls back to the bundled [demoFile] (local file system or CDN).
      *
      * @public
      * @static

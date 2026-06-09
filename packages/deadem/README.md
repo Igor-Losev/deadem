@@ -84,7 +84,7 @@ printer.printStats();
 
 ## Examples
 
-All example scripts live in the [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
+All example scripts live in the [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
 
 ### Parsing
 

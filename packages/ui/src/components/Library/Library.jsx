@@ -7,7 +7,7 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const FILES = DemoFile.getAll().reverse();
 
 function getDemoFileUrl(file) {
-  return `https://deadem.s3.us-east-1.amazonaws.com/${file.game.code}/demos/${file.getFileName()}`;
+  return `https://deadem.com/demos/${file.game.code}/${file.getFileName()}`;
 }
 
 function formatSize(bytes) {

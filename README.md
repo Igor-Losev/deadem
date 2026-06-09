@@ -49,7 +49,7 @@ npm install
 
 ### Example scripts
 
-Scripts live under `packages/examples-node-<game>/scripts` (`1xx` — parsing, `2xx` — playback). By default they parse a demo, downloaded from S3 on first run if it is not already in `./demos/<game>/` folder. Pass `--demo=<path>` to parse your own `.dem` replay:
+Scripts live under `packages/examples-node-<game>/scripts` (`1xx` — parsing, `2xx` — playback). By default they parse a demo, downloaded from [deadem.com](https://deadem.com) on first run if it is not already in `./demos/<game>/` folder. Pass `--demo=<path>` to parse your own `.dem` replay:
 
 ```bash
 node ./packages/examples-node-deadem/scripts/100_parse.js --demo=./match.dem

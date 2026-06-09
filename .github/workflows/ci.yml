@@ -53,14 +53,14 @@ jobs:
               51543455-6140
               75438101-6448
               75439032-6448
-            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/deadlock/demos
+            demo_cdn_prefix: https://deadem.com/demos/deadlock
             parser_script: ./packages/examples-node-deadem/scripts/101_parse_multiple.js
           - name: cs2
             demo_dir: demos/cs2
             demo_files: |
               2026-05-11-furia-vs-spirit-m1-dust2
               2026-05-15-natus-vincere-vs-vitality-m3-inferno
-            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/cs2/demos
+            demo_cdn_prefix: https://deadem.com/demos/cs2
             parser_script: ./packages/examples-node-cs2/scripts/101_parse_multiple.js
           - name: dota2
             demo_dir: demos/dota2
@@ -69,13 +69,13 @@ jobs:
               8777738576
               8783006717
               8783086929
-            demo_s3_prefix: https://deadem.s3.us-east-1.amazonaws.com/dota2/demos
+            demo_cdn_prefix: https://deadem.com/demos/dota2
             parser_script: ./packages/examples-node-dota2/scripts/101_parse_multiple.js
 
     env:
       DEMO_DIR: ${{ matrix.demo_dir }}
       DEMO_FILES: ${{ matrix.demo_files }}
-      DEMO_S3_PREFIX: ${{ matrix.demo_s3_prefix }}
+      DEMO_CDN_PREFIX: ${{ matrix.demo_cdn_prefix }}
       PARSER_SCRIPT: ${{ matrix.parser_script }}
 
     steps:

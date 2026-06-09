@@ -82,7 +82,7 @@ printer.printStats();
 
 ## Examples
 
-All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
+All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
 
 ### Parsing
 
