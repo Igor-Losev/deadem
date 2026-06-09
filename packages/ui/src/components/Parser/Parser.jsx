@@ -6,7 +6,7 @@ import {
   Info as InfoIcon
 } from '@mui/icons-material';
 import { Alert, Box, Chip, Paper, Snackbar } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import Navigation from './../Navigation/Navigation';
 
@@ -57,6 +57,16 @@ const TABS = [
     props: { icon: <InfoIcon />, label: 'Info', sx: TAB_STYLE }
   }
 ];
+
+function TabPanel({ active, children }) {
+  const frozen = useRef(children);
+
+  if (active) {
+    frozen.current = children;
+  }
+
+  return <Box display={active ? 'contents' : 'none'}>{frozen.current}</Box>;
+}
 
 export default function Parser({ isVisible = true, library, onLibraryChange }) {
   const [tabIndex, setTabIndex] = useState(0);
@@ -137,20 +147,20 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
 
             <Box display='flex' flexDirection='column' minHeight={0} overflow={TABS[tabIndex].overflow}>
               <Box display={tabIndex === 0 ? 'contents' : 'none'}>
-                <MatchSummary demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
+                <MatchSummary active={tabIndex === 0} demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
               </Box>
-              <Box display={tabIndex === 1 ? 'contents' : 'none'}>
+              <TabPanel active={tabIndex === 1}>
                 <PacketExplorer history={history} />
-              </Box>
-              <Box display={tabIndex === 2 ? 'contents' : 'none'}>
+              </TabPanel>
+              <TabPanel active={tabIndex === 2}>
                 <EntityExplorer demo={demo} contentVersion={contentVersion} />
-              </Box>
-              <Box display={tabIndex === 3 ? 'contents' : 'none'}>
+              </TabPanel>
+              <TabPanel active={tabIndex === 3}>
                 <EntityDiff diff={diff} />
-              </Box>
-              <Box display={tabIndex === 4 ? 'contents' : 'none'}>
+              </TabPanel>
+              <TabPanel active={tabIndex === 4}>
                 <InfoExplorer demo={demo} />
-              </Box>
+              </TabPanel>
             </Box>
           </Box>
 

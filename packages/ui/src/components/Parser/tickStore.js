@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 
 export function createTickStore(initial = -1) {
   let current = initial;
@@ -22,6 +22,17 @@ export function createTickStore(initial = -1) {
   };
 }
 
-export function useCurrentTick(tickStore) {
-  return useSyncExternalStore(tickStore.subscribe, tickStore.getCurrent);
+export function useCurrentTick(tickStore, active = true) {
+  const frozenRef = useRef(tickStore.getCurrent());
+
+  const tick = useSyncExternalStore(
+    tickStore.subscribe,
+    active ? tickStore.getCurrent : () => frozenRef.current
+  );
+
+  if (active) {
+    frozenRef.current = tick;
+  }
+
+  return tick;
 }

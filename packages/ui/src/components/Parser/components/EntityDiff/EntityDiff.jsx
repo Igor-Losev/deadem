@@ -1,5 +1,4 @@
 import { InboxOutlined as InboxOutlinedIcon } from '@mui/icons-material';
-import { memo } from 'react';
 
 import EmptyState from './../EmptyState';
 
@@ -113,7 +112,7 @@ function formatValue(value) {
   return String(value);
 }
 
-function EntityDiff({ diff }) {
+export default function EntityDiff({ diff }) {
   if (diff === null || diff.tick < 0) {
     return <EmptyState icon={<InboxOutlinedIcon color='disabled' />} text='Step or seek to capture entity changes for the current tick' />;
   }
@@ -194,5 +193,3 @@ function EntityDiff({ diff }) {
     </div>
   );
 }
-
-export default memo(EntityDiff);

@@ -1,6 +1,6 @@
 import { PeopleOutline as PeopleOutlineIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import EmptyState from './../EmptyState';
 
@@ -48,11 +48,11 @@ function getAdapter(library) {
   }
 }
 
-export default function MatchSummary({ demo, library, tickStore, contentVersion }) {
+function MatchSummary({ active, demo, library, tickStore, contentVersion }) {
   const [orderBy, setOrderBy] = useState('Team');
   const [order, setOrder] = useState('asc');
 
-  const tick = useCurrentTick(tickStore);
+  const tick = useCurrentTick(tickStore, active);
 
   const adapter = useMemo(() => getAdapter(library), [library]);
   const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, tick, contentVersion]);
@@ -138,3 +138,5 @@ export default function MatchSummary({ demo, library, tickStore, contentVersion 
     </Table>
   );
 }
+
+export default memo(MatchSummary);
