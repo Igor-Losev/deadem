@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-dota2",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Node.js example scripts, benchmarks, and diagnostics for @deademx/dota2",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "3.0.1",
-    "@deademx/dota2": "3.0.1"
+    "@deademx/examples-common": "3.1.0",
+    "@deademx/dota2": "3.1.0"
   }
 }

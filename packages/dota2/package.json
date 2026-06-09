@@ -1,6 +1,6 @@
 {
   "name": "@deademx/dota2",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Dota 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -63,6 +63,6 @@
     }
   },
   "dependencies": {
-    "@deademx/engine": "3.0.1"
+    "@deademx/engine": "3.1.0"
   }
 }

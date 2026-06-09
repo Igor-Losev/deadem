@@ -1,6 +1,6 @@
 {
   "name": "@deademx/ui",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Deadem Explorer — live in-browser demo of the deadem parser libraries",
   "private": true,
   "type": "module",
@@ -16,9 +16,9 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@mui/x-tree-view": "^8.10.2",
-    "@deademx/cs2": "3.0.1",
-    "@deademx/dota2": "3.0.1",
-    "deadem": "3.0.1",
+    "@deademx/cs2": "3.1.0",
+    "@deademx/dota2": "3.1.0",
+    "deadem": "3.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
