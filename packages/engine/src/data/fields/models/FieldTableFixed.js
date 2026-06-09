@@ -2,8 +2,9 @@ import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
 
-import Field from '../Field.js';
-import Serializer from '../Serializer.js';
+import Field from '#data/fields/Field.js';
+import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
+import Serializer from '#data/fields/Serializer.js';
 
 class FieldTableFixed extends Field {
     /**
@@ -12,24 +13,16 @@ class FieldTableFixed extends Field {
      * @param {String} name
      * @param {Array<String>} sendNode
      * @param {Serializer} serializer
-     * @param {Function} decoderBase
+     * @param {FieldDecoder} fieldDecoderBase
      */
-    constructor(name, sendNode, serializer, decoderBase) {
+    constructor(name, sendNode, serializer, fieldDecoderBase) {
         super(name, sendNode);
 
         Assert.isTrue(serializer instanceof Serializer);
-        Assert.isTrue(typeof decoderBase === 'function');
+        Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
 
         this._serializer = serializer;
-        this._decoderBase = decoderBase;
-    }
-
-    /**
-     * @public
-     * @returns {Function}
-     */
-    get decoderBase() {
-        return this._decoderBase;
+        this._fieldDecoderBase = fieldDecoderBase;
     }
 
     /**
@@ -56,10 +49,24 @@ class FieldTableFixed extends Field {
      */
     getDecoderForFieldPath(fieldPath, index) {
         if (fieldPath.length === index) {
-            return this._decoderBase;
+            return this._fieldDecoderBase.fn;
         }
 
         return this._serializer.getDecoderForFieldPath(fieldPath, index);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath(fieldPath, index) {
+        if (fieldPath.length === index) {
+            return this._fieldDecoderBase.storage;
+        }
+
+        return this._serializer.getStorageForFieldPath(fieldPath, index);
     }
 
     /**

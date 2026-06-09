@@ -2,11 +2,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { loadLibraryModule } from '../../../libraries';
 
-const MAX_HISTORY = 100;
-const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
-const CONTENT_TICK_INTERVAL = 256;
+import {
+  PACKET_HISTORY_SIZE,
+  PLAYBACK_RATES,
+  REFRESH_INTERVAL_PLAYER_TICK_MS
+} from '../config';
+import { createTickStore } from '../tickStore';
 
-const INITIAL_TICKS = { current: -1, first: -1, last: -1 };
+const INITIAL_TICKS = { first: -1, last: -1 };
 const INITIAL_PLAYER_ERROR = null;
 
 function formatPlayerError(operationLabel, error) {
@@ -19,10 +22,14 @@ function getIsPlaybackInterruptedError(error) {
   return error instanceof Error && error.name === 'PlaybackInterruptedError';
 }
 
-export default function usePlayer(library) {
+export default function usePlayer(library, updatesEnabled = true) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
+  const entityDiffRef = useRef({ events: [], fullSnapshot: false, prevTick: -1, tick: -1 });
   const loadRequestIdRef = useRef(0);
+  const tickStoreRef = useRef(null);
+
+  tickStoreRef.current ??= createTickStore();
 
   const [ fileName, setFileName ] = useState(null);
   const [ mapName, setMapName ] = useState(null);
@@ -33,8 +40,8 @@ export default function usePlayer(library) {
   const [ ticks, setTicks ] = useState(INITIAL_TICKS);
   const [ contentVersion, setContentVersion ] = useState(0);
   const [ playerError, setPlayerError ] = useState(INITIAL_PLAYER_ERROR);
+  const [ frozen, setFrozen ] = useState(false);
 
-  const lastContentTickRef = useRef(-1);
   const playerRef = useRef(null);
   const playingRef = useRef(false);
   const seekingRef = useRef(false);
@@ -54,8 +61,10 @@ export default function usePlayer(library) {
     }
 
     historyRef.current = [];
-    lastContentTickRef.current = -1;
+    entityDiffRef.current = { events: [], fullSnapshot: false, prevTick: -1, tick: -1 };
     runtimeErrorsRef.current = { PlaybackInterruptedError: null };
+
+    tickStoreRef.current.setCurrent(-1);
 
     setPlayer(null);
     setFileName(null);
@@ -79,9 +88,19 @@ export default function usePlayer(library) {
       return;
     }
 
-    setTicks({ current: currentPlayer.getCurrentTick(), first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
+    const current = currentPlayer.getCurrentTick();
+
+    tickStoreRef.current.setCurrent(current);
+
+    setTicks({ first: currentPlayer.getFirstTick(), last: currentPlayer.getLastTick() });
     setContentVersion((version) => version + 1);
   }, []);
+
+  useEffect(() => {
+    if (updatesEnabled) {
+      syncTicks();
+    }
+  }, [ updatesEnabled, syncTicks ]);
 
   const clearPlayerError = useCallback(() => setPlayerError(INITIAL_PLAYER_ERROR), []);
 
@@ -137,7 +156,7 @@ export default function usePlayer(library) {
         return;
       }
 
-      const { DemoPacketType, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
+      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
         breakInterval: 100,
         parserThreads: 0
@@ -155,8 +174,58 @@ export default function usePlayer(library) {
 
         history.push(demoPacket);
 
-        if (history.length > MAX_HISTORY) {
-          history.splice(0, history.length - MAX_HISTORY);
+        if (history.length > PACKET_HISTORY_SIZE) {
+          history.splice(0, history.length - PACKET_HISTORY_SIZE);
+        }
+      });
+
+      newPlayer.registerPreInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
+        const buffer = entityDiffRef.current;
+
+        if (demoPacket.tick !== buffer.tick) {
+          buffer.prevTick = buffer.tick;
+          buffer.tick = demoPacket.tick;
+          buffer.events = [];
+          buffer.fullSnapshot = false;
+        }
+
+        if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
+          buffer.fullSnapshot = true;
+          buffer.events = [];
+
+          return;
+        }
+
+        for (let i = 0; i < events.length; i++) {
+          const event = events[i];
+          const entity = event.entity;
+          const operation = event.operation;
+
+          const fields = [];
+
+          if (operation === EntityOperation.UPDATE || operation === EntityOperation.CREATE) {
+            const isCreate = operation === EntityOperation.CREATE;
+            const batch = event.batch;
+            const serializer = entity.class.serializer;
+
+            for (let j = 0; j < batch.length; j++) {
+              const id = batch.ids[j];
+
+              fields.push({
+                name: serializer.getNameForFieldPathId(id),
+                next: batch.values[j],
+                previous: isCreate ? undefined : entity.getFieldById(id)
+              });
+            }
+          }
+
+          buffer.events.push({
+            className: entity.class.name,
+            fields,
+            index: entity.index,
+            operation: operation.code,
+            serial: entity.serial
+          });
         }
       });
 
@@ -169,7 +238,11 @@ export default function usePlayer(library) {
         return;
       }
 
-      setTicks({ current: newPlayer.getCurrentTick(), first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
+      const current = newPlayer.getCurrentTick();
+
+      tickStoreRef.current.setCurrent(current);
+
+      setTicks({ first: newPlayer.getFirstTick(), last: newPlayer.getLastTick() });
     } catch (err) {
       if (loadRequestIdRef.current === requestId) {
         setFileName(null);
@@ -185,29 +258,18 @@ export default function usePlayer(library) {
   }, [ library?.key, resetPlayer ]);
 
   useEffect(() => {
-    if (!playing || !player) {
+    if (!playing || !player || !updatesEnabled || frozen) {
       return;
     }
 
-    let rafId;
+    const pump = () => tickStoreRef.current.setCurrent(player.getCurrentTick());
 
-    const pump = () => {
-      const current = player.getCurrentTick();
+    pump();
 
-      setTicks((prev) => prev.current === current ? prev : { ...prev, current });
+    const intervalId = setInterval(pump, REFRESH_INTERVAL_PLAYER_TICK_MS);
 
-      if (Math.abs(current - lastContentTickRef.current) >= CONTENT_TICK_INTERVAL) {
-        lastContentTickRef.current = current;
-        setContentVersion((version) => version + 1);
-      }
-
-      rafId = requestAnimationFrame(pump);
-    };
-
-    rafId = requestAnimationFrame(pump);
-
-    return () => cancelAnimationFrame(rafId);
-  }, [ playing, player ]);
+    return () => clearInterval(intervalId);
+  }, [ playing, player, updatesEnabled, frozen ]);
 
   const handlePauseClicked = useCallback(() => {
     const currentPlayer = playerRef.current;
@@ -279,7 +341,7 @@ export default function usePlayer(library) {
     historyRef.current = [];
     setPlaying(false);
     setSeeking(true);
-    setTicks((prev) => ({ ...prev, current: tick }));
+    tickStoreRef.current.setCurrent(tick);
 
     currentPlayer.seekToTick(tick).then(() => {
       syncTicks();
@@ -300,12 +362,14 @@ export default function usePlayer(library) {
     resetPlayer();
   }, [ resetPlayer ]);
 
+  const toggleFrozen = useCallback(() => setFrozen((value) => !value), []);
+
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
-    fileInputRef, historyRef,
-    clearPlayerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError, frozen,
+    fileInputRef, historyRef, entityDiffRef,
+    clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,

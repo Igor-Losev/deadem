@@ -17,30 +17,31 @@ export const DOTA_COLUMNS = [
 ];
 
 function findScoreboardEntity(demo) {
-  const entities = demo?.getEntities?.() ?? [];
+  if (!demo) {
+    return null;
+  }
 
-  for (const entity of entities) {
-    const data = entity.unpackFlattened();
-
-    if (data.m_vecPlayerTeamData && data.m_vecPlayerData) {
-      return data;
+  for (const entity of demo.getEntitiesByClassNameIterator('CDOTA_PlayerResource')) {
+    if (entity.hasField('m_vecPlayerTeamData') && entity.hasField('m_vecPlayerData')) {
+      return entity;
     }
   }
 
   return null;
 }
 
-function readArrayIndex(scoreboard, field, index) {
+function readArrayField(entity, field, index) {
   const prefix = `${field}.${index.toString().padStart(4, '0')}.`;
 
-  return (key, fallback) => scoreboard[`${prefix}${key}`] ?? fallback;
+  return (key, fallback) => entity.getField(`${prefix}${key}`) ?? fallback;
 }
 
-function readTeamRows(scoreboard) {
+function readTeamRows(entity) {
+  const length = entity.getField('m_vecPlayerTeamData') ?? 0;
   const rows = [];
 
-  for (let index = 0; index < scoreboard.m_vecPlayerTeamData; index += 1) {
-    const read = readArrayIndex(scoreboard, 'm_vecPlayerTeamData', index);
+  for (let index = 0; index < length; index += 1) {
+    const read = readArrayField(entity, 'm_vecPlayerTeamData', index);
     const team = index < TEAM_SIZE ? RADIANT_TEAM : DIRE_TEAM;
 
     rows.push({
@@ -63,11 +64,12 @@ function readTeamRows(scoreboard) {
   return rows;
 }
 
-function readPlayerRows(scoreboard) {
+function readPlayerRows(entity) {
+  const length = entity.getField('m_vecPlayerData') ?? 0;
   const rows = [];
 
-  for (let index = 0; index < scoreboard.m_vecPlayerData; index += 1) {
-    const read = readArrayIndex(scoreboard, 'm_vecPlayerData', index);
+  for (let index = 0; index < length; index += 1) {
+    const read = readArrayField(entity, 'm_vecPlayerData', index);
     const isValid = read('m_bIsValid', false) === true;
     const isBroadcaster = read('m_bIsBroadcaster', false) === true;
     const team = read('m_iPlayerTeam', null);
@@ -86,14 +88,14 @@ function readPlayerRows(scoreboard) {
 }
 
 export function getDotaPlayers(demo) {
-  const scoreboard = findScoreboardEntity(demo);
+  const entity = findScoreboardEntity(demo);
 
-  if (scoreboard === null) {
+  if (entity === null) {
     return [];
   }
 
-  const teamRows = readTeamRows(scoreboard);
-  const playerRows = readPlayerRows(scoreboard);
+  const teamRows = readTeamRows(entity);
+  const playerRows = readPlayerRows(entity);
 
   const playerQueues = new Map();
 

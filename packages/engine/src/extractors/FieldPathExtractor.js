@@ -18,15 +18,21 @@ class FieldPathExtractor {
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
+        this._ids = [ ];
     }
 
     /**
+     * @deprecated
+     *
      * @public
      * @returns {Array<FieldPath>}
      */
     all() {
         const bitBuffer = this._bitBuffer;
         const builder = this._fieldPathBuilder;
+
+        builder.reset();
+
         const fieldPaths = [ ];
 
         for (;;) {
@@ -59,10 +65,45 @@ class FieldPathExtractor {
 
     /**
      * @public
+     * @returns {Array<number>}
      */
-    reset() {
-        this._bitBuffer.reset();
-        this._fieldPathBuilder = new FieldPathBuilder();
+    allIds() {
+        const bitBuffer = this._bitBuffer;
+        const builder = this._fieldPathBuilder;
+        const ids = this._ids;
+
+        builder.reset();
+
+        let count = 0;
+
+        for (;;) {
+            const unread = bitBuffer.getUnreadCount();
+
+            if (unread <= 0) {
+                break;
+            }
+
+            const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
+
+            const code = bitBuffer.readBitsAsUInt(bits);
+
+            const bitsUsed = BITS_TABLE[code];
+            const operation = OPERATIONS[OPS_TABLE[code]];
+
+            bitBuffer.moveBack(bits - bitsUsed);
+
+            if (operation === FieldPathOperation.FINISH) {
+                break;
+            }
+
+            operation._executor(bitBuffer, builder);
+
+            ids[count++] = builder.build().id;
+        }
+
+        ids.length = count;
+
+        return ids;
     }
 }
 

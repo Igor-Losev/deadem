@@ -2,7 +2,7 @@ import Transform from '#core/stream/Transform.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
 
-import EntityMutation from '#data/entity/EntityMutation.js';
+import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';
@@ -21,9 +21,10 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      */
-    constructor(engine) {
-        super();
+    constructor(engine, highWaterMark) {
+        super(highWaterMark);
 
         this._engine = engine;
 
@@ -290,15 +291,18 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
                 break;
             }
 
-            const mutations = [];
+            const length = eventPartial.mutations.length >>> 1;
 
-            for (let j = 0; j < eventPartial.mutations.length; j += 2) {
-                const fieldPath = FieldPathBuilder.reconstruct(eventPartial.mutations[j]);
+            const ids = new Uint32Array(length);
+            const values = new Array(length);
 
-                mutations.push(new EntityMutation(fieldPath, eventPartial.mutations[j + 1]));
+            for (let j = 0; j < length; j += 1) {
+                ids[j] = FieldPathBuilder.reconstruct(eventPartial.mutations[j * 2]).id;
+
+                values[j] = eventPartial.mutations[j * 2 + 1];
             }
 
-            events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, mutations));
+            events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, new EntityMutationBatch(ids, values)));
         }
 
         if (i < 0) {

@@ -1,5 +1,5 @@
 class TransformBrowser extends TransformStream {
-    constructor() {
+    constructor(highWaterMark) {
         super({
             flush: async (controller) => {
                 this._controller = controller;
@@ -19,7 +19,7 @@ class TransformBrowser extends TransformStream {
 
                 this._controller = null;
             }
-        });
+        }, { highWaterMark }, { highWaterMark });
 
         this._bufferized = [ ];
         this._controller = null;

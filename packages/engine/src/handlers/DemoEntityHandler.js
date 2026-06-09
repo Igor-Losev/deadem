@@ -24,10 +24,8 @@ class DemoEntityHandler {
                 case EntityOperation.CREATE:
                     this._demo.registerEntity(entity);
 
-                    for (let j = 0; j < event.mutations.length; j++) {
-                        const mutation = event.mutations[j];
-
-                        entity.updateByFieldPath(mutation.fieldPath, mutation.value);
+                    for (let i = 0; i < event.batch.length; i++) {
+                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
                     }
 
                     break;
@@ -36,10 +34,8 @@ class DemoEntityHandler {
                         entity.activate();
                     }
 
-                    for (let j = 0; j < event.mutations.length; j++) {
-                        const mutation = event.mutations[j];
-
-                        entity.updateByFieldPath(mutation.fieldPath, mutation.value);
+                    for (let i = 0; i < event.batch.length; i++) {
+                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
                     }
 
                     break;

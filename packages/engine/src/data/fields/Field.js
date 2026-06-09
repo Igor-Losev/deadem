@@ -40,6 +40,7 @@ class Field {
     }
 
     /**
+     * @abstract
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
@@ -50,6 +51,18 @@ class Field {
     }
 
     /**
+     * @abstract
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath() {
+        throw new Error('Abstract: getStorageForFieldPath()');
+    }
+
+    /**
+     * @abstract
      * @public
      * @returns {String}
      */

@@ -28,7 +28,7 @@ const BATCH_SIZE = 1000;
     const printer1 = new Printer(parser1);
     const printer2 = new Printer(parser2);
 
-    const [ readable1, readable2 ] = await Promise.all([ DemoProvider.read(demoFile), DemoProvider.read(demoFile) ]);
+    const [ readable1, readable2 ] = await Promise.all([ DemoProvider.resolve(demoFile), DemoProvider.resolve(demoFile) ]);
 
     const batch1 = [];
     const batch2 = [];

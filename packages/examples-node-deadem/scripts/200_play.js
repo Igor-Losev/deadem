@@ -7,7 +7,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 const PLAYBACK_SPEED = 16;
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
 
     const player = new Player(new ParserConfiguration({ parserThreads: 0 }), Logger.CONSOLE_WARN);
 

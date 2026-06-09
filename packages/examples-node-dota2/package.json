@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "benchmark": "node --expose-gc ./scripts/000_benchmark.js",
+    "profile": "node ./scripts/003_profile.js",
     "lint": "eslint"
   },
   "imports": {

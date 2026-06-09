@@ -13,11 +13,11 @@ deadem
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2?label=%40deademx%2Fcs2" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2?label=%40deademx%2Fdota2" /></a>
 
-Collection of JavaScript packages for parsing and playing back Valve Source 2 demo / replay data in Node.js and modern browsers.
+Collection of JavaScript packages for parsing and playing back Valve Source 2 demo / replay data in Node.js, Deno, Bun, and browsers.
 
 The parsing stack depends only on:
 
-- [`protobufjs`](https://www.npmjs.com/package/protobufjs) — protobuf decoding.
+- [`protobufjs`](https://www.npmjs.com/package/protobufjs) — Protobuf decoding.
 - [`snappyjs`](https://www.npmjs.com/package/snappyjs) — Snappy decompression.
 
 ## Packages
@@ -40,6 +40,31 @@ The parsing stack depends only on:
 | [`@deademx/examples-node-cs2`](./packages/examples-node-cs2) | Node.js example scripts, benchmarks, and diagnostics for `@deademx/cs2`. |
 | [`@deademx/examples-node-dota2`](./packages/examples-node-dota2) | Node.js example scripts, benchmarks, and diagnostics for `@deademx/dota2`. |
 | [`@deademx/ui`](./packages/ui) | Published web app at [deadem.com](https://deadem.com) demonstrating the libraries. |
+
+## Getting started
+
+```bash
+npm install
+```
+
+### Example scripts
+
+Scripts live under `packages/examples-node-<game>/scripts` (`1xx` — parsing, `2xx` — playback). By default they parse a demo, downloaded from [deadem.com](https://deadem.com) on first run if it is not already in `./demos/<game>/` folder. Pass `--demo=<path>` to parse your own `.dem` replay:
+
+```bash
+node ./packages/examples-node-deadem/scripts/100_parse.js --demo=./match.dem
+node ./packages/examples-node-cs2/scripts/100_parse.js --demo=./match.dem
+node ./packages/examples-node-dota2/scripts/100_parse.js --demo=./match.dem
+```
+
+### UI
+
+The [deadem.com](https://deadem.com) explorer lives in [`@deademx/ui`](./packages/ui):
+
+```bash
+npm start      # UI dev server
+npm preview    # UI production preview 
+```
 
 ## Documentation
 

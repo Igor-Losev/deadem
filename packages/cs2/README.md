@@ -11,7 +11,7 @@
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.6.0-darkGreen" /></a>
 
-**@deademx/cs2** is a Counter-Strike 2 (Source 2) demo parser and replay player for Node.js and modern browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/cs2** is a Counter-Strike 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Counter-Strike 2-specific usage only.
 
@@ -20,7 +20,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install for Node.js or use the browser bundle.
+  Install from npm or use the browser bundle.
 - [Quick start](#quick-start)<br/>
   Minimal example to parse a Counter-Strike 2 demo file.
 - [Examples](#examples)<br/>
@@ -42,7 +42,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 
 ## Installation
 
-### Node.js
+### Node.js / Deno / Bun
 
 ```shell
 npm install @deademx/cs2 --save
@@ -82,7 +82,7 @@ printer.printStats();
 
 ## Examples
 
-All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-cs2) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
+All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-cs2) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
 
 ### Parsing
 
@@ -157,9 +157,10 @@ Query entities and classes after the parse completes:
 await parser.parse(readable);
 
 const demo = parser.getDemo();
-const entities = demo.getEntities();
 
-console.log(`Total entities at end of demo: ${entities.length}`);
+demo.getEntitiesByClassName('CCSPlayerController').forEach((entity) => {
+    console.log(entity.getField('m_iszPlayerName'));
+});
 ```
 
 ### Playback and seeking
@@ -185,18 +186,18 @@ await player.dispose();
 ## Compatibility
 
 - **Game:** tested with Counter-Strike 2 demos from version `1.41.6.0`.
-- **Node.js:** v18.0.0 and above.
-- **Browsers:** latest Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, and Bun.
+- **Browsers:** Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
 For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-| # | Configuration                                                  | Ticks/sec        | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max RSS, MB    |
-| - | ---                                                            | ---              | ---                             | ---                | ---            |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 18 131 +- 2.71%  | 283.30 +- 2.71%                 | ~6.35              | 211 +- 5.83%   |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 74 436 +- 1.55%  | 1 163.06 +- 1.55%               | ~1.55              | 262 +- 5.09%   |
-| 3 | `entityClasses` allowlist                                      | 52 697 +- 9.23%  | 823.40 +- 9.23%                 | ~2.19              | 257 +- 8.83%   |
+| # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 24 165 +- 0.88% | ~4.77              | 38 +- 4.99%  | 21 +- 18.99%         | 209 +- 5.59% |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 71 858 +- 1.40% | ~1.60              | 27 +- 6.44%  | 37 +- 7.55%          | 239 +- 7.29% |
+| 3 | `entityClasses` allowlist                                      | 54 103 +- 2.37% | ~2.13              | 30 +- 9.73%  | 26 +- 2.66%          | 241 +- 6.35% |
 
 Runtime: Node.js v22.14.0.
 

@@ -1,6 +1,5 @@
-import packageJson from './../package.json';
+import loadLibraryModule from '#libraryLoader';
 
-const loadedLibraryPromises = new Map();
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 
 const SHARED_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
@@ -57,71 +56,4 @@ export function getLibraryByKey(key) {
   return LIBRARIES.find((library) => library.key === key) ?? null;
 }
 
-function getLibraryScriptUrl(library) {
-  return `//cdn.jsdelivr.net/npm/${library.npmPackageName}@${packageJson.version}/dist/${library.scriptFileName}`;
-}
-
-function injectScript(library) {
-  if (typeof window === 'undefined') {
-    throw new Error('Window is unavailable');
-  }
-
-  const existingLibrary = window[library.globalName];
-
-  if (existingLibrary) {
-    return Promise.resolve(existingLibrary);
-  }
-
-  const existingPromise = loadedLibraryPromises.get(library.key);
-
-  if (existingPromise) {
-    return existingPromise;
-  }
-
-  const promise = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-
-    script.async = true;
-    script.src = getLibraryScriptUrl(library);
-
-    script.onload = () => {
-      const runtimeLibrary = window[library.globalName];
-
-      if (runtimeLibrary) {
-        resolve(runtimeLibrary);
-        return;
-      }
-
-      loadedLibraryPromises.delete(library.key);
-      reject(new Error(`Global ${library.globalName} is unavailable after script load`));
-    };
-
-    script.onerror = () => {
-      loadedLibraryPromises.delete(library.key);
-      reject(new Error(`Failed to load ${library.npmPackageName} from CDN`));
-    };
-
-    document.head.appendChild(script);
-  });
-
-  loadedLibraryPromises.set(library.key, promise);
-
-  return promise;
-}
-
-export async function loadLibraryModule(library) {
-  if (import.meta.env.DEV) {
-    switch (library.key) {
-      case 'deadlock':
-        return import('deadem');
-      case 'dota2':
-        return import('@deademx/dota2');
-      case 'cs2':
-        return import('@deademx/cs2');
-      default:
-        throw new Error(`Unsupported library key: ${library.key}`);
-    }
-  }
-
-  return injectScript(library);
-}
+export { loadLibraryModule };

@@ -2,6 +2,18 @@ import Assert from '#core/Assert.js';
 
 import Class from '#data/Class.js';
 
+import FieldStorageType from '#data/enums/FieldStorageType.js';
+
+const STORAGE_FLOAT = FieldStorageType.FLOAT;
+const STORAGE_INT = FieldStorageType.INT;
+const STORAGE_VECTOR = FieldStorageType.VECTOR;
+const STORAGE_MISC = FieldStorageType.MISC;
+
+const INITIAL_TYPED_ARRAY_SIZE = 8;
+
+const ENTITY_INDEX_BITS = 14;
+const ENTITY_INDEX_MAX = 1 << ENTITY_INDEX_BITS;
+
 class Entity {
     /**
      * @constructor
@@ -10,7 +22,7 @@ class Entity {
      * @param {Class} clazz
      */
     constructor(index, serial, clazz) {
-        Assert.isTrue(Number.isInteger(index));
+        Assert.isTrue(Number.isInteger(index) && index >= 0 && index < ENTITY_INDEX_MAX, 'entity index out of range');
         Assert.isTrue(Number.isInteger(serial));
         Assert.isTrue(clazz instanceof Class);
 
@@ -18,14 +30,18 @@ class Entity {
         this._serial = serial;
         this._class = clazz;
 
-        this._handle = ((serial << 14) | index) >>> 0;
+        this._handle = ((serial << ENTITY_INDEX_BITS) | index) >>> 0;
 
         this._active = true;
 
-        this._names = new Map();
-        this._state = new Map();
+        this._state = {
+            float32: new Float32Array(clazz.layout.getFloatLength()),
+            int32: new Int32Array(clazz.layout.getIntLength()),
+            misc: null,
+            presence: new Uint8Array(clazz.layout.getPresenceLength())
+        };
 
-        this._changed = new Set();
+        this._changed = null;
         this._snapshot = null;
     }
 
@@ -77,14 +93,6 @@ class Entity {
 
     /**
      * @public
-     * @returns {Map<FieldPath, *>}
-     */
-    get state() {
-        return this._state;
-    }
-
-    /**
-     * @public
      */
     activate() {
         this._active = true;
@@ -98,41 +106,302 @@ class Entity {
     }
 
     /**
+     * Number of field paths currently set on the entity.
+     *
+     * @public
+     * @returns {number}
+     */
+    getFieldCount() {
+        const metas = this._class.layout.getMetas();
+
+        let size = 0;
+
+        for (let i = 0; i < metas.length; i++) {
+            const meta = metas[i];
+
+            if (meta.storage !== STORAGE_MISC && this._getIsPresent(meta)) {
+                size++;
+            }
+        }
+
+        if (this._state.misc !== null) {
+            size += this._state.misc.size;
+        }
+
+        return size;
+    }
+
+    /**
+     * Reads a single field by its flattened name (e.g. `'CBodyComponent.m_cellX'`).
+     *
+     * @public
+     * @param {string} name
+     * @returns {*}
+     */
+    getField(name) {
+        const fieldPathId = this._class.getFieldPathId(name);
+
+        if (fieldPathId === null) {
+            return undefined;
+        }
+
+        return this.getFieldById(fieldPathId);
+    }
+
+    /**
+     * Reads a single field by its field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {*}
+     */
+    getFieldById(fieldPathId) {
+        const meta = this._class.layout.peek(fieldPathId);
+
+        if (meta === null || !this._getIsPresent(meta)) {
+            return undefined;
+        }
+
+        return this._read(meta);
+    }
+
+    /**
+     * Iterates `[ name, value ]` pairs for all fields currently present.
+     *
+     * @public
+     * @returns {IterableIterator<[ string, * ]>}
+     */
+    * fieldEntries() {
+        const metas = this._class.layout.getMetas();
+        const serializer = this._class.serializer;
+
+        for (let i = 0; i < metas.length; i++) {
+            const meta = metas[i];
+
+            if (this._getIsPresent(meta)) {
+                yield [ serializer.getNameForFieldPathId(meta.id), this._read(meta) ];
+            }
+        }
+    }
+
+    /**
+     * Iterates the flattened names of all fields currently present.
+     *
+     * @public
+     * @returns {IterableIterator<string>}
+     */
+    * fieldNames() {
+        const metas = this._class.layout.getMetas();
+        const serializer = this._class.serializer;
+
+        for (let i = 0; i < metas.length; i++) {
+            const meta = metas[i];
+
+            if (this._getIsPresent(meta)) {
+                yield serializer.getNameForFieldPathId(meta.id);
+            }
+        }
+    }
+
+    /**
+     * Returns whether the named field is currently present on this entity.
+     *
+     * @public
+     * @param {string} name
+     * @returns {boolean}
+     */
+    hasField(name) {
+        const fieldPathId = this._class.getFieldPathId(name);
+
+        if (fieldPathId === null) {
+            return false;
+        }
+
+        const meta = this._class.layout.peek(fieldPathId);
+
+        return meta !== null && this._getIsPresent(meta);
+    }
+
+    /**
      * @public
      * @returns {*}
      */
     unpackFlattened() {
-        const unpacked = this._snapshot || { };
+        const layout = this._class.layout;
+        const serializer = this._class.serializer;
 
-        this._changed.forEach((fieldPath) => {
-            const value = this._state.get(fieldPath);
+        const metas = this._class.layout.getMetas();
 
-            let name = this._names.get(fieldPath) || null;
+        if (this._snapshot === null) {
+            const unpacked = { };
 
-            if (name === null) {
-                name = this._class.serializer.getNameForFieldPath(fieldPath);
+            for (let i = 0; i < metas.length; i++) {
+                const meta = metas[i];
 
-                this._names.set(fieldPath, name);
+                if (this._getIsPresent(meta)) {
+                    unpacked[serializer.getNameForFieldPathId(meta.id)] = this._read(meta);
+                }
             }
 
-            unpacked[name] = value;
+            this._snapshot = unpacked;
+            this._changed = new Set();
+
+            return unpacked;
+        }
+
+        const unpacked = this._snapshot;
+
+        this._changed.forEach((id) => {
+            unpacked[serializer.getNameForFieldPathId(id)] = this._read(layout.peekOrAssign(id));
         });
 
-        this._snapshot = unpacked;
         this._changed.clear();
 
         return unpacked;
     }
 
     /**
+     * @internal
      * @public
      * @param {FieldPath} fieldPath
      * @param {*} value
      */
     updateByFieldPath(fieldPath, value) {
-        this._state.set(fieldPath, value);
-        this._changed.add(fieldPath);
+        this.updateByFieldPathId(fieldPath.id, value);
     }
+
+    /**
+     * @internal
+     * @public
+     * @param {number} fieldPathId
+     * @param {*} value
+     */
+    updateByFieldPathId(fieldPathId, value) {
+        const meta = this._class.layout.peekOrAssign(fieldPathId);
+
+        if (meta.storage === STORAGE_FLOAT) {
+            const offset = meta.offset;
+
+            if (offset >= this._state.float32.length) {
+                this._state.float32 = grow(this._state.float32, Float32Array, offset + 1);
+            }
+
+            this._state.float32[offset] = value;
+
+            this._markPresence(meta.present);
+        } else if (meta.storage === STORAGE_INT) {
+            const offset = meta.offset;
+
+            if (offset >= this._state.int32.length) {
+                this._state.int32 = grow(this._state.int32, Int32Array, offset + 1);
+            }
+
+            this._state.int32[offset] = value;
+
+            this._markPresence(meta.present);
+        } else if (meta.storage === STORAGE_VECTOR) {
+            const offset = meta.offset;
+            const end = offset + meta.dim;
+
+            if (end > this._state.float32.length) {
+                this._state.float32 = grow(this._state.float32, Float32Array, end);
+            }
+
+            for (let i = 0; i < meta.dim; i++) {
+                this._state.float32[offset + i] = value[i];
+            }
+
+            this._markPresence(meta.present);
+        } else {
+            if (this._state.misc === null) {
+                this._state.misc = new Map();
+            }
+
+            this._state.misc.set(fieldPathId, value);
+        }
+
+        if (this._changed !== null) {
+            this._changed.add(fieldPathId);
+        }
+    }
+
+    /**
+     * @protected
+     * @param {Object} meta
+     * @returns {boolean}
+     */
+    _getIsPresent(meta) {
+        if (meta.storage === STORAGE_MISC) {
+            return this._state.misc !== null && this._state.misc.has(meta.id);
+        }
+
+        return meta.present < this._state.presence.length && this._state.presence[meta.present] === 1;
+    }
+
+    /**
+     * @protected
+     * @param {number} present
+     */
+    _markPresence(present) {
+        if (present >= this._state.presence.length) {
+            this._state.presence = grow(this._state.presence, Uint8Array, present + 1);
+        }
+
+        this._state.presence[present] = 1;
+    }
+
+    /**
+     * @protected
+     * @param {Object} meta
+     * @returns {*}
+     */
+    _read(meta) {
+        if (meta.storage === STORAGE_FLOAT) {
+            return this._state.float32[meta.offset];
+        }
+
+        if (meta.storage === STORAGE_INT) {
+            const value = this._state.int32[meta.offset];
+
+            if (meta.bool) {
+                return value !== 0;
+            }
+
+            return meta.signed ? value : value >>> 0;
+        }
+
+        if (meta.storage === STORAGE_VECTOR) {
+            const vector = new Float32Array(meta.dim);
+
+            for (let i = 0; i < meta.dim; i++) {
+                vector[i] = this._state.float32[meta.offset + i];
+            }
+
+            return vector;
+        }
+
+        return this._state.misc.get(meta.id);
+    }
+}
+
+/**
+ * @param {Float32Array|Int32Array|Uint8Array} current
+ * @param {Function} Ctor
+ * @param {number} min
+ * @returns {Float32Array|Int32Array|Uint8Array}
+ */
+function grow(current, Ctor, min) {
+    let length = current.length === 0 ? INITIAL_TYPED_ARRAY_SIZE : current.length;
+
+    while (length < min) {
+        length *= 2;
+    }
+
+    const next = new Ctor(length);
+
+    next.set(current);
+
+    return next;
 }
 
 export default Entity;

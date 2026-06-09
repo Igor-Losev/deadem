@@ -7,7 +7,7 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "preview": "vite preview",
+    "preview": "vite build --mode preview && vite preview",
     "start": "vite"
   },
   "dependencies": {

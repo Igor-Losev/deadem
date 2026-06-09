@@ -1,7 +1,9 @@
 import Assert from '#core/Assert.js';
 
+import FieldDecoder from './FieldDecoder.js';
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 import FieldDecoderQuantizedFloat from './FieldDecoderQuantizedFloat.js';
+import FieldStorageDescriptor from './FieldStorageDescriptor.js';
 
 class FieldDecoderFactory {
     constructor() {
@@ -136,7 +138,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => number}
+     * @returns {FieldDecoder}
      */
     createFloat32(instructions) {
         return this._createFloat32(instructions);
@@ -145,7 +147,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => Float32Array}
+     * @returns {FieldDecoder}
      */
     createQAngle(instructions) {
         return this._createQAngle(instructions);
@@ -154,7 +156,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => number}
+     * @returns {FieldDecoder}
      */
     createQuantizedFloat(instructions) {
         return this._createQuantizedFloat(instructions);
@@ -163,7 +165,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => BigInt}
+     * @returns {FieldDecoder}
      */
     createUInt64(instructions) {
         return this._createUInt64(instructions);
@@ -173,7 +175,7 @@ class FieldDecoderFactory {
      * @public
      * @param {FieldDecoderInstructions} instructions
      * @param {number} dimension
-     * @returns {(bitBuffer: BitBuffer) => Float32Array}
+     * @returns {FieldDecoder}
      */
     createVector(instructions, dimension) {
         return this._createVector(instructions, dimension);
@@ -182,7 +184,7 @@ class FieldDecoderFactory {
     /**
      * @protected
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => number}
+     * @returns {FieldDecoder}
      */
     _createFloat32(instructions) {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
@@ -193,27 +195,27 @@ class FieldDecoderFactory {
             return existing;
         }
 
-        let decoder;
+        let resolved;
 
         if (instructions.encoder === 'coord') {
-            decoder = FieldDecoderFactory.COORDINATE;
+            resolved = new FieldDecoder(FieldDecoderFactory.COORDINATE, FieldStorageDescriptor.FLOAT);
         } else if (instructions.encoder === 'simtime') {
-            decoder = FieldDecoderFactory.SIMULATION_TIME;
+            resolved = new FieldDecoder(FieldDecoderFactory.SIMULATION_TIME, FieldStorageDescriptor.INT_UNSIGNED);
         } else if (instructions.bitCount === null || instructions.bitCount <= 0 || instructions.bitCount >= 32) {
-            decoder = FieldDecoderFactory.NO_SCALE;
+            resolved = new FieldDecoder(FieldDecoderFactory.NO_SCALE, FieldStorageDescriptor.FLOAT);
         } else {
-            decoder = this._createQuantizedFloat(instructions);
+            resolved = this._createQuantizedFloat(instructions);
         }
 
-        this._registryFloat32.set(instructions, decoder);
+        this._registryFloat32.set(instructions, resolved);
 
-        return decoder;
+        return resolved;
     }
 
     /**
      * @protected
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => Float32Array}
+     * @returns {FieldDecoder}
      */
     _createQAngle(instructions) {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
@@ -248,22 +250,24 @@ class FieldDecoderFactory {
                 } else {
                     if (hasPitch) result[0] = bitBuffer.readCoordinate();
                     if (hasYaw) result[1] = bitBuffer.readCoordinate();
-                    if (hasRoll)  result[2] = bitBuffer.readCoordinate();
+                    if (hasRoll) result[2] = bitBuffer.readCoordinate();
                 }
             }
 
             return result;
         };
 
-        this._registryQAngle.set(instructions, qAngleDecoder);
+        const resolved = new FieldDecoder(qAngleDecoder, FieldStorageDescriptor.createVector(3));
 
-        return qAngleDecoder;
+        this._registryQAngle.set(instructions, resolved);
+
+        return resolved;
     }
 
     /**
      * @protected
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => number}
+     * @returns {FieldDecoder}
      */
     _createQuantizedFloat(instructions) {
         const existing = this._registryQuantizedFloat.get(instructions) || null;
@@ -275,23 +279,25 @@ class FieldDecoderFactory {
         const decoder = new FieldDecoderQuantizedFloat(instructions);
         const decoderFn = bitBuffer => decoder.decode(bitBuffer);
 
-        this._registryQuantizedFloat.set(instructions, decoderFn);
+        const resolved = new FieldDecoder(decoderFn, FieldStorageDescriptor.FLOAT);
 
-        return decoderFn;
+        this._registryQuantizedFloat.set(instructions, resolved);
+
+        return resolved;
     }
 
     /**
      * @protected
      * @param {FieldDecoderInstructions} instructions
-     * @returns {(bitBuffer: BitBuffer) => BigInt}
+     * @returns {FieldDecoder}
      */
     _createUInt64(instructions) {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
 
         if (instructions.encoder === 'fixed64') {
-            return FieldDecoderFactory.FIXED_UINT_64;
+            return new FieldDecoder(FieldDecoderFactory.FIXED_UINT_64, FieldStorageDescriptor.MISC);
         } else {
-            return FieldDecoderFactory.VAR_UINT_64;
+            return new FieldDecoder(FieldDecoderFactory.VAR_UINT_64, FieldStorageDescriptor.MISC);
         }
     }
 
@@ -299,7 +305,7 @@ class FieldDecoderFactory {
      * @protected
      * @param {FieldDecoderInstructions} instructions
      * @param {number} dimension
-     * @returns {(bitBuffer: BitBuffer) => Float32Array}
+     * @returns {FieldDecoder}
      */
     _createVector(instructions, dimension) {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
@@ -318,12 +324,14 @@ class FieldDecoderFactory {
         }
 
         if (dimension === 3 && instructions.encoder === 'normal') {
-            registry.set(instructions, FieldDecoderFactory.NORMAL_VECTOR);
+            const resolved = new FieldDecoder(FieldDecoderFactory.NORMAL_VECTOR, FieldStorageDescriptor.createVector(3));
 
-            return FieldDecoderFactory.NORMAL_VECTOR;
+            registry.set(instructions, resolved);
+
+            return resolved;
         }
 
-        const valueDecoder = this._createFloat32(instructions);
+        const valueDecoder = this._createFloat32(instructions).fn;
 
         const vectorNDecoder = (bitBuffer) => {
             const vector = new Float32Array(dimension);
@@ -335,9 +343,11 @@ class FieldDecoderFactory {
             return vector;
         };
 
-        registry.set(instructions, vectorNDecoder);
+        const resolved = new FieldDecoder(vectorNDecoder, FieldStorageDescriptor.createVector(dimension));
 
-        return vectorNDecoder;
+        registry.set(instructions, resolved);
+
+        return resolved;
     }
 }
 

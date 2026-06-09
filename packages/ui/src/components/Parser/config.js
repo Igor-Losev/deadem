@@ -1,0 +1,5 @@
+export const REFRESH_INTERVAL_PLAYER_TICK_MS = 50;
+export const REFRESH_INTERVAL_SEEK_BAR_MS = 250;
+
+export const PLAYBACK_RATES = [ 1, 2, 4, 8, 16, 32, 64, 128 ];
+export const PACKET_HISTORY_SIZE = 100;

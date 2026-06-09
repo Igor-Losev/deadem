@@ -1,17 +1,20 @@
 import {
   Category as CategoryIcon,
+  CompareArrows as CompareArrowsIcon,
   Email as EmailIcon,
   Groups as GroupsIcon,
   Info as InfoIcon
 } from '@mui/icons-material';
 import { Alert, Box, Chip, Paper, Snackbar } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import Navigation from './../Navigation/Navigation';
 
 import BottomBar from './components/BottomBar/BottomBar';
 import Cs2GameInfo from './components/BottomBar/Cs2GameInfo';
+import EntityDiff from './components/EntityDiff/EntityDiff';
 import EntityExplorer from './components/EntityExplorer/EntityExplorer';
+import FreezeToggle from './components/FreezeToggle/FreezeToggle';
 import InfoExplorer from './components/InfoExplorer/InfoExplorer';
 import MatchSummary from './components/MatchSummary/MatchSummary';
 import PacketExplorer from './components/PacketExplorer/PacketExplorer';
@@ -44,41 +47,59 @@ const TABS = [
     props: { icon: <CategoryIcon />, label: 'Entities', sx: TAB_STYLE }
   },
   {
+    key: 'diff',
+    overflow: null,
+    props: { icon: <CompareArrowsIcon />, label: 'Diff', sx: TAB_STYLE }
+  },
+  {
     key: 'info',
     overflow: 'auto',
     props: { icon: <InfoIcon />, label: 'Info', sx: TAB_STYLE }
   }
 ];
 
-export default function Parser({ library, onLibraryChange }) {
+function TabPanel({ active, children }) {
+  const frozen = useRef(children);
+
+  if (active) {
+    frozen.current = children;
+  }
+
+  return <Box display={active ? 'contents' : 'none'}>{frozen.current}</Box>;
+}
+
+export default function Parser({ isVisible = true, library, onLibraryChange }) {
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const isCs2 = library?.gameCode === 'cs2';
+
   const {
-    demo, fileName, mapName, playing, rate, seeking, ticks, contentVersion, playerError,
-    fileInputRef, historyRef,
-    clearPlayerError,
+    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
+    fileInputRef, historyRef, entityDiffRef,
+    clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
     handleNextTick, handlePrevTick, handleSeek,
     handleSeekToStart, handleSeekToEnd
-  } = usePlayer(library);
+  } = usePlayer(library, isVisible);
 
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const isCs2 = library?.gameCode === 'cs2';
   const bottomBarOffset = BOTTOM_BAR_HEIGHT + (isCs2 ? CS2_GAME_INFO_HEIGHT : 0);
 
   const handleTabChanged = (event, newValue) => setTabIndex(newValue);
 
   const history = useMemo(() => [...historyRef.current], [contentVersion]);
 
-  const activeTab = useMemo(() => {
-    switch (tabIndex) {
-      case 0: return <MatchSummary demo={demo} library={library} />;
-      case 1: return <PacketExplorer history={history} />;
-      case 2: return <EntityExplorer demo={demo} contentVersion={contentVersion} />;
-      case 3: return <InfoExplorer demo={demo} />;
-      default: return null;
-    }
-  }, [demo, library, tabIndex, contentVersion, history]);
+  const diff = useMemo(() => ({
+    events: [...entityDiffRef.current.events],
+    fullSnapshot: entityDiffRef.current.fullSnapshot,
+    prevTick: entityDiffRef.current.prevTick,
+    tick: entityDiffRef.current.tick
+  }), [contentVersion]);
+
+  const gameInfo = useMemo(
+    () => isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null,
+    [isCs2, demo, mapName, contentVersion]
+  );
 
   const handleReset = () => {
     handleResetClicked();
@@ -117,20 +138,35 @@ export default function Parser({ library, onLibraryChange }) {
         <>
           <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${bottomBarOffset + 20}px`} minHeight={0}>
             <Navigation
+              actions={<FreezeToggle frozen={frozen} onToggle={toggleFrozen} />}
               active={tabIndex}
               onChange={handleTabChanged}
               tabs={TABS}
-              tabsProps={{ indicatorColor: 'secondary', sx: { minHeight: '50px' }, textColor: 'secondary' }}
+              tabsProps={{ allowScrollButtonsMobile: true, indicatorColor: 'secondary', scrollButtons: 'auto', sx: { minHeight: '50px' }, textColor: 'secondary', variant: 'scrollable' }}
             />
 
             <Box display='flex' flexDirection='column' minHeight={0} overflow={TABS[tabIndex].overflow}>
-              {activeTab}
+              <Box display={tabIndex === 0 ? 'contents' : 'none'}>
+                <MatchSummary active={tabIndex === 0} demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
+              </Box>
+              <TabPanel active={tabIndex === 1}>
+                <PacketExplorer history={history} />
+              </TabPanel>
+              <TabPanel active={tabIndex === 2}>
+                <EntityExplorer demo={demo} contentVersion={contentVersion} />
+              </TabPanel>
+              <TabPanel active={tabIndex === 3}>
+                <EntityDiff diff={diff} />
+              </TabPanel>
+              <TabPanel active={tabIndex === 4}>
+                <InfoExplorer demo={demo} />
+              </TabPanel>
             </Box>
           </Box>
 
           <BottomBar
             demo={demo}
-            gameInfo={isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null}
+            gameInfo={gameInfo}
             height={BOTTOM_BAR_HEIGHT}
             onNextTick={handleNextTick}
             onPauseClick={handlePauseClicked}
@@ -144,6 +180,7 @@ export default function Parser({ library, onLibraryChange }) {
             rate={rate}
             seeking={seeking}
             ticks={ticks}
+            tickStore={tickStore}
           />
         </>
       ) : (

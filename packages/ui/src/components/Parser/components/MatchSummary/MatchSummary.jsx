@@ -1,10 +1,12 @@
 import { PeopleOutline as PeopleOutlineIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import EmptyState from './../EmptyState';
 
 import { compare } from './../../utils';
+
+import { useCurrentTick } from './../../tickStore';
 
 import { CS2_COLUMNS, getCs2PlayerKey, getCs2Players, getCs2Team } from './helpers/cs2Players';
 import { DEADLOCK_COLUMNS, getDeadlockPlayerKey, getDeadlockPlayers, getDeadlockTeam } from './helpers/deadlockPlayers';
@@ -46,23 +48,24 @@ function getAdapter(library) {
   }
 }
 
-export default function MatchSummary({ demo, library }) {
+function MatchSummary({ active, demo, library, tickStore, contentVersion }) {
   const [orderBy, setOrderBy] = useState('Team');
   const [order, setOrder] = useState('asc');
 
-  const adapter = getAdapter(library);
-  const players = adapter.getPlayers(demo);
+  const tick = useCurrentTick(tickStore, active);
 
-  if (!players.length) {
-    return <EmptyState icon={<PeopleOutlineIcon color='disabled' />} text='No player data available' />;
-  }
+  const adapter = useMemo(() => getAdapter(library), [library]);
+  const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, tick, contentVersion]);
 
-  const activeColumn = adapter.columns.find((column) => column.header === orderBy) ?? adapter.columns[0];
-  const sortedPlayers = [...players].sort((left, right) => {
-    const comparison = compare(activeColumn.value(left), activeColumn.value(right));
+  const sortedPlayers = useMemo(() => {
+    const activeColumn = adapter.columns.find((column) => column.header === orderBy) ?? adapter.columns[0];
 
-    return order === 'asc' ? comparison : -comparison;
-  });
+    return [...players].sort((left, right) => {
+      const comparison = compare(activeColumn.value(left), activeColumn.value(right));
+
+      return order === 'asc' ? comparison : -comparison;
+    });
+  }, [players, adapter, orderBy, order]);
 
   const handleSort = (header) => {
     if (orderBy === header) {
@@ -73,6 +76,10 @@ export default function MatchSummary({ demo, library }) {
     setOrderBy(header);
     setOrder('asc');
   };
+
+  if (!players.length) {
+    return <EmptyState icon={<PeopleOutlineIcon color='disabled' />} text='No player data available' />;
+  }
 
   let previousTeam = null;
 
@@ -131,3 +138,5 @@ export default function MatchSummary({ demo, library }) {
     </Table>
   );
 }
+
+export default memo(MatchSummary);

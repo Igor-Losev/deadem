@@ -89,7 +89,16 @@ The engine maintains a mutable `Demo` object that is updated tick by tick. Query
 | `demo.stringTableContainer.getByName(name)` | String table by name |
 | `demo.server` | Server metadata (`tickInterval`, `tickRate`, `maxClients`, `maxClasses`) |
 
-Entities expose raw state via `entity.state` and a cached flattened view via `entity.unpackFlattened()`, which lazily materializes a plain object keyed by field name and reuses snapshots between ticks.
+Each `Entity` exposes its decoded fields:
+
+| Method | Returns |
+| --- | --- |
+| `entity.getField(name)` | Field value by flattened name (e.g. `'CBodyComponent.m_cellX'`), or `undefined` |
+| `entity.hasField(name)` | Whether the named field is currently set |
+| `entity.getFieldCount()` | Number of fields currently set |
+| `entity.fieldEntries()` | Iterator of `[ name, value ]` pairs for present fields |
+| `entity.fieldNames()` | Iterator of present field names |
+| `entity.unpackFlattened()` | Cached plain object keyed by field name, lazily materialized and reused between ticks |
 
 > [!WARNING]
 > Demos carry only the minimal data required for visual playback. Not all game state is preserved, and the parser may skip packets it cannot decode. Call `parser.getStats()` (or `player.getStats()`) for detailed per-packet statistics.

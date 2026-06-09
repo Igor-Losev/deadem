@@ -4,9 +4,11 @@ import FieldModel from '#data/enums/FieldModel.js';
 
 import FieldDefinition from './FieldDefinition.js';
 
+import FieldDecoder from './decoding/FieldDecoder.js';
 import FieldDecoderCatalog from './decoding/FieldDecoderCatalog.js';
 import FieldDecoderFactory from './decoding/FieldDecoderFactory.js';
 import FieldDecoderInstructionsFactory from './decoding/FieldDecoderInstructionsFactory.js';
+import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js';
 
 import FieldRuleRegistry from './FieldRuleRegistry.js';
 
@@ -64,16 +66,11 @@ class FieldFactory {
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
-                return new FieldArrayVariable(
-                    name,
-                    sendNode,
-                    FieldDecoderFactory.VAR_UINT_32,
-                    this._resolveDecoder(name, definition.generic.baseType, decoderInstructions)
-                );
+                return new FieldArrayVariable(name, sendNode, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic.baseType, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, serializer, FieldDecoderFactory.BOOLEAN);
+                return new FieldTableFixed(name, sendNode, serializer, BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, serializer, FieldDecoderFactory.VAR_UINT_32);
+                return new FieldTableVariable(name, sendNode, serializer, VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }
@@ -110,7 +107,7 @@ class FieldFactory {
      * @param {String} name
      * @param {String} baseType
      * @param {FieldDecoderInstructions} decoderInstructions
-     * @returns {Function}
+     * @returns {FieldDecoder}
      */
     _resolveDecoder(name, baseType, decoderInstructions) {
         const override = this._fieldRuleRegistry.getFieldDecoderOverride(name);
@@ -122,11 +119,14 @@ class FieldFactory {
         const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(baseType);
 
         if (descriptor === null) {
-            return FieldDecoderFactory.VAR_UINT_32;
+            return VAR_UINT_32_DECODER;
         }
 
         return this._decoderCatalog.resolve(descriptor, decoderInstructions);
     }
 }
+
+const VAR_UINT_32_DECODER = new FieldDecoder(FieldDecoderFactory.VAR_UINT_32, FieldStorageDescriptor.INT_UNSIGNED);
+const BOOLEAN_DECODER = new FieldDecoder(FieldDecoderFactory.BOOLEAN, FieldStorageDescriptor.INT_BOOL);
 
 export default FieldFactory;

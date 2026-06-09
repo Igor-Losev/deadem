@@ -1,3 +1,15 @@
+const PLAYER_FIELDS = [
+  'm_iDeaths',
+  'm_iGoldNetWorth',
+  'm_iHeroDamage',
+  'm_iHeroHealing',
+  'm_iObjectiveDamage',
+  'm_iPlayerAssists',
+  'm_iPlayerKills',
+  'm_iTeamNum',
+  'm_iszPlayerName'
+];
+
 export const DEADLOCK_COLUMNS = [
   { header: 'Player', value: (player) => player.m_iszPlayerName ?? '', selector: (player) => player.m_iszPlayerName },
   { header: 'Team', value: (player) => player.m_iTeamNum ?? 0, selector: (player) => player.m_iTeamNum, align: 'right' },
@@ -10,14 +22,28 @@ export const DEADLOCK_COLUMNS = [
   { header: 'Healing', value: (player) => player.m_iHeroHealing ?? 0, selector: (player) => (player.m_iHeroHealing ?? 0).toLocaleString(), align: 'right', color: '#4dd0e1' }
 ];
 
-export function getDeadlockPlayers(demo) {
-  const entities = demo?.getEntitiesByClassName('CCitadelPlayerController');
+function readPlayer(entity) {
+  const player = { };
 
-  if (!entities?.length) {
+  for (const field of PLAYER_FIELDS) {
+    player[field] = entity.getField(field);
+  }
+
+  return player;
+}
+
+export function getDeadlockPlayers(demo) {
+  if (!demo) {
     return [];
   }
 
-  return entities.map((entity) => entity.unpackFlattened());
+  const players = [];
+
+  for (const entity of demo.getEntitiesByClassNameIterator('CCitadelPlayerController')) {
+    players.push(readPlayer(entity));
+  }
+
+  return players;
 }
 
 export function getDeadlockTeam(player) {

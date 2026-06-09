@@ -11,7 +11,7 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6448-darkGreen" /></a>
 
-**deadem** is the original Deadlock (Source 2) demo parser and replay player for Node.js and modern browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**deadem** is the original Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Deadlock-specific usage only.
 
@@ -20,7 +20,7 @@ Other game implementations: [`@deademx/cs2`](https://github.com/Igor-Losev/deade
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install for Node.js or use the browser bundle.
+  Install from npm or use the browser bundle.
 - [Quick start](#quick-start)<br/>
   Minimal example to parse a Deadlock demo file.
 - [Examples](#examples)<br/>
@@ -44,7 +44,7 @@ Other game implementations: [`@deademx/cs2`](https://github.com/Igor-Losev/deade
 
 ## Installation
 
-### Node.js
+### Node.js / Deno / Bun
 
 ```shell
 npm install deadem --save
@@ -84,7 +84,7 @@ printer.printStats();
 
 ## Examples
 
-All example scripts live in the [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
+All example scripts live in the [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
 
 ### Parsing
 
@@ -225,9 +225,10 @@ await player.seekToTick(player.getLastTick());
 const demo = player.getDemo();
 
 demo.getEntitiesByClassName('CCitadelPlayerController').forEach((entity) => {
-    const data = entity.unpackFlattened();
+    const name = entity.getField('m_iszPlayerName');
+    const damage = entity.getField('m_iHeroDamage');
 
-    console.log(`${data.m_iszPlayerName}: ${data.m_iHeroDamage} hero damage`);
+    console.log(`${name}: ${damage} hero damage`);
 });
 
 await player.dispose();
@@ -236,18 +237,18 @@ await player.dispose();
 ## Compatibility
 
 - **Game builds:** tested with Deadlock demos from build `6448` and below.
-- **Node.js:** v18.0.0 and above.
-- **Browsers:** latest Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, and Bun.
+- **Browsers:** Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
 For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-| # | Configuration                                                  | Ticks/sec       | Game seconds/sec (tick rate 64) | 30-min replay, sec | Max RSS, MB    |
-| - | ---                                                            | ---             | ---                             | ---                | ---            |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 9 164 +- 5.79%  | 143.19 +- 5.79%                 | ~12.57             | 470 +- 6.58%   |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 76 948 +- 4.07% | 1 202.31 +- 4.07%               | ~1.50              | 279 +- 9.11%   |
-| 3 | `entityClasses` allowlist                                      | 55 002 +- 2.19% | 859.40 +- 2.19%                 | ~2.09              | 314 +- 3.94%   |
+| # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 12 115 +- 2.80% | ~9.51              | 43 +- 3.65%  | 17 +- 9.48%          | 187 +- 2.74% |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 73 277 +- 3.41% | ~1.57              | 32 +- 6.58%  | 30 +- 7.74%          | 241 +- 3.38% |
+| 3 | `entityClasses` allowlist                                      | 55 834 +- 2.08% | ~2.06              | 45 +- 15.71% | 23 +- 5.53%          | 239 +- 5.09% |
 
 Runtime: Node.js v22.14.0.
 

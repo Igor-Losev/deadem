@@ -2,9 +2,11 @@ import Assert from '#core/Assert.js';
 
 import FieldDecoderType from '#data/enums/FieldDecoderType.js';
 
+import FieldDecoder from './FieldDecoder.js';
 import FieldDecoderDescriptor from './FieldDecoderDescriptor.js';
 import FieldDecoderFactory from './FieldDecoderFactory.js';
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
+import FieldStorageDescriptor from './FieldStorageDescriptor.js';
 
 class FieldDecoderCatalog {
     /**
@@ -16,19 +18,21 @@ class FieldDecoderCatalog {
     }
 
     /**
+     * Resolves a decoder.
+     *
      * @public
      * @param {FieldDecoderDescriptor} descriptor
      * @param {FieldDecoderInstructions} decoderInstructions
-     * @returns {Function}
+     * @returns {FieldDecoder}
      */
     resolve(descriptor, decoderInstructions) {
         Assert.isTrue(descriptor instanceof FieldDecoderDescriptor);
         Assert.isTrue(decoderInstructions instanceof FieldDecoderInstructions);
 
-        const decoder = registry.get(descriptor.type) || null;
+        const resolved = registry.get(descriptor.type) || null;
 
-        if (decoder !== null) {
-            return decoder;
+        if (resolved !== null) {
+            return resolved;
         }
 
         switch (descriptor.type) {
@@ -49,24 +53,22 @@ class FieldDecoderCatalog {
 }
 
 /**
- * @typedef {(bitBuffer: BitBuffer) => *} Decoder
- *
- * @type {Map<FieldDecoderType, Decoder>}
+ * @type {Map<FieldDecoderType, FieldDecoder>}
  */
 const registry = new Map();
 
-registry.set(FieldDecoderType.BINARY_BLOCK, FieldDecoderFactory.BINARY_BLOCK);
-registry.set(FieldDecoderType.BOOLEAN, FieldDecoderFactory.BOOLEAN);
-registry.set(FieldDecoderType.COORDINATE, FieldDecoderFactory.COORDINATE);
-registry.set(FieldDecoderType.FIXED_UINT_64, FieldDecoderFactory.FIXED_UINT_64);
-registry.set(FieldDecoderType.GAME_MODE_RULES, FieldDecoderFactory.GAME_MODE_RULES);
-registry.set(FieldDecoderType.NO_SCALE, FieldDecoderFactory.NO_SCALE);
-registry.set(FieldDecoderType.NORMAL_VECTOR, FieldDecoderFactory.NORMAL_VECTOR);
-registry.set(FieldDecoderType.SIMULATION_TIME, FieldDecoderFactory.SIMULATION_TIME);
-registry.set(FieldDecoderType.STRING, FieldDecoderFactory.STRING);
-registry.set(FieldDecoderType.VAR_INT_32, FieldDecoderFactory.VAR_INT_32);
-registry.set(FieldDecoderType.VAR_INT_64, FieldDecoderFactory.VAR_INT_64);
-registry.set(FieldDecoderType.VAR_UINT_32, FieldDecoderFactory.VAR_UINT_32);
-registry.set(FieldDecoderType.VAR_UINT_64, FieldDecoderFactory.VAR_UINT_64);
+registry.set(FieldDecoderType.BINARY_BLOCK, new FieldDecoder(FieldDecoderFactory.BINARY_BLOCK, FieldStorageDescriptor.MISC));
+registry.set(FieldDecoderType.BOOLEAN, new FieldDecoder(FieldDecoderFactory.BOOLEAN, FieldStorageDescriptor.INT_BOOL));
+registry.set(FieldDecoderType.COORDINATE, new FieldDecoder(FieldDecoderFactory.COORDINATE, FieldStorageDescriptor.FLOAT));
+registry.set(FieldDecoderType.FIXED_UINT_64, new FieldDecoder(FieldDecoderFactory.FIXED_UINT_64, FieldStorageDescriptor.MISC));
+registry.set(FieldDecoderType.GAME_MODE_RULES, new FieldDecoder(FieldDecoderFactory.GAME_MODE_RULES, FieldStorageDescriptor.INT_BOOL));
+registry.set(FieldDecoderType.NO_SCALE, new FieldDecoder(FieldDecoderFactory.NO_SCALE, FieldStorageDescriptor.FLOAT));
+registry.set(FieldDecoderType.NORMAL_VECTOR, new FieldDecoder(FieldDecoderFactory.NORMAL_VECTOR, FieldStorageDescriptor.createVector(3)));
+registry.set(FieldDecoderType.SIMULATION_TIME, new FieldDecoder(FieldDecoderFactory.SIMULATION_TIME, FieldStorageDescriptor.INT_UNSIGNED));
+registry.set(FieldDecoderType.STRING, new FieldDecoder(FieldDecoderFactory.STRING, FieldStorageDescriptor.MISC));
+registry.set(FieldDecoderType.VAR_INT_32, new FieldDecoder(FieldDecoderFactory.VAR_INT_32, FieldStorageDescriptor.INT_SIGNED));
+registry.set(FieldDecoderType.VAR_INT_64, new FieldDecoder(FieldDecoderFactory.VAR_INT_64, FieldStorageDescriptor.MISC));
+registry.set(FieldDecoderType.VAR_UINT_32, new FieldDecoder(FieldDecoderFactory.VAR_UINT_32, FieldStorageDescriptor.INT_UNSIGNED));
+registry.set(FieldDecoderType.VAR_UINT_64, new FieldDecoder(FieldDecoderFactory.VAR_UINT_64, FieldStorageDescriptor.MISC));
 
 export default FieldDecoderCatalog;

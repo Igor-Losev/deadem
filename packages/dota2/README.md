@@ -11,7 +11,7 @@
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41b-darkGreen" /></a>
 
-**@deademx/dota2** is a Dota 2 (Source 2) demo parser and replay player for Node.js and modern browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/dota2** is a Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Dota 2-specific usage only.
 
@@ -20,7 +20,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install for Node.js or use the browser bundle.
+  Install from npm or use the browser bundle.
 - [Quick start](#quick-start)<br/>
   Minimal example to parse a Dota 2 demo file.
 - [Examples](#examples)<br/>
@@ -42,7 +42,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 
 ## Installation
 
-### Node.js
+### Node.js / Deno / Bun
 
 ```shell
 npm install @deademx/dota2 --save
@@ -82,7 +82,7 @@ printer.printStats();
 
 ## Examples
 
-All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from the public S3 bucket.
+All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
 
 ### Parsing
 
@@ -147,9 +147,10 @@ Query entities and classes after the parse completes:
 await parser.parse(readable);
 
 const demo = parser.getDemo();
-const entities = demo.getEntities();
 
-console.log(`Total entities at end of demo: ${entities.length}`);
+demo.getEntitiesByClassName('CDOTAPlayerController').forEach((entity) => {
+    console.log(entity.getField('m_iszPlayerName'));
+});
 ```
 
 ### Playback and seeking
@@ -175,18 +176,18 @@ await player.dispose();
 ## Compatibility
 
 - **Game patch:** tested with Dota 2 demos from patch `7.41b` and below.
-- **Node.js:** v18.0.0 and above.
-- **Browsers:** latest Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, and Bun.
+- **Browsers:** Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
 For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
-| # | Configuration                                                  | Ticks/sec        | Game seconds/sec (tick rate 30) | 30-min replay, sec | Max RSS, MB    |
-| - | ---                                                            | ---              | ---                             | ---                | ---            |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 17 630 +- 2.68%  | 587.66 +- 2.68%                 | ~3.06              | 449 +- 3.98%   |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 168 694 +- 1.75% | 5 623.14 +- 1.75%               | ~0.32              | 276 +- 10.55%  |
-| 3 | `entityClasses` allowlist                                      | 81 859 +- 1.83%  | 2 728.62 +- 1.83%               | ~0.66              | 293 +- 5.55%   |
+| # | Configuration                                                  | Ticks/sec        | 30-min replay, sec | Max Heap, MB  | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---                                                            | ---              | ---                | ---           | ---                  | ---          |
+| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 25 464 +- 3.63%  | ~2.12              | 104 +- 18.28% | 48 +- 28.16%         | 330 +- 0.92% |
+| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 168 743 +- 3.21% | ~0.32              | 39 +- 6.07%   | 22 +- 13.72%         | 232 +- 6.87% |
+| 3 | `entityClasses` allowlist                                      | 89 779 +- 0.75%  | ~0.60              | 75 +- 23.59%  | 17 +- 20.27%         | 250 +- 2.96% |
 
 Runtime: Node.js v22.14.0.
 

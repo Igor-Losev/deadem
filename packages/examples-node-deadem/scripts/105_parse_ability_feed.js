@@ -5,7 +5,7 @@ import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObse
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.read(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
     const parser = new Parser(new ParserConfiguration({
         parserThreads: 0,
         messagePacketTypes: [

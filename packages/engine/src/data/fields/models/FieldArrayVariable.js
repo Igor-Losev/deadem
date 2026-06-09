@@ -2,7 +2,8 @@ import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
 
-import Field from '../Field.js';
+import Field from '#data/fields/Field.js';
+import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
 
 class FieldArrayVariable extends Field {
     /**
@@ -10,33 +11,17 @@ class FieldArrayVariable extends Field {
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
-     * @param {Function} decoderBase
-     * @param {Function} decoderChild
+     * @param {FieldDecoder} fieldDecoderBase
+     * @param {FieldDecoder} fieldDecoderChild
      */
-    constructor(name, sendNode, decoderBase, decoderChild) {
+    constructor(name, sendNode, fieldDecoderBase, fieldDecoderChild) {
         super(name, sendNode);
 
-        Assert.isTrue(typeof decoderBase === 'function');
-        Assert.isTrue(typeof decoderChild === 'function');
+        Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
+        Assert.isTrue(fieldDecoderChild instanceof FieldDecoder);
 
-        this._decoderBase = decoderBase;
-        this._decoderChild = decoderChild;
-    }
-
-    /**
-     * @public
-     * @returns {Function}
-     */
-    get decoderBase() {
-        return this._decoderBase;
-    }
-
-    /**
-     * @public
-     * @returns {Function}
-     */
-    get decoderChild() {
-        return this._decoderChild;
+        this._fieldDecoderBase = fieldDecoderBase;
+        this._fieldDecoderChild = fieldDecoderChild;
     }
 
     /**
@@ -54,7 +39,17 @@ class FieldArrayVariable extends Field {
      * @returns {Function}
      */
     getDecoderForFieldPath(fieldPath, index) {
-        return fieldPath.length - 1 === index ? this._decoderChild : this._decoderBase;
+        return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).fn;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath(fieldPath, index) {
+        return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).storage;
     }
 
     /**

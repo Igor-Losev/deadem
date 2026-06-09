@@ -1,4 +1,4 @@
-import WorkerManager from './WorkerManager.js';
+import WorkerManager from './WorkerManager.base.js';
 import WorkerThread from './WorkerThread.browser.js';
 
 import Worker from './scripts/Worker.browser.js?worker&inline';

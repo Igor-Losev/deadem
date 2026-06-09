@@ -60,7 +60,7 @@ class DemoPacketRawBroadcastExtractor {
             }
 
             offset += tick.size;
-            
+
             // 1 byte ignored
             offset += 1;
 
@@ -77,7 +77,7 @@ class DemoPacketRawBroadcastExtractor {
             offset += frame.size;
 
             if (this._tail.byteLength - offset >= frame.value) {
-                yield new DemoPacketRaw(sequence, type, DemoSource.HTTP_BROADCAST, tick, frame, new Uint8Array(this._tail.subarray(offset, offset + frame.value)));
+                yield new DemoPacketRaw(sequence, type, DemoSource.HTTP_BROADCAST, tick, frame, this._tail.subarray(offset, offset + frame.value));
 
                 offset += frame.value;
 

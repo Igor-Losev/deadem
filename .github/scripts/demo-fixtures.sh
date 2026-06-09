@@ -46,7 +46,7 @@ ensure_demo_fixtures() {
         echo "Downloading $file.dem"
         curl --fail --silent --show-error --location \
             --output "$target" \
-            "$DEMO_S3_PREFIX/$file.dem"
+            "$DEMO_CDN_PREFIX/$file.dem"
     done
 }
 
@@ -70,7 +70,7 @@ main() {
             ;;
         ensure)
             require_env DEMO_DIR
-            require_env DEMO_S3_PREFIX
+            require_env DEMO_CDN_PREFIX
             ensure_demo_fixtures
             ;;
         matches)

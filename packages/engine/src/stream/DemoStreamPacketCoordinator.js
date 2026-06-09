@@ -13,9 +13,10 @@ class DemoStreamPacketCoordinator extends Transform {
      * @public
      * @constructor
      * @param {ParserEngine} engine
+     * @param {number} highWaterMark
      */
-    constructor(engine) {
-        super();
+    constructor(engine, highWaterMark) {
+        super(highWaterMark);
 
         this._engine = engine;
 

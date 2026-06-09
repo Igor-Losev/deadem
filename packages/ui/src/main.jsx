@@ -34,9 +34,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: 'rgba(255, 255, 255, 0.06)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: 'rgba(36, 36, 58, 0.84)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 18px 45px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
         },
       },
     },
@@ -68,6 +68,24 @@ const theme = createTheme({
       styleOverrides: {
         outlined: {
           borderColor: 'rgba(255, 255, 255, 0.15)',
+        },
+      },
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#252238',
+          border: '1px solid rgba(179, 136, 255, 0.28)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.45)',
+          color: 'rgba(255, 255, 255, 0.88)',
+          fontSize: '0.75rem',
+        },
+        arrow: {
+          color: '#252238',
+          filter: 'drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35))',
+          '&:before': {
+            border: '1px solid rgba(179, 136, 255, 0.28)',
+          },
         },
       },
     },

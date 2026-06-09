@@ -1,15 +1,22 @@
+import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+
+import EntityMutation from './EntityMutation.js';
+import EntityMutationBatch from './EntityMutationBatch.js';
+
 class EntityMutationEvent {
     /**
      * @public
+     * @constructor
      * @param {EntityOperation} operation
      * @param {Entity} entity
-     * @param {Array<EntityMutation>} mutations
+     * @param {EntityMutationBatch} batch
      */
-    constructor(operation, entity, mutations) {
+    constructor(operation, entity, batch) {
         this._operation = operation;
         this._entity = entity;
-        this._mutations = mutations;
+        this._batch = batch;
 
+        this._mutations = null;
         this._changes = null;
     }
 
@@ -31,15 +38,50 @@ class EntityMutationEvent {
 
     /**
      * @public
-     * @returns {Array<EntityMutation>}
+     * @returns {EntityMutationBatch}
      */
-    get mutations() {
-        return this._mutations;
+    get batch() {
+        return this._batch;
     }
 
     /**
-     * Resolves and returns the per-event delta as an object keyed by field name.
-     * The result is computed lazily on the first call and cached for subsequent calls.
+     * (Lazy).
+     *
+     * @public
+     * @returns {Array<EntityMutation>}
+     */
+    get mutations() {
+        if (this._mutations !== null) {
+            return this._mutations;
+        }
+
+        const batch = this._batch;
+        const mutations = new Array(batch.length);
+
+        for (let i = 0; i < batch.length; i++) {
+            mutations[i] = new EntityMutation(FieldPathBuilder.getById(batch.ids[i]), batch.values[i]);
+        }
+
+        this._mutations = mutations;
+
+        return mutations;
+    }
+
+    /**
+     * Creates a mutation-less event.
+     *
+     * @public
+     * @static
+     * @param {EntityOperation} operation
+     * @param {Entity} entity
+     * @returns {EntityMutationEvent}
+     */
+    static createEmpty(operation, entity) {
+        return new EntityMutationEvent(operation, entity, EntityMutationBatch.EMPTY);
+    }
+
+    /**
+     * (Lazy). Resolves the per-event delta as an object keyed by field name.
      *
      * @public
      * @returns {Object<string, *>}
@@ -49,14 +91,13 @@ class EntityMutationEvent {
             return this._changes;
         }
 
-        const changes = { };
+        const changes = {};
+
         const serializer = this._entity.class.serializer;
+        const batch = this._batch;
 
-        for (let i = 0; i < this._mutations.length; i++) {
-            const mutation = this._mutations[i];
-            const name = serializer.getNameForFieldPath(mutation.fieldPath);
-
-            changes[name] = mutation.value;
+        for (let i = 0; i < batch.length; i++) {
+            changes[serializer.getNameForFieldPathId(batch.ids[i])] = batch.values[i];
         }
 
         this._changes = changes;

@@ -1,8 +1,8 @@
 import Stream from 'node:stream';
 
 class TransformNode extends Stream.Transform {
-    constructor() {
-        super({ objectMode: true });
+    constructor(highWaterMark) {
+        super({ objectMode: true, highWaterMark });
     }
 
     /**
