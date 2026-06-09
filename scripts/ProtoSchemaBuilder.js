@@ -138,7 +138,7 @@ class ProtoSchemaBuilder {
 
         ProtoSchemaBuilder._stripExtensionsNode(schema);
 
-        fs.writeFileSync(file, JSON.stringify(schema));
+        fs.writeFileSync(file, JSON.stringify(schema, null, 2));
     }
 
     /**

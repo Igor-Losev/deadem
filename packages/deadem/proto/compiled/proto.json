@@ -1,1 +1,5584 @@
-{"options":{"optimize_for":"SPEED","cc_generic_services":false},"nested":{"PARTICLE_SYSTEM_MANAGER_MESSAGE":{"edition":"proto2","values":{"PARTICLE_SYSTEM_MANAGER_EVENT_CREATE":0,"PARTICLE_SYSTEM_MANAGER_EVENT_DESTROY":1,"PARTICLE_SYSTEM_MANAGER_EVENT_DESTROY_INVOLVING":2,"PARTICLE_SYSTEM_MANAGER_EVENT_RELEASE":3,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE":4,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FORWARD":5,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_ORIENTATION":6,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FALLBACK":7,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_ENT":8,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_OFFSET":9,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FROZEN":10,"PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_SHOULD_DRAW":11}},"CMsgFireBullets":{"edition":"proto2","fields":{"origin":{"type":".CMsgVector","id":1},"angles":{"type":".CMsgQAngle","id":2},"seed":{"type":"uint32","id":4},"shooterEntity":{"type":"int32","id":5,"options":{"default":-1}},"ability":{"type":"int32","id":7,"options":{"default":-1}},"penetrationPercent":{"type":"float","id":8},"spread":{"type":"float","id":9},"firedFromGun":{"type":"bool","id":10,"options":{"default":true}},"bulletsOverride":{"type":"uint32","id":11},"tracerReplacement":{"type":".CMsgFireBullets.TracerAssignment","id":12},"tracerAdditional":{"rule":"repeated","type":".CMsgFireBullets.TracerAssignment","id":13},"anglesOriginal":{"type":".CMsgQAngle","id":14},"weaponSubclassId":{"type":"uint32","id":15},"shotNumber":{"type":"uint32","id":16},"ignoreEntity":{"type":"int32","id":17,"options":{"default":-1}},"maxRange":{"type":"float","id":18},"shotId":{"type":"uint32","id":19},"predictHitsAgainstUnits":{"type":"bool","id":20,"options":{"default":true}},"bulletRadiusOverride":{"type":"float","id":21,"options":{"default":0}},"bulletSpeedOverride":{"type":"float","id":22,"options":{"default":0}},"bulletGravityOverride":{"type":"float","id":23,"options":{"default":0}},"muzzleNumber":{"type":"int32","id":24},"abilityAsBullet":{"type":"bool","id":25}},"nested":{"TracerAssignment":{"fields":{"tracerResourceId":{"type":"uint64","id":1},"bulletIndicies":{"type":"uint32","id":2}}}}},"CMsgBulletImpact":{"edition":"proto2","fields":{"traceStart":{"type":".CMsgVector","id":1},"impactOrigin":{"type":".CMsgVector","id":2},"surfaceNormal":{"type":".CMsgVector","id":3},"damage":{"type":"uint32","id":4},"surfaceType":{"type":"uint32","id":5},"abilityEhandle":{"type":"uint32","id":7,"options":{"default":16777215}},"impactedEhandle":{"type":"uint32","id":8,"options":{"default":16777215}},"impactedBoneIndex":{"type":"uint32","id":9},"weaponSubclassId":{"type":"uint32","id":10},"shooterEhandle":{"type":"uint32","id":11,"options":{"default":16777215}},"bulletRadiusOverride":{"type":"float","id":12}}},"CMsgPlayerAnimEvent":{"edition":"proto2","fields":{"player":{"type":"fixed32","id":1,"options":{"default":16777215}},"event":{"type":"uint32","id":2},"data":{"type":"int32","id":3}}},"CMsgParticleSystemManager":{"edition":"proto2","fields":{"type":{"type":".PARTICLE_SYSTEM_MANAGER_MESSAGE","id":1,"options":{"default":"PARTICLE_SYSTEM_MANAGER_EVENT_CREATE"}},"index":{"type":"uint32","id":2},"createParticle":{"type":".CMsgParticleSystemManager.CreateParticle","id":3},"destroyParticle":{"type":".CMsgParticleSystemManager.DestroyParticle","id":4},"destroyParticleInvolving":{"type":".CMsgParticleSystemManager.DestroyParticleInvolving","id":5},"releaseParticleIndex":{"type":".CMsgParticleSystemManager.ReleaseParticleIndex","id":6},"updateParticle":{"type":".CMsgParticleSystemManager.UpdateParticle","id":7},"updateParticleFwd":{"type":".CMsgParticleSystemManager.UpdateParticleFwd","id":8},"updateParticleOrient":{"type":".CMsgParticleSystemManager.UpdateParticleOrient","id":9},"updateParticleFallback":{"type":".CMsgParticleSystemManager.UpdateParticleFallback","id":10},"updateParticleOffset":{"type":".CMsgParticleSystemManager.UpdateParticleOffset","id":11},"updateParticleEnt":{"type":".CMsgParticleSystemManager.UpdateParticleEnt","id":12},"updateParticleFrozen":{"type":".CMsgParticleSystemManager.UpdateParticleFrozen","id":13},"updateParticleShouldDraw":{"type":".CMsgParticleSystemManager.UpdateParticleShouldDraw","id":14}},"nested":{"CreateParticle":{"fields":{"particleNameIndex":{"type":"fixed64","id":1},"attachType":{"type":"int32","id":2},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}},"position":{"type":".CMsgVector","id":4},"angles":{"type":".CMsgQAngle","id":5}}},"DestroyParticle":{"fields":{"destroyImmediately":{"type":"bool","id":1}}},"DestroyParticleInvolving":{"fields":{"destroyImmediately":{"type":"bool","id":1},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}}}},"ReleaseParticleIndex":{"fields":{}},"UpdateParticle":{"fields":{"controlPoint":{"type":"int32","id":1},"position":{"type":".CMsgVector","id":2}}},"UpdateParticleFwd":{"fields":{"controlPoint":{"type":"int32","id":1},"forward":{"type":".CMsgVector","id":2}}},"UpdateParticleOrient":{"fields":{"controlPoint":{"type":"int32","id":1},"forward":{"type":".CMsgVector","id":2},"left":{"type":".CMsgVector","id":3},"up":{"type":".CMsgVector","id":4}}},"UpdateParticleFallback":{"fields":{"controlPoint":{"type":"int32","id":1},"position":{"type":".CMsgVector","id":2}}},"UpdateParticleEnt":{"fields":{"controlPoint":{"type":"int32","id":1},"entityHandle":{"type":"uint32","id":2,"options":{"default":16777215}},"attachType":{"type":"int32","id":3},"attachment":{"type":"int32","id":4},"fallbackPosition":{"type":".CMsgVector","id":5}}},"UpdateParticleOffset":{"fields":{"controlPoint":{"type":"int32","id":1},"originOffset":{"type":".CMsgVector","id":2}}},"UpdateParticleFrozen":{"fields":{"setFrozen":{"type":"bool","id":1}}},"UpdateParticleShouldDraw":{"fields":{"shouldDraw":{"type":"bool","id":1}}}}},"CMsgScreenTextPretty":{"edition":"proto2","fields":{"xPos":{"type":"float","id":1},"yPos":{"type":"float","id":2},"line":{"type":"int32","id":3},"text":{"type":"string","id":4},"r":{"type":"int32","id":5},"g":{"type":"int32","id":6},"b":{"type":"int32","id":7},"a":{"type":"int32","id":8},"duration":{"type":"float","id":9},"fontName":{"type":"string","id":10},"fontSize":{"type":"int32","id":11},"boldFont":{"type":"bool","id":12}}},"CMsgEnableSatVolumesEvent":{"edition":"proto2","fields":{"mode":{"type":"uint32","id":1},"desatAmount":{"type":"float","id":2},"satTint":{"type":"fixed32","id":3},"desatTint":{"type":"fixed32","id":4},"outlineColor":{"type":"fixed32","id":5}}},"CMsgPlaceSatVolumeEvent":{"edition":"proto2","fields":{"position":{"type":".CMsgVector","id":1},"direction":{"type":".CMsgVector","id":2},"radius":{"type":"float","id":3},"falloffDistance":{"type":"float","id":4},"thetaDot":{"type":"float","id":5},"phiDot":{"type":"float","id":6},"entityHandle":{"type":"uint32","id":7,"options":{"default":16777215}},"attachmentHandle":{"type":"uint32","id":8},"type":{"type":"uint32","id":9},"volumeId":{"type":"int32","id":10}}},"CMsgRemoveSatVolumeEvent":{"edition":"proto2","fields":{"volumeId":{"type":"int32","id":1}}},"CMsgDisableSatVolumesEvent":{"edition":"proto2","fields":{}},"CMsgRemoveBullet":{"edition":"proto2","fields":{"shooterEntindex":{"type":"int32","id":1,"options":{"default":-1}},"shotId":{"type":"uint32","id":2},"bulletIndex":{"type":"uint32","id":3}}},"SignonState_t":{"edition":"proto2","values":{"SIGNONSTATE_NONE":0,"SIGNONSTATE_CHALLENGE":1,"SIGNONSTATE_CONNECTED":2,"SIGNONSTATE_NEW":3,"SIGNONSTATE_PRESPAWN":4,"SIGNONSTATE_SPAWN":5,"SIGNONSTATE_FULL":6,"SIGNONSTATE_CHANGELEVEL":7}},"CMsgVector":{"edition":"proto2","fields":{"x":{"type":"float","id":1},"y":{"type":"float","id":2},"z":{"type":"float","id":3},"w":{"type":"float","id":4}}},"CMsgQAngle":{"edition":"proto2","fields":{"x":{"type":"float","id":1},"y":{"type":"float","id":2},"z":{"type":"float","id":3}}},"CMsgQuaternion":{"edition":"proto2","fields":{"x":{"type":"float","id":1},"y":{"type":"float","id":2},"z":{"type":"float","id":3},"w":{"type":"float","id":4}}},"CMsgTransform":{"edition":"proto2","fields":{"position":{"type":".CMsgVector","id":1},"scale":{"type":"float","id":2},"orientation":{"type":".CMsgQuaternion","id":3}}},"CMsgPlayerInfo":{"edition":"proto2","fields":{"name":{"type":"string","id":1},"xuid":{"type":"fixed64","id":2},"userid":{"type":"int32","id":3},"steamid":{"type":"fixed64","id":4},"fakeplayer":{"type":"bool","id":5},"ishltv":{"type":"bool","id":6}}},"CEntityMsg":{"edition":"proto2","fields":{"targetEntity":{"type":"uint32","id":1,"options":{"default":16777215}}}},"CMsg_CVars":{"edition":"proto2","fields":{"cvars":{"rule":"repeated","type":".CMsg_CVars.CVar","id":1}},"nested":{"CVar":{"fields":{"name":{"type":"string","id":1},"value":{"type":"string","id":2}}}}},"CNETMsg_Tick":{"edition":"proto2","fields":{"tick":{"type":"uint32","id":1},"hostComputationtime":{"type":"uint32","id":4},"hostComputationtimeStdDeviation":{"type":"uint32","id":5},"legacyHostLoss":{"type":"uint32","id":7},"hostUnfilteredFrametime":{"type":"uint32","id":8},"hltvReplayFlags":{"type":"uint32","id":9},"expectedLongTick":{"type":"uint32","id":10},"expectedLongTickReason":{"type":"string","id":11},"hostFrameDroppedPctX10":{"type":"uint32","id":12},"hostFrameIrregularArrivalPctX10":{"type":"uint32","id":13}}},"CNETMsg_SetConVar":{"edition":"proto2","options":{"(maximum_size_bytes)":4096},"fields":{"convars":{"type":".CMsg_CVars","id":1}}},"CNETMsg_SignonState":{"edition":"proto2","fields":{"signonState":{"type":".SignonState_t","id":1,"options":{"default":"SIGNONSTATE_NONE"}},"spawnCount":{"type":"uint32","id":2},"numServerPlayers":{"type":"uint32","id":3},"playersNetworkids":{"rule":"repeated","type":"string","id":4},"mapName":{"type":"string","id":5},"addons":{"type":"string","id":6}}},"CNETMsg_SpawnGroup_Load":{"edition":"proto2","options":{"(maximum_size_bytes)":131072},"fields":{"worldname":{"type":"string","id":1},"entitylumpname":{"type":"string","id":2},"entityfiltername":{"type":"string","id":3},"spawngrouphandle":{"type":"uint32","id":4},"spawngroupownerhandle":{"type":"uint32","id":5},"worldOffsetPos":{"type":".CMsgVector","id":6},"worldOffsetAngle":{"type":".CMsgQAngle","id":7},"spawngroupmanifest":{"type":"bytes","id":8},"flags":{"type":"uint32","id":9},"tickcount":{"type":"int32","id":10},"manifestincomplete":{"type":"bool","id":11},"localnamefixup":{"type":"string","id":12},"parentnamefixup":{"type":"string","id":13},"manifestloadpriority":{"type":"int32","id":14},"worldgroupid":{"type":"uint32","id":15},"creationsequence":{"type":"uint32","id":16},"savegamefilename":{"type":"string","id":17},"spawngroupparenthandle":{"type":"uint32","id":18},"leveltransition":{"type":"bool","id":19},"worldgroupname":{"type":"string","id":20}}},"CNETMsg_SpawnGroup_ManifestUpdate":{"edition":"proto2","options":{"(maximum_size_bytes)":2048},"fields":{"spawngrouphandle":{"type":"uint32","id":1},"spawngroupmanifest":{"type":"bytes","id":2},"manifestincomplete":{"type":"bool","id":3}}},"CNETMsg_SpawnGroup_SetCreationTick":{"edition":"proto2","fields":{"spawngrouphandle":{"type":"uint32","id":1},"tickcount":{"type":"int32","id":2},"creationsequence":{"type":"uint32","id":3}}},"CSVCMsg_GameSessionConfiguration":{"edition":"proto2","fields":{"isMultiplayer":{"type":"bool","id":1},"isLoadsavegame":{"type":"bool","id":2},"isBackgroundMap":{"type":"bool","id":3},"isHeadless":{"type":"bool","id":4},"minClientLimit":{"type":"uint32","id":5},"maxClientLimit":{"type":"uint32","id":6},"maxClients":{"type":"uint32","id":7},"tickInterval":{"type":"fixed32","id":8},"hostname":{"type":"string","id":9},"savegamename":{"type":"string","id":10},"s1Mapname":{"type":"string","id":11},"gamemode":{"type":"string","id":12},"serverIpAddress":{"type":"string","id":13},"data":{"type":"bytes","id":14},"isLocalonly":{"type":"bool","id":15},"noSteamServer":{"type":"bool","id":19},"isTransition":{"type":"bool","id":16},"previouslevel":{"type":"string","id":17},"landmarkname":{"type":"string","id":18}}},"CMsgLaneColor":{"edition":"proto2","valuesOptions":{"k_ELaneColor_Invalid":{"(schema_friendly_name)":"None"},"k_ELaneColor_Yellow":{"(schema_friendly_name)":"Yellow"},"k_ELaneColor_Green":{"(schema_friendly_name)":"Green"},"k_ELaneColor_Blue":{"(schema_friendly_name)":"Blue"},"k_ELaneColor_Purple":{"(schema_friendly_name)":"Purple"}},"values":{"k_ELaneColor_Invalid":0,"k_ELaneColor_Yellow":1,"k_ELaneColor_Green":3,"k_ELaneColor_Blue":4,"k_ELaneColor_Purple":6}},"CMsgMapLine":{"edition":"proto2","fields":{"x":{"type":"int32","id":1},"y":{"type":"int32","id":2},"initial":{"type":"bool","id":3}}},"ChatMsgPingMarkerInfo":{"edition":"proto2","valuesOptions":{"k_EPingMarkerInfo_ShowMarkerAndSound":{"(schema_friendly_name)":"Show Ping Indicator at Ping Location, Play Ping Sound, and Play VO"},"k_EPingMarkerInfo_ShowMarkerOnSender":{"(schema_friendly_name)":"Show Ping Indicator on Pinging Player, Play Ping Sound, and Play VO"},"k_EPingMarkerInfo_HideMarkerAndSound":{"(schema_friendly_name)":"No Marker or Sound (just VO)"},"k_EPingMarkerInfo_OnlyShowMarker":{"(schema_friendly_name)":"Only Show Ping Indicator at Ping Location (no ping sound)"},"k_EPingMarkerInfo_OnlyPlaySound":{"(schema_friendly_name)":"Only Play Ping Sound (and VO)"},"k_EPingMarkerInfo_OnlyMiniMap":{"(schema_friendly_name)":"Only show on Minimap, no world, no sound"}},"values":{"k_EPingMarkerInfo_ShowMarkerAndSound":0,"k_EPingMarkerInfo_ShowMarkerOnSender":1,"k_EPingMarkerInfo_HideMarkerAndSound":2,"k_EPingMarkerInfo_OnlyShowMarker":3,"k_EPingMarkerInfo_OnlyPlaySound":4,"k_EPingMarkerInfo_OnlyMiniMap":5}},"CameraOperation":{"edition":"proto2","values":{"k_ECameraOp_Maintain":2,"k_ECameraOp_Approach":3,"k_ECameraOp_Spring":4,"k_ECameraOp_Lerp":5,"k_ECameraOp_Lag":6}},"CameraParam":{"edition":"proto2","values":{"k_EParam_ClearAllOps":0,"k_EParam_ClearAllOpsForContext":1,"k_EParam_Distance":2,"k_EParam_FOV":3,"k_EParam_TargetPosition":4,"k_EParam_VertOffset":5,"k_EParam_HorizOffset":6}},"CameraParamMode":{"edition":"proto2","values":{"k_EParamMode_AllowInOneContext":0,"k_EParamMode_AllowInMultipleContexts":1}},"CameraAction":{"edition":"proto2","values":{"k_EAction_AddOp":0,"k_EAction_ClearAllOps":1,"k_EAction_ClearOpsForContext":2}},"ECitadelChatMessage":{"edition":"proto2","values":{"CITADEL_CHAT_MESSAGE_UNPAUSE_COUNTDOWN":1,"CITADEL_CHAT_MESSAGE_UNPAUSED":2,"CITADEL_CHAT_MESSAGE_AUTO_UNPAUSED":3,"CITADEL_CHAT_MESSAGE_PAUSE_COUNTDOWN":4,"CITADEL_CHAT_MESSAGE_PAUSED":5,"CITADEL_CHAT_MESSAGE_YOUPAUSED":6,"CITADEL_CHAT_MESSAGE_CANTPAUSE":7,"CITADEL_CHAT_MESSAGE_CANTUNPAUSETEAM":8,"CITADEL_CHAT_MESSAGE_NOPAUSESLEFT":9,"CITADEL_CHAT_MESSAGE_CANTPAUSEYET":10,"CITADEL_CHAT_MESSAGE_PREGAME_COUNTDOWN":11,"CITADEL_CHAT_MESSAGE_NOTEAMPAUSESLEFT":12,"CITADEL_CHAT_MESSAGE_COMMS_RESTRICTED":13}},"PostProcessingGameStates":{"edition":"proto2","values":{"PostProcState_Killed":0,"PostProcState_Black":1,"PostProcState_DoormanHotelVictim":2,"PostProcState_Blinded":3,"PostProcState_DrifterDarknessCaster":4,"PostProcState_MatchIntro":5}},"CCitadelUserMessage_Damage":{"edition":"proto2","fields":{"damage":{"type":"int32","id":1},"preDamageDeprecated":{"type":"int32","id":2},"preDamage":{"type":"float","id":27},"type":{"type":"int32","id":3},"citadelType":{"type":"int32","id":4},"origin":{"type":".CMsgVector","id":5},"entindexVictim":{"type":"int32","id":6,"options":{"default":-1}},"entindexInflictor":{"type":"int32","id":7,"options":{"default":-1}},"entindexAttacker":{"type":"int32","id":8,"options":{"default":-1}},"entindexAbility":{"type":"int32","id":9,"options":{"default":-1}},"damageAbsorbedDeprecated":{"type":"int32","id":10},"damageAbsorbed":{"type":"float","id":28},"victimHealthMax":{"type":"int32","id":11},"victimHealthNew":{"type":"int32","id":12},"flags":{"type":"uint64","id":13},"abilityId":{"type":"uint32","id":14},"attackerClass":{"type":"uint32","id":15},"victimClass":{"type":"uint32","id":16},"victimShieldMax":{"type":"int32","id":17},"victimShieldNew":{"type":"int32","id":18},"hits":{"type":"int32","id":19},"healthLost":{"type":"int32","id":20},"hitgroupId":{"type":"int32","id":21},"entindexAttackingObject":{"type":"int32","id":22,"options":{"default":-1}},"damageDirection":{"type":".CMsgVector","id":23},"isSecondaryStat":{"type":"bool","id":24},"effectiveness":{"type":"float","id":25},"critDamage":{"type":"float","id":26},"serverTick":{"type":"int32","id":29}}},"PingCommonData":{"edition":"proto2","fields":{"pingMessageId":{"type":"uint32","id":1},"pingLocation":{"type":".CMsgVector","id":2},"entityIndex":{"type":"uint32","id":3,"options":{"default":16777215}},"senderPlayerSlot":{"type":"int32","id":4,"options":{"default":-1}},"speechConcept":{"type":"int32","id":5},"responseChosen":{"type":"string","id":6},"cooldownTime":{"type":"float","id":7}}},"CCitadelUserMsg_MapPing":{"edition":"proto2","fields":{"pingData":{"type":".PingCommonData","id":1},"eventType":{"type":"uint32","id":2},"pingMarkerAndSoundInfo":{"type":".ChatMsgPingMarkerInfo","id":3,"options":{"default":"k_EPingMarkerInfo_ShowMarkerAndSound"}},"pingedEnemyEntity":{"type":"bool","id":4},"pingedEntityClass":{"type":"uint32","id":5},"isMinimapPing":{"type":"bool","id":6},"pingedHeroName":{"type":"string","id":7},"isBlindPing":{"type":"bool","id":8}}},"CCitadelUserMsg_AbilityPing":{"edition":"proto2","fields":{"pingData":{"type":".PingCommonData","id":1},"abilityId":{"type":"uint32","id":2},"abilityCooldown":{"type":"float","id":3},"pingMarkerAndSoundInfo":{"type":".ChatMsgPingMarkerInfo","id":4,"options":{"default":"k_EPingMarkerInfo_ShowMarkerAndSound"}}}},"CCitadelUserMsg_QuickResponse":{"edition":"proto2","fields":{"pingData":{"type":".PingCommonData","id":1},"respondingToPingMessageId":{"type":"uint32","id":2},"respondingToPlayerSlot":{"type":"int32","id":3,"options":{"default":-1}},"laneColor":{"type":".CMsgLaneColor","id":4,"options":{"default":"k_ELaneColor_Invalid"}}}},"CCitadelUserMsg_ItemDraftReaction":{"edition":"proto2","fields":{"pingData":{"type":".PingCommonData","id":1},"rare":{"type":"bool","id":2},"legendary":{"type":"bool","id":3}}},"CCitadelUserMsg_MapLine":{"edition":"proto2","fields":{"senderPlayerSlot":{"type":"int32","id":1,"options":{"default":-1}},"mapline":{"type":".CMsgMapLine","id":2}}},"CCitadelUserMsg_TeamRewards":{"edition":"proto2","fields":{"xp":{"type":"uint32","id":1},"gold":{"type":"uint32","id":2},"winner":{"type":"bool","id":3}}},"CCitadelUserMsg_TriggerDamageFlash":{"edition":"proto2","fields":{"entindexFlashVictim":{"type":"int32","id":1,"options":{"default":-1}},"entindexFlashAttacker":{"type":"int32","id":2,"options":{"default":-1}},"entindexFlashHitgroup":{"type":"int32","id":3},"flashValue":{"type":"uint32","id":4},"flashType":{"type":"uint32","id":5},"flashFlags":{"type":"uint32","id":6},"flashPosition":{"type":".CMsgVector","id":7}}},"CCitadelUserMsg_AbilitiesChanged":{"edition":"proto2","fields":{"purchaserPlayerSlot":{"type":"int32","id":1,"options":{"default":-1}},"abilityId":{"type":"uint32","id":2},"change":{"type":".CCitadelUserMsg_AbilitiesChanged.Change","id":3,"options":{"default":"EInvalid"}}},"nested":{"Change":{"values":{"EInvalid":-1,"EPurchased":0,"EUpgraded":1,"ESold":2,"ESwappedActivatedAbility":3,"EFailure":4}}}},"CCitadelUserMsg_AbilityInterrupted":{"edition":"proto2","fields":{"entindexVictim":{"type":"int32","id":1,"options":{"default":-1}},"entindexInterrupter":{"type":"int32","id":2,"options":{"default":-1}},"abilityIdInterrupted":{"type":"uint32","id":3},"abilityIdInterrupter":{"type":"uint32","id":4},"heroIdInterrupter":{"type":"uint32","id":5}}},"CCitadelUserMsg_AbilityLateFailure":{"edition":"proto2","fields":{"entindexCaster":{"type":"int32","id":1,"options":{"default":-1}},"entindexAbility":{"type":"int32","id":2,"options":{"default":-1}},"failureType":{"type":"uint32","id":3}}},"CCitadelUserMsg_RecentDamageSummary":{"edition":"proto2","options":{"(maximum_size_bytes)":8192},"fields":{"playerSlot":{"type":"int32","id":1,"options":{"default":-1}},"damageRecords":{"rule":"repeated","type":".CCitadelUserMsg_RecentDamageSummary.DamageRecord","id":2},"startTime":{"type":"float","id":3},"endTime":{"type":"float","id":4},"totalDamage":{"type":"int32","id":5},"lostGold":{"type":"int32","id":6},"modifierRecords":{"rule":"repeated","type":".CCitadelUserMsg_RecentDamageSummary.ModifierRecord","id":7}},"nested":{"DamageRecord":{"fields":{"damage":{"type":"int32","id":1},"hits":{"type":"int32","id":2},"damageType":{"type":"uint32","id":3},"heroId":{"type":"uint32","id":4},"abilityId":{"type":"uint32","id":5},"attackerClass":{"type":"uint32","id":6},"damageAbsorbed":{"type":"float","id":7},"isKillingBlow":{"type":"bool","id":8},"victimHeroId":{"type":"uint32","id":9},"isSecondaryStat":{"type":"bool","id":10},"preDamage":{"type":"float","id":11},"critDamage":{"type":"float","id":12}}},"ModifierRecord":{"fields":{"abilityId":{"type":"uint32","id":1},"modifierTypeId":{"type":"uint32","id":2},"entindexCaster":{"type":"int32","id":3,"options":{"default":-1}},"startTime":{"type":"float","id":4},"endTime":{"type":"float","id":5},"debuff":{"type":"bool","id":6}}}}},"CCitadelUserMsg_SpectatorTeamChanged":{"edition":"proto2","fields":{"teamnumber":{"type":"int32","id":1}}},"CCitadelUserMsg_ChatWheel":{"edition":"proto2","fields":{"chatMessageId":{"type":"uint32","id":1},"playerSlot":{"type":"int32","id":2,"options":{"default":-1}},"pawnEntindex":{"type":"int32","id":3,"options":{"default":-1}},"accountId":{"type":"uint32","id":4},"heroId":{"type":"uint32","id":5},"param_1":{"type":"string","id":6},"laneColor":{"type":".CMsgLaneColor","id":7,"options":{"default":"k_ELaneColor_Invalid"}}}},"CCitadelUserMsg_ChatMsg":{"edition":"proto2","fields":{"playerSlot":{"type":"int32","id":1,"options":{"default":-1}},"text":{"type":"string","id":2},"allChat":{"type":"bool","id":3},"laneColor":{"type":".CMsgLaneColor","id":4,"options":{"default":"k_ELaneColor_Invalid"}}}},"CCitadelUserMsg_GoldHistory":{"edition":"proto2","fields":{"entindexPlayer":{"type":"int32","id":1,"options":{"default":-1}},"minuteRecords":{"rule":"repeated","type":".CCitadelUserMsg_GoldHistory.MinuteRecord","id":2}},"nested":{"GoldRecord":{"fields":{"currencySource":{"type":"int32","id":1},"gold":{"type":"int32","id":2},"events":{"type":"int32","id":3}}},"MinuteRecord":{"fields":{"matchMinute":{"type":"int32","id":1},"goldRecords":{"rule":"repeated","type":".CCitadelUserMsg_GoldHistory.GoldRecord","id":2}}}}},"CCitadelUserMsg_CameraController":{"edition":"proto2","fields":{"action":{"type":".CameraAction","id":1,"options":{"default":"k_EAction_AddOp"}},"operation":{"type":".CameraOperation","id":2,"options":{"default":"k_ECameraOp_Maintain"}},"param":{"type":".CameraParam","id":3,"options":{"default":"k_EParam_ClearAllOps"}},"paramMode":{"type":".CameraParamMode","id":12,"options":{"default":"k_EParamMode_AllowInOneContext"}},"delay":{"type":"float","id":4},"relativeValues":{"type":"bool","id":11},"contextSymbolId":{"type":"uint32","id":5},"priority":{"type":"uint32","id":13,"options":{"default":1}},"maintain":{"type":".CCitadelUserMsg_CameraController.Maintain","id":6},"approach":{"type":".CCitadelUserMsg_CameraController.Approach","id":7},"spring":{"type":".CCitadelUserMsg_CameraController.Spring","id":8},"lerp":{"type":".CCitadelUserMsg_CameraController.Lerp","id":9},"lag":{"type":".CCitadelUserMsg_CameraController.Lag","id":10}},"nested":{"Maintain":{"fields":{"duration":{"type":"float","id":1,"options":{"default":0}}}},"Approach":{"fields":{"speed":{"type":"float","id":1,"options":{"default":600}},"defaultSpeed":{"type":"float","id":2,"options":{"default":600}},"acceleration":{"type":"float","id":3,"options":{"default":1000}},"minDuration":{"type":"float","id":4,"options":{"default":0}},"approachFloat":{"type":"float","id":5},"approachVector":{"type":".CMsgVector","id":6},"chaseDefault":{"type":"bool","id":7}}},"Spring":{"fields":{"springStrength":{"type":"float","id":1,"options":{"default":10}},"minSpeed":{"type":"float","id":4,"options":{"default":0}},"maxDuration":{"type":"float","id":5,"options":{"default":0}},"targetFloat":{"type":"float","id":6},"targetVector":{"type":".CMsgVector","id":7}}},"Lerp":{"fields":{"startFloat":{"type":"float","id":1},"startVector":{"type":".CMsgVector","id":2},"endFloat":{"type":"float","id":3},"endVector":{"type":".CMsgVector","id":4},"bias":{"type":"float","id":5},"gain":{"type":"float","id":6},"duration":{"type":"float","id":7,"options":{"default":1}}}},"Lag":{"fields":{"minDuration":{"type":"float","id":1},"lagTime":{"type":"float","id":2},"maxSpeed":{"type":"float","id":3},"springStrength":{"type":"float","id":4},"increaseSpringStrengthToKeepTargetOnScreen":{"type":"bool","id":5,"options":{"default":true}}}}}},"CCitadelUserMsg_PostMatchDetails":{"edition":"proto2","options":{"(maximum_size_bytes)":1000000},"fields":{"matchDetails":{"type":"bytes","id":1}}},"CCitadelUserMsg_ChatEvent":{"edition":"proto2","fields":{"type":{"type":".ECitadelChatMessage","id":1,"options":{"default":"CITADEL_CHAT_MESSAGE_UNPAUSE_COUNTDOWN"}},"values":{"rule":"repeated","type":"uint32","id":2},"playerSlots":{"rule":"repeated","type":"int32","id":3}}},"CCitadelUserMsg_HeroKilled":{"edition":"proto2","fields":{"entindexVictim":{"type":"int32","id":1,"options":{"default":-1}},"entindexInflictor":{"type":"int32","id":2,"options":{"default":-1}},"entindexAttacker":{"type":"int32","id":3,"options":{"default":-1}},"entindexAssisters":{"rule":"repeated","type":"int32","id":4},"entindexScorer":{"type":"int32","id":5,"options":{"default":-1}},"respawnReason":{"type":"int32","id":6},"victimTeamNumber":{"type":"int32","id":7}}},"CCitadelEntityMsg_BreakablePropSpawnDebris":{"edition":"proto2","fields":{"entityMsg":{"type":".CEntityMsg","id":1},"damagePos":{"type":".CMsgVector","id":2},"damage":{"type":"float","id":3},"damageForce":{"type":".CMsgVector","id":4}}},"CCitadelUserMsg_ReturnIdol":{"edition":"proto2","fields":{"locationIndex":{"type":"int32","id":1},"returnLocation":{"type":".CMsgVector","id":2},"locationEnabled":{"type":"bool","id":3}}},"CCitadelUserMsg_SetClientCameraAngles":{"edition":"proto2","fields":{"playerSlot":{"type":"int32","id":1,"options":{"default":-1}},"cameraAngles":{"type":".CMsgQAngle","id":2}}},"CCitadelUserMessage_BulletHit":{"edition":"proto2","fields":{"shotid":{"type":"int32","id":1},"pellet":{"type":"int32","id":2},"hitEntindex":{"type":"int32","id":3,"options":{"default":-1}},"weaponEntindex":{"type":"int32","id":4,"options":{"default":-1}},"isPredicted":{"type":"bool","id":5}}},"CCitadelUserMessage_ObjectiveMask":{"edition":"proto2","fields":{"objectiveMaskTeam0":{"type":"uint64","id":2},"objectiveMaskTeam1":{"type":"uint64","id":3}}},"CCitadelUserMessage_ModifierApplied":{"edition":"proto2","fields":{"entindexCaster":{"type":"int32","id":1,"options":{"default":-1}},"entindexParent":{"type":"int32","id":2,"options":{"default":-1}},"serialNumber":{"type":"int32","id":3}}},"CCitadelUserMessage_AuraModifierApplied":{"edition":"proto2","fields":{"entindexCaster":{"type":"int32","id":1,"options":{"default":-1}},"entindexTarget":{"type":"int32","id":2,"options":{"default":-1}},"modifierTypeId":{"type":"uint32","id":3},"modifierSerialNumber":{"type":"int32","id":4},"auraStartTime":{"type":"float","id":5},"auraEndTime":{"type":"float","id":6}}},"CCitadelUserMsg_ObstructedShotFired":{"edition":"proto2","fields":{}},"CCitadelUserMsg_PostProcessingAnim":{"edition":"proto2","fields":{"entindexOwner":{"type":"int32","id":1,"options":{"default":-1}},"clearAllStates":{"type":"bool","id":2},"state":{"type":".PostProcessingGameStates","id":3,"options":{"default":"PostProcState_Killed"}},"delay":{"type":"float","id":4},"fadeInTime":{"type":"float","id":5},"holdTime":{"type":"float","id":6},"fadeOutTime":{"type":"float","id":7},"scale":{"type":"float","id":8}}},"CCitadelUserMsg_DeathReplayData":{"edition":"proto2","fields":{"killerScorer":{"type":"int32","id":1,"options":{"default":-1}},"killerInflictor":{"type":"int32","id":2,"options":{"default":-1}},"damageSummary":{"type":".CCitadelUserMsg_RecentDamageSummary","id":3}}},"CCitadelUserMsg_ForceShopClosed":{"edition":"proto2","fields":{}},"CCitadelUserMsg_PlayerLifetimeStatInfo":{"edition":"proto2","fields":{"stats":{"rule":"repeated","type":".CCitadelUserMsg_PlayerLifetimeStatInfo.Stat","id":1},"matchId":{"type":"uint64","id":2},"endOfMatch":{"type":"bool","id":3},"isOfficialMatch":{"type":"bool","id":4}},"nested":{"Stat":{"fields":{"statName":{"type":"string","id":1},"matchTotal":{"type":"uint32","id":2},"lifetimeValue":{"type":"uint32","id":3},"priority":{"type":"uint32","id":4},"prevLifetimeMax":{"type":"uint32","id":5},"statType":{"type":"uint32","id":6},"statTypeId":{"type":"uint32","id":7}}}}},"CCitadelUserMsg_StaminaConsumed":{"edition":"proto2","fields":{"entindexTarget":{"type":"int32","id":1,"options":{"default":-1}},"staminaBefore":{"type":"float","id":3},"staminaAfter":{"type":"float","id":4},"drained":{"type":"bool","id":5},"staminaMax":{"type":"float","id":6},"gametime":{"type":"float","id":7}}},"CCitadelUserMessage_AbilityNotify":{"edition":"proto2","fields":{"entindexVictim":{"type":"int32","id":1,"options":{"default":-1}},"entindexAttacker":{"type":"int32","id":2,"options":{"default":-1}},"abilityId":{"type":"uint32","id":3},"statusImpact":{"type":"uint32","id":4}}},"CCitadelUserMessage_CurrencyChanged":{"edition":"proto2","fields":{"userid":{"type":"int32","id":1,"options":{"default":-1}},"currencyType":{"type":"int32","id":2},"currencySource":{"type":"int32","id":3},"delta":{"type":"int32","id":4},"notification":{"type":"bool","id":5},"entindexVictim":{"type":"int32","id":6,"options":{"default":-1}},"victimPos":{"type":".CMsgVector","id":7},"playsound":{"type":"int32","id":8},"abilityId":{"type":"uint32","id":9},"newValue":{"type":"uint32","id":10}}},"CCitadelUserMessage_GameOver":{"edition":"proto2","fields":{"winningTeam":{"type":"int32","id":1},"justATest":{"type":"bool","id":2}}},"CCitadelUserMsg_GetDamageStatsResponse":{"edition":"proto2","fields":{"playerSlot":{"type":"uint32","id":1},"abilityName":{"type":"string","id":2},"damage":{"type":".CCitadelUserMsg_GetDamageStatsResponse.StatType","id":3},"healing":{"type":".CCitadelUserMsg_GetDamageStatsResponse.StatType","id":4}},"nested":{"StatType":{"fields":{"targetPlayerSlot":{"rule":"repeated","type":"uint32","id":1,"options":{"packed":true}},"value":{"rule":"repeated","type":"uint32","id":2,"options":{"packed":true}}}}}},"CCitadelUserMsg_ParticipantStartSoundEvent":{"edition":"proto2","fields":{"event":{"type":".CMsgSosStartSoundEvent","id":1},"playerSlots":{"rule":"repeated","type":"int32","id":2}}},"CCitadelUserMsg_ParticipantStopSoundEvent":{"edition":"proto2","fields":{"event":{"type":".CMsgSosStopSoundEvent","id":1},"playerSlots":{"rule":"repeated","type":"int32","id":2}}},"CCitadelUserMsg_ParticipantStopSoundEventHash":{"edition":"proto2","fields":{"event":{"type":".CMsgSosStopSoundEventHash","id":1},"playerSlots":{"rule":"repeated","type":"int32","id":2}}},"CCitadelUserMsg_ParticipantSetSoundEventParams":{"edition":"proto2","fields":{"event":{"type":".CMsgSosSetSoundEventParams","id":1},"playerSlots":{"rule":"repeated","type":"int32","id":2}}},"CCitadelUserMsg_ParticipantSetLibraryStackFields":{"edition":"proto2","fields":{"event":{"type":".CMsgSosSetLibraryStackFields","id":1},"playerSlots":{"rule":"repeated","type":"int32","id":2}}},"CCitadelUserMsg_BossKilled":{"edition":"proto2","fields":{"objectiveTeam":{"type":"int32","id":1},"objectiveMaskChange":{"type":"int32","id":2},"entityKilled":{"type":"uint32","id":3,"options":{"default":16777215}},"entityKilledClass":{"type":"int32","id":4},"entityKiller":{"type":"uint32","id":5,"options":{"default":16777215}},"gametime":{"type":"float","id":6},"bossesRemaining":{"type":"int32","id":7},"entityPosition":{"type":".CMsgVector","id":8}}},"CCitadelUserMsg_BossDamaged":{"edition":"proto2","fields":{"objectiveTeam":{"type":"int32","id":1},"objectiveId":{"type":"int32","id":2},"entityDamaged":{"type":"uint32","id":3,"options":{"default":16777215}}}},"CCitadelUserMsg_MidBossSpawned":{"edition":"proto2","fields":{}},"CCitadelUserMsg_RejuvStatus":{"edition":"proto2","fields":{"killingTeam":{"type":"int32","id":1},"playerPawn":{"type":"uint32","id":2,"options":{"default":16777215}},"userTeam":{"type":"int32","id":3},"eventType":{"type":"int32","id":4}}},"CCitadelUserMsg_KillStreak":{"edition":"proto2","fields":{"playerPawn":{"type":"uint32","id":1,"options":{"default":16777215}},"numKills":{"type":"int32","id":2},"isFirstBlood":{"type":"bool","id":3},"streakEnded":{"type":"bool","id":4},"duration":{"type":"float","id":5,"options":{"default":5}}}},"CCitadelUserMsg_TeamMsg":{"edition":"proto2","fields":{"eventType":{"type":"int32","id":1},"teamNumber":{"type":"int32","id":2},"laneColor":{"type":"int32","id":3},"playerController":{"type":"uint32","id":4,"options":{"default":16777215}}}},"CCitadelUserMsg_PlayerRespawned":{"edition":"proto2","fields":{"playerPawn":{"type":"uint32","id":1,"options":{"default":16777215}},"facingYaw":{"type":"float","id":2}}},"CCitadelUserMsg_CallCheaterVote":{"edition":"proto2","fields":{"playerSlot":{"type":"int32","id":1,"options":{"default":-1}}}},"CCitadelUserMessage_MeleeHit":{"edition":"proto2","fields":{"hitEntindex":{"type":"int32","id":1,"options":{"default":-1}},"heavy":{"type":"bool","id":2}}},"CCitadelUserMsg_FlexSlotUnlocked":{"edition":"proto2","fields":{"teamNumber":{"type":"int32","id":1},"flexslotUnlocked":{"type":"int32","id":2}}},"CCitadelUserMessage_ItemPurchaseNotification":{"edition":"proto2","fields":{"userid":{"type":"int32","id":1,"options":{"default":-1}},"abilityId":{"type":"uint32","id":2},"sell":{"type":"bool","id":3},"quickbuy":{"type":"bool","id":4}}},"CCitadelUserMsg_SeasonalKill":{"edition":"proto2","fields":{"killer":{"type":"uint32","id":1,"options":{"default":16777215}},"victim":{"type":"uint32","id":2,"options":{"default":16777215}}}},"CCitadelUserMsg_MusicQueue":{"edition":"proto2","fields":{"musicState":{"type":"int32","id":1},"override":{"type":"bool","id":2}}},"CCitadelUserMsg_AG2ParamTrigger":{"edition":"proto2","fields":{"paramId":{"type":"string","id":1},"paramValue":{"type":"string","id":2}}},"CCitadelUserMsg_EntityPortalled":{"edition":"proto2","fields":{"entityPortalled":{"type":"uint32","id":1,"options":{"default":16777215}},"portalTransform":{"type":".CMsgTransform","id":2}}},"CCitadelUserMsg_StreetBrawlScoring":{"edition":"proto2","fields":{"scoringTeam":{"type":"int32","id":1},"justATest":{"type":"bool","id":2},"sapphireScore":{"type":"int32","id":3},"amberScore":{"type":"int32","id":4}}},"CCitadelUserMsg_HudGameAnnouncement":{"edition":"proto2","fields":{"titleLocstring":{"type":"string","id":1},"descriptionLocstring":{"type":"string","id":2},"classname":{"rule":"repeated","type":"string","id":3},"dialogVariableName":{"rule":"repeated","type":"string","id":4},"dialogVariableLocstring":{"rule":"repeated","type":"string","id":5}}},"CCitadelUserMessage_ImportantAbilityUsed":{"edition":"proto2","fields":{"player":{"type":"uint32","id":1,"options":{"default":16777215}},"caster":{"type":"uint32","id":2,"options":{"default":16777215}},"abilityName":{"type":"string","id":3}}},"CCitadelUserMsg_BannedHeroes":{"edition":"proto2","fields":{"bannedHeroIds":{"rule":"repeated","type":"uint32","id":1}}},"CMsgPlaceDecalEvent":{"edition":"proto2","fields":{"position":{"type":".CMsgVector","id":1},"normal":{"type":".CMsgVector","id":2},"saxis":{"type":".CMsgVector","id":3},"boneindex":{"type":"int32","id":4},"triangleindex":{"type":"int32","id":13},"flags":{"type":"uint32","id":5},"color":{"type":"fixed32","id":6},"randomSeed":{"type":"int32","id":7},"decalGroupName":{"type":"uint32","id":8},"sizeOverride":{"type":"float","id":9},"entityhandle":{"type":"uint32","id":10,"options":{"default":16777215}},"materialId":{"type":"uint64","id":11},"sequenceName":{"type":"uint32","id":12}}},"CMsgSource1LegacyGameEventList":{"edition":"proto2","options":{"(maximum_size_bytes)":32768},"fields":{"descriptors":{"rule":"repeated","type":".CMsgSource1LegacyGameEventList.descriptor_t","id":1}},"nested":{"key_t":{"fields":{"type":{"type":"int32","id":1},"name":{"type":"string","id":2}}},"descriptor_t":{"fields":{"eventid":{"type":"int32","id":1},"name":{"type":"string","id":2},"keys":{"rule":"repeated","type":".CMsgSource1LegacyGameEventList.key_t","id":3}}}}},"CMsgSource1LegacyGameEvent":{"edition":"proto2","fields":{"eventName":{"type":"string","id":1},"eventid":{"type":"int32","id":2},"keys":{"rule":"repeated","type":".CMsgSource1LegacyGameEvent.key_t","id":3},"serverTick":{"type":"int32","id":4},"passthrough":{"type":"int32","id":5}},"nested":{"key_t":{"fields":{"type":{"type":"int32","id":1},"valString":{"type":"string","id":2},"valFloat":{"type":"float","id":3},"valLong":{"type":"int32","id":4},"valShort":{"type":"int32","id":5},"valByte":{"type":"int32","id":6},"valBool":{"type":"bool","id":7},"valUint64":{"type":"uint64","id":8}}}}},"CMsgSosStartSoundEvent":{"edition":"proto2","fields":{"soundeventGuid":{"type":"int32","id":1},"soundeventHash":{"type":"fixed32","id":2},"sourceEntityIndex":{"type":"int32","id":3,"options":{"default":-1}},"seed":{"type":"int32","id":4},"packedParams":{"type":"bytes","id":5},"startTime":{"type":"float","id":6}}},"CMsgSosStopSoundEvent":{"edition":"proto2","fields":{"soundeventGuid":{"type":"int32","id":1}}},"CMsgSosStopSoundEventHash":{"edition":"proto2","fields":{"soundeventHash":{"type":"fixed32","id":1},"sourceEntityIndex":{"type":"int32","id":2,"options":{"default":-1}}}},"CMsgSosSetSoundEventParams":{"edition":"proto2","fields":{"soundeventGuid":{"type":"int32","id":1},"packedParams":{"type":"bytes","id":5}}},"CMsgSosSetLibraryStackFields":{"edition":"proto2","fields":{"stackHash":{"type":"fixed32","id":1},"packedFields":{"type":"bytes","id":5}}},"CDemoFileHeader":{"edition":"proto2","fields":{"demoFileStamp":{"rule":"required","type":"string","id":1},"patchVersion":{"type":"int32","id":2},"serverName":{"type":"string","id":3},"clientName":{"type":"string","id":4},"mapName":{"type":"string","id":5},"gameDirectory":{"type":"string","id":6},"fullpacketsVersion":{"type":"int32","id":7},"allowClientsideEntities":{"type":"bool","id":8},"allowClientsideParticles":{"type":"bool","id":9},"addons":{"type":"string","id":10},"demoVersionName":{"type":"string","id":11},"demoVersionGuid":{"type":"string","id":12},"buildNum":{"type":"int32","id":13},"game":{"type":"string","id":14},"serverStartTick":{"type":"int32","id":15}}},"CGameInfo":{"edition":"proto2","fields":{"dota":{"type":".CGameInfo.CDotaGameInfo","id":4},"cs":{"type":".CGameInfo.CCSGameInfo","id":5}},"nested":{"CDotaGameInfo":{"fields":{"matchId":{"type":"uint64","id":1},"gameMode":{"type":"int32","id":2},"gameWinner":{"type":"int32","id":3},"playerInfo":{"rule":"repeated","type":".CGameInfo.CDotaGameInfo.CPlayerInfo","id":4},"leagueid":{"type":"uint32","id":5},"picksBans":{"rule":"repeated","type":".CGameInfo.CDotaGameInfo.CHeroSelectEvent","id":6},"radiantTeamId":{"type":"uint32","id":7},"direTeamId":{"type":"uint32","id":8},"radiantTeamTag":{"type":"string","id":9},"direTeamTag":{"type":"string","id":10},"endTime":{"type":"uint32","id":11}},"nested":{"CPlayerInfo":{"fields":{"heroName":{"type":"string","id":1},"playerName":{"type":"string","id":2},"isFakeClient":{"type":"bool","id":3},"steamid":{"type":"uint64","id":4},"gameTeam":{"type":"int32","id":5}}},"CHeroSelectEvent":{"fields":{"isPick":{"type":"bool","id":1},"team":{"type":"uint32","id":2},"heroId":{"type":"int32","id":3}}}}},"CCSGameInfo":{"fields":{"roundStartTicks":{"rule":"repeated","type":"int32","id":1}}}}},"CDemoFileInfo":{"edition":"proto2","fields":{"playbackTime":{"type":"float","id":1},"playbackTicks":{"type":"int32","id":2},"playbackFrames":{"type":"int32","id":3},"gameInfo":{"type":".CGameInfo","id":4}}},"CDemoPacket":{"edition":"proto2","fields":{"data":{"type":"bytes","id":3}}},"CDemoFullPacket":{"edition":"proto2","fields":{"stringTable":{"type":".CDemoStringTables","id":1},"packet":{"type":".CDemoPacket","id":2}}},"CDemoSaveGame":{"edition":"proto2","fields":{"data":{"type":"bytes","id":1},"steamId":{"type":"fixed64","id":2},"signature":{"type":"fixed64","id":3},"version":{"type":"int32","id":4}}},"CDemoSyncTick":{"edition":"proto2","fields":{}},"CDemoConsoleCmd":{"edition":"proto2","fields":{"cmdstring":{"type":"string","id":1}}},"CDemoSendTables":{"edition":"proto2","fields":{"data":{"type":"bytes","id":1}}},"CDemoClassInfo":{"edition":"proto2","fields":{"classes":{"rule":"repeated","type":".CDemoClassInfo.class_t","id":1}},"nested":{"class_t":{"fields":{"classId":{"type":"int32","id":1},"networkName":{"type":"string","id":2},"tableName":{"type":"string","id":3}}}}},"CDemoCustomData":{"edition":"proto2","fields":{"callbackIndex":{"type":"int32","id":1},"data":{"type":"bytes","id":2}}},"CDemoCustomDataCallbacks":{"edition":"proto2","fields":{"saveId":{"rule":"repeated","type":"string","id":1}}},"CDemoAnimationHeader":{"edition":"proto2","fields":{"entityId":{"type":"sint32","id":1},"tick":{"type":"int32","id":2},"data":{"type":"bytes","id":3}}},"CDemoAnimationData":{"edition":"proto2","fields":{"entityId":{"type":"sint32","id":1},"startTick":{"type":"int32","id":2},"endTick":{"type":"int32","id":3},"data":{"type":"bytes","id":4},"dataChecksum":{"type":"int64","id":5}}},"CDemoStringTables":{"edition":"proto2","fields":{"tables":{"rule":"repeated","type":".CDemoStringTables.table_t","id":1}},"nested":{"items_t":{"fields":{"str":{"type":"string","id":1},"data":{"type":"bytes","id":2}}},"table_t":{"fields":{"tableName":{"type":"string","id":1},"items":{"rule":"repeated","type":".CDemoStringTables.items_t","id":2},"itemsClientside":{"rule":"repeated","type":".CDemoStringTables.items_t","id":3},"tableFlags":{"type":"int32","id":4}}}}},"CDemoStop":{"edition":"proto2","fields":{}},"CDemoUserCmd":{"edition":"proto2","fields":{"cmdNumber":{"type":"int32","id":1},"data":{"type":"bytes","id":2}}},"CDemoSpawnGroups":{"edition":"proto2","fields":{"msgs":{"rule":"repeated","type":"bytes","id":3}}},"CDemoRecovery":{"edition":"proto2","fields":{"initialSpawnGroup":{"type":".CDemoRecovery.DemoInitialSpawnGroupEntry","id":1},"spawnGroupMessage":{"type":"bytes","id":2}},"nested":{"DemoInitialSpawnGroupEntry":{"fields":{"spawngrouphandle":{"type":"uint32","id":1},"wasCreated":{"type":"bool","id":2}}}}},"VoiceDataFormat_t":{"edition":"proto2","values":{"VOICEDATA_FORMAT_STEAM":0,"VOICEDATA_FORMAT_ENGINE":1,"VOICEDATA_FORMAT_OPUS":2}},"CMsgVoiceAudio":{"edition":"proto2","fields":{"format":{"type":".VoiceDataFormat_t","id":1,"options":{"default":"VOICEDATA_FORMAT_STEAM"}},"voiceData":{"type":"bytes","id":2},"sequenceBytes":{"type":"int32","id":3},"sectionNumber":{"type":"uint32","id":4},"sampleRate":{"type":"uint32","id":5},"uncompressedSampleOffset":{"type":"uint32","id":6},"numPackets":{"type":"uint32","id":7},"packetOffsets":{"rule":"repeated","type":"uint32","id":8,"options":{"packed":true}},"voiceLevel":{"type":"float","id":9}}},"CSVCMsg_ServerInfo":{"edition":"proto2","options":{"(maximum_size_bytes)":409600},"fields":{"protocol":{"type":"int32","id":1},"serverCount":{"type":"int32","id":2},"isDedicated":{"type":"bool","id":3},"isHltv":{"type":"bool","id":4},"cOs":{"type":"int32","id":6},"maxClients":{"type":"int32","id":10},"maxClasses":{"type":"int32","id":11},"playerSlot":{"type":"int32","id":12,"options":{"default":-1}},"tickInterval":{"type":"float","id":13},"gameDir":{"type":"string","id":14},"mapName":{"type":"string","id":15},"skyName":{"type":"string","id":16},"hostName":{"type":"string","id":17},"addonName":{"type":"string","id":18},"gameSessionConfig":{"type":".CSVCMsg_GameSessionConfiguration","id":19},"gameSessionManifest":{"type":"bytes","id":20}}},"CSVCMsg_ClassInfo":{"edition":"proto2","options":{"(maximum_size_bytes)":8192},"fields":{"createOnClient":{"type":"bool","id":1},"classes":{"rule":"repeated","type":".CSVCMsg_ClassInfo.class_t","id":2}},"nested":{"class_t":{"fields":{"classId":{"type":"int32","id":1},"className":{"type":"string","id":3}}}}},"CSVCMsg_VoiceInit":{"edition":"proto2","fields":{"quality":{"type":"int32","id":1},"codec":{"type":"string","id":2},"version":{"type":"int32","id":3,"options":{"default":0}}}},"CSVCMsg_PacketEntities":{"edition":"proto2","options":{"(maximum_size_bytes)":0},"fields":{"maxEntries":{"type":"int32","id":1},"updatedEntries":{"type":"int32","id":2},"legacyIsDelta":{"type":"bool","id":3},"updateBaseline":{"type":"bool","id":4},"baseline":{"type":"int32","id":5},"deltaFrom":{"type":"int32","id":6},"entityData":{"type":"bytes","id":7},"pendingFullFrame":{"type":"bool","id":8},"activeSpawngroupHandle":{"type":"uint32","id":9},"maxSpawngroupCreationsequence":{"type":"uint32","id":10},"lastCmdNumberExecuted":{"type":"uint32","id":11},"lastCmdNumberRecvDelta":{"type":"sint32","id":17},"serverTick":{"type":"uint32","id":12},"serializedEntities":{"type":"bytes","id":13},"alternateBaselines":{"rule":"repeated","type":".CSVCMsg_PacketEntities.alternate_baseline_t","id":15},"hasPvsVisBitsDeprecated":{"type":"uint32","id":16},"cmdRecvStatus":{"rule":"repeated","type":"sint32","id":22,"options":{"packed":true}},"nonTransmittedEntities":{"type":".CSVCMsg_PacketEntities.non_transmitted_entities_t","id":19},"cqStarvedCommandTicks":{"type":"uint32","id":20},"cqDiscardedCommandTicks":{"type":"uint32","id":21},"outofpvsEntityUpdates":{"type":".CSVCMsg_PacketEntities.outofpvs_entity_updates_t","id":23},"devPadding":{"type":"bytes","id":999}},"nested":{"alternate_baseline_t":{"fields":{"entityIndex":{"type":"int32","id":1},"baselineIndex":{"type":"int32","id":2}}},"non_transmitted_entities_t":{"fields":{"headerCount":{"type":"int32","id":1},"data":{"type":"bytes","id":2}}},"outofpvs_entity_updates_t":{"fields":{"count":{"type":"int32","id":1},"data":{"type":"bytes","id":2}}}}},"CSVCMsg_CreateStringTable":{"edition":"proto2","options":{"(maximum_size_bytes)":102400},"fields":{"name":{"type":"string","id":1},"numEntries":{"type":"int32","id":2},"userDataFixedSize":{"type":"bool","id":3},"userDataSize":{"type":"int32","id":4},"userDataSizeBits":{"type":"int32","id":5},"flags":{"type":"int32","id":6},"stringData":{"type":"bytes","id":7},"uncompressedSize":{"type":"int32","id":8},"dataCompressed":{"type":"bool","id":9},"usingVarintBitcounts":{"type":"bool","id":10}}},"CSVCMsg_UpdateStringTable":{"edition":"proto2","options":{"(maximum_size_bytes)":262144},"fields":{"tableId":{"type":"int32","id":1},"numChangedEntries":{"type":"int32","id":2},"stringData":{"type":"bytes","id":3}}},"CSVCMsg_VoiceData":{"edition":"proto2","fields":{"audio":{"type":".CMsgVoiceAudio","id":1},"client":{"type":"int32","id":2,"options":{"default":-1}},"proximity":{"type":"bool","id":3},"xuid":{"type":"fixed64","id":4},"audibleMask":{"type":"int32","id":5},"tick":{"type":"uint32","id":6},"passthrough":{"type":"int32","id":7}}},"CSVCMsg_HLTVStatus":{"edition":"proto2","fields":{"master":{"type":"string","id":1},"clients":{"type":"int32","id":2},"slots":{"type":"int32","id":3},"proxies":{"type":"int32","id":4}}},"CSVCMsg_ClearAllStringTables":{"edition":"proto2","fields":{"mapname":{"type":"string","id":1},"createTablesSkipped":{"type":"bool","id":3}}},"ProtoFlattenedSerializerField_t":{"edition":"proto2","fields":{"varTypeSym":{"type":"int32","id":1},"varNameSym":{"type":"int32","id":2},"bitCount":{"type":"int32","id":3},"lowValue":{"type":"float","id":4},"highValue":{"type":"float","id":5},"encodeFlags":{"type":"int32","id":6},"fieldSerializerNameSym":{"type":"int32","id":7},"fieldSerializerVersion":{"type":"int32","id":8},"sendNodeSym":{"type":"int32","id":9},"varEncoderSym":{"type":"int32","id":10},"polymorphicTypes":{"rule":"repeated","type":".ProtoFlattenedSerializerField_t.polymorphic_field_t","id":11},"varSerializerSym":{"type":"int32","id":12}},"nested":{"polymorphic_field_t":{"fields":{"polymorphicFieldSerializerNameSym":{"type":"int32","id":1},"polymorphicFieldSerializerVersion":{"type":"int32","id":2}}}}},"ProtoFlattenedSerializer_t":{"edition":"proto2","fields":{"serializerNameSym":{"type":"int32","id":1},"serializerVersion":{"type":"int32","id":2},"fieldsIndex":{"rule":"repeated","type":"int32","id":3}}},"CSVCMsg_FlattenedSerializer":{"edition":"proto2","options":{"(maximum_size_bytes)":0},"fields":{"serializers":{"rule":"repeated","type":".ProtoFlattenedSerializer_t","id":1},"symbols":{"rule":"repeated","type":"string","id":2},"fields":{"rule":"repeated","type":".ProtoFlattenedSerializerField_t","id":3}}},"CMsgServerUserCmd":{"edition":"proto2","fields":{"data":{"type":"bytes","id":1},"cmdNumber":{"type":"int32","id":2},"playerSlot":{"type":"int32","id":3,"options":{"default":-1}},"serverTickExecuted":{"type":"int32","id":4},"clientTick":{"type":"int32","id":5}}},"CSVCMsg_UserCommands":{"edition":"proto2","fields":{"commands":{"rule":"repeated","type":".CMsgServerUserCmd","id":1}}},"CMsgEffectData":{"edition":"proto2","fields":{"origin":{"type":".CMsgVector","id":1},"start":{"type":".CMsgVector","id":2},"normal":{"type":".CMsgVector","id":3},"angles":{"type":".CMsgQAngle","id":4},"entity":{"type":"fixed32","id":5,"options":{"default":16777215}},"otherentity":{"type":"fixed32","id":6,"options":{"default":16777215}},"scale":{"type":"float","id":7},"magnitude":{"type":"float","id":8},"radius":{"type":"float","id":9},"surfaceprop":{"type":"fixed32","id":10},"effectindex":{"type":"fixed64","id":11},"damagetype":{"type":"uint32","id":12},"material":{"type":"uint32","id":13},"hitbox":{"type":"uint32","id":14},"color":{"type":"uint32","id":15},"flags":{"type":"uint32","id":16},"attachmentindex":{"type":"int32","id":17},"effectname":{"type":"uint32","id":18},"attachmentname":{"type":"uint32","id":19,"options":{"default":0}}}},"CMsgTEEffectDispatch":{"edition":"proto2","fields":{"effectdata":{"type":".CMsgEffectData","id":1}}},"PARTICLE_MESSAGE":{"edition":"proto2","values":{"GAME_PARTICLE_MANAGER_EVENT_CREATE":0,"GAME_PARTICLE_MANAGER_EVENT_UPDATE":1,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD":2,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION":3,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK":4,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENT":5,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET":6,"GAME_PARTICLE_MANAGER_EVENT_DESTROY":7,"GAME_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING":8,"GAME_PARTICLE_MANAGER_EVENT_RELEASE":9,"GAME_PARTICLE_MANAGER_EVENT_LATENCY":10,"GAME_PARTICLE_MANAGER_EVENT_SHOULD_DRAW":11,"GAME_PARTICLE_MANAGER_EVENT_FROZEN":12,"GAME_PARTICLE_MANAGER_EVENT_CHANGE_CONTROL_POINT_ATTACHMENT":13,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENTITY_POSITION":14,"GAME_PARTICLE_MANAGER_EVENT_SET_FOW_PROPERTIES":15,"GAME_PARTICLE_MANAGER_EVENT_SET_TEXT":16,"GAME_PARTICLE_MANAGER_EVENT_SET_SHOULD_CHECK_FOW":17,"GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_MODEL":18,"GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_SNAPSHOT":19,"GAME_PARTICLE_MANAGER_EVENT_SET_TEXTURE_ATTRIBUTE":20,"GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_GENERIC_FLAG":21,"GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_TINT_AND_DESAT":22,"GAME_PARTICLE_MANAGER_EVENT_DESTROY_NAMED":23,"GAME_PARTICLE_MANAGER_EVENT_SKIP_TO_TIME":24,"GAME_PARTICLE_MANAGER_EVENT_CAN_FREEZE":25,"GAME_PARTICLE_MANAGER_EVENT_SET_NAMED_VALUE_CONTEXT":26,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_TRANSFORM":27,"GAME_PARTICLE_MANAGER_EVENT_FREEZE_TRANSITION_OVERRIDE":28,"GAME_PARTICLE_MANAGER_EVENT_FREEZE_INVOLVING":29,"GAME_PARTICLE_MANAGER_EVENT_ADD_MODELLIST_OVERRIDE_ELEMENT":30,"GAME_PARTICLE_MANAGER_EVENT_CLEAR_MODELLIST_OVERRIDE":31,"GAME_PARTICLE_MANAGER_EVENT_CREATE_PHYSICS_SIM":32,"GAME_PARTICLE_MANAGER_EVENT_DESTROY_PHYSICS_SIM":33,"GAME_PARTICLE_MANAGER_EVENT_SET_VDATA":34,"GAME_PARTICLE_MANAGER_EVENT_SET_MATERIAL_OVERRIDE":35,"GAME_PARTICLE_MANAGER_EVENT_ADD_FAN":36,"GAME_PARTICLE_MANAGER_EVENT_UPDATE_FAN":37,"GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH":38,"GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN":39,"GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID":40}},"CUserMessageSayText2":{"edition":"proto2","fields":{"entityindex":{"type":"int32","id":1,"options":{"default":-1}},"chat":{"type":"bool","id":2},"messagename":{"type":"string","id":3},"param1":{"type":"string","id":4},"param2":{"type":"string","id":5},"param3":{"type":"string","id":6},"param4":{"type":"string","id":7}}},"CUserMessageTextMsg":{"edition":"proto2","fields":{"dest":{"type":"uint32","id":1},"param":{"rule":"repeated","type":"string","id":2}}},"CUserMessageSendAudio":{"edition":"proto2","fields":{"soundname":{"type":"string","id":1},"stop":{"type":"bool","id":2}}},"CUserMessageVoiceMask":{"edition":"proto2","fields":{"gamerulesMasks":{"rule":"repeated","type":"uint32","id":1},"banMasks":{"rule":"repeated","type":"uint32","id":2},"modEnable":{"type":"bool","id":3}}},"CEntityMessageRemoveAllDecals":{"edition":"proto2","fields":{"removeDecals":{"type":"bool","id":1},"entityMsg":{"type":".CEntityMsg","id":2}}},"CUserMsg_ParticleManager":{"edition":"proto2","options":{"(maximum_size_bytes)":4096},"fields":{"type":{"type":".PARTICLE_MESSAGE","id":1,"options":{"default":"GAME_PARTICLE_MANAGER_EVENT_CREATE"}},"index":{"type":"uint32","id":2},"releaseParticleIndex":{"type":".CUserMsg_ParticleManager.ReleaseParticleIndex","id":3},"createParticle":{"type":".CUserMsg_ParticleManager.CreateParticle","id":4},"destroyParticle":{"type":".CUserMsg_ParticleManager.DestroyParticle","id":5},"destroyParticleInvolving":{"type":".CUserMsg_ParticleManager.DestroyParticleInvolving","id":6},"updateParticle":{"type":".CUserMsg_ParticleManager.UpdateParticle_OBSOLETE","id":7},"updateParticleFwd":{"type":".CUserMsg_ParticleManager.UpdateParticleFwd_OBSOLETE","id":8},"updateParticleOrient":{"type":".CUserMsg_ParticleManager.UpdateParticleOrient_OBSOLETE","id":9},"updateParticleFallback":{"type":".CUserMsg_ParticleManager.UpdateParticleFallback","id":10},"updateParticleOffset":{"type":".CUserMsg_ParticleManager.UpdateParticleOffset","id":11},"updateParticleEnt":{"type":".CUserMsg_ParticleManager.UpdateParticleEnt","id":12},"updateParticleShouldDraw":{"type":".CUserMsg_ParticleManager.UpdateParticleShouldDraw","id":14},"updateParticleSetFrozen":{"type":".CUserMsg_ParticleManager.UpdateParticleSetFrozen","id":15},"changeControlPointAttachment":{"type":".CUserMsg_ParticleManager.ChangeControlPointAttachment","id":16},"updateEntityPosition":{"type":".CUserMsg_ParticleManager.UpdateEntityPosition","id":17},"setParticleFowProperties":{"type":".CUserMsg_ParticleManager.SetParticleFoWProperties","id":18},"setParticleText":{"type":".CUserMsg_ParticleManager.SetParticleText","id":19},"setParticleShouldCheckFow":{"type":".CUserMsg_ParticleManager.SetParticleShouldCheckFoW","id":20},"setControlPointModel":{"type":".CUserMsg_ParticleManager.SetControlPointModel","id":21},"setControlPointSnapshot":{"type":".CUserMsg_ParticleManager.SetControlPointSnapshot","id":22},"setTextureAttribute":{"type":".CUserMsg_ParticleManager.SetTextureAttribute","id":23},"setSceneObjectGenericFlag":{"type":".CUserMsg_ParticleManager.SetSceneObjectGenericFlag","id":24},"setSceneObjectTintAndDesat":{"type":".CUserMsg_ParticleManager.SetSceneObjectTintAndDesat","id":25},"destroyParticleNamed":{"type":".CUserMsg_ParticleManager.DestroyParticleNamed","id":26},"particleSkipToTime":{"type":".CUserMsg_ParticleManager.ParticleSkipToTime","id":27},"particleCanFreeze":{"type":".CUserMsg_ParticleManager.ParticleCanFreeze","id":28},"setNamedValueContext":{"type":".CUserMsg_ParticleManager.SetParticleNamedValueContext","id":29},"updateParticleTransform":{"type":".CUserMsg_ParticleManager.UpdateParticleTransform","id":30},"particleFreezeTransitionOverride":{"type":".CUserMsg_ParticleManager.ParticleFreezeTransitionOverride","id":31},"freezeParticleInvolving":{"type":".CUserMsg_ParticleManager.FreezeParticleInvolving","id":32},"addModellistOverrideElement":{"type":".CUserMsg_ParticleManager.AddModellistOverrideElement","id":33},"clearModellistOverride":{"type":".CUserMsg_ParticleManager.ClearModellistOverride","id":34},"createPhysicsSim":{"type":".CUserMsg_ParticleManager.CreatePhysicsSim","id":35},"destroyPhysicsSim":{"type":".CUserMsg_ParticleManager.DestroyPhysicsSim","id":36},"setVdata":{"type":".CUserMsg_ParticleManager.SetVData","id":37},"setMaterialOverride":{"type":".CUserMsg_ParticleManager.SetMaterialOverride","id":38},"addFan":{"type":".CUserMsg_ParticleManager.AddFan","id":39},"updateFan":{"type":".CUserMsg_ParticleManager.UpdateFan","id":40},"setParticleClusterGrowth":{"type":".CUserMsg_ParticleManager.SetParticleClusterGrowth","id":41},"removeFan":{"type":".CUserMsg_ParticleManager.RemoveFan","id":42},"createSmokeGrid":{"type":".CUserMsg_ParticleManager.CreateSmokeGrid","id":43}},"nested":{"ReleaseParticleIndex":{"fields":{}},"CreateParticle":{"fields":{"particleNameIndex":{"type":"fixed64","id":1},"attachType":{"type":"int32","id":2},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}},"entityHandleForModifiers":{"type":"uint32","id":4,"options":{"default":16777215}},"applyVoiceBanRules":{"type":"bool","id":5},"teamBehavior":{"type":"int32","id":6},"controlPointConfiguration":{"type":"string","id":7},"cluster":{"type":"bool","id":8},"endcapTime":{"type":"float","id":9},"aggregationPosition":{"type":".CMsgVector","id":10}}},"DestroyParticle":{"fields":{"destroyImmediately":{"type":"bool","id":1}}},"DestroyParticleInvolving":{"fields":{"destroyImmediately":{"type":"bool","id":1},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}}}},"DestroyParticleNamed":{"fields":{"particleNameIndex":{"type":"fixed64","id":1},"entityHandle":{"type":"uint32","id":2,"options":{"default":16777215}},"destroyImmediately":{"type":"bool","id":3},"playEndcap":{"type":"bool","id":4}}},"UpdateParticle_OBSOLETE":{"fields":{"controlPoint":{"type":"int32","id":1},"position":{"type":".CMsgVector","id":2}}},"UpdateParticleFwd_OBSOLETE":{"fields":{"controlPoint":{"type":"int32","id":1},"forward":{"type":".CMsgVector","id":2}}},"UpdateParticleOrient_OBSOLETE":{"fields":{"controlPoint":{"type":"int32","id":1},"forward":{"type":".CMsgVector","id":2},"deprecatedRight":{"type":".CMsgVector","id":3},"up":{"type":".CMsgVector","id":4},"left":{"type":".CMsgVector","id":5}}},"UpdateParticleTransform":{"fields":{"controlPoint":{"type":"int32","id":1},"position":{"type":".CMsgVector","id":2},"orientation":{"type":".CMsgQuaternion","id":3},"interpolationInterval":{"type":"float","id":4}}},"UpdateParticleFallback":{"fields":{"controlPoint":{"type":"int32","id":1},"position":{"type":".CMsgVector","id":2}}},"UpdateParticleOffset":{"fields":{"controlPoint":{"type":"int32","id":1},"originOffset":{"type":".CMsgVector","id":2},"angleOffset":{"type":".CMsgQAngle","id":3}}},"UpdateParticleEnt":{"fields":{"controlPoint":{"type":"int32","id":1},"entityHandle":{"type":"uint32","id":2,"options":{"default":16777215}},"attachType":{"type":"int32","id":3},"attachment":{"type":"int32","id":4},"fallbackPosition":{"type":".CMsgVector","id":5},"includeWearables":{"type":"bool","id":6},"offsetPosition":{"type":".CMsgVector","id":7},"offsetAngles":{"type":".CMsgQAngle","id":8}}},"UpdateParticleSetFrozen":{"fields":{"setFrozen":{"type":"bool","id":1},"transitionDuration":{"type":"float","id":2}}},"UpdateParticleShouldDraw":{"fields":{"shouldDraw":{"type":"bool","id":1}}},"ChangeControlPointAttachment":{"fields":{"attachmentOld":{"type":"int32","id":1},"attachmentNew":{"type":"int32","id":2},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}}}},"UpdateEntityPosition":{"fields":{"entityHandle":{"type":"uint32","id":1,"options":{"default":16777215}},"position":{"type":".CMsgVector","id":2}}},"SetParticleFoWProperties":{"fields":{"fowControlPoint":{"type":"int32","id":1},"fowControlPoint2":{"type":"int32","id":2},"fowRadius":{"type":"float","id":3}}},"SetParticleShouldCheckFoW":{"fields":{"checkFow":{"type":"bool","id":1}}},"SetControlPointModel":{"fields":{"controlPoint":{"type":"int32","id":1},"modelName":{"type":"string","id":2}}},"SetControlPointSnapshot":{"fields":{"controlPoint":{"type":"int32","id":1},"snapshotName":{"type":"string","id":2}}},"SetParticleText":{"fields":{"text":{"type":"string","id":1},"localize":{"type":"bool","id":2}}},"SetTextureAttribute":{"fields":{"attributeName":{"type":"string","id":1},"textureName":{"type":"string","id":2}}},"SetSceneObjectGenericFlag":{"fields":{"flagValue":{"type":"bool","id":1}}},"SetSceneObjectTintAndDesat":{"fields":{"tint":{"type":"fixed32","id":1},"desat":{"type":"float","id":2}}},"ParticleSkipToTime":{"fields":{"skipToTime":{"type":"float","id":1}}},"ParticleCanFreeze":{"fields":{"canFreeze":{"type":"bool","id":1}}},"ParticleFreezeTransitionOverride":{"fields":{"freezeTransitionOverride":{"type":"float","id":1}}},"FreezeParticleInvolving":{"fields":{"setFrozen":{"type":"bool","id":1},"transitionDuration":{"type":"float","id":2},"entityHandle":{"type":"uint32","id":3,"options":{"default":16777215}}}},"AddModellistOverrideElement":{"fields":{"modelName":{"type":"string","id":1},"spawnProbability":{"type":"float","id":2},"groupid":{"type":"uint32","id":3}}},"ClearModellistOverride":{"fields":{"groupid":{"type":"uint32","id":1}}},"SetParticleNamedValueContext":{"fields":{"floatValues":{"rule":"repeated","type":".CUserMsg_ParticleManager.SetParticleNamedValueContext.FloatContextValue","id":1},"vectorValues":{"rule":"repeated","type":".CUserMsg_ParticleManager.SetParticleNamedValueContext.VectorContextValue","id":2},"transformValues":{"rule":"repeated","type":".CUserMsg_ParticleManager.SetParticleNamedValueContext.TransformContextValue","id":3},"ehandleValues":{"rule":"repeated","type":".CUserMsg_ParticleManager.SetParticleNamedValueContext.EHandleContext","id":4}},"nested":{"FloatContextValue":{"fields":{"valueNameHash":{"type":"uint32","id":1},"value":{"type":"float","id":2}}},"VectorContextValue":{"fields":{"valueNameHash":{"type":"uint32","id":1},"value":{"type":".CMsgVector","id":2}}},"TransformContextValue":{"fields":{"valueNameHash":{"type":"uint32","id":1},"angles":{"type":".CMsgQAngle","id":2},"translation":{"type":".CMsgVector","id":3}}},"EHandleContext":{"fields":{"valueNameHash":{"type":"uint32","id":1},"entIndex":{"type":"uint32","id":2,"options":{"default":16777215}}}}}},"CreatePhysicsSim":{"fields":{"propGroupName":{"type":"string","id":1},"useHighQualitySimulation":{"type":"bool","id":2},"maxParticleCount":{"type":"uint32","id":3}}},"DestroyPhysicsSim":{"fields":{}},"CreateSmokeGrid":{"fields":{"vdataName":{"type":"string","id":1}}},"SetVData":{"fields":{"vdataName":{"type":"string","id":1}}},"SetMaterialOverride":{"fields":{"materialName":{"type":"string","id":1},"includeChildren":{"type":"bool","id":2}}},"AddFan":{"fields":{"active":{"type":"bool","id":1},"boundsMins":{"type":".CMsgVector","id":2},"boundsMaxs":{"type":".CMsgVector","id":3},"fanOrigin":{"type":".CMsgVector","id":4},"fanOriginOffset":{"type":".CMsgVector","id":5},"fanDirection":{"type":".CMsgVector","id":6},"force":{"type":"float","id":7},"fanForceCurve":{"type":"string","id":8},"falloff":{"type":"bool","id":9},"pullTowardsPoint":{"type":"bool","id":10},"curveMinDist":{"type":"float","id":11},"curveMaxDist":{"type":"float","id":12},"fanType":{"type":"uint32","id":13},"coneStartRadius":{"type":"float","id":14},"coneEndRadius":{"type":"float","id":15},"coneLength":{"type":"float","id":16},"entityHandle":{"type":"uint32","id":17,"options":{"default":16777215}},"attachmentName":{"type":"string","id":18}}},"UpdateFan":{"fields":{"active":{"type":"bool","id":1},"fanOrigin":{"type":".CMsgVector","id":2},"fanOriginOffset":{"type":".CMsgVector","id":3},"fanDirection":{"type":".CMsgVector","id":4},"fanRampRatio":{"type":"float","id":7},"boundsMins":{"type":".CMsgVector","id":5},"boundsMaxs":{"type":".CMsgVector","id":6}}},"RemoveFan":{"fields":{}},"SetParticleClusterGrowth":{"fields":{"duration":{"type":"float","id":1},"origin":{"type":".CMsgVector","id":2}}}}},"CUserMessage_PlayResponseConditional":{"edition":"proto2","fields":{"entIndex":{"type":"int32","id":1,"options":{"default":-1}},"playerSlots":{"rule":"repeated","type":"int32","id":2},"response":{"type":"string","id":3},"entOrigin":{"type":".CMsgVector","id":4},"preDelay":{"type":"float","id":5},"mixPriority":{"type":"int32","id":6}}}}}
+{
+  "options": {
+    "optimize_for": "SPEED",
+    "cc_generic_services": false
+  },
+  "nested": {
+    "PARTICLE_SYSTEM_MANAGER_MESSAGE": {
+      "edition": "proto2",
+      "values": {
+        "PARTICLE_SYSTEM_MANAGER_EVENT_CREATE": 0,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_DESTROY": 1,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_DESTROY_INVOLVING": 2,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_RELEASE": 3,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE": 4,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FORWARD": 5,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_ORIENTATION": 6,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FALLBACK": 7,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_ENT": 8,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_OFFSET": 9,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_FROZEN": 10,
+        "PARTICLE_SYSTEM_MANAGER_EVENT_UPDATE_SHOULD_DRAW": 11
+      }
+    },
+    "CMsgFireBullets": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "angles": {
+          "type": ".CMsgQAngle",
+          "id": 2
+        },
+        "seed": {
+          "type": "uint32",
+          "id": 4
+        },
+        "shooterEntity": {
+          "type": "int32",
+          "id": 5,
+          "options": {
+            "default": -1
+          }
+        },
+        "ability": {
+          "type": "int32",
+          "id": 7,
+          "options": {
+            "default": -1
+          }
+        },
+        "penetrationPercent": {
+          "type": "float",
+          "id": 8
+        },
+        "spread": {
+          "type": "float",
+          "id": 9
+        },
+        "firedFromGun": {
+          "type": "bool",
+          "id": 10,
+          "options": {
+            "default": true
+          }
+        },
+        "bulletsOverride": {
+          "type": "uint32",
+          "id": 11
+        },
+        "tracerReplacement": {
+          "type": ".CMsgFireBullets.TracerAssignment",
+          "id": 12
+        },
+        "tracerAdditional": {
+          "rule": "repeated",
+          "type": ".CMsgFireBullets.TracerAssignment",
+          "id": 13
+        },
+        "anglesOriginal": {
+          "type": ".CMsgQAngle",
+          "id": 14
+        },
+        "weaponSubclassId": {
+          "type": "uint32",
+          "id": 15
+        },
+        "shotNumber": {
+          "type": "uint32",
+          "id": 16
+        },
+        "ignoreEntity": {
+          "type": "int32",
+          "id": 17,
+          "options": {
+            "default": -1
+          }
+        },
+        "maxRange": {
+          "type": "float",
+          "id": 18
+        },
+        "shotId": {
+          "type": "uint32",
+          "id": 19
+        },
+        "predictHitsAgainstUnits": {
+          "type": "bool",
+          "id": 20,
+          "options": {
+            "default": true
+          }
+        },
+        "bulletRadiusOverride": {
+          "type": "float",
+          "id": 21,
+          "options": {
+            "default": 0
+          }
+        },
+        "bulletSpeedOverride": {
+          "type": "float",
+          "id": 22,
+          "options": {
+            "default": 0
+          }
+        },
+        "bulletGravityOverride": {
+          "type": "float",
+          "id": 23,
+          "options": {
+            "default": 0
+          }
+        },
+        "muzzleNumber": {
+          "type": "int32",
+          "id": 24
+        },
+        "abilityAsBullet": {
+          "type": "bool",
+          "id": 25
+        }
+      },
+      "nested": {
+        "TracerAssignment": {
+          "fields": {
+            "tracerResourceId": {
+              "type": "uint64",
+              "id": 1
+            },
+            "bulletIndicies": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CMsgBulletImpact": {
+      "edition": "proto2",
+      "fields": {
+        "traceStart": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "impactOrigin": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "surfaceNormal": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "damage": {
+          "type": "uint32",
+          "id": 4
+        },
+        "surfaceType": {
+          "type": "uint32",
+          "id": 5
+        },
+        "abilityEhandle": {
+          "type": "uint32",
+          "id": 7,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "impactedEhandle": {
+          "type": "uint32",
+          "id": 8,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "impactedBoneIndex": {
+          "type": "uint32",
+          "id": 9
+        },
+        "weaponSubclassId": {
+          "type": "uint32",
+          "id": 10
+        },
+        "shooterEhandle": {
+          "type": "uint32",
+          "id": 11,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "bulletRadiusOverride": {
+          "type": "float",
+          "id": 12
+        }
+      }
+    },
+    "CMsgPlayerAnimEvent": {
+      "edition": "proto2",
+      "fields": {
+        "player": {
+          "type": "fixed32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "event": {
+          "type": "uint32",
+          "id": 2
+        },
+        "data": {
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CMsgParticleSystemManager": {
+      "edition": "proto2",
+      "fields": {
+        "type": {
+          "type": ".PARTICLE_SYSTEM_MANAGER_MESSAGE",
+          "id": 1,
+          "options": {
+            "default": "PARTICLE_SYSTEM_MANAGER_EVENT_CREATE"
+          }
+        },
+        "index": {
+          "type": "uint32",
+          "id": 2
+        },
+        "createParticle": {
+          "type": ".CMsgParticleSystemManager.CreateParticle",
+          "id": 3
+        },
+        "destroyParticle": {
+          "type": ".CMsgParticleSystemManager.DestroyParticle",
+          "id": 4
+        },
+        "destroyParticleInvolving": {
+          "type": ".CMsgParticleSystemManager.DestroyParticleInvolving",
+          "id": 5
+        },
+        "releaseParticleIndex": {
+          "type": ".CMsgParticleSystemManager.ReleaseParticleIndex",
+          "id": 6
+        },
+        "updateParticle": {
+          "type": ".CMsgParticleSystemManager.UpdateParticle",
+          "id": 7
+        },
+        "updateParticleFwd": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleFwd",
+          "id": 8
+        },
+        "updateParticleOrient": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleOrient",
+          "id": 9
+        },
+        "updateParticleFallback": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleFallback",
+          "id": 10
+        },
+        "updateParticleOffset": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleOffset",
+          "id": 11
+        },
+        "updateParticleEnt": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleEnt",
+          "id": 12
+        },
+        "updateParticleFrozen": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleFrozen",
+          "id": 13
+        },
+        "updateParticleShouldDraw": {
+          "type": ".CMsgParticleSystemManager.UpdateParticleShouldDraw",
+          "id": 14
+        }
+      },
+      "nested": {
+        "CreateParticle": {
+          "fields": {
+            "particleNameIndex": {
+              "type": "fixed64",
+              "id": 1
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 2
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "angles": {
+              "type": ".CMsgQAngle",
+              "id": 5
+            }
+          }
+        },
+        "DestroyParticle": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "DestroyParticleInvolving": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "ReleaseParticleIndex": {
+          "fields": {}
+        },
+        "UpdateParticle": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleFwd": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleOrient": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "left": {
+              "type": ".CMsgVector",
+              "id": 3
+            },
+            "up": {
+              "type": ".CMsgVector",
+              "id": 4
+            }
+          }
+        },
+        "UpdateParticleFallback": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleEnt": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 3
+            },
+            "attachment": {
+              "type": "int32",
+              "id": 4
+            },
+            "fallbackPosition": {
+              "type": ".CMsgVector",
+              "id": 5
+            }
+          }
+        },
+        "UpdateParticleOffset": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "originOffset": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleFrozen": {
+          "fields": {
+            "setFrozen": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "UpdateParticleShouldDraw": {
+          "fields": {
+            "shouldDraw": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        }
+      }
+    },
+    "CMsgScreenTextPretty": {
+      "edition": "proto2",
+      "fields": {
+        "xPos": {
+          "type": "float",
+          "id": 1
+        },
+        "yPos": {
+          "type": "float",
+          "id": 2
+        },
+        "line": {
+          "type": "int32",
+          "id": 3
+        },
+        "text": {
+          "type": "string",
+          "id": 4
+        },
+        "r": {
+          "type": "int32",
+          "id": 5
+        },
+        "g": {
+          "type": "int32",
+          "id": 6
+        },
+        "b": {
+          "type": "int32",
+          "id": 7
+        },
+        "a": {
+          "type": "int32",
+          "id": 8
+        },
+        "duration": {
+          "type": "float",
+          "id": 9
+        },
+        "fontName": {
+          "type": "string",
+          "id": 10
+        },
+        "fontSize": {
+          "type": "int32",
+          "id": 11
+        },
+        "boldFont": {
+          "type": "bool",
+          "id": 12
+        }
+      }
+    },
+    "CMsgEnableSatVolumesEvent": {
+      "edition": "proto2",
+      "fields": {
+        "mode": {
+          "type": "uint32",
+          "id": 1
+        },
+        "desatAmount": {
+          "type": "float",
+          "id": 2
+        },
+        "satTint": {
+          "type": "fixed32",
+          "id": 3
+        },
+        "desatTint": {
+          "type": "fixed32",
+          "id": 4
+        },
+        "outlineColor": {
+          "type": "fixed32",
+          "id": 5
+        }
+      }
+    },
+    "CMsgPlaceSatVolumeEvent": {
+      "edition": "proto2",
+      "fields": {
+        "position": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "direction": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "radius": {
+          "type": "float",
+          "id": 3
+        },
+        "falloffDistance": {
+          "type": "float",
+          "id": 4
+        },
+        "thetaDot": {
+          "type": "float",
+          "id": 5
+        },
+        "phiDot": {
+          "type": "float",
+          "id": 6
+        },
+        "entityHandle": {
+          "type": "uint32",
+          "id": 7,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "attachmentHandle": {
+          "type": "uint32",
+          "id": 8
+        },
+        "type": {
+          "type": "uint32",
+          "id": 9
+        },
+        "volumeId": {
+          "type": "int32",
+          "id": 10
+        }
+      }
+    },
+    "CMsgRemoveSatVolumeEvent": {
+      "edition": "proto2",
+      "fields": {
+        "volumeId": {
+          "type": "int32",
+          "id": 1
+        }
+      }
+    },
+    "CMsgDisableSatVolumesEvent": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CMsgRemoveBullet": {
+      "edition": "proto2",
+      "fields": {
+        "shooterEntindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "shotId": {
+          "type": "uint32",
+          "id": 2
+        },
+        "bulletIndex": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "SignonState_t": {
+      "edition": "proto2",
+      "values": {
+        "SIGNONSTATE_NONE": 0,
+        "SIGNONSTATE_CHALLENGE": 1,
+        "SIGNONSTATE_CONNECTED": 2,
+        "SIGNONSTATE_NEW": 3,
+        "SIGNONSTATE_PRESPAWN": 4,
+        "SIGNONSTATE_SPAWN": 5,
+        "SIGNONSTATE_FULL": 6,
+        "SIGNONSTATE_CHANGELEVEL": 7
+      }
+    },
+    "CMsgVector": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgQAngle": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        }
+      }
+    },
+    "CMsgQuaternion": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgTransform": {
+      "edition": "proto2",
+      "fields": {
+        "position": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "scale": {
+          "type": "float",
+          "id": 2
+        },
+        "orientation": {
+          "type": ".CMsgQuaternion",
+          "id": 3
+        }
+      }
+    },
+    "CMsgPlayerInfo": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "xuid": {
+          "type": "fixed64",
+          "id": 2
+        },
+        "userid": {
+          "type": "int32",
+          "id": 3
+        },
+        "steamid": {
+          "type": "fixed64",
+          "id": 4
+        },
+        "fakeplayer": {
+          "type": "bool",
+          "id": 5
+        },
+        "ishltv": {
+          "type": "bool",
+          "id": 6
+        }
+      }
+    },
+    "CEntityMsg": {
+      "edition": "proto2",
+      "fields": {
+        "targetEntity": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CMsg_CVars": {
+      "edition": "proto2",
+      "fields": {
+        "cvars": {
+          "rule": "repeated",
+          "type": ".CMsg_CVars.CVar",
+          "id": 1
+        }
+      },
+      "nested": {
+        "CVar": {
+          "fields": {
+            "name": {
+              "type": "string",
+              "id": 1
+            },
+            "value": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CNETMsg_Tick": {
+      "edition": "proto2",
+      "fields": {
+        "tick": {
+          "type": "uint32",
+          "id": 1
+        },
+        "hostComputationtime": {
+          "type": "uint32",
+          "id": 4
+        },
+        "hostComputationtimeStdDeviation": {
+          "type": "uint32",
+          "id": 5
+        },
+        "legacyHostLoss": {
+          "type": "uint32",
+          "id": 7
+        },
+        "hostUnfilteredFrametime": {
+          "type": "uint32",
+          "id": 8
+        },
+        "hltvReplayFlags": {
+          "type": "uint32",
+          "id": 9
+        },
+        "expectedLongTick": {
+          "type": "uint32",
+          "id": 10
+        },
+        "expectedLongTickReason": {
+          "type": "string",
+          "id": 11
+        },
+        "hostFrameDroppedPctX10": {
+          "type": "uint32",
+          "id": 12
+        },
+        "hostFrameIrregularArrivalPctX10": {
+          "type": "uint32",
+          "id": 13
+        }
+      }
+    },
+    "CNETMsg_SetConVar": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
+      "fields": {
+        "convars": {
+          "type": ".CMsg_CVars",
+          "id": 1
+        }
+      }
+    },
+    "CNETMsg_SignonState": {
+      "edition": "proto2",
+      "fields": {
+        "signonState": {
+          "type": ".SignonState_t",
+          "id": 1,
+          "options": {
+            "default": "SIGNONSTATE_NONE"
+          }
+        },
+        "spawnCount": {
+          "type": "uint32",
+          "id": 2
+        },
+        "numServerPlayers": {
+          "type": "uint32",
+          "id": 3
+        },
+        "playersNetworkids": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4
+        },
+        "mapName": {
+          "type": "string",
+          "id": 5
+        },
+        "addons": {
+          "type": "string",
+          "id": 6
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_Load": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 131072
+      },
+      "fields": {
+        "worldname": {
+          "type": "string",
+          "id": 1
+        },
+        "entitylumpname": {
+          "type": "string",
+          "id": 2
+        },
+        "entityfiltername": {
+          "type": "string",
+          "id": 3
+        },
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 4
+        },
+        "spawngroupownerhandle": {
+          "type": "uint32",
+          "id": 5
+        },
+        "worldOffsetPos": {
+          "type": ".CMsgVector",
+          "id": 6
+        },
+        "worldOffsetAngle": {
+          "type": ".CMsgQAngle",
+          "id": 7
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 8
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 9
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 10
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 11
+        },
+        "localnamefixup": {
+          "type": "string",
+          "id": 12
+        },
+        "parentnamefixup": {
+          "type": "string",
+          "id": 13
+        },
+        "manifestloadpriority": {
+          "type": "int32",
+          "id": 14
+        },
+        "worldgroupid": {
+          "type": "uint32",
+          "id": 15
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 16
+        },
+        "savegamefilename": {
+          "type": "string",
+          "id": 17
+        },
+        "spawngroupparenthandle": {
+          "type": "uint32",
+          "id": 18
+        },
+        "leveltransition": {
+          "type": "bool",
+          "id": 19
+        },
+        "worldgroupname": {
+          "type": "string",
+          "id": 20
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_ManifestUpdate": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 2048
+      },
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 2
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_SetCreationTick": {
+      "edition": "proto2",
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 2
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CSVCMsg_GameSessionConfiguration": {
+      "edition": "proto2",
+      "fields": {
+        "isMultiplayer": {
+          "type": "bool",
+          "id": 1
+        },
+        "isLoadsavegame": {
+          "type": "bool",
+          "id": 2
+        },
+        "isBackgroundMap": {
+          "type": "bool",
+          "id": 3
+        },
+        "isHeadless": {
+          "type": "bool",
+          "id": 4
+        },
+        "minClientLimit": {
+          "type": "uint32",
+          "id": 5
+        },
+        "maxClientLimit": {
+          "type": "uint32",
+          "id": 6
+        },
+        "maxClients": {
+          "type": "uint32",
+          "id": 7
+        },
+        "tickInterval": {
+          "type": "fixed32",
+          "id": 8
+        },
+        "hostname": {
+          "type": "string",
+          "id": 9
+        },
+        "savegamename": {
+          "type": "string",
+          "id": 10
+        },
+        "s1Mapname": {
+          "type": "string",
+          "id": 11
+        },
+        "gamemode": {
+          "type": "string",
+          "id": 12
+        },
+        "serverIpAddress": {
+          "type": "string",
+          "id": 13
+        },
+        "data": {
+          "type": "bytes",
+          "id": 14
+        },
+        "isLocalonly": {
+          "type": "bool",
+          "id": 15
+        },
+        "noSteamServer": {
+          "type": "bool",
+          "id": 19
+        },
+        "isTransition": {
+          "type": "bool",
+          "id": 16
+        },
+        "previouslevel": {
+          "type": "string",
+          "id": 17
+        },
+        "landmarkname": {
+          "type": "string",
+          "id": 18
+        }
+      }
+    },
+    "CMsgLaneColor": {
+      "edition": "proto2",
+      "valuesOptions": {
+        "k_ELaneColor_Invalid": {
+          "(schema_friendly_name)": "None"
+        },
+        "k_ELaneColor_Yellow": {
+          "(schema_friendly_name)": "Yellow"
+        },
+        "k_ELaneColor_Green": {
+          "(schema_friendly_name)": "Green"
+        },
+        "k_ELaneColor_Blue": {
+          "(schema_friendly_name)": "Blue"
+        },
+        "k_ELaneColor_Purple": {
+          "(schema_friendly_name)": "Purple"
+        }
+      },
+      "values": {
+        "k_ELaneColor_Invalid": 0,
+        "k_ELaneColor_Yellow": 1,
+        "k_ELaneColor_Green": 3,
+        "k_ELaneColor_Blue": 4,
+        "k_ELaneColor_Purple": 6
+      }
+    },
+    "CMsgMapLine": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "initial": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "ChatMsgPingMarkerInfo": {
+      "edition": "proto2",
+      "valuesOptions": {
+        "k_EPingMarkerInfo_ShowMarkerAndSound": {
+          "(schema_friendly_name)": "Show Ping Indicator at Ping Location, Play Ping Sound, and Play VO"
+        },
+        "k_EPingMarkerInfo_ShowMarkerOnSender": {
+          "(schema_friendly_name)": "Show Ping Indicator on Pinging Player, Play Ping Sound, and Play VO"
+        },
+        "k_EPingMarkerInfo_HideMarkerAndSound": {
+          "(schema_friendly_name)": "No Marker or Sound (just VO)"
+        },
+        "k_EPingMarkerInfo_OnlyShowMarker": {
+          "(schema_friendly_name)": "Only Show Ping Indicator at Ping Location (no ping sound)"
+        },
+        "k_EPingMarkerInfo_OnlyPlaySound": {
+          "(schema_friendly_name)": "Only Play Ping Sound (and VO)"
+        },
+        "k_EPingMarkerInfo_OnlyMiniMap": {
+          "(schema_friendly_name)": "Only show on Minimap, no world, no sound"
+        }
+      },
+      "values": {
+        "k_EPingMarkerInfo_ShowMarkerAndSound": 0,
+        "k_EPingMarkerInfo_ShowMarkerOnSender": 1,
+        "k_EPingMarkerInfo_HideMarkerAndSound": 2,
+        "k_EPingMarkerInfo_OnlyShowMarker": 3,
+        "k_EPingMarkerInfo_OnlyPlaySound": 4,
+        "k_EPingMarkerInfo_OnlyMiniMap": 5
+      }
+    },
+    "CameraOperation": {
+      "edition": "proto2",
+      "values": {
+        "k_ECameraOp_Maintain": 2,
+        "k_ECameraOp_Approach": 3,
+        "k_ECameraOp_Spring": 4,
+        "k_ECameraOp_Lerp": 5,
+        "k_ECameraOp_Lag": 6
+      }
+    },
+    "CameraParam": {
+      "edition": "proto2",
+      "values": {
+        "k_EParam_ClearAllOps": 0,
+        "k_EParam_ClearAllOpsForContext": 1,
+        "k_EParam_Distance": 2,
+        "k_EParam_FOV": 3,
+        "k_EParam_TargetPosition": 4,
+        "k_EParam_VertOffset": 5,
+        "k_EParam_HorizOffset": 6
+      }
+    },
+    "CameraParamMode": {
+      "edition": "proto2",
+      "values": {
+        "k_EParamMode_AllowInOneContext": 0,
+        "k_EParamMode_AllowInMultipleContexts": 1
+      }
+    },
+    "CameraAction": {
+      "edition": "proto2",
+      "values": {
+        "k_EAction_AddOp": 0,
+        "k_EAction_ClearAllOps": 1,
+        "k_EAction_ClearOpsForContext": 2
+      }
+    },
+    "ECitadelChatMessage": {
+      "edition": "proto2",
+      "values": {
+        "CITADEL_CHAT_MESSAGE_UNPAUSE_COUNTDOWN": 1,
+        "CITADEL_CHAT_MESSAGE_UNPAUSED": 2,
+        "CITADEL_CHAT_MESSAGE_AUTO_UNPAUSED": 3,
+        "CITADEL_CHAT_MESSAGE_PAUSE_COUNTDOWN": 4,
+        "CITADEL_CHAT_MESSAGE_PAUSED": 5,
+        "CITADEL_CHAT_MESSAGE_YOUPAUSED": 6,
+        "CITADEL_CHAT_MESSAGE_CANTPAUSE": 7,
+        "CITADEL_CHAT_MESSAGE_CANTUNPAUSETEAM": 8,
+        "CITADEL_CHAT_MESSAGE_NOPAUSESLEFT": 9,
+        "CITADEL_CHAT_MESSAGE_CANTPAUSEYET": 10,
+        "CITADEL_CHAT_MESSAGE_PREGAME_COUNTDOWN": 11,
+        "CITADEL_CHAT_MESSAGE_NOTEAMPAUSESLEFT": 12,
+        "CITADEL_CHAT_MESSAGE_COMMS_RESTRICTED": 13
+      }
+    },
+    "PostProcessingGameStates": {
+      "edition": "proto2",
+      "values": {
+        "PostProcState_Killed": 0,
+        "PostProcState_Black": 1,
+        "PostProcState_DoormanHotelVictim": 2,
+        "PostProcState_Blinded": 3,
+        "PostProcState_DrifterDarknessCaster": 4,
+        "PostProcState_MatchIntro": 5
+      }
+    },
+    "CCitadelUserMessage_Damage": {
+      "edition": "proto2",
+      "fields": {
+        "damage": {
+          "type": "int32",
+          "id": 1
+        },
+        "preDamageDeprecated": {
+          "type": "int32",
+          "id": 2
+        },
+        "preDamage": {
+          "type": "float",
+          "id": 27
+        },
+        "type": {
+          "type": "int32",
+          "id": 3
+        },
+        "citadelType": {
+          "type": "int32",
+          "id": 4
+        },
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 5
+        },
+        "entindexVictim": {
+          "type": "int32",
+          "id": 6,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexInflictor": {
+          "type": "int32",
+          "id": 7,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAttacker": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAbility": {
+          "type": "int32",
+          "id": 9,
+          "options": {
+            "default": -1
+          }
+        },
+        "damageAbsorbedDeprecated": {
+          "type": "int32",
+          "id": 10
+        },
+        "damageAbsorbed": {
+          "type": "float",
+          "id": 28
+        },
+        "victimHealthMax": {
+          "type": "int32",
+          "id": 11
+        },
+        "victimHealthNew": {
+          "type": "int32",
+          "id": 12
+        },
+        "flags": {
+          "type": "uint64",
+          "id": 13
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 14
+        },
+        "attackerClass": {
+          "type": "uint32",
+          "id": 15
+        },
+        "victimClass": {
+          "type": "uint32",
+          "id": 16
+        },
+        "victimShieldMax": {
+          "type": "int32",
+          "id": 17
+        },
+        "victimShieldNew": {
+          "type": "int32",
+          "id": 18
+        },
+        "hits": {
+          "type": "int32",
+          "id": 19
+        },
+        "healthLost": {
+          "type": "int32",
+          "id": 20
+        },
+        "hitgroupId": {
+          "type": "int32",
+          "id": 21
+        },
+        "entindexAttackingObject": {
+          "type": "int32",
+          "id": 22,
+          "options": {
+            "default": -1
+          }
+        },
+        "damageDirection": {
+          "type": ".CMsgVector",
+          "id": 23
+        },
+        "isSecondaryStat": {
+          "type": "bool",
+          "id": 24
+        },
+        "effectiveness": {
+          "type": "float",
+          "id": 25
+        },
+        "critDamage": {
+          "type": "float",
+          "id": 26
+        },
+        "serverTick": {
+          "type": "int32",
+          "id": 29
+        }
+      }
+    },
+    "PingCommonData": {
+      "edition": "proto2",
+      "fields": {
+        "pingMessageId": {
+          "type": "uint32",
+          "id": 1
+        },
+        "pingLocation": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "entityIndex": {
+          "type": "uint32",
+          "id": 3,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "senderPlayerSlot": {
+          "type": "int32",
+          "id": 4,
+          "options": {
+            "default": -1
+          }
+        },
+        "speechConcept": {
+          "type": "int32",
+          "id": 5
+        },
+        "responseChosen": {
+          "type": "string",
+          "id": 6
+        },
+        "cooldownTime": {
+          "type": "float",
+          "id": 7
+        }
+      }
+    },
+    "CCitadelUserMsg_MapPing": {
+      "edition": "proto2",
+      "fields": {
+        "pingData": {
+          "type": ".PingCommonData",
+          "id": 1
+        },
+        "eventType": {
+          "type": "uint32",
+          "id": 2
+        },
+        "pingMarkerAndSoundInfo": {
+          "type": ".ChatMsgPingMarkerInfo",
+          "id": 3,
+          "options": {
+            "default": "k_EPingMarkerInfo_ShowMarkerAndSound"
+          }
+        },
+        "pingedEnemyEntity": {
+          "type": "bool",
+          "id": 4
+        },
+        "pingedEntityClass": {
+          "type": "uint32",
+          "id": 5
+        },
+        "isMinimapPing": {
+          "type": "bool",
+          "id": 6
+        },
+        "pingedHeroName": {
+          "type": "string",
+          "id": 7
+        },
+        "isBlindPing": {
+          "type": "bool",
+          "id": 8
+        }
+      }
+    },
+    "CCitadelUserMsg_AbilityPing": {
+      "edition": "proto2",
+      "fields": {
+        "pingData": {
+          "type": ".PingCommonData",
+          "id": 1
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 2
+        },
+        "abilityCooldown": {
+          "type": "float",
+          "id": 3
+        },
+        "pingMarkerAndSoundInfo": {
+          "type": ".ChatMsgPingMarkerInfo",
+          "id": 4,
+          "options": {
+            "default": "k_EPingMarkerInfo_ShowMarkerAndSound"
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_QuickResponse": {
+      "edition": "proto2",
+      "fields": {
+        "pingData": {
+          "type": ".PingCommonData",
+          "id": 1
+        },
+        "respondingToPingMessageId": {
+          "type": "uint32",
+          "id": 2
+        },
+        "respondingToPlayerSlot": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "laneColor": {
+          "type": ".CMsgLaneColor",
+          "id": 4,
+          "options": {
+            "default": "k_ELaneColor_Invalid"
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_ItemDraftReaction": {
+      "edition": "proto2",
+      "fields": {
+        "pingData": {
+          "type": ".PingCommonData",
+          "id": 1
+        },
+        "rare": {
+          "type": "bool",
+          "id": 2
+        },
+        "legendary": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_MapLine": {
+      "edition": "proto2",
+      "fields": {
+        "senderPlayerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "mapline": {
+          "type": ".CMsgMapLine",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_TeamRewards": {
+      "edition": "proto2",
+      "fields": {
+        "xp": {
+          "type": "uint32",
+          "id": 1
+        },
+        "gold": {
+          "type": "uint32",
+          "id": 2
+        },
+        "winner": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_TriggerDamageFlash": {
+      "edition": "proto2",
+      "fields": {
+        "entindexFlashVictim": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexFlashAttacker": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexFlashHitgroup": {
+          "type": "int32",
+          "id": 3
+        },
+        "flashValue": {
+          "type": "uint32",
+          "id": 4
+        },
+        "flashType": {
+          "type": "uint32",
+          "id": 5
+        },
+        "flashFlags": {
+          "type": "uint32",
+          "id": 6
+        },
+        "flashPosition": {
+          "type": ".CMsgVector",
+          "id": 7
+        }
+      }
+    },
+    "CCitadelUserMsg_AbilitiesChanged": {
+      "edition": "proto2",
+      "fields": {
+        "purchaserPlayerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 2
+        },
+        "change": {
+          "type": ".CCitadelUserMsg_AbilitiesChanged.Change",
+          "id": 3,
+          "options": {
+            "default": "EInvalid"
+          }
+        }
+      },
+      "nested": {
+        "Change": {
+          "values": {
+            "EInvalid": -1,
+            "EPurchased": 0,
+            "EUpgraded": 1,
+            "ESold": 2,
+            "ESwappedActivatedAbility": 3,
+            "EFailure": 4
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_AbilityInterrupted": {
+      "edition": "proto2",
+      "fields": {
+        "entindexVictim": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexInterrupter": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityIdInterrupted": {
+          "type": "uint32",
+          "id": 3
+        },
+        "abilityIdInterrupter": {
+          "type": "uint32",
+          "id": 4
+        },
+        "heroIdInterrupter": {
+          "type": "uint32",
+          "id": 5
+        }
+      }
+    },
+    "CCitadelUserMsg_AbilityLateFailure": {
+      "edition": "proto2",
+      "fields": {
+        "entindexCaster": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAbility": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "failureType": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_RecentDamageSummary": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
+      "fields": {
+        "playerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "damageRecords": {
+          "rule": "repeated",
+          "type": ".CCitadelUserMsg_RecentDamageSummary.DamageRecord",
+          "id": 2
+        },
+        "startTime": {
+          "type": "float",
+          "id": 3
+        },
+        "endTime": {
+          "type": "float",
+          "id": 4
+        },
+        "totalDamage": {
+          "type": "int32",
+          "id": 5
+        },
+        "lostGold": {
+          "type": "int32",
+          "id": 6
+        },
+        "modifierRecords": {
+          "rule": "repeated",
+          "type": ".CCitadelUserMsg_RecentDamageSummary.ModifierRecord",
+          "id": 7
+        }
+      },
+      "nested": {
+        "DamageRecord": {
+          "fields": {
+            "damage": {
+              "type": "int32",
+              "id": 1
+            },
+            "hits": {
+              "type": "int32",
+              "id": 2
+            },
+            "damageType": {
+              "type": "uint32",
+              "id": 3
+            },
+            "heroId": {
+              "type": "uint32",
+              "id": 4
+            },
+            "abilityId": {
+              "type": "uint32",
+              "id": 5
+            },
+            "attackerClass": {
+              "type": "uint32",
+              "id": 6
+            },
+            "damageAbsorbed": {
+              "type": "float",
+              "id": 7
+            },
+            "isKillingBlow": {
+              "type": "bool",
+              "id": 8
+            },
+            "victimHeroId": {
+              "type": "uint32",
+              "id": 9
+            },
+            "isSecondaryStat": {
+              "type": "bool",
+              "id": 10
+            },
+            "preDamage": {
+              "type": "float",
+              "id": 11
+            },
+            "critDamage": {
+              "type": "float",
+              "id": 12
+            }
+          }
+        },
+        "ModifierRecord": {
+          "fields": {
+            "abilityId": {
+              "type": "uint32",
+              "id": 1
+            },
+            "modifierTypeId": {
+              "type": "uint32",
+              "id": 2
+            },
+            "entindexCaster": {
+              "type": "int32",
+              "id": 3,
+              "options": {
+                "default": -1
+              }
+            },
+            "startTime": {
+              "type": "float",
+              "id": 4
+            },
+            "endTime": {
+              "type": "float",
+              "id": 5
+            },
+            "debuff": {
+              "type": "bool",
+              "id": 6
+            }
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_SpectatorTeamChanged": {
+      "edition": "proto2",
+      "fields": {
+        "teamnumber": {
+          "type": "int32",
+          "id": 1
+        }
+      }
+    },
+    "CCitadelUserMsg_ChatWheel": {
+      "edition": "proto2",
+      "fields": {
+        "chatMessageId": {
+          "type": "uint32",
+          "id": 1
+        },
+        "playerSlot": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "pawnEntindex": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "accountId": {
+          "type": "uint32",
+          "id": 4
+        },
+        "heroId": {
+          "type": "uint32",
+          "id": 5
+        },
+        "param_1": {
+          "type": "string",
+          "id": 6
+        },
+        "laneColor": {
+          "type": ".CMsgLaneColor",
+          "id": 7,
+          "options": {
+            "default": "k_ELaneColor_Invalid"
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_ChatMsg": {
+      "edition": "proto2",
+      "fields": {
+        "playerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "text": {
+          "type": "string",
+          "id": 2
+        },
+        "allChat": {
+          "type": "bool",
+          "id": 3
+        },
+        "laneColor": {
+          "type": ".CMsgLaneColor",
+          "id": 4,
+          "options": {
+            "default": "k_ELaneColor_Invalid"
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_GoldHistory": {
+      "edition": "proto2",
+      "fields": {
+        "entindexPlayer": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "minuteRecords": {
+          "rule": "repeated",
+          "type": ".CCitadelUserMsg_GoldHistory.MinuteRecord",
+          "id": 2
+        }
+      },
+      "nested": {
+        "GoldRecord": {
+          "fields": {
+            "currencySource": {
+              "type": "int32",
+              "id": 1
+            },
+            "gold": {
+              "type": "int32",
+              "id": 2
+            },
+            "events": {
+              "type": "int32",
+              "id": 3
+            }
+          }
+        },
+        "MinuteRecord": {
+          "fields": {
+            "matchMinute": {
+              "type": "int32",
+              "id": 1
+            },
+            "goldRecords": {
+              "rule": "repeated",
+              "type": ".CCitadelUserMsg_GoldHistory.GoldRecord",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_CameraController": {
+      "edition": "proto2",
+      "fields": {
+        "action": {
+          "type": ".CameraAction",
+          "id": 1,
+          "options": {
+            "default": "k_EAction_AddOp"
+          }
+        },
+        "operation": {
+          "type": ".CameraOperation",
+          "id": 2,
+          "options": {
+            "default": "k_ECameraOp_Maintain"
+          }
+        },
+        "param": {
+          "type": ".CameraParam",
+          "id": 3,
+          "options": {
+            "default": "k_EParam_ClearAllOps"
+          }
+        },
+        "paramMode": {
+          "type": ".CameraParamMode",
+          "id": 12,
+          "options": {
+            "default": "k_EParamMode_AllowInOneContext"
+          }
+        },
+        "delay": {
+          "type": "float",
+          "id": 4
+        },
+        "relativeValues": {
+          "type": "bool",
+          "id": 11
+        },
+        "contextSymbolId": {
+          "type": "uint32",
+          "id": 5
+        },
+        "priority": {
+          "type": "uint32",
+          "id": 13,
+          "options": {
+            "default": 1
+          }
+        },
+        "maintain": {
+          "type": ".CCitadelUserMsg_CameraController.Maintain",
+          "id": 6
+        },
+        "approach": {
+          "type": ".CCitadelUserMsg_CameraController.Approach",
+          "id": 7
+        },
+        "spring": {
+          "type": ".CCitadelUserMsg_CameraController.Spring",
+          "id": 8
+        },
+        "lerp": {
+          "type": ".CCitadelUserMsg_CameraController.Lerp",
+          "id": 9
+        },
+        "lag": {
+          "type": ".CCitadelUserMsg_CameraController.Lag",
+          "id": 10
+        }
+      },
+      "nested": {
+        "Maintain": {
+          "fields": {
+            "duration": {
+              "type": "float",
+              "id": 1,
+              "options": {
+                "default": 0
+              }
+            }
+          }
+        },
+        "Approach": {
+          "fields": {
+            "speed": {
+              "type": "float",
+              "id": 1,
+              "options": {
+                "default": 600
+              }
+            },
+            "defaultSpeed": {
+              "type": "float",
+              "id": 2,
+              "options": {
+                "default": 600
+              }
+            },
+            "acceleration": {
+              "type": "float",
+              "id": 3,
+              "options": {
+                "default": 1000
+              }
+            },
+            "minDuration": {
+              "type": "float",
+              "id": 4,
+              "options": {
+                "default": 0
+              }
+            },
+            "approachFloat": {
+              "type": "float",
+              "id": 5
+            },
+            "approachVector": {
+              "type": ".CMsgVector",
+              "id": 6
+            },
+            "chaseDefault": {
+              "type": "bool",
+              "id": 7
+            }
+          }
+        },
+        "Spring": {
+          "fields": {
+            "springStrength": {
+              "type": "float",
+              "id": 1,
+              "options": {
+                "default": 10
+              }
+            },
+            "minSpeed": {
+              "type": "float",
+              "id": 4,
+              "options": {
+                "default": 0
+              }
+            },
+            "maxDuration": {
+              "type": "float",
+              "id": 5,
+              "options": {
+                "default": 0
+              }
+            },
+            "targetFloat": {
+              "type": "float",
+              "id": 6
+            },
+            "targetVector": {
+              "type": ".CMsgVector",
+              "id": 7
+            }
+          }
+        },
+        "Lerp": {
+          "fields": {
+            "startFloat": {
+              "type": "float",
+              "id": 1
+            },
+            "startVector": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "endFloat": {
+              "type": "float",
+              "id": 3
+            },
+            "endVector": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "bias": {
+              "type": "float",
+              "id": 5
+            },
+            "gain": {
+              "type": "float",
+              "id": 6
+            },
+            "duration": {
+              "type": "float",
+              "id": 7,
+              "options": {
+                "default": 1
+              }
+            }
+          }
+        },
+        "Lag": {
+          "fields": {
+            "minDuration": {
+              "type": "float",
+              "id": 1
+            },
+            "lagTime": {
+              "type": "float",
+              "id": 2
+            },
+            "maxSpeed": {
+              "type": "float",
+              "id": 3
+            },
+            "springStrength": {
+              "type": "float",
+              "id": 4
+            },
+            "increaseSpringStrengthToKeepTargetOnScreen": {
+              "type": "bool",
+              "id": 5,
+              "options": {
+                "default": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_PostMatchDetails": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 1000000
+      },
+      "fields": {
+        "matchDetails": {
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
+    "CCitadelUserMsg_ChatEvent": {
+      "edition": "proto2",
+      "fields": {
+        "type": {
+          "type": ".ECitadelChatMessage",
+          "id": 1,
+          "options": {
+            "default": "CITADEL_CHAT_MESSAGE_UNPAUSE_COUNTDOWN"
+          }
+        },
+        "values": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_HeroKilled": {
+      "edition": "proto2",
+      "fields": {
+        "entindexVictim": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexInflictor": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAttacker": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAssisters": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 4
+        },
+        "entindexScorer": {
+          "type": "int32",
+          "id": 5,
+          "options": {
+            "default": -1
+          }
+        },
+        "respawnReason": {
+          "type": "int32",
+          "id": 6
+        },
+        "victimTeamNumber": {
+          "type": "int32",
+          "id": 7
+        }
+      }
+    },
+    "CCitadelEntityMsg_BreakablePropSpawnDebris": {
+      "edition": "proto2",
+      "fields": {
+        "entityMsg": {
+          "type": ".CEntityMsg",
+          "id": 1
+        },
+        "damagePos": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "damage": {
+          "type": "float",
+          "id": 3
+        },
+        "damageForce": {
+          "type": ".CMsgVector",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMsg_ReturnIdol": {
+      "edition": "proto2",
+      "fields": {
+        "locationIndex": {
+          "type": "int32",
+          "id": 1
+        },
+        "returnLocation": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "locationEnabled": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_SetClientCameraAngles": {
+      "edition": "proto2",
+      "fields": {
+        "playerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "cameraAngles": {
+          "type": ".CMsgQAngle",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMessage_BulletHit": {
+      "edition": "proto2",
+      "fields": {
+        "shotid": {
+          "type": "int32",
+          "id": 1
+        },
+        "pellet": {
+          "type": "int32",
+          "id": 2
+        },
+        "hitEntindex": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "weaponEntindex": {
+          "type": "int32",
+          "id": 4,
+          "options": {
+            "default": -1
+          }
+        },
+        "isPredicted": {
+          "type": "bool",
+          "id": 5
+        }
+      }
+    },
+    "CCitadelUserMessage_ObjectiveMask": {
+      "edition": "proto2",
+      "fields": {
+        "objectiveMaskTeam0": {
+          "type": "uint64",
+          "id": 2
+        },
+        "objectiveMaskTeam1": {
+          "type": "uint64",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMessage_ModifierApplied": {
+      "edition": "proto2",
+      "fields": {
+        "entindexCaster": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexParent": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "serialNumber": {
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMessage_AuraModifierApplied": {
+      "edition": "proto2",
+      "fields": {
+        "entindexCaster": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexTarget": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "modifierTypeId": {
+          "type": "uint32",
+          "id": 3
+        },
+        "modifierSerialNumber": {
+          "type": "int32",
+          "id": 4
+        },
+        "auraStartTime": {
+          "type": "float",
+          "id": 5
+        },
+        "auraEndTime": {
+          "type": "float",
+          "id": 6
+        }
+      }
+    },
+    "CCitadelUserMsg_ObstructedShotFired": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CCitadelUserMsg_PostProcessingAnim": {
+      "edition": "proto2",
+      "fields": {
+        "entindexOwner": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "clearAllStates": {
+          "type": "bool",
+          "id": 2
+        },
+        "state": {
+          "type": ".PostProcessingGameStates",
+          "id": 3,
+          "options": {
+            "default": "PostProcState_Killed"
+          }
+        },
+        "delay": {
+          "type": "float",
+          "id": 4
+        },
+        "fadeInTime": {
+          "type": "float",
+          "id": 5
+        },
+        "holdTime": {
+          "type": "float",
+          "id": 6
+        },
+        "fadeOutTime": {
+          "type": "float",
+          "id": 7
+        },
+        "scale": {
+          "type": "float",
+          "id": 8
+        }
+      }
+    },
+    "CCitadelUserMsg_DeathReplayData": {
+      "edition": "proto2",
+      "fields": {
+        "killerScorer": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "killerInflictor": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "damageSummary": {
+          "type": ".CCitadelUserMsg_RecentDamageSummary",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_ForceShopClosed": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CCitadelUserMsg_PlayerLifetimeStatInfo": {
+      "edition": "proto2",
+      "fields": {
+        "stats": {
+          "rule": "repeated",
+          "type": ".CCitadelUserMsg_PlayerLifetimeStatInfo.Stat",
+          "id": 1
+        },
+        "matchId": {
+          "type": "uint64",
+          "id": 2
+        },
+        "endOfMatch": {
+          "type": "bool",
+          "id": 3
+        },
+        "isOfficialMatch": {
+          "type": "bool",
+          "id": 4
+        }
+      },
+      "nested": {
+        "Stat": {
+          "fields": {
+            "statName": {
+              "type": "string",
+              "id": 1
+            },
+            "matchTotal": {
+              "type": "uint32",
+              "id": 2
+            },
+            "lifetimeValue": {
+              "type": "uint32",
+              "id": 3
+            },
+            "priority": {
+              "type": "uint32",
+              "id": 4
+            },
+            "prevLifetimeMax": {
+              "type": "uint32",
+              "id": 5
+            },
+            "statType": {
+              "type": "uint32",
+              "id": 6
+            },
+            "statTypeId": {
+              "type": "uint32",
+              "id": 7
+            }
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_StaminaConsumed": {
+      "edition": "proto2",
+      "fields": {
+        "entindexTarget": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "staminaBefore": {
+          "type": "float",
+          "id": 3
+        },
+        "staminaAfter": {
+          "type": "float",
+          "id": 4
+        },
+        "drained": {
+          "type": "bool",
+          "id": 5
+        },
+        "staminaMax": {
+          "type": "float",
+          "id": 6
+        },
+        "gametime": {
+          "type": "float",
+          "id": 7
+        }
+      }
+    },
+    "CCitadelUserMessage_AbilityNotify": {
+      "edition": "proto2",
+      "fields": {
+        "entindexVictim": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "entindexAttacker": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 3
+        },
+        "statusImpact": {
+          "type": "uint32",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMessage_CurrencyChanged": {
+      "edition": "proto2",
+      "fields": {
+        "userid": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "currencyType": {
+          "type": "int32",
+          "id": 2
+        },
+        "currencySource": {
+          "type": "int32",
+          "id": 3
+        },
+        "delta": {
+          "type": "int32",
+          "id": 4
+        },
+        "notification": {
+          "type": "bool",
+          "id": 5
+        },
+        "entindexVictim": {
+          "type": "int32",
+          "id": 6,
+          "options": {
+            "default": -1
+          }
+        },
+        "victimPos": {
+          "type": ".CMsgVector",
+          "id": 7
+        },
+        "playsound": {
+          "type": "int32",
+          "id": 8
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 9
+        },
+        "newValue": {
+          "type": "uint32",
+          "id": 10
+        }
+      }
+    },
+    "CCitadelUserMessage_GameOver": {
+      "edition": "proto2",
+      "fields": {
+        "winningTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "justATest": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_GetDamageStatsResponse": {
+      "edition": "proto2",
+      "fields": {
+        "playerSlot": {
+          "type": "uint32",
+          "id": 1
+        },
+        "abilityName": {
+          "type": "string",
+          "id": 2
+        },
+        "damage": {
+          "type": ".CCitadelUserMsg_GetDamageStatsResponse.StatType",
+          "id": 3
+        },
+        "healing": {
+          "type": ".CCitadelUserMsg_GetDamageStatsResponse.StatType",
+          "id": 4
+        }
+      },
+      "nested": {
+        "StatType": {
+          "fields": {
+            "targetPlayerSlot": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 1,
+              "options": {
+                "packed": true
+              }
+            },
+            "value": {
+              "rule": "repeated",
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "packed": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_ParticipantStartSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "event": {
+          "type": ".CMsgSosStartSoundEvent",
+          "id": 1
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_ParticipantStopSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "event": {
+          "type": ".CMsgSosStopSoundEvent",
+          "id": 1
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_ParticipantStopSoundEventHash": {
+      "edition": "proto2",
+      "fields": {
+        "event": {
+          "type": ".CMsgSosStopSoundEventHash",
+          "id": 1
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_ParticipantSetSoundEventParams": {
+      "edition": "proto2",
+      "fields": {
+        "event": {
+          "type": ".CMsgSosSetSoundEventParams",
+          "id": 1
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_ParticipantSetLibraryStackFields": {
+      "edition": "proto2",
+      "fields": {
+        "event": {
+          "type": ".CMsgSosSetLibraryStackFields",
+          "id": 1
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_BossKilled": {
+      "edition": "proto2",
+      "fields": {
+        "objectiveTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "objectiveMaskChange": {
+          "type": "int32",
+          "id": 2
+        },
+        "entityKilled": {
+          "type": "uint32",
+          "id": 3,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "entityKilledClass": {
+          "type": "int32",
+          "id": 4
+        },
+        "entityKiller": {
+          "type": "uint32",
+          "id": 5,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "gametime": {
+          "type": "float",
+          "id": 6
+        },
+        "bossesRemaining": {
+          "type": "int32",
+          "id": 7
+        },
+        "entityPosition": {
+          "type": ".CMsgVector",
+          "id": 8
+        }
+      }
+    },
+    "CCitadelUserMsg_BossDamaged": {
+      "edition": "proto2",
+      "fields": {
+        "objectiveTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "objectiveId": {
+          "type": "int32",
+          "id": 2
+        },
+        "entityDamaged": {
+          "type": "uint32",
+          "id": 3,
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_MidBossSpawned": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CCitadelUserMsg_RejuvStatus": {
+      "edition": "proto2",
+      "fields": {
+        "killingTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "playerPawn": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "userTeam": {
+          "type": "int32",
+          "id": 3
+        },
+        "eventType": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMsg_KillStreak": {
+      "edition": "proto2",
+      "fields": {
+        "playerPawn": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "numKills": {
+          "type": "int32",
+          "id": 2
+        },
+        "isFirstBlood": {
+          "type": "bool",
+          "id": 3
+        },
+        "streakEnded": {
+          "type": "bool",
+          "id": 4
+        },
+        "duration": {
+          "type": "float",
+          "id": 5,
+          "options": {
+            "default": 5
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_TeamMsg": {
+      "edition": "proto2",
+      "fields": {
+        "eventType": {
+          "type": "int32",
+          "id": 1
+        },
+        "teamNumber": {
+          "type": "int32",
+          "id": 2
+        },
+        "laneColor": {
+          "type": "int32",
+          "id": 3
+        },
+        "playerController": {
+          "type": "uint32",
+          "id": 4,
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_PlayerRespawned": {
+      "edition": "proto2",
+      "fields": {
+        "playerPawn": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "facingYaw": {
+          "type": "float",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_CallCheaterVote": {
+      "edition": "proto2",
+      "fields": {
+        "playerSlot": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CCitadelUserMessage_MeleeHit": {
+      "edition": "proto2",
+      "fields": {
+        "hitEntindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "heavy": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_FlexSlotUnlocked": {
+      "edition": "proto2",
+      "fields": {
+        "teamNumber": {
+          "type": "int32",
+          "id": 1
+        },
+        "flexslotUnlocked": {
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMessage_ItemPurchaseNotification": {
+      "edition": "proto2",
+      "fields": {
+        "userid": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "uint32",
+          "id": 2
+        },
+        "sell": {
+          "type": "bool",
+          "id": 3
+        },
+        "quickbuy": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMsg_SeasonalKill": {
+      "edition": "proto2",
+      "fields": {
+        "killer": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "victim": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CCitadelUserMsg_MusicQueue": {
+      "edition": "proto2",
+      "fields": {
+        "musicState": {
+          "type": "int32",
+          "id": 1
+        },
+        "override": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_AG2ParamTrigger": {
+      "edition": "proto2",
+      "fields": {
+        "paramId": {
+          "type": "string",
+          "id": 1
+        },
+        "paramValue": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_EntityPortalled": {
+      "edition": "proto2",
+      "fields": {
+        "entityPortalled": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "portalTransform": {
+          "type": ".CMsgTransform",
+          "id": 2
+        }
+      }
+    },
+    "CCitadelUserMsg_StreetBrawlScoring": {
+      "edition": "proto2",
+      "fields": {
+        "scoringTeam": {
+          "type": "int32",
+          "id": 1
+        },
+        "justATest": {
+          "type": "bool",
+          "id": 2
+        },
+        "sapphireScore": {
+          "type": "int32",
+          "id": 3
+        },
+        "amberScore": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CCitadelUserMsg_HudGameAnnouncement": {
+      "edition": "proto2",
+      "fields": {
+        "titleLocstring": {
+          "type": "string",
+          "id": 1
+        },
+        "descriptionLocstring": {
+          "type": "string",
+          "id": 2
+        },
+        "classname": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 3
+        },
+        "dialogVariableName": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4
+        },
+        "dialogVariableLocstring": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 5
+        }
+      }
+    },
+    "CCitadelUserMessage_ImportantAbilityUsed": {
+      "edition": "proto2",
+      "fields": {
+        "player": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "caster": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "abilityName": {
+          "type": "string",
+          "id": 3
+        }
+      }
+    },
+    "CCitadelUserMsg_BannedHeroes": {
+      "edition": "proto2",
+      "fields": {
+        "bannedHeroIds": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1
+        }
+      }
+    },
+    "CMsgPlaceDecalEvent": {
+      "edition": "proto2",
+      "fields": {
+        "position": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "saxis": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "boneindex": {
+          "type": "int32",
+          "id": 4
+        },
+        "triangleindex": {
+          "type": "int32",
+          "id": 13
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 5
+        },
+        "color": {
+          "type": "fixed32",
+          "id": 6
+        },
+        "randomSeed": {
+          "type": "int32",
+          "id": 7
+        },
+        "decalGroupName": {
+          "type": "uint32",
+          "id": 8
+        },
+        "sizeOverride": {
+          "type": "float",
+          "id": 9
+        },
+        "entityhandle": {
+          "type": "uint32",
+          "id": 10,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "materialId": {
+          "type": "uint64",
+          "id": 11
+        },
+        "sequenceName": {
+          "type": "uint32",
+          "id": 12
+        }
+      }
+    },
+    "CMsgSource1LegacyGameEventList": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 32768
+      },
+      "fields": {
+        "descriptors": {
+          "rule": "repeated",
+          "type": ".CMsgSource1LegacyGameEventList.descriptor_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "key_t": {
+          "fields": {
+            "type": {
+              "type": "int32",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "descriptor_t": {
+          "fields": {
+            "eventid": {
+              "type": "int32",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            },
+            "keys": {
+              "rule": "repeated",
+              "type": ".CMsgSource1LegacyGameEventList.key_t",
+              "id": 3
+            }
+          }
+        }
+      }
+    },
+    "CMsgSource1LegacyGameEvent": {
+      "edition": "proto2",
+      "fields": {
+        "eventName": {
+          "type": "string",
+          "id": 1
+        },
+        "eventid": {
+          "type": "int32",
+          "id": 2
+        },
+        "keys": {
+          "rule": "repeated",
+          "type": ".CMsgSource1LegacyGameEvent.key_t",
+          "id": 3
+        },
+        "serverTick": {
+          "type": "int32",
+          "id": 4
+        },
+        "passthrough": {
+          "type": "int32",
+          "id": 5
+        }
+      },
+      "nested": {
+        "key_t": {
+          "fields": {
+            "type": {
+              "type": "int32",
+              "id": 1
+            },
+            "valString": {
+              "type": "string",
+              "id": 2
+            },
+            "valFloat": {
+              "type": "float",
+              "id": 3
+            },
+            "valLong": {
+              "type": "int32",
+              "id": 4
+            },
+            "valShort": {
+              "type": "int32",
+              "id": 5
+            },
+            "valByte": {
+              "type": "int32",
+              "id": 6
+            },
+            "valBool": {
+              "type": "bool",
+              "id": 7
+            },
+            "valUint64": {
+              "type": "uint64",
+              "id": 8
+            }
+          }
+        }
+      }
+    },
+    "CMsgSosStartSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1
+        },
+        "soundeventHash": {
+          "type": "fixed32",
+          "id": 2
+        },
+        "sourceEntityIndex": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "seed": {
+          "type": "int32",
+          "id": 4
+        },
+        "packedParams": {
+          "type": "bytes",
+          "id": 5
+        },
+        "startTime": {
+          "type": "float",
+          "id": 6
+        }
+      }
+    },
+    "CMsgSosStopSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1
+        }
+      }
+    },
+    "CMsgSosStopSoundEventHash": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventHash": {
+          "type": "fixed32",
+          "id": 1
+        },
+        "sourceEntityIndex": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CMsgSosSetSoundEventParams": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1
+        },
+        "packedParams": {
+          "type": "bytes",
+          "id": 5
+        }
+      }
+    },
+    "CMsgSosSetLibraryStackFields": {
+      "edition": "proto2",
+      "fields": {
+        "stackHash": {
+          "type": "fixed32",
+          "id": 1
+        },
+        "packedFields": {
+          "type": "bytes",
+          "id": 5
+        }
+      }
+    },
+    "CDemoFileHeader": {
+      "edition": "proto2",
+      "fields": {
+        "demoFileStamp": {
+          "rule": "required",
+          "type": "string",
+          "id": 1
+        },
+        "patchVersion": {
+          "type": "int32",
+          "id": 2
+        },
+        "serverName": {
+          "type": "string",
+          "id": 3
+        },
+        "clientName": {
+          "type": "string",
+          "id": 4
+        },
+        "mapName": {
+          "type": "string",
+          "id": 5
+        },
+        "gameDirectory": {
+          "type": "string",
+          "id": 6
+        },
+        "fullpacketsVersion": {
+          "type": "int32",
+          "id": 7
+        },
+        "allowClientsideEntities": {
+          "type": "bool",
+          "id": 8
+        },
+        "allowClientsideParticles": {
+          "type": "bool",
+          "id": 9
+        },
+        "addons": {
+          "type": "string",
+          "id": 10
+        },
+        "demoVersionName": {
+          "type": "string",
+          "id": 11
+        },
+        "demoVersionGuid": {
+          "type": "string",
+          "id": 12
+        },
+        "buildNum": {
+          "type": "int32",
+          "id": 13
+        },
+        "game": {
+          "type": "string",
+          "id": 14
+        },
+        "serverStartTick": {
+          "type": "int32",
+          "id": 15
+        }
+      }
+    },
+    "CGameInfo": {
+      "edition": "proto2",
+      "fields": {
+        "dota": {
+          "type": ".CGameInfo.CDotaGameInfo",
+          "id": 4
+        },
+        "cs": {
+          "type": ".CGameInfo.CCSGameInfo",
+          "id": 5
+        }
+      },
+      "nested": {
+        "CDotaGameInfo": {
+          "fields": {
+            "matchId": {
+              "type": "uint64",
+              "id": 1
+            },
+            "gameMode": {
+              "type": "int32",
+              "id": 2
+            },
+            "gameWinner": {
+              "type": "int32",
+              "id": 3
+            },
+            "playerInfo": {
+              "rule": "repeated",
+              "type": ".CGameInfo.CDotaGameInfo.CPlayerInfo",
+              "id": 4
+            },
+            "leagueid": {
+              "type": "uint32",
+              "id": 5
+            },
+            "picksBans": {
+              "rule": "repeated",
+              "type": ".CGameInfo.CDotaGameInfo.CHeroSelectEvent",
+              "id": 6
+            },
+            "radiantTeamId": {
+              "type": "uint32",
+              "id": 7
+            },
+            "direTeamId": {
+              "type": "uint32",
+              "id": 8
+            },
+            "radiantTeamTag": {
+              "type": "string",
+              "id": 9
+            },
+            "direTeamTag": {
+              "type": "string",
+              "id": 10
+            },
+            "endTime": {
+              "type": "uint32",
+              "id": 11
+            }
+          },
+          "nested": {
+            "CPlayerInfo": {
+              "fields": {
+                "heroName": {
+                  "type": "string",
+                  "id": 1
+                },
+                "playerName": {
+                  "type": "string",
+                  "id": 2
+                },
+                "isFakeClient": {
+                  "type": "bool",
+                  "id": 3
+                },
+                "steamid": {
+                  "type": "uint64",
+                  "id": 4
+                },
+                "gameTeam": {
+                  "type": "int32",
+                  "id": 5
+                }
+              }
+            },
+            "CHeroSelectEvent": {
+              "fields": {
+                "isPick": {
+                  "type": "bool",
+                  "id": 1
+                },
+                "team": {
+                  "type": "uint32",
+                  "id": 2
+                },
+                "heroId": {
+                  "type": "int32",
+                  "id": 3
+                }
+              }
+            }
+          }
+        },
+        "CCSGameInfo": {
+          "fields": {
+            "roundStartTicks": {
+              "rule": "repeated",
+              "type": "int32",
+              "id": 1
+            }
+          }
+        }
+      }
+    },
+    "CDemoFileInfo": {
+      "edition": "proto2",
+      "fields": {
+        "playbackTime": {
+          "type": "float",
+          "id": 1
+        },
+        "playbackTicks": {
+          "type": "int32",
+          "id": 2
+        },
+        "playbackFrames": {
+          "type": "int32",
+          "id": 3
+        },
+        "gameInfo": {
+          "type": ".CGameInfo",
+          "id": 4
+        }
+      }
+    },
+    "CDemoPacket": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoFullPacket": {
+      "edition": "proto2",
+      "fields": {
+        "stringTable": {
+          "type": ".CDemoStringTables",
+          "id": 1
+        },
+        "packet": {
+          "type": ".CDemoPacket",
+          "id": 2
+        }
+      }
+    },
+    "CDemoSaveGame": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        },
+        "steamId": {
+          "type": "fixed64",
+          "id": 2
+        },
+        "signature": {
+          "type": "fixed64",
+          "id": 3
+        },
+        "version": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CDemoSyncTick": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDemoConsoleCmd": {
+      "edition": "proto2",
+      "fields": {
+        "cmdstring": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "CDemoSendTables": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
+    "CDemoClassInfo": {
+      "edition": "proto2",
+      "fields": {
+        "classes": {
+          "rule": "repeated",
+          "type": ".CDemoClassInfo.class_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "class_t": {
+          "fields": {
+            "classId": {
+              "type": "int32",
+              "id": 1
+            },
+            "networkName": {
+              "type": "string",
+              "id": 2
+            },
+            "tableName": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      }
+    },
+    "CDemoCustomData": {
+      "edition": "proto2",
+      "fields": {
+        "callbackIndex": {
+          "type": "int32",
+          "id": 1
+        },
+        "data": {
+          "type": "bytes",
+          "id": 2
+        }
+      }
+    },
+    "CDemoCustomDataCallbacks": {
+      "edition": "proto2",
+      "fields": {
+        "saveId": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "CDemoAnimationHeader": {
+      "edition": "proto2",
+      "fields": {
+        "entityId": {
+          "type": "sint32",
+          "id": 1
+        },
+        "tick": {
+          "type": "int32",
+          "id": 2
+        },
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoAnimationData": {
+      "edition": "proto2",
+      "fields": {
+        "entityId": {
+          "type": "sint32",
+          "id": 1
+        },
+        "startTick": {
+          "type": "int32",
+          "id": 2
+        },
+        "endTick": {
+          "type": "int32",
+          "id": 3
+        },
+        "data": {
+          "type": "bytes",
+          "id": 4
+        },
+        "dataChecksum": {
+          "type": "int64",
+          "id": 5
+        }
+      }
+    },
+    "CDemoStringTables": {
+      "edition": "proto2",
+      "fields": {
+        "tables": {
+          "rule": "repeated",
+          "type": ".CDemoStringTables.table_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "items_t": {
+          "fields": {
+            "str": {
+              "type": "string",
+              "id": 1
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "table_t": {
+          "fields": {
+            "tableName": {
+              "type": "string",
+              "id": 1
+            },
+            "items": {
+              "rule": "repeated",
+              "type": ".CDemoStringTables.items_t",
+              "id": 2
+            },
+            "itemsClientside": {
+              "rule": "repeated",
+              "type": ".CDemoStringTables.items_t",
+              "id": 3
+            },
+            "tableFlags": {
+              "type": "int32",
+              "id": 4
+            }
+          }
+        }
+      }
+    },
+    "CDemoStop": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDemoUserCmd": {
+      "edition": "proto2",
+      "fields": {
+        "cmdNumber": {
+          "type": "int32",
+          "id": 1
+        },
+        "data": {
+          "type": "bytes",
+          "id": 2
+        }
+      }
+    },
+    "CDemoSpawnGroups": {
+      "edition": "proto2",
+      "fields": {
+        "msgs": {
+          "rule": "repeated",
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoRecovery": {
+      "edition": "proto2",
+      "fields": {
+        "initialSpawnGroup": {
+          "type": ".CDemoRecovery.DemoInitialSpawnGroupEntry",
+          "id": 1
+        },
+        "spawnGroupMessage": {
+          "type": "bytes",
+          "id": 2
+        }
+      },
+      "nested": {
+        "DemoInitialSpawnGroupEntry": {
+          "fields": {
+            "spawngrouphandle": {
+              "type": "uint32",
+              "id": 1
+            },
+            "wasCreated": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "VoiceDataFormat_t": {
+      "edition": "proto2",
+      "values": {
+        "VOICEDATA_FORMAT_STEAM": 0,
+        "VOICEDATA_FORMAT_ENGINE": 1,
+        "VOICEDATA_FORMAT_OPUS": 2
+      }
+    },
+    "CMsgVoiceAudio": {
+      "edition": "proto2",
+      "fields": {
+        "format": {
+          "type": ".VoiceDataFormat_t",
+          "id": 1,
+          "options": {
+            "default": "VOICEDATA_FORMAT_STEAM"
+          }
+        },
+        "voiceData": {
+          "type": "bytes",
+          "id": 2
+        },
+        "sequenceBytes": {
+          "type": "int32",
+          "id": 3
+        },
+        "sectionNumber": {
+          "type": "uint32",
+          "id": 4
+        },
+        "sampleRate": {
+          "type": "uint32",
+          "id": 5
+        },
+        "uncompressedSampleOffset": {
+          "type": "uint32",
+          "id": 6
+        },
+        "numPackets": {
+          "type": "uint32",
+          "id": 7
+        },
+        "packetOffsets": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 8,
+          "options": {
+            "packed": true
+          }
+        },
+        "voiceLevel": {
+          "type": "float",
+          "id": 9
+        }
+      }
+    },
+    "CSVCMsg_ServerInfo": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 409600
+      },
+      "fields": {
+        "protocol": {
+          "type": "int32",
+          "id": 1
+        },
+        "serverCount": {
+          "type": "int32",
+          "id": 2
+        },
+        "isDedicated": {
+          "type": "bool",
+          "id": 3
+        },
+        "isHltv": {
+          "type": "bool",
+          "id": 4
+        },
+        "cOs": {
+          "type": "int32",
+          "id": 6
+        },
+        "maxClients": {
+          "type": "int32",
+          "id": 10
+        },
+        "maxClasses": {
+          "type": "int32",
+          "id": 11
+        },
+        "playerSlot": {
+          "type": "int32",
+          "id": 12,
+          "options": {
+            "default": -1
+          }
+        },
+        "tickInterval": {
+          "type": "float",
+          "id": 13
+        },
+        "gameDir": {
+          "type": "string",
+          "id": 14
+        },
+        "mapName": {
+          "type": "string",
+          "id": 15
+        },
+        "skyName": {
+          "type": "string",
+          "id": 16
+        },
+        "hostName": {
+          "type": "string",
+          "id": 17
+        },
+        "addonName": {
+          "type": "string",
+          "id": 18
+        },
+        "gameSessionConfig": {
+          "type": ".CSVCMsg_GameSessionConfiguration",
+          "id": 19
+        },
+        "gameSessionManifest": {
+          "type": "bytes",
+          "id": 20
+        }
+      }
+    },
+    "CSVCMsg_ClassInfo": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
+      "fields": {
+        "createOnClient": {
+          "type": "bool",
+          "id": 1
+        },
+        "classes": {
+          "rule": "repeated",
+          "type": ".CSVCMsg_ClassInfo.class_t",
+          "id": 2
+        }
+      },
+      "nested": {
+        "class_t": {
+          "fields": {
+            "classId": {
+              "type": "int32",
+              "id": 1
+            },
+            "className": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      }
+    },
+    "CSVCMsg_VoiceInit": {
+      "edition": "proto2",
+      "fields": {
+        "quality": {
+          "type": "int32",
+          "id": 1
+        },
+        "codec": {
+          "type": "string",
+          "id": 2
+        },
+        "version": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CSVCMsg_PacketEntities": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
+      "fields": {
+        "maxEntries": {
+          "type": "int32",
+          "id": 1
+        },
+        "updatedEntries": {
+          "type": "int32",
+          "id": 2
+        },
+        "legacyIsDelta": {
+          "type": "bool",
+          "id": 3
+        },
+        "updateBaseline": {
+          "type": "bool",
+          "id": 4
+        },
+        "baseline": {
+          "type": "int32",
+          "id": 5
+        },
+        "deltaFrom": {
+          "type": "int32",
+          "id": 6
+        },
+        "entityData": {
+          "type": "bytes",
+          "id": 7
+        },
+        "pendingFullFrame": {
+          "type": "bool",
+          "id": 8
+        },
+        "activeSpawngroupHandle": {
+          "type": "uint32",
+          "id": 9
+        },
+        "maxSpawngroupCreationsequence": {
+          "type": "uint32",
+          "id": 10
+        },
+        "lastCmdNumberExecuted": {
+          "type": "uint32",
+          "id": 11
+        },
+        "lastCmdNumberRecvDelta": {
+          "type": "sint32",
+          "id": 17
+        },
+        "serverTick": {
+          "type": "uint32",
+          "id": 12
+        },
+        "serializedEntities": {
+          "type": "bytes",
+          "id": 13
+        },
+        "alternateBaselines": {
+          "rule": "repeated",
+          "type": ".CSVCMsg_PacketEntities.alternate_baseline_t",
+          "id": 15
+        },
+        "hasPvsVisBitsDeprecated": {
+          "type": "uint32",
+          "id": 16
+        },
+        "cmdRecvStatus": {
+          "rule": "repeated",
+          "type": "sint32",
+          "id": 22,
+          "options": {
+            "packed": true
+          }
+        },
+        "nonTransmittedEntities": {
+          "type": ".CSVCMsg_PacketEntities.non_transmitted_entities_t",
+          "id": 19
+        },
+        "cqStarvedCommandTicks": {
+          "type": "uint32",
+          "id": 20
+        },
+        "cqDiscardedCommandTicks": {
+          "type": "uint32",
+          "id": 21
+        },
+        "outofpvsEntityUpdates": {
+          "type": ".CSVCMsg_PacketEntities.outofpvs_entity_updates_t",
+          "id": 23
+        },
+        "devPadding": {
+          "type": "bytes",
+          "id": 999
+        }
+      },
+      "nested": {
+        "alternate_baseline_t": {
+          "fields": {
+            "entityIndex": {
+              "type": "int32",
+              "id": 1
+            },
+            "baselineIndex": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        },
+        "non_transmitted_entities_t": {
+          "fields": {
+            "headerCount": {
+              "type": "int32",
+              "id": 1
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "outofpvs_entity_updates_t": {
+          "fields": {
+            "count": {
+              "type": "int32",
+              "id": 1
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CSVCMsg_CreateStringTable": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 102400
+      },
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "numEntries": {
+          "type": "int32",
+          "id": 2
+        },
+        "userDataFixedSize": {
+          "type": "bool",
+          "id": 3
+        },
+        "userDataSize": {
+          "type": "int32",
+          "id": 4
+        },
+        "userDataSizeBits": {
+          "type": "int32",
+          "id": 5
+        },
+        "flags": {
+          "type": "int32",
+          "id": 6
+        },
+        "stringData": {
+          "type": "bytes",
+          "id": 7
+        },
+        "uncompressedSize": {
+          "type": "int32",
+          "id": 8
+        },
+        "dataCompressed": {
+          "type": "bool",
+          "id": 9
+        },
+        "usingVarintBitcounts": {
+          "type": "bool",
+          "id": 10
+        }
+      }
+    },
+    "CSVCMsg_UpdateStringTable": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 262144
+      },
+      "fields": {
+        "tableId": {
+          "type": "int32",
+          "id": 1
+        },
+        "numChangedEntries": {
+          "type": "int32",
+          "id": 2
+        },
+        "stringData": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CSVCMsg_VoiceData": {
+      "edition": "proto2",
+      "fields": {
+        "audio": {
+          "type": ".CMsgVoiceAudio",
+          "id": 1
+        },
+        "client": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        },
+        "proximity": {
+          "type": "bool",
+          "id": 3
+        },
+        "xuid": {
+          "type": "fixed64",
+          "id": 4
+        },
+        "audibleMask": {
+          "type": "int32",
+          "id": 5
+        },
+        "tick": {
+          "type": "uint32",
+          "id": 6
+        },
+        "passthrough": {
+          "type": "int32",
+          "id": 7
+        }
+      }
+    },
+    "CSVCMsg_HLTVStatus": {
+      "edition": "proto2",
+      "fields": {
+        "master": {
+          "type": "string",
+          "id": 1
+        },
+        "clients": {
+          "type": "int32",
+          "id": 2
+        },
+        "slots": {
+          "type": "int32",
+          "id": 3
+        },
+        "proxies": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CSVCMsg_ClearAllStringTables": {
+      "edition": "proto2",
+      "fields": {
+        "mapname": {
+          "type": "string",
+          "id": 1
+        },
+        "createTablesSkipped": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "ProtoFlattenedSerializerField_t": {
+      "edition": "proto2",
+      "fields": {
+        "varTypeSym": {
+          "type": "int32",
+          "id": 1
+        },
+        "varNameSym": {
+          "type": "int32",
+          "id": 2
+        },
+        "bitCount": {
+          "type": "int32",
+          "id": 3
+        },
+        "lowValue": {
+          "type": "float",
+          "id": 4
+        },
+        "highValue": {
+          "type": "float",
+          "id": 5
+        },
+        "encodeFlags": {
+          "type": "int32",
+          "id": 6
+        },
+        "fieldSerializerNameSym": {
+          "type": "int32",
+          "id": 7
+        },
+        "fieldSerializerVersion": {
+          "type": "int32",
+          "id": 8
+        },
+        "sendNodeSym": {
+          "type": "int32",
+          "id": 9
+        },
+        "varEncoderSym": {
+          "type": "int32",
+          "id": 10
+        },
+        "polymorphicTypes": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializerField_t.polymorphic_field_t",
+          "id": 11
+        },
+        "varSerializerSym": {
+          "type": "int32",
+          "id": 12
+        }
+      },
+      "nested": {
+        "polymorphic_field_t": {
+          "fields": {
+            "polymorphicFieldSerializerNameSym": {
+              "type": "int32",
+              "id": 1
+            },
+            "polymorphicFieldSerializerVersion": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "ProtoFlattenedSerializer_t": {
+      "edition": "proto2",
+      "fields": {
+        "serializerNameSym": {
+          "type": "int32",
+          "id": 1
+        },
+        "serializerVersion": {
+          "type": "int32",
+          "id": 2
+        },
+        "fieldsIndex": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CSVCMsg_FlattenedSerializer": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
+      "fields": {
+        "serializers": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializer_t",
+          "id": 1
+        },
+        "symbols": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2
+        },
+        "fields": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializerField_t",
+          "id": 3
+        }
+      }
+    },
+    "CMsgServerUserCmd": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        },
+        "cmdNumber": {
+          "type": "int32",
+          "id": 2
+        },
+        "playerSlot": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "serverTickExecuted": {
+          "type": "int32",
+          "id": 4
+        },
+        "clientTick": {
+          "type": "int32",
+          "id": 5
+        }
+      }
+    },
+    "CSVCMsg_UserCommands": {
+      "edition": "proto2",
+      "fields": {
+        "commands": {
+          "rule": "repeated",
+          "type": ".CMsgServerUserCmd",
+          "id": 1
+        }
+      }
+    },
+    "CMsgEffectData": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "start": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "angles": {
+          "type": ".CMsgQAngle",
+          "id": 4
+        },
+        "entity": {
+          "type": "fixed32",
+          "id": 5,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "otherentity": {
+          "type": "fixed32",
+          "id": 6,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "scale": {
+          "type": "float",
+          "id": 7
+        },
+        "magnitude": {
+          "type": "float",
+          "id": 8
+        },
+        "radius": {
+          "type": "float",
+          "id": 9
+        },
+        "surfaceprop": {
+          "type": "fixed32",
+          "id": 10
+        },
+        "effectindex": {
+          "type": "fixed64",
+          "id": 11
+        },
+        "damagetype": {
+          "type": "uint32",
+          "id": 12
+        },
+        "material": {
+          "type": "uint32",
+          "id": 13
+        },
+        "hitbox": {
+          "type": "uint32",
+          "id": 14
+        },
+        "color": {
+          "type": "uint32",
+          "id": 15
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 16
+        },
+        "attachmentindex": {
+          "type": "int32",
+          "id": 17
+        },
+        "effectname": {
+          "type": "uint32",
+          "id": 18
+        },
+        "attachmentname": {
+          "type": "uint32",
+          "id": 19,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CMsgTEEffectDispatch": {
+      "edition": "proto2",
+      "fields": {
+        "effectdata": {
+          "type": ".CMsgEffectData",
+          "id": 1
+        }
+      }
+    },
+    "PARTICLE_MESSAGE": {
+      "edition": "proto2",
+      "values": {
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE": 0,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE": 1,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD": 2,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION": 3,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK": 4,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENT": 5,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET": 6,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY": 7,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING": 8,
+        "GAME_PARTICLE_MANAGER_EVENT_RELEASE": 9,
+        "GAME_PARTICLE_MANAGER_EVENT_LATENCY": 10,
+        "GAME_PARTICLE_MANAGER_EVENT_SHOULD_DRAW": 11,
+        "GAME_PARTICLE_MANAGER_EVENT_FROZEN": 12,
+        "GAME_PARTICLE_MANAGER_EVENT_CHANGE_CONTROL_POINT_ATTACHMENT": 13,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENTITY_POSITION": 14,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_FOW_PROPERTIES": 15,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_TEXT": 16,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SHOULD_CHECK_FOW": 17,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_MODEL": 18,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_SNAPSHOT": 19,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_TEXTURE_ATTRIBUTE": 20,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_GENERIC_FLAG": 21,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_TINT_AND_DESAT": 22,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_NAMED": 23,
+        "GAME_PARTICLE_MANAGER_EVENT_SKIP_TO_TIME": 24,
+        "GAME_PARTICLE_MANAGER_EVENT_CAN_FREEZE": 25,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_NAMED_VALUE_CONTEXT": 26,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_TRANSFORM": 27,
+        "GAME_PARTICLE_MANAGER_EVENT_FREEZE_TRANSITION_OVERRIDE": 28,
+        "GAME_PARTICLE_MANAGER_EVENT_FREEZE_INVOLVING": 29,
+        "GAME_PARTICLE_MANAGER_EVENT_ADD_MODELLIST_OVERRIDE_ELEMENT": 30,
+        "GAME_PARTICLE_MANAGER_EVENT_CLEAR_MODELLIST_OVERRIDE": 31,
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE_PHYSICS_SIM": 32,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_PHYSICS_SIM": 33,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_VDATA": 34,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_MATERIAL_OVERRIDE": 35,
+        "GAME_PARTICLE_MANAGER_EVENT_ADD_FAN": 36,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FAN": 37,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH": 38,
+        "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39,
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID": 40
+      }
+    },
+    "CUserMessageSayText2": {
+      "edition": "proto2",
+      "fields": {
+        "entityindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "chat": {
+          "type": "bool",
+          "id": 2
+        },
+        "messagename": {
+          "type": "string",
+          "id": 3
+        },
+        "param1": {
+          "type": "string",
+          "id": 4
+        },
+        "param2": {
+          "type": "string",
+          "id": 5
+        },
+        "param3": {
+          "type": "string",
+          "id": 6
+        },
+        "param4": {
+          "type": "string",
+          "id": 7
+        }
+      }
+    },
+    "CUserMessageTextMsg": {
+      "edition": "proto2",
+      "fields": {
+        "dest": {
+          "type": "uint32",
+          "id": 1
+        },
+        "param": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "CUserMessageSendAudio": {
+      "edition": "proto2",
+      "fields": {
+        "soundname": {
+          "type": "string",
+          "id": 1
+        },
+        "stop": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CUserMessageVoiceMask": {
+      "edition": "proto2",
+      "fields": {
+        "gamerulesMasks": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1
+        },
+        "banMasks": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2
+        },
+        "modEnable": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CEntityMessageRemoveAllDecals": {
+      "edition": "proto2",
+      "fields": {
+        "removeDecals": {
+          "type": "bool",
+          "id": 1
+        },
+        "entityMsg": {
+          "type": ".CEntityMsg",
+          "id": 2
+        }
+      }
+    },
+    "CUserMsg_ParticleManager": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
+      "fields": {
+        "type": {
+          "type": ".PARTICLE_MESSAGE",
+          "id": 1,
+          "options": {
+            "default": "GAME_PARTICLE_MANAGER_EVENT_CREATE"
+          }
+        },
+        "index": {
+          "type": "uint32",
+          "id": 2
+        },
+        "releaseParticleIndex": {
+          "type": ".CUserMsg_ParticleManager.ReleaseParticleIndex",
+          "id": 3
+        },
+        "createParticle": {
+          "type": ".CUserMsg_ParticleManager.CreateParticle",
+          "id": 4
+        },
+        "destroyParticle": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticle",
+          "id": 5
+        },
+        "destroyParticleInvolving": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticleInvolving",
+          "id": 6
+        },
+        "updateParticle": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticle_OBSOLETE",
+          "id": 7
+        },
+        "updateParticleFwd": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleFwd_OBSOLETE",
+          "id": 8
+        },
+        "updateParticleOrient": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleOrient_OBSOLETE",
+          "id": 9
+        },
+        "updateParticleFallback": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleFallback",
+          "id": 10
+        },
+        "updateParticleOffset": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleOffset",
+          "id": 11
+        },
+        "updateParticleEnt": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleEnt",
+          "id": 12
+        },
+        "updateParticleShouldDraw": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleShouldDraw",
+          "id": 14
+        },
+        "updateParticleSetFrozen": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleSetFrozen",
+          "id": 15
+        },
+        "changeControlPointAttachment": {
+          "type": ".CUserMsg_ParticleManager.ChangeControlPointAttachment",
+          "id": 16
+        },
+        "updateEntityPosition": {
+          "type": ".CUserMsg_ParticleManager.UpdateEntityPosition",
+          "id": 17
+        },
+        "setParticleFowProperties": {
+          "type": ".CUserMsg_ParticleManager.SetParticleFoWProperties",
+          "id": 18
+        },
+        "setParticleText": {
+          "type": ".CUserMsg_ParticleManager.SetParticleText",
+          "id": 19
+        },
+        "setParticleShouldCheckFow": {
+          "type": ".CUserMsg_ParticleManager.SetParticleShouldCheckFoW",
+          "id": 20
+        },
+        "setControlPointModel": {
+          "type": ".CUserMsg_ParticleManager.SetControlPointModel",
+          "id": 21
+        },
+        "setControlPointSnapshot": {
+          "type": ".CUserMsg_ParticleManager.SetControlPointSnapshot",
+          "id": 22
+        },
+        "setTextureAttribute": {
+          "type": ".CUserMsg_ParticleManager.SetTextureAttribute",
+          "id": 23
+        },
+        "setSceneObjectGenericFlag": {
+          "type": ".CUserMsg_ParticleManager.SetSceneObjectGenericFlag",
+          "id": 24
+        },
+        "setSceneObjectTintAndDesat": {
+          "type": ".CUserMsg_ParticleManager.SetSceneObjectTintAndDesat",
+          "id": 25
+        },
+        "destroyParticleNamed": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticleNamed",
+          "id": 26
+        },
+        "particleSkipToTime": {
+          "type": ".CUserMsg_ParticleManager.ParticleSkipToTime",
+          "id": 27
+        },
+        "particleCanFreeze": {
+          "type": ".CUserMsg_ParticleManager.ParticleCanFreeze",
+          "id": 28
+        },
+        "setNamedValueContext": {
+          "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext",
+          "id": 29
+        },
+        "updateParticleTransform": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleTransform",
+          "id": 30
+        },
+        "particleFreezeTransitionOverride": {
+          "type": ".CUserMsg_ParticleManager.ParticleFreezeTransitionOverride",
+          "id": 31
+        },
+        "freezeParticleInvolving": {
+          "type": ".CUserMsg_ParticleManager.FreezeParticleInvolving",
+          "id": 32
+        },
+        "addModellistOverrideElement": {
+          "type": ".CUserMsg_ParticleManager.AddModellistOverrideElement",
+          "id": 33
+        },
+        "clearModellistOverride": {
+          "type": ".CUserMsg_ParticleManager.ClearModellistOverride",
+          "id": 34
+        },
+        "createPhysicsSim": {
+          "type": ".CUserMsg_ParticleManager.CreatePhysicsSim",
+          "id": 35
+        },
+        "destroyPhysicsSim": {
+          "type": ".CUserMsg_ParticleManager.DestroyPhysicsSim",
+          "id": 36
+        },
+        "setVdata": {
+          "type": ".CUserMsg_ParticleManager.SetVData",
+          "id": 37
+        },
+        "setMaterialOverride": {
+          "type": ".CUserMsg_ParticleManager.SetMaterialOverride",
+          "id": 38
+        },
+        "addFan": {
+          "type": ".CUserMsg_ParticleManager.AddFan",
+          "id": 39
+        },
+        "updateFan": {
+          "type": ".CUserMsg_ParticleManager.UpdateFan",
+          "id": 40
+        },
+        "setParticleClusterGrowth": {
+          "type": ".CUserMsg_ParticleManager.SetParticleClusterGrowth",
+          "id": 41
+        },
+        "removeFan": {
+          "type": ".CUserMsg_ParticleManager.RemoveFan",
+          "id": 42
+        },
+        "createSmokeGrid": {
+          "type": ".CUserMsg_ParticleManager.CreateSmokeGrid",
+          "id": 43
+        }
+      },
+      "nested": {
+        "ReleaseParticleIndex": {
+          "fields": {}
+        },
+        "CreateParticle": {
+          "fields": {
+            "particleNameIndex": {
+              "type": "fixed64",
+              "id": 1
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 2
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "entityHandleForModifiers": {
+              "type": "uint32",
+              "id": 4,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "applyVoiceBanRules": {
+              "type": "bool",
+              "id": 5
+            },
+            "teamBehavior": {
+              "type": "int32",
+              "id": 6
+            },
+            "controlPointConfiguration": {
+              "type": "string",
+              "id": 7
+            },
+            "cluster": {
+              "type": "bool",
+              "id": 8
+            },
+            "endcapTime": {
+              "type": "float",
+              "id": 9
+            },
+            "aggregationPosition": {
+              "type": ".CMsgVector",
+              "id": 10
+            }
+          }
+        },
+        "DestroyParticle": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "DestroyParticleInvolving": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "DestroyParticleNamed": {
+          "fields": {
+            "particleNameIndex": {
+              "type": "fixed64",
+              "id": 1
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 3
+            },
+            "playEndcap": {
+              "type": "bool",
+              "id": 4
+            }
+          }
+        },
+        "UpdateParticle_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleFwd_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleOrient_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "deprecatedRight": {
+              "type": ".CMsgVector",
+              "id": 3
+            },
+            "up": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "left": {
+              "type": ".CMsgVector",
+              "id": 5
+            }
+          }
+        },
+        "UpdateParticleTransform": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "orientation": {
+              "type": ".CMsgQuaternion",
+              "id": 3
+            },
+            "interpolationInterval": {
+              "type": "float",
+              "id": 4
+            }
+          }
+        },
+        "UpdateParticleFallback": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleOffset": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "originOffset": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "angleOffset": {
+              "type": ".CMsgQAngle",
+              "id": 3
+            }
+          }
+        },
+        "UpdateParticleEnt": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 2,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 3
+            },
+            "attachment": {
+              "type": "int32",
+              "id": 4
+            },
+            "fallbackPosition": {
+              "type": ".CMsgVector",
+              "id": 5
+            },
+            "includeWearables": {
+              "type": "bool",
+              "id": 6
+            },
+            "offsetPosition": {
+              "type": ".CMsgVector",
+              "id": 7
+            },
+            "offsetAngles": {
+              "type": ".CMsgQAngle",
+              "id": 8
+            }
+          }
+        },
+        "UpdateParticleSetFrozen": {
+          "fields": {
+            "setFrozen": {
+              "type": "bool",
+              "id": 1
+            },
+            "transitionDuration": {
+              "type": "float",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleShouldDraw": {
+          "fields": {
+            "shouldDraw": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "ChangeControlPointAttachment": {
+          "fields": {
+            "attachmentOld": {
+              "type": "int32",
+              "id": 1
+            },
+            "attachmentNew": {
+              "type": "int32",
+              "id": 2
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "UpdateEntityPosition": {
+          "fields": {
+            "entityHandle": {
+              "type": "uint32",
+              "id": 1,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "SetParticleFoWProperties": {
+          "fields": {
+            "fowControlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "fowControlPoint2": {
+              "type": "int32",
+              "id": 2
+            },
+            "fowRadius": {
+              "type": "float",
+              "id": 3
+            }
+          }
+        },
+        "SetParticleShouldCheckFoW": {
+          "fields": {
+            "checkFow": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "SetControlPointModel": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "modelName": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SetControlPointSnapshot": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1
+            },
+            "snapshotName": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SetParticleText": {
+          "fields": {
+            "text": {
+              "type": "string",
+              "id": 1
+            },
+            "localize": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        },
+        "SetTextureAttribute": {
+          "fields": {
+            "attributeName": {
+              "type": "string",
+              "id": 1
+            },
+            "textureName": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "SetSceneObjectGenericFlag": {
+          "fields": {
+            "flagValue": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "SetSceneObjectTintAndDesat": {
+          "fields": {
+            "tint": {
+              "type": "fixed32",
+              "id": 1
+            },
+            "desat": {
+              "type": "float",
+              "id": 2
+            }
+          }
+        },
+        "ParticleSkipToTime": {
+          "fields": {
+            "skipToTime": {
+              "type": "float",
+              "id": 1
+            }
+          }
+        },
+        "ParticleCanFreeze": {
+          "fields": {
+            "canFreeze": {
+              "type": "bool",
+              "id": 1
+            }
+          }
+        },
+        "ParticleFreezeTransitionOverride": {
+          "fields": {
+            "freezeTransitionOverride": {
+              "type": "float",
+              "id": 1
+            }
+          }
+        },
+        "FreezeParticleInvolving": {
+          "fields": {
+            "setFrozen": {
+              "type": "bool",
+              "id": 1
+            },
+            "transitionDuration": {
+              "type": "float",
+              "id": 2
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "AddModellistOverrideElement": {
+          "fields": {
+            "modelName": {
+              "type": "string",
+              "id": 1
+            },
+            "spawnProbability": {
+              "type": "float",
+              "id": 2
+            },
+            "groupid": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "ClearModellistOverride": {
+          "fields": {
+            "groupid": {
+              "type": "uint32",
+              "id": 1
+            }
+          }
+        },
+        "SetParticleNamedValueContext": {
+          "fields": {
+            "floatValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.FloatContextValue",
+              "id": 1
+            },
+            "vectorValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.VectorContextValue",
+              "id": 2
+            },
+            "transformValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.TransformContextValue",
+              "id": 3
+            },
+            "ehandleValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.EHandleContext",
+              "id": 4
+            }
+          },
+          "nested": {
+            "FloatContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1
+                },
+                "value": {
+                  "type": "float",
+                  "id": 2
+                }
+              }
+            },
+            "VectorContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1
+                },
+                "value": {
+                  "type": ".CMsgVector",
+                  "id": 2
+                }
+              }
+            },
+            "TransformContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1
+                },
+                "angles": {
+                  "type": ".CMsgQAngle",
+                  "id": 2
+                },
+                "translation": {
+                  "type": ".CMsgVector",
+                  "id": 3
+                }
+              }
+            },
+            "EHandleContext": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1
+                },
+                "entIndex": {
+                  "type": "uint32",
+                  "id": 2,
+                  "options": {
+                    "default": 16777215
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CreatePhysicsSim": {
+          "fields": {
+            "propGroupName": {
+              "type": "string",
+              "id": 1
+            },
+            "useHighQualitySimulation": {
+              "type": "bool",
+              "id": 2
+            },
+            "maxParticleCount": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "DestroyPhysicsSim": {
+          "fields": {}
+        },
+        "CreateSmokeGrid": {
+          "fields": {
+            "vdataName": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SetVData": {
+          "fields": {
+            "vdataName": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "SetMaterialOverride": {
+          "fields": {
+            "materialName": {
+              "type": "string",
+              "id": 1
+            },
+            "includeChildren": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        },
+        "AddFan": {
+          "fields": {
+            "active": {
+              "type": "bool",
+              "id": 1
+            },
+            "boundsMins": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "boundsMaxs": {
+              "type": ".CMsgVector",
+              "id": 3
+            },
+            "fanOrigin": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "fanOriginOffset": {
+              "type": ".CMsgVector",
+              "id": 5
+            },
+            "fanDirection": {
+              "type": ".CMsgVector",
+              "id": 6
+            },
+            "force": {
+              "type": "float",
+              "id": 7
+            },
+            "fanForceCurve": {
+              "type": "string",
+              "id": 8
+            },
+            "falloff": {
+              "type": "bool",
+              "id": 9
+            },
+            "pullTowardsPoint": {
+              "type": "bool",
+              "id": 10
+            },
+            "curveMinDist": {
+              "type": "float",
+              "id": 11
+            },
+            "curveMaxDist": {
+              "type": "float",
+              "id": 12
+            },
+            "fanType": {
+              "type": "uint32",
+              "id": 13
+            },
+            "coneStartRadius": {
+              "type": "float",
+              "id": 14
+            },
+            "coneEndRadius": {
+              "type": "float",
+              "id": 15
+            },
+            "coneLength": {
+              "type": "float",
+              "id": 16
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 17,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachmentName": {
+              "type": "string",
+              "id": 18
+            }
+          }
+        },
+        "UpdateFan": {
+          "fields": {
+            "active": {
+              "type": "bool",
+              "id": 1
+            },
+            "fanOrigin": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "fanOriginOffset": {
+              "type": ".CMsgVector",
+              "id": 3
+            },
+            "fanDirection": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "fanRampRatio": {
+              "type": "float",
+              "id": 7
+            },
+            "boundsMins": {
+              "type": ".CMsgVector",
+              "id": 5
+            },
+            "boundsMaxs": {
+              "type": ".CMsgVector",
+              "id": 6
+            }
+          }
+        },
+        "RemoveFan": {
+          "fields": {}
+        },
+        "SetParticleClusterGrowth": {
+          "fields": {
+            "duration": {
+              "type": "float",
+              "id": 1
+            },
+            "origin": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CUserMessage_PlayResponseConditional": {
+      "edition": "proto2",
+      "fields": {
+        "entIndex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2
+        },
+        "response": {
+          "type": "string",
+          "id": 3
+        },
+        "entOrigin": {
+          "type": ".CMsgVector",
+          "id": 4
+        },
+        "preDelay": {
+          "type": "float",
+          "id": 5
+        },
+        "mixPriority": {
+          "type": "int32",
+          "id": 6
+        }
+      }
+    }
+  }
+}
