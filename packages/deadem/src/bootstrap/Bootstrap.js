@@ -93,7 +93,6 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_MELEE_HIT, um.lookupType('CCitadelUserMessage_MeleeHit'));
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED, um.lookupType('CCitadelUserMsg_FlexSlotUnlocked'));
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED, um.lookupType('CCitadelUserMsg_SeasonalKill'));
-        registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_MUSIC_QUEUE, um.lookupType('CCitadelUserMsg_MusicQueue'));
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_AG2_PARAM_TRIGGER, um.lookupType('CCitadelUserMsg_AG2ParamTrigger'));
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION, um.lookupType('CCitadelUserMessage_ItemPurchaseNotification'));
         registry.registerMessageType(MessagePacketType.CITADEL_USER_MESSAGE_ENTITY_PORTALLED, um.lookupType('CCitadelUserMsg_EntityPortalled'));

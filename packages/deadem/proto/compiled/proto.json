@@ -3316,20 +3316,6 @@
         }
       }
     },
-    "CCitadelUserMsg_MusicQueue": {
-      "edition": "proto2",
-      "fields": {
-        "musicState": {
-          "type": "int32",
-          "id": 1,
-          "protoName": "music_state"
-        },
-        "override": {
-          "type": "bool",
-          "id": 2
-        }
-      }
-    },
     "CCitadelUserMsg_AG2ParamTrigger": {
       "edition": "proto2",
       "fields": {

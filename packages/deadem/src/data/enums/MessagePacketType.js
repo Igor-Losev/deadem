@@ -52,7 +52,6 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_MELEE_HIT() { return citadelUserMessageMeleeHit; }
     static get CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED() { return citadelUserMessageFlexSlotUnlocked; }
     static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalKill; }
-    static get CITADEL_USER_MESSAGE_MUSIC_QUEUE() { return citadelUserMessageMusicQueue; }
     static get CITADEL_USER_MESSAGE_AG2_PARAM_TRIGGER() { return citadelUserMessageAG2ParamTrigger; }
     static get CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION() { return citadelUserMessageItemPurchaseNotification; }
     static get CITADEL_USER_MESSAGE_ENTITY_PORTALLED() { return citadelUserMessageEntityPortalled; }
@@ -127,7 +126,6 @@ const citadelUserMessageCallCheaterVote = new MessagePacketType('k_EUserMsg_Call
 const citadelUserMessageMeleeHit = new MessagePacketType('k_EUserMsg_MeleeHit', 355);
 const citadelUserMessageFlexSlotUnlocked = new MessagePacketType('k_EUserMsg_FlexSlotUnlocked', 356);
 const citadelUserMessageSeasonalKill = new MessagePacketType('k_EUserMsg_SeasonalKill', 357);
-const citadelUserMessageMusicQueue = new MessagePacketType('k_EUserMsg_MusicQueue', 358);
 const citadelUserMessageAG2ParamTrigger = new MessagePacketType('k_EUserMsg_AG2ParamTrigger', 359);
 const citadelUserMessageItemPurchaseNotification = new MessagePacketType('k_EUserMsg_ItemPurchaseNotification', 360);
 const citadelUserMessageEntityPortalled = new MessagePacketType('k_EUserMsg_EntityPortalled', 361);
