@@ -13,11 +13,11 @@ deadem
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2?label=%40deademx%2Fcs2" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2?label=%40deademx%2Fdota2" /></a>
 
-Collection of JavaScript packages for parsing and playing back Valve Source 2 demo / replay data in Node.js and modern browsers.
+Collection of JavaScript packages for parsing and playing back Valve Source 2 demo / replay data in Node.js, Deno, Bun, and browsers.
 
 The parsing stack depends only on:
 
-- [`protobufjs`](https://www.npmjs.com/package/protobufjs) — protobuf decoding.
+- [`protobufjs`](https://www.npmjs.com/package/protobufjs) — Protobuf decoding.
 - [`snappyjs`](https://www.npmjs.com/package/snappyjs) — Snappy decompression.
 
 ## Packages

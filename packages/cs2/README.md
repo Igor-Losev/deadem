@@ -11,7 +11,7 @@
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.6.0-darkGreen" /></a>
 
-**@deademx/cs2** is a Counter-Strike 2 (Source 2) demo parser and replay player for Node.js and modern browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/cs2** is a Counter-Strike 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Counter-Strike 2-specific usage only.
 
@@ -20,7 +20,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install for Node.js or use the browser bundle.
+  Install from npm or use the browser bundle.
 - [Quick start](#quick-start)<br/>
   Minimal example to parse a Counter-Strike 2 demo file.
 - [Examples](#examples)<br/>
@@ -42,7 +42,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 
 ## Installation
 
-### Node.js
+### Node.js / Deno / Bun
 
 ```shell
 npm install @deademx/cs2 --save
@@ -186,8 +186,8 @@ await player.dispose();
 ## Compatibility
 
 - **Game:** tested with Counter-Strike 2 demos from version `1.41.6.0`.
-- **Node.js:** v18.0.0 and above.
-- **Browsers:** latest Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, and Bun.
+- **Browsers:** Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
