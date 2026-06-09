@@ -225,9 +225,10 @@ await player.seekToTick(player.getLastTick());
 const demo = player.getDemo();
 
 demo.getEntitiesByClassName('CCitadelPlayerController').forEach((entity) => {
-    const data = entity.unpackFlattened();
+    const name = entity.getField('m_iszPlayerName');
+    const damage = entity.getField('m_iHeroDamage');
 
-    console.log(`${data.m_iszPlayerName}: ${data.m_iHeroDamage} hero damage`);
+    console.log(`${name}: ${damage} hero damage`);
 });
 
 await player.dispose();

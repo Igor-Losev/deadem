@@ -157,9 +157,10 @@ Query entities and classes after the parse completes:
 await parser.parse(readable);
 
 const demo = parser.getDemo();
-const entities = demo.getEntities();
 
-console.log(`Total entities at end of demo: ${entities.length}`);
+demo.getEntitiesByClassName('CCSPlayerController').forEach((entity) => {
+    console.log(entity.getField('m_iszPlayerName'));
+});
 ```
 
 ### Playback and seeking
