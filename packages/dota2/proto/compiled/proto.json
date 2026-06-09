@@ -6,39 +6,48 @@
         "demoFileStamp": {
           "rule": "required",
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "demo_file_stamp"
         },
         "patchVersion": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "patch_version"
         },
         "serverName": {
           "type": "string",
-          "id": 3
+          "id": 3,
+          "protoName": "server_name"
         },
         "clientName": {
           "type": "string",
-          "id": 4
+          "id": 4,
+          "protoName": "client_name"
         },
         "mapName": {
           "type": "string",
-          "id": 5
+          "id": 5,
+          "protoName": "map_name"
         },
         "gameDirectory": {
           "type": "string",
-          "id": 6
+          "id": 6,
+          "protoName": "game_directory"
         },
         "fullpacketsVersion": {
           "type": "int32",
-          "id": 7
+          "id": 7,
+          "protoName": "fullpackets_version"
         },
         "allowClientsideEntities": {
           "type": "bool",
-          "id": 8
+          "id": 8,
+          "protoName": "allow_clientside_entities"
         },
         "allowClientsideParticles": {
           "type": "bool",
-          "id": 9
+          "id": 9,
+          "protoName": "allow_clientside_particles"
         },
         "addons": {
           "type": "string",
@@ -46,15 +55,18 @@
         },
         "demoVersionName": {
           "type": "string",
-          "id": 11
+          "id": 11,
+          "protoName": "demo_version_name"
         },
         "demoVersionGuid": {
           "type": "string",
-          "id": 12
+          "id": 12,
+          "protoName": "demo_version_guid"
         },
         "buildNum": {
           "type": "int32",
-          "id": 13
+          "id": 13,
+          "protoName": "build_num"
         },
         "game": {
           "type": "string",
@@ -62,7 +74,8 @@
         },
         "serverStartTick": {
           "type": "int32",
-          "id": 15
+          "id": 15,
+          "protoName": "server_start_tick"
         }
       }
     },
@@ -83,20 +96,24 @@
           "fields": {
             "matchId": {
               "type": "uint64",
-              "id": 1
+              "id": 1,
+              "protoName": "match_id"
             },
             "gameMode": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "game_mode"
             },
             "gameWinner": {
               "type": "int32",
-              "id": 3
+              "id": 3,
+              "protoName": "game_winner"
             },
             "playerInfo": {
               "rule": "repeated",
               "type": ".CGameInfo.CDotaGameInfo.CPlayerInfo",
-              "id": 4
+              "id": 4,
+              "protoName": "player_info"
             },
             "leagueid": {
               "type": "uint32",
@@ -105,27 +122,33 @@
             "picksBans": {
               "rule": "repeated",
               "type": ".CGameInfo.CDotaGameInfo.CHeroSelectEvent",
-              "id": 6
+              "id": 6,
+              "protoName": "picks_bans"
             },
             "radiantTeamId": {
               "type": "uint32",
-              "id": 7
+              "id": 7,
+              "protoName": "radiant_team_id"
             },
             "direTeamId": {
               "type": "uint32",
-              "id": 8
+              "id": 8,
+              "protoName": "dire_team_id"
             },
             "radiantTeamTag": {
               "type": "string",
-              "id": 9
+              "id": 9,
+              "protoName": "radiant_team_tag"
             },
             "direTeamTag": {
               "type": "string",
-              "id": 10
+              "id": 10,
+              "protoName": "dire_team_tag"
             },
             "endTime": {
               "type": "uint32",
-              "id": 11
+              "id": 11,
+              "protoName": "end_time"
             }
           },
           "nested": {
@@ -133,15 +156,18 @@
               "fields": {
                 "heroName": {
                   "type": "string",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "hero_name"
                 },
                 "playerName": {
                   "type": "string",
-                  "id": 2
+                  "id": 2,
+                  "protoName": "player_name"
                 },
                 "isFakeClient": {
                   "type": "bool",
-                  "id": 3
+                  "id": 3,
+                  "protoName": "is_fake_client"
                 },
                 "steamid": {
                   "type": "uint64",
@@ -149,7 +175,8 @@
                 },
                 "gameTeam": {
                   "type": "int32",
-                  "id": 5
+                  "id": 5,
+                  "protoName": "game_team"
                 }
               }
             },
@@ -157,7 +184,8 @@
               "fields": {
                 "isPick": {
                   "type": "bool",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "is_pick"
                 },
                 "team": {
                   "type": "uint32",
@@ -165,7 +193,8 @@
                 },
                 "heroId": {
                   "type": "int32",
-                  "id": 3
+                  "id": 3,
+                  "protoName": "hero_id"
                 }
               }
             }
@@ -176,7 +205,8 @@
             "roundStartTicks": {
               "rule": "repeated",
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "round_start_ticks"
             }
           }
         }
@@ -187,19 +217,23 @@
       "fields": {
         "playbackTime": {
           "type": "float",
-          "id": 1
+          "id": 1,
+          "protoName": "playback_time"
         },
         "playbackTicks": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "playback_ticks"
         },
         "playbackFrames": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "playback_frames"
         },
         "gameInfo": {
           "type": ".CGameInfo",
-          "id": 4
+          "id": 4,
+          "protoName": "game_info"
         }
       }
     },
@@ -217,7 +251,8 @@
       "fields": {
         "stringTable": {
           "type": ".CDemoStringTables",
-          "id": 1
+          "id": 1,
+          "protoName": "string_table"
         },
         "packet": {
           "type": ".CDemoPacket",
@@ -234,7 +269,8 @@
         },
         "steamId": {
           "type": "fixed64",
-          "id": 2
+          "id": 2,
+          "protoName": "steam_id"
         },
         "signature": {
           "type": "fixed64",
@@ -282,15 +318,18 @@
           "fields": {
             "classId": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "class_id"
             },
             "networkName": {
               "type": "string",
-              "id": 2
+              "id": 2,
+              "protoName": "network_name"
             },
             "tableName": {
               "type": "string",
-              "id": 3
+              "id": 3,
+              "protoName": "table_name"
             }
           }
         }
@@ -301,7 +340,8 @@
       "fields": {
         "callbackIndex": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "callback_index"
         },
         "data": {
           "type": "bytes",
@@ -315,7 +355,8 @@
         "saveId": {
           "rule": "repeated",
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "save_id"
         }
       }
     },
@@ -324,7 +365,8 @@
       "fields": {
         "entityId": {
           "type": "sint32",
-          "id": 1
+          "id": 1,
+          "protoName": "entity_id"
         },
         "tick": {
           "type": "int32",
@@ -341,15 +383,18 @@
       "fields": {
         "entityId": {
           "type": "sint32",
-          "id": 1
+          "id": 1,
+          "protoName": "entity_id"
         },
         "startTick": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "start_tick"
         },
         "endTick": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "end_tick"
         },
         "data": {
           "type": "bytes",
@@ -357,7 +402,8 @@
         },
         "dataChecksum": {
           "type": "int64",
-          "id": 5
+          "id": 5,
+          "protoName": "data_checksum"
         }
       }
     },
@@ -387,7 +433,8 @@
           "fields": {
             "tableName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "table_name"
             },
             "items": {
               "rule": "repeated",
@@ -397,11 +444,13 @@
             "itemsClientside": {
               "rule": "repeated",
               "type": ".CDemoStringTables.items_t",
-              "id": 3
+              "id": 3,
+              "protoName": "items_clientside"
             },
             "tableFlags": {
               "type": "int32",
-              "id": 4
+              "id": 4,
+              "protoName": "table_flags"
             }
           }
         }
@@ -416,7 +465,8 @@
       "fields": {
         "cmdNumber": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "cmd_number"
         },
         "data": {
           "type": "bytes",
@@ -439,11 +489,13 @@
       "fields": {
         "initialSpawnGroup": {
           "type": ".CDemoRecovery.DemoInitialSpawnGroupEntry",
-          "id": 1
+          "id": 1,
+          "protoName": "initial_spawn_group"
         },
         "spawnGroupMessage": {
           "type": "bytes",
-          "id": 2
+          "id": 2,
+          "protoName": "spawn_group_message"
         }
       },
       "nested": {
@@ -455,7 +507,8 @@
             },
             "wasCreated": {
               "type": "bool",
-              "id": 2
+              "id": 2,
+              "protoName": "was_created"
             }
           }
         }
@@ -502,7 +555,8 @@
         },
         "gridNavDirections": {
           "type": "bytes",
-          "id": 3
+          "id": 3,
+          "protoName": "grid_nav_directions"
         }
       }
     },
@@ -526,7 +580,8 @@
         },
         "directPing": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "direct_ping"
         },
         "type": {
           "type": "uint32",
@@ -538,13 +593,15 @@
         "pingSource": {
           "type": ".EPingSource",
           "id": 6,
+          "protoName": "ping_source",
           "options": {
             "default": "k_ePingSource_Default"
           }
         },
         "waypointPath": {
           "type": ".CDOTAMsg_PingWaypointPath",
-          "id": 7
+          "id": 7,
+          "protoName": "waypoint_path"
         }
       }
     },
@@ -562,6 +619,7 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 3,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
@@ -623,17 +681,20 @@
         "statStrings": {
           "rule": "repeated",
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "stat_strings"
         },
         "statImages": {
           "rule": "repeated",
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "stat_images"
         },
         "statImageTypes": {
           "rule": "repeated",
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "stat_image_types"
         },
         "duration": {
           "type": "float",
@@ -641,11 +702,13 @@
         },
         "useHtml": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "use_html"
         },
         "movieName": {
           "type": "string",
-          "id": 7
+          "id": 7,
+          "protoName": "movie_name"
         }
       }
     },
@@ -654,7 +717,8 @@
       "fields": {
         "timeDelay": {
           "type": "float",
-          "id": 1
+          "id": 1,
+          "protoName": "time_delay"
         }
       }
     },
@@ -685,7 +749,8 @@
         },
         "playbackRate": {
           "type": "float",
-          "id": 2
+          "id": 2,
+          "protoName": "playback_rate"
         }
       },
       "nested": {
@@ -697,11 +762,13 @@
             },
             "disableAutoKill": {
               "type": "bool",
-              "id": 2
+              "id": 2,
+              "protoName": "disable_auto_kill"
             },
             "forceLooping": {
               "type": "bool",
-              "id": 3
+              "id": 3,
+              "protoName": "force_looping"
             }
           }
         }
@@ -713,13 +780,15 @@
         "chatMessageId": {
           "type": "uint32",
           "id": 1,
+          "protoName": "chat_message_id",
           "options": {
             "default": 4294967295
           }
         },
         "emoticonId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "emoticon_id"
         }
       }
     },
@@ -852,6 +921,7 @@
         "targetEntity": {
           "type": "uint32",
           "id": 1,
+          "protoName": "target_entity",
           "options": {
             "default": 16777215
           }
@@ -891,39 +961,48 @@
         },
         "hostComputationtime": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "host_computationtime"
         },
         "hostComputationtimeStdDeviation": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "host_computationtime_std_deviation"
         },
         "legacyHostLoss": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "legacy_host_loss"
         },
         "hostUnfilteredFrametime": {
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "protoName": "host_unfiltered_frametime"
         },
         "hltvReplayFlags": {
           "type": "uint32",
-          "id": 9
+          "id": 9,
+          "protoName": "hltv_replay_flags"
         },
         "expectedLongTick": {
           "type": "uint32",
-          "id": 10
+          "id": 10,
+          "protoName": "expected_long_tick"
         },
         "expectedLongTickReason": {
           "type": "string",
-          "id": 11
+          "id": 11,
+          "protoName": "expected_long_tick_reason"
         },
         "hostFrameDroppedPctX10": {
           "type": "uint32",
-          "id": 12
+          "id": 12,
+          "protoName": "host_frame_dropped_pct_x10"
         },
         "hostFrameIrregularArrivalPctX10": {
           "type": "uint32",
-          "id": 13
+          "id": 13,
+          "protoName": "host_frame_irregular_arrival_pct_x10"
         }
       }
     },
@@ -945,26 +1024,31 @@
         "signonState": {
           "type": ".SignonState_t",
           "id": 1,
+          "protoName": "signon_state",
           "options": {
             "default": "SIGNONSTATE_NONE"
           }
         },
         "spawnCount": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "spawn_count"
         },
         "numServerPlayers": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "num_server_players"
         },
         "playersNetworkids": {
           "rule": "repeated",
           "type": "string",
-          "id": 4
+          "id": 4,
+          "protoName": "players_networkids"
         },
         "mapName": {
           "type": "string",
-          "id": 5
+          "id": 5,
+          "protoName": "map_name"
         },
         "addons": {
           "type": "string",
@@ -1000,11 +1084,13 @@
         },
         "worldOffsetPos": {
           "type": ".CMsgVector",
-          "id": 6
+          "id": 6,
+          "protoName": "world_offset_pos"
         },
         "worldOffsetAngle": {
           "type": ".CMsgQAngle",
-          "id": 7
+          "id": 7,
+          "protoName": "world_offset_angle"
         },
         "spawngroupmanifest": {
           "type": "bytes",
@@ -1102,35 +1188,43 @@
       "fields": {
         "isMultiplayer": {
           "type": "bool",
-          "id": 1
+          "id": 1,
+          "protoName": "is_multiplayer"
         },
         "isLoadsavegame": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "is_loadsavegame"
         },
         "isBackgroundMap": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "is_background_map"
         },
         "isHeadless": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "is_headless"
         },
         "minClientLimit": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "min_client_limit"
         },
         "maxClientLimit": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "max_client_limit"
         },
         "maxClients": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "max_clients"
         },
         "tickInterval": {
           "type": "fixed32",
-          "id": 8
+          "id": 8,
+          "protoName": "tick_interval"
         },
         "hostname": {
           "type": "string",
@@ -1142,7 +1236,8 @@
         },
         "s1Mapname": {
           "type": "string",
-          "id": 11
+          "id": 11,
+          "protoName": "s1_mapname"
         },
         "gamemode": {
           "type": "string",
@@ -1150,7 +1245,8 @@
         },
         "serverIpAddress": {
           "type": "string",
-          "id": 13
+          "id": 13,
+          "protoName": "server_ip_address"
         },
         "data": {
           "type": "bytes",
@@ -1158,15 +1254,18 @@
         },
         "isLocalonly": {
           "type": "bool",
-          "id": 15
+          "id": 15,
+          "protoName": "is_localonly"
         },
         "noSteamServer": {
           "type": "bool",
-          "id": 19
+          "id": 19,
+          "protoName": "no_steam_server"
         },
         "isTransition": {
           "type": "bool",
-          "id": 16
+          "id": 16,
+          "protoName": "is_transition"
         },
         "previouslevel": {
           "type": "string",
@@ -1251,47 +1350,58 @@
         },
         "targetName": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "target_name"
         },
         "targetSourceName": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "target_source_name"
         },
         "attackerName": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "attacker_name"
         },
         "damageSourceName": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "damage_source_name"
         },
         "inflictorName": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "inflictor_name"
         },
         "isAttackerIllusion": {
           "type": "bool",
-          "id": 7
+          "id": 7,
+          "protoName": "is_attacker_illusion"
         },
         "isAttackerHero": {
           "type": "bool",
-          "id": 8
+          "id": 8,
+          "protoName": "is_attacker_hero"
         },
         "isTargetIllusion": {
           "type": "bool",
-          "id": 9
+          "id": 9,
+          "protoName": "is_target_illusion"
         },
         "isTargetHero": {
           "type": "bool",
-          "id": 10
+          "id": 10,
+          "protoName": "is_target_hero"
         },
         "isVisibleRadiant": {
           "type": "bool",
-          "id": 11
+          "id": 11,
+          "protoName": "is_visible_radiant"
         },
         "isVisibleDire": {
           "type": "bool",
-          "id": 12
+          "id": 12,
+          "protoName": "is_visible_dire"
         },
         "value": {
           "type": "uint32",
@@ -1307,120 +1417,149 @@
         },
         "stunDuration": {
           "type": "float",
-          "id": 16
+          "id": 16,
+          "protoName": "stun_duration"
         },
         "slowDuration": {
           "type": "float",
-          "id": 17
+          "id": 17,
+          "protoName": "slow_duration"
         },
         "isAbilityToggleOn": {
           "type": "bool",
-          "id": 18
+          "id": 18,
+          "protoName": "is_ability_toggle_on"
         },
         "isAbilityToggleOff": {
           "type": "bool",
-          "id": 19
+          "id": 19,
+          "protoName": "is_ability_toggle_off"
         },
         "abilityLevel": {
           "type": "uint32",
-          "id": 20
+          "id": 20,
+          "protoName": "ability_level"
         },
         "locationX": {
           "type": "float",
-          "id": 21
+          "id": 21,
+          "protoName": "location_x"
         },
         "locationY": {
           "type": "float",
-          "id": 22
+          "id": 22,
+          "protoName": "location_y"
         },
         "goldReason": {
           "type": "uint32",
-          "id": 23
+          "id": 23,
+          "protoName": "gold_reason"
         },
         "timestampRaw": {
           "type": "float",
-          "id": 24
+          "id": 24,
+          "protoName": "timestamp_raw"
         },
         "modifierDuration": {
           "type": "float",
-          "id": 25
+          "id": 25,
+          "protoName": "modifier_duration"
         },
         "xpReason": {
           "type": "uint32",
-          "id": 26
+          "id": 26,
+          "protoName": "xp_reason"
         },
         "lastHits": {
           "type": "uint32",
-          "id": 27
+          "id": 27,
+          "protoName": "last_hits"
         },
         "attackerTeam": {
           "type": "uint32",
-          "id": 28
+          "id": 28,
+          "protoName": "attacker_team"
         },
         "targetTeam": {
           "type": "uint32",
-          "id": 29
+          "id": 29,
+          "protoName": "target_team"
         },
         "obsWardsPlaced": {
           "type": "uint32",
-          "id": 30
+          "id": 30,
+          "protoName": "obs_wards_placed"
         },
         "assistPlayer0": {
           "type": "uint32",
-          "id": 31
+          "id": 31,
+          "protoName": "assist_player0"
         },
         "assistPlayer1": {
           "type": "uint32",
-          "id": 32
+          "id": 32,
+          "protoName": "assist_player1"
         },
         "assistPlayer2": {
           "type": "uint32",
-          "id": 33
+          "id": 33,
+          "protoName": "assist_player2"
         },
         "assistPlayer3": {
           "type": "uint32",
-          "id": 34
+          "id": 34,
+          "protoName": "assist_player3"
         },
         "stackCount": {
           "type": "uint32",
-          "id": 35
+          "id": 35,
+          "protoName": "stack_count"
         },
         "hiddenModifier": {
           "type": "bool",
-          "id": 36
+          "id": 36,
+          "protoName": "hidden_modifier"
         },
         "isTargetBuilding": {
           "type": "bool",
-          "id": 37
+          "id": 37,
+          "protoName": "is_target_building"
         },
         "neutralCampType": {
           "type": "uint32",
-          "id": 38
+          "id": 38,
+          "protoName": "neutral_camp_type"
         },
         "runeType": {
           "type": "uint32",
-          "id": 39
+          "id": 39,
+          "protoName": "rune_type"
         },
         "assistPlayers": {
           "rule": "repeated",
           "type": "int32",
-          "id": 40
+          "id": 40,
+          "protoName": "assist_players"
         },
         "isHealSave": {
           "type": "bool",
-          "id": 41
+          "id": 41,
+          "protoName": "is_heal_save"
         },
         "isUltimateAbility": {
           "type": "bool",
-          "id": 42
+          "id": 42,
+          "protoName": "is_ultimate_ability"
         },
         "attackerHeroLevel": {
           "type": "uint32",
-          "id": 43
+          "id": 43,
+          "protoName": "attacker_hero_level"
         },
         "targetHeroLevel": {
           "type": "uint32",
-          "id": 44
+          "id": 44,
+          "protoName": "target_hero_level"
         },
         "xpm": {
           "type": "uint32",
@@ -1432,23 +1571,28 @@
         },
         "eventLocation": {
           "type": "uint32",
-          "id": 47
+          "id": 47,
+          "protoName": "event_location"
         },
         "targetIsSelf": {
           "type": "bool",
-          "id": 48
+          "id": 48,
+          "protoName": "target_is_self"
         },
         "damageType": {
           "type": "uint32",
-          "id": 49
+          "id": 49,
+          "protoName": "damage_type"
         },
         "invisibilityModifier": {
           "type": "bool",
-          "id": 50
+          "id": 50,
+          "protoName": "invisibility_modifier"
         },
         "damageCategory": {
           "type": "uint32",
-          "id": 51
+          "id": 51,
+          "protoName": "damage_category"
         },
         "networth": {
           "type": "uint32",
@@ -1456,123 +1600,153 @@
         },
         "buildingType": {
           "type": "uint32",
-          "id": 53
+          "id": 53,
+          "protoName": "building_type"
         },
         "modifierElapsedDuration": {
           "type": "float",
-          "id": 54
+          "id": 54,
+          "protoName": "modifier_elapsed_duration"
         },
         "silenceModifier": {
           "type": "bool",
-          "id": 55
+          "id": 55,
+          "protoName": "silence_modifier"
         },
         "healFromLifesteal": {
           "type": "bool",
-          "id": 56
+          "id": 56,
+          "protoName": "heal_from_lifesteal"
         },
         "modifierPurged": {
           "type": "bool",
-          "id": 57
+          "id": 57,
+          "protoName": "modifier_purged"
         },
         "spellEvaded": {
           "type": "bool",
-          "id": 58
+          "id": 58,
+          "protoName": "spell_evaded"
         },
         "motionControllerModifier": {
           "type": "bool",
-          "id": 59
+          "id": 59,
+          "protoName": "motion_controller_modifier"
         },
         "longRangeKill": {
           "type": "bool",
-          "id": 60
+          "id": 60,
+          "protoName": "long_range_kill"
         },
         "modifierPurgeAbility": {
           "type": "uint32",
-          "id": 61
+          "id": 61,
+          "protoName": "modifier_purge_ability"
         },
         "modifierPurgeNpc": {
           "type": "uint32",
-          "id": 62
+          "id": 62,
+          "protoName": "modifier_purge_npc"
         },
         "rootModifier": {
           "type": "bool",
-          "id": 63
+          "id": 63,
+          "protoName": "root_modifier"
         },
         "totalUnitDeathCount": {
           "type": "uint32",
-          "id": 64
+          "id": 64,
+          "protoName": "total_unit_death_count"
         },
         "auraModifier": {
           "type": "bool",
-          "id": 65
+          "id": 65,
+          "protoName": "aura_modifier"
         },
         "armorDebuffModifier": {
           "type": "bool",
-          "id": 66
+          "id": 66,
+          "protoName": "armor_debuff_modifier"
         },
         "noPhysicalDamageModifier": {
           "type": "bool",
-          "id": 67
+          "id": 67,
+          "protoName": "no_physical_damage_modifier"
         },
         "modifierAbility": {
           "type": "uint32",
-          "id": 68
+          "id": 68,
+          "protoName": "modifier_ability"
         },
         "modifierHidden": {
           "type": "bool",
-          "id": 69
+          "id": 69,
+          "protoName": "modifier_hidden"
         },
         "inflictorIsStolenAbility": {
           "type": "bool",
-          "id": 70
+          "id": 70,
+          "protoName": "inflictor_is_stolen_ability"
         },
         "killEaterEvent": {
           "type": "uint32",
-          "id": 71
+          "id": 71,
+          "protoName": "kill_eater_event"
         },
         "unitStatusLabel": {
           "type": "uint32",
-          "id": 72
+          "id": 72,
+          "protoName": "unit_status_label"
         },
         "spellGeneratedAttack": {
           "type": "bool",
-          "id": 73
+          "id": 73,
+          "protoName": "spell_generated_attack"
         },
         "atNightTime": {
           "type": "bool",
-          "id": 74
+          "id": 74,
+          "protoName": "at_night_time"
         },
         "attackerHasScepter": {
           "type": "bool",
-          "id": 75
+          "id": 75,
+          "protoName": "attacker_has_scepter"
         },
         "neutralCampTeam": {
           "type": "uint32",
-          "id": 76
+          "id": 76,
+          "protoName": "neutral_camp_team"
         },
         "regeneratedHealth": {
           "type": "float",
-          "id": 77
+          "id": 77,
+          "protoName": "regenerated_health"
         },
         "willReincarnate": {
           "type": "bool",
-          "id": 78
+          "id": 78,
+          "protoName": "will_reincarnate"
         },
         "usesCharges": {
           "type": "bool",
-          "id": 79
+          "id": 79,
+          "protoName": "uses_charges"
         },
         "trackedStatId": {
           "type": "uint32",
-          "id": 80
+          "id": 80,
+          "protoName": "tracked_stat_id"
         },
         "modifierPurgedDuration": {
           "type": "float",
-          "id": 81
+          "id": 81,
+          "protoName": "modifier_purged_duration"
         },
         "healFromRegen": {
           "type": "bool",
-          "id": 82
+          "id": 82,
+          "protoName": "heal_from_regen"
         }
       }
     },
@@ -1582,7 +1756,8 @@
         "materialCounts": {
           "rule": "repeated",
           "type": ".CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry",
-          "id": 1
+          "id": 1,
+          "protoName": "material_counts"
         }
       },
       "nested": {
@@ -1605,23 +1780,28 @@
       "fields": {
         "heroId": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "hero_id"
         },
         "personaId": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "persona_id"
         },
         "matchRewards": {
           "type": ".CMsgMonsterHunterMaterialQuantity",
-          "id": 3
+          "id": 3,
+          "protoName": "match_rewards"
         },
         "huntRewards": {
           "type": ".CMsgMonsterHunterMaterialQuantity",
-          "id": 4
+          "id": 4,
+          "protoName": "hunt_rewards"
         },
         "successState": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "success_state"
         }
       }
     },
@@ -1630,12 +1810,14 @@
       "fields": {
         "selectedInvestigation": {
           "type": ".CMsgMonsterHunterInvestigation",
-          "id": 1
+          "id": 1,
+          "protoName": "selected_investigation"
         },
         "huntedBy": {
           "rule": "repeated",
           "type": ".CMsgMonsterHunterInvestigationGameState.HuntedBy",
-          "id": 2
+          "id": 2,
+          "protoName": "hunted_by"
         }
       },
       "nested": {
@@ -1643,19 +1825,23 @@
           "fields": {
             "heroId": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "hero_id"
             },
             "personaId": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "persona_id"
             },
             "huntRewards": {
               "type": ".CMsgMonsterHunterMaterialQuantity",
-              "id": 3
+              "id": 3,
+              "protoName": "hunt_rewards"
             },
             "successState": {
               "type": "bool",
-              "id": 4
+              "id": 4,
+              "protoName": "success_state"
             }
           }
         }
@@ -1911,6 +2097,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -1993,6 +2180,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2007,7 +2195,8 @@
         },
         "teamOnly": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "team_only"
         }
       }
     },
@@ -2024,7 +2213,8 @@
         },
         "worldPos": {
           "type": ".CMsgVector2D",
-          "id": 3
+          "id": 3,
+          "protoName": "world_pos"
         },
         "health": {
           "type": "int32",
@@ -2041,7 +2231,8 @@
         "combatEntries": {
           "rule": "repeated",
           "type": ".CMsgDOTACombatLogEntry",
-          "id": 1
+          "id": 1,
+          "protoName": "combat_entries"
         },
         "timestamp": {
           "type": "float",
@@ -2054,13 +2245,15 @@
         "playerId": {
           "type": "int32",
           "id": 4,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "requestTime": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "request_time"
         }
       }
     },
@@ -2069,7 +2262,8 @@
       "fields": {
         "controlPoint": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "control_point"
         },
         "vector": {
           "type": ".CMsgVector",
@@ -2086,7 +2280,8 @@
         },
         "controlPoint": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "control_point"
         },
         "vector": {
           "type": ".CMsgVector",
@@ -2115,7 +2310,8 @@
             },
             "totalDamage": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "total_damage"
             },
             "abilities": {
               "rule": "repeated",
@@ -2124,7 +2320,8 @@
             },
             "attackerName": {
               "type": "string",
-              "id": 4
+              "id": 4,
+              "protoName": "attacker_name"
             }
           },
           "nested": {
@@ -2133,6 +2330,7 @@
                 "abilityId": {
                   "type": "int32",
                   "id": 1,
+                  "protoName": "ability_id",
                   "options": {
                     "default": -1
                   }
@@ -2179,13 +2377,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "locationPing": {
           "type": ".CDOTAMsg_LocationPing",
-          "id": 2
+          "id": 2,
+          "protoName": "location_ping"
         }
       }
     },
@@ -2195,17 +2395,20 @@
         "playerIdOfOriginalPinger": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_of_original_pinger",
           "options": {
             "default": -1
           }
         },
         "entityIndex": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "entity_index"
         },
         "iconType": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "icon_type"
         },
         "location": {
           "type": ".CMsgVector",
@@ -2219,13 +2422,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "itemAlert": {
           "type": ".CDOTAMsg_ItemAlert",
-          "id": 2
+          "id": 2,
+          "protoName": "item_alert"
         }
       }
     },
@@ -2235,6 +2440,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2242,6 +2448,7 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
@@ -2249,6 +2456,7 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 3,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
@@ -2256,17 +2464,20 @@
         "runeType": {
           "type": "int32",
           "id": 4,
+          "protoName": "rune_type",
           "options": {
             "default": -1
           }
         },
         "entityId": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "entity_id"
         },
         "itemLevel": {
           "type": "int32",
           "id": 6,
+          "protoName": "item_level",
           "options": {
             "default": -1
           }
@@ -2274,6 +2485,7 @@
         "primaryCharges": {
           "type": "int32",
           "id": 7,
+          "protoName": "primary_charges",
           "options": {
             "default": -1
           }
@@ -2281,6 +2493,7 @@
         "secondaryCharges": {
           "type": "int32",
           "id": 8,
+          "protoName": "secondary_charges",
           "options": {
             "default": -1
           }
@@ -2293,32 +2506,38 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "className": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "class_name"
         },
         "stackCount": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "stack_count"
         },
         "isDebuff": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "is_debuff"
         },
         "targetEntindex": {
           "type": "int32",
           "id": 5,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
         },
         "secondsRemaining": {
           "type": "float",
-          "id": 6
+          "id": 6,
+          "protoName": "seconds_remaining"
         }
       }
     },
@@ -2328,6 +2547,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2335,13 +2555,15 @@
         "targetEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
         },
         "showRawValues": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "show_raw_values"
         }
       }
     },
@@ -2351,6 +2573,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2358,6 +2581,7 @@
         "spawnerEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "spawner_entindex",
           "options": {
             "default": -1
           }
@@ -2365,25 +2589,30 @@
         "unitEntindex": {
           "type": "int32",
           "id": 3,
+          "protoName": "unit_entindex",
           "options": {
             "default": -1
           }
         },
         "stackCount": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "stack_count"
         },
         "campType": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "camp_type"
         },
         "stackRequest": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "stack_request"
         },
         "stackIntention": {
           "type": "bool",
-          "id": 7
+          "id": 7,
+          "protoName": "stack_intention"
         }
       }
     },
@@ -2393,6 +2622,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2409,6 +2639,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2425,6 +2656,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2441,6 +2673,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2457,6 +2690,7 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 1,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
@@ -2464,17 +2698,20 @@
         "playerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "goldRemaining": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "gold_remaining"
         },
         "suggestionPlayerId": {
           "type": "int32",
           "id": 4,
+          "protoName": "suggestion_player_id",
           "options": {
             "default": -1
           }
@@ -2487,6 +2724,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -2494,13 +2732,15 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
         },
         "cooldownSeconds": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "cooldown_seconds"
         }
       }
     },
@@ -2510,6 +2750,7 @@
         "sourceEhandle": {
           "type": "uint32",
           "id": 1,
+          "protoName": "source_ehandle",
           "options": {
             "default": 16777215
           }
@@ -2517,13 +2758,15 @@
         "targetEhandle": {
           "type": "uint32",
           "id": 2,
+          "protoName": "target_ehandle",
           "options": {
             "default": 16777215
           }
         },
         "warriorIndex": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "warrior_index"
         }
       }
     },
@@ -2533,6 +2776,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2545,6 +2789,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2552,21 +2797,25 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 2,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
         },
         "goldCost": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "gold_cost"
         },
         "itemCooldownSeconds": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "item_cooldown_seconds"
         },
         "showBuyback": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "show_buyback"
         }
       }
     },
@@ -2579,11 +2828,13 @@
         },
         "goldValue": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "gold_value"
         },
         "entityHandle": {
           "type": "uint32",
           "id": 3,
+          "protoName": "entity_handle",
           "options": {
             "default": 16777215
           }
@@ -2595,11 +2846,13 @@
         "lostItems": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_CourierKilledAlert.LostItem",
-          "id": 5
+          "id": 5,
+          "protoName": "lost_items"
         },
         "killerPlayerId": {
           "type": "int32",
           "id": 6,
+          "protoName": "killer_player_id",
           "options": {
             "default": -1
           }
@@ -2607,6 +2860,7 @@
         "owningPlayerId": {
           "type": "int32",
           "id": 7,
+          "protoName": "owning_player_id",
           "options": {
             "default": -1
           }
@@ -2618,6 +2872,7 @@
             "itemAbilityId": {
               "type": "int32",
               "id": 1,
+              "protoName": "item_ability_id",
               "options": {
                 "default": -1
               }
@@ -2635,11 +2890,13 @@
       "fields": {
         "eventType": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "event_type"
         },
         "entityHandle": {
           "type": "uint32",
           "id": 2,
+          "protoName": "entity_handle",
           "options": {
             "default": 16777215
           }
@@ -2659,6 +2916,7 @@
         "targetEntityHandle": {
           "type": "uint32",
           "id": 6,
+          "protoName": "target_entity_handle",
           "options": {
             "default": 16777215
           }
@@ -2671,6 +2929,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -2726,7 +2985,8 @@
         },
         "particleIndex": {
           "type": "uint64",
-          "id": 5
+          "id": 5,
+          "protoName": "particle_index"
         },
         "handle": {
           "type": "int32",
@@ -2738,15 +2998,18 @@
         },
         "maxSpeed": {
           "type": "float",
-          "id": 8
+          "id": 8,
+          "protoName": "max_speed"
         },
         "fowRadius": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "fow_radius"
         },
         "stickyFowReveal": {
           "type": "bool",
-          "id": 10
+          "id": 10,
+          "protoName": "sticky_fow_reveal"
         },
         "distance": {
           "type": "float",
@@ -2759,7 +3022,8 @@
         "particleCpData": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_ProjectileParticleCPData",
-          "id": 13
+          "id": 13,
+          "protoName": "particle_cp_data"
         }
       }
     },
@@ -2784,7 +3048,8 @@
         },
         "attacksOnly": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "attacks_only"
         }
       }
     },
@@ -2800,11 +3065,13 @@
         },
         "orderType": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "order_type"
         },
         "targetIndex": {
           "type": "int32",
           "id": 3,
+          "protoName": "target_index",
           "options": {
             "default": 0
           }
@@ -2823,7 +3090,8 @@
         },
         "orderType": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "order_type"
         },
         "units": {
           "rule": "repeated",
@@ -2833,6 +3101,7 @@
         "targetIndex": {
           "type": "int32",
           "id": 4,
+          "protoName": "target_index",
           "options": {
             "default": 0
           }
@@ -2840,6 +3109,7 @@
         "abilityId": {
           "type": "int32",
           "id": 5,
+          "protoName": "ability_id",
           "options": {
             "default": -1
           }
@@ -2854,7 +3124,8 @@
         },
         "sequenceNumber": {
           "type": "int32",
-          "id": 8
+          "id": 8,
+          "protoName": "sequence_number"
         },
         "flags": {
           "type": "uint32",
@@ -2862,7 +3133,8 @@
         },
         "lastOrderLatency": {
           "type": "uint32",
-          "id": 10
+          "id": 10,
+          "protoName": "last_order_latency"
         },
         "ping": {
           "type": "uint32",
@@ -2876,6 +3148,7 @@
         "entityHandle": {
           "type": "uint32",
           "id": 1,
+          "protoName": "entity_handle",
           "options": {
             "default": 16777215
           }
@@ -2903,7 +3176,8 @@
         },
         "sequenceNumber": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "sequence_number"
         }
       }
     },
@@ -2912,11 +3186,13 @@
       "fields": {
         "orderId": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "order_id"
         },
         "sequenceNumber": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "sequence_number"
         }
       }
     },
@@ -2940,7 +3216,8 @@
         },
         "nameIndex": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "name_index"
         }
       }
     },
@@ -2959,16 +3236,19 @@
         "itemDefs": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "item_defs"
         },
         "playerIds": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "player_ids"
         },
         "prizeList": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "prize_list"
         }
       }
     },
@@ -2978,6 +3258,7 @@
         "owningPlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "owning_player_id",
           "options": {
             "default": -1
           }
@@ -3009,19 +3290,23 @@
             },
             "valNumeric": {
               "type": "float",
-              "id": 3
+              "id": 3,
+              "protoName": "val_numeric"
             },
             "valString": {
               "type": "string",
-              "id": 4
+              "id": 4,
+              "protoName": "val_string"
             },
             "valStringtableIndex": {
               "type": "int32",
-              "id": 5
+              "id": 5,
+              "protoName": "val_stringtable_index"
             },
             "valIntNumeric": {
               "type": "sint32",
-              "id": 6
+              "id": 6,
+              "protoName": "val_int_numeric"
             }
           },
           "nested": {
@@ -3042,11 +3327,13 @@
       "fields": {
         "speechConcept": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "speech_concept"
         },
         "recipientType": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "recipient_type"
         },
         "responsequery": {
           "type": ".CDOTAResponseQuerySerialized",
@@ -3067,13 +3354,15 @@
         "msgType": {
           "type": ".EDotaEntityMessages",
           "id": 1,
+          "protoName": "msg_type",
           "options": {
             "default": "DOTA_UNIT_SPEECH"
           }
         },
         "entityIndex": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "entity_index"
         },
         "speech": {
           "type": ".CDOTAUserMsg_UnitEvent.Speech",
@@ -3081,27 +3370,33 @@
         },
         "speechMute": {
           "type": ".CDOTAUserMsg_UnitEvent.SpeechMute",
-          "id": 4
+          "id": 4,
+          "protoName": "speech_mute"
         },
         "addGesture": {
           "type": ".CDOTAUserMsg_UnitEvent.AddGesture",
-          "id": 5
+          "id": 5,
+          "protoName": "add_gesture"
         },
         "removeGesture": {
           "type": ".CDOTAUserMsg_UnitEvent.RemoveGesture",
-          "id": 6
+          "id": 6,
+          "protoName": "remove_gesture"
         },
         "bloodImpact": {
           "type": ".CDOTAUserMsg_UnitEvent.BloodImpact",
-          "id": 7
+          "id": 7,
+          "protoName": "blood_impact"
         },
         "fadeGesture": {
           "type": ".CDOTAUserMsg_UnitEvent.FadeGesture",
-          "id": 8
+          "id": 8,
+          "protoName": "fade_gesture"
         },
         "speechMatchOnClient": {
           "type": ".CDOTASpeechMatchOnClient",
-          "id": 9
+          "id": 9,
+          "protoName": "speech_match_on_client"
         }
       },
       "nested": {
@@ -3121,7 +3416,8 @@
           "fields": {
             "speechConcept": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "speech_concept"
             },
             "response": {
               "type": "string",
@@ -3129,7 +3425,8 @@
             },
             "recipientType": {
               "type": "int32",
-              "id": 3
+              "id": 3,
+              "protoName": "recipient_type"
             },
             "muteable": {
               "type": "bool",
@@ -3148,7 +3445,8 @@
             },
             "responseType": {
               "type": "int32",
-              "id": 8
+              "id": 8,
+              "protoName": "response_type"
             }
           }
         },
@@ -3176,6 +3474,7 @@
             "fadeIn": {
               "type": "float",
               "id": 3,
+              "protoName": "fade_in",
               "options": {
                 "default": 0
               }
@@ -3183,6 +3482,7 @@
             "fadeOut": {
               "type": "float",
               "id": 4,
+              "protoName": "fade_out",
               "options": {
                 "default": 0.1
               }
@@ -3190,13 +3490,15 @@
             "playbackRate": {
               "type": "float",
               "id": 5,
+              "protoName": "playback_rate",
               "options": {
                 "default": 1
               }
             },
             "sequenceVariant": {
               "type": "int32",
-              "id": 6
+              "id": 6,
+              "protoName": "sequence_variant"
             }
           }
         },
@@ -3216,11 +3518,13 @@
             },
             "xNormal": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "x_normal"
             },
             "yNormal": {
               "type": "int32",
-              "id": 3
+              "id": 3,
+              "protoName": "y_normal"
             }
           }
         },
@@ -3240,13 +3544,15 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 1,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
         },
         "fromCombine": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "from_combine"
         }
       }
     },
@@ -3256,6 +3562,7 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 1,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
@@ -3296,6 +3603,7 @@
         "messageType": {
           "type": ".DOTA_OVERHEAD_ALERT",
           "id": 1,
+          "protoName": "message_type",
           "options": {
             "default": "OVERHEAD_ALERT_GOLD"
           }
@@ -3307,6 +3615,7 @@
         "targetPlayerEntindex": {
           "type": "int32",
           "id": 3,
+          "protoName": "target_player_entindex",
           "options": {
             "default": -1
           }
@@ -3314,6 +3623,7 @@
         "targetEntindex": {
           "type": "int32",
           "id": 4,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
@@ -3321,6 +3631,7 @@
         "sourcePlayerEntindex": {
           "type": "int32",
           "id": 5,
+          "protoName": "source_player_entindex",
           "options": {
             "default": -1
           }
@@ -3392,6 +3703,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -3408,6 +3720,7 @@
         "chatMessageId": {
           "type": "uint32",
           "id": 1,
+          "protoName": "chat_message_id",
           "options": {
             "default": 4294967295
           }
@@ -3415,21 +3728,25 @@
         "playerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "accountId": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "account_id"
         },
         "paramHeroId": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "param_hero_id"
         },
         "emoticonId": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "emoticon_id"
         }
       }
     },
@@ -3439,17 +3756,20 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "itemName": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "item_name"
         },
         "inventorySlot": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "inventory_slot"
         }
       }
     },
@@ -3458,27 +3778,33 @@
       "fields": {
         "surveyId": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "survey_id"
         },
         "matchId": {
           "type": "uint64",
-          "id": 2
+          "id": 2,
+          "protoName": "match_id"
         },
         "responseStyle": {
           "type": "string",
-          "id": 3
+          "id": 3,
+          "protoName": "response_style"
         },
         "teammateHeroId": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "teammate_hero_id"
         },
         "teammateName": {
           "type": "string",
-          "id": 5
+          "id": 5,
+          "protoName": "teammate_name"
         },
         "teammateAccountId": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "teammate_account_id"
         }
       }
     },
@@ -3487,7 +3813,8 @@
       "fields": {
         "slotType": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "slot_type"
         }
       }
     },
@@ -3500,7 +3827,8 @@
       "fields": {
         "tgtAlpha": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "tgt_alpha"
         }
       }
     },
@@ -3510,25 +3838,30 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "posX": {
           "type": "float",
-          "id": 2
+          "id": 2,
+          "protoName": "pos_x"
         },
         "posY": {
           "type": "float",
-          "id": 3
+          "id": 3,
+          "protoName": "pos_y"
         },
         "posZ": {
           "type": "float",
-          "id": 4
+          "id": 4,
+          "protoName": "pos_z"
         },
         "entityIndex": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "entity_index"
         }
       }
     },
@@ -3546,11 +3879,13 @@
       "fields": {
         "npcName": {
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "npc_name"
         },
         "npcDialog": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "npc_dialog"
         }
       }
     },
@@ -3560,6 +3895,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -3591,11 +3927,13 @@
         },
         "phaseStartTime": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "phase_start_time"
         },
         "phaseLength": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "phase_length"
         }
       }
     },
@@ -3618,12 +3956,14 @@
         "reliableGold": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "reliable_gold"
         },
         "unreliableGold": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "unreliable_gold"
         }
       }
     },
@@ -3637,6 +3977,7 @@
         "playerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -3653,13 +3994,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "hudPing": {
           "type": ".CDOTAMsg_CoachHUDPing",
-          "id": 2
+          "id": 2,
+          "protoName": "hud_ping"
         }
       }
     },
@@ -3686,15 +4029,18 @@
         },
         "moveSpeed": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "move_speed"
         },
         "sourceAttachment": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "source_attachment"
         },
         "particleSystemHandle": {
           "type": "int64",
-          "id": 5
+          "id": 5,
+          "protoName": "particle_system_handle"
         },
         "dodgeable": {
           "type": "bool",
@@ -3702,11 +4048,13 @@
         },
         "isAttack": {
           "type": "bool",
-          "id": 7
+          "id": 7,
+          "protoName": "is_attack"
         },
         "expireTime": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "expire_time"
         },
         "maximpacttime": {
           "type": "float",
@@ -3718,7 +4066,8 @@
         },
         "launchTick": {
           "type": "int32",
-          "id": 12
+          "id": 12,
+          "protoName": "launch_tick"
         },
         "handle": {
           "type": "int32",
@@ -3726,20 +4075,24 @@
         },
         "targetLoc": {
           "type": ".CMsgVector",
-          "id": 14
+          "id": 14,
+          "protoName": "target_loc"
         },
         "particleCpData": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_ProjectileParticleCPData",
-          "id": 15
+          "id": 15,
+          "protoName": "particle_cp_data"
         },
         "additionalParticleSystemHandle": {
           "type": "int64",
-          "id": 16
+          "id": 16,
+          "protoName": "additional_particle_system_handle"
         },
         "originalMoveSpeed": {
           "type": "int32",
-          "id": 17
+          "id": 17,
+          "protoName": "original_move_speed"
         },
         "ability": {
           "type": "uint32",
@@ -3750,7 +4103,8 @@
         },
         "targetProjectileHandle": {
           "type": "int32",
-          "id": 19
+          "id": 19,
+          "protoName": "target_projectile_handle"
         }
       }
     },
@@ -3759,7 +4113,8 @@
       "fields": {
         "sourceLoc": {
           "type": ".CMsgVector",
-          "id": 1
+          "id": 1,
+          "protoName": "source_loc"
         },
         "target": {
           "type": "uint32",
@@ -3770,11 +4125,13 @@
         },
         "moveSpeed": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "move_speed"
         },
         "particleSystemHandle": {
           "type": "int64",
-          "id": 4
+          "id": 4,
+          "protoName": "particle_system_handle"
         },
         "dodgeable": {
           "type": "bool",
@@ -3782,15 +4139,18 @@
         },
         "isAttack": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "is_attack"
         },
         "expireTime": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "expire_time"
         },
         "targetLoc": {
           "type": ".CMsgVector",
-          "id": 10
+          "id": 10,
+          "protoName": "target_loc"
         },
         "colorgemcolor": {
           "type": "fixed32",
@@ -3798,7 +4158,8 @@
         },
         "launchTick": {
           "type": "int32",
-          "id": 12
+          "id": 12,
+          "protoName": "launch_tick"
         },
         "handle": {
           "type": "int32",
@@ -3813,20 +4174,24 @@
         },
         "sourceAttachment": {
           "type": "int32",
-          "id": 15
+          "id": 15,
+          "protoName": "source_attachment"
         },
         "particleCpData": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_ProjectileParticleCPData",
-          "id": 16
+          "id": 16,
+          "protoName": "particle_cp_data"
         },
         "additionalParticleSystemHandle": {
           "type": "int64",
-          "id": 17
+          "id": 17,
+          "protoName": "additional_particle_system_handle"
         },
         "originalMoveSpeed": {
           "type": "int32",
-          "id": 18
+          "id": 18,
+          "protoName": "original_move_speed"
         }
       }
     },
@@ -3869,6 +4234,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -3876,6 +4242,7 @@
         "abilityId": {
           "type": "int32",
           "id": 2,
+          "protoName": "ability_id",
           "options": {
             "default": -1
           }
@@ -3889,7 +4256,8 @@
         },
         "cooldownSeconds": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "cooldown_seconds"
         },
         "level": {
           "type": "uint32",
@@ -3901,31 +4269,38 @@
         },
         "manaNeeded": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "mana_needed"
         },
         "entityId": {
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "protoName": "entity_id"
         },
         "primaryCharges": {
           "type": "int32",
-          "id": 9
+          "id": 9,
+          "protoName": "primary_charges"
         },
         "secondaryCharges": {
           "type": "int32",
-          "id": 10
+          "id": 10,
+          "protoName": "secondary_charges"
         },
         "ctrlHeld": {
           "type": "bool",
-          "id": 12
+          "id": 12,
+          "protoName": "ctrl_held"
         },
         "reclaimTime": {
           "type": "float",
-          "id": 13
+          "id": 13,
+          "protoName": "reclaim_time"
         },
         "ownerEntity": {
           "type": "int32",
           "id": 14,
+          "protoName": "owner_entity",
           "options": {
             "default": -1
           }
@@ -3944,7 +4319,8 @@
         },
         "sequenceVariant": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "sequence_variant"
         },
         "playbackrate": {
           "type": "float",
@@ -3964,7 +4340,8 @@
         },
         "lagCompensationTime": {
           "type": "float",
-          "id": 7
+          "id": 7,
+          "protoName": "lag_compensation_time"
         }
       }
     },
@@ -4005,11 +4382,13 @@
         },
         "tintScreen": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "tint_screen"
         },
         "showNoOtherDialogs": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "show_no_other_dialogs"
         }
       }
     },
@@ -4026,7 +4405,8 @@
         },
         "choiceCount": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "choice_count"
         },
         "choices": {
           "rule": "repeated",
@@ -4041,7 +4421,8 @@
         "choiceCounts": {
           "rule": "repeated",
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "choice_counts"
         }
       }
     },
@@ -4050,7 +4431,8 @@
       "fields": {
         "selectedChoice": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "selected_choice"
         }
       }
     },
@@ -4060,6 +4442,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4070,15 +4453,18 @@
         },
         "eventBonus": {
           "type": "float",
-          "id": 3
+          "id": 3,
+          "protoName": "event_bonus"
         },
         "bonusItemId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "bonus_item_id"
         },
         "eventBonusItemId": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "event_bonus_item_id"
         }
       }
     },
@@ -4088,7 +4474,8 @@
         "boostedPlayers": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_BoosterStatePlayer",
-          "id": 1
+          "id": 1,
+          "protoName": "boosted_players"
         }
       }
     },
@@ -4098,6 +4485,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4105,13 +4493,15 @@
         "abilityId": {
           "type": "int32",
           "id": 2,
+          "protoName": "ability_id",
           "options": {
             "default": -1
           }
         },
         "abilityLevel": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "ability_level"
         }
       }
     },
@@ -4121,17 +4511,20 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "heroId": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "hero_id"
         },
         "heroName": {
           "type": "string",
-          "id": 3
+          "id": 3,
+          "protoName": "hero_name"
         },
         "persona": {
           "type": "string",
@@ -4144,12 +4537,14 @@
       "fields": {
         "averagePosition": {
           "type": "float",
-          "id": 1
+          "id": 1,
+          "protoName": "average_position"
         },
         "positionDetails": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsHeroPositionInfo.PositionPair",
-          "id": 2
+          "id": 2,
+          "protoName": "position_details"
         }
       },
       "nested": {
@@ -4158,13 +4553,15 @@
             "positionCategory": {
               "type": ".DOTA_POSITION_CATEGORY",
               "id": 1,
+              "protoName": "position_category",
               "options": {
                 "default": "DOTA_POSITION_NONE"
               }
             },
             "positionCount": {
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "protoName": "position_count"
             }
           }
         }
@@ -4175,66 +4572,81 @@
       "fields": {
         "lastHits": {
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "last_hits"
         },
         "heroKills": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "hero_kills"
         },
         "heroDamage": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "hero_damage"
         },
         "towerDamage": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "tower_damage"
         },
         "positionInfo": {
           "type": ".CDOTAUserMsg_StatsHeroPositionInfo",
-          "id": 5
+          "id": 5,
+          "protoName": "position_info"
         },
         "totalXp": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "total_xp"
         },
         "netWorth": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "net_worth"
         },
         "harvestedCreepGold": {
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "protoName": "harvested_creep_gold"
         },
         "claimedFarm": {
           "type": "uint32",
-          "id": 9
+          "id": 9,
+          "protoName": "claimed_farm"
         },
         "wardsPlaced": {
           "type": "uint32",
-          "id": 10
+          "id": 10,
+          "protoName": "wards_placed"
         },
         "runesCollected": {
           "type": "uint32",
-          "id": 11
+          "id": 11,
+          "protoName": "runes_collected"
         },
         "tpsUsed": {
           "type": "uint32",
-          "id": 12
+          "id": 12,
+          "protoName": "tps_used"
         },
         "manaSpent": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 13
+          "id": 13,
+          "protoName": "mana_spent"
         },
         "damageAbsorbed": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 14
+          "id": 14,
+          "protoName": "damage_absorbed"
         },
         "damageDone": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 15
+          "id": 15,
+          "protoName": "damage_done"
         }
       }
     },
@@ -4244,44 +4656,54 @@
         "playerStats": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsHeroMinuteDetails",
-          "id": 1
+          "id": 1,
+          "protoName": "player_stats"
         },
         "towerKills": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "tower_kills"
         },
         "barrackKills": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "barrack_kills"
         },
         "availableLaneCreepGold": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "available_lane_creep_gold"
         },
         "balanceKillValue": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "balance_kill_value"
         },
         "balanceTowerValue": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "balance_tower_value"
         },
         "balanceBarracksValue": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "balance_barracks_value"
         },
         "balanceGoldValue": {
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "protoName": "balance_gold_value"
         },
         "balanceXpValue": {
           "type": "uint32",
-          "id": 9
+          "id": 9,
+          "protoName": "balance_xp_value"
         },
         "lanePerformance": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsTeamMinuteDetails.LocationPerformance",
-          "id": 10
+          "id": 10,
+          "protoName": "lane_performance"
         }
       },
       "nested": {
@@ -4289,11 +4711,13 @@
           "fields": {
             "locationCategory": {
               "type": "uint32",
-              "id": 1
+              "id": 1,
+              "protoName": "location_category"
             },
             "statType": {
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "protoName": "stat_type"
             },
             "value": {
               "type": "uint32",
@@ -4309,29 +4733,35 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "killSharePercent": {
           "type": "float",
-          "id": 2
+          "id": 2,
+          "protoName": "kill_share_percent"
         },
         "playerLocX": {
           "type": "float",
-          "id": 3
+          "id": 3,
+          "protoName": "player_loc_x"
         },
         "playerLocY": {
           "type": "float",
-          "id": 4
+          "id": 4,
+          "protoName": "player_loc_y"
         },
         "healthPercent": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "health_percent"
         },
         "manaPercent": {
           "type": "float",
-          "id": 6
+          "id": 6,
+          "protoName": "mana_percent"
         }
       }
     },
@@ -4341,6 +4771,7 @@
         "victimId": {
           "type": "int32",
           "id": 1,
+          "protoName": "victim_id",
           "options": {
             "default": -1
           }
@@ -4348,23 +4779,28 @@
         "killShares": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsPlayerKillShare",
-          "id": 2
+          "id": 2,
+          "protoName": "kill_shares"
         },
         "damageToKill": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "damage_to_kill"
         },
         "effectiveHealth": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "effective_health"
         },
         "deathTime": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "death_time"
         },
         "killerId": {
           "type": "int32",
           "id": 6,
+          "protoName": "killer_id",
           "options": {
             "default": -1
           }
@@ -4380,32 +4816,38 @@
         "heroLookup": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsHeroLookup",
-          "id": 1
+          "id": 1,
+          "protoName": "hero_lookup"
         },
         "radiantStats": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsTeamMinuteDetails",
-          "id": 2
+          "id": 2,
+          "protoName": "radiant_stats"
         },
         "direStats": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsTeamMinuteDetails",
-          "id": 3
+          "id": 3,
+          "protoName": "dire_stats"
         },
         "radiantKills": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsKillDetails",
-          "id": 4
+          "id": 4,
+          "protoName": "radiant_kills"
         },
         "direKills": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsKillDetails",
-          "id": 5
+          "id": 5,
+          "protoName": "dire_kills"
         },
         "fightDetails": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightDetails",
-          "id": 6
+          "id": 6,
+          "protoName": "fight_details"
         }
       },
       "nested": {
@@ -4423,11 +4865,13 @@
             },
             "goldDelta": {
               "type": "uint32",
-              "id": 3
+              "id": 3,
+              "protoName": "gold_delta"
             },
             "xpDelta": {
               "type": "uint32",
-              "id": 4
+              "id": 4,
+              "protoName": "xp_delta"
             }
           }
         },
@@ -4435,19 +4879,23 @@
           "fields": {
             "startTime": {
               "type": "float",
-              "id": 1
+              "id": 1,
+              "protoName": "start_time"
             },
             "endTime": {
               "type": "float",
-              "id": 2
+              "id": 2,
+              "protoName": "end_time"
             },
             "radiantFightDetails": {
               "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightTeamDetails",
-              "id": 3
+              "id": 3,
+              "protoName": "radiant_fight_details"
             },
             "direFightDetails": {
               "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightTeamDetails",
-              "id": 4
+              "id": 4,
+              "protoName": "dire_fight_details"
             }
           }
         }
@@ -4459,6 +4907,7 @@
         "tauntingPlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "taunting_player_id",
           "options": {
             "default": -1
           }
@@ -4470,7 +4919,8 @@
       "fields": {
         "destroyAll": {
           "type": "bool",
-          "id": 1
+          "id": 1,
+          "protoName": "destroy_all"
         }
       }
     },
@@ -4480,6 +4930,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4524,11 +4975,13 @@
       "fields": {
         "elementId": {
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "element_id"
         },
         "layoutFilename": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "layout_filename"
         },
         "data": {
           "type": "bytes",
@@ -4541,11 +4994,13 @@
       "fields": {
         "elementId": {
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "element_id"
         },
         "modifyVisible": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "modify_visible"
         },
         "data": {
           "type": "bytes",
@@ -4558,7 +5013,8 @@
       "fields": {
         "elementId": {
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "element_id"
         }
       }
     },
@@ -4568,6 +5024,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4584,7 +5041,8 @@
         "compendiumPlayers": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_CompendiumStatePlayer",
-          "id": 1
+          "id": 1,
+          "protoName": "compendium_players"
         }
       }
     },
@@ -4594,6 +5052,7 @@
         "abilityId": {
           "type": "int32",
           "id": 1,
+          "protoName": "ability_id",
           "options": {
             "default": -1
           }
@@ -4601,17 +5060,20 @@
         "casterEntIndex": {
           "type": "int32",
           "id": 2,
+          "protoName": "caster_ent_index",
           "options": {
             "default": -1
           }
         },
         "casterTeam": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "caster_team"
         },
         "channelEnd": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "channel_end"
         },
         "origin": {
           "type": ".CMsgVector",
@@ -4619,15 +5081,18 @@
         },
         "trackCasterOnly": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "track_caster_only"
         },
         "endTime": {
           "type": "float",
-          "id": 7
+          "id": 7,
+          "protoName": "end_time"
         },
         "victimEntIndex": {
           "type": "int32",
           "id": 8,
+          "protoName": "victim_ent_index",
           "options": {
             "default": -1
           }
@@ -4640,6 +5105,7 @@
         "eventId": {
           "type": ".EProjectionEvent",
           "id": 1,
+          "protoName": "event_id",
           "options": {
             "default": "ePE_FirstBlood"
           }
@@ -4656,6 +5122,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4663,6 +5130,7 @@
         "targetEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
@@ -4675,6 +5143,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4682,6 +5151,7 @@
         "targetEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
@@ -4689,6 +5159,7 @@
         "abilityId": {
           "type": "int32",
           "id": 3,
+          "protoName": "ability_id",
           "options": {
             "default": -1
           }
@@ -4713,17 +5184,20 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "questId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "quest_id"
         },
         "challengeId": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "challenge_id"
         },
         "progress": {
           "type": "uint32",
@@ -4739,11 +5213,13 @@
         },
         "failGametime": {
           "type": "float",
-          "id": 7
+          "id": 7,
+          "protoName": "fail_gametime"
         },
         "itemAbilityId": {
           "type": "int32",
           "id": 8,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
@@ -4756,13 +5232,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "heroId": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "hero_id"
         },
         "ban": {
           "type": "bool",
@@ -4770,7 +5248,8 @@
         },
         "facetId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "facet_id"
         }
       }
     },
@@ -4780,13 +5259,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "heroRole": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "hero_role"
         }
       }
     },
@@ -4796,32 +5277,38 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "damageTaken": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "damage_taken"
         },
         "itemType": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "item_type"
         },
         "itemAbilityId": {
           "type": "int32",
           "id": 4,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
         },
         "heroName": {
           "type": "string",
-          "id": 5
+          "id": 5,
+          "protoName": "hero_name"
         },
         "damageColor": {
           "type": "string",
-          "id": 6
+          "id": 6,
+          "protoName": "damage_color"
         }
       }
     },
@@ -4831,6 +5318,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4847,21 +5335,25 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "channelType": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "channel_type"
         },
         "rollMin": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "roll_min"
         },
         "rollMax": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "roll_max"
         },
         "result": {
           "type": "uint32",
@@ -4875,13 +5367,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "channelType": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "channel_type"
         },
         "result": {
           "type": "bool",
@@ -4895,6 +5389,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4911,6 +5406,7 @@
         "captainPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "captain_player_id",
           "options": {
             "default": -1
           }
@@ -4923,13 +5419,15 @@
         "messageId": {
           "type": "uint32",
           "id": 1,
+          "protoName": "message_id",
           "options": {
             "default": 4294967295
           }
         },
         "cooldownRemaining": {
           "type": "float",
-          "id": 2
+          "id": 2,
+          "protoName": "cooldown_remaining"
         }
       }
     },
@@ -4938,7 +5436,8 @@
       "fields": {
         "heroRelicType": {
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "hero_relic_type"
         },
         "value": {
           "type": "uint32",
@@ -4953,11 +5452,13 @@
         },
         "eventId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "event_id"
         },
         "valueDisplay": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "value_display"
         }
       }
     },
@@ -4967,6 +5468,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -4974,21 +5476,25 @@
         "requestedAbilityId": {
           "type": "int32",
           "id": 2,
+          "protoName": "requested_ability_id",
           "options": {
             "default": -1
           }
         },
         "ctrlIsDown": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "ctrl_is_down"
         },
         "requestedHeroId": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "requested_hero_id"
         },
         "requestedFacetKey": {
           "type": "uint64",
-          "id": 5
+          "id": 5,
+          "protoName": "requested_facet_key"
         }
       }
     },
@@ -4998,21 +5504,25 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "targetHeroId": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "target_hero_id"
         },
         "sourceHeroId": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "source_hero_id"
         },
         "damageAmount": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "damage_amount"
         },
         "broadcast": {
           "type": "bool",
@@ -5026,6 +5536,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -5033,25 +5544,30 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
         },
         "tipAmount": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "tip_amount"
         },
         "eventId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "event_id"
         },
         "customTipStyle": {
           "type": "string",
-          "id": 5
+          "id": 5,
+          "protoName": "custom_tip_style"
         },
         "numRecentTips": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "num_recent_tips"
         }
       }
     },
@@ -5061,6 +5577,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -5068,13 +5585,15 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
         },
         "giftItemDefIndex": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "gift_item_def_index"
         }
       }
     },
@@ -5084,13 +5603,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "tipText": {
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "tip_text"
         }
       }
     },
@@ -5100,6 +5621,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5107,6 +5629,7 @@
         "sourceEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "source_entindex",
           "options": {
             "default": -1
           }
@@ -5114,6 +5637,7 @@
         "targetEntindex": {
           "type": "int32",
           "id": 3,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
@@ -5132,11 +5656,13 @@
         },
         "comboCount": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "combo_count"
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "arcana_level"
         }
       }
     },
@@ -5152,11 +5678,13 @@
         },
         "comboCount": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "combo_count"
         },
         "damageAmount": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "damage_amount"
         }
       }
     },
@@ -5172,15 +5700,18 @@
         },
         "multicastAmount": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "multicast_amount"
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "arcana_level"
         },
         "multicastChance": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "multicast_chance"
         }
       }
     },
@@ -5190,6 +5721,7 @@
         "playerId_1": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_1",
           "options": {
             "default": -1
           }
@@ -5197,17 +5729,20 @@
         "playerId_2": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_2",
           "options": {
             "default": -1
           }
         },
         "specialHighFive": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "special_high_five"
         },
         "specialEntindex": {
           "type": "int32",
           "id": 4,
+          "protoName": "special_entindex",
           "options": {
             "default": -1
           }
@@ -5220,6 +5755,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5232,13 +5768,15 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "allChat": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "all_chat"
         },
         "locstring": {
           "type": "string",
@@ -5256,6 +5794,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -5263,22 +5802,26 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
         },
         "pointAmount": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "point_amount"
         },
         "eventId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "event_id"
         },
         "playerScores": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_AllStarEvent.PlayerScore",
-          "id": 5
+          "id": 5,
+          "protoName": "player_scores"
         }
       },
       "nested": {
@@ -5287,13 +5830,15 @@
             "playerId": {
               "type": "int32",
               "id": 1,
+              "protoName": "player_id",
               "options": {
                 "default": -1
               }
             },
             "scoreSansKda": {
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "protoName": "score_sans_kda"
             }
           }
         }
@@ -5305,7 +5850,8 @@
         "unitOrderSequence": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "unit_order_sequence"
         }
       }
     },
@@ -5314,31 +5860,38 @@
       "fields": {
         "challengeType": {
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "challenge_type"
         },
         "challengeQueryId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "challenge_query_id"
         },
         "eventId": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "event_id"
         },
         "instanceId": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "instance_id"
         },
         "challengeVar_0": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "challenge_var_0"
         },
         "challengeVar_1": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "challenge_var_1"
         },
         "challengeMaxRank": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "challenge_max_rank"
         }
       }
     },
@@ -5348,6 +5901,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5355,32 +5909,38 @@
         "itemAbilityId": {
           "type": "int32",
           "id": 2,
+          "protoName": "item_ability_id",
           "options": {
             "default": -1
           }
         },
         "itemTier": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "item_tier"
         },
         "tierItemCount": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "tier_item_count"
         },
         "enhancementAbilityId": {
           "type": "int32",
           "id": 5,
+          "protoName": "enhancement_ability_id",
           "options": {
             "default": -1
           }
         },
         "enhancementLevel": {
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "protoName": "enhancement_level"
         },
         "trinketLevel": {
           "type": "int32",
-          "id": 7
+          "id": 7,
+          "protoName": "trinket_level"
         }
       }
     },
@@ -5390,13 +5950,15 @@
         "outpostEntindex": {
           "type": "int32",
           "id": 1,
+          "protoName": "outpost_entindex",
           "options": {
             "default": -1
           }
         },
         "teamId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "team_id"
         }
       }
     },
@@ -5405,11 +5967,13 @@
       "fields": {
         "teamId": {
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "team_id"
         },
         "xpAmount": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "xp_amount"
         }
       }
     },
@@ -5419,6 +5983,7 @@
         "unitEhandle": {
           "type": "uint32",
           "id": 1,
+          "protoName": "unit_ehandle",
           "options": {
             "default": 16777215
           }
@@ -5431,7 +5996,8 @@
         "dataBits": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_PauseMinigameData.DataBit",
-          "id": 1
+          "id": 1,
+          "protoName": "data_bits"
         }
       },
       "nested": {
@@ -5447,7 +6013,8 @@
             },
             "dataExtra": {
               "type": "int64",
-              "id": 3
+              "id": 3,
+              "protoName": "data_extra"
             }
           }
         }
@@ -5459,6 +6026,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5472,15 +6040,18 @@
         },
         "playActivity": {
           "type": ".VersusScene_PlayActivity",
-          "id": 3
+          "id": 3,
+          "protoName": "play_activity"
         },
         "chatWheel": {
           "type": ".VersusScene_ChatWheel",
-          "id": 4
+          "id": 4,
+          "protoName": "chat_wheel"
         },
         "playbackRate": {
           "type": ".VersusScene_PlaybackRate",
-          "id": 5
+          "id": 5,
+          "protoName": "playback_rate"
         }
       }
     },
@@ -5496,15 +6067,18 @@
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "arcana_level"
         },
         "playersHit": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "players_hit"
         },
         "playersKilled": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "players_killed"
         }
       }
     },
@@ -5514,6 +6088,7 @@
         "playerId_1": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_1",
           "options": {
             "default": -1
           }
@@ -5521,6 +6096,7 @@
         "playerId_2": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_2",
           "options": {
             "default": -1
           }
@@ -5533,6 +6109,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5551,11 +6128,13 @@
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "arcana_level"
         },
         "heroId": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "hero_id"
         }
       }
     },
@@ -5565,30 +6144,36 @@
         "playerProgress": {
           "rule": "repeated",
           "type": ".CDOTAUserMsg_GuildChallenge_Progress.PlayerProgress",
-          "id": 1
+          "id": 1,
+          "protoName": "player_progress"
         },
         "guildId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "guild_id"
         },
         "challengeInstanceId": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "challenge_instance_id"
         },
         "challengeParameter": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "challenge_parameter"
         },
         "challengeType": {
           "type": ".CDOTAUserMsg_GuildChallenge_Progress.EChallengeType",
           "id": 5,
+          "protoName": "challenge_type",
           "options": {
             "default": "k_EChallengeType_Invalid"
           }
         },
         "challengeProgressAtStart": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "challenge_progress_at_start"
         },
         "complete": {
           "type": "bool",
@@ -5601,6 +6186,7 @@
             "playerId": {
               "type": "int32",
               "id": 1,
+              "protoName": "player_id",
               "options": {
                 "default": -1
               }
@@ -5633,29 +6219,35 @@
         "targetEhandle": {
           "type": "uint32",
           "id": 2,
+          "protoName": "target_ehandle",
           "options": {
             "default": 16777215
           }
         },
         "arrowsLanded": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "arrows_landed"
         },
         "damageDealt": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "damage_dealt"
         },
         "targetHp": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "target_hp"
         },
         "targetMaxHp": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "target_max_hp"
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "arcana_level"
         }
       }
     },
@@ -5672,29 +6264,35 @@
         "targetEhandle": {
           "type": "uint32",
           "id": 2,
+          "protoName": "target_ehandle",
           "options": {
             "default": 16777215
           }
         },
         "arrowsLanded": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "arrows_landed"
         },
         "damageDealt": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "damage_dealt"
         },
         "targetHp": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "target_hp"
         },
         "targetMaxHp": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "target_max_hp"
         },
         "arcanaLevel": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "arcana_level"
         },
         "success": {
           "type": "bool",
@@ -5708,6 +6306,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -5715,17 +6314,20 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
         },
         "slotIndex": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "slot_index"
         },
         "cooldownSeconds": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "cooldown_seconds"
         }
       }
     },
@@ -5735,6 +6337,7 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
@@ -5742,6 +6345,7 @@
         "targetPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_player_id",
           "options": {
             "default": -1
           }
@@ -5749,21 +6353,25 @@
         "targetEntindex": {
           "type": "int32",
           "id": 3,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
         },
         "alertType": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "alert_type"
         },
         "hasScepter": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "has_scepter"
         },
         "hasShard": {
           "type": "bool",
-          "id": 6
+          "id": 6,
+          "protoName": "has_shard"
         }
       }
     },
@@ -5773,12 +6381,14 @@
         "textMutedPlayerIds": {
           "rule": "repeated",
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "text_muted_player_ids"
         },
         "voiceMutedPlayerIds": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "voice_muted_player_ids"
         }
       }
     },
@@ -5787,26 +6397,31 @@
       "fields": {
         "tipId": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "tip_id"
         },
         "referencedAbilities": {
           "rule": "repeated",
           "type": "string",
-          "id": 2
+          "id": 2,
+          "protoName": "referenced_abilities"
         },
         "referencedUnits": {
           "rule": "repeated",
           "type": "string",
-          "id": 3
+          "id": 3,
+          "protoName": "referenced_units"
         },
         "panoramaClasses": {
           "rule": "repeated",
           "type": "string",
-          "id": 4
+          "id": 4,
+          "protoName": "panorama_classes"
         },
         "forceAnnotation": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "force_annotation"
         },
         "variant": {
           "type": "int32",
@@ -5814,39 +6429,48 @@
         },
         "intParam": {
           "type": "int32",
-          "id": 7
+          "id": 7,
+          "protoName": "int_param"
         },
         "intParam2": {
           "type": "int32",
-          "id": 8
+          "id": 8,
+          "protoName": "int_param2"
         },
         "floatParam": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "float_param"
         },
         "floatParam2": {
           "type": "float",
-          "id": 10
+          "id": 10,
+          "protoName": "float_param2"
         },
         "stringParam": {
           "type": "string",
-          "id": 11
+          "id": 11,
+          "protoName": "string_param"
         },
         "stringParam2": {
           "type": "string",
-          "id": 12
+          "id": 12,
+          "protoName": "string_param2"
         },
         "tipTextOverride": {
           "type": "string",
-          "id": 13
+          "id": 13,
+          "protoName": "tip_text_override"
         },
         "tipAnnotationOverride": {
           "type": "string",
-          "id": 14
+          "id": 14,
+          "protoName": "tip_annotation_override"
         },
         "panoramaSnippet": {
           "type": "string",
-          "id": 15
+          "id": 15,
+          "protoName": "panorama_snippet"
         }
       }
     },
@@ -5856,17 +6480,20 @@
         "sourcePlayerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "source_player_id",
           "options": {
             "default": -1
           }
         },
         "channelType": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "channel_type"
         },
         "messageText": {
           "type": "string",
-          "id": 3
+          "id": 3,
+          "protoName": "message_text"
         }
       }
     },
@@ -5876,6 +6503,7 @@
         "playerIdSource": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_source",
           "options": {
             "default": -1
           }
@@ -5883,6 +6511,7 @@
         "playerIdTarget": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_target",
           "options": {
             "default": -1
           }
@@ -5895,6 +6524,7 @@
         "playerId_1": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_1",
           "options": {
             "default": -1
           }
@@ -5902,17 +6532,20 @@
         "playerId_2": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_2",
           "options": {
             "default": -1
           }
         },
         "player_1Choice": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "player_1_choice"
         },
         "player_2Choice": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "player_2_choice"
         }
       }
     },
@@ -5921,11 +6554,13 @@
       "fields": {
         "playerIdWinner": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "player_id_winner"
         },
         "playerIdLoser": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "player_id_loser"
         }
       }
     },
@@ -5934,11 +6569,13 @@
       "fields": {
         "playerId_1": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "player_id_1"
         },
         "playerId_2": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "player_id_2"
         }
       }
     },
@@ -5948,6 +6585,7 @@
         "playerIdRequestor": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_requestor",
           "options": {
             "default": -1
           }
@@ -5960,6 +6598,7 @@
         "playerIdKiller": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_killer",
           "options": {
             "default": -1
           }
@@ -5967,6 +6606,7 @@
         "playerIdTarget": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_target",
           "options": {
             "default": -1
           }
@@ -5977,11 +6617,13 @@
         },
         "pointsTotal": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "points_total"
         },
         "lastHit": {
           "type": "bool",
-          "id": 5
+          "id": 5,
+          "protoName": "last_hit"
         }
       }
     },
@@ -5991,6 +6633,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -5998,6 +6641,7 @@
         "suggestionPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "suggestion_player_id",
           "options": {
             "default": -1
           }
@@ -6010,6 +6654,7 @@
         "playerIdCaptain": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id_captain",
           "options": {
             "default": -1
           }
@@ -6017,6 +6662,7 @@
         "playerIdTarget": {
           "type": "int32",
           "id": 2,
+          "protoName": "player_id_target",
           "options": {
             "default": -1
           }
@@ -6033,21 +6679,25 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "facetStrhash": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "facet_strhash"
         },
         "entityId": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "protoName": "entity_id"
         },
         "allChat": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "all_chat"
         }
       }
     },
@@ -6057,17 +6707,20 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "entityId": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "entity_id"
         },
         "allChat": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "all_chat"
         }
       }
     },
@@ -6081,6 +6734,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -6088,6 +6742,7 @@
         "timerAlertType": {
           "type": ".ETimerAlertType",
           "id": 2,
+          "protoName": "timer_alert_type",
           "options": {
             "default": "k_TimerAlertType_PowerRune"
           }
@@ -6100,6 +6755,7 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
@@ -6107,6 +6763,7 @@
         "targetEntindex": {
           "type": "int32",
           "id": 2,
+          "protoName": "target_entindex",
           "options": {
             "default": -1
           }
@@ -6118,6 +6775,7 @@
         "madstoneAlertType": {
           "type": ".CDOTAUserMsg_MadstoneAlert.EMadstoneAlertType",
           "id": 4,
+          "protoName": "madstone_alert_type",
           "options": {
             "default": "CraftAvailable"
           }
@@ -6152,11 +6810,13 @@
       "fields": {
         "investigationGameState": {
           "type": ".CMsgMonsterHunterInvestigationGameState",
-          "id": 1
+          "id": 1,
+          "protoName": "investigation_game_state"
         },
         "investigationsLocked": {
           "type": "bool",
-          "id": 2
+          "id": 2,
+          "protoName": "investigations_locked"
         }
       }
     },
@@ -6166,17 +6826,20 @@
         "playerId": {
           "type": "int32",
           "id": 1,
+          "protoName": "player_id",
           "options": {
             "default": -1
           }
         },
         "heroId": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "hero_id"
         },
         "huntAlertType": {
           "type": ".CDOTAUserMsg_MonsterHunter_HuntAlert.EHuntAlertType",
           "id": 3,
+          "protoName": "hunt_alert_type",
           "options": {
             "default": "MainObjective"
           }
@@ -6184,6 +6847,7 @@
         "huntStatusType": {
           "type": ".CDOTAUserMsg_MonsterHunter_HuntAlert.EHuntStatusType",
           "id": 4,
+          "protoName": "hunt_status_type",
           "options": {
             "default": "Pending"
           }
@@ -6220,6 +6884,7 @@
         "victimEntIndex": {
           "type": "int32",
           "id": 1,
+          "protoName": "victim_ent_index",
           "options": {
             "default": -1
           }
@@ -6227,6 +6892,7 @@
         "killerPlayerId": {
           "type": "int32",
           "id": 2,
+          "protoName": "killer_player_id",
           "options": {
             "default": -1
           }
@@ -6239,6 +6905,7 @@
         "giverEntIndex": {
           "type": "uint32",
           "id": 1,
+          "protoName": "giver_ent_index",
           "options": {
             "default": 16777215
           }
@@ -6246,6 +6913,7 @@
         "receiverEntIndex": {
           "type": "uint32",
           "id": 2,
+          "protoName": "receiver_ent_index",
           "options": {
             "default": 16777215
           }
@@ -6253,6 +6921,7 @@
         "itemEntIndex": {
           "type": "uint32",
           "id": 3,
+          "protoName": "item_ent_index",
           "options": {
             "default": 16777215
           }
@@ -6260,6 +6929,7 @@
         "giveStatus": {
           "type": ".CDOTAUserMsg_GiveItem.EGiveStatus",
           "id": 4,
+          "protoName": "give_status",
           "options": {
             "default": "Start"
           }
@@ -6307,15 +6977,18 @@
         },
         "randomSeed": {
           "type": "int32",
-          "id": 7
+          "id": 7,
+          "protoName": "random_seed"
         },
         "decalGroupName": {
           "type": "uint32",
-          "id": 8
+          "id": 8,
+          "protoName": "decal_group_name"
         },
         "sizeOverride": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "size_override"
         },
         "entityhandle": {
           "type": "uint32",
@@ -6326,15 +6999,18 @@
         },
         "materialId": {
           "type": "uint64",
-          "id": 11
+          "id": 11,
+          "protoName": "material_id"
         },
         "sequenceName": {
           "type": "uint32",
-          "id": 12
+          "id": 12,
+          "protoName": "sequence_name"
         },
         "positionObjectspace": {
           "type": ".CMsgVector",
-          "id": 14
+          "id": 14,
+          "protoName": "position_objectspace"
         }
       }
     },
@@ -6387,7 +7063,8 @@
       "fields": {
         "eventName": {
           "type": "string",
-          "id": 1
+          "id": 1,
+          "protoName": "event_name"
         },
         "eventid": {
           "type": "int32",
@@ -6400,7 +7077,8 @@
         },
         "serverTick": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "server_tick"
         },
         "passthrough": {
           "type": "int32",
@@ -6416,31 +7094,38 @@
             },
             "valString": {
               "type": "string",
-              "id": 2
+              "id": 2,
+              "protoName": "val_string"
             },
             "valFloat": {
               "type": "float",
-              "id": 3
+              "id": 3,
+              "protoName": "val_float"
             },
             "valLong": {
               "type": "int32",
-              "id": 4
+              "id": 4,
+              "protoName": "val_long"
             },
             "valShort": {
               "type": "int32",
-              "id": 5
+              "id": 5,
+              "protoName": "val_short"
             },
             "valByte": {
               "type": "int32",
-              "id": 6
+              "id": 6,
+              "protoName": "val_byte"
             },
             "valBool": {
               "type": "bool",
-              "id": 7
+              "id": 7,
+              "protoName": "val_bool"
             },
             "valUint64": {
               "type": "uint64",
-              "id": 8
+              "id": 8,
+              "protoName": "val_uint64"
             }
           }
         }
@@ -6451,15 +7136,18 @@
       "fields": {
         "soundeventGuid": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "soundevent_guid"
         },
         "soundeventHash": {
           "type": "fixed32",
-          "id": 2
+          "id": 2,
+          "protoName": "soundevent_hash"
         },
         "sourceEntityIndex": {
           "type": "int32",
           "id": 3,
+          "protoName": "source_entity_index",
           "options": {
             "default": -1
           }
@@ -6470,11 +7158,13 @@
         },
         "packedParams": {
           "type": "bytes",
-          "id": 5
+          "id": 5,
+          "protoName": "packed_params"
         },
         "startTime": {
           "type": "float",
-          "id": 6
+          "id": 6,
+          "protoName": "start_time"
         }
       }
     },
@@ -6483,7 +7173,8 @@
       "fields": {
         "soundeventGuid": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "soundevent_guid"
         }
       }
     },
@@ -6492,11 +7183,13 @@
       "fields": {
         "soundeventHash": {
           "type": "fixed32",
-          "id": 1
+          "id": 1,
+          "protoName": "soundevent_hash"
         },
         "sourceEntityIndex": {
           "type": "int32",
           "id": 2,
+          "protoName": "source_entity_index",
           "options": {
             "default": -1
           }
@@ -6508,11 +7201,13 @@
       "fields": {
         "soundeventGuid": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "soundevent_guid"
         },
         "packedParams": {
           "type": "bytes",
-          "id": 5
+          "id": 5,
+          "protoName": "packed_params"
         }
       }
     },
@@ -6536,39 +7231,47 @@
         },
         "voiceData": {
           "type": "bytes",
-          "id": 2
+          "id": 2,
+          "protoName": "voice_data"
         },
         "sequenceBytes": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "sequence_bytes"
         },
         "sectionNumber": {
           "type": "uint32",
-          "id": 4
+          "id": 4,
+          "protoName": "section_number"
         },
         "sampleRate": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "protoName": "sample_rate"
         },
         "uncompressedSampleOffset": {
           "type": "uint32",
-          "id": 6
+          "id": 6,
+          "protoName": "uncompressed_sample_offset"
         },
         "numPackets": {
           "type": "uint32",
-          "id": 7
+          "id": 7,
+          "protoName": "num_packets"
         },
         "packetOffsets": {
           "rule": "repeated",
           "type": "uint32",
           "id": 8,
+          "protoName": "packet_offsets",
           "options": {
             "packed": true
           }
         },
         "voiceLevel": {
           "type": "float",
-          "id": 9
+          "id": 9,
+          "protoName": "voice_level"
         }
       }
     },
@@ -6584,66 +7287,81 @@
         },
         "serverCount": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "server_count"
         },
         "isDedicated": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "is_dedicated"
         },
         "isHltv": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "is_hltv"
         },
         "cOs": {
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "protoName": "c_os"
         },
         "maxClients": {
           "type": "int32",
-          "id": 10
+          "id": 10,
+          "protoName": "max_clients"
         },
         "maxClasses": {
           "type": "int32",
-          "id": 11
+          "id": 11,
+          "protoName": "max_classes"
         },
         "playerSlot": {
           "type": "int32",
           "id": 12,
+          "protoName": "player_slot",
           "options": {
             "default": -1
           }
         },
         "tickInterval": {
           "type": "float",
-          "id": 13
+          "id": 13,
+          "protoName": "tick_interval"
         },
         "gameDir": {
           "type": "string",
-          "id": 14
+          "id": 14,
+          "protoName": "game_dir"
         },
         "mapName": {
           "type": "string",
-          "id": 15
+          "id": 15,
+          "protoName": "map_name"
         },
         "skyName": {
           "type": "string",
-          "id": 16
+          "id": 16,
+          "protoName": "sky_name"
         },
         "hostName": {
           "type": "string",
-          "id": 17
+          "id": 17,
+          "protoName": "host_name"
         },
         "addonName": {
           "type": "string",
-          "id": 18
+          "id": 18,
+          "protoName": "addon_name"
         },
         "gameSessionConfig": {
           "type": ".CSVCMsg_GameSessionConfiguration",
-          "id": 19
+          "id": 19,
+          "protoName": "game_session_config"
         },
         "gameSessionManifest": {
           "type": "bytes",
-          "id": 20
+          "id": 20,
+          "protoName": "game_session_manifest"
         }
       }
     },
@@ -6655,7 +7373,8 @@
       "fields": {
         "createOnClient": {
           "type": "bool",
-          "id": 1
+          "id": 1,
+          "protoName": "create_on_client"
         },
         "classes": {
           "rule": "repeated",
@@ -6668,11 +7387,13 @@
           "fields": {
             "classId": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "class_id"
             },
             "className": {
               "type": "string",
-              "id": 3
+              "id": 3,
+              "protoName": "class_name"
             }
           }
         }
@@ -6706,19 +7427,23 @@
       "fields": {
         "maxEntries": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "max_entries"
         },
         "updatedEntries": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "updated_entries"
         },
         "legacyIsDelta": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "legacy_is_delta"
         },
         "updateBaseline": {
           "type": "bool",
-          "id": 4
+          "id": 4,
+          "protoName": "update_baseline"
         },
         "baseline": {
           "type": "int32",
@@ -6726,76 +7451,93 @@
         },
         "deltaFrom": {
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "protoName": "delta_from"
         },
         "entityData": {
           "type": "bytes",
-          "id": 7
+          "id": 7,
+          "protoName": "entity_data"
         },
         "pendingFullFrame": {
           "type": "bool",
-          "id": 8
+          "id": 8,
+          "protoName": "pending_full_frame"
         },
         "activeSpawngroupHandle": {
           "type": "uint32",
-          "id": 9
+          "id": 9,
+          "protoName": "active_spawngroup_handle"
         },
         "maxSpawngroupCreationsequence": {
           "type": "uint32",
-          "id": 10
+          "id": 10,
+          "protoName": "max_spawngroup_creationsequence"
         },
         "lastCmdNumberExecuted": {
           "type": "uint32",
-          "id": 11
+          "id": 11,
+          "protoName": "last_cmd_number_executed"
         },
         "lastCmdNumberRecvDelta": {
           "type": "sint32",
-          "id": 17
+          "id": 17,
+          "protoName": "last_cmd_number_recv_delta"
         },
         "serverTick": {
           "type": "uint32",
-          "id": 12
+          "id": 12,
+          "protoName": "server_tick"
         },
         "serializedEntities": {
           "type": "bytes",
-          "id": 13
+          "id": 13,
+          "protoName": "serialized_entities"
         },
         "alternateBaselines": {
           "rule": "repeated",
           "type": ".CSVCMsg_PacketEntities.alternate_baseline_t",
-          "id": 15
+          "id": 15,
+          "protoName": "alternate_baselines"
         },
         "hasPvsVisBitsDeprecated": {
           "type": "uint32",
-          "id": 16
+          "id": 16,
+          "protoName": "has_pvs_vis_bits_deprecated"
         },
         "cmdRecvStatus": {
           "rule": "repeated",
           "type": "sint32",
           "id": 22,
+          "protoName": "cmd_recv_status",
           "options": {
             "packed": true
           }
         },
         "nonTransmittedEntities": {
           "type": ".CSVCMsg_PacketEntities.non_transmitted_entities_t",
-          "id": 19
+          "id": 19,
+          "protoName": "non_transmitted_entities"
         },
         "cqStarvedCommandTicks": {
           "type": "uint32",
-          "id": 20
+          "id": 20,
+          "protoName": "cq_starved_command_ticks"
         },
         "cqDiscardedCommandTicks": {
           "type": "uint32",
-          "id": 21
+          "id": 21,
+          "protoName": "cq_discarded_command_ticks"
         },
         "outofpvsEntityUpdates": {
           "type": ".CSVCMsg_PacketEntities.outofpvs_entity_updates_t",
-          "id": 23
+          "id": 23,
+          "protoName": "outofpvs_entity_updates"
         },
         "devPadding": {
           "type": "bytes",
-          "id": 999
+          "id": 999,
+          "protoName": "dev_padding"
         }
       },
       "nested": {
@@ -6803,11 +7545,13 @@
           "fields": {
             "entityIndex": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "entity_index"
             },
             "baselineIndex": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "baseline_index"
             }
           }
         },
@@ -6815,7 +7559,8 @@
           "fields": {
             "headerCount": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "header_count"
             },
             "data": {
               "type": "bytes",
@@ -6849,19 +7594,23 @@
         },
         "numEntries": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "num_entries"
         },
         "userDataFixedSize": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "user_data_fixed_size"
         },
         "userDataSize": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "user_data_size"
         },
         "userDataSizeBits": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "user_data_size_bits"
         },
         "flags": {
           "type": "int32",
@@ -6869,19 +7618,23 @@
         },
         "stringData": {
           "type": "bytes",
-          "id": 7
+          "id": 7,
+          "protoName": "string_data"
         },
         "uncompressedSize": {
           "type": "int32",
-          "id": 8
+          "id": 8,
+          "protoName": "uncompressed_size"
         },
         "dataCompressed": {
           "type": "bool",
-          "id": 9
+          "id": 9,
+          "protoName": "data_compressed"
         },
         "usingVarintBitcounts": {
           "type": "bool",
-          "id": 10
+          "id": 10,
+          "protoName": "using_varint_bitcounts"
         }
       }
     },
@@ -6893,15 +7646,18 @@
       "fields": {
         "tableId": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "table_id"
         },
         "numChangedEntries": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "num_changed_entries"
         },
         "stringData": {
           "type": "bytes",
-          "id": 3
+          "id": 3,
+          "protoName": "string_data"
         }
       }
     },
@@ -6929,7 +7685,8 @@
         },
         "audibleMask": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "audible_mask"
         },
         "tick": {
           "type": "uint32",
@@ -6971,7 +7728,8 @@
         },
         "createTablesSkipped": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "create_tables_skipped"
         }
       }
     },
@@ -6980,52 +7738,64 @@
       "fields": {
         "varTypeSym": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "var_type_sym"
         },
         "varNameSym": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "var_name_sym"
         },
         "bitCount": {
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "bit_count"
         },
         "lowValue": {
           "type": "float",
-          "id": 4
+          "id": 4,
+          "protoName": "low_value"
         },
         "highValue": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "high_value"
         },
         "encodeFlags": {
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "protoName": "encode_flags"
         },
         "fieldSerializerNameSym": {
           "type": "int32",
-          "id": 7
+          "id": 7,
+          "protoName": "field_serializer_name_sym"
         },
         "fieldSerializerVersion": {
           "type": "int32",
-          "id": 8
+          "id": 8,
+          "protoName": "field_serializer_version"
         },
         "sendNodeSym": {
           "type": "int32",
-          "id": 9
+          "id": 9,
+          "protoName": "send_node_sym"
         },
         "varEncoderSym": {
           "type": "int32",
-          "id": 10
+          "id": 10,
+          "protoName": "var_encoder_sym"
         },
         "polymorphicTypes": {
           "rule": "repeated",
           "type": ".ProtoFlattenedSerializerField_t.polymorphic_field_t",
-          "id": 11
+          "id": 11,
+          "protoName": "polymorphic_types"
         },
         "varSerializerSym": {
           "type": "int32",
-          "id": 12
+          "id": 12,
+          "protoName": "var_serializer_sym"
         }
       },
       "nested": {
@@ -7033,11 +7803,13 @@
           "fields": {
             "polymorphicFieldSerializerNameSym": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "polymorphic_field_serializer_name_sym"
             },
             "polymorphicFieldSerializerVersion": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "polymorphic_field_serializer_version"
             }
           }
         }
@@ -7048,16 +7820,19 @@
       "fields": {
         "serializerNameSym": {
           "type": "int32",
-          "id": 1
+          "id": 1,
+          "protoName": "serializer_name_sym"
         },
         "serializerVersion": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "serializer_version"
         },
         "fieldsIndex": {
           "rule": "repeated",
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "protoName": "fields_index"
         }
       }
     },
@@ -7093,22 +7868,26 @@
         },
         "cmdNumber": {
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "cmd_number"
         },
         "playerSlot": {
           "type": "int32",
           "id": 3,
+          "protoName": "player_slot",
           "options": {
             "default": -1
           }
         },
         "serverTickExecuted": {
           "type": "int32",
-          "id": 4
+          "id": 4,
+          "protoName": "server_tick_executed"
         },
         "clientTick": {
           "type": "int32",
-          "id": 5
+          "id": 5,
+          "protoName": "client_tick"
         }
       }
     },
@@ -7337,16 +8116,19 @@
         "gamerulesMasks": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 1
+          "id": 1,
+          "protoName": "gamerules_masks"
         },
         "banMasks": {
           "rule": "repeated",
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "protoName": "ban_masks"
         },
         "modEnable": {
           "type": "bool",
-          "id": 3
+          "id": 3,
+          "protoName": "mod_enable"
         }
       }
     },
@@ -7355,11 +8137,13 @@
       "fields": {
         "removeDecals": {
           "type": "bool",
-          "id": 1
+          "id": 1,
+          "protoName": "remove_decals"
         },
         "entityMsg": {
           "type": ".CEntityMsg",
-          "id": 2
+          "id": 2,
+          "protoName": "entity_msg"
         }
       }
     },
@@ -7382,167 +8166,208 @@
         },
         "releaseParticleIndex": {
           "type": ".CUserMsg_ParticleManager.ReleaseParticleIndex",
-          "id": 3
+          "id": 3,
+          "protoName": "release_particle_index"
         },
         "createParticle": {
           "type": ".CUserMsg_ParticleManager.CreateParticle",
-          "id": 4
+          "id": 4,
+          "protoName": "create_particle"
         },
         "destroyParticle": {
           "type": ".CUserMsg_ParticleManager.DestroyParticle",
-          "id": 5
+          "id": 5,
+          "protoName": "destroy_particle"
         },
         "destroyParticleInvolving": {
           "type": ".CUserMsg_ParticleManager.DestroyParticleInvolving",
-          "id": 6
+          "id": 6,
+          "protoName": "destroy_particle_involving"
         },
         "updateParticle": {
           "type": ".CUserMsg_ParticleManager.UpdateParticle_OBSOLETE",
-          "id": 7
+          "id": 7,
+          "protoName": "update_particle"
         },
         "updateParticleFwd": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleFwd_OBSOLETE",
-          "id": 8
+          "id": 8,
+          "protoName": "update_particle_fwd"
         },
         "updateParticleOrient": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleOrient_OBSOLETE",
-          "id": 9
+          "id": 9,
+          "protoName": "update_particle_orient"
         },
         "updateParticleFallback": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleFallback",
-          "id": 10
+          "id": 10,
+          "protoName": "update_particle_fallback"
         },
         "updateParticleOffset": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleOffset",
-          "id": 11
+          "id": 11,
+          "protoName": "update_particle_offset"
         },
         "updateParticleEnt": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleEnt",
-          "id": 12
+          "id": 12,
+          "protoName": "update_particle_ent"
         },
         "updateParticleShouldDraw": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleShouldDraw",
-          "id": 14
+          "id": 14,
+          "protoName": "update_particle_should_draw"
         },
         "updateParticleSetFrozen": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleSetFrozen",
-          "id": 15
+          "id": 15,
+          "protoName": "update_particle_set_frozen"
         },
         "changeControlPointAttachment": {
           "type": ".CUserMsg_ParticleManager.ChangeControlPointAttachment",
-          "id": 16
+          "id": 16,
+          "protoName": "change_control_point_attachment"
         },
         "updateEntityPosition": {
           "type": ".CUserMsg_ParticleManager.UpdateEntityPosition",
-          "id": 17
+          "id": 17,
+          "protoName": "update_entity_position"
         },
         "setParticleFowProperties": {
           "type": ".CUserMsg_ParticleManager.SetParticleFoWProperties",
-          "id": 18
+          "id": 18,
+          "protoName": "set_particle_fow_properties"
         },
         "setParticleText": {
           "type": ".CUserMsg_ParticleManager.SetParticleText",
-          "id": 19
+          "id": 19,
+          "protoName": "set_particle_text"
         },
         "setParticleShouldCheckFow": {
           "type": ".CUserMsg_ParticleManager.SetParticleShouldCheckFoW",
-          "id": 20
+          "id": 20,
+          "protoName": "set_particle_should_check_fow"
         },
         "setControlPointModel": {
           "type": ".CUserMsg_ParticleManager.SetControlPointModel",
-          "id": 21
+          "id": 21,
+          "protoName": "set_control_point_model"
         },
         "setControlPointSnapshot": {
           "type": ".CUserMsg_ParticleManager.SetControlPointSnapshot",
-          "id": 22
+          "id": 22,
+          "protoName": "set_control_point_snapshot"
         },
         "setTextureAttribute": {
           "type": ".CUserMsg_ParticleManager.SetTextureAttribute",
-          "id": 23
+          "id": 23,
+          "protoName": "set_texture_attribute"
         },
         "setSceneObjectGenericFlag": {
           "type": ".CUserMsg_ParticleManager.SetSceneObjectGenericFlag",
-          "id": 24
+          "id": 24,
+          "protoName": "set_scene_object_generic_flag"
         },
         "setSceneObjectTintAndDesat": {
           "type": ".CUserMsg_ParticleManager.SetSceneObjectTintAndDesat",
-          "id": 25
+          "id": 25,
+          "protoName": "set_scene_object_tint_and_desat"
         },
         "destroyParticleNamed": {
           "type": ".CUserMsg_ParticleManager.DestroyParticleNamed",
-          "id": 26
+          "id": 26,
+          "protoName": "destroy_particle_named"
         },
         "particleSkipToTime": {
           "type": ".CUserMsg_ParticleManager.ParticleSkipToTime",
-          "id": 27
+          "id": 27,
+          "protoName": "particle_skip_to_time"
         },
         "particleCanFreeze": {
           "type": ".CUserMsg_ParticleManager.ParticleCanFreeze",
-          "id": 28
+          "id": 28,
+          "protoName": "particle_can_freeze"
         },
         "setNamedValueContext": {
           "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext",
-          "id": 29
+          "id": 29,
+          "protoName": "set_named_value_context"
         },
         "updateParticleTransform": {
           "type": ".CUserMsg_ParticleManager.UpdateParticleTransform",
-          "id": 30
+          "id": 30,
+          "protoName": "update_particle_transform"
         },
         "particleFreezeTransitionOverride": {
           "type": ".CUserMsg_ParticleManager.ParticleFreezeTransitionOverride",
-          "id": 31
+          "id": 31,
+          "protoName": "particle_freeze_transition_override"
         },
         "freezeParticleInvolving": {
           "type": ".CUserMsg_ParticleManager.FreezeParticleInvolving",
-          "id": 32
+          "id": 32,
+          "protoName": "freeze_particle_involving"
         },
         "addModellistOverrideElement": {
           "type": ".CUserMsg_ParticleManager.AddModellistOverrideElement",
-          "id": 33
+          "id": 33,
+          "protoName": "add_modellist_override_element"
         },
         "clearModellistOverride": {
           "type": ".CUserMsg_ParticleManager.ClearModellistOverride",
-          "id": 34
+          "id": 34,
+          "protoName": "clear_modellist_override"
         },
         "createPhysicsSim": {
           "type": ".CUserMsg_ParticleManager.CreatePhysicsSim",
-          "id": 35
+          "id": 35,
+          "protoName": "create_physics_sim"
         },
         "destroyPhysicsSim": {
           "type": ".CUserMsg_ParticleManager.DestroyPhysicsSim",
-          "id": 36
+          "id": 36,
+          "protoName": "destroy_physics_sim"
         },
         "setVdata": {
           "type": ".CUserMsg_ParticleManager.SetVData",
-          "id": 37
+          "id": 37,
+          "protoName": "set_vdata"
         },
         "setMaterialOverride": {
           "type": ".CUserMsg_ParticleManager.SetMaterialOverride",
-          "id": 38
+          "id": 38,
+          "protoName": "set_material_override"
         },
         "addFan": {
           "type": ".CUserMsg_ParticleManager.AddFan",
-          "id": 39
+          "id": 39,
+          "protoName": "add_fan"
         },
         "updateFan": {
           "type": ".CUserMsg_ParticleManager.UpdateFan",
-          "id": 40
+          "id": 40,
+          "protoName": "update_fan"
         },
         "setParticleClusterGrowth": {
           "type": ".CUserMsg_ParticleManager.SetParticleClusterGrowth",
-          "id": 41
+          "id": 41,
+          "protoName": "set_particle_cluster_growth"
         },
         "removeFan": {
           "type": ".CUserMsg_ParticleManager.RemoveFan",
-          "id": 42
+          "id": 42,
+          "protoName": "remove_fan"
         },
         "createSmokeGrid": {
           "type": ".CUserMsg_ParticleManager.CreateSmokeGrid",
-          "id": 43
+          "id": 43,
+          "protoName": "create_smoke_grid"
         },
         "setOverrideTexture": {
           "type": ".CUserMsg_ParticleManager.SetOverrideTexture",
-          "id": 44
+          "id": 44,
+          "protoName": "set_override_texture"
         }
       },
       "nested": {
@@ -7553,15 +8378,18 @@
           "fields": {
             "particleNameIndex": {
               "type": "fixed64",
-              "id": 1
+              "id": 1,
+              "protoName": "particle_name_index"
             },
             "attachType": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "attach_type"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 3,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
@@ -7569,21 +8397,25 @@
             "entityHandleForModifiers": {
               "type": "uint32",
               "id": 4,
+              "protoName": "entity_handle_for_modifiers",
               "options": {
                 "default": 16777215
               }
             },
             "applyVoiceBanRules": {
               "type": "bool",
-              "id": 5
+              "id": 5,
+              "protoName": "apply_voice_ban_rules"
             },
             "teamBehavior": {
               "type": "int32",
-              "id": 6
+              "id": 6,
+              "protoName": "team_behavior"
             },
             "controlPointConfiguration": {
               "type": "string",
-              "id": 7
+              "id": 7,
+              "protoName": "control_point_configuration"
             },
             "cluster": {
               "type": "bool",
@@ -7591,11 +8423,13 @@
             },
             "endcapTime": {
               "type": "float",
-              "id": 9
+              "id": 9,
+              "protoName": "endcap_time"
             },
             "aggregationPosition": {
               "type": ".CMsgVector",
-              "id": 10
+              "id": 10,
+              "protoName": "aggregation_position"
             }
           }
         },
@@ -7603,7 +8437,8 @@
           "fields": {
             "destroyImmediately": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "destroy_immediately"
             }
           }
         },
@@ -7611,11 +8446,13 @@
           "fields": {
             "destroyImmediately": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "destroy_immediately"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 3,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
@@ -7626,22 +8463,26 @@
           "fields": {
             "particleNameIndex": {
               "type": "fixed64",
-              "id": 1
+              "id": 1,
+              "protoName": "particle_name_index"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 2,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
             },
             "destroyImmediately": {
               "type": "bool",
-              "id": 3
+              "id": 3,
+              "protoName": "destroy_immediately"
             },
             "playEndcap": {
               "type": "bool",
-              "id": 4
+              "id": 4,
+              "protoName": "play_endcap"
             }
           }
         },
@@ -7649,7 +8490,8 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "position": {
               "type": ".CMsgVector",
@@ -7661,7 +8503,8 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "forward": {
               "type": ".CMsgVector",
@@ -7673,7 +8516,8 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "forward": {
               "type": ".CMsgVector",
@@ -7681,7 +8525,8 @@
             },
             "deprecatedRight": {
               "type": ".CMsgVector",
-              "id": 3
+              "id": 3,
+              "protoName": "deprecated_right"
             },
             "up": {
               "type": ".CMsgVector",
@@ -7697,7 +8542,8 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "position": {
               "type": ".CMsgVector",
@@ -7709,7 +8555,8 @@
             },
             "interpolationInterval": {
               "type": "float",
-              "id": 4
+              "id": 4,
+              "protoName": "interpolation_interval"
             }
           }
         },
@@ -7717,7 +8564,8 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "position": {
               "type": ".CMsgVector",
@@ -7729,15 +8577,18 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "originOffset": {
               "type": ".CMsgVector",
-              "id": 2
+              "id": 2,
+              "protoName": "origin_offset"
             },
             "angleOffset": {
               "type": ".CMsgQAngle",
-              "id": 3
+              "id": 3,
+              "protoName": "angle_offset"
             }
           }
         },
@@ -7745,18 +8596,21 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 2,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
             },
             "attachType": {
               "type": "int32",
-              "id": 3
+              "id": 3,
+              "protoName": "attach_type"
             },
             "attachment": {
               "type": "int32",
@@ -7764,19 +8618,23 @@
             },
             "fallbackPosition": {
               "type": ".CMsgVector",
-              "id": 5
+              "id": 5,
+              "protoName": "fallback_position"
             },
             "includeWearables": {
               "type": "bool",
-              "id": 6
+              "id": 6,
+              "protoName": "include_wearables"
             },
             "offsetPosition": {
               "type": ".CMsgVector",
-              "id": 7
+              "id": 7,
+              "protoName": "offset_position"
             },
             "offsetAngles": {
               "type": ".CMsgQAngle",
-              "id": 8
+              "id": 8,
+              "protoName": "offset_angles"
             }
           }
         },
@@ -7784,11 +8642,13 @@
           "fields": {
             "setFrozen": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "set_frozen"
             },
             "transitionDuration": {
               "type": "float",
-              "id": 2
+              "id": 2,
+              "protoName": "transition_duration"
             }
           }
         },
@@ -7796,7 +8656,8 @@
           "fields": {
             "shouldDraw": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "should_draw"
             }
           }
         },
@@ -7804,15 +8665,18 @@
           "fields": {
             "attachmentOld": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "attachment_old"
             },
             "attachmentNew": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "attachment_new"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 3,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
@@ -7824,6 +8688,7 @@
             "entityHandle": {
               "type": "uint32",
               "id": 1,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
@@ -7838,15 +8703,18 @@
           "fields": {
             "fowControlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "fow_control_point"
             },
             "fowControlPoint2": {
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "protoName": "fow_control_point2"
             },
             "fowRadius": {
               "type": "float",
-              "id": 3
+              "id": 3,
+              "protoName": "fow_radius"
             }
           }
         },
@@ -7854,7 +8722,8 @@
           "fields": {
             "checkFow": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "check_fow"
             }
           }
         },
@@ -7862,11 +8731,13 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "modelName": {
               "type": "string",
-              "id": 2
+              "id": 2,
+              "protoName": "model_name"
             }
           }
         },
@@ -7874,11 +8745,13 @@
           "fields": {
             "controlPoint": {
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "protoName": "control_point"
             },
             "snapshotName": {
               "type": "string",
-              "id": 2
+              "id": 2,
+              "protoName": "snapshot_name"
             }
           }
         },
@@ -7898,11 +8771,13 @@
           "fields": {
             "attributeName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "attribute_name"
             },
             "textureName": {
               "type": "string",
-              "id": 2
+              "id": 2,
+              "protoName": "texture_name"
             }
           }
         },
@@ -7910,7 +8785,8 @@
           "fields": {
             "textureName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "texture_name"
             }
           }
         },
@@ -7918,7 +8794,8 @@
           "fields": {
             "flagValue": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "flag_value"
             }
           }
         },
@@ -7938,7 +8815,8 @@
           "fields": {
             "skipToTime": {
               "type": "float",
-              "id": 1
+              "id": 1,
+              "protoName": "skip_to_time"
             }
           }
         },
@@ -7946,7 +8824,8 @@
           "fields": {
             "canFreeze": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "can_freeze"
             }
           }
         },
@@ -7954,7 +8833,8 @@
           "fields": {
             "freezeTransitionOverride": {
               "type": "float",
-              "id": 1
+              "id": 1,
+              "protoName": "freeze_transition_override"
             }
           }
         },
@@ -7962,15 +8842,18 @@
           "fields": {
             "setFrozen": {
               "type": "bool",
-              "id": 1
+              "id": 1,
+              "protoName": "set_frozen"
             },
             "transitionDuration": {
               "type": "float",
-              "id": 2
+              "id": 2,
+              "protoName": "transition_duration"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 3,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
@@ -7981,11 +8864,13 @@
           "fields": {
             "modelName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "model_name"
             },
             "spawnProbability": {
               "type": "float",
-              "id": 2
+              "id": 2,
+              "protoName": "spawn_probability"
             },
             "groupid": {
               "type": "uint32",
@@ -8006,22 +8891,26 @@
             "floatValues": {
               "rule": "repeated",
               "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.FloatContextValue",
-              "id": 1
+              "id": 1,
+              "protoName": "float_values"
             },
             "vectorValues": {
               "rule": "repeated",
               "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.VectorContextValue",
-              "id": 2
+              "id": 2,
+              "protoName": "vector_values"
             },
             "transformValues": {
               "rule": "repeated",
               "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.TransformContextValue",
-              "id": 3
+              "id": 3,
+              "protoName": "transform_values"
             },
             "ehandleValues": {
               "rule": "repeated",
               "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.EHandleContext",
-              "id": 4
+              "id": 4,
+              "protoName": "ehandle_values"
             }
           },
           "nested": {
@@ -8029,7 +8918,8 @@
               "fields": {
                 "valueNameHash": {
                   "type": "uint32",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "value_name_hash"
                 },
                 "value": {
                   "type": "float",
@@ -8041,7 +8931,8 @@
               "fields": {
                 "valueNameHash": {
                   "type": "uint32",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "value_name_hash"
                 },
                 "value": {
                   "type": ".CMsgVector",
@@ -8053,7 +8944,8 @@
               "fields": {
                 "valueNameHash": {
                   "type": "uint32",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "value_name_hash"
                 },
                 "angles": {
                   "type": ".CMsgQAngle",
@@ -8069,11 +8961,13 @@
               "fields": {
                 "valueNameHash": {
                   "type": "uint32",
-                  "id": 1
+                  "id": 1,
+                  "protoName": "value_name_hash"
                 },
                 "entIndex": {
                   "type": "uint32",
                   "id": 2,
+                  "protoName": "ent_index",
                   "options": {
                     "default": 16777215
                   }
@@ -8086,15 +8980,18 @@
           "fields": {
             "propGroupName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "prop_group_name"
             },
             "useHighQualitySimulation": {
               "type": "bool",
-              "id": 2
+              "id": 2,
+              "protoName": "use_high_quality_simulation"
             },
             "maxParticleCount": {
               "type": "uint32",
-              "id": 3
+              "id": 3,
+              "protoName": "max_particle_count"
             }
           }
         },
@@ -8105,7 +9002,8 @@
           "fields": {
             "vdataName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "vdata_name"
             }
           }
         },
@@ -8113,7 +9011,8 @@
           "fields": {
             "vdataName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "vdata_name"
             }
           }
         },
@@ -8121,11 +9020,13 @@
           "fields": {
             "materialName": {
               "type": "string",
-              "id": 1
+              "id": 1,
+              "protoName": "material_name"
             },
             "includeChildren": {
               "type": "bool",
-              "id": 2
+              "id": 2,
+              "protoName": "include_children"
             }
           }
         },
@@ -8137,23 +9038,28 @@
             },
             "boundsMins": {
               "type": ".CMsgVector",
-              "id": 2
+              "id": 2,
+              "protoName": "bounds_mins"
             },
             "boundsMaxs": {
               "type": ".CMsgVector",
-              "id": 3
+              "id": 3,
+              "protoName": "bounds_maxs"
             },
             "fanOrigin": {
               "type": ".CMsgVector",
-              "id": 4
+              "id": 4,
+              "protoName": "fan_origin"
             },
             "fanOriginOffset": {
               "type": ".CMsgVector",
-              "id": 5
+              "id": 5,
+              "protoName": "fan_origin_offset"
             },
             "fanDirection": {
               "type": ".CMsgVector",
-              "id": 6
+              "id": 6,
+              "protoName": "fan_direction"
             },
             "force": {
               "type": "float",
@@ -8161,7 +9067,8 @@
             },
             "fanForceCurve": {
               "type": "string",
-              "id": 8
+              "id": 8,
+              "protoName": "fan_force_curve"
             },
             "falloff": {
               "type": "bool",
@@ -8169,42 +9076,51 @@
             },
             "pullTowardsPoint": {
               "type": "bool",
-              "id": 10
+              "id": 10,
+              "protoName": "pull_towards_point"
             },
             "curveMinDist": {
               "type": "float",
-              "id": 11
+              "id": 11,
+              "protoName": "curve_min_dist"
             },
             "curveMaxDist": {
               "type": "float",
-              "id": 12
+              "id": 12,
+              "protoName": "curve_max_dist"
             },
             "fanType": {
               "type": "uint32",
-              "id": 13
+              "id": 13,
+              "protoName": "fan_type"
             },
             "coneStartRadius": {
               "type": "float",
-              "id": 14
+              "id": 14,
+              "protoName": "cone_start_radius"
             },
             "coneEndRadius": {
               "type": "float",
-              "id": 15
+              "id": 15,
+              "protoName": "cone_end_radius"
             },
             "coneLength": {
               "type": "float",
-              "id": 16
+              "id": 16,
+              "protoName": "cone_length"
             },
             "entityHandle": {
               "type": "uint32",
               "id": 17,
+              "protoName": "entity_handle",
               "options": {
                 "default": 16777215
               }
             },
             "attachmentName": {
               "type": "string",
-              "id": 18
+              "id": 18,
+              "protoName": "attachment_name"
             }
           }
         },
@@ -8216,27 +9132,33 @@
             },
             "fanOrigin": {
               "type": ".CMsgVector",
-              "id": 2
+              "id": 2,
+              "protoName": "fan_origin"
             },
             "fanOriginOffset": {
               "type": ".CMsgVector",
-              "id": 3
+              "id": 3,
+              "protoName": "fan_origin_offset"
             },
             "fanDirection": {
               "type": ".CMsgVector",
-              "id": 4
+              "id": 4,
+              "protoName": "fan_direction"
             },
             "fanRampRatio": {
               "type": "float",
-              "id": 7
+              "id": 7,
+              "protoName": "fan_ramp_ratio"
             },
             "boundsMins": {
               "type": ".CMsgVector",
-              "id": 5
+              "id": 5,
+              "protoName": "bounds_mins"
             },
             "boundsMaxs": {
               "type": ".CMsgVector",
-              "id": 6
+              "id": 6,
+              "protoName": "bounds_maxs"
             }
           }
         },
@@ -8263,6 +9185,7 @@
         "entIndex": {
           "type": "int32",
           "id": 1,
+          "protoName": "ent_index",
           "options": {
             "default": -1
           }
@@ -8270,7 +9193,8 @@
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
-          "id": 2
+          "id": 2,
+          "protoName": "player_slots"
         },
         "response": {
           "type": "string",
@@ -8278,15 +9202,18 @@
         },
         "entOrigin": {
           "type": ".CMsgVector",
-          "id": 4
+          "id": 4,
+          "protoName": "ent_origin"
         },
         "preDelay": {
           "type": "float",
-          "id": 5
+          "id": 5,
+          "protoName": "pre_delay"
         },
         "mixPriority": {
           "type": "int32",
-          "id": 6
+          "id": 6,
+          "protoName": "mix_priority"
         }
       }
     }
