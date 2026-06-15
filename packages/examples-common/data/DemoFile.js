@@ -129,6 +129,9 @@ class DemoFile {
     static get DEADLOCK_BROADCAST_38625795() { return deadlockBroadcast38625795; }
 
     // === DOTA2 ===
+    static get DOTA2_REPLAY_5177640686() { return dota2Replay5177640686; }
+    static get DOTA2_REPLAY_6006667545() { return dota2Replay6006667545; }
+    static get DOTA2_REPLAY_6007738726() { return dota2Replay6007738726; }
     static get DOTA2_REPLAY_8773493455() { return dota2Replay8773493455; }
     static get DOTA2_REPLAY_8777738576() { return dota2Replay8777738576; }
     static get DOTA2_REPLAY_8783006717() { return dota2Replay8783006717; }
@@ -197,6 +200,24 @@ const deadlockReplay75438101 = new DemoFile(DemoSource.REPLAY, 75438101, Game.DE
 const deadlockReplay75439032 = new DemoFile(DemoSource.REPLAY, 75439032, Game.DEADLOCK, 6448, { date: '2026-04-13', mode: 'Street Brawl', size: 143222996 });
 
 // === DOTA2 ===
+const dota2Replay5177640686 = new DemoFile(DemoSource.REPLAY, 5177640686, Game.DOTA2, '7.23', {
+    date: '2019-12-31',
+    mode: 'Captains Mode',
+    size: 73151406,
+    match: { team1: 'Immortal Gaming', team2: 'Team Sincere', event: 'ASIA CHALLENGER LEAGUE' }
+});
+const dota2Replay6006667545 = new DemoFile(DemoSource.REPLAY, 6006667545, Game.DOTA2, '7.29', {
+    date: '2021-05-22',
+    mode: 'Captains Mode',
+    size: 102204017,
+    match: { team1: 'Ravens', team2: 'Arkosh Gaming', event: 'DPC Spring 21 Lower Division (NA) presented by BTS' }
+});
+const dota2Replay6007738726 = new DemoFile(DemoSource.REPLAY, 6007738726, Game.DOTA2, '7.29', {
+    date: '2021-05-23',
+    mode: 'Captains Mode',
+    size: 77735801,
+    match: { team1: 'Brame', team2: 'Old G', event: 'Pinnacle Cup #1' }
+});
 const dota2Replay8773493455 = new DemoFile(DemoSource.REPLAY, 8773493455, Game.DOTA2, '7.41b', { date: '2026-04-16', mode: 'Captains Mode', size: 77016661 });
 const dota2Replay8777738576 = new DemoFile(DemoSource.REPLAY, 8777738576, Game.DOTA2, '7.41b', { date: '2026-04-19', mode: 'Captains Mode', size: 138711012 });
 const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'Captains Mode', size: 172651462 });

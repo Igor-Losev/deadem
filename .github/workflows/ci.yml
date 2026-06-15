@@ -65,6 +65,8 @@ jobs:
           - name: dota2
             demo_dir: demos/dota2
             demo_files: |
+              5177640686
+              6006667545
               8773493455
               8777738576
               8783006717

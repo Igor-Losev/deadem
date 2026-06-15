@@ -81,7 +81,7 @@ const COLUMNS = [
   { key: 'game', label: 'Game', getValue: (file) => file.game.code, renderValue: (file) => file.game.code.toUpperCase() },
   { key: 'gameBuild', label: 'Game Build', getValue: (file) => getGameBuildSortValue(file), renderValue: (file) => file.gameBuild ?? '-' },
   { key: 'source', label: 'Source', getValue: (file) => file.source.code, renderValue: (file) => file.source.code },
-  { key: 'date', label: 'Date', getValue: (file) => file.meta?.date ?? '', renderValue: (file) => file.meta?.date ?? '-' },
+  { key: 'date', label: 'Date', getValue: (file) => file.meta?.date ?? '', renderValue: (file) => file.meta?.date ?? '-', sx: { whiteSpace: 'nowrap' } },
   { key: 'mode', label: 'Mode', getValue: (file) => file.meta?.mode ?? 'Normal', renderValue: (file) => file.meta?.mode ?? 'Normal' },
   { key: 'size', label: 'Size', getValue: (file) => file.meta?.size ?? -1, renderValue: (file) => formatSize(file.meta?.size) }
 ];
@@ -134,7 +134,7 @@ export default function Library() {
               <TableCell
                 key={column.key}
                 sortDirection={sortBy === column.key ? sortDirection : false}
-                sx={{ fontWeight: 'bold' }}
+                sx={{ fontWeight: 'bold', ...column.sx }}
               >
                 <TableSortLabel
                   active={sortBy === column.key}
@@ -154,7 +154,7 @@ export default function Library() {
             <TableRow key={`${file.id}-${file.source.code}`} sx={ROW_SX}>
               <TableCell sx={{ color: 'text.secondary' }}>{index + 1}</TableCell>
               {COLUMNS.map((column) => (
-                <TableCell key={column.key}>
+                <TableCell key={column.key} sx={column.sx}>
                   {column.renderValue ? column.renderValue(file) : column.getValue(file)}
                 </TableCell>
               ))}
