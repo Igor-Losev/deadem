@@ -30,8 +30,6 @@ class Bootstrap {
      */
     static _registerCitadelFieldRules(registry) {
         registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
-
-        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**

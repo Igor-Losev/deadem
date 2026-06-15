@@ -90,7 +90,7 @@ class StringTableHandler {
             let stringTable;
 
             if (existing !== null) {
-                stringTable = new StringTable(existing.id, stringTableType, tableData.tableFlags, existing.instructions);
+                stringTable = new StringTable(existing.id, stringTableType, existing.flags, existing.instructions);
             } else {
                 stringTable = new StringTable(this._container.size, stringTableType, tableData.tableFlags, null);
             }

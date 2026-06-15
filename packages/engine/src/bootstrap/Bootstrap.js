@@ -97,6 +97,7 @@ class Bootstrap {
         registry.registerFixedTableType('CEntityIdentity');
         registry.registerFixedTableType('CEntityInstance');
         registry.registerFixedTableType('CPhysicsComponent');
+        registry.registerFixedTableType('CPlayerLocalData');
         registry.registerFixedTableType('CRenderComponent');
         registry.registerFixedTableType('CScriptComponent');
 
@@ -105,6 +106,7 @@ class Bootstrap {
         registry.registerVariableArrayType('CNetworkUtlVectorBase');
 
         registry.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
+        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**

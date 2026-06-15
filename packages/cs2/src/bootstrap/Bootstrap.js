@@ -33,10 +33,8 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('Quaternion', FieldDecoderDescriptor.createVector(4));
 
         registry.registerFixedTableType('CLightComponent');
-        registry.registerFixedTableType('CPlayerLocalData');
 
         registry.registerFieldDecoderOverride('m_pGameModeRules', FieldDecoderDescriptor.GAME_MODE_RULES);
-        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 
     /**
