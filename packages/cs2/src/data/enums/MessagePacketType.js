@@ -1,6 +1,8 @@
 import { MessagePacketType as EngineMessagePacketType } from '@deademx/engine';
 
 class MessagePacketType extends EngineMessagePacketType {
+    static get USER_MESSAGE_SAY_TEXT() { return umSayText; }
+
     static get CS_UM_VGUI_MENU() { return csUmVguiMenu; }
     static get CS_UM_HUD_TEXT() { return csUmHudText; }
     static get CS_UM_HUD_MSG() { return csUmHudMsg; }
@@ -28,7 +30,12 @@ class MessagePacketType extends EngineMessagePacketType {
     static get GE_RADIO_ICON_EVENT() { return geRadioIconEvent; }
     static get GE_FIRE_BULLETS() { return geFireBullets; }
     static get GE_PLAYER_BULLET_HIT() { return gePlayerBulletHit; }
+
+    static get TE_WORLD_DECAL() { return teWorldDecal; }
+    static get TE_EXPLOSION() { return teExplosion; }
 }
+
+const umSayText = new MessagePacketType('UM_SayText', 117);
 
 const csUmVguiMenu = new MessagePacketType('CS_UM_VGUIMenu', 301);
 const csUmHudText = new MessagePacketType('CS_UM_HudText', 304);
@@ -57,5 +64,8 @@ const gePlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEventId', 450);
 const geRadioIconEvent = new MessagePacketType('GE_RadioIconEventId', 451);
 const geFireBullets = new MessagePacketType('GE_FireBulletsId', 452);
 const gePlayerBulletHit = new MessagePacketType('GE_PlayerBulletHitId', 453);
+
+const teWorldDecal = new MessagePacketType('TE_WorldDecalId', 411);
+const teExplosion = new MessagePacketType('TE_ExplosionId', 419);
 
 export default MessagePacketType;

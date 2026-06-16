@@ -19,6 +19,7 @@ class Bootstrap {
         Bootstrap._registerCs2FieldRules(registry);
         Bootstrap._registerCs2UserMessages(registry);
         Bootstrap._registerCs2GameEvents(registry);
+        Bootstrap._registerCs2TemporaryEntities(registry);
         Bootstrap._registerCs2StringTableTypes(registry);
     }
 
@@ -43,7 +44,10 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2UserMessages(registry) {
+        const base = registry.getProtoProvider().USER_MESSAGES;
         const um = registry.getProtoProvider().CS_USER_MESSAGES;
+
+        registry.registerMessageType(MessagePacketType.USER_MESSAGE_SAY_TEXT, base.lookupType('CUserMessageSayText'));
 
         registry.registerMessageType(MessagePacketType.CS_UM_VGUI_MENU, um.lookupType('CCSUsrMsg_VGUIMenu'));
         registry.registerMessageType(MessagePacketType.CS_UM_HUD_TEXT, um.lookupType('CCSUsrMsg_HudText'));
@@ -81,6 +85,18 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.GE_RADIO_ICON_EVENT, ge.lookupType('CMsgTERadioIcon'));
         registry.registerMessageType(MessagePacketType.GE_FIRE_BULLETS, ge.lookupType('CMsgTEFireBullets'));
         registry.registerMessageType(MessagePacketType.GE_PLAYER_BULLET_HIT, ge.lookupType('CMsgPlayerBulletHit'));
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerCs2TemporaryEntities(registry) {
+        const te = registry.getProtoProvider().TEMPORARY_ENTITIES;
+
+        registry.registerMessageType(MessagePacketType.TE_WORLD_DECAL, te.lookupType('CMsgTEWorldDecal'));
+        registry.registerMessageType(MessagePacketType.TE_EXPLOSION, te.lookupType('CMsgTEExplosion'));
     }
 
     /**

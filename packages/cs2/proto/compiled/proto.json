@@ -3798,6 +3798,86 @@
         }
       }
     },
+    "CMsgTEExplosion": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 3
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 4
+        },
+        "radius": {
+          "type": "uint32",
+          "id": 6
+        },
+        "magnitude": {
+          "type": "uint32",
+          "id": 7
+        },
+        "affectRagdolls": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "affect_ragdolls"
+        },
+        "soundName": {
+          "type": "string",
+          "id": 10,
+          "protoName": "sound_name"
+        },
+        "explosionType": {
+          "type": "uint32",
+          "id": 11,
+          "protoName": "explosion_type"
+        },
+        "explosionTypeName": {
+          "type": "uint32",
+          "id": 15,
+          "protoName": "explosion_type_name",
+          "options": {
+            "default": 0
+          }
+        },
+        "createDebris": {
+          "type": "bool",
+          "id": 12,
+          "protoName": "create_debris"
+        },
+        "debrisOrigin": {
+          "type": ".CMsgVector",
+          "id": 13,
+          "protoName": "debris_origin"
+        },
+        "debrisSurfaceprop": {
+          "type": "fixed32",
+          "id": 14,
+          "protoName": "debris_surfaceprop"
+        }
+      }
+    },
+    "CMsgTEWorldDecal": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "index": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
     "PARTICLE_MESSAGE": {
       "edition": "proto2",
       "values": {
@@ -3843,6 +3923,26 @@
         "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39,
         "GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID": 40,
         "GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE": 41
+      }
+    },
+    "CUserMessageSayText": {
+      "edition": "proto2",
+      "fields": {
+        "playerindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "text": {
+          "type": "string",
+          "id": 2
+        },
+        "chat": {
+          "type": "bool",
+          "id": 3
+        }
       }
     },
     "CUserMessageSayText2": {
