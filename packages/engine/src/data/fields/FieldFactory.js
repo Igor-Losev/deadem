@@ -68,9 +68,9 @@ class FieldFactory {
 
                 return new FieldArrayVariable(name, sendNode, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic.baseType, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, serializer, BOOLEAN_DECODER);
+                return new FieldTableFixed(name, sendNode, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, serializer, VAR_UINT_32_DECODER);
+                return new FieldTableVariable(name, sendNode, serializer, this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }
@@ -110,10 +110,10 @@ class FieldFactory {
      * @returns {FieldDecoder}
      */
     _resolveDecoder(name, baseType, decoderInstructions) {
-        const override = this._fieldRuleRegistry.getFieldDecoderOverride(name);
+        const override = this._resolveDecoderOverride(name, decoderInstructions);
 
         if (override !== null) {
-            return this._decoderCatalog.resolve(override, decoderInstructions);
+            return override;
         }
 
         const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(baseType);
@@ -123,6 +123,22 @@ class FieldFactory {
         }
 
         return this._decoderCatalog.resolve(descriptor, decoderInstructions);
+    }
+
+    /**
+     * @protected
+     * @param {String} name
+     * @param {FieldDecoderInstructions} decoderInstructions
+     * @returns {FieldDecoder|null}
+     */
+    _resolveDecoderOverride(name, decoderInstructions) {
+        const override = this._fieldRuleRegistry.getFieldDecoderOverride(name);
+
+        if (override === null) {
+            return null;
+        }
+
+        return this._decoderCatalog.resolve(override, decoderInstructions);
     }
 }
 
