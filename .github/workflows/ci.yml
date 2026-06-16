@@ -58,8 +58,10 @@ jobs:
           - name: cs2
             demo_dir: demos/cs2
             demo_files: |
-              2026-05-11-furia-vs-spirit-m1-dust2
               2026-05-15-natus-vincere-vs-vitality-m3-inferno
+              2026-05-11-furia-vs-spirit-m1-dust2
+              2025-03-07-falcons-vs-liquid-m2-dust2
+              2024-08-19-ninjas-in-pyjamas-vs-parivision-m1-ancient
             demo_cdn_prefix: https://deadem.com/demos/cs2
             parser_script: ./packages/examples-node-cs2/scripts/101_parse_multiple.js
           - name: dota2

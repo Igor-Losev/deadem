@@ -138,6 +138,8 @@ class DemoFile {
     static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
 
     // === CS2 ===
+    static get CS2_REPLAY_20240819_NINJAS_IN_PYJAMAS_VS_PARIVISION_M1_ANCIENT() { return cs2Replay20240819NinjasInPyjamasVsParivisionM1Ancient; }
+    static get CS2_REPLAY_20250307_FALCONS_VS_LIQUID_M2_DUST2() { return cs2Replay20250307FalconsVsLiquidM2Dust2; }
     static get CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2() { return cs2Replay20260511FuriaVsSpiritM1Dust2; }
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M1_DUST2() { return cs2Replay20260515NatusVincereVsVitalityM1Dust2; }
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M2_ANUBIS() { return cs2Replay20260515NatusVincereVsVitalityM2Anubis; }
@@ -224,6 +226,16 @@ const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.D
 const dota2Replay8783086929 = new DemoFile(DemoSource.REPLAY, 8783086929, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'All Draft', size: 77530595 });
 
 // === CS2 ===
+const cs2Replay20240819NinjasInPyjamasVsParivisionM1Ancient = new DemoFile(DemoSource.REPLAY, '2024-08-19-ninjas-in-pyjamas-vs-parivision-m1-ancient', Game.CS2, null, {
+    date: '2024-08-19',
+    size: 206884158,
+    match: { team1: 'Ninjas in Pyjamas', team2: 'PARIVISION', event: 'IEM Rio 2024 Europe Open Qualifier 2', map: 'Ancient', mapNumber: 1 }
+});
+const cs2Replay20250307FalconsVsLiquidM2Dust2 = new DemoFile(DemoSource.REPLAY, '2025-03-07-falcons-vs-liquid-m2-dust2', Game.CS2, null, {
+    date: '2025-03-07',
+    size: 595955010,
+    match: { team1: 'Falcons', team2: 'Liquid', event: 'ESL Pro League Season 21', map: 'Dust2', mapNumber: 2 }
+});
 const cs2Replay20260511FuriaVsSpiritM1Dust2 = new DemoFile(DemoSource.REPLAY, '2026-05-11-furia-vs-spirit-m1-dust2', Game.CS2, '1.41.6.0', {
     date: '2026-05-11',
     size: 495042178,
