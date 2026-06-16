@@ -19,6 +19,7 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CS_UM_VOTE_PASS() { return csUmVotePass; }
     static get CS_UM_VOTE_FAILED() { return csUmVoteFailed; }
     static get CS_UM_SERVER_RANK_REVEAL_ALL() { return csUmServerRankRevealAll; }
+    static get CS_UM_SEND_PLAYER_ITEM_FOUND() { return csUmSendPlayerItemFound; }
     static get CS_UM_REPORT_HIT() { return csUmReportHit; }
     static get CS_UM_WEAPON_SOUND() { return csUmWeaponSound; }
     static get CS_UM_XP_UPDATE() { return csUmXpUpdate; }
@@ -31,8 +32,10 @@ class MessagePacketType extends EngineMessagePacketType {
     static get GE_FIRE_BULLETS() { return geFireBullets; }
     static get GE_PLAYER_BULLET_HIT() { return gePlayerBulletHit; }
 
+    static get TE_DECAL() { return teDecal; }
     static get TE_WORLD_DECAL() { return teWorldDecal; }
     static get TE_EXPLOSION() { return teExplosion; }
+    static get TE_PHYSICS_PROP() { return tePhysicsProp; }
 }
 
 const umSayText = new MessagePacketType('UM_SayText', 117);
@@ -53,6 +56,7 @@ const csUmVoteStart = new MessagePacketType('CS_UM_VoteStart', 346);
 const csUmVotePass = new MessagePacketType('CS_UM_VotePass', 347);
 const csUmVoteFailed = new MessagePacketType('CS_UM_VoteFailed', 348);
 const csUmServerRankRevealAll = new MessagePacketType('CS_UM_ServerRankRevealAll', 350);
+const csUmSendPlayerItemFound = new MessagePacketType('CS_UM_SendPlayerItemFound', 363);
 const csUmReportHit = new MessagePacketType('CS_UM_ReportHit', 364);
 const csUmWeaponSound = new MessagePacketType('CS_UM_WeaponSound', 369);
 const csUmXpUpdate = new MessagePacketType('CS_UM_XpUpdate', 365);
@@ -65,7 +69,9 @@ const geRadioIconEvent = new MessagePacketType('GE_RadioIconEventId', 451);
 const geFireBullets = new MessagePacketType('GE_FireBulletsId', 452);
 const gePlayerBulletHit = new MessagePacketType('GE_PlayerBulletHitId', 453);
 
-const teWorldDecal = new MessagePacketType('TE_WorldDecalId', 411);
-const teExplosion = new MessagePacketType('TE_ExplosionId', 419);
+const teDecal = new MessagePacketType('TE_Decal', 410);
+const teWorldDecal = new MessagePacketType('TE_WorldDecal', 411);
+const teExplosion = new MessagePacketType('TE_Explosion', 419);
+const tePhysicsProp = new MessagePacketType('TE_PhysicsProp', 423);
 
 export default MessagePacketType;

@@ -1704,6 +1704,22 @@
         }
       }
     },
+    "CCSUsrMsg_SendPlayerItemFound": {
+      "edition": "proto2",
+      "fields": {
+        "iteminfo": {
+          "type": ".CEconItemPreviewDataBlock",
+          "id": 1
+        },
+        "playerslot": {
+          "type": "int32",
+          "id": 2,
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
     "CCSUsrMsg_WeaponSound": {
       "edition": "proto2",
       "fields": {
@@ -3699,6 +3715,34 @@
         }
       }
     },
+    "CMsgTEDecal": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "start": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "entity": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "hitbox": {
+          "type": "uint32",
+          "id": 4
+        },
+        "index": {
+          "type": "uint32",
+          "id": 5
+        }
+      }
+    },
     "CMsgEffectData": {
       "edition": "proto2",
       "fields": {
@@ -3858,6 +3902,67 @@
           "type": "fixed32",
           "id": 14,
           "protoName": "debris_surfaceprop"
+        }
+      }
+    },
+    "CMsgTEPhysicsProp": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "velocity": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "angles": {
+          "type": ".CMsgQAngle",
+          "id": 3
+        },
+        "skin": {
+          "type": "fixed32",
+          "id": 4,
+          "options": {
+            "default": 0
+          }
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 5
+        },
+        "effects": {
+          "type": "uint32",
+          "id": 6
+        },
+        "color": {
+          "type": "fixed32",
+          "id": 7
+        },
+        "modelindex": {
+          "type": "fixed64",
+          "id": 8
+        },
+        "unusedBreakmodelsnottomake": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "unused_breakmodelsnottomake"
+        },
+        "scale": {
+          "type": "float",
+          "id": 10
+        },
+        "dmgpos": {
+          "type": ".CMsgVector",
+          "id": 11
+        },
+        "dmgdir": {
+          "type": ".CMsgVector",
+          "id": 12
+        },
+        "dmgtype": {
+          "type": "int32",
+          "id": 13
         }
       }
     },

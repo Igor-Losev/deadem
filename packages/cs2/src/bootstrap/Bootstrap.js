@@ -65,6 +65,7 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.CS_UM_VOTE_PASS, um.lookupType('CCSUsrMsg_VotePass'));
         registry.registerMessageType(MessagePacketType.CS_UM_VOTE_FAILED, um.lookupType('CCSUsrMsg_VoteFailed'));
         registry.registerMessageType(MessagePacketType.CS_UM_SERVER_RANK_REVEAL_ALL, um.lookupType('CCSUsrMsg_ServerRankRevealAll'));
+        registry.registerMessageType(MessagePacketType.CS_UM_SEND_PLAYER_ITEM_FOUND, um.lookupType('CCSUsrMsg_SendPlayerItemFound'));
         registry.registerMessageType(MessagePacketType.CS_UM_REPORT_HIT, um.lookupType('CCSUsrMsg_ReportHit'));
         registry.registerMessageType(MessagePacketType.CS_UM_WEAPON_SOUND, um.lookupType('CCSUsrMsg_WeaponSound'));
         registry.registerMessageType(MessagePacketType.CS_UM_XP_UPDATE, um.lookupType('CCSUsrMsg_XpUpdate'));
@@ -95,8 +96,10 @@ class Bootstrap {
     static _registerCs2TemporaryEntities(registry) {
         const te = registry.getProtoProvider().TEMPORARY_ENTITIES;
 
+        registry.registerMessageType(MessagePacketType.TE_DECAL, te.lookupType('CMsgTEDecal'));
         registry.registerMessageType(MessagePacketType.TE_WORLD_DECAL, te.lookupType('CMsgTEWorldDecal'));
         registry.registerMessageType(MessagePacketType.TE_EXPLOSION, te.lookupType('CMsgTEExplosion'));
+        registry.registerMessageType(MessagePacketType.TE_PHYSICS_PROP, te.lookupType('CMsgTEPhysicsProp'));
     }
 
     /**
