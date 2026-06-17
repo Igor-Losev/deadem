@@ -1,3 +1,5 @@
+/** @import Logger from '#core/Logger.js' */
+
 import { Worker } from 'node:worker_threads';
 
 import FileSystem from '#core/FileSystem.js';

@@ -1,3 +1,7 @@
+/** @import { Stream } from 'node:stream' */
+
+/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';

@@ -1,3 +1,5 @@
+/** @import { PerformanceTrackerRecordStats } from '#data/trackers/PerformanceTrackerRecord.js' */
+
 import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
 import PerformanceTrackerRecord from '#data/trackers/PerformanceTrackerRecord.js';
 

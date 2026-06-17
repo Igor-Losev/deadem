@@ -1,3 +1,5 @@
+/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+
 import Assert from '#core/Assert.js';
 
 import Class from '#data/Class.js';

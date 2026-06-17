@@ -1,3 +1,16 @@
+/** @import { Stream } from 'node:stream' */
+
+/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+
+/** @import Demo from '#data/Demo.js' */
+/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+
+/** @import InterceptorStage from '#data/enums/InterceptorStage.js' */
+
+/** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from '#trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from '#trackers/PerformanceTracker.js' */
+
 import Logger from '#core/Logger.js';
 
 import DemoSource from '#data/enums/DemoSource.js';

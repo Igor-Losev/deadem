@@ -1,3 +1,9 @@
+/** @import WorkerRequestBootstrap from '#workers/requests/WorkerRequestBootstrap.js' */
+/** @import WorkerRequestDemoClear from '#workers/requests/WorkerRequestDemoClear.js' */
+/** @import WorkerRequestDHPParse from '#workers/requests/WorkerRequestDHPParse.js' */
+/** @import WorkerRequestDPacketSync from '#workers/requests/WorkerRequestDPacketSync.js' */
+/** @import WorkerRequestMPacketSync from '#workers/requests/WorkerRequestMPacketSync.js' */
+
 import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 

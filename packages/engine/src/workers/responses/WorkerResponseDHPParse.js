@@ -1,3 +1,7 @@
+/** @import { MessagePacketRawPacked } from '#extractors/MessagePacketRawExtractor.js' */
+
+/** @import { WorkerResponseRaw } from '#workers/responses/WorkerResponse.js' */
+
 import MessagePacketRaw from '#data/MessagePacketRaw.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';

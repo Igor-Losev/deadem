@@ -1,3 +1,7 @@
+/** @import VarInt32 from './VarInt32.js' */
+
+/** @import DemoSource from './enums/DemoSource.js' */
+
 class DemoPacketRaw {
     /**
      * @public

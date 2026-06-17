@@ -1,3 +1,5 @@
+/** @import { Logger, ParserConfiguration } from '@deademx/engine' */
+
 import {
     Parser as EngineParser,
     Player as EnginePlayer,

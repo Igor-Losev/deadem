@@ -1,3 +1,7 @@
+/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+
+/** @import MessagePacketType from './enums/MessagePacketType.js' */
+
 class MessagePacket {
     /**
      * @public

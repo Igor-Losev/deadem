@@ -1,3 +1,5 @@
+/** @import StringTable from './tables/string/StringTable.js' */
+
 import Assert from '#core/Assert.js';
 
 import Class from './Class.js';

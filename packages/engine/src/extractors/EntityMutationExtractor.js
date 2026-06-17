@@ -1,3 +1,8 @@
+/** @import BitBuffer from '#core/BitBuffer.js' */
+
+/** @import Entity from '#data/entity/Entity.js' */
+/** @import Serializer from '#data/fields/Serializer.js' */
+
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 
 import FieldPathExtractor from './FieldPathExtractor.js';

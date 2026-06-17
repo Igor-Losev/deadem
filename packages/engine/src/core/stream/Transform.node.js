@@ -1,3 +1,5 @@
+/** @import { TransformCallback } from 'node:stream' */
+
 import Stream from 'node:stream';
 
 class TransformNode extends Stream.Transform {

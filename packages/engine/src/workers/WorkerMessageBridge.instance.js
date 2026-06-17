@@ -1,3 +1,8 @@
+/** @import { WorkerRequestRaw } from '#workers/requests/WorkerRequest.js' */
+/** @import WorkerRequest from '#workers/requests/WorkerRequest.js' */
+/** @import { WorkerResponseRaw } from '#workers/responses/WorkerResponse.js' */
+/** @import WorkerResponse from '#workers/responses/WorkerResponse.js' */
+
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerRequestBootstrap from '#workers/requests/WorkerRequestBootstrap.js';

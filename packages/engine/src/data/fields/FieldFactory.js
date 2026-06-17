@@ -1,3 +1,8 @@
+/** @import Field from './Field.js' */
+/** @import Serializer from './Serializer.js' */
+
+/** @import FieldDecoderInstructions from './decoding/FieldDecoderInstructions.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';

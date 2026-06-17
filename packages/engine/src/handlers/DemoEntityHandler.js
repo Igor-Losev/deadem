@@ -1,3 +1,5 @@
+/** @import EntityMutationEvent from '#data/entity/EntityMutationEvent.js' */
+
 import Assert from '#core/Assert.js';
 
 import Demo from '#data/Demo.js';

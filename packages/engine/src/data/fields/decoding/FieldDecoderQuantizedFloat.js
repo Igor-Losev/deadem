@@ -1,3 +1,5 @@
+/** @import BitBuffer from '#core/BitBuffer.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';

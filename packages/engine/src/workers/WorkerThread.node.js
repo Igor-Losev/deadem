@@ -1,3 +1,9 @@
+/** @import { Worker } from 'node:worker_threads' */
+
+/** @import Logger from '#core/Logger.js' */
+
+/** @import WorkerRequest from '#workers/requests/WorkerRequest.js' */
+
 import WorkerThread from './WorkerThread.js';
 
 /**

@@ -1,3 +1,5 @@
+/** @import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js' */
+
 import Assert from '#core/Assert.js';
 
 import DemoPacketType from '#data/enums/DemoPacketType.js';

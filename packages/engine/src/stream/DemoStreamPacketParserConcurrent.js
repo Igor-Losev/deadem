@@ -1,3 +1,13 @@
+/** @import { Message as CDemoStringTables } from 'protobufjs' */
+
+/** @import ParserEngine from '#root/src/ParserEngine.js' */
+
+/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from '#data/MessagePacketRaw.js' */
+/** @import MessagePacket from '#data/MessagePacket.js' */
+
+/** @import WorkerThread from '#workers/WorkerThread.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 import DemoPacket from '#data/DemoPacket.js';

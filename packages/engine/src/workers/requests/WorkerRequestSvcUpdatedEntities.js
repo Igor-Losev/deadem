@@ -1,3 +1,9 @@
+/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+
+/** @import { MessagePacketObject } from '#data/MessagePacket.js' */
+
+/** @import { WorkerRequestRaw } from '#workers/requests/WorkerRequest.js' */
+
 import MessagePacket from '#data/MessagePacket.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';

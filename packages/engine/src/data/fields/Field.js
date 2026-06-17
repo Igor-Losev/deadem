@@ -1,3 +1,8 @@
+/** @import FieldModel from '#data/enums/FieldModel.js' */
+
+/** @import FieldPath from './path/FieldPath.js' */
+/** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldDefinition from './FieldDefinition.js';

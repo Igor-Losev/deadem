@@ -1,3 +1,8 @@
+/** @import { Message as CDemoStringTables } from 'protobufjs' */
+
+/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from '#data/MessagePacketRaw.js' */
+
 import Assert from '#core/Assert.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 

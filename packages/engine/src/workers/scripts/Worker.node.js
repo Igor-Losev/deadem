@@ -1,3 +1,5 @@
+/** @import WorkerResponse from '#workers/responses/WorkerResponse.js' */
+
 import { parentPort } from 'node:worker_threads';
 
 import Worker from './Worker.js';

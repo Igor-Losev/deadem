@@ -1,3 +1,6 @@
+/** @import { Stream } from 'node:stream' */
+/** @import { SyncObject } from '#broadcast/BroadcastGateway.js' */
+
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';
 
 import Assert from '#core/Assert.js';
@@ -315,4 +318,3 @@ async function wait(ms) {
 }
 
 export default BroadcastAgent;
-

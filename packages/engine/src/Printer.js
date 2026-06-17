@@ -1,5 +1,12 @@
 import Logger from '#core/Logger.js';
 
+/** @import Parser from '#root/src/Parser.js' */
+
+/** @import { PacketTrackerUnpackedItem } from '#data/trackers/PacketTrackerRegistry.js' */
+/** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from '#trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from '#trackers/PerformanceTracker.js' */
+
 class Printer {
     /**
      * @constructor

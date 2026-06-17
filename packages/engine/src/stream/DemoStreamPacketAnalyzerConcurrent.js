@@ -1,3 +1,10 @@
+/** @import ParserEngine from '#root/src/ParserEngine.js' */
+
+/** @import DemoPacket from '#data/DemoPacket.js' */
+/** @import MessagePacket from '#data/MessagePacket.js' */
+
+/** @import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';

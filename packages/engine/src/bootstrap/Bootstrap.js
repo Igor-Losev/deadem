@@ -1,3 +1,5 @@
+/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+
 import DemoPacketType from '#data/enums/DemoPacketType.js';
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 import StringTableType from '#data/enums/StringTableType.js';

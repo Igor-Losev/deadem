@@ -1,3 +1,5 @@
+/** @import WorkerRequest from '#workers/requests/WorkerRequest.js' */
+
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 

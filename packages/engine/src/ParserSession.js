@@ -1,3 +1,8 @@
+/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import PlayerPacketIndex from '#root/src/PlayerPacketIndex.js' */
+
+/** @import DemoSource from '#data/enums/DemoSource.js' */
+
 import ReadableArray from '#core/stream/ReadableArray.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';

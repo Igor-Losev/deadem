@@ -1,3 +1,5 @@
+/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+
 class EntityMutation {
     /**
      * @constructor

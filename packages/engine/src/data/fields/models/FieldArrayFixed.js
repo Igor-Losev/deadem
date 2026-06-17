@@ -1,4 +1,6 @@
 /** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from '#data/fields/path/FieldPath.js' */
 
 import Assert from '#core/Assert.js';
 

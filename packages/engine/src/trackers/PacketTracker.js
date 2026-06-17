@@ -1,3 +1,10 @@
+/** @import DemoPacket from '#data/DemoPacket.js' */
+/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from '#data/MessagePacketRaw.js' */
+/** @import MessagePacket from '#data/MessagePacket.js' */
+
+/** @import { PacketTrackerUnpackedItem } from '#data/trackers/PacketTrackerRegistry.js' */
+
 import Assert from '#core/Assert.js';
 
 import PacketTrackerRegistry from '#data/trackers/PacketTrackerRegistry.js';

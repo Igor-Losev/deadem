@@ -1,3 +1,5 @@
+/** @import { Message as CDemoStringTables, Message as CSVCMsg_CreateStringTable, Message as CSVCMsg_UpdateStringTable } from 'protobufjs' */
+
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';

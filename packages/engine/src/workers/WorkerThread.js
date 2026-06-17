@@ -1,3 +1,10 @@
+/** @import { Worker } from 'node:worker_threads' */
+
+/** @import Logger from '#core/Logger.js' */
+
+/** @import WorkerRequest from '#workers/requests/WorkerRequest.js' */
+/** @import WorkerResponse from '#workers/responses/WorkerResponse.js' */
+
 import DeferredPromise from '#data/DeferredPromise.js';
 
 import WorkerMessageBridge from '#workers/WorkerMessageBridge.instance.js';

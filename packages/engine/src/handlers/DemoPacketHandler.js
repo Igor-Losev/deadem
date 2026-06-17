@@ -1,3 +1,5 @@
+/** @import DemoPacket from '#data/DemoPacket.js' */
+
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 

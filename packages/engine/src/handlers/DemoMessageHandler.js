@@ -1,3 +1,5 @@
+/** @import MessagePacket from '#data/MessagePacket.js' */
+
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 

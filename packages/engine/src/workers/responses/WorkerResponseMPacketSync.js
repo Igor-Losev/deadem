@@ -1,3 +1,5 @@
+/** @import { WorkerResponseRaw } from '#workers/responses/WorkerResponse.js' */
+
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerResponse from './WorkerResponse.js';

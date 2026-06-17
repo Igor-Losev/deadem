@@ -1,3 +1,9 @@
+/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+
+/** @import { DemoPacketObject } from '#data/DemoPacket.js' */
+
+/** @import { WorkerRequestRaw } from '#workers/requests/WorkerRequest.js' */
+
 import DemoPacket from '#data/DemoPacket.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';

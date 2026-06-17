@@ -1,3 +1,5 @@
+/** @import { TransferListItem } from 'node:worker_threads' */
+
 import Assert from '#core/Assert.js';
 import Serializable from '#core/Serializable.js';
 

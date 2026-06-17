@@ -1,3 +1,5 @@
+/** @import { WorkerResponseRaw } from '#workers/responses/WorkerResponse.js' */
+
 import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
 
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';

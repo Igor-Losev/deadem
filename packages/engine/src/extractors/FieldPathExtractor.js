@@ -1,3 +1,7 @@
+/** @import BitBuffer from '#core/BitBuffer.js' */
+
+/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+
 import FieldPathOperation from '#data/enums/FieldPathOperation.js';
 
 import HuffmanTree from '#data/fields/path/HuffmanTree.js';

@@ -1,3 +1,7 @@
+/** @import ParserEngine from '#root/src/ParserEngine.js' */
+
+/** @import DemoPacket from '#data/DemoPacket.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';

@@ -1,3 +1,5 @@
+/** @import { SchemaRegistry } from '@deademx/engine' */
+
 import { Bootstrap as EngineBootstrap, FieldDecoderDescriptor } from '@deademx/engine';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';

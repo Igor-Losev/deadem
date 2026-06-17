@@ -1,3 +1,5 @@
+/** @import { WorkerRequestRaw } from '#workers/requests/WorkerRequest.js' */
+
 import WorkerMessageType from '#data/enums/WorkerMessageType.js';
 
 import WorkerRequest from './WorkerRequest.js';
