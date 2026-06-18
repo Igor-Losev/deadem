@@ -7,16 +7,21 @@ class FieldRuleRegistry {
      * @constructor
      */
     constructor() {
+        /** @type {Map<String, FieldDecoderDescriptor>} */
         this._typeDecoders = new Map();
+        /** @type {Set<String>} */
         this._fixedTableTypes = new Set();
+        /** @type {Set<String>} */
         this._variableArrayTypes = new Set();
+        /** @type {Map<String, FieldDecoderDescriptor>} */
         this._fieldDecoderOverrides = new Map();
+        /** @type {Map<String, String>} */
         this._fieldEncoderOverrides = new Map();
     }
 
     /**
      * @public
-     * @returns {Object}
+     * @returns {FieldRuleRegistrySnapshot}
      */
     export() {
         return {
@@ -95,7 +100,7 @@ class FieldRuleRegistry {
     /**
      * @public
      * @static
-     * @param {Object|null} data
+     * @param {FieldRuleRegistrySnapshot|null} data
      * @returns {FieldRuleRegistry}
      */
     static reconstruct(data) {
@@ -184,5 +189,19 @@ class FieldRuleRegistry {
         this._variableArrayTypes.add(baseType);
     }
 }
+
+/**
+ * @typedef {{ type: String, options: Object }} FieldDecoderDescriptorSnapshot
+ * @typedef {{ name: String, descriptor: FieldDecoderDescriptorSnapshot }} FieldDecoderOverrideSnapshot
+ * @typedef {{ name: String, encoder: String }} FieldEncoderOverrideSnapshot
+ * @typedef {{ baseType: String, descriptor: FieldDecoderDescriptorSnapshot }} FieldTypeDecoderSnapshot
+ * @typedef {{
+ *   fieldDecoderOverrides: FieldDecoderOverrideSnapshot[],
+ *   fieldEncoderOverrides: FieldEncoderOverrideSnapshot[],
+ *   fixedTableTypes: String[],
+ *   typeDecoders: FieldTypeDecoderSnapshot[],
+ *   variableArrayTypes: String[]
+ * }} FieldRuleRegistrySnapshot
+ */
 
 export default FieldRuleRegistry;

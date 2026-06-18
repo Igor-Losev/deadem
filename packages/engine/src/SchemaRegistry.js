@@ -1,4 +1,5 @@
 /** @import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js' */
+/** @import { FieldRuleRegistrySnapshot } from '#data/fields/FieldRuleRegistry.js' */
 
 import Assert from '#core/Assert.js';
 
@@ -368,7 +369,7 @@ class SchemaRegistry {
  *   messageTypes: SchemaRegistryMessageTypeSnapshot[],
  *   stringTableTypes: SchemaRegistryStringTableTypeSnapshot[],
  *   stringTableDecoders: SchemaRegistryStringTableDecoderSnapshot[],
- *   fieldRules: Object,
+ *   fieldRules: FieldRuleRegistrySnapshot,
  *   sendTablesSerializerDecoder: String|null
  * }} SchemaRegistrySnapshot
  */
