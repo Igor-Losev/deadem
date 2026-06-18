@@ -28,6 +28,7 @@ class SchemaRegistry {
     constructor(protoProvider) {
         Assert.isTrue(protoProvider instanceof ProtoProvider, 'Invalid protoProvider: expected an instance of ProtoProvider');
 
+        /** @type {SchemaRegistryProtos} */
         this._protos = {
             provider: protoProvider,
             demo: new Map(),
@@ -35,6 +36,7 @@ class SchemaRegistry {
             stringTableDecoders: new Map()
         };
 
+        /** @type {SchemaRegistryTypes} */
         this._types = {
             demoById: new Map(),
             demoByCode: new Map(),
@@ -43,6 +45,7 @@ class SchemaRegistry {
             stringTableByName: new Map()
         };
 
+        /** @type {SchemaRegistrySerializers} */
         this._serializers = {
             sendTables: null
         };
@@ -57,15 +60,24 @@ class SchemaRegistry {
      * its own {@link protobuf.Root} built from the same schema.
      *
      * @public
-     * @returns {Object}
+     * @returns {SchemaRegistrySnapshot}
      */
     export() {
+        /** @type {SchemaRegistryDemoTypeSnapshot[]} */
         const demoTypes = [];
+        /** @type {SchemaRegistryMessageTypeSnapshot[]} */
         const messageTypes = [];
+        /** @type {SchemaRegistryStringTableTypeSnapshot[]} */
         const stringTableTypes = [];
+        /** @type {SchemaRegistryStringTableDecoderSnapshot[]} */
+        const stringTableDecoders = [];
 
         this._types.demoById.forEach((type, id) => {
             const proto = this._protos.demo.get(id);
+
+            if (!proto) {
+                throw new Error(`Cannot export demo type [ ${type.code} ]: proto not registered`);
+            }
 
             demoTypes.push({
                 id: type.id,
@@ -78,6 +90,10 @@ class SchemaRegistry {
 
         this._types.messageById.forEach((type, id) => {
             const proto = this._protos.message.get(id);
+
+            if (!proto) {
+                throw new Error(`Cannot export message type [ ${type.code} ]: proto not registered`);
+            }
 
             messageTypes.push({
                 id: type.id,
@@ -94,11 +110,19 @@ class SchemaRegistry {
             });
         });
 
+        this._protos.stringTableDecoders.forEach((proto, name) => {
+            stringTableDecoders.push({
+                name,
+                protoName: proto.fullName
+            });
+        });
+
         return {
             protoJson: this._protos.provider.schema,
             demoTypes,
             messageTypes,
             stringTableTypes,
+            stringTableDecoders,
             fieldRules: this._fieldRules.export(),
             sendTablesSerializerDecoder: this._serializers.sendTables ? this._serializers.sendTables.fullName : null
         };
@@ -291,7 +315,7 @@ class SchemaRegistry {
      *
      * @public
      * @static
-     * @param {Object} snapshot
+     * @param {SchemaRegistrySnapshot} snapshot
      * @returns {SchemaRegistry}
      */
     static reconstruct(snapshot) {
@@ -326,5 +350,27 @@ class SchemaRegistry {
         return registry;
     }
 }
+
+/**
+ * @typedef {{ provider: ProtoProvider, demo: Map<number, protobuf.Type>, message: Map<number, protobuf.Type>, stringTableDecoders: Map<String, protobuf.Type> }} SchemaRegistryProtos
+ *
+ * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<String, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<String, MessagePacketType>, stringTableByName: Map<String, StringTableType> }} SchemaRegistryTypes
+ *
+ * @typedef {{ sendTables: protobuf.Type|null }} SchemaRegistrySerializers
+ * @typedef {{ id: number, code: String, heavy: boolean, bootstrap: boolean, protoName: String }} SchemaRegistryDemoTypeSnapshot
+ * @typedef {{ id: number, code: String, protoName: String }} SchemaRegistryMessageTypeSnapshot
+ * @typedef {{ code: String, name: String, synthesized: boolean }} SchemaRegistryStringTableTypeSnapshot
+ * @typedef {{ name: String, protoName: String }} SchemaRegistryStringTableDecoderSnapshot
+ *
+ * @typedef {{
+ *   protoJson: Object,
+ *   demoTypes: SchemaRegistryDemoTypeSnapshot[],
+ *   messageTypes: SchemaRegistryMessageTypeSnapshot[],
+ *   stringTableTypes: SchemaRegistryStringTableTypeSnapshot[],
+ *   stringTableDecoders: SchemaRegistryStringTableDecoderSnapshot[],
+ *   fieldRules: Object,
+ *   sendTablesSerializerDecoder: String|null
+ * }} SchemaRegistrySnapshot
+ */
 
 export default SchemaRegistry;
