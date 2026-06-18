@@ -1,4 +1,12 @@
+/** @import BitBuffer from '#core/BitBuffer.js' */
+
+/** @import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js' */
+
 import Assert from '#core/Assert.js';
+
+/**
+ * @typedef {(bitBuffer: BitBuffer, fieldPathBuilder: FieldPathBuilder) => void} FieldPathExecutor
+ */
 
 const registry = {
     byCode: new Map()
@@ -12,7 +20,7 @@ class FieldPathOperation {
      * @param {String} name
      * @param {number} weight
      * @param {number} sequence
-     * @param {Function|null} executor
+     * @param {FieldPathExecutor|null} executor
      */
     constructor(code, name, weight, sequence, executor) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
@@ -77,7 +85,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {Function|null}
+     * @returns {FieldPathExecutor|null}
      */
     get executor() {
         return this._executor;
@@ -93,7 +101,8 @@ class FieldPathOperation {
     }
 }
 
-const executor = (callback) => callback;
+/** @type {(callback: FieldPathExecutor) => FieldPathExecutor} */
+const executor = callback => callback;
 
 /* eslint-disable no-unused-vars */
 

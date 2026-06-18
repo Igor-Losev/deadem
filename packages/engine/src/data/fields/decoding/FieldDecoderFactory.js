@@ -1,3 +1,5 @@
+/** @import BitBuffer from '#core/BitBuffer.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldDecoder from './FieldDecoder.js';
@@ -11,6 +13,7 @@ class FieldDecoderFactory {
         this._registryQAngle = new Map();
         this._registryQuantizedFloat = new Map();
 
+        /** @type {{ [dimension: number]: Map<FieldDecoderInstructions, FieldDecoder> }} */
         this._registryVector = {
             2: new Map(),
             3: new Map(),
@@ -21,7 +24,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => string}
+     * @returns {(bitBuffer: BitBuffer) => string}
      */
     static get BINARY_BLOCK() {
         return decodeBinaryBlock;
@@ -30,7 +33,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => boolean}
+     * @returns {(bitBuffer: BitBuffer) => boolean}
      */
     static get BOOLEAN() {
         return decodeBoolean;
@@ -39,7 +42,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => number}
+     * @returns {(bitBuffer: BitBuffer) => number}
      */
     static get COORDINATE() {
         return decodeCoordinate;
@@ -48,7 +51,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => boolean}
+     * @returns {(bitBuffer: BitBuffer) => boolean}
      */
     static get GAME_MODE_RULES() {
         return decodeGameModeRules;
@@ -57,7 +60,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => Float32Array}
+     * @returns {(bitBuffer: BitBuffer) => Float32Array}
      */
     static get NORMAL_VECTOR() {
         return decodeNormalVector;
@@ -66,7 +69,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => number}
+     * @returns {(bitBuffer: BitBuffer) => number}
      */
     static get NO_SCALE() {
         return decodeNoScale;
@@ -75,7 +78,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => number}
+     * @returns {(bitBuffer: BitBuffer) => number}
      */
     static get SIMULATION_TIME() {
         return decodeSimulationTime;
@@ -84,7 +87,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => string}
+     * @returns {(bitBuffer: BitBuffer) => string}
      */
     static get STRING() {
         return decodeString;
@@ -93,7 +96,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => BigInt}
      */
     static get FIXED_UINT_64() {
         return decodeUInt64;
@@ -102,7 +105,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => number}
+     * @returns {(bitBuffer: BitBuffer) => number}
      */
     static get VAR_UINT_32() {
         return decodeUVarInt32;
@@ -111,7 +114,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => BigInt}
      */
     static get VAR_UINT_64() {
         return decodeUVarInt64;
@@ -120,7 +123,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => number}
+     * @returns {(bitBuffer: BitBuffer) => number}
      */
     static get VAR_INT_32() {
         return decodeVarInt32;
@@ -129,7 +132,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => BigInt}
      */
     static get VAR_INT_64() {
         return decodeVarInt64;
@@ -226,10 +229,11 @@ class FieldDecoderFactory {
             return existing;
         }
 
+        /** @type {(bitBuffer: BitBuffer) => Float32Array} */
         const qAngleDecoder = (bitBuffer) => {
             const result = new Float32Array(3);
 
-            if (instructions.encoder === 'qangle_pitch_yaw') {
+            if (instructions.bitCount !== null && instructions.encoder === 'qangle_pitch_yaw') {
                 result[0] = bitBuffer.readAngle(instructions.bitCount);
                 result[1] = bitBuffer.readAngle(instructions.bitCount);
             } else if (instructions.bitCount !== null && instructions.bitCount !== 0) {
@@ -277,6 +281,8 @@ class FieldDecoderFactory {
         }
 
         const decoder = new FieldDecoderQuantizedFloat(instructions);
+
+        /** @type {(bitBuffer: BitBuffer) => number} */
         const decoderFn = bitBuffer => decoder.decode(bitBuffer);
 
         const resolved = new FieldDecoder(decoderFn, FieldStorageDescriptor.FLOAT);
@@ -333,6 +339,7 @@ class FieldDecoderFactory {
 
         const valueDecoder = this._createFloat32(instructions).fn;
 
+        /** @type {(bitBuffer: BitBuffer) => Float32Array} */
         const vectorNDecoder = (bitBuffer) => {
             const vector = new Float32Array(dimension);
 
@@ -353,14 +360,18 @@ class FieldDecoderFactory {
 
 const textDecoder = new TextDecoder('utf-8', { fatal: false });
 
+/** @type {(bitBuffer: BitBuffer) => string} */
 const decodeBinaryBlock = (bitBuffer) => {
     const length = bitBuffer.readUVarInt32();
     const bytes = bitBuffer.read(length * 8, true);
 
     return textDecoder.decode(bytes.subarray(0, length));
 };
+/** @type {(bitBuffer: BitBuffer) => boolean} */
 const decodeBoolean = bitBuffer => bitBuffer.readBit();
+/** @type {(bitBuffer: BitBuffer) => number} */
 const decodeCoordinate = bitBuffer => bitBuffer.readCoordinate();
+/** @type {(bitBuffer: BitBuffer) => boolean} */
 const decodeGameModeRules = (bitBuffer) => {
     const value = bitBuffer.readBit();
 
@@ -368,14 +379,23 @@ const decodeGameModeRules = (bitBuffer) => {
 
     return value;
 };
+/** @type {(bitBuffer: BitBuffer) => Float32Array} */
 const decodeNormalVector = bitBuffer => bitBuffer.readNormalVector();
+/** @type {(bitBuffer: BitBuffer) => number} */
 const decodeNoScale = bitBuffer => bitBuffer.readFloat32();
+/** @type {(bitBuffer: BitBuffer) => number} */
 const decodeSimulationTime = bitBuffer => bitBuffer.readUVarInt32();
+/** @type {(bitBuffer: BitBuffer) => string} */
 const decodeString = bitBuffer => bitBuffer.readString();
+/** @type {(bitBuffer: BitBuffer) => BigInt} */
 const decodeUInt64 = bitBuffer => bitBuffer.readUInt64();
+/** @type {(bitBuffer: BitBuffer) => number} */
 const decodeUVarInt32 = bitBuffer => bitBuffer.readUVarInt32();
+/** @type {(bitBuffer: BitBuffer) => BigInt} */
 const decodeUVarInt64 = bitBuffer => bitBuffer.readUVarInt64();
+/** @type {(bitBuffer: BitBuffer) => number} */
 const decodeVarInt32 = bitBuffer => bitBuffer.readVarInt32();
+/** @type {(bitBuffer: BitBuffer) => BigInt} */
 const decodeVarInt64 = bitBuffer => bitBuffer.readVarInt64();
 
 export default FieldDecoderFactory;
