@@ -52,8 +52,9 @@ class Worker {
 
     /**
      * @protected
+     * @param {WorkerResponseBootstrap|WorkerResponseDemoClear|WorkerResponseDHPParse|WorkerResponseDPacketSync|WorkerResponseMPacketSync|WorkerResponseSvcCreatedEntities|WorkerResponseSvcUpdatedEntities} response
      */
-    _respond() {
+    _respond(response) {
         throw new Error('Worker._respond() is not implemented');
     }
 

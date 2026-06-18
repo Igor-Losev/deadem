@@ -20,8 +20,10 @@ class Serializable {
 
     /**
      * @protected
+     * @param {*} [payload]
+     * @returns {*}
      */
-    _serialize() {
+    _serialize(payload) {
         throw new Error('serialize() method is not implemented');
     }
 }

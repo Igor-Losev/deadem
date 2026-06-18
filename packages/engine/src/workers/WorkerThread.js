@@ -130,8 +130,9 @@ class WorkerThread {
 
     /**
      * @protected
+     * @param {WorkerRequest} request
      */
-    _sendRequest() {
+    _sendRequest(request) {
         throw new Error('WorkerThread._sendRequest not implemented()');
     }
 }

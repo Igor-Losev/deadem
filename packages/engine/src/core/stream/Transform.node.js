@@ -15,7 +15,6 @@ class TransformNode extends Stream.Transform {
     }
 
     /**
-     * @protected
      * @param {TransformCallback} callback
      * @returns {Promise<void>}
      */
@@ -32,9 +31,10 @@ class TransformNode extends Stream.Transform {
     /**
      * @protected
      * @abstract
-     * @returns {void}
+     * @param {*} chunk
+     * @returns {Promise<void>}
      */
-    async _handle() {
+    async _handle(chunk) {
         throw new Error('TransformNode.handle() is not implemented');
     }
 
@@ -47,7 +47,6 @@ class TransformNode extends Stream.Transform {
     }
 
     /**
-     * @protected
      * @param {Buffer} chunk
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback

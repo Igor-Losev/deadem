@@ -64,7 +64,7 @@ class Field {
      * @param {number} index
      * @returns {Function}
      */
-    getDecoderForFieldPath() {
+    getDecoderForFieldPath(fieldPath, index) {
         throw new Error('Abstract: getDecoderForFieldPath()');
     }
 
@@ -94,9 +94,11 @@ class Field {
     /**
      * @abstract
      * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} [index=0]
      * @returns {String}
      */
-    getNameForFieldPath() {
+    getNameForFieldPath(fieldPath, index = 0) {
         throw new Error('Abstract: getNameForFieldPath()');
     }
 
@@ -107,7 +109,7 @@ class Field {
      * @param {number} index
      * @returns {FieldStorageDescriptor}
      */
-    getStorageForFieldPath() {
+    getStorageForFieldPath(fieldPath, index) {
         throw new Error('Abstract: getStorageForFieldPath()');
     }
 
