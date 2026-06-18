@@ -18,7 +18,7 @@ class EntityOperation {
     }
 
     /**
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;

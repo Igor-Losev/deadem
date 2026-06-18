@@ -1,6 +1,6 @@
 /**
- * @param {Object} library
- * @returns {Promise<Object>}
+ * @param {object} library
+ * @returns {Promise<object>}
  */
 export default function loadLibraryModule(library) {
   switch (library.key) {

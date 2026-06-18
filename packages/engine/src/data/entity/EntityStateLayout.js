@@ -54,7 +54,7 @@ class EntityStateLayout {
      * All assigned field metas in assignment order.
      *
      * @public
-     * @returns {Array<Object>}
+     * @returns {Array<object>}
      */
     getMetas() {
         return this._metas.order;
@@ -75,7 +75,7 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {Object|null}
+     * @returns {object|null}
      */
     peek(fieldPathId) {
         return this._metas.byId.get(fieldPathId) || null;
@@ -87,7 +87,7 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {Object}
+     * @returns {object}
      */
     peekOrAssign(fieldPathId) {
         const existing = this.peek(fieldPathId);
@@ -107,7 +107,7 @@ class EntityStateLayout {
     /**
      * @protected
      * @param {number} fieldPathId
-     * @returns {Object}
+     * @returns {object}
      */
     _classify(fieldPathId) {
         const container = this._serializer.getIsContainerForFieldPathId(fieldPathId);
@@ -144,7 +144,7 @@ class EntityStateLayout {
  * @param {boolean} container
  * @param {boolean} signed
  * @param {boolean} bool
- * @returns {Object}
+ * @returns {object}
  */
 function createMeta(id, storage, offset, dim, present, container, signed, bool) {
     return { id, storage, offset, dim, present, container, signed, bool };

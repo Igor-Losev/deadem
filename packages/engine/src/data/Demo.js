@@ -106,7 +106,7 @@ class Demo {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {Class|null}
      */
     getClassByName(name) {

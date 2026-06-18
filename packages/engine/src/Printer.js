@@ -67,8 +67,8 @@ class Printer {
 
     /**
      * @protected
-     * @param {String} text
-     * @returns {String}
+     * @param {string} text
+     * @returns {string}
      */
     _highlight(text) {
         return `===== ${text} =====`;

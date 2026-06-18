@@ -2,8 +2,8 @@ class StringTableEvent {
     /**
      * @public
      * @constructor
-     * @param {String} code
-     * @param {String} name
+     * @param {string} code
+     * @param {string} name
      */
     constructor(code, name) {
         this._code = code;
@@ -12,7 +12,7 @@ class StringTableEvent {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -20,7 +20,7 @@ class StringTableEvent {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;

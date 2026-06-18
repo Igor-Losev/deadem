@@ -7,7 +7,7 @@ import WorkerRequest from './WorkerRequest.js';
 class WorkerRequestBootstrap extends WorkerRequest {
     /**
      * @constructor
-     * @param {Object} registrySnapshot
+     * @param {object} registrySnapshot
      */
     constructor(registrySnapshot) {
         super(WorkerMessageType.BOOTSTRAP, { registrySnapshot }, []);
@@ -16,7 +16,7 @@ class WorkerRequestBootstrap extends WorkerRequest {
     /**
      * @public
      * @static
-     * @param {{registrySnapshot: Object}} payload
+     * @param {{registrySnapshot: object}} payload
      * @returns {WorkerRequestBootstrap}
      */
     static deserialize(payload) {

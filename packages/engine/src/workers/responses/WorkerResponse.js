@@ -58,7 +58,7 @@ class WorkerResponse extends Serializable {
 }
 
 /**
- * @typedef {{ __type: String, payload: * }} WorkerResponseRaw
+ * @typedef {{ __type: string, payload: * }} WorkerResponseRaw
  */
 
 export default WorkerResponse;

@@ -8,7 +8,7 @@ class Class {
     /**
      * @constructor
      * @param {number} id
-     * @param {String} name
+     * @param {string} name
      * @param {Serializer} serializer
      */
     constructor(id, name, serializer) {
@@ -34,7 +34,7 @@ class Class {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;

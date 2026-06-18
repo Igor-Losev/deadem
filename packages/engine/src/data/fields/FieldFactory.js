@@ -39,10 +39,10 @@ class FieldFactory {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDefinition} definition
-     * @param {Array<String>} sendNode
-     * @param {{encoder: String|null, encoderFlags: number|null, bitCount: number|null, valueLow: number|null, valueHigh: number|null}} instructionsRaw
+     * @param {Array<string>} sendNode
+     * @param {{encoder: string|null, encoderFlags: number|null, bitCount: number|null, valueLow: number|null, valueHigh: number|null}} instructionsRaw
      * @param {Serializer|null} serializer
      * @returns {Field}
      */
@@ -109,7 +109,7 @@ class FieldFactory {
 
     /**
      * @protected
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDefinition} definition
      * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {FieldDecoder}
@@ -136,7 +136,7 @@ class FieldFactory {
 
     /**
      * @protected
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {FieldDecoder|null}
      */

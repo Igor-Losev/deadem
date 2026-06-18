@@ -34,7 +34,7 @@ class FileSystem {
     /**
      * @public
      * @static
-     * @param {String} path
+     * @param {string} path
      * @returns {boolean}
      */
     static isFile(path) {
@@ -54,9 +54,9 @@ class FileSystem {
     /**
      * @public
      * @static
-     * @param {String} importMetaUrl
-     * @param {String} path
-     * @returns {String}
+     * @param {string} importMetaUrl
+     * @param {string} path
+     * @returns {string}
      */
     static getAbsolutePath(importMetaUrl, path) {
         Assert.isTrue(typeof importMetaUrl === 'string');

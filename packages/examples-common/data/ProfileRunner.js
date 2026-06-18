@@ -172,7 +172,7 @@ function runParent(scriptPath) {
  * @param {string} scriptPath
  * @param {string} passType
  * @param {Array<string>} args
- * @returns {{summary: parseSummary|null, allocProfile: Object|null, log: string}}
+ * @returns {{summary: parseSummary|null, allocProfile: object|null, log: string}}
  */
 function spawnPass(scriptPath, passType, args) {
     const result = spawnSync(process.execPath, args, {
@@ -205,7 +205,7 @@ function spawnPass(scriptPath, passType, args) {
 
 /**
  * @param {string} output
- * @returns {{summary: parseSummary|null, allocProfile: Object|null}}
+ * @returns {{summary: parseSummary|null, allocProfile: object|null}}
  */
 function extractChildProfile(output) {
     const lines = output.split('\n');
@@ -228,7 +228,7 @@ function extractChildProfile(output) {
 
 /**
  * @param {string} prefix
- * @param {Object} payload
+ * @param {object} payload
  */
 function writeProfileMessage(prefix, payload) {
     const buffer = Buffer.from(`${prefix}${JSON.stringify(payload)}\n`);
@@ -292,8 +292,8 @@ function createMemorySampler() {
 /**
  * @param {inspector.Session} session
  * @param {string} method
- * @param {Object} [params]
- * @returns {Promise<Object>}
+ * @param {object} [params]
+ * @returns {Promise<object>}
  */
 function post(session, method, params = {}) {
     return new Promise((resolve, reject) => {
@@ -391,7 +391,7 @@ function readGcNumber(line, key) {
 }
 
 /**
- * @param {Object} profile
+ * @param {object} profile
  */
 function printAllocationSummary(profile) {
     const rows = [];
@@ -421,7 +421,7 @@ function printAllocationSummary(profile) {
 }
 
 /**
- * @param {Object} node
+ * @param {object} node
  * @param {Array<allocationRow>} rows
  * @param {Array<frame>} [stack]
  */

@@ -7,15 +7,15 @@ class FieldRuleRegistry {
      * @constructor
      */
     constructor() {
-        /** @type {Map<String, FieldDecoderDescriptor>} */
+        /** @type {FieldDecoderDescriptorMap} */
         this._typeDecoders = new Map();
-        /** @type {Set<String>} */
+        /** @type {StringSet} */
         this._fixedTableTypes = new Set();
-        /** @type {Set<String>} */
+        /** @type {StringSet} */
         this._variableArrayTypes = new Set();
-        /** @type {Map<String, FieldDecoderDescriptor>} */
+        /** @type {FieldDecoderDescriptorMap} */
         this._fieldDecoderOverrides = new Map();
-        /** @type {Map<String, String>} */
+        /** @type {StringMap} */
         this._fieldEncoderOverrides = new Map();
     }
 
@@ -44,7 +44,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {FieldDecoderDescriptor|null}
      */
     getFieldDecoderOverride(name) {
@@ -55,8 +55,8 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @returns {String|null}
+     * @param {string} name
+     * @returns {string|null}
      */
     getFieldEncoderOverride(name) {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
@@ -66,7 +66,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {FieldDecoderDescriptor|null}
      */
     getFieldTypeDecoder(baseType) {
@@ -77,7 +77,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {boolean}
      */
     getIsFixedTableType(baseType) {
@@ -88,7 +88,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {boolean}
      */
     getIsVariableArrayType(baseType) {
@@ -135,7 +135,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldDecoderOverride(name, descriptor) {
@@ -147,8 +147,8 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @param {String} encoder
+     * @param {string} name
+     * @param {string} encoder
      */
     registerFieldEncoderOverride(name, encoder) {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
@@ -159,7 +159,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldTypeDecoder(baseType, descriptor) {
@@ -171,7 +171,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerFixedTableType(baseType) {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
@@ -181,7 +181,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerVariableArrayType(baseType) {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
@@ -191,16 +191,19 @@ class FieldRuleRegistry {
 }
 
 /**
- * @typedef {{ type: String, options: Object }} FieldDecoderDescriptorSnapshot
- * @typedef {{ name: String, descriptor: FieldDecoderDescriptorSnapshot }} FieldDecoderOverrideSnapshot
- * @typedef {{ name: String, encoder: String }} FieldEncoderOverrideSnapshot
- * @typedef {{ baseType: String, descriptor: FieldDecoderDescriptorSnapshot }} FieldTypeDecoderSnapshot
+ * @typedef {Map<string, FieldDecoderDescriptor>} FieldDecoderDescriptorMap
+ * @typedef {Map<string, string>} StringMap
+ * @typedef {Set<string>} StringSet
+ * @typedef {{ type: string, options: object }} FieldDecoderDescriptorSnapshot
+ * @typedef {{ name: string, descriptor: FieldDecoderDescriptorSnapshot }} FieldDecoderOverrideSnapshot
+ * @typedef {{ name: string, encoder: string }} FieldEncoderOverrideSnapshot
+ * @typedef {{ baseType: string, descriptor: FieldDecoderDescriptorSnapshot }} FieldTypeDecoderSnapshot
  * @typedef {{
  *   fieldDecoderOverrides: FieldDecoderOverrideSnapshot[],
  *   fieldEncoderOverrides: FieldEncoderOverrideSnapshot[],
- *   fixedTableTypes: String[],
+ *   fixedTableTypes: string[],
  *   typeDecoders: FieldTypeDecoderSnapshot[],
- *   variableArrayTypes: String[]
+ *   variableArrayTypes: string[]
  * }} FieldRuleRegistrySnapshot
  */
 

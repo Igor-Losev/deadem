@@ -6,7 +6,7 @@ class StringTableEntry {
      * @constructor
      * @param {StringTable} table
      * @param {number} id
-     * @param {String} key
+     * @param {string} key
      * @param {Uint8Array|null} raw
      */
     constructor(table, id, key, raw) {
@@ -51,7 +51,7 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {String}
+     * @returns {string}
      */
     get key() {
         return this._key;

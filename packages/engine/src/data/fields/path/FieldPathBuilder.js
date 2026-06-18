@@ -85,7 +85,7 @@ class FieldPathBuilder {
      *
      * @public
      * @static
-     * @param {BigInt|number} code
+     * @param {bigint|number} code
      * @returns {FieldPath}
      */
     static reconstruct(code) {

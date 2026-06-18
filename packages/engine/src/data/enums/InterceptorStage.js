@@ -1,7 +1,7 @@
 class InterceptorStage {
     /**
      * @constructor
-     * @param {String} code
+     * @param {string} code
      * @param {number} id
      */
     constructor(code, id) {
@@ -11,7 +11,7 @@ class InterceptorStage {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;

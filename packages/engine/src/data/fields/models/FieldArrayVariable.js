@@ -14,8 +14,8 @@ class FieldArrayVariable extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {string} name
+     * @param {Array<string>} sendNode
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoderBase
      * @param {FieldDecoder} fieldDecoderChild
@@ -62,7 +62,7 @@ class FieldArrayVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 === index) {

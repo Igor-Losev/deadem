@@ -58,7 +58,7 @@ class WorkerRequest extends Serializable {
 }
 
 /**
- * @typedef {{ __type: String, payload: * }} WorkerRequestRaw
+ * @typedef {{ __type: string, payload: * }} WorkerRequestRaw
  */
 
 export default WorkerRequest;

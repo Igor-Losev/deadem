@@ -135,9 +135,9 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 })();
 
 /**
- * @param {Object} descriptor
- * @param {Array<Object>} keys
- * @returns {Object}
+ * @param {object} descriptor
+ * @param {Array<object>} keys
+ * @returns {object}
  */
 function zip(descriptor, keys) {
     const out = { };
@@ -150,7 +150,7 @@ function zip(descriptor, keys) {
 }
 
 /**
- * @param {Object} key
+ * @param {object} key
  * @returns {*}
  */
 function valueOf(key) {

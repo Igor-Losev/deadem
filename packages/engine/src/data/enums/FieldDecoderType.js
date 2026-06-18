@@ -5,7 +5,7 @@ const registry = new Map();
 class FieldDecoderType {
     /**
      * @constructor
-     * @param {String} code
+     * @param {string} code
      */
     constructor(code) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
@@ -18,7 +18,7 @@ class FieldDecoderType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -27,7 +27,7 @@ class FieldDecoderType {
     /**
      * @public
      * @static
-     * @param {String} code
+     * @param {string} code
      * @returns {FieldDecoderType}
      */
     static parse(code) {

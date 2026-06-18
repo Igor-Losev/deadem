@@ -193,7 +193,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldDecoderOverride(name, descriptor) {
@@ -202,8 +202,8 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @param {String} encoder
+     * @param {string} name
+     * @param {string} encoder
      */
     registerFieldEncoderOverride(name, encoder) {
         this._fieldRules.registerFieldEncoderOverride(name, encoder);
@@ -211,7 +211,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldTypeDecoder(baseType, descriptor) {
@@ -220,7 +220,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerFixedTableType(baseType) {
         this._fieldRules.registerFixedTableType(baseType);
@@ -252,7 +252,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerVariableArrayType(baseType) {
         this._fieldRules.registerVariableArrayType(baseType);
@@ -277,7 +277,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} code
+     * @param {string} code
      * @returns {DemoPacketType|null}
      */
     resolveDemoTypeByCode(code) {
@@ -295,7 +295,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} code
+     * @param {string} code
      * @returns {MessagePacketType|null}
      */
     resolveMessageTypeByCode(code) {
@@ -304,7 +304,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {StringTableType|null}
      */
     resolveStringTableTypeByName(name) {
@@ -353,24 +353,24 @@ class SchemaRegistry {
 }
 
 /**
- * @typedef {{ provider: ProtoProvider, demo: Map<number, protobuf.Type>, message: Map<number, protobuf.Type>, stringTableDecoders: Map<String, protobuf.Type> }} SchemaRegistryProtos
+ * @typedef {{ provider: ProtoProvider, demo: Map<number, protobuf.Type>, message: Map<number, protobuf.Type>, stringTableDecoders: Map<string, protobuf.Type> }} SchemaRegistryProtos
  *
- * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<String, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<String, MessagePacketType>, stringTableByName: Map<String, StringTableType> }} SchemaRegistryTypes
+ * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<string, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<string, MessagePacketType>, stringTableByName: Map<string, StringTableType> }} SchemaRegistryTypes
  *
  * @typedef {{ sendTables: protobuf.Type|null }} SchemaRegistrySerializers
- * @typedef {{ id: number, code: String, heavy: boolean, bootstrap: boolean, protoName: String }} SchemaRegistryDemoTypeSnapshot
- * @typedef {{ id: number, code: String, protoName: String }} SchemaRegistryMessageTypeSnapshot
- * @typedef {{ code: String, name: String, synthesized: boolean }} SchemaRegistryStringTableTypeSnapshot
- * @typedef {{ name: String, protoName: String }} SchemaRegistryStringTableDecoderSnapshot
+ * @typedef {{ id: number, code: string, heavy: boolean, bootstrap: boolean, protoName: string }} SchemaRegistryDemoTypeSnapshot
+ * @typedef {{ id: number, code: string, protoName: string }} SchemaRegistryMessageTypeSnapshot
+ * @typedef {{ code: string, name: string, synthesized: boolean }} SchemaRegistryStringTableTypeSnapshot
+ * @typedef {{ name: string, protoName: string }} SchemaRegistryStringTableDecoderSnapshot
  *
  * @typedef {{
- *   protoJson: Object,
+ *   protoJson: object,
  *   demoTypes: SchemaRegistryDemoTypeSnapshot[],
  *   messageTypes: SchemaRegistryMessageTypeSnapshot[],
  *   stringTableTypes: SchemaRegistryStringTableTypeSnapshot[],
  *   stringTableDecoders: SchemaRegistryStringTableDecoderSnapshot[],
  *   fieldRules: FieldRuleRegistrySnapshot,
- *   sendTablesSerializerDecoder: String|null
+ *   sendTablesSerializerDecoder: string|null
  * }} SchemaRegistrySnapshot
  */
 

@@ -5,8 +5,8 @@ const registry = new Map();
 class Protocol {
     /**
     * @constructor
-    * @param {String} code
-    * @param {String} scheme
+    * @param {string} code
+    * @param {string} scheme
     */
     constructor(code, scheme) {
         Assert.isTrue(typeof code === 'string');
@@ -19,14 +19,14 @@ class Protocol {
     }
 
     /**
-     * @returns {String} 
+     * @returns {string}
      */
     get code() {
         return this._code;
     }
 
     /**
-     * @returns {String} 
+     * @returns {string}
      */
     get scheme() {
         return this._scheme;
@@ -51,4 +51,3 @@ const http = new Protocol('HTTP', 'http');
 const https = new Protocol('HTTPS', 'https');
 
 export default Protocol;
-

@@ -4,7 +4,7 @@ class FieldDecoderInstructions {
     /**
      * @public
      * @constructor
-     * @param {String|null} encoder
+     * @param {string|null} encoder
      * @param {number|null} encoderFlags
      * @param {number|null} bitCount
      * @param {number|null} valueLow
@@ -25,7 +25,7 @@ class FieldDecoderInstructions {
     }
 
     /**
-     * @returns {String|null}
+     * @returns {string|null}
      */
     get encoder() {
         return this._encoder;

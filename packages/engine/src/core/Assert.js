@@ -3,7 +3,7 @@ class Assert {
      * @public
      * @static
      * @param {boolean} condition
-     * @param {String=} message
+     * @param {string=} message
      */
     static isTrue(condition, message = 'Assertion failed') {
         if (!condition) {

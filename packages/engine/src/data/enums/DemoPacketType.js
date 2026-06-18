@@ -3,7 +3,7 @@ import Assert from '#core/Assert.js';
 class DemoPacketType {
     /**
      * @constructor
-     * @param {String} code
+     * @param {string} code
      * @param {number} id
      * @param {boolean} heavy
      * @param {boolean} bootstrap
@@ -22,7 +22,7 @@ class DemoPacketType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;

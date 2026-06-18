@@ -395,7 +395,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {object} meta
      * @returns {boolean}
      */
     _getIsContainer(meta) {
@@ -429,7 +429,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {object} meta
      * @returns {*}
      */
     _read(meta) {

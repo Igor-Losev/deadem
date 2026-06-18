@@ -205,7 +205,7 @@ function getGameTick(demoPacket) {
 }
 
 /**
- * @typedef {Object} Game
+ * @typedef {object} Game
  * @property {number} clockGame
  * @property {number} clockTotal
  * @property {boolean} paused
@@ -214,7 +214,7 @@ function getGameTick(demoPacket) {
  */
 
 /**
- * @typedef {Object} GameFormatted
+ * @typedef {object} GameFormatted
  * @property {string} clockGame
  * @property {string} clockTotal
  * @property {string} paused

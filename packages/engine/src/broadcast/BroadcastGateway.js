@@ -6,7 +6,7 @@ import Protocol from '#data/enums/Protocol.js';
 class BroadcastGateway {
     /**
     * @constructor
-    * @param {String} baseUrl
+    * @param {string} baseUrl
     * @param {Protocol} [protocol=Protocol.HTTPS]
     */
     constructor(baseUrl, protocol = Protocol.HTTPS) {
@@ -74,7 +74,7 @@ class BroadcastGateway {
 }
 
 /**
- * @typedef {Object} SyncObject
+ * @typedef {object} SyncObject
  * @property {number} tick
  * @property {number} endtick
  * @property {number} maxtick

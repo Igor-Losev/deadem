@@ -119,7 +119,7 @@ class DemoPacket {
 }
 
 /**
- * @typedef {{sequence: number, type: String, tick: number, data: *}} DemoPacketObject
+ * @typedef {{sequence: number, type: string, tick: number, data: *}} DemoPacketObject
  */
 
 export default DemoPacket;

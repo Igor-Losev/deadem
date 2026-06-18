@@ -188,7 +188,7 @@ class StringTableHandler {
 
     /**
      * @protected
-     * @param {String} name
+     * @param {string} name
      * @returns {StringTableType}
      */
     _resolveOrSynthesize(name) {

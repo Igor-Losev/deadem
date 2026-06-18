@@ -12,9 +12,9 @@ class FieldScalar extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
-     * @param {FieldDefinition} definition
+     * @param {string} name
+     * @param {Array<string>} sendNode
+     * @param {FieldDefinition} definition:packages/engine/src/data/fields/models/FieldSimple.js
      * @param {FieldDecoder} fieldDecoder
      */
     constructor(name, sendNode, definition, fieldDecoder) {
@@ -51,7 +51,7 @@ class FieldScalar extends Field {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath() {
         return this._name;

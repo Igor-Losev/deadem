@@ -423,7 +423,7 @@ class BitBuffer {
      * Reads exactly 64 bits as an unsigned BigInt (little-endian).
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readUInt64() {
         const lo = this.readUInt32();
@@ -485,7 +485,7 @@ class BitBuffer {
      * Reads a signed variable-length 64-bit integer from the buffer.
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readVarInt64() {
         const unsigned = this.readUVarInt64();
@@ -531,7 +531,7 @@ class BitBuffer {
      *         to represent the maximum possible 64-bit integer.
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readUVarInt64() {
         let continuation = true;

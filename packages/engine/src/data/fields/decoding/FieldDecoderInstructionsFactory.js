@@ -16,7 +16,7 @@ class FieldDecoderInstructionsFactory {
 
     /**
      * @public
-     * @param {String|null} encoder
+     * @param {string|null} encoder
      * @param {number|null} encoderFlags
      * @param {number|null} bitCount
      * @param {number|null} valueLow

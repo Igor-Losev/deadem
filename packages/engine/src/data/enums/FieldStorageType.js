@@ -4,7 +4,7 @@ class FieldStorageType {
     /**
      * @public
      * @constructor
-     * @param {String} code
+     * @param {string} code
      */
     constructor(code) {
         Assert.isTrue(typeof code === 'string');

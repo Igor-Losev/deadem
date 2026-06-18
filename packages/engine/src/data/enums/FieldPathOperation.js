@@ -16,8 +16,8 @@ class FieldPathOperation {
     /**
      * @public
      * @constructor
-     * @param {String} code
-     * @param {String} name
+     * @param {string} code
+     * @param {string} name
      * @param {number} weight
      * @param {number} sequence
      * @param {FieldPathExecutor|null} executor
@@ -53,7 +53,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -61,7 +61,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;

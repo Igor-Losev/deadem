@@ -96,7 +96,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(bitBuffer: BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => bigint}
      */
     static get FIXED_UINT_64() {
         return decodeUInt64;
@@ -114,7 +114,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(bitBuffer: BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => bigint}
      */
     static get VAR_UINT_64() {
         return decodeUVarInt64;
@@ -132,7 +132,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(bitBuffer: BitBuffer) => BigInt}
+     * @returns {(bitBuffer: BitBuffer) => bigint}
      */
     static get VAR_INT_64() {
         return decodeVarInt64;
@@ -387,15 +387,15 @@ const decodeNoScale = bitBuffer => bitBuffer.readFloat32();
 const decodeSimulationTime = bitBuffer => bitBuffer.readUVarInt32();
 /** @type {(bitBuffer: BitBuffer) => string} */
 const decodeString = bitBuffer => bitBuffer.readString();
-/** @type {(bitBuffer: BitBuffer) => BigInt} */
+/** @type {(bitBuffer: BitBuffer) => bigint} */
 const decodeUInt64 = bitBuffer => bitBuffer.readUInt64();
 /** @type {(bitBuffer: BitBuffer) => number} */
 const decodeUVarInt32 = bitBuffer => bitBuffer.readUVarInt32();
-/** @type {(bitBuffer: BitBuffer) => BigInt} */
+/** @type {(bitBuffer: BitBuffer) => bigint} */
 const decodeUVarInt64 = bitBuffer => bitBuffer.readUVarInt64();
 /** @type {(bitBuffer: BitBuffer) => number} */
 const decodeVarInt32 = bitBuffer => bitBuffer.readVarInt32();
-/** @type {(bitBuffer: BitBuffer) => BigInt} */
+/** @type {(bitBuffer: BitBuffer) => bigint} */
 const decodeVarInt64 = bitBuffer => bitBuffer.readVarInt64();
 
 export default FieldDecoderFactory;

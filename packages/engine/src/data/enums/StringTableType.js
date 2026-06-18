@@ -3,8 +3,8 @@ import Assert from '#core/Assert.js';
 class StringTableType {
     /**
      * @constructor
-     * @param {String} code
-     * @param {String} name
+     * @param {string} code
+     * @param {string} name
      * @param {boolean} synthesized
      * @param {boolean} [lazy=false] - decode strategy flag for table entries.
      */
@@ -22,7 +22,7 @@ class StringTableType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -30,7 +30,7 @@ class StringTableType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;
@@ -57,7 +57,7 @@ class StringTableType {
      *
      * @public
      * @static
-     * @param {String} name
+     * @param {string} name
      * @returns {StringTableType}
      */
     static synthesize(name) {

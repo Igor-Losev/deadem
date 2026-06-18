@@ -59,7 +59,7 @@ class MessagePacket {
 }
 
 /**
- * @typedef {{type: String, data: *}} MessagePacketObject
+ * @typedef {{type: string, data: *}} MessagePacketObject
  */
 
 export default MessagePacket;

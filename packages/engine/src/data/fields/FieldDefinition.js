@@ -6,7 +6,7 @@ class FieldDefinition {
     /**
      * @public
      * @constructor
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDefinition|null} generic
      * @param {number|null} count
      * @param {boolean} pointer
@@ -42,7 +42,7 @@ class FieldDefinition {
     /**
      * @public
      * @static
-     * @param {String} varType
+     * @param {string} varType
      * @returns {FieldDefinition}
      */
     static parse(varType) {

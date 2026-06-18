@@ -40,7 +40,7 @@ class StringTableContainer {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {StringTable|null}
      */
     getByName(name) {

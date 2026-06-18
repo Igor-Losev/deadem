@@ -14,8 +14,8 @@ class FieldTableVariable extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {string} name
+     * @param {Array<string>} sendNode
      * @param {FieldDefinition} definition
      * @param {Serializer} serializer
      * @param {FieldDecoder} fieldDecoderBase

@@ -8,8 +8,8 @@ class PerformanceTrackerCategory {
     /**
      * @private
      * @constructor
-     * @param {String} code
-     * @param {String} description
+     * @param {string} code
+     * @param {string} description
      * @param {Array<PerformanceTrackerCategory>} subcategories
      */
     constructor(code, description, subcategories = [ ]) {
@@ -26,7 +26,7 @@ class PerformanceTrackerCategory {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -34,7 +34,7 @@ class PerformanceTrackerCategory {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get description() {
         return this._description;

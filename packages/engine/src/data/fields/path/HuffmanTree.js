@@ -186,7 +186,7 @@ function build() {
  * Updates the maximum depth of the tree.
  *
  * @param {HuffmanTree} node
- * @param {String} path
+ * @param {string} path
  * @param {number} depth
  */
 function dfs(node, path = '', depth = 0) {

@@ -86,7 +86,7 @@ function getNode(category = PerformanceTrackerCategory.PARSER) {
 }
 
 /**
- * @typedef {Object} PerformanceTrackerNode
+ * @typedef {object} PerformanceTrackerNode
  * @property {Array<PerformanceTrackerNode>} children
  * @property {PerformanceTrackerRecordStats|null} stats
  * @property {PerformanceTrackerCategory} category

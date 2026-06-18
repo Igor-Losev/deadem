@@ -18,7 +18,7 @@ class Serializer {
     /**
      * @public
      * @constructor
-     * @param {String} name
+     * @param {string} name
      * @param {number} version
      * @param {Array<Field>} fields
      */

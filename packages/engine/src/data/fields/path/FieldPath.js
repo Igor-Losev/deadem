@@ -17,8 +17,8 @@ class FieldPath {
     /**
      * @public
      * @constructor
-     * @param {Array<Number>} path
-     * @param {BigInt} code
+     * @param {Array<number>} path
+     * @param {bigint} code
      * @param {number} id
      */
     constructor(path, code, id) {
@@ -55,7 +55,7 @@ class FieldPath {
 
     /**
      * @public
-     * @returns {Array<Number>}
+     * @returns {Array<number>}
      */
     get path() {
         return this._path;
@@ -63,7 +63,7 @@ class FieldPath {
 
     /**
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     get code() {
         return this._code;
@@ -90,7 +90,7 @@ class FieldPath {
      * Number for length 1-2 paths, BigInt for longer.
      *
      * @public
-     * @returns {number|BigInt}
+     * @returns {number|bigint}
      */
     get transferCode() {
         return this._transferCode;

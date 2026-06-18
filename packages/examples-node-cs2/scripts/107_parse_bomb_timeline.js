@@ -89,9 +89,9 @@ const BOMB_EVENTS = new Set([ 'bomb_pickup', 'bomb_dropped', 'bomb_planted', 'bo
 })();
 
 /**
- * @param {Object} descriptor
- * @param {Array<Object>} keys
- * @returns {Object}
+ * @param {object} descriptor
+ * @param {Array<object>} keys
+ * @returns {object}
  */
 function zip(descriptor, keys) {
     const out = { };
@@ -104,7 +104,7 @@ function zip(descriptor, keys) {
 }
 
 /**
- * @param {Object} key
+ * @param {object} key
  * @returns {*}
  */
 function valueOf(key) {

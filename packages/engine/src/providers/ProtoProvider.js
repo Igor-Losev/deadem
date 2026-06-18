@@ -3,7 +3,7 @@ import protobuf from 'protobufjs/light.js';
 class ProtoProvider {
     /**
      * @public
-     * @param {Object} schema
+     * @param {object} schema
      */
     constructor(schema) {
         this._schema = schema;
@@ -13,7 +13,7 @@ class ProtoProvider {
 
     /**
      * @public
-     * @returns {Object}
+     * @returns {object}
      */
     get schema() {
         return this._schema;

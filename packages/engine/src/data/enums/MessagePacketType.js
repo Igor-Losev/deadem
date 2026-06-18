@@ -3,7 +3,7 @@ import Assert from '#core/Assert.js';
 class MessagePacketType {
     /**
      * @constructor
-     * @param {String} code
+     * @param {string} code
      * @param {number} id
      */
     constructor(code, id) {
@@ -16,7 +16,7 @@ class MessagePacketType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;

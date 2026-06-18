@@ -19,7 +19,7 @@ class SerializerKey {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     toString() {
         return `${this._name}|${this._version}`;

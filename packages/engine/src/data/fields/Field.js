@@ -11,8 +11,8 @@ class Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {string} name
+     * @param {Array<string>} sendNode
      * @param {FieldDefinition} definition
      */
     constructor(name, sendNode, definition) {
@@ -43,7 +43,7 @@ class Field {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;
@@ -51,7 +51,7 @@ class Field {
 
     /**
      * @public
-     * @returns {Array<String>}
+     * @returns {Array<string>}
      */
     get sendNode() {
         return this._sendNode;
@@ -96,7 +96,7 @@ class Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath(fieldPath, index = 0) {
         throw new Error('Abstract: getNameForFieldPath()');
