@@ -1,3 +1,5 @@
+/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
@@ -11,10 +13,11 @@ class FieldSimple extends Field {
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
+     * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, fieldDecoder) {
-        super(name, sendNode);
+    constructor(name, sendNode, definition, fieldDecoder) {
+        super(name, sendNode, definition);
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 

@@ -1,3 +1,5 @@
+/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
@@ -12,11 +14,12 @@ class FieldTableVariable extends Field {
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
+     * @param {FieldDefinition} definition
      * @param {Serializer} serializer
      * @param {FieldDecoder} fieldDecoderBase
      */
-    constructor(name, sendNode, serializer, fieldDecoderBase) {
-        super(name, sendNode);
+    constructor(name, sendNode, definition, serializer, fieldDecoderBase) {
+        super(name, sendNode, definition);
 
         Assert.isTrue(serializer instanceof Serializer);
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);

@@ -60,17 +60,17 @@ class FieldFactory {
 
         switch (model) {
             case FieldModel.SIMPLE:
-                return new FieldSimple(name, sendNode, this._resolveDecoder(name, definition.baseType, decoderInstructions));
+                return new FieldSimple(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
-                return new FieldArrayFixed(name, sendNode, this._resolveDecoder(name, definition.baseType, decoderInstructions));
+                return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
-                return new FieldArrayVariable(name, sendNode, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic.baseType, decoderInstructions));
+                return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic.baseType, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
+                return new FieldTableFixed(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, serializer, this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
+                return new FieldTableVariable(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }

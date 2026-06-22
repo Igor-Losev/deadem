@@ -1,18 +1,31 @@
 import Assert from '#core/Assert.js';
 
+import FieldDefinition from './FieldDefinition.js';
+
 class Field {
     /**
      * @public
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
+     * @param {FieldDefinition} definition
      */
-    constructor(name, sendNode) {
+    constructor(name, sendNode, definition) {
         Assert.isTrue(typeof name === 'string');
         Assert.isTrue(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
+        Assert.isTrue(definition instanceof FieldDefinition);
 
         this._name = name;
         this._sendNode = sendNode;
+        this._definition = definition;
+    }
+
+    /**
+     * @public
+     * @returns {FieldDefinition}
+     */
+    get definition() {
+        return this._definition;
     }
 
     /**

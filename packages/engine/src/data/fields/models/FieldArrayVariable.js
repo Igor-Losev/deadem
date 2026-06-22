@@ -1,3 +1,5 @@
+/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+
 import Assert from '#core/Assert.js';
 
 import FieldModel from '#data/enums/FieldModel.js';
@@ -11,11 +13,12 @@ class FieldArrayVariable extends Field {
      * @constructor
      * @param {String} name
      * @param {Array<String>} sendNode
+     * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoderBase
      * @param {FieldDecoder} fieldDecoderChild
      */
-    constructor(name, sendNode, fieldDecoderBase, fieldDecoderChild) {
-        super(name, sendNode);
+    constructor(name, sendNode, definition, fieldDecoderBase, fieldDecoderChild) {
+        super(name, sendNode, definition);
 
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
         Assert.isTrue(fieldDecoderChild instanceof FieldDecoder);
