@@ -75,6 +75,8 @@ class ParserEngine {
         if (configuration.parserThreads === 0) {
             this._workerManager = null;
         } else {
+            logger.warn('ParserEngine: parserThreads > 0 is deprecated and will be removed in the next major release');
+
             this._workerManager = new WorkerManager(configuration.parserThreads, logger);
         }
 

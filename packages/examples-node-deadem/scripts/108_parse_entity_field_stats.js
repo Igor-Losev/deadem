@@ -11,7 +11,6 @@ const TOP_FIELDS_PER_CLASS = 5;
     const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
 
     const parser = new Parser(new ParserConfiguration({
-        parserThreads: 0,
         messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ]
     }));
 

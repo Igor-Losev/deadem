@@ -24,7 +24,7 @@ class Player {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         if (configuration.parserThreads > 0) {
-            throw new Error('Player: parallel parsing is not supported yet');
+            throw new Error('Player: parallel parsing is not supported');
         }
 
         this._engine = new ParserEngine(registry, configuration, logger);

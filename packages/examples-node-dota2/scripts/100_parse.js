@@ -6,7 +6,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 (async () => {
     const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_8783006717);
 
-    const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
+    const parser = new Parser(ParserConfiguration.DEFAULT);
 
     await parser.parse(reader);
     await parser.dispose();

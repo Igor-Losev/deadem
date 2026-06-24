@@ -9,7 +9,6 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
 
     const parser = new Parser(new ParserConfiguration({
-        parserThreads: 0,
         messagePacketTypes: [
             MessagePacketType.CITADEL_USER_MESSAGE_BOSS_KILLED,
             MessagePacketType.SVC_PACKET_ENTITIES

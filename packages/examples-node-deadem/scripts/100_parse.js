@@ -7,7 +7,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 (async () => {
     const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
 
-    const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
+    const parser = new Parser(ParserConfiguration.DEFAULT);
 
     await parser.parse(reader);
     await parser.dispose();

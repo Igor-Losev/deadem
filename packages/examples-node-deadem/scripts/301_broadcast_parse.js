@@ -19,7 +19,7 @@ import { BroadcastAgent, BroadcastGateway, DemoSource, Logger, Parser, ParserCon
     const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
     const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);
 
-    const parserConfiguration = new ParserConfiguration({ parserThreads: 3 });
+    const parserConfiguration = ParserConfiguration.DEFAULT;
     const parser = new Parser(parserConfiguration);
 
     const printer = new Printer(parser);

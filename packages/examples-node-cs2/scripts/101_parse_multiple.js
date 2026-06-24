@@ -20,7 +20,7 @@ const MATCHES_ARGUMENT_PREFIX = '--matches=';
 
     for (const demo of demos) {
         const reader = await DemoProvider.read(demo);
-        const parser = new Parser(new ParserConfiguration({ parserThreads: 0 }));
+        const parser = new Parser(ParserConfiguration.DEFAULT);
 
         await parser.parse(reader);
         await parser.dispose();

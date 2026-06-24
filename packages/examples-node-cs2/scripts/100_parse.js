@@ -6,9 +6,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 (async () => {
     const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
 
-    const parser = new Parser(new ParserConfiguration({
-        parserThreads: 0
-    }));
+    const parser = new Parser(ParserConfiguration.DEFAULT);
 
     await parser.parse(reader);
     await parser.dispose();

@@ -8,7 +8,6 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_51541762);
 
     const parser = new Parser(new ParserConfiguration({
-        parserThreads: 3,
         messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
     }));
 

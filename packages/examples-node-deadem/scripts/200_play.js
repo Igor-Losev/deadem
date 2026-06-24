@@ -9,7 +9,7 @@ const PLAYBACK_SPEED = 16;
 (async () => {
     const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
 
-    const player = new Player(new ParserConfiguration({ parserThreads: 0 }), Logger.CONSOLE_WARN);
+    const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 
     const printTick = () => {
         console.log(`Current tick: [ ${player.getCurrentTick()} ]`);

@@ -174,9 +174,6 @@ SEEKING
 
 The current state is exposed via `player.state`.
 
-> [!NOTE]
-> `Player` does not support `parserThreads > 0`. Constructing a player with parallel parsing throws immediately.
-
 ### Interceptors
 
 Interceptors are user-defined hooks that run before or after specific parsing stages. They are the primary way to extract data during parsing.
@@ -251,7 +248,7 @@ POST DEMO_PACKET
 | `entityClasses` | Allowlist of entity class names to decode from `SVC_PACKET_ENTITIES`. | `Array<string> \| null` | `null` |
 | `messagePacketTypes` | Allowlist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
 | `messagePacketTypesExclude` | Blocklist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
-| `parserThreads` | Number of additional worker threads. Not supported by `Player`. | `number` | `0` |
+| `parserThreads` | ~~Number of additional worker threads.~~ **Deprecated.** Will be removed in the next major release. | `number` | `0` |
 
 The engine always processes the following message types regardless of filters, because they drive internal state:
 

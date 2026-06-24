@@ -8,7 +8,6 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
 
     const parser = new Parser(new ParserConfiguration({
-        parserThreads: 0,
         messagePacketTypes: [
             MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST,
             MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT

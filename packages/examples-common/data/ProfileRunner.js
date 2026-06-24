@@ -26,7 +26,7 @@ const PROFILE_PIPE_FD = 3;
 const SUMMARY_PREFIX = '__DEADEM_PROFILE_SUMMARY__';
 const ALLOCATION_PROFILE_PREFIX = '__DEADEM_ALLOCATION_PROFILE__';
 
-const PARSER_CONFIGURATION = new ParserConfiguration({ parserThreads: 0 });
+const PARSER_CONFIGURATION = ParserConfiguration.DEFAULT;
 
 /**
  * Two sequential passes:

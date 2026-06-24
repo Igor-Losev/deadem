@@ -158,8 +158,7 @@ export default function usePlayer(library, updatesEnabled = true) {
 
       const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
-        breakInterval: 100,
-        parserThreads: 0
+        breakInterval: 100
       });
       const newPlayer = new Player(parserConfiguration);
 

@@ -8,7 +8,7 @@ const PLAYBACK_SPEED = 16;
 
 (async () => {
     const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_8777738576);
-    const player = new Player(new ParserConfiguration({ parserThreads: 0 }), Logger.CONSOLE_WARN);
+    const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 
     const printTick = () => {
         console.log(`Current tick: [ ${player.getCurrentTick()} ]`);
