@@ -64,6 +64,16 @@ class Field {
     }
 
     /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldDefinition}
+     */
+    getDefinitionForFieldPath() {
+        return this._definition;
+    }
+
+    /**
      * @abstract
      * @public
      * @param {FieldPath} fieldPath

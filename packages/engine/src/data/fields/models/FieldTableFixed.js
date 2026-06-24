@@ -62,6 +62,20 @@ class FieldTableFixed extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
+     * @returns {FieldDefinition}
+     */
+    getDefinitionForFieldPath(fieldPath, index) {
+        if (fieldPath.length === index) {
+            return this._definition;
+        }
+
+        return this._serializer.getDefinitionForFieldPath(fieldPath, index);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
      * @returns {FieldStorageDescriptor}
      */
     getStorageForFieldPath(fieldPath, index) {

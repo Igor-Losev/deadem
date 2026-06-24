@@ -57,6 +57,30 @@ class FieldDefinition {
 
         return new FieldDefinition(baseType, generic, count, pointer);
     }
+
+    /**
+     * CHandle<CCitadelPlayerPawn>`, `float32[10]`, `CUtlVector<float32>`.
+     *
+     * @public
+     * @returns {String}
+     */
+    toString() {
+        let value = this._baseType;
+
+        if (this._generic !== null) {
+            value += `<${this._generic.toString()}>`;
+        }
+
+        if (this._count !== null) {
+            value += `[${this._count}]`;
+        }
+
+        if (this._pointer) {
+            value += '*';
+        }
+
+        return value;
+    }
 }
 
 export default FieldDefinition;

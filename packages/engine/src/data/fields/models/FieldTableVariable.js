@@ -48,6 +48,20 @@ class FieldTableVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
+     * @returns {FieldDefinition}
+     */
+    getDefinitionForFieldPath(fieldPath, index) {
+        if (fieldPath.length - 1 >= index + 1) {
+            return this._serializer.getDefinitionForFieldPath(fieldPath, index + 1);
+        }
+
+        return this._definition;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
      * @returns {Function}
      */
     getDecoderForFieldPath(fieldPath, index) {

@@ -26,6 +26,7 @@ class Serializer {
         this._fields = fields;
 
         this._decoderCache = [];
+        this._definitionCache = [];
         this._nameCache = [];
         this._storageCache = [];
     }
@@ -115,6 +116,50 @@ class Serializer {
         }
 
         return this.getDecoderForFieldPath(FieldPathBuilder.getById(fieldPathId));
+    }
+
+    /**
+     * Resolves the field definition for a given field path.
+     *
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number=} fieldPathIndex
+     * @returns {FieldDefinition}
+     */
+    getDefinitionForFieldPath(fieldPath, fieldPathIndex = 0) {
+        if (fieldPathIndex === 0) {
+            const cached = this._definitionCache[fieldPath.id] ?? null;
+
+            if (cached !== null) {
+                return cached;
+            }
+        }
+
+        const field = this._fields[fieldPath.get(fieldPathIndex)];
+        const definition = field.getDefinitionForFieldPath(fieldPath, fieldPathIndex + 1);
+
+        if (fieldPathIndex === 0) {
+            this._definitionCache[fieldPath.id] = definition;
+        }
+
+        return definition;
+    }
+
+    /**
+     * Resolves the field definition for a cached field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {FieldDefinition}
+     */
+    getDefinitionForFieldPathId(fieldPathId) {
+        const cached = this._definitionCache[fieldPathId] ?? null;
+
+        if (cached !== null) {
+            return cached;
+        }
+
+        return this.getDefinitionForFieldPath(FieldPathBuilder.getById(fieldPathId));
     }
 
     /**
