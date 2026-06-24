@@ -14,7 +14,7 @@ import FieldRuleRegistry from './FieldRuleRegistry.js';
 
 import FieldArrayFixed from './models/FieldArrayFixed.js';
 import FieldArrayVariable from './models/FieldArrayVariable.js';
-import FieldSimple from './models/FieldSimple.js';
+import FieldScalar from './models/FieldScalar.js';
 import FieldTableFixed from './models/FieldTableFixed.js';
 import FieldTableVariable from './models/FieldTableVariable.js';
 
@@ -59,8 +59,8 @@ class FieldFactory {
         const model = this._classify(definition, serializer);
 
         switch (model) {
-            case FieldModel.SIMPLE:
-                return new FieldSimple(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
+            case FieldModel.SCALAR:
+                return new FieldScalar(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
                 return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
@@ -99,7 +99,7 @@ class FieldFactory {
             return FieldModel.ARRAY_VARIABLE;
         }
 
-        return FieldModel.SIMPLE;
+        return FieldModel.SCALAR;
     }
 
     /**

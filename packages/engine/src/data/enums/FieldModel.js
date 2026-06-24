@@ -43,8 +43,8 @@ class FieldModel {
      * @static
      * @returns {FieldModel}
      */
-    static get SIMPLE() {
-        return simple;
+    static get SCALAR() {
+        return scalar;
     }
 
     /**
@@ -68,7 +68,7 @@ class FieldModel {
 
 const arrayFixed = new FieldModel('ARRAY_FIXED');
 const arrayVariable = new FieldModel('ARRAY_VARIABLE');
-const simple = new FieldModel('SIMPLE');
+const scalar = new FieldModel('SCALAR');
 const tableFixed = new FieldModel('TABLE_FIXED');
 const tableVariable = new FieldModel('TABLE_VARIABLE');
 

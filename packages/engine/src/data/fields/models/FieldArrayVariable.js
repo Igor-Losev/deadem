@@ -6,6 +6,7 @@ import FieldModel from '#data/enums/FieldModel.js';
 
 import Field from '#data/fields/Field.js';
 import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
+import Serializer from '#data/fields/Serializer.js';
 
 class FieldArrayVariable extends Field {
     /**
@@ -63,10 +64,41 @@ class FieldArrayVariable extends Field {
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 === index) {
-            return `${this._name}.${String(fieldPath.get(index)).padStart(4, '0')}`;
+            return Serializer.formatElementIndex(this._name, fieldPath.get(index));
         }
 
         return this._name;
+    }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @returns {Array<*>|undefined}
+     */
+    unpack(extractor) {
+        const count = extractor.read();
+
+        if (typeof count !== 'number' || count < 0) {
+            return undefined;
+        }
+
+        const out = new Array(count);
+
+        for (let i = 0; i < count; i++) {
+            out[i] = extractor.at(i);
+        }
+
+        return out;
+    }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @param {number} index
+     * @returns {*}
+     */
+    unpackElement(extractor, index) {
+        return extractor.at(index);
     }
 }
 

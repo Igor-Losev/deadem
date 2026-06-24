@@ -7,7 +7,7 @@ import FieldModel from '#data/enums/FieldModel.js';
 import Field from '#data/fields/Field.js';
 import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
 
-class FieldSimple extends Field {
+class FieldScalar extends Field {
     /**
      * @public
      * @constructor
@@ -29,7 +29,7 @@ class FieldSimple extends Field {
      * @returns {FieldModel}
      */
     get model() {
-        return FieldModel.SIMPLE;
+        return FieldModel.SCALAR;
     }
 
     /**
@@ -55,6 +55,15 @@ class FieldSimple extends Field {
     getNameForFieldPath() {
         return this._name;
     }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @returns {*}
+     */
+    unpack(extractor) {
+        return extractor.read();
+    }
 }
 
-export default FieldSimple;
+export default FieldScalar;

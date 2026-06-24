@@ -80,16 +80,57 @@ class FieldTableVariable extends Field {
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 !== index - 1) {
-            const parts = [ this._name, String(fieldPath.get(index)).padStart(4, '0') ];
+            const base = Serializer.formatElementIndex(this._name, fieldPath.get(index));
 
             if (fieldPath.length - 1 !== index) {
-                parts.push(this._serializer.getNameForFieldPath(fieldPath, index + 1));
+                return `${base}.${this._serializer.getNameForFieldPath(fieldPath, index + 1)}`;
             }
 
-            return parts.join('.');
+            return base;
         }
 
         return this._name;
+    }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @returns {Array<Object>|undefined}
+     */
+    unpack(extractor) {
+        const count = extractor.read();
+
+        if (typeof count !== 'number' || count < 0) {
+            return undefined;
+        }
+
+        const out = new Array(count);
+
+        for (let i = 0; i < count; i++) {
+            extractor.enter(i);
+
+            out[i] = this._serializer.unpack(extractor);
+
+            extractor.exit();
+        }
+
+        return out;
+    }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @param {number} index
+     * @returns {Object|undefined}
+     */
+    unpackElement(extractor, index) {
+        extractor.enter(index);
+
+        const value = this._serializer.unpack(extractor);
+
+        extractor.exit();
+
+        return value;
     }
 }
 

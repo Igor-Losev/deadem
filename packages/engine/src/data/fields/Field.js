@@ -82,6 +82,32 @@ class Field {
     getNameForFieldPath() {
         throw new Error('Abstract: getNameForFieldPath()');
     }
+
+    /**
+     * Unpacks the entire field starting from the position the [extractor]
+     * currently points to.
+     *
+     * @abstract
+     * @public
+     * @param {FieldExtractor} extractor
+     * @returns {*}
+     */
+    unpack() {
+        throw new Error('Abstract: unpack()');
+    }
+
+    /**
+     * Unpacks a single element at [index] within this field. The default
+     * delegates to {@link #unpack}. Override for array and table fields.
+     *
+     * @public
+     * @param {FieldExtractor} extractor
+     * @param {number} index
+     * @returns {*}
+     */
+    unpackElement(extractor, _index) {
+        return this.unpack(extractor);
+    }
 }
 
 export default Field;

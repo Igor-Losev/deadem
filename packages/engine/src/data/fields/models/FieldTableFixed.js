@@ -85,6 +85,15 @@ class FieldTableFixed extends Field {
 
         return this._name;
     }
+
+    /**
+     * @public
+     * @param {FieldExtractor} extractor
+     * @returns {Object|undefined}
+     */
+    unpack(extractor) {
+        return this._serializer.unpack(extractor);
+    }
 }
 
 export default FieldTableFixed;

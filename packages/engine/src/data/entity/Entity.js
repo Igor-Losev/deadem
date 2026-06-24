@@ -106,6 +106,73 @@ class Entity {
     }
 
     /**
+     * Reads a field by its flattened name. Returns a scalar, a fully
+     * reconstructed array, or a plain object for a struct. Nested names
+     * like `'m_vecImbuements.0000.m_vecImbuedAbilities'` drill in. Returns
+     * `undefined` when the name does not resolve.
+     *
+     *     'm_flHealth'
+     *     'm_vecAbilities'           // full array
+     *     'm_vecAbilities.0000'      // single element
+     *     'CBodyComponent.m_vecX'    // drill into fixed table
+     *     'm_vecState.0000.m_bits'   // drill into struct element
+     *
+     * Arrays are not guaranteed to be contiguous — indices with no data
+     * appear as `undefined` in the reconstructed array. For example,
+     * `[100, undefined, 300]` is a valid result when only elements 0 and
+     * 2 are present.
+     *
+     * Resolution is cached per class — the name walk happens once. The
+     * remaining cost depends on how many elements are read. Rough numbers
+     * from a 556 MB Deadlock replay:
+     *
+     *     'm_iHealth'                 | scalar .......... ~0.08 µs
+     *     'm_iszPlayerName'           | string .......... ~0.07 µs
+     *     'CBodyComponent.m_vecX'     | nested .......... ~0.09 µs
+     *     'm_vecAbilities.0000'       | indexed ......... ~0.11 µs
+     *     'm_vecAbilities'            | 16 × scalar ..... ~0.96 µs
+     *     'm_vecFOWEntities.0000'     | 8  × scalar ..... ~0.71 µs
+     *     'm_vecFOWEntities'          | 121 × 8 fields .. ~88   µs
+     *
+     * A full array read unpacks every element — N leaf reads. For a large
+     * nested structure like `'m_vecFOWEntities'` (121 elements × 8 fields),
+     * that is 968 leaf reads and ~88 µs. Calling this every tick adds up.
+     * Throttle such calls.
+     *
+     * @public
+     * @param {string} name
+     * @returns {*}
+     */
+    getField(name) {
+        const accessor = this._class.getFieldAccessor(name);
+
+        if (accessor === null) {
+            return undefined;
+        }
+
+        const readField = fieldPath => this.getFieldById(fieldPath.id);
+
+        return accessor.read(readField);
+    }
+
+    /**
+     * Reads a single field by its field path id.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {*}
+     */
+    getFieldById(fieldPathId) {
+        const meta = this._class.layout.peek(fieldPathId);
+
+        if (meta === null || !this._getIsPresent(meta)) {
+            return undefined;
+        }
+
+        return this._read(meta);
+    }
+
+    /**
      * Number of field paths currently set on the entity.
      *
      * @public
@@ -129,40 +196,6 @@ class Entity {
         }
 
         return size;
-    }
-
-    /**
-     * Reads a single field by its flattened name (e.g. `'CBodyComponent.m_cellX'`).
-     *
-     * @public
-     * @param {string} name
-     * @returns {*}
-     */
-    getField(name) {
-        const fieldPathId = this._class.getFieldPathId(name);
-
-        if (fieldPathId === null) {
-            return undefined;
-        }
-
-        return this.getFieldById(fieldPathId);
-    }
-
-    /**
-     * Reads a single field by its field path id.
-     *
-     * @public
-     * @param {number} fieldPathId
-     * @returns {*}
-     */
-    getFieldById(fieldPathId) {
-        const meta = this._class.layout.peek(fieldPathId);
-
-        if (meta === null || !this._getIsPresent(meta)) {
-            return undefined;
-        }
-
-        return this._read(meta);
     }
 
     /**
@@ -204,25 +237,39 @@ class Entity {
     }
 
     /**
-     * Returns whether the named field is currently present on this entity.
+     * Returns whether the field at [name] has a value present on this entity.
      *
      * @public
      * @param {string} name
      * @returns {boolean}
      */
     hasField(name) {
-        const fieldPathId = this._class.getFieldPathId(name);
+        const accessor = this._class.getFieldAccessor(name);
 
-        if (fieldPathId === null) {
-            return false;
-        }
+        return accessor !== null && this.hasById(accessor.fieldPath.id);
+    }
 
+    /**
+     * Returns whether the slot with [fieldPathId] is present on this entity.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {boolean}
+     */
+    hasById(fieldPathId) {
         const meta = this._class.layout.peek(fieldPathId);
 
         return meta !== null && this._getIsPresent(meta);
     }
 
     /**
+     * Returns a snapshot of all present fields as a plain object. The first
+     * call reads every field and caches the result. Subsequent calls patch
+     * only changed fields into the cached object.
+     *
+     * Expensive — every present field forces a leaf read. Use
+     * {@link #getField} unless you are debugging.
+     *
      * @public
      * @returns {*}
      */

@@ -20,6 +20,7 @@ class Class {
         this._name = name;
         this._serializer = serializer;
 
+        this._accessors = new Map();
         this._layout = new EntityStateLayout(serializer);
     }
 
@@ -58,14 +59,23 @@ class Class {
     }
 
     /**
-     * Resolves a flattened field name to its field path id for this class.
+     * Returns the compiled read accessor for a flattened field name, or `null`
+     * when the name does not resolve. Compiled once per name and cached.
      *
      * @public
      * @param {string} name
-     * @returns {number|null}
+     * @returns {FieldAccessor|null}
      */
-    getFieldPathId(name) {
-        return this._layout.getFieldPathId(name);
+    getFieldAccessor(name) {
+        if (this._accessors.has(name)) {
+            return this._accessors.get(name);
+        }
+
+        const accessor = this._serializer.getFieldAccessorForName(name);
+
+        this._accessors.set(name, accessor);
+
+        return accessor;
     }
 }
 
