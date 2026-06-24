@@ -237,29 +237,17 @@ class Entity {
     }
 
     /**
-     * Returns whether the field at [name] has a value present on this entity.
+     * Returns whether [name] resolves to a value currently present on this
+     * entity.
+     *
+     * Must be revisited. Reconstructs the value just to test presence.
      *
      * @public
      * @param {string} name
      * @returns {boolean}
      */
     hasField(name) {
-        const accessor = this._class.getFieldAccessor(name);
-
-        return accessor !== null && this.hasById(accessor.fieldPath.id);
-    }
-
-    /**
-     * Returns whether the slot with [fieldPathId] is present on this entity.
-     *
-     * @public
-     * @param {number} fieldPathId
-     * @returns {boolean}
-     */
-    hasById(fieldPathId) {
-        const meta = this._class.layout.peek(fieldPathId);
-
-        return meta !== null && this._getIsPresent(meta);
+        return this.getField(name) !== undefined;
     }
 
     /**
