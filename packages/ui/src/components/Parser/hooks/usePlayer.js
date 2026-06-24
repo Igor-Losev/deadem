@@ -213,7 +213,8 @@ export default function usePlayer(library, updatesEnabled = true) {
               fields.push({
                 name: serializer.getNameForFieldPathId(id),
                 next: batch.values[j],
-                previous: isCreate ? undefined : entity.getFieldById(id)
+                previous: isCreate ? undefined : entity.getFieldById(id),
+                type: serializer.getDefinitionForFieldPathId(id).toString()
               });
             }
           }

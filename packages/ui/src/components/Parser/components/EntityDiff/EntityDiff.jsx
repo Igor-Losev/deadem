@@ -85,9 +85,10 @@ const BLOCK_STYLE = { marginBottom: 10 };
 const HEAD_STYLE = { alignItems: 'center', display: 'flex', gap: 8, marginBottom: 2 };
 const CLASS_STYLE = { color: COLORS.entityClass, fontSize: FONT_SIZE.sm };
 const INDEX_STYLE = { color: 'rgba(255,255,255,0.4)', fontSize: FONT_SIZE.sm };
-const FIELD_STYLE = { display: 'flex', fontFamily: MONO_FONT, fontSize: FONT_SIZE.sm, lineHeight: 1.6, paddingLeft: 16 };
+const FIELD_STYLE = { display: 'flex', fontFamily: MONO_FONT, fontSize: FONT_SIZE.sm, lineHeight: 1.6, paddingLeft: 16, whiteSpace: 'nowrap' };
 const NAME_STYLE = { color: 'rgba(255,255,255,0.6)', flexShrink: 0, paddingRight: 8 };
-const VALUE_STYLE = { color: 'rgba(255,255,255,0.85)', wordBreak: 'break-all' };
+const TYPE_STYLE = { color: 'rgba(255,255,255,0.3)' };
+const VALUE_STYLE = { color: 'rgba(255,255,255,0.85)' };
 const PREV_STYLE = { color: 'rgba(255,255,255,0.4)' };
 const ARROW_STYLE = { color: 'rgba(255,255,255,0.3)' };
 const NEXT_STYLE = { color: COLORS.jsonNumber };
@@ -173,7 +174,7 @@ export default function EntityDiff({ diff }) {
 
             {event.fields.map((field) => (
               <div key={field.name} style={FIELD_STYLE}>
-                <span style={NAME_STYLE}>{field.name}:</span>
+                <span style={NAME_STYLE}>{field.name}<span style={TYPE_STYLE}> ({field.type})</span>:</span>
                 <span style={VALUE_STYLE}>
                   {field.previous === undefined ? (
                     <span style={NEXT_STYLE}>{formatValue(field.next)}</span>

@@ -37,6 +37,10 @@ pre {
     background: rgba(255, 255, 255, 0.25);
 }
 
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
 ::-webkit-resizer {
     background: linear-gradient(135deg, transparent 60%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.15) 65%, transparent 65%, transparent 75%, rgba(255, 255, 255, 0.15) 75%, rgba(255, 255, 255, 0.15) 80%, transparent 80%);
 }

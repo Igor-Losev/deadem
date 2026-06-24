@@ -37,7 +37,7 @@ function readArrayField(entity, field, index) {
 }
 
 function readTeamRows(entity) {
-  const length = entity.getField('m_vecPlayerTeamData') ?? 0;
+  const length = entity.getField('m_vecPlayerTeamData')?.length ?? 0;
   const rows = [];
 
   for (let index = 0; index < length; index += 1) {
@@ -65,7 +65,7 @@ function readTeamRows(entity) {
 }
 
 function readPlayerRows(entity) {
-  const length = entity.getField('m_vecPlayerData') ?? 0;
+  const length = entity.getField('m_vecPlayerData')?.length ?? 0;
   const rows = [];
 
   for (let index = 0; index < length; index += 1) {
