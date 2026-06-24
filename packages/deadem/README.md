@@ -200,10 +200,10 @@ const demo = parser.getDemo();
 const controllers = demo.getEntitiesByClassName('CCitadelPlayerController');
 
 const topDamageDealer = controllers.reduce((top, entity) => {
-    const data = entity.unpackFlattened();
+    const damage = entity.getField('m_iHeroDamage') || 0;
 
-    return data.m_iHeroDamage > top.damage
-        ? { player: data.m_iszPlayerName, damage: data.m_iHeroDamage }
+    return damage > top.damage
+        ? { player: entity.getField('m_iszPlayerName'), damage }
         : top;
 }, { player: null, damage: 0 });
 
