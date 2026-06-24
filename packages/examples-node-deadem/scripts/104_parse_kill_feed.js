@@ -100,7 +100,7 @@ function getEntity(demo, entityIndex) {
  * @returns {Entity|null}
  */
 function getEntityOwner(demo, entity) {
-    const ownerEntityHandle = entity.unpackFlattened().m_hOwnerEntity;
+    const ownerEntityHandle = entity.getField('m_hOwnerEntity');
     const ownerEntity = demo.getEntityByHandle(ownerEntityHandle);
 
     if (ownerEntity === null) {
@@ -122,16 +122,15 @@ function getEntityLog(demo, entity) {
         case 'CCitadelPlayerPawn': {
             const ownerEntity = getEntityOwner(demo, entity);
 
-            const data = ownerEntity.unpackFlattened();
+            const team = ownerEntity.getField('m_iTeamNum');
+            const name = ownerEntity.getField('m_iszPlayerName');
 
-            log = `[ Team ${data.m_iTeamNum} ] ${data.m_iszPlayerName}`;
+            log = `[ Team ${team} ] ${name}`;
 
             break;
         }
         default: {
-            const data = entity.unpackFlattened();
-
-            log = `[ Team ${data.m_iTeamNum} ] [ ${entity.class.name} ]`;
+            log = `[ Team ${entity.getField('m_iTeamNum')} ] [ ${entity.class.name} ]`;
 
             break;
         }

@@ -37,9 +37,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
         const entity = getEntity(parser.getDemo(), messagePacket.data.entityKilled);
 
-        const unpacked = entity.unpackFlattened();
-
-        if (unpacked.m_iTeamNum !== 4) {
+        if (entity.getField('m_iTeamNum') !== 4) {
             console.log(`[ ${gameObserver.getGameClockFormatted()} ]: Tower Destroyed, Team [ ${messagePacket.data.objectiveTeam} ]`);
         }
     });

@@ -148,12 +148,12 @@ function resolvePawn(demo, pawnHandle) {
         return `pawn=${pawnHandle}`;
     }
 
-    const controllerHandle = pawn.unpackFlattened().m_hController;
+    const controllerHandle = pawn.getField('m_hController');
     const controller = demo.getEntityByHandle(controllerHandle);
 
     if (controller === null) {
         return `pawn=${pawnHandle}`;
     }
 
-    return controller.unpackFlattened().m_iszPlayerName;
+    return controller.getField('m_iszPlayerName');
 }

@@ -16,12 +16,10 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
 
     const scoreboard = entities.map((entity) => {
-        const data = entity.unpackFlattened();
-
         return {
-            name: data.m_iszPlayerName,
-            team: data.m_iTeamNum,
-            heroDamage: data.m_iHeroDamage || 0
+            name: entity.getField('m_iszPlayerName'),
+            team: entity.getField('m_iTeamNum'),
+            heroDamage: entity.getField('m_iHeroDamage') || 0
         };
     });
 

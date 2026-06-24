@@ -51,13 +51,11 @@ function getCasterLog(demo, handle) {
         return `[ ${entity.class.name} #${entity.index} ]`;
     }
 
-    const owner = demo.getEntityByHandle(entity.unpackFlattened().m_hOwnerEntity);
+    const owner = demo.getEntityByHandle(entity.getField('m_hOwnerEntity'));
 
     if (owner === null) {
         return `[ CCitadelPlayerPawn #${entity.index} ]`;
     }
 
-    const data = owner.unpackFlattened();
-
-    return `[ Team ${data.m_iTeamNum} ] ${data.m_iszPlayerName} (#${entity.index})`;
+    return `[ Team ${owner.getField('m_iTeamNum')} ] ${owner.getField('m_iszPlayerName')} (#${entity.index})`;
 }

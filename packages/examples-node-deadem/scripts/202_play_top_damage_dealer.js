@@ -16,11 +16,11 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
 
     const topDamageDealer = entities.reduce((accumulator, entity) => {
-        const data = entity.unpackFlattened();
+        const damage = entity.getField('m_iHeroDamage') || 0;
 
-        if (data.m_iHeroDamage > accumulator.damage) {
-            accumulator.player = data.m_iszPlayerName;
-            accumulator.damage = data.m_iHeroDamage;
+        if (damage > accumulator.damage) {
+            accumulator.player = entity.getField('m_iszPlayerName');
+            accumulator.damage = damage;
         }
 
         return accumulator;
