@@ -55,7 +55,7 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
 
 | Package | Game | Links |
 | --- | --- | --- |
-| `deadem` | Deadlock (original) | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
+| `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
 | `@deademx/cs2` | Counter-Strike 2 | [npm](https://www.npmjs.com/package/@deademx/cs2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) |
 | `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
 

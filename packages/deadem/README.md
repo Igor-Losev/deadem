@@ -11,7 +11,7 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6448-darkGreen" /></a>
 
-**deadem** is the original Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**deadem** is the Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
 For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Deadlock-specific usage only.
 
@@ -44,7 +44,7 @@ Other game implementations: [`@deademx/cs2`](https://github.com/Igor-Losev/deade
 
 ## Installation
 
-### Node.js / Deno / Bun
+### Node.js
 
 ```shell
 npm install deadem --save

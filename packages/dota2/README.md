@@ -42,7 +42,7 @@ Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob
 
 ## Installation
 
-### Node.js / Deno / Bun
+### Node.js
 
 ```shell
 npm install @deademx/dota2 --save
