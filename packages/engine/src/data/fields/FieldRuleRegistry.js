@@ -8,7 +8,6 @@ class FieldRuleRegistry {
      */
     constructor() {
         this._typeDecoders = new Map();
-        this._fixedTableTypes = new Set();
         this._variableArrayTypes = new Set();
         this._fieldDecoderOverrides = new Map();
         this._fieldEncoderOverrides = new Map();
@@ -28,7 +27,6 @@ class FieldRuleRegistry {
                 name,
                 encoder
             })),
-            fixedTableTypes: [ ...this._fixedTableTypes ],
             typeDecoders: [ ...this._typeDecoders ].map(([ baseType, descriptor ]) => ({
                 baseType,
                 descriptor: descriptor.export()
@@ -75,17 +73,6 @@ class FieldRuleRegistry {
      * @param {String} baseType
      * @returns {boolean}
      */
-    getIsFixedTableType(baseType) {
-        Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
-
-        return this._fixedTableTypes.has(baseType);
-    }
-
-    /**
-     * @public
-     * @param {String} baseType
-     * @returns {boolean}
-     */
     getIsVariableArrayType(baseType) {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
 
@@ -111,10 +98,6 @@ class FieldRuleRegistry {
 
         (Array.isArray(data.fieldEncoderOverrides) ? data.fieldEncoderOverrides : []).forEach(({ name, encoder }) => {
             registry.registerFieldEncoderOverride(name, encoder);
-        });
-
-        (Array.isArray(data.fixedTableTypes) ? data.fixedTableTypes : []).forEach(baseType => {
-            registry.registerFixedTableType(baseType);
         });
 
         (Array.isArray(data.typeDecoders) ? data.typeDecoders : []).forEach(({ baseType, descriptor }) => {
@@ -162,16 +145,6 @@ class FieldRuleRegistry {
         Assert.isTrue(descriptor instanceof FieldDecoderDescriptor);
 
         this._typeDecoders.set(baseType, descriptor);
-    }
-
-    /**
-     * @public
-     * @param {String} baseType
-     */
-    registerFixedTableType(baseType) {
-        Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
-
-        this._fixedTableTypes.add(baseType);
     }
 
     /**
