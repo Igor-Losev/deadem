@@ -27,7 +27,7 @@ The parsing stack depends only on:
 | Package | Description |
 | --- | --- |
 | [`@deademx/engine`](./packages/engine) | Shared, game-agnostic engine: parser, replay player, interceptor pipeline, broadcast client, configuration. |
-| [`deadem`](./packages/deadem) | Original Deadlock implementation built on top of `@deademx/engine`. |
+| [`deadem`](./packages/deadem) | Deadlock implementation built on top of `@deademx/engine`. |
 | [`@deademx/cs2`](./packages/cs2) | Counter-Strike 2 implementation built on top of `@deademx/engine`. |
 | [`@deademx/dota2`](./packages/dota2) | Dota 2 implementation built on top of `@deademx/engine`. |
 
