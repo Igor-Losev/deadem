@@ -259,7 +259,16 @@ class Serializer {
     getFieldIndexForName(name) {
         const i = this._fields.findIndex(f => f.name === name);
 
-        return i !== -1 ? i : null;
+        // IL 2026-06-25: a leaf name can repeat in one serializer when the same
+        // field is reached through different send nodes. To avoid silently
+        // returning data from the wrong duplicate, ambiguous names resolve to
+        // null. This is a safety measure — a proper disambiguation (e.g.
+        // sendNode-prefixed names) should be revisited in the future.
+        if (i === -1 || this._fields.findIndex((f, j) => j > i && f.name === name) !== -1) {
+            return null;
+        }
+
+        return i;
     }
 
     /**
