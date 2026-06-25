@@ -74,14 +74,16 @@ class Field {
     }
 
     /**
+     * Returns `true` when the field path addresses a container's base slot (not a leaf).
+     *
      * @abstract
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {FieldStorageDescriptor}
+     * @returns {boolean}
      */
-    getStorageForFieldPath() {
-        throw new Error('Abstract: getStorageForFieldPath()');
+    getIsContainerForFieldPath() {
+        throw new Error('Abstract: getIsContainerForFieldPath()');
     }
 
     /**
@@ -91,6 +93,17 @@ class Field {
      */
     getNameForFieldPath() {
         throw new Error('Abstract: getNameForFieldPath()');
+    }
+
+    /**
+     * @abstract
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath() {
+        throw new Error('Abstract: getStorageForFieldPath()');
     }
 
     /**

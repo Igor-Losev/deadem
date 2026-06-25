@@ -42,10 +42,10 @@ class FieldScalar extends Field {
 
     /**
      * @public
-     * @returns {FieldStorageDescriptor}
+     * @returns {boolean}
      */
-    getStorageForFieldPath() {
-        return this._fieldDecoder.storage;
+    getIsContainerForFieldPath() {
+        return false;
     }
 
     /**
@@ -54,6 +54,14 @@ class FieldScalar extends Field {
      */
     getNameForFieldPath() {
         return this._name;
+    }
+
+    /**
+     * @public
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath() {
+        return this._fieldDecoder.storage;
     }
 
     /**

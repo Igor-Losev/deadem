@@ -76,14 +76,14 @@ class FieldTableFixed extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {FieldStorageDescriptor}
+     * @returns {boolean}
      */
-    getStorageForFieldPath(fieldPath, index) {
-        if (fieldPath.length === index) {
-            return this._fieldDecoderBase.storage;
+    getIsContainerForFieldPath(fieldPath, index) {
+        if (fieldPath.length - 1 >= index) {
+            return this._serializer.getIsContainerForFieldPath(fieldPath, index);
         }
 
-        return this._serializer.getStorageForFieldPath(fieldPath, index);
+        return true;
     }
 
     /**
@@ -98,6 +98,20 @@ class FieldTableFixed extends Field {
         }
 
         return this._name;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath(fieldPath, index) {
+        if (fieldPath.length === index) {
+            return this._fieldDecoderBase.storage;
+        }
+
+        return this._serializer.getStorageForFieldPath(fieldPath, index);
     }
 
     /**

@@ -265,6 +265,29 @@ class Serializer {
     /**
      * @public
      * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {boolean}
+     */
+    getIsContainerForFieldPath(fieldPath, index) {
+        return this._fields[fieldPath.get(index)].getIsContainerForFieldPath(fieldPath, index + 1);
+    }
+
+    /**
+     * @public
+     * @param {number} fieldPathId
+     * @returns {boolean}
+     */
+    getIsContainerForFieldPathId(fieldPathId) {
+        const fieldPath = FieldPathBuilder.getById(fieldPathId);
+
+        const field = this._fields[fieldPath.get(0)];
+
+        return field.getIsContainerForFieldPath(fieldPath, 1);
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
      * @param {number} [fieldPathIndex=0]
      * @returns {string}
      */

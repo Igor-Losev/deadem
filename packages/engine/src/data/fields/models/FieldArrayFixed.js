@@ -43,10 +43,12 @@ class FieldArrayFixed extends Field {
 
     /**
      * @public
-     * @returns {FieldStorageDescriptor}
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {boolean}
      */
-    getStorageForFieldPath() {
-        return this._fieldDecoder.storage;
+    getIsContainerForFieldPath(fieldPath, index) {
+        return index >= fieldPath.length;
     }
 
     /**
@@ -61,6 +63,14 @@ class FieldArrayFixed extends Field {
         }
 
         return this._name;
+    }
+
+    /**
+     * @public
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath() {
+        return this._fieldDecoder.storage;
     }
 
     /**

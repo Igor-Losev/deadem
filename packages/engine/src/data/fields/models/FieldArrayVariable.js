@@ -50,10 +50,10 @@ class FieldArrayVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {FieldStorageDescriptor}
+     * @returns {boolean}
      */
-    getStorageForFieldPath(fieldPath, index) {
-        return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).storage;
+    getIsContainerForFieldPath(fieldPath, index) {
+        return index >= fieldPath.length;
     }
 
     /**
@@ -68,6 +68,16 @@ class FieldArrayVariable extends Field {
         }
 
         return this._name;
+    }
+
+    /**
+     * @public
+     * @param {FieldPath} fieldPath
+     * @param {number} index
+     * @returns {FieldStorageDescriptor}
+     */
+    getStorageForFieldPath(fieldPath, index) {
+        return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).storage;
     }
 
     /**
