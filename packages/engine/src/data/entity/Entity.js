@@ -186,7 +186,7 @@ class Entity {
         for (let i = 0; i < metas.length; i++) {
             const meta = metas[i];
 
-            if (meta.storage !== STORAGE_MISC && this._getIsPresent(meta)) {
+            if (!this._getIsContainer(meta) && meta.storage !== STORAGE_MISC && this._getIsPresent(meta)) {
                 size++;
             }
         }
@@ -211,7 +211,7 @@ class Entity {
         for (let i = 0; i < metas.length; i++) {
             const meta = metas[i];
 
-            if (this._getIsPresent(meta)) {
+            if (!this._getIsContainer(meta) && this._getIsPresent(meta)) {
                 yield [ serializer.getNameForFieldPathId(meta.id), this._read(meta) ];
             }
         }
@@ -230,7 +230,7 @@ class Entity {
         for (let i = 0; i < metas.length; i++) {
             const meta = metas[i];
 
-            if (this._getIsPresent(meta)) {
+            if (!this._getIsContainer(meta) && this._getIsPresent(meta)) {
                 yield serializer.getNameForFieldPathId(meta.id);
             }
         }
@@ -273,7 +273,7 @@ class Entity {
             for (let i = 0; i < metas.length; i++) {
                 const meta = metas[i];
 
-                if (this._getIsPresent(meta)) {
+                if (!this._getIsContainer(meta) && this._getIsPresent(meta)) {
                     unpacked[serializer.getNameForFieldPathId(meta.id)] = this._read(meta);
                 }
             }
@@ -287,7 +287,11 @@ class Entity {
         const unpacked = this._snapshot;
 
         this._changed.forEach((id) => {
-            unpacked[serializer.getNameForFieldPathId(id)] = this._read(layout.peekOrAssign(id));
+            const meta = layout.peekOrAssign(id);
+
+            if (!this._getIsContainer(meta)) {
+                unpacked[serializer.getNameForFieldPathId(id)] = this._read(meta);
+            }
         });
 
         this._changed.clear();
