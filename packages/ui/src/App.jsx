@@ -1,13 +1,13 @@
 import { Folder as FolderIcon, Troubleshoot as TroubleshootIcon } from '@mui/icons-material';
 import { Box, Container, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import HeaderActions from './components/Header/HeaderActions';
 import Library from './components/Library/Library';
 import Navigation from './components/Navigation/Navigation';
 import Parser from './components/Parser/Parser';
 
-import { getLibraryByKey } from './libraries';
+import { getLibraryByKey, loadLibraryModule } from './libraries';
 
 import packageJson from './../package.json';
 
@@ -21,6 +21,12 @@ function App() {
 
   const handleTabChanged = (event, newValue) => setTabIndex(newValue);
   const handleLibraryChanged = (event) => setLibraryKey(event.target.value);
+
+  useEffect(() => {
+    if (activeLibrary) {
+      loadLibraryModule(activeLibrary);
+    }
+  }, [activeLibrary]);
 
   const tabs = [
     {
