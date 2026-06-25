@@ -76,17 +76,23 @@ class FieldArrayFixed extends Field {
     /**
      * @public
      * @param {FieldExtractor} extractor
-     * @returns {Array<*>}
+     * @returns {Array<*>|undefined}
      */
     unpack(extractor) {
         const count = this._definition.count;
         const out = new Array(count);
 
+        let present = 0;
+
         for (let i = 0; i < count; i++) {
             out[i] = extractor.at(i);
+
+            if (out[i] !== undefined) {
+                present++;
+            }
         }
 
-        return out;
+        return present > 0 ? out : undefined;
     }
 
     /**

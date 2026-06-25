@@ -365,6 +365,15 @@ class Entity {
      * @param {Object} meta
      * @returns {boolean}
      */
+    _getIsContainer(meta) {
+        return meta.container;
+    }
+
+    /**
+     * @protected
+     * @param {Object} meta
+     * @returns {boolean}
+     */
     _getIsPresent(meta) {
         if (meta.storage === STORAGE_MISC) {
             return this._state.misc !== null && this._state.misc.has(meta.id);

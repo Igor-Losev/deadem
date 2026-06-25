@@ -110,6 +110,7 @@ class EntityStateLayout {
      * @returns {Object}
      */
     _classify(fieldPathId) {
+        const container = this._serializer.getIsContainerForFieldPathId(fieldPathId);
         const descriptor = this._serializer.getStorageForFieldPathId(fieldPathId);
 
         switch (descriptor.type) {
@@ -119,17 +120,17 @@ class EntityStateLayout {
 
                 this._lengths.float += descriptor.dim;
 
-                return createMeta(fieldPathId, descriptor.type, offset, descriptor.dim, this._lengths.presence++, false, false);
+                return createMeta(fieldPathId, descriptor.type, offset, descriptor.dim, this._lengths.presence++, container, false, false);
             }
             case FieldStorageType.INT: {
                 const offset = this._lengths.int;
 
                 this._lengths.int += 1;
 
-                return createMeta(fieldPathId, FieldStorageType.INT, offset, 1, this._lengths.presence++, descriptor.signed, descriptor.bool);
+                return createMeta(fieldPathId, FieldStorageType.INT, offset, 1, this._lengths.presence++, container, descriptor.signed, descriptor.bool);
             }
             default:
-                return createMeta(fieldPathId, FieldStorageType.MISC, -1, 0, -1, false, false);
+                return createMeta(fieldPathId, FieldStorageType.MISC, -1, 0, -1, container, false, false);
         }
     }
 }
@@ -140,12 +141,13 @@ class EntityStateLayout {
  * @param {number} offset
  * @param {number} dim
  * @param {number} present
+ * @param {boolean} container
  * @param {boolean} signed
  * @param {boolean} bool
  * @returns {Object}
  */
-function createMeta(id, storage, offset, dim, present, signed, bool) {
-    return { id, storage, offset, dim, present, signed, bool };
+function createMeta(id, storage, offset, dim, present, container, signed, bool) {
+    return { id, storage, offset, dim, present, container, signed, bool };
 }
 
 export default EntityStateLayout;
