@@ -84,7 +84,11 @@ class FieldFactory {
      */
     _classify(definition, serializer) {
         if (serializer !== null) {
-            return definition.generic !== null ? FieldModel.TABLE_VARIABLE : FieldModel.TABLE_FIXED;
+            if (definition.pointer || this._fieldRuleRegistry.getIsFixedTableType(definition.baseType)) {
+                return FieldModel.TABLE_FIXED;
+            }
+
+            return FieldModel.TABLE_VARIABLE;
         }
 
         if (definition.count > 0 && definition.baseType !== 'char') {

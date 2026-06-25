@@ -92,6 +92,15 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('VectorWS', FieldDecoderDescriptor.createVector(3));
         registry.registerFieldTypeDecoder('Vector4D', FieldDecoderDescriptor.createVector(4));
 
+        registry.registerFixedTableType('CBodyComponent');
+        registry.registerFixedTableType('CEntityComponent');
+        registry.registerFixedTableType('CEntityIdentity');
+        registry.registerFixedTableType('CEntityInstance');
+        registry.registerFixedTableType('CPhysicsComponent');
+        registry.registerFixedTableType('CPlayerLocalData');
+        registry.registerFixedTableType('CRenderComponent');
+        registry.registerFixedTableType('CScriptComponent');
+
         registry.registerVariableArrayType('CUtlVector');
         registry.registerVariableArrayType('CUtlVectorEmbeddedNetworkVar');
         registry.registerVariableArrayType('CNetworkUtlVectorBase');

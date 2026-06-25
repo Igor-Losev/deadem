@@ -202,6 +202,14 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @param {String} baseType
+     */
+    registerFixedTableType(baseType) {
+        this._fieldRules.registerFixedTableType(baseType);
+    }
+
+    /**
+     * @public
      * @param {MessagePacketType} type
      * @param {protobuf.Type} proto
      */
