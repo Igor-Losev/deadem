@@ -214,6 +214,7 @@ class Bootstrap {
         registry.registerStringTableType(StringTableType.COMBAT_LOG_NAMES);
         registry.registerStringTableType(StringTableType.LUA_MODIFIERS);
         registry.registerStringTableType(StringTableType.PARTICLE_ASSETS);
+        registry.registerStringTableType(StringTableType.DOWNLOADABLES);
     }
 }
 

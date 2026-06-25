@@ -8,6 +8,7 @@ class StringTableType extends EngineStringTableType {
     static get COMBAT_LOG_NAMES() { return combatLogNames; }
     static get LUA_MODIFIERS() { return luaModifiers; }
     static get PARTICLE_ASSETS() { return particleAssets; }
+    static get DOWNLOADABLES() { return downloadables; }
 }
 
 const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
@@ -17,5 +18,6 @@ const econItems = new StringTableType('ECON_ITEMS', 'EconItems');
 const combatLogNames = new StringTableType('COMBAT_LOG_NAMES', 'CombatLogNames');
 const luaModifiers = new StringTableType('LUA_MODIFIERS', 'LuaModifiers');
 const particleAssets = new StringTableType('PARTICLE_ASSETS', 'ParticleAssets');
+const downloadables = new StringTableType('DOWNLOADABLES', 'downloadables');
 
 export default StringTableType;
