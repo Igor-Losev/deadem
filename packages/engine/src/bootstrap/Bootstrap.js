@@ -142,8 +142,6 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_PARTICLE_MANAGER, pp.USER_MESSAGES.lookupType('CUserMsg_ParticleManager'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL, pp.USER_MESSAGES.lookupType('CUserMessage_PlayResponseConditional'));
 
-        registry.registerMessageType(MessagePacketType.ENTITY_MESSAGE_REMOVE_ALL_DECALS, pp.USER_MESSAGES.lookupType('CEntityMessageRemoveAllDecals'));
-
         registry.registerMessageType(MessagePacketType.GE_PLACE_DECAL_EVENT, pp.GAME_EVENTS.lookupType('CMsgPlaceDecalEvent'));
         registry.registerMessageType(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST, pp.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEventList'));
         registry.registerMessageType(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT, pp.GAME_EVENTS.lookupType('CMsgSource1LegacyGameEvent'));
