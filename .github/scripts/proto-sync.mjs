@@ -39,13 +39,15 @@ const TARGETS = {
             'dota_commonmessages.proto',
             'dota_shared_enums.proto',
             'dota_usermessages.proto',
+            'events.proto',
             'gameevents.proto',
             'netmessages.proto',
             'network_connection.proto',
             'networkbasetypes.proto',
             'source2_steam_stats.proto',
             'te.proto',
-            'usermessages.proto'
+            'usermessages.proto',
+            'valveextensions.proto'
         ]
     },
     cs2: {
