@@ -68,13 +68,17 @@ class StringTableHandler {
         const decoder = this._registry.getStringTableDecoder(stringTable.type);
         const entryExtractor = new StringTableEntryExtractor(payload, stringTable, createData.numEntries, decoder);
 
+        const entries = [ ];
+
         for (const entry of entryExtractor.retrieve()) {
             stringTable.updateEntry(entry);
+
+            entries.push(entry);
         }
 
         this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
 
-        this._container.register(stringTable);
+        this._container.register(stringTable, entries);
     }
 
     /**
@@ -97,15 +101,19 @@ class StringTableHandler {
 
             const decoder = this._registry.getStringTableDecoder(stringTable.type);
 
+            const entries = [ ];
+
             tableData.items.forEach((entryData, index) => {
                 const entry = StringTableEntry.fromBuffer(decoder, entryData.data, stringTable.type, index, entryData.str);
 
                 stringTable.updateEntry(entry);
+
+                entries.push(entry);
             });
 
             this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
 
-            this._container.register(stringTable);
+            this._container.register(stringTable, entries);
         });
     }
 
@@ -129,13 +137,17 @@ class StringTableHandler {
 
             const decoder = this._registry.getStringTableDecoder(existingTable.type);
 
+            const entries = [ ];
+
             tableData.items.forEach((entryData, index) => {
                 const entry = StringTableEntry.fromBuffer(decoder, entryData.data || null, existingTable.type, index, entryData.str);
 
                 existingTable.updateEntry(entry);
+
+                entries.push(entry);
             });
 
-            this._container.markChanged(existingTable);
+            this._container.markChanged(existingTable, entries);
         });
     }
 
@@ -155,11 +167,15 @@ class StringTableHandler {
         const decoder = this._registry.getStringTableDecoder(stringTable.type);
         const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries, decoder);
 
+        const entries = [ ];
+
         for (const entry of entryExtractor.retrieve()) {
             stringTable.updateEntry(entry);
+
+            entries.push(entry);
         }
 
-        this._container.markUpdated(stringTable);
+        this._container.markUpdated(stringTable, entries);
     }
 
     /**

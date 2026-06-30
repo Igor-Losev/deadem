@@ -61,15 +61,18 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
+     * @param {Array<StringTableEntry>} [entries=null] — affected entries (all new entries for a create)
      */
-    register(stringTable) {
+    register(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
 
         this._tableById.set(stringTable.id, stringTable);
         this._tableByName.set(stringTable.type.name, stringTable);
 
-        this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable);
-        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        const affected = entries || stringTable.getEntries();
+
+        this._eventEmitter.fire(StringTableEvent.TABLE_CREATED.name, stringTable, affected);
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable, affected);
     }
 
     /**
@@ -77,24 +80,31 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
+     * @param {Array<StringTableEntry>} [entries=null] — only the entries that changed
      */
-    markUpdated(stringTable) {
+    markUpdated(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
 
-        this._eventEmitter.fire(StringTableEvent.TABLE_UPDATED.name, stringTable);
-        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        const affected = entries || stringTable.getEntries();
+
+        this._eventEmitter.fire(StringTableEvent.TABLE_UPDATED.name, stringTable, affected);
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable, affected);
     }
 
     /**
-     * Signals that a table's state changed without an explicit update. Fires TABLE_CHANGED.
+     * Signals that a table's state changed without an explicit update (e.g. snapshot).
+     * Fires TABLE_CHANGED.
      *
      * @public
      * @param {StringTable} stringTable
+     * @param {Array<StringTableEntry>} [changedEntries=null] — resupplied entries, if known
      */
-    markChanged(stringTable) {
+    markChanged(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
 
-        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable);
+        const affected = entries || stringTable.getEntries();
+
+        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable, affected);
     }
 
     /**
