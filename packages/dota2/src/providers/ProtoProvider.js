@@ -16,6 +16,14 @@ class ProtoProvider extends EngineProtoProvider {
     get DOTA_USER_MESSAGES() {
         return this._root;
     }
+
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
+    get ECON_ITEMS() {
+        return this._root;
+    }
 }
 
 export default ProtoProvider;

@@ -36,6 +36,7 @@ const TARGETS = {
         upstream: 'https://raw.githubusercontent.com/SteamTracking/GameTracking-Dota2/master/Protobufs',
         localDir: 'packages/dota2/proto/source',
         files: [
+            'base_gcmessages.proto',
             'demo.proto',
             'dota_commonmessages.proto',
             'dota_modifiers.proto',
@@ -43,10 +44,14 @@ const TARGETS = {
             'dota_usermessages.proto',
             'events.proto',
             'gameevents.proto',
+            'gcsdk_gcmessages.proto',
             'netmessages.proto',
             'network_connection.proto',
             'networkbasetypes.proto',
             'source2_steam_stats.proto',
+            'steammessages.proto',
+            'steammessages_steamlearn.steamworkssdk.proto',
+            'steammessages_unified_base.steamworkssdk.proto',
             'te.proto',
             'usermessages.proto',
             'valveextensions.proto'
