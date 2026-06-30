@@ -19,7 +19,6 @@ class Bootstrap {
         Bootstrap._registerFieldRules(registry);
         Bootstrap._registerMessagePacketTypes(registry);
         Bootstrap._registerStringTableTypes(registry);
-        Bootstrap._registerStringTableDecoders(registry);
 
         const pp = registry.getProtoProvider();
 
@@ -158,18 +157,11 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerStringTableDecoders(registry) {
+    static _registerStringTableTypes(registry) {
         const pp = registry.getProtoProvider();
 
-        registry.registerStringTableDecoder(StringTableType.USER_INFO, pp.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo'));
-    }
+        const userInfoProto = pp.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
 
-    /**
-     * @protected
-     * @static
-     * @param {SchemaRegistry} registry
-     */
-    static _registerStringTableTypes(registry) {
         registry.registerStringTableType(StringTableType.DECAL_PRE_CACHE);
         registry.registerStringTableType(StringTableType.EFFECT_DISPATCH);
         registry.registerStringTableType(StringTableType.ENTITY_NAMES);
@@ -180,7 +172,7 @@ class Bootstrap {
         registry.registerStringTableType(StringTableType.RESPONSE_KEYS);
         registry.registerStringTableType(StringTableType.SCENES);
         registry.registerStringTableType(StringTableType.SERVER_QUERY_INFO);
-        registry.registerStringTableType(StringTableType.USER_INFO);
+        registry.registerStringTableType(StringTableType.USER_INFO, buffer => userInfoProto.decode(buffer));
         registry.registerStringTableType(StringTableType.V_GUI_SCREEN);
         registry.registerStringTableType(StringTableType.ANIM_TASK_TYPES);
         registry.registerStringTableType(StringTableType.ANIM_ASSET_DATA);

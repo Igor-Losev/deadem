@@ -61,7 +61,6 @@ class SchemaRegistry {
         const demoTypes = [];
         const messageTypes = [];
         const stringTableTypes = [];
-        const stringTableDecoders = [];
 
         this._types.demoById.forEach((type, id) => {
             const proto = this._protos.demo.get(id);
@@ -93,19 +92,11 @@ class SchemaRegistry {
             });
         });
 
-        this._protos.stringTableDecoders.forEach((proto, name) => {
-            stringTableDecoders.push({
-                name,
-                protoName: proto.fullName
-            });
-        });
-
         return {
             protoJson: this._protos.provider.schema,
             demoTypes,
             messageTypes,
             stringTableTypes,
-            stringTableDecoders,
             fieldRules: this._fieldRules.export(),
             sendTablesSerializerDecoder: this._serializers.sendTables ? this._serializers.sendTables.fullName : null
         };
@@ -222,18 +213,14 @@ class SchemaRegistry {
     /**
      * @public
      * @param {StringTableType} type
-     * @param {protobuf.Type} proto
+     * @param {((buffer: Uint8Array) => *)|null} [decoder=null]
      */
-    registerStringTableDecoder(type, proto) {
-        this._protos.stringTableDecoders.set(type.name, proto);
-    }
-
-    /**
-     * @public
-     * @param {StringTableType} type
-     */
-    registerStringTableType(type) {
+    registerStringTableType(type, decoder = null) {
         this._types.stringTableByName.set(type.name, type);
+
+        if (decoder !== null) {
+            this._protos.stringTableDecoders.set(type.name, decoder);
+        }
     }
 
     /**
@@ -328,16 +315,6 @@ class SchemaRegistry {
             const type = new StringTableType(code, name, synthesized);
 
             registry.registerStringTableType(type);
-        });
-
-        snapshot.stringTableDecoders.forEach(({ name, protoName }) => {
-            const type = registry._types.stringTableByName.get(name);
-
-            if (!type) {
-                throw new Error(`Cannot reconstruct stringTableDecoder: type not registered for [ ${name} ]`);
-            }
-
-            registry.registerStringTableDecoder(type, protoProvider.root.lookupType(protoName));
         });
 
         if (snapshot.sendTablesSerializerDecoder !== null) {

@@ -207,7 +207,11 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
+        const pp = registry.getProtoProvider();
+
+        const modifierProto = pp.DOTA_MODIFIERS.lookupType('CDOTAModifierBuffTableEntry');
+
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, buffer => modifierProto.decode(buffer));
         registry.registerStringTableType(StringTableType.MODIFIER_NAMES);
         registry.registerStringTableType(StringTableType.COOLDOWN_NAMES);
         registry.registerStringTableType(StringTableType.ECON_ITEMS);

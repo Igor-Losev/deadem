@@ -53,7 +53,7 @@ class StringTableEntry {
     /**
      * @public
      * @static
-     * @param {protobuf.Type|null} decoder
+     * @param {Function|null} decoder
      * @param {Buffer|Uint8Array|null} buffer
      * @param {StringTableType} type
      * @param {number} id
@@ -64,7 +64,7 @@ class StringTableEntry {
             return new StringTableEntry(type, id, key, null);
         }
 
-        const value = decoder ? decoder.decode(buffer) : buffer;
+        const value = decoder ? decoder(buffer) : buffer;
 
         return new StringTableEntry(type, id, key, value);
     }

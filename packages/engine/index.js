@@ -18,4 +18,5 @@ export { default as Printer } from './src/Printer.js';
 export { default as ProtoProvider } from './src/providers/ProtoProvider.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
 export { default as SchemaRegistry } from './src/SchemaRegistry.js';
+export { default as StringTableEvent } from './src/data/enums/StringTableEvent.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';

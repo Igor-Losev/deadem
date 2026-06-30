@@ -131,7 +131,11 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
+        const pp = registry.getProtoProvider();
+
+        const modifierProto = pp.BASE_MODIFIER.lookupType('CModifierTableEntry');
+
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, buffer => modifierProto.decode(buffer));
     }
 }
 

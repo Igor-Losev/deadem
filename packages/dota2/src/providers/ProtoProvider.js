@@ -5,6 +5,14 @@ class ProtoProvider extends EngineProtoProvider {
      * @public
      * @returns {protobuf.Root}
      */
+    get DOTA_MODIFIERS() {
+        return this._root;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Root}
+     */
     get DOTA_USER_MESSAGES() {
         return this._root;
     }
