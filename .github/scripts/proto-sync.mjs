@@ -13,6 +13,7 @@ const TARGETS = {
         localDir: 'packages/deadem/proto/source',
         files: [
             'base_gcmessages.proto',
+            'base_modifier.proto',
             'citadel_gameevents.proto',
             'citadel_gcmessages_common.proto',
             'citadel_usermessages.proto',
@@ -37,6 +38,7 @@ const TARGETS = {
         files: [
             'demo.proto',
             'dota_commonmessages.proto',
+            'dota_modifiers.proto',
             'dota_shared_enums.proto',
             'dota_usermessages.proto',
             'events.proto',
