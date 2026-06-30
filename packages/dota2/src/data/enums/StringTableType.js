@@ -18,6 +18,6 @@ const econItems = new StringTableType('ECON_ITEMS', 'EconItems');
 const combatLogNames = new StringTableType('COMBAT_LOG_NAMES', 'CombatLogNames');
 const luaModifiers = new StringTableType('LUA_MODIFIERS', 'LuaModifiers');
 const particleAssets = new StringTableType('PARTICLE_ASSETS', 'ParticleAssets');
-const downloadables = new StringTableType('DOWNLOADABLES', 'downloadables');
+const downloadables = new StringTableType('DOWNLOADABLES', 'Downloadables');
 
 export default StringTableType;
