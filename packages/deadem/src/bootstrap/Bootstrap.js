@@ -134,8 +134,9 @@ class Bootstrap {
         const pp = registry.getProtoProvider();
 
         const modifierProto = pp.BASE_MODIFIER.lookupType('CModifierTableEntry');
+        const modifierDecoder = buffer => modifierProto.decode(buffer);
 
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, buffer => modifierProto.decode(buffer));
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, modifierDecoder);
     }
 }
 

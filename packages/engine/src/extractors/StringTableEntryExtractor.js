@@ -14,9 +14,8 @@ class StringTableEntryExtractor {
      * @param {Uint8Array} buffer
      * @param {StringTable} table
      * @param {number} entriesCount
-     * @param {protobuf.Type|null} decoder
      */
-    constructor(buffer, table, entriesCount, decoder) {
+    constructor(buffer, table, entriesCount) {
         Assert.isTrue(buffer instanceof Uint8Array);
         Assert.isTrue(table instanceof StringTable);
         Assert.isTrue(Number.isInteger(entriesCount));
@@ -24,7 +23,6 @@ class StringTableEntryExtractor {
         this._bitBuffer = new BitBuffer(buffer);
         this._table = table;
         this._entriesCount = entriesCount;
-        this._decoder = decoder;
     }
 
     *retrieve() {
@@ -101,7 +99,7 @@ class StringTableEntryExtractor {
                 }
             }
 
-            const entry = StringTableEntry.fromBuffer(this._decoder, value, this._table.type, index, key);
+            const entry = new StringTableEntry(this._table, index, key, value);
 
             yield entry;
         }

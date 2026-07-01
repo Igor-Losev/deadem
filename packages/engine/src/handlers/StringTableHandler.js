@@ -63,15 +63,15 @@ class StringTableHandler {
 
         const tableId = existing !== null ? existing.id : this._container.size;
 
-        const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions);
+        const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions,
+            this._registry.getStringTableDecoder(stringTableType));
 
-        const decoder = this._registry.getStringTableDecoder(stringTable.type);
-        const entryExtractor = new StringTableEntryExtractor(payload, stringTable, createData.numEntries, decoder);
+        const entryExtractor = new StringTableEntryExtractor(payload, stringTable, createData.numEntries);
 
         const entries = [ ];
 
         for (const entry of entryExtractor.retrieve()) {
-            stringTable.updateEntry(entry);
+            stringTable.registerEntry(entry);
 
             entries.push(entry);
         }
@@ -94,19 +94,19 @@ class StringTableHandler {
             let stringTable;
 
             if (existing !== null) {
-                stringTable = new StringTable(existing.id, stringTableType, existing.flags, existing.instructions);
+                stringTable = new StringTable(existing.id, stringTableType, existing.flags, existing.instructions,
+                    this._registry.getStringTableDecoder(stringTableType));
             } else {
-                stringTable = new StringTable(this._container.size, stringTableType, tableData.tableFlags, null);
+                stringTable = new StringTable(this._container.size, stringTableType, tableData.tableFlags, null,
+                    this._registry.getStringTableDecoder(stringTableType));
             }
-
-            const decoder = this._registry.getStringTableDecoder(stringTable.type);
 
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
-                const entry = StringTableEntry.fromBuffer(decoder, entryData.data, stringTable.type, index, entryData.str);
+                const entry = new StringTableEntry(stringTable, index, entryData.str, entryData.data || null);
 
-                stringTable.updateEntry(entry);
+                stringTable.registerEntry(entry);
 
                 entries.push(entry);
             });
@@ -135,14 +135,12 @@ class StringTableHandler {
                 return;
             }
 
-            const decoder = this._registry.getStringTableDecoder(existingTable.type);
-
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
-                const entry = StringTableEntry.fromBuffer(decoder, entryData.data || null, existingTable.type, index, entryData.str);
+                const entry = new StringTableEntry(existingTable, index, entryData.str, entryData.data || null);
 
-                existingTable.updateEntry(entry);
+                existingTable.registerEntry(entry);
 
                 entries.push(entry);
             });
@@ -164,13 +162,12 @@ class StringTableHandler {
 
         this._logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
 
-        const decoder = this._registry.getStringTableDecoder(stringTable.type);
-        const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries, decoder);
+        const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries);
 
         const entries = [ ];
 
         for (const entry of entryExtractor.retrieve()) {
-            stringTable.updateEntry(entry);
+            stringTable.registerEntry(entry);
 
             entries.push(entry);
         }

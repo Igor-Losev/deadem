@@ -6,15 +6,18 @@ class StringTableType {
      * @param {String} code
      * @param {String} name
      * @param {boolean} synthesized
+     * @param {boolean} [lazy=false] - decode strategy flag for table entries.
      */
-    constructor(code, name, synthesized = false) {
+    constructor(code, name, synthesized = false, lazy = false) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(typeof name === 'string' && name.length > 0);
         Assert.isTrue(typeof synthesized === 'boolean');
+        Assert.isTrue(typeof lazy === 'boolean');
 
         this._code = code;
         this._name = name;
         this._synthesized = synthesized;
+        this._lazy = lazy;
     }
 
     /**
@@ -39,6 +42,14 @@ class StringTableType {
      */
     get synthesized() {
         return this._synthesized;
+    }
+
+    /**
+     * @public
+     * @returns {boolean}
+     */
+    get lazy() {
+        return this._lazy;
     }
 
     /**

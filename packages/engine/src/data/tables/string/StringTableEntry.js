@@ -1,32 +1,46 @@
 import Assert from '#core/Assert.js';
 
-import StringTableType from '#data/enums/StringTableType.js';
-
 class StringTableEntry {
     /**
      * @public
      * @constructor
-     * @param {StringTableType} type
+     * @param {StringTable} table
      * @param {number} id
      * @param {String} key
-     * @param {Buffer|null|*} value
+     * @param {Uint8Array|null} raw
      */
-    constructor(type, id, key, value) {
-        Assert.isTrue(type instanceof StringTableType);
-        Assert.isTrue(Number.isInteger(id));
+    constructor(table, id, key, raw) {
+        Assert.isTrue(typeof id === 'number' && Number.isInteger(id));
         Assert.isTrue(typeof key === 'string');
 
-        this._type = type;
+        this._table = table;
         this._id = id;
         this._key = key;
-        this._value = value;
+
+        if (raw === null) {
+            this._decoded = true;
+            this._raw = null;
+            this._value = null;
+
+            return;
+        }
+
+        if (table.type.lazy && table.decoder !== null) {
+            this._decoded = false;
+            this._raw = raw;
+            this._value = null;
+        } else {
+            this._decoded = true;
+            this._raw = null;
+            this._value = table.decoder ? table.decoder(raw) : raw;
+        }
     }
 
     /**
      * @returns {StringTableType}
      */
     get type() {
-        return this._type;
+        return this._table.type;
     }
 
     /**
@@ -44,29 +58,21 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {Buffer|null|*}
+     * @returns {Uint8Array|null|*}
      */
     get value() {
-        return this._value;
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {Function|null} decoder
-     * @param {Buffer|Uint8Array|null} buffer
-     * @param {StringTableType} type
-     * @param {number} id
-     * @param {String} key
-     */
-    static fromBuffer(decoder, buffer, type, id, key) {
-        if (buffer === null) {
-            return new StringTableEntry(type, id, key, null);
+        if (this._decoded) {
+            return this._value;
         }
 
-        const value = decoder ? decoder(buffer) : buffer;
+        if (this._table.decoder) {
+            this._value = this._table.decoder(this._raw);
+            this._decoded = true;
 
-        return new StringTableEntry(type, id, key, value);
+            return this._value;
+        }
+
+        return this._raw;
     }
 }
 

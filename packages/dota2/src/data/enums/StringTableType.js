@@ -11,7 +11,7 @@ class StringTableType extends EngineStringTableType {
     static get DOWNLOADABLES() { return downloadables; }
 }
 
-const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
+const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers', false, true);
 const modifierNames = new StringTableType('MODIFIER_NAMES', 'ModifierNames');
 const cooldownNames = new StringTableType('COOLDOWN_NAMES', 'CooldownNames');
 const econItems = new StringTableType('ECON_ITEMS', 'EconItems');

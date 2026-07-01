@@ -11,8 +11,9 @@ class StringTable {
      * @param {StringTableType} type
      * @param {number} flags
      * @param {StringTableInstructions|null=} instructions
+     * @param {Function|null} [decoder=null]
      */
-    constructor(id, type, flags, instructions) {
+    constructor(id, type, flags, instructions, decoder = null) {
         Assert.isTrue(Number.isInteger(id) && id >= 0);
         Assert.isTrue(type instanceof StringTableType);
         Assert.isTrue(Number.isInteger(flags));
@@ -22,6 +23,8 @@ class StringTable {
         this._type = type;
         this._flags = flags;
         this._instructions = instructions || null;
+
+        this._decoder = decoder || null;
 
         this._registry = {
             entryById: new Map()
@@ -54,6 +57,13 @@ class StringTable {
      */
     get instructions() {
         return this._instructions;
+    }
+
+    /**
+     * @returns {Function|null}
+     */
+    get decoder() {
+        return this._decoder;
     }
 
     /**
@@ -94,7 +104,7 @@ class StringTable {
      * @param {StringTableEntry} entry
      * @returns {void}
      */
-    updateEntry(entry) {
+    registerEntry(entry) {
         this._registry.entryById.set(entry.id, entry);
     }
 }

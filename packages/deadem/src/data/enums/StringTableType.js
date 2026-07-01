@@ -4,6 +4,6 @@ class StringTableType extends EngineStringTableType {
     static get ACTIVE_MODIFIERS() { return activeModifiers; }
 }
 
-const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers');
+const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers', false, true);
 
 export default StringTableType;
