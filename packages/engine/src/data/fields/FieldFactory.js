@@ -60,13 +60,13 @@ class FieldFactory {
 
         switch (model) {
             case FieldModel.SCALAR:
-                return new FieldScalar(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
+                return new FieldScalar(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
-                return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition.baseType, decoderInstructions));
+                return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
-                return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic.baseType, decoderInstructions));
+                return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
             case FieldModel.TABLE_FIXED:
                 return new FieldTableFixed(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
@@ -105,18 +105,22 @@ class FieldFactory {
     /**
      * @protected
      * @param {String} name
-     * @param {String} baseType
+     * @param {FieldDefinition} definition
      * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {FieldDecoder}
      */
-    _resolveDecoder(name, baseType, decoderInstructions) {
+    _resolveDecoder(name, definition, decoderInstructions) {
+        if (definition.baseType === 'char' && definition.count === null) {
+            return VAR_UINT_32_DECODER;
+        }
+
         const override = this._resolveDecoderOverride(name, decoderInstructions);
 
         if (override !== null) {
             return override;
         }
 
-        const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(baseType);
+        const descriptor = this._fieldRuleRegistry.getFieldTypeDecoder(definition.baseType);
 
         if (descriptor === null) {
             return VAR_UINT_32_DECODER;
