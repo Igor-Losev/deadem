@@ -816,6 +816,9 @@
     },
     "CMsgVector": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -837,6 +840,9 @@
     },
     "CMsgVector2D": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -850,6 +856,9 @@
     },
     "CMsgQAngle": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -867,6 +876,9 @@
     },
     "CMsgQuaternion": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -1953,7 +1965,8 @@
         "CHAT_MESSAGE_CRAFTING_XP": 122,
         "CHAT_MESSAGE_ROSHAN_ROAR": 123,
         "CHAT_MESSAGE_STONE_OF_RECALL_USED": 124,
-        "CHAT_MESSAGE_DEITY_BLESSING": 125
+        "CHAT_MESSAGE_DEITY_BLESSING": 125,
+        "CHAT_MESSAGE_SMOKE_ACTIVATED": 126
       }
     },
     "DOTA_ABILITY_PING_TYPE": {
@@ -6998,6 +7011,11 @@
           "type": ".CMsgVector",
           "id": 14,
           "protoName": "position_objectspace"
+        },
+        "normalObjectspace": {
+          "type": ".CMsgVector",
+          "id": 15,
+          "protoName": "normal_objectspace"
         }
       }
     },
@@ -7655,9 +7673,10 @@
           "type": ".CMsgVoiceAudio",
           "id": 1
         },
-        "client": {
+        "clientDeprecated": {
           "type": "int32",
           "id": 2,
+          "protoName": "client_deprecated",
           "options": {
             "default": -1
           }
@@ -7682,6 +7701,13 @@
         "passthrough": {
           "type": "int32",
           "id": 7
+        },
+        "entity": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
         }
       }
     },
@@ -7875,6 +7901,11 @@
           "type": "int32",
           "id": 5,
           "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
         }
       }
     },
