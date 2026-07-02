@@ -1247,6 +1247,9 @@
         },
         "k_EPingMarkerInfo_OnlyMiniMap": {
           "(schema_friendly_name)": "Only show on Minimap, no world, no sound"
+        },
+        "k_EPingMarkerInfo_NoMarkerYesSoundMiniMap": {
+          "(schema_friendly_name)": "No World, Just Minimap and sound"
         }
       },
       "values": {
@@ -1255,7 +1258,8 @@
         "k_EPingMarkerInfo_HideMarkerAndSound": 2,
         "k_EPingMarkerInfo_OnlyShowMarker": 3,
         "k_EPingMarkerInfo_OnlyPlaySound": 4,
-        "k_EPingMarkerInfo_OnlyMiniMap": 5
+        "k_EPingMarkerInfo_OnlyMiniMap": 5,
+        "k_EPingMarkerInfo_NoMarkerYesSoundMiniMap": 6
       }
     },
     "CameraOperation": {
