@@ -49,6 +49,15 @@ class StringTableContainer {
 
     /**
      * @public
+     * @param {StringTableType} type
+     * @returns {StringTable|null}
+     */
+    getByType(type) {
+        return this.getByName(type.name);
+    }
+
+    /**
+     * @public
      * @returns {Array<StringTable>}
      */
     getTables() {
