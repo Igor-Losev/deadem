@@ -81,28 +81,58 @@ class EntityMutationEvent {
     }
 
     /**
-     * (Lazy). Resolves the per-event delta as an object keyed by field name.
+     * Returns changed fields as a flattened object. When `names` is
+     * `null` returns all fields. Otherwise returns a same-order
+     * array — `undefined` for fields not in this event.
      *
      * @public
-     * @returns {Object<string, *>}
+     * @param {Array<string>|null} [names=null]
+     * @returns {Record<string, *>|Array<*>}
      */
-    getChanges() {
-        if (this._changes !== null) {
-            return this._changes;
-        }
-
-        const changes = {};
-
-        const serializer = this._entity.class.serializer;
+    getChanges(names = null) {
         const batch = this._batch;
 
-        for (let i = 0; i < batch.length; i++) {
-            changes[serializer.getNameForFieldPathId(batch.ids[i])] = batch.values[i];
+        if (names === null) {
+            if (this._changes !== null) {
+                return this._changes;
+            }
+
+            const changes = {};
+            const serializer = this._entity.class.serializer;
+
+            for (let i = 0; i < batch.length; i++) {
+                changes[serializer.getNameForFieldPathId(batch.ids[i])] = batch.values[i];
+            }
+
+            this._changes = changes;
+
+            return changes;
         }
 
-        this._changes = changes;
+        const count = names.length;
 
-        return changes;
+        const serializer = this._entity.class.serializer;
+        const result = new Array(count);
+
+        let found = 0;
+
+        for (let i = batch.length - 1; i >= 0 && found < count; i--) {
+            const name = serializer.getNameForFieldPathId(batch.ids[i]);
+
+            for (let j = 0; j < count; j++) {
+                if (names[j] === name) {
+                    if (result[j] === undefined) {
+                        result[j] = batch.values[i];
+
+                        found++;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 }
 

@@ -347,7 +347,7 @@ describe('EntityMutationEvent', () => {
         return new Entity(1, 1, new Class(1, 'CTest', serializer));
     }
 
-    test('getChanges resolves the batch into a name-keyed delta', () => {
+    test('getChanges resolves names into values in-order, no-args returns full delta', () => {
         const fp1 = FieldPathBuilder.build([ 1 ]);
         const fp2 = FieldPathBuilder.build([ 2 ]);
         const names = new Map([ [ fp1.id, 'm_flHealth' ], [ fp2.id, 'm_iScore' ] ]);
@@ -357,6 +357,11 @@ describe('EntityMutationEvent', () => {
 
         expect(event.getChanges()).toEqual({ m_flHealth: 123, m_iScore: 'abc' });
         expect(event.getChanges()).toBe(event.getChanges());
+
+        expect(event.getChanges([ 'm_flHealth', 'm_iScore' ])).toEqual([ 123, 'abc' ]);
+        expect(event.getChanges([ 'm_iScore', 'm_flHealth' ])).toEqual([ 'abc', 123 ]);
+        expect(event.getChanges([ 'm_flHealth', 'unknown' ])).toEqual([ 123, undefined ]);
+        expect(event.getChanges([ ])).toEqual([ ]);
     });
 
     test('mutations reconstructs field-path/value pairs', () => {
