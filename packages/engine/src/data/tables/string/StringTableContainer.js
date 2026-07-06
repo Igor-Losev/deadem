@@ -123,7 +123,7 @@ class StringTableContainer {
      */
     clear() {
         this._tableById.forEach((stringTable) => {
-            this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable);
+            this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable, null);
         });
 
         this._tableById.clear();
