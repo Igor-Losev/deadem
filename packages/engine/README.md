@@ -45,7 +45,7 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
     Inner message packets — string tables, entities, user messages.
   - [`InterceptorStage.ENTITY_PACKET`](#interceptorstageentity_packet)<br/>
     Per-entity mutation events — delta reads, operation table.
-  - [Parse Order](#parse-order)<br/>
+  - [Interceptor Flow](#interceptor-flow)<br/>
     Nesting diagram of all interceptor stages.
 - [Player](#player)<br/>
   Replay — seeking, playback, state machine.
@@ -98,7 +98,7 @@ await parser.dispose(); // cleanup state and resources
 
 ## How It Works
 
-[`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) reads a byte stream and processes it packet by packet, mutating internal state. Interceptors hook into any packet. Once parsing ends, `Parser` holds the game state — `dispose()` releases it. [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) works the same way but buffers the demo in memory, adding seeking and playback.
+[`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) reads a byte stream and processes it packet by packet, mutating internal state. Interceptors run before or after each packet. Once parsing ends, `Parser` holds the game state — `dispose()` releases it. [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) works the same way but buffers the demo in memory, adding seeking and playback.
 
 The engine provides raw parsed data — it does not compute statistics, interpret game state, or make analytical decisions.
 
@@ -276,7 +276,7 @@ Each event exposes:
 | `LEAVE` | Entity deactivated, slot reserved | Empty |
 | `DELETE` | Entity permanently removed | Empty |
 
-### Parse Order
+### Interceptor Flow
 
 ```text
 PRE DEMO_PACKET
@@ -426,7 +426,7 @@ new Player(configB);
 
 ### Stream Tuning
 
-`breakInterval` — every N packets, the parser schedules and awaits a macrotask to avoid blocking. Lower values mean more breaks (responsive UI, slower parse); higher values mean fewer breaks (faster parse, blocked UI). Default is `1000`.
+`breakInterval` — every N `DemoPacket`s, the parser schedules and awaits a macrotask to avoid blocking. Lower values mean more breaks (responsive UI, slower parse); higher values mean fewer breaks (faster parse, blocked UI). Default is `1000`.
 
 ### Logging
 
