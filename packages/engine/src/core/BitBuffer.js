@@ -368,7 +368,7 @@ class BitBuffer {
                 break;
             }
 
-            const byte = this.readBitsAsUInt(8);
+            const byte = this.readBitsAsUInt(BITS_PER_BYTE);
 
             if (byte === 0) {
                 break;
@@ -391,7 +391,7 @@ class BitBuffer {
             return this._buffer[this._pByte++] >>> 0;
         }
 
-        return this.readBitsAsUInt(8);
+        return this.readBitsAsUInt(BITS_PER_BYTE);
     }
 
     /**
