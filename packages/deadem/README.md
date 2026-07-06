@@ -11,36 +11,34 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6448-darkGreen" /></a>
 
-**deadem** is the Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**deadem** is the Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md).
 
-For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Deadlock-specific usage only.
+The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Deadlock-specific details only.
 
-Other game implementations: [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) (Dota 2).
+Sibling packages: [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) (Dota 2).
 
 ## Contents
 
 - [Installation](#installation)<br/>
   Install from npm or use the browser bundle.
-- [Quick start](#quick-start)<br/>
-  Minimal example to parse a Deadlock demo file.
+- [Quick Start](#quick-start)<br/>
+  Parse a replay, print stats.
+- [What Deadlock Adds](#what-deadlock-adds)<br/>
+  Everything the package registers on top of the engine.
+  - [Message Types](#message-types)<br/>
+    Deadlock-specific message types.
+  - [String Tables](#string-tables)<br/>
+    Deadlock-specific string tables.
+  - [Decoders](#decoders)<br/>
+    Deadlock-specific entity field decoders.
 - [Examples](#examples)<br/>
-  Runnable example scripts covering parsing, player, and broadcast.
-- [Usage](#usage)<br/>
-  Deadlock-specific usage patterns.
-  - [Replay file](#replay-file)<br/>
-    Parse a Deadlock replay from a `.dem` file.
-  - [HTTP broadcast](#http-broadcast)<br/>
-    Parse a live Deadlock HTTP broadcast stream.
-  - [Data extraction](#data-extraction)<br/>
-    Extract chat messages and query Deadlock entities.
-  - [Playback and seeking](#playback-and-seeking)<br/>
-    Inspect Deadlock state at a specific tick.
+  Runnable scripts: parsing, player, broadcast.
 - [Compatibility](#compatibility)<br/>
-  Supported game builds and runtimes.
+  Game builds and runtimes.
 - [Performance](#performance)<br/>
   Measured throughput and memory usage.
 - [License](#license)<br/>
-  Project licensing information.
+  MIT.
 
 ## Installation
 
@@ -64,7 +62,7 @@ import { Parser, Player } from 'deadem';
 const { Parser, Player } = window.deadem;
 ```
 
-## Quick start
+## Quick Start
 
 ```js
 import { createReadStream } from 'node:fs';
@@ -72,15 +70,36 @@ import { createReadStream } from 'node:fs';
 import { Parser, Printer } from 'deadem';
 
 const parser = new Parser();
+const readable = createReadStream('./match.dem');
+
+await parser.parse(readable);
+
 const printer = new Printer(parser);
 
-await parser.parse(createReadStream(PATH_TO_DEM_FILE));
-await parser.dispose();
-
 printer.printStats();
+
+await parser.dispose(); // cleanup state and resources
 ```
 
-`Parser` and `Player` in `deadem` are drop-in subclasses of the engine classes — the schema registry is built automatically, so no extra wiring is required.
+## What Deadlock Adds
+
+[`Bootstrap`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/bootstrap/Bootstrap.js) registers the Deadlock schema onto the engine registry:
+
+### Message Types
+
+Deadlock-specific [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js)s — kills, objectives, chat, etc.
+
+### String Tables
+
+Deadlock-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/StringTableType.js)s.
+
+| Table | Entries | Content |
+| --- | --- | --- |
+| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Updated on roughly two thirds of all ticks. |
+
+### Decoders
+
+Deadlock-specific entity field decoders. Entity examples: `CCitadelPlayerController`, `CCitadelPlayerPawn`, `CCitadelGameRulesProxy`. Entities, fields and types can be browsed in [Deadem Explorer](https://deadem.com).
 
 ## Examples
 
@@ -117,132 +136,12 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 | 301 | Parse HTTP Broadcast live | [301_broadcast_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/301_broadcast_parse.js) | `node ./packages/examples-node-deadem/scripts/301_broadcast_parse.js` |
 | 302 | Parse HTTP Broadcast data from a saved file | [302_broadcast_parse_file.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/302_broadcast_parse_file.js) | `node ./packages/examples-node-deadem/scripts/302_broadcast_parse_file.js` |
 
-### Browser
-
-| # | Description | Command |
-| --- | --- | --- |
-| 01 | Deadem Explorer | `npm start` |
-
-## Usage
-
-### Replay file
-
-```js
-import { createReadStream } from 'node:fs';
-
-import { Parser, Printer } from 'deadem';
-
-const parser = new Parser();
-const printer = new Printer(parser);
-
-await parser.parse(createReadStream(PATH_TO_DEM_FILE));
-await parser.dispose();
-
-printer.printStats();
-```
-
-### HTTP broadcast
-
-```js
-import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from 'deadem';
-
-const FROM_BEGINNING = false;
-const MATCH_ID = '75637129_201673668';
-
-const gateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
-const agent = new BroadcastAgent(gateway, MATCH_ID);
-
-const parser = new Parser();
-
-await parser.parse(agent.stream(FROM_BEGINNING), DemoSource.HTTP_BROADCAST);
-await parser.dispose();
-```
-
-### Data extraction
-
-Deadlock-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js) — for example, `CITADEL_USER_MESSAGE_CHAT_MESSAGE`, `CITADEL_USER_MESSAGE_HERO_KILLED`, `CITADEL_USER_MESSAGE_BOSS_KILLED`, `CITADEL_USER_MESSAGE_MID_BOSS_SPAWNED`, and more.
-
-Extract chat messages paired with player names from the `USER_INFO` string table:
-
-```js
-import { InterceptorStage, MessagePacketType, Parser, StringTableType } from 'deadem';
-
-const parser = new Parser();
-const players = new Map();
-
-parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
-    if (players.size === 0 && !demoPacket.getIsInitial()) {
-        const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
-
-        for (const entry of userInfo.getEntries()) {
-            if (Number.isInteger(entry.value.userid)) {
-                players.set(entry.value.userid, entry.value.name);
-            }
-        }
-    }
-});
-
-parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-    if (messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE) {
-        console.log(`${players.get(messagePacket.data.playerSlot)}: ${messagePacket.data.text}`);
-    }
-});
-
-await parser.parse(readable);
-```
-
-Query entities after the parse completes:
-
-```js
-await parser.parse(readable);
-
-const demo = parser.getDemo();
-const controllers = demo.getEntitiesByClassName('CCitadelPlayerController');
-
-const topDamageDealer = controllers.reduce((top, entity) => {
-    const damage = entity.getField('m_iHeroDamage') || 0;
-
-    return damage > top.damage
-        ? { player: entity.getField('m_iszPlayerName'), damage }
-        : top;
-}, { player: null, damage: 0 });
-
-console.log(`Top damage dealer: ${topDamageDealer.player} (${topDamageDealer.damage})`);
-```
-
-### Playback and seeking
-
-```js
-import { createReadStream } from 'node:fs';
-
-import { Player } from 'deadem';
-
-const player = new Player();
-
-await player.load(createReadStream(PATH_TO_DEM_FILE));
-await player.seekToTick(player.getLastTick());
-
-const demo = player.getDemo();
-
-demo.getEntitiesByClassName('CCitadelPlayerController').forEach((entity) => {
-    const name = entity.getField('m_iszPlayerName');
-    const damage = entity.getField('m_iHeroDamage');
-
-    console.log(`${name}: ${damage} hero damage`);
-});
-
-await player.dispose();
-```
-
 ## Compatibility
 
 - **Game builds:** tested with Deadlock demos from build `6448` and below.
-- **Runtimes:** Node.js v18+, Deno, and Bun.
-- **Browsers:** Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance
-
-For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
 | # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
 | - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
@@ -252,6 +151,8 @@ For configuration trade-offs see the [engine performance notes](https://github.c
 
 Runtime: Node.js v22.14.0.
 
+See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md#performance) for optimization tips.
+
 ## License
 
-This project is licensed under the [MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE) License.
+[MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE)

@@ -11,34 +11,34 @@
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41b-darkGreen" /></a>
 
-**@deademx/dota2** is a Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/dota2** is the Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md).
 
-For the shared parser model, player lifecycle, interceptors, configuration, and the full API surface, see the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This document covers Dota 2-specific usage only.
+The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Dota 2-specific details only.
 
-Other game implementations: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2).
+Sibling packages: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README2.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README2.md) (Counter-Strike 2).
 
 ## Contents
 
 - [Installation](#installation)<br/>
   Install from npm or use the browser bundle.
-- [Quick start](#quick-start)<br/>
-  Minimal example to parse a Dota 2 demo file.
+- [Quick Start](#quick-start)<br/>
+  Parse a replay, print stats.
+- [What Dota 2 Adds](#what-dota-2-adds)<br/>
+  Everything the package registers on top of the engine.
+  - [Message Types](#message-types)<br/>
+    Dota 2-specific message types.
+  - [String Tables](#string-tables)<br/>
+    Dota 2-specific string tables.
+  - [Decoders](#decoders)<br/>
+    Dota 2-specific entity field decoders.
 - [Examples](#examples)<br/>
-  Runnable example scripts covering parsing and player.
-- [Usage](#usage)<br/>
-  Dota 2-specific usage patterns.
-  - [Replay file](#replay-file)<br/>
-    Parse a Dota 2 replay from a `.dem` file.
-  - [Data extraction](#data-extraction)<br/>
-    Extract Dota 2 chat and query entities.
-  - [Playback and seeking](#playback-and-seeking)<br/>
-    Inspect Dota 2 state at a specific tick.
+  Runnable scripts: parsing, player.
 - [Compatibility](#compatibility)<br/>
-  Supported game patch and runtimes.
+  Game patch and runtimes.
 - [Performance](#performance)<br/>
-  Measured throughput benchmarks.
+  Measured throughput and memory usage.
 - [License](#license)<br/>
-  Project licensing information.
+  MIT.
 
 ## Installation
 
@@ -62,7 +62,7 @@ import { Parser, Player } from '@deademx/dota2';
 const { Parser, Player } = window.deademDota2;
 ```
 
-## Quick start
+## Quick Start
 
 ```js
 import { createReadStream } from 'node:fs';
@@ -70,15 +70,44 @@ import { createReadStream } from 'node:fs';
 import { Parser, Printer } from '@deademx/dota2';
 
 const parser = new Parser();
+const readable = createReadStream('./match.dem');
+
+await parser.parse(readable);
+
 const printer = new Printer(parser);
 
-await parser.parse(createReadStream(PATH_TO_DEM_FILE));
-await parser.dispose();
-
 printer.printStats();
+
+await parser.dispose(); // cleanup state and resources
 ```
 
-`Parser` and `Player` in `@deademx/dota2` are drop-in subclasses of the engine classes — the schema registry is built automatically, so no extra wiring is required.
+## What Dota 2 Adds
+
+[`Bootstrap`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/bootstrap/Bootstrap.js) registers the Dota 2 schema onto the engine registry:
+
+### Message Types
+
+Dota 2-specific [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/MessagePacketType.js)s — chat, objectives, economy.
+
+### String Tables
+
+Dota 2-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/StringTableType.js)s.
+
+| Table | Entries | Content |
+| --- | --- | --- |
+| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. |
+| `StringTableType.COMBAT_LOG_NAMES` | hundreds | Resolves combat log entity/ability/item ids to names. |
+| `StringTableType.COOLDOWN_NAMES` | hundreds | Resolves ability cooldown ids to names. |
+| `StringTableType.DOWNLOADABLES` | hundreds | — |
+| `StringTableType.ECON_ITEMS` | hundreds | Equipped cosmetic items. |
+| `StringTableType.LUA_MODIFIERS` | hundreds | — |
+| `StringTableType.MODIFIER_NAMES` | thousands | Resolves `ActiveModifiers.modifierClass` to readable names. |
+| `StringTableType.PARTICLE_ASSETS` | hundreds | — |
+| `StringTableType.RESPONSE_KEYS` | hundreds | — |
+
+### Decoders
+
+Dota 2-specific entity field decoders. Entity examples: `CDOTAPlayerController`, `CDOTAGameRulesProxy`. Entities, fields and types can be browsed in [Deadem Explorer](https://deadem.com).
 
 ## Examples
 
@@ -93,6 +122,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | 102 | Parse selected message types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
 | 103 | Print chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
 | 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
+| 110 | Print the combat log, names resolved through `CombatLogNames` | [110_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/110_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/110_parse_combat_log.js` |
 
 ### Player
 
@@ -100,88 +130,12 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | --- | --- | --- | --- |
 | 200 | Load, seek, play, and pause a replay | [200_play.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js) | `node ./packages/examples-node-dota2/scripts/200_play.js` |
 
-## Usage
-
-### Replay file
-
-```js
-import { createReadStream } from 'node:fs';
-
-import { Parser, Printer } from '@deademx/dota2';
-
-const parser = new Parser();
-const printer = new Printer(parser);
-
-await parser.parse(createReadStream(PATH_TO_DEM_FILE));
-await parser.dispose();
-
-printer.printStats();
-```
-
-### Data extraction
-
-Dota 2-specific message types are exposed via the extended [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/MessagePacketType.js) — for example, `DOTA_UM_CHAT_MESSAGE`, `DOTA_UM_CHAT_EVENT`, `DOTA_UM_OVERHEAD_EVENT`, `DOTA_UM_COMBAT_LOG_DATA_HLTV`, and more. Dota 2-specific string tables (`MODIFIER_NAMES`, `COMBAT_LOG_NAMES`, `ECON_ITEMS`, …) are exposed via the extended [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/StringTableType.js).
-
-Filter and extract chat messages:
-
-```js
-import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration } from '@deademx/dota2';
-
-const parser = new Parser(new ParserConfiguration({
-    messagePacketTypes: [ MessagePacketType.DOTA_UM_CHAT_MESSAGE ]
-}));
-
-parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-    if (messagePacket.type === MessagePacketType.DOTA_UM_CHAT_MESSAGE) {
-        console.log(messagePacket.data);
-    }
-});
-
-await parser.parse(readable);
-await parser.dispose();
-```
-
-Query entities and classes after the parse completes:
-
-```js
-await parser.parse(readable);
-
-const demo = parser.getDemo();
-
-demo.getEntitiesByClassName('CDOTAPlayerController').forEach((entity) => {
-    console.log(entity.getField('m_iszPlayerName'));
-});
-```
-
-### Playback and seeking
-
-```js
-import { createReadStream } from 'node:fs';
-
-import { Player } from '@deademx/dota2';
-
-const player = new Player();
-
-await player.load(createReadStream(PATH_TO_DEM_FILE));
-await player.seekToTick(player.getLastTick());
-
-const demo = player.getDemo();
-
-console.log(`Ticks: ${player.getFirstTick()} → ${player.getLastTick()}`);
-console.log(`Entities at last tick: ${demo.getEntities().length}`);
-
-await player.dispose();
-```
-
 ## Compatibility
 
 - **Game patch:** tested with Dota 2 demos from patch `7.41b` and below.
-- **Runtimes:** Node.js v18+, Deno, and Bun.
-- **Browsers:** Chrome, Firefox, Safari, Edge.
+- **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance
-
-For configuration trade-offs see the [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
 | # | Configuration                                                  | Ticks/sec        | 30-min replay, sec | Max Heap, MB  | Max ArrayBuffers, MB | Max RSS, MB  |
 | - | ---                                                            | ---              | ---                | ---           | ---                  | ---          |
@@ -191,6 +145,8 @@ For configuration trade-offs see the [engine performance notes](https://github.c
 
 Runtime: Node.js v22.14.0.
 
+See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md#performance) for optimization tips.
+
 ## License
 
-This project is licensed under the [MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE) License.
+[MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE)

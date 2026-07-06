@@ -255,8 +255,7 @@ class Entity {
      * call reads every field and caches the result. Subsequent calls patch
      * only changed fields into the cached object.
      *
-     * Expensive — every present field forces a leaf read. Use
-     * {@link #getField} unless you are debugging.
+     * Use {@link #getField} unless you are debugging.
      *
      * @public
      * @returns {*}

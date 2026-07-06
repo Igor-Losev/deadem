@@ -12,44 +12,58 @@
 
 **@deademx/engine** is the shared, game-agnostic Source 2 parsing and replay playback engine that powers [`deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) (Deadlock), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) (Counter-Strike 2), and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) (Dota 2).
 
-It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. For a ready-to-run package, install one of the implementations below.
+It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. Ready-to-run packages are listed below.
 
 ## Contents
 
 - [Implementations](#implementations)<br/>
-  Game-specific packages built on top of the shared engine.
-- [Concepts](#concepts)<br/>
-  Core concepts of the parsing and playback engine.
-  - [Demo](#demo)<br/>
-    Structure and content of Source 2 demo packets.
-  - [Parser](#parser)<br/>
-    Parser lifecycle and stream processing model.
-  - [Player](#player)<br/>
-    Replay playback, seeking, and player state transitions.
-  - [Interceptors](#interceptors)<br/>
-    Hook points for inspecting and extracting data during parsing.
-- [Configuration](#configuration)<br/>
-  Parser configuration options and logging strategies.
-  - [Parser options](#parser-options)<br/>
-    Packet filtering, worker settings, and parser tuning.
+  Game-specific packages built on top of the engine.
+- [Quick Start](#quick-start)<br/>
+  Parse a replay, print stats.
+- [How It Works](#how-it-works)<br/>
+  Packet flow, parser lifecycle, interceptors overview.
+- [Demo](#demo)<br/>
+  Structure of Source 2 demo.
+  - [Entities](#entities)<br/>
+    Entity identity, decoded fields, query API.
+  - [String Tables](#string-tables)<br/>
+    Container, entries, subscription events.
+- [Interceptors](#interceptors)<br/>
+  Capturing data in flight.
+  - [`InterceptorStage.DEMO_PACKET`](#interceptorstagedemo_packet)<br/>
+    One call per outer demo packet.
+  - [`InterceptorStage.MESSAGE_PACKET`](#interceptorstagemessage_packet)<br/>
+    Inner message packets — string tables, entities, user messages.
+  - [`InterceptorStage.ENTITY_PACKET`](#interceptorstageentity_packet)<br/>
+    Per-entity mutation events — delta reads, operation table.
+  - [Parse Order](#parse-order)<br/>
+    Nesting diagram of all interceptor stages.
+- [Player](#player)<br/>
+  Replay — seeking, playback, state machine.
+  - [Seeking](#seeking)<br/>
+    Tick seeking, entity state access.
+  - [State](#state)<br/>
+    State transitions.
+  - [Navigation](#navigation)<br/>
+    Tick methods, seek cost.
+  - [Playback](#playback)<br/>
+    Continuous play, pause/stop, error handling.
+- [Configuration & Tuning](#configuration--tuning)<br/>
+  Packet filtering, break interval, logging.
+  - [Filters](#filters)<br/>
+    `entityClasses`, `messagePacketTypes` — the primary speed lever.
+  - [Stream Tuning](#stream-tuning)<br/>
+    `breakInterval` — macrotask scheduling for UI responsiveness.
   - [Logging](#logging)<br/>
-    Built-in logger strategies.
-- [API reference](#api-reference)<br/>
-  Summary of all public exports and key methods.
-- [Usage](#usage)<br/>
-  Common usage patterns for replay parsing, broadcast parsing, and playback.
-  - [Replay file](#replay-file)<br/>
-    Parse a replay from a `.dem` file.
-  - [HTTP broadcast](#http-broadcast)<br/>
-    Parse a live Source 2 HTTP broadcast stream.
-  - [Data extraction](#data-extraction)<br/>
-    Capture data during parsing or query the final state.
-  - [Playback and seeking](#playback-and-seeking)<br/>
-    Seek through buffered state and run continuous playback.
+    Verbosity strategies.
+- [HTTP Broadcast](#http-broadcast)<br/>
+  Live Source 2 broadcast parsing.
 - [Performance](#performance)<br/>
-  How configuration choices affect parser throughput.
+  Speedup table and tuning advice.
+  - [Tips](#tips)<br/>
+    Optimization patterns.
 - [License](#license)<br/>
-  Project licensing information.
+  MIT.
 
 ## Implementations
 
@@ -59,159 +73,221 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
 | `@deademx/cs2` | Counter-Strike 2 | [npm](https://www.npmjs.com/package/@deademx/cs2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) |
 | `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
 
-## Concepts
+> [!NOTE]
+> `@deademx/engine` is not runnable on its own. It depends on upstream proto files, decoders, and string table parsing instructions. A game package supplies all three.
+>
+> This document shows every example using `deadem` (Deadlock). The same code works with `@deademx/cs2` and `@deademx/dota2` — only the import changes.
 
-### Demo
+## Quick Start
 
-A Source 2 demo is a sequential stream of outer packets, called `DemoPacket` in this project. Each has a type from [`DemoPacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js).
+```bash
+npm install deadem
+```
 
-Most `DemoPacket` types parse into plain objects. Three types carry an array of inner `MessagePacket` values:
+```js
+import { createReadStream } from 'node:fs';
 
-- `DEM_PACKET`
-- `DEM_SIGNON_PACKET`
-- `DEM_FULL_PACKET`
+import { Parser, Printer } from 'deadem';
 
-Two [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) categories require additional decoding and drive the internal game state:
+const parser = new Parser();
+const readable = createReadStream('./match.dem');
 
-- **Entities** — `SVC_PACKET_ENTITIES` contains creates, updates, and deletes.
-- **String tables** — `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE`, `SVC_CLEAR_ALL_STRING_TABLES`.
+await parser.parse(readable);
 
-The engine maintains a mutable `Demo` object that is updated tick by tick. Query it for the current state:
+const printer = new Printer(parser);
+printer.printStats();
+
+await parser.dispose(); // cleanup state and resources
+```
+
+## How It Works
+
+[`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) reads a byte stream and processes it packet by packet, mutating internal state as it goes. Interceptors hook into any packet before or after processing. Once parsing ends, `Parser` holds the game state — `dispose()` releases it.
+
+## Demo
+
+[`Demo`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Demo.js) is the state that [`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) and [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) mutate as they read. Access with `parser.getDemo()` or `player.getDemo()`.
+
+A demo file is a stream of outer packets, called [`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js). Most carry protobuf-decoded data relevant to that packet type. Three outer packet types — [`DEM_PACKET`, `DEM_SIGNON_PACKET`, `DEM_FULL_PACKET`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js) — are different: they carry an array of inner packets, called [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js). Each represents a network message — entity deltas, string table operations, user messages — identified by its [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js).
+
+[`MessagePacketType.SVC_PACKET_ENTITIES`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) carries packed entity deltas, sent every tick. Once unpacked, they become part of `Demo`. `Demo` also holds string tables.
+
+### Entities
 
 | Method | Returns |
 | --- | --- |
 | `demo.getEntities()` | All live entities |
 | `demo.getEntitiesByClassName(name)` | Entities filtered by class name |
 | `demo.getEntity(index)` | Entity by index |
-| `demo.getEntityByHandle(handle)` | Entity by handle |
+| `demo.getEntityByHandle(handle)`* | Entity by handle |
 | `demo.getClasses()` | All registered entity classes |
 | `demo.getClassByName(name)` | Entity class by name |
-| `demo.stringTableContainer.getByName(name)` | String table by name |
-| `demo.server` | Server metadata (`tickInterval`, `tickRate`, `maxClients`, `maxClasses`) |
 
-Each `Entity` exposes its decoded fields:
+\* — entity fields like `m_hOwnerEntity` store handles pointing to other entities
+
+[`Entity`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js) has these properties:
+
+| Property | Returns |
+| --- | --- |
+| `entity.index` | Slot index in `Demo` |
+| `entity.serial` | Generation counter — changes when a new entity reuses a previous entity's index |
+| `entity.class` | The entity's [`Class`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Class.js) — `.id`, `.name` |
+| `entity.handle` | `index` and `serial` packed into one number |
+
+Decoded fields:
 
 | Method | Returns |
 | --- | --- |
-| `entity.getField(name)` | Field value by flattened name (e.g. `'CBodyComponent.m_cellX'`), or `undefined` |
+| `entity.getField(name)` | Value at the given dot-separated path — the array/struct if the path stops short of a leaf, the scalar if it reaches one, `undefined` if unresolved. Indices are zero-padded to 4 digits (`0000`, `0001`, ...). |
 | `entity.hasField(name)` | Whether the named field is currently set |
 | `entity.getFieldCount()` | Number of fields currently set |
 | `entity.fieldEntries()` | Iterator of `[ name, value ]` pairs for present fields |
 | `entity.fieldNames()` | Iterator of present field names |
-| `entity.unpackFlattened()` | Cached plain object keyed by field name, lazily materialized and reused between ticks |
+| `entity.unpackFlattened()` | Plain object keyed by field name |
 
-> [!WARNING]
-> Demos carry only the minimal data required for visual playback. Not all game state is preserved, and the parser may skip packets it cannot decode. Call `parser.getStats()` (or `player.getStats()`) for detailed per-packet statistics.
+### String Tables
 
-### Parser
+The engine registers common [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableType.js)s:
 
-`Parser` consumes a readable stream and incrementally parses packets into an internal `Demo` instance. It overwrites past state as ticks advance and does not buffer snapshots.
-
-```js
-const parser = new Parser(registry);
-
-await parser.parse(readable);
-await parser.dispose();
-```
-
-Parsing can be paused and resumed mid-stream:
-
-```js
-parser.pause();
-parser.resume();
-```
-
-### Player
-
-`Player` is a higher-level class built on top of the same engine. Unlike `Parser`, it buffers the entire demo on `load()` and builds a packet index, enabling forward and backward seeks.
-
-```js
-const player = new Player(registry);
-
-await player.load(readable);
-await player.seekToTick(50000);
-
-await player.nextTick();
-await player.prevTick();
-
-await player.play(2.0).catch((err) => {
-    if (!(err instanceof PlaybackInterruptedError)) throw err;
-});
-
-player.pause();
-await player.stop();
-await player.dispose();
-```
-
-The player follows a strict state machine:
-
-```text
-IDLE
- ├── load()        → LOADED
- └── dispose()     → DISPOSED
-
-LOADED
- ├── play()        → PLAYING
- ├── seekToTick()  → SEEKING → LOADED
- └── dispose()     → DISPOSED
-
-PLAYING
- ├── pause() / end → LOADED
- └── dispose()     → DISPOSED
-
-SEEKING
- ├── (completes)   → LOADED
- └── dispose()     → DISPOSED
-```
-
-| State | Description |
+| `StringTableType` | Content |
 | --- | --- |
-| `IDLE` | Initial state. Only `load()` or `dispose()` is allowed. |
-| `LOADED` | Demo is buffered and indexed. Ready for seek and playback. |
-| `PLAYING` | Continuous playback is running. |
-| `SEEKING` | A `seekToTick()` call is in progress. |
-| `DISPOSED` | Resources released. The player cannot be used further. |
+| `StringTableType.ANIM_ASSET_DATA` | Animation asset names, raw binary values |
+| `StringTableType.ANIM_TASK_TYPES` | Animation task type names, static |
+| `StringTableType.DECAL_PRE_CACHE` | Decal cache |
+| `StringTableType.EFFECT_DISPATCH` | Effect dispatch keys, static |
+| `StringTableType.ENTITY_NAMES` | Key-only registry of entity class names |
+| `StringTableType.GENERIC_PRE_CACHE` | Single-entry metadata |
+| `StringTableType.INFO_PANEL` | Info panel data |
+| `StringTableType.INSTANCE_BASE_LINE` | Entity class baselines, consumed internally for entity decoding |
+| `StringTableType.LIGHT_STYLES` | Light style definitions, engine-internal |
+| `StringTableType.RESPONSE_KEYS` | Response key definitions |
+| `StringTableType.SCENES` | Scene names, static |
+| `StringTableType.SERVER_QUERY_INFO` | Single-entry metadata |
+| `StringTableType.USER_INFO` | Player name, Steam ID, userid — decoded `CMsgPlayerInfo` per slot |
+| `StringTableType.V_GUI_SCREEN` | VGUI screen data |
 
-The current state is exposed via `player.state`.
+> [!NOTE]
+> `StringTableType.USER_INFO` slots hold values only while a player is connected. Players disconnect after the match ends — by the time `parse()` returns, most slots are empty.
 
-### Interceptors
+Access tables through [`StringTableContainer`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/tables/string/StringTableContainer.js):
 
-Interceptors are user-defined hooks that run before or after specific parsing stages. They are the primary way to extract data during parsing.
+| Method | Returns |
+| --- | --- |
+| `demo.stringTableContainer.getById(id)` | Table by id, or `null` |
+| `demo.stringTableContainer.getByType(type)` | Table by its [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableType.js), or `null` |
+| `demo.stringTableContainer.getTables()` | All tables |
 
-`Parser` and `Player` expose the same registration API:
+Table entries:
 
-- `registerPreInterceptor(stage, fn)`
-- `registerPostInterceptor(stage, fn)`
-- `unregisterPreInterceptor(stage, fn)`
-- `unregisterPostInterceptor(stage, fn)`
+| Method | Returns |
+| --- | --- |
+| `table.getEntries()` | All entries |
+| `table.getEntriesCount()` | Number of entries |
+| `table.getEntryById(id)` | Entry by id, or `null` |
 
-Three stages are supported via `InterceptorStage`:
+An entry is a [`StringTableEntry`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/tables/string/StringTableEntry.js):
+
+| Property | Returns |
+| --- | --- |
+| `entry.id` | Positional id within the table |
+| `entry.key` | String key |
+| `entry.value` | `null` for key-only entries. Otherwise a decoded value or the raw `Uint8Array` payload. |
+
+`StringTableContainer` reports table changes through [`StringTableEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableEvent.js):
+
+| Event | Fires when |
+| --- | --- |
+| `TABLE_CREATED` | A table is registered |
+| `TABLE_UPDATED` | An existing table's entries change |
+| `TABLE_REMOVED` | A table is removed |
+
+Subscribe with `demo.stringTableContainer.subscribe(StringTableEvent.TABLE_UPDATED, callback)`, unsubscribe the same way. The callback receives `(StringTableContainer, StringTable, Array<StringTableEntry>|null)`.
+
+## Interceptors
+
+Interceptors capture data in flight — per packet, before or after it reaches `Demo`. [`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) and [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) expose `registerPreInterceptor(stage, callback)`, `registerPostInterceptor(stage, callback)`, `unregisterPreInterceptor(stage, callback)`, and `unregisterPostInterceptor(stage, callback)`. Unregistration uses reference equality — the same function instance must be passed. `PRE` fires before a stage's data reaches `Demo`; `POST` fires after.
+
+There are three [`InterceptorStage`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/InterceptorStage.js) values:
 
 | Stage | Hook signature |
 | --- | --- |
-| `DEMO_PACKET` | `(demoPacket) => void` |
-| `MESSAGE_PACKET` | `(demoPacket, messagePacket) => void` |
-| `ENTITY_PACKET` | `(demoPacket, messagePacket, events) => void` |
+| `DEMO_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`) => void` |
+| `MESSAGE_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`, `[`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)`) => void` |
+| `ENTITY_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`, `[`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)`, Array<`[`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)`>) => void` |
 
-For `ENTITY_PACKET`, `events` is an array of `EntityMutationEvent` values with `{ operation, entity, mutations }`, where `operation` is an `EntityOperation` (`CREATE`, `UPDATE`, `LEAVE`, `DELETE`).
+### `InterceptorStage.DEMO_PACKET`
+
+One call per outer [`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js):
 
 ```js
-import { EntityOperation, InterceptorStage, Parser } from '@deademx/engine';
+import { InterceptorStage, Parser } from 'deadem';
+
+const parser = new Parser();
+
+parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
+    console.log(demoPacket.type.code, demoPacket.tick);
+});
+```
+
+### `InterceptorStage.MESSAGE_PACKET`
+
+One call per inner [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js).
+
+```js
+import { MessagePacketType } from 'deadem';
+
+parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
+    if (messagePacket.type !== MessagePacketType.NET_TICK) return;
+
+    console.log(messagePacket.data);
+});
+```
+
+`messagePacket.data` is protobuf-decoded. Two types carry further encoded data:
+
+- `SVC_CREATE_STRING_TABLE` and `SVC_UPDATE_STRING_TABLE` — encoded entries, decoded internally. For per-entry changes, use `StringTableContainer.subscribe`.
+- `SVC_PACKET_ENTITIES` — packed entity changes, decoded internally. For per-entity changes, use `InterceptorStage.ENTITY_PACKET`.
+
+### `InterceptorStage.ENTITY_PACKET`
+
+One call per `SVC_PACKET_ENTITIES`, with an array of [`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js) — one per entity:
+
+```js
+import { EntityOperation } from 'deadem';
 
 parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
     for (const event of events) {
         if (event.operation !== EntityOperation.UPDATE) continue;
+        if (event.entity.class.name !== 'CCitadelPlayerPawn') continue; // Deadlock hero entity
 
-        const changes = event.getChanges();
+        const [health] = event.getChanges(['m_iHealth']);
 
-        if ('m_iHealth' in changes) {
-            console.log(event.entity.class.name, changes.m_iHealth);
+        if (health !== undefined) {
+            console.log(`Tick [ ${demoPacket.tick} ] | Entity [ ${event.entity.class.name}|${event.entity.index} ] | m_iHealth = ${health}`);
         }
     }
 });
 ```
 
-The parse timeline:
+Each event exposes:
+
+| Property | Returns |
+| --- | --- |
+| `event.operation` | [`EntityOperation`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/EntityOperation.js) — `CREATE`, `UPDATE`, `LEAVE`, or `DELETE` |
+| `event.entity` | Affected [`Entity`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js) |
+
+`event.getChanges()` — object of all changed fields. `event.getChanges(names)` — same-order array, `undefined` for missing fields.
+
+| Operation | When | Batch |
+|---|---|---|
+| `CREATE` | Entity first appears | All initial fields |
+| `UPDATE` | Entity fields changed | Changed fields only |
+| `LEAVE` | Entity deactivated, slot reserved | Empty |
+| `DELETE` | Entity permanently removed | Empty |
+
+`PRE` fires before `Demo` is mutated. `POST` fires after.
+
+### Parse Order
 
 ```text
 PRE DEMO_PACKET
@@ -222,225 +298,193 @@ PRE DEMO_PACKET
  └─ DEM_PACKET
      ├─ PRE MESSAGE_PACKET
      │   └─ NET_TICK
-     └─ POST MESSAGE_PACKET
+     ├─ POST MESSAGE_PACKET
+     ├─ ...
      ├─ PRE MESSAGE_PACKET
      │   └─ SVC_PACKET_ENTITIES
      │       ├─ PRE ENTITY_PACKET
-     │       │   └─ ENTITY_1
+     │       │   └─ events
      │       └─ POST ENTITY_PACKET
-     │       └─ ...
-     └─ POST MESSAGE_PACKET
+     ├─ POST MESSAGE_PACKET
+     └─ ...
 POST DEMO_PACKET
 ```
 
-> [!IMPORTANT]
-> Interceptor callbacks are not awaited. Use synchronous callbacks when data must be captured before the parser advances.
+## Player
 
-## Configuration
+[`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) steps tick by tick, jumps to any tick, or plays back at a chosen rate. It wraps [`ParserEngine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/ParserEngine.js) — the same engine that powers [`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js).
 
-### Parser options
+`load()` buffers the entire file and indexes keyframes. Streaming and HTTP broadcast are not supported (yet) — seeking requires the entire file buffered.
 
-`ParserConfiguration` controls packet filtering and parser tuning:
-
-| Option | Description | Type | Default |
-| --- | --- | --- | --- |
-| `breakInterval` | How often, in packets, to yield to the event loop. Lower values improve responsiveness, higher values improve throughput. | `number` | `1000` |
-| `entityClasses` | Allowlist of entity class names to decode from `SVC_PACKET_ENTITIES`. | `Array<string> \| null` | `null` |
-| `messagePacketTypes` | Allowlist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypesExclude`. | `Array<MessagePacketType> \| null` | `null` |
-| `messagePacketTypesExclude` | Blocklist of [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values. Mutually exclusive with `messagePacketTypes`. | `Array<MessagePacketType> \| null` | `null` |
-| `parserThreads` | ~~Number of additional worker threads.~~ **Deprecated.** Will be removed in the next major release. | `number` | `0` |
-
-The engine always processes the following message types regardless of filters, because they drive internal state:
-
-- `SVC_SERVER_INFO`
-- `SVC_CREATE_STRING_TABLE`
-- `SVC_UPDATE_STRING_TABLE`
-- `SVC_CLEAR_ALL_STRING_TABLES`
-
-Example — skip entity packets when entity data is not needed:
-
-```js
-import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine';
-
-const parser = new Parser(registry, new ParserConfiguration({
-    messagePacketTypesExclude: [ MessagePacketType.SVC_PACKET_ENTITIES ]
-}));
-```
-
-Example - decoding only a subset of entity classes:
-
-```js
-import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/engine';
-
-const parser = new Parser(registry, new ParserConfiguration({
-    messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
-    entityClasses: [ 'CExampleEntityA', 'CExampleEntityB' ]
-}));
-```
-
-### Logging
-
-`Logger` ships with predefined strategies:
-
-| Strategy | Levels emitted |
-| --- | --- |
-| `Logger.CONSOLE_TRACE` | trace, debug, info, warn, error |
-| `Logger.CONSOLE_DEBUG` | debug, info, warn, error |
-| `Logger.CONSOLE_INFO` *(default)* | info, warn, error |
-| `Logger.CONSOLE_WARN` | warn, error |
-| `Logger.NOOP` | (nothing) |
-
-```js
-import { Logger, Parser, ParserConfiguration } from '@deademx/engine';
-
-const parser = new Parser(registry, ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
-```
-
-## API reference
-
-| Export | Purpose |
-| --- | --- |
-| `Parser` | Streaming parser over a `Readable`. |
-| `Player` | Buffered replay player with seek and playback. |
-| `ParserConfiguration` | Parser options (filters, threads, break interval). |
-| `SchemaRegistry` | Registry of protobuf types. Required by `Parser` and `Player`. |
-| `Bootstrap` | Populates a `SchemaRegistry` with engine-level types. |
-| `ProtoProvider` | Base protobuf schema provider for game-specific packages. |
-| `FieldDecoderDescriptor` | Field decoder descriptors used by game-specific bootstrap rules. |
-| `FieldDecoderType` | Enum of supported field decoder descriptor types. |
-| `BroadcastAgent` | Polls Source 2 HTTP broadcast fragments. |
-| `BroadcastGateway` | Low-level HTTP client for broadcast endpoints. |
-| `Printer` | Prints parser stats (memory, packets, performance). |
-| `Logger` | Logging strategy (see above). |
-| `PlaybackInterruptedError` | Raised when `Player.play()` is interrupted. Exposes `reason`. |
-| [`DemoPacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js) | Enum of outer packet types (`DEM_PACKET`, `DEM_FULL_PACKET`, …). |
-| [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) | Enum of inner message types (`NET_TICK`, `SVC_PACKET_ENTITIES`, …). |
-| [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableType.js) | Enum of string tables (`USER_INFO`, `INSTANCE_BASE_LINE`, …). |
-| `EntityOperation` | `CREATE`, `UPDATE`, `LEAVE`, `DELETE`. |
-| `InterceptorStage` | `DEMO_PACKET`, `MESSAGE_PACKET`, `ENTITY_PACKET`. |
-| `PlayerState` | `IDLE`, `LOADED`, `PLAYING`, `SEEKING`, `DISPOSED`. |
-| `DemoSource` | `REPLAY`, `HTTP_BROADCAST`. |
-| `Protocol` | `HTTP`, `HTTPS`. |
-
-Key methods on `Parser`: `parse(reader, source?, objectMode?)`, `extract(reader, source?)`, `pause()`, `resume()`, `abort()`, `dispose()`, `getDemo()`, `getStats()`, `getIsStarted()`, `getIsPaused()`, `getIsFinished()`, `getIsDisposed()`, plus the interceptor registration API.
-
-Key methods on `Player`: `load(reader, source?)`, `seekToTick(tick)`, `nextTick()`, `prevTick()`, `play(rate?)`, `pause()`, `stop()`, `dispose()`, `getDemo()`, `getCurrentTick()`, `getFirstTick()`, `getLastTick()`, `getStats()`, `state`, plus the interceptor registration API.
-
-## Usage
-
-All examples assume `registry` is a populated `SchemaRegistry`. When using a game-specific package (`deadem`, `@deademx/cs2`, `@deademx/dota2`), the registry is built automatically inside the subclassed `Parser` and `Player` — there is nothing to wire up. When consuming `@deademx/engine` directly, you must supply both a `ProtoProvider` and a bootstrap routine that layers game-specific types on top of `Bootstrap.run(registry)`.
-
-### Replay file
+### Seeking
 
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, Printer } from '@deademx/engine';
+import { Player } from 'deadem';
 
-const parser = new Parser(registry);
-const printer = new Printer(parser);
-const readable = createReadStream(PATH_TO_DEMO_FILE);
+const player = new Player();
 
-await parser.parse(readable);
-await parser.dispose();
+await player.load(createReadStream('./match.dem'));
+await player.seekToTick(player.getLastTick());
 
-printer.printStats();
+const controllers = player.getDemo().getEntitiesByClassName('CCitadelPlayerController'); // Deadlock player controllers
+
+for (const controller of controllers) {
+    const name = controller.getField('m_iszPlayerName');
+    const netWorth = controller.getField('m_iGoldNetWorth');
+
+    console.log(`[ ${name} ] | m_iGoldNetWorth = ${netWorth}`);
+}
+
+await player.dispose();
 ```
 
-### HTTP broadcast
+### State
+
+`Player` follows a state machine:
+
+| `player.state` | Meaning | Moves to |
+| --- | --- | --- |
+| `IDLE` | Created, nothing loaded | `LOADED` |
+| `LOADED` | Holds a tick, ready for navigation | `PLAYING`, `SEEKING` |
+| `PLAYING` | `play()` in progress | `LOADED` |
+| `SEEKING` | `seekToTick()` in progress | `LOADED` |
+| `DISPOSED` | Released, unusable | — |
+
+Any state can move to `DISPOSED` via `dispose()`. A failed seek still returns to `LOADED`.
+
+### Navigation
+
+| Method | Returns |
+| --- | --- |
+| `player.getCurrentTick()` | Current tick |
+| `player.getFirstTick()` | First tick in the demo |
+| `player.getLastTick()` | Last tick in the demo |
+| `player.nextTick()` | Advances one tick. `false` at the last tick |
+| `player.prevTick()` | Moves back one tick. `false` at the first tick |
+| `player.seekToTick(tick)` | Jumps to the given tick, or the nearest one before it |
+
+`nextTick()` advances the open session — cheap. `seekToTick()` closes it and opens a new one from the nearest keyframe — expensive. `prevTick()` calls `seekToTick()` internally: the name is symmetric, the cost is not.
+
+Every seek clears `Demo` internals — entities and tables from a previous tick are stale. The `Demo` instance remains the same, its contents are rebuilt.
+
+### Playback
+
+| Method | Returns |
+| --- | --- |
+| `player.play(rate = 1.0)` | Promise that resolves at the last tick |
+| `player.pause()` | Rejects the `play()` promise. No-op if not playing |
+| `player.stop()` | Rejects the `play()` promise, then seeks to the first tick. No-op if not playing |
+
+`play()` also rejects if interrupted by `seekToTick()`, or by `dispose()`. Unlike `pause()` / `stop()`, calling `play()` while not `LOADED` throws — a no‑op otherwise. The rejection is a [`PlaybackInterruptedError`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/errors/PlaybackInterruptedError.js) with `.reason`: `'paused'`, `'stopped'`, or `'disposed'`.
 
 ```js
-import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from '@deademx/engine';
+const playback = player.play(0.5); // half speed
 
-const FROM_BEGINNING = false;
+setTimeout(() => player.pause(), 1000);
+
+try {
+    await playback;
+} catch (error) {
+    console.log(error.reason); // 'paused'
+}
+```
+
+Interceptors work the same as on `Parser` (above) and stay registered across seeks.
+
+## Configuration & Tuning
+
+[`ParserConfiguration`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/ParserConfiguration.js) tunes entity decoding, packet filtering, and stream behavior.
+
+### Filters
+
+Filters are the primary lever for parser performance — reducing decoded data cuts both memory and time.
+
+| Option | Type | Default | Filters |
+| --- | --- | --- | --- |
+| `entityClasses` | `Array<string>\|null` | `null` | Which entity classes get their fields decoded |
+| `messagePacketTypes` | `Array<MessagePacketType>\|null` | `null` | Allowlist of message types to process |
+| `messagePacketTypesExclude` | `Array<MessagePacketType>\|null` | `null` | Blocklist of message types to process |
+
+Four [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) values are always processed — they drive internal state: `SVC_SERVER_INFO`, `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE`, `SVC_CLEAR_ALL_STRING_TABLES`.
+
+```js
+import { MessagePacketType, Parser, Player, ParserConfiguration } from 'deadem';
+
+const configA = new ParserConfiguration({
+    messagePacketTypesExclude: [MessagePacketType.SVC_PACKET_ENTITIES]
+});
+
+const configB = new ParserConfiguration({
+    entityClasses: ['CCitadelPlayerPawn', 'CCitadelPlayerController']
+});
+
+new Parser(configA);
+new Player(configB);
+```
+
+### Stream Tuning
+
+`breakInterval` — every N packets, the parser schedules and awaits a macrotask to avoid blocking. Lower values mean more breaks (responsive UI, slower parse); higher values mean fewer breaks (faster parse, blocked UI). Default is `1000`.
+
+### Logging
+
+[`Logger`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/core/Logger.js) controls verbosity. Accepted by `Parser` and `Player` constructors. Built-in strategies — `CONSOLE_TRACE`, `CONSOLE_DEBUG`, `CONSOLE_INFO` (default), `CONSOLE_WARN`, `NOOP`.
+
+```js
+import { Logger, Parser, ParserConfiguration } from 'deadem';
+
+new Parser(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
+```
+
+## HTTP Broadcast
+
+[`BroadcastAgent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/broadcast/BroadcastAgent.js) exposes a live Source 2 TV broadcast as a readable stream for `Parser`.
+
+```js
+import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from 'deadem';
+
 const MATCH_ID = 'MATCH_IDENTIFIER';
 
 const gateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
 const agent = new BroadcastAgent(gateway, MATCH_ID);
 
-const parser = new Parser(registry);
+const parser = new Parser();
 
-await parser.parse(agent.stream(FROM_BEGINNING), DemoSource.HTTP_BROADCAST);
-await parser.dispose();
+await parser.parse(agent.stream(), DemoSource.HTTP_BROADCAST);
 ```
 
-### Data extraction
+`agent.stream(fromStart = false)` polls fragments from the relay and emits them as they arrive. `DemoSource.HTTP_BROADCAST` is required — `parse()` defaults to `DemoSource.REPLAY`.
 
-Use interceptors when data must be captured *during* parsing:
-
-```js
-import { InterceptorStage, Parser } from '@deademx/engine';
-
-const parser = new Parser(registry);
-
-parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-    console.log(messagePacket.type.code, messagePacket.data);
-});
-
-await parser.parse(readable);
-```
-
-Use post-parse queries when only the final state is needed:
-
-```js
-await parser.parse(readable);
-
-const demo = parser.getDemo();
-const entities = demo.getEntities();
-```
-
-### Playback and seeking
-
-Inspect state at a specific tick:
-
-```js
-import { createReadStream } from 'node:fs';
-
-import { Player } from '@deademx/engine';
-
-const player = new Player(registry);
-const readable = createReadStream(PATH_TO_DEMO_FILE);
-
-await player.load(readable);
-await player.seekToTick(player.getLastTick());
-
-const demo = player.getDemo();
-const entities = demo.getEntities();
-
-await player.dispose();
-```
-
-Continuous playback at 2× speed, paused after 3 seconds:
-
-```js
-import { PlaybackInterruptedError, Player } from '@deademx/engine';
-
-const player = new Player(registry);
-
-await player.load(readable);
-
-const playback = player.play(2.0).catch((err) => {
-    if (!(err instanceof PlaybackInterruptedError)) throw err;
-});
-
-setTimeout(() => player.pause(), 3000);
-
-await playback;
-await player.dispose();
-```
+`BroadcastAgent` defaults to `Logger.CONSOLE_DEBUG` — louder than `Parser`'s and `Player`'s `CONSOLE_INFO` default. A logger can be passed explicitly to quiet it.
 
 ## Performance
 
-Entity-packet decoding (`MessagePacketType.SVC_PACKET_ENTITIES`) accounts for most of the parser's work — everything else combined is under ~20%. Three configurations cover typical use cases:
+Entity-packet decoding (`SVC_PACKET_ENTITIES`) accounts for most of the parser's work — everything else combined is under ~20%. Three configurations cover typical use cases:
 
-| # | Configuration                                                  | Speedup vs default | Use case                                      |
-| - | ---                                                            | ---                | ---                                           |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 1× (baseline)      | Full replay state.                            |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | ~6–8×              | Non-entity packets only.                      |
-| 3 | `entityClasses` allowlist                                      | ~4–6×              | Entity consumers with a known set of classes. |
+| # | Configuration | Speedup |
+| --- | --- | --- |
+| 1 | No filters | 1× (baseline) |
+| 2 | Exclude `SVC_PACKET_ENTITIES` entirely | ~4–6× |
+| 3 | `entityClasses` allowlist | ~1–5× |
 
-The engine itself is game-agnostic. For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance), or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
+For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance), or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
+
+### Tips
+
+- Filter what gets decoded — the biggest performance gain. Only enable the message types and entity classes the code needs.
+
+- `breakInterval` default (`1000`) is tuned for Node.js. In a browser, lower it to keep the UI responsive — `100` is used in Deadem Explorer. Experiment to find the balance for the target environment.
+
+- Mind the call frequency. A 500 MB Deadlock demo may contain ~150k `InterceptorStage.DEMO_PACKET` and ~3M `InterceptorStage.MESSAGE_PACKET` calls — one interceptor invocation each. Heavy work in the `InterceptorStage.MESSAGE_PACKET` interceptor compounds fast and can tank performance. The same holds for CS2 and Dota 2 demos.
+
+- Use `InterceptorStage.ENTITY_PACKET` only when per-entity diffs between ticks are needed. To simply read current state — player positions, health, etc. — use `Demo` from an `InterceptorStage.DEMO_PACKET` interceptor instead.
+
+- Throttle per-tick logic when frame-level precision isn't required. A UI renderer rarely needs health changes every tick — sampling once per second is usually enough. Depending on server tick rate, that's every 64 ticks (Deadlock), every 30 ticks (Dota 2), or similar for CS2.
+
+- Use `getField('name')` for reading entity state — point reads are cheap (~0.08 µs per scalar). A 500 MB Deadlock demo may produce ~10M [`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)s carrying ~100M individual field updates. Entity state stays in TypedArrays internally, keeping memory compact — values materialize into JS objects on read. See [`Entity.getField`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js#L109) JSDoc for detailed overhead.
 
 ## License
 
-This project is licensed under the [MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE) License.
+[MIT](https://github.com/Igor-Losev/deadem/blob/main/LICENSE)
