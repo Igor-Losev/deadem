@@ -4,6 +4,732 @@
     "cc_generic_services": false
   },
   "nested": {
+    "MODIFIER_ENTRY_TYPE": {
+      "edition": "proto2",
+      "values": {
+        "MODIFIER_ENTRY_TYPE_ACTIVE": 1,
+        "MODIFIER_ENTRY_TYPE_REMOVED": 2
+      }
+    },
+    "CModifierTableEntry": {
+      "edition": "proto2",
+      "fields": {
+        "entryType": {
+          "type": ".MODIFIER_ENTRY_TYPE",
+          "id": 1,
+          "protoName": "entry_type",
+          "options": {
+            "default": "MODIFIER_ENTRY_TYPE_ACTIVE"
+          }
+        },
+        "parent": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "serialNumber": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "serial_number"
+        },
+        "modifierSubclass": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "modifier_subclass",
+          "options": {
+            "default": 0
+          }
+        },
+        "stackCount": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "stack_count"
+        },
+        "maxStackCount": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "max_stack_count"
+        },
+        "lastAppliedTime": {
+          "type": "float",
+          "id": 7,
+          "protoName": "last_applied_time"
+        },
+        "duration": {
+          "type": "float",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
+        },
+        "caster": {
+          "type": "uint32",
+          "id": 9,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "ability": {
+          "type": "uint32",
+          "id": 10,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "auraProviderSerialNumber": {
+          "type": "int32",
+          "id": 11,
+          "protoName": "aura_provider_serial_number"
+        },
+        "auraProviderEhandle": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "aura_provider_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "abilitySubclass": {
+          "type": "uint32",
+          "id": 13,
+          "protoName": "ability_subclass",
+          "options": {
+            "default": 0
+          }
+        },
+        "inAuraRange": {
+          "type": "bool",
+          "id": 14,
+          "protoName": "in_aura_range"
+        },
+        "bool1_": {
+          "type": "bool",
+          "id": 20
+        },
+        "bool2_": {
+          "type": "bool",
+          "id": 21
+        },
+        "bool3_": {
+          "type": "bool",
+          "id": 22
+        },
+        "bool4_": {
+          "type": "bool",
+          "id": 23
+        },
+        "int1_": {
+          "type": "int32",
+          "id": 25
+        },
+        "int2_": {
+          "type": "int32",
+          "id": 26
+        },
+        "int3_": {
+          "type": "int32",
+          "id": 27
+        },
+        "int4_": {
+          "type": "int32",
+          "id": 28
+        },
+        "float1_": {
+          "type": "float",
+          "id": 30
+        },
+        "float2_": {
+          "type": "float",
+          "id": 31
+        },
+        "float3_": {
+          "type": "float",
+          "id": 32
+        },
+        "float4_": {
+          "type": "float",
+          "id": 33
+        },
+        "float5_": {
+          "type": "float",
+          "id": 49
+        },
+        "float6_": {
+          "type": "float",
+          "id": 50
+        },
+        "float7_": {
+          "type": "float",
+          "id": 51
+        },
+        "float8_": {
+          "type": "float",
+          "id": 52
+        },
+        "float9_": {
+          "type": "float",
+          "id": 53
+        },
+        "float10_": {
+          "type": "float",
+          "id": 54
+        },
+        "float11_": {
+          "type": "float",
+          "id": 55
+        },
+        "float12_": {
+          "type": "float",
+          "id": 56
+        },
+        "float13_": {
+          "type": "float",
+          "id": 57
+        },
+        "float14_": {
+          "type": "float",
+          "id": 58
+        },
+        "float15_": {
+          "type": "float",
+          "id": 59
+        },
+        "float16_": {
+          "type": "float",
+          "id": 60
+        },
+        "uint1_": {
+          "type": "uint64",
+          "id": 35
+        },
+        "uint2_": {
+          "type": "uint64",
+          "id": 36
+        },
+        "uint3_": {
+          "type": "uint64",
+          "id": 37
+        },
+        "uint4_": {
+          "type": "uint64",
+          "id": 38
+        },
+        "vec1_": {
+          "type": ".CMsgVector",
+          "id": 40
+        },
+        "vec2_": {
+          "type": ".CMsgVector",
+          "id": 41
+        },
+        "vec3_": {
+          "type": ".CMsgVector",
+          "id": 42
+        },
+        "vec4_": {
+          "type": ".CMsgVector",
+          "id": 43
+        },
+        "string1_": {
+          "type": "string",
+          "id": 45
+        },
+        "string2_": {
+          "type": "string",
+          "id": 46
+        },
+        "string3_": {
+          "type": "string",
+          "id": 47
+        },
+        "string4_": {
+          "type": "string",
+          "id": 48
+        }
+      }
+    },
+    "SignonState_t": {
+      "edition": "proto2",
+      "values": {
+        "SIGNONSTATE_NONE": 0,
+        "SIGNONSTATE_CHALLENGE": 1,
+        "SIGNONSTATE_CONNECTED": 2,
+        "SIGNONSTATE_NEW": 3,
+        "SIGNONSTATE_PRESPAWN": 4,
+        "SIGNONSTATE_SPAWN": 5,
+        "SIGNONSTATE_FULL": 6,
+        "SIGNONSTATE_CHANGELEVEL": 7
+      }
+    },
+    "CMsgVector": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgQAngle": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        }
+      }
+    },
+    "CMsgQuaternion": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgTransform": {
+      "edition": "proto2",
+      "fields": {
+        "position": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "scale": {
+          "type": "float",
+          "id": 2
+        },
+        "orientation": {
+          "type": ".CMsgQuaternion",
+          "id": 3
+        }
+      }
+    },
+    "CMsgPlayerInfo": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "xuid": {
+          "type": "fixed64",
+          "id": 2
+        },
+        "userid": {
+          "type": "int32",
+          "id": 3
+        },
+        "steamid": {
+          "type": "fixed64",
+          "id": 4
+        },
+        "fakeplayer": {
+          "type": "bool",
+          "id": 5
+        },
+        "ishltv": {
+          "type": "bool",
+          "id": 6
+        }
+      }
+    },
+    "CEntityMsg": {
+      "edition": "proto2",
+      "fields": {
+        "targetEntity": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "target_entity",
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CMsg_CVars": {
+      "edition": "proto2",
+      "fields": {
+        "cvars": {
+          "rule": "repeated",
+          "type": ".CMsg_CVars.CVar",
+          "id": 1
+        }
+      },
+      "nested": {
+        "CVar": {
+          "fields": {
+            "name": {
+              "type": "string",
+              "id": 1
+            },
+            "value": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CNETMsg_Tick": {
+      "edition": "proto2",
+      "fields": {
+        "tick": {
+          "type": "uint32",
+          "id": 1
+        },
+        "hostComputationtime": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "host_computationtime"
+        },
+        "hostComputationtimeStdDeviation": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "host_computationtime_std_deviation"
+        },
+        "legacyHostLoss": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "legacy_host_loss"
+        },
+        "hostUnfilteredFrametime": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "host_unfiltered_frametime"
+        },
+        "hltvReplayFlags": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "hltv_replay_flags"
+        },
+        "expectedLongTick": {
+          "type": "uint32",
+          "id": 10,
+          "protoName": "expected_long_tick"
+        },
+        "expectedLongTickReason": {
+          "type": "string",
+          "id": 11,
+          "protoName": "expected_long_tick_reason"
+        },
+        "hostFrameDroppedPctX10": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "host_frame_dropped_pct_x10"
+        },
+        "hostFrameIrregularArrivalPctX10": {
+          "type": "uint32",
+          "id": 13,
+          "protoName": "host_frame_irregular_arrival_pct_x10"
+        }
+      }
+    },
+    "CNETMsg_SetConVar": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
+      "fields": {
+        "convars": {
+          "type": ".CMsg_CVars",
+          "id": 1
+        }
+      }
+    },
+    "CNETMsg_SignonState": {
+      "edition": "proto2",
+      "fields": {
+        "signonState": {
+          "type": ".SignonState_t",
+          "id": 1,
+          "protoName": "signon_state",
+          "options": {
+            "default": "SIGNONSTATE_NONE"
+          }
+        },
+        "spawnCount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "spawn_count"
+        },
+        "numServerPlayers": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "num_server_players"
+        },
+        "playersNetworkids": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4,
+          "protoName": "players_networkids"
+        },
+        "mapName": {
+          "type": "string",
+          "id": 5,
+          "protoName": "map_name"
+        },
+        "addons": {
+          "type": "string",
+          "id": 6
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_Load": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 131072
+      },
+      "fields": {
+        "worldname": {
+          "type": "string",
+          "id": 1
+        },
+        "entitylumpname": {
+          "type": "string",
+          "id": 2
+        },
+        "entityfiltername": {
+          "type": "string",
+          "id": 3
+        },
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 4
+        },
+        "spawngroupownerhandle": {
+          "type": "uint32",
+          "id": 5
+        },
+        "worldOffsetPos": {
+          "type": ".CMsgVector",
+          "id": 6,
+          "protoName": "world_offset_pos"
+        },
+        "worldOffsetAngle": {
+          "type": ".CMsgQAngle",
+          "id": 7,
+          "protoName": "world_offset_angle"
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 8
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 9
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 10
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 11
+        },
+        "localnamefixup": {
+          "type": "string",
+          "id": 12
+        },
+        "parentnamefixup": {
+          "type": "string",
+          "id": 13
+        },
+        "manifestloadpriority": {
+          "type": "int32",
+          "id": 14
+        },
+        "worldgroupid": {
+          "type": "uint32",
+          "id": 15
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 16
+        },
+        "savegamefilename": {
+          "type": "string",
+          "id": 17
+        },
+        "spawngroupparenthandle": {
+          "type": "uint32",
+          "id": 18
+        },
+        "leveltransition": {
+          "type": "bool",
+          "id": 19
+        },
+        "worldgroupname": {
+          "type": "string",
+          "id": 20
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_ManifestUpdate": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 2048
+      },
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 2
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_SetCreationTick": {
+      "edition": "proto2",
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 2
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CSVCMsg_GameSessionConfiguration": {
+      "edition": "proto2",
+      "fields": {
+        "isMultiplayer": {
+          "type": "bool",
+          "id": 1,
+          "protoName": "is_multiplayer"
+        },
+        "isLoadsavegame": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "is_loadsavegame"
+        },
+        "isBackgroundMap": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "is_background_map"
+        },
+        "isHeadless": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "is_headless"
+        },
+        "minClientLimit": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "min_client_limit"
+        },
+        "maxClientLimit": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "max_client_limit"
+        },
+        "maxClients": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "max_clients"
+        },
+        "tickInterval": {
+          "type": "fixed32",
+          "id": 8,
+          "protoName": "tick_interval"
+        },
+        "hostname": {
+          "type": "string",
+          "id": 9
+        },
+        "savegamename": {
+          "type": "string",
+          "id": 10
+        },
+        "s1Mapname": {
+          "type": "string",
+          "id": 11,
+          "protoName": "s1_mapname"
+        },
+        "gamemode": {
+          "type": "string",
+          "id": 12
+        },
+        "serverIpAddress": {
+          "type": "string",
+          "id": 13,
+          "protoName": "server_ip_address"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 14
+        },
+        "isLocalonly": {
+          "type": "bool",
+          "id": 15,
+          "protoName": "is_localonly"
+        },
+        "noSteamServer": {
+          "type": "bool",
+          "id": 19,
+          "protoName": "no_steam_server"
+        },
+        "isTransition": {
+          "type": "bool",
+          "id": 16,
+          "protoName": "is_transition"
+        },
+        "previouslevel": {
+          "type": "string",
+          "id": 17
+        },
+        "landmarkname": {
+          "type": "string",
+          "id": 18
+        }
+      }
+    },
     "PARTICLE_SYSTEM_MANAGER_MESSAGE": {
       "edition": "proto2",
       "values": {
@@ -703,486 +1429,6 @@
         }
       }
     },
-    "SignonState_t": {
-      "edition": "proto2",
-      "values": {
-        "SIGNONSTATE_NONE": 0,
-        "SIGNONSTATE_CHALLENGE": 1,
-        "SIGNONSTATE_CONNECTED": 2,
-        "SIGNONSTATE_NEW": 3,
-        "SIGNONSTATE_PRESPAWN": 4,
-        "SIGNONSTATE_SPAWN": 5,
-        "SIGNONSTATE_FULL": 6,
-        "SIGNONSTATE_CHANGELEVEL": 7
-      }
-    },
-    "CMsgVector": {
-      "edition": "proto2",
-      "fields": {
-        "x": {
-          "type": "float",
-          "id": 1
-        },
-        "y": {
-          "type": "float",
-          "id": 2
-        },
-        "z": {
-          "type": "float",
-          "id": 3
-        },
-        "w": {
-          "type": "float",
-          "id": 4
-        }
-      }
-    },
-    "CMsgQAngle": {
-      "edition": "proto2",
-      "fields": {
-        "x": {
-          "type": "float",
-          "id": 1
-        },
-        "y": {
-          "type": "float",
-          "id": 2
-        },
-        "z": {
-          "type": "float",
-          "id": 3
-        }
-      }
-    },
-    "CMsgQuaternion": {
-      "edition": "proto2",
-      "fields": {
-        "x": {
-          "type": "float",
-          "id": 1
-        },
-        "y": {
-          "type": "float",
-          "id": 2
-        },
-        "z": {
-          "type": "float",
-          "id": 3
-        },
-        "w": {
-          "type": "float",
-          "id": 4
-        }
-      }
-    },
-    "CMsgTransform": {
-      "edition": "proto2",
-      "fields": {
-        "position": {
-          "type": ".CMsgVector",
-          "id": 1
-        },
-        "scale": {
-          "type": "float",
-          "id": 2
-        },
-        "orientation": {
-          "type": ".CMsgQuaternion",
-          "id": 3
-        }
-      }
-    },
-    "CMsgPlayerInfo": {
-      "edition": "proto2",
-      "fields": {
-        "name": {
-          "type": "string",
-          "id": 1
-        },
-        "xuid": {
-          "type": "fixed64",
-          "id": 2
-        },
-        "userid": {
-          "type": "int32",
-          "id": 3
-        },
-        "steamid": {
-          "type": "fixed64",
-          "id": 4
-        },
-        "fakeplayer": {
-          "type": "bool",
-          "id": 5
-        },
-        "ishltv": {
-          "type": "bool",
-          "id": 6
-        }
-      }
-    },
-    "CEntityMsg": {
-      "edition": "proto2",
-      "fields": {
-        "targetEntity": {
-          "type": "uint32",
-          "id": 1,
-          "protoName": "target_entity",
-          "options": {
-            "default": 16777215
-          }
-        }
-      }
-    },
-    "CMsg_CVars": {
-      "edition": "proto2",
-      "fields": {
-        "cvars": {
-          "rule": "repeated",
-          "type": ".CMsg_CVars.CVar",
-          "id": 1
-        }
-      },
-      "nested": {
-        "CVar": {
-          "fields": {
-            "name": {
-              "type": "string",
-              "id": 1
-            },
-            "value": {
-              "type": "string",
-              "id": 2
-            }
-          }
-        }
-      }
-    },
-    "CNETMsg_Tick": {
-      "edition": "proto2",
-      "fields": {
-        "tick": {
-          "type": "uint32",
-          "id": 1
-        },
-        "hostComputationtime": {
-          "type": "uint32",
-          "id": 4,
-          "protoName": "host_computationtime"
-        },
-        "hostComputationtimeStdDeviation": {
-          "type": "uint32",
-          "id": 5,
-          "protoName": "host_computationtime_std_deviation"
-        },
-        "legacyHostLoss": {
-          "type": "uint32",
-          "id": 7,
-          "protoName": "legacy_host_loss"
-        },
-        "hostUnfilteredFrametime": {
-          "type": "uint32",
-          "id": 8,
-          "protoName": "host_unfiltered_frametime"
-        },
-        "hltvReplayFlags": {
-          "type": "uint32",
-          "id": 9,
-          "protoName": "hltv_replay_flags"
-        },
-        "expectedLongTick": {
-          "type": "uint32",
-          "id": 10,
-          "protoName": "expected_long_tick"
-        },
-        "expectedLongTickReason": {
-          "type": "string",
-          "id": 11,
-          "protoName": "expected_long_tick_reason"
-        },
-        "hostFrameDroppedPctX10": {
-          "type": "uint32",
-          "id": 12,
-          "protoName": "host_frame_dropped_pct_x10"
-        },
-        "hostFrameIrregularArrivalPctX10": {
-          "type": "uint32",
-          "id": 13,
-          "protoName": "host_frame_irregular_arrival_pct_x10"
-        }
-      }
-    },
-    "CNETMsg_SetConVar": {
-      "edition": "proto2",
-      "options": {
-        "(maximum_size_bytes)": 4096
-      },
-      "fields": {
-        "convars": {
-          "type": ".CMsg_CVars",
-          "id": 1
-        }
-      }
-    },
-    "CNETMsg_SignonState": {
-      "edition": "proto2",
-      "fields": {
-        "signonState": {
-          "type": ".SignonState_t",
-          "id": 1,
-          "protoName": "signon_state",
-          "options": {
-            "default": "SIGNONSTATE_NONE"
-          }
-        },
-        "spawnCount": {
-          "type": "uint32",
-          "id": 2,
-          "protoName": "spawn_count"
-        },
-        "numServerPlayers": {
-          "type": "uint32",
-          "id": 3,
-          "protoName": "num_server_players"
-        },
-        "playersNetworkids": {
-          "rule": "repeated",
-          "type": "string",
-          "id": 4,
-          "protoName": "players_networkids"
-        },
-        "mapName": {
-          "type": "string",
-          "id": 5,
-          "protoName": "map_name"
-        },
-        "addons": {
-          "type": "string",
-          "id": 6
-        }
-      }
-    },
-    "CNETMsg_SpawnGroup_Load": {
-      "edition": "proto2",
-      "options": {
-        "(maximum_size_bytes)": 131072
-      },
-      "fields": {
-        "worldname": {
-          "type": "string",
-          "id": 1
-        },
-        "entitylumpname": {
-          "type": "string",
-          "id": 2
-        },
-        "entityfiltername": {
-          "type": "string",
-          "id": 3
-        },
-        "spawngrouphandle": {
-          "type": "uint32",
-          "id": 4
-        },
-        "spawngroupownerhandle": {
-          "type": "uint32",
-          "id": 5
-        },
-        "worldOffsetPos": {
-          "type": ".CMsgVector",
-          "id": 6,
-          "protoName": "world_offset_pos"
-        },
-        "worldOffsetAngle": {
-          "type": ".CMsgQAngle",
-          "id": 7,
-          "protoName": "world_offset_angle"
-        },
-        "spawngroupmanifest": {
-          "type": "bytes",
-          "id": 8
-        },
-        "flags": {
-          "type": "uint32",
-          "id": 9
-        },
-        "tickcount": {
-          "type": "int32",
-          "id": 10
-        },
-        "manifestincomplete": {
-          "type": "bool",
-          "id": 11
-        },
-        "localnamefixup": {
-          "type": "string",
-          "id": 12
-        },
-        "parentnamefixup": {
-          "type": "string",
-          "id": 13
-        },
-        "manifestloadpriority": {
-          "type": "int32",
-          "id": 14
-        },
-        "worldgroupid": {
-          "type": "uint32",
-          "id": 15
-        },
-        "creationsequence": {
-          "type": "uint32",
-          "id": 16
-        },
-        "savegamefilename": {
-          "type": "string",
-          "id": 17
-        },
-        "spawngroupparenthandle": {
-          "type": "uint32",
-          "id": 18
-        },
-        "leveltransition": {
-          "type": "bool",
-          "id": 19
-        },
-        "worldgroupname": {
-          "type": "string",
-          "id": 20
-        }
-      }
-    },
-    "CNETMsg_SpawnGroup_ManifestUpdate": {
-      "edition": "proto2",
-      "options": {
-        "(maximum_size_bytes)": 2048
-      },
-      "fields": {
-        "spawngrouphandle": {
-          "type": "uint32",
-          "id": 1
-        },
-        "spawngroupmanifest": {
-          "type": "bytes",
-          "id": 2
-        },
-        "manifestincomplete": {
-          "type": "bool",
-          "id": 3
-        }
-      }
-    },
-    "CNETMsg_SpawnGroup_SetCreationTick": {
-      "edition": "proto2",
-      "fields": {
-        "spawngrouphandle": {
-          "type": "uint32",
-          "id": 1
-        },
-        "tickcount": {
-          "type": "int32",
-          "id": 2
-        },
-        "creationsequence": {
-          "type": "uint32",
-          "id": 3
-        }
-      }
-    },
-    "CSVCMsg_GameSessionConfiguration": {
-      "edition": "proto2",
-      "fields": {
-        "isMultiplayer": {
-          "type": "bool",
-          "id": 1,
-          "protoName": "is_multiplayer"
-        },
-        "isLoadsavegame": {
-          "type": "bool",
-          "id": 2,
-          "protoName": "is_loadsavegame"
-        },
-        "isBackgroundMap": {
-          "type": "bool",
-          "id": 3,
-          "protoName": "is_background_map"
-        },
-        "isHeadless": {
-          "type": "bool",
-          "id": 4,
-          "protoName": "is_headless"
-        },
-        "minClientLimit": {
-          "type": "uint32",
-          "id": 5,
-          "protoName": "min_client_limit"
-        },
-        "maxClientLimit": {
-          "type": "uint32",
-          "id": 6,
-          "protoName": "max_client_limit"
-        },
-        "maxClients": {
-          "type": "uint32",
-          "id": 7,
-          "protoName": "max_clients"
-        },
-        "tickInterval": {
-          "type": "fixed32",
-          "id": 8,
-          "protoName": "tick_interval"
-        },
-        "hostname": {
-          "type": "string",
-          "id": 9
-        },
-        "savegamename": {
-          "type": "string",
-          "id": 10
-        },
-        "s1Mapname": {
-          "type": "string",
-          "id": 11,
-          "protoName": "s1_mapname"
-        },
-        "gamemode": {
-          "type": "string",
-          "id": 12
-        },
-        "serverIpAddress": {
-          "type": "string",
-          "id": 13,
-          "protoName": "server_ip_address"
-        },
-        "data": {
-          "type": "bytes",
-          "id": 14
-        },
-        "isLocalonly": {
-          "type": "bool",
-          "id": 15,
-          "protoName": "is_localonly"
-        },
-        "noSteamServer": {
-          "type": "bool",
-          "id": 19,
-          "protoName": "no_steam_server"
-        },
-        "isTransition": {
-          "type": "bool",
-          "id": 16,
-          "protoName": "is_transition"
-        },
-        "previouslevel": {
-          "type": "string",
-          "id": 17
-        },
-        "landmarkname": {
-          "type": "string",
-          "id": 18
-        }
-      }
-    },
     "CMsgLaneColor": {
       "edition": "proto2",
       "valuesOptions": {
@@ -1247,6 +1493,9 @@
         },
         "k_EPingMarkerInfo_OnlyMiniMap": {
           "(schema_friendly_name)": "Only show on Minimap, no world, no sound"
+        },
+        "k_EPingMarkerInfo_NoMarkerYesSoundMiniMap": {
+          "(schema_friendly_name)": "No World, Just Minimap and sound"
         }
       },
       "values": {
@@ -1255,7 +1504,8 @@
         "k_EPingMarkerInfo_HideMarkerAndSound": 2,
         "k_EPingMarkerInfo_OnlyShowMarker": 3,
         "k_EPingMarkerInfo_OnlyPlaySound": 4,
-        "k_EPingMarkerInfo_OnlyMiniMap": 5
+        "k_EPingMarkerInfo_OnlyMiniMap": 5,
+        "k_EPingMarkerInfo_NoMarkerYesSoundMiniMap": 6
       }
     },
     "CameraOperation": {

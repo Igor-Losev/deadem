@@ -1,5 +1,132 @@
 {
+  "options": {
+    "optimize_for": "SPEED",
+    "cc_generic_services": false
+  },
   "nested": {
+    "CSOEconItemAttribute": {
+      "edition": "proto2",
+      "fields": {
+        "defIndex": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "def_index",
+          "options": {
+            "default": 65535
+          }
+        },
+        "value": {
+          "type": "uint32",
+          "id": 2
+        },
+        "valueBytes": {
+          "type": "bytes",
+          "id": 3,
+          "protoName": "value_bytes"
+        }
+      }
+    },
+    "CSOEconItemEquipped": {
+      "edition": "proto2",
+      "fields": {
+        "newClass": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "new_class"
+        },
+        "newSlot": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "new_slot"
+        }
+      }
+    },
+    "CSOEconItem": {
+      "edition": "proto2",
+      "fields": {
+        "id": {
+          "type": "uint64",
+          "id": 1
+        },
+        "accountId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "account_id"
+        },
+        "inventory": {
+          "type": "uint32",
+          "id": 3
+        },
+        "defIndex": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "def_index"
+        },
+        "quantity": {
+          "type": "uint32",
+          "id": 5,
+          "options": {
+            "default": 1
+          }
+        },
+        "level": {
+          "type": "uint32",
+          "id": 6,
+          "options": {
+            "default": 1
+          }
+        },
+        "quality": {
+          "type": "uint32",
+          "id": 7,
+          "options": {
+            "default": 4
+          }
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 8,
+          "options": {
+            "default": 0
+          }
+        },
+        "origin": {
+          "type": "uint32",
+          "id": 9,
+          "options": {
+            "default": 0
+          }
+        },
+        "attribute": {
+          "rule": "repeated",
+          "type": ".CSOEconItemAttribute",
+          "id": 12
+        },
+        "interiorItem": {
+          "type": ".CSOEconItem",
+          "id": 13,
+          "protoName": "interior_item"
+        },
+        "style": {
+          "type": "uint32",
+          "id": 15,
+          "options": {
+            "default": 0
+          }
+        },
+        "originalId": {
+          "type": "uint64",
+          "id": 16,
+          "protoName": "original_id"
+        },
+        "equippedState": {
+          "rule": "repeated",
+          "type": ".CSOEconItemEquipped",
+          "id": 18,
+          "protoName": "equipped_state"
+        }
+      }
+    },
     "CDemoFileHeader": {
       "edition": "proto2",
       "fields": {
@@ -816,6 +943,9 @@
     },
     "CMsgVector": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -837,6 +967,9 @@
     },
     "CMsgVector2D": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -850,6 +983,9 @@
     },
     "CMsgQAngle": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -867,6 +1003,9 @@
     },
     "CMsgQuaternion": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -1261,6 +1400,252 @@
         "landmarkname": {
           "type": "string",
           "id": 18
+        }
+      }
+    },
+    "DOTA_MODIFIER_ENTRY_TYPE": {
+      "edition": "proto2",
+      "values": {
+        "DOTA_MODIFIER_ENTRY_TYPE_ACTIVE": 1,
+        "DOTA_MODIFIER_ENTRY_TYPE_REMOVED": 2
+      }
+    },
+    "CDOTAModifierBuffTableEntry": {
+      "edition": "proto2",
+      "fields": {
+        "entryType": {
+          "type": ".DOTA_MODIFIER_ENTRY_TYPE",
+          "id": 1,
+          "protoName": "entry_type",
+          "options": {
+            "default": "DOTA_MODIFIER_ENTRY_TYPE_ACTIVE"
+          }
+        },
+        "parent": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "index": {
+          "type": "int32",
+          "id": 3
+        },
+        "serialNum": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "serial_num"
+        },
+        "modifierClass": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "modifier_class"
+        },
+        "abilityLevel": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "ability_level"
+        },
+        "stackCount": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "stack_count"
+        },
+        "creationTime": {
+          "type": "float",
+          "id": 8,
+          "protoName": "creation_time"
+        },
+        "duration": {
+          "type": "float",
+          "id": 9,
+          "options": {
+            "default": -1
+          }
+        },
+        "caster": {
+          "type": "uint32",
+          "id": 10,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "ability": {
+          "type": "uint32",
+          "id": 11,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "armor": {
+          "type": "int32",
+          "id": 12
+        },
+        "fadeTime": {
+          "type": "float",
+          "id": 13,
+          "protoName": "fade_time"
+        },
+        "subtle": {
+          "type": "bool",
+          "id": 14
+        },
+        "channelTime": {
+          "type": "float",
+          "id": 15,
+          "protoName": "channel_time"
+        },
+        "vStart": {
+          "type": ".CMsgVector",
+          "id": 16,
+          "protoName": "v_start"
+        },
+        "vEnd": {
+          "type": ".CMsgVector",
+          "id": 17,
+          "protoName": "v_end"
+        },
+        "portalLoopAppear": {
+          "type": "string",
+          "id": 18,
+          "protoName": "portal_loop_appear"
+        },
+        "portalLoopDisappear": {
+          "type": "string",
+          "id": 19,
+          "protoName": "portal_loop_disappear"
+        },
+        "heroLoopAppear": {
+          "type": "string",
+          "id": 20,
+          "protoName": "hero_loop_appear"
+        },
+        "heroLoopDisappear": {
+          "type": "string",
+          "id": 21,
+          "protoName": "hero_loop_disappear"
+        },
+        "movementSpeed": {
+          "type": "int32",
+          "id": 22,
+          "protoName": "movement_speed"
+        },
+        "aura": {
+          "type": "bool",
+          "id": 23
+        },
+        "activity": {
+          "type": "int32",
+          "id": 24
+        },
+        "damage": {
+          "type": "int32",
+          "id": 25
+        },
+        "range": {
+          "type": "int32",
+          "id": 26
+        },
+        "ddModifierIndex": {
+          "type": "int32",
+          "id": 27,
+          "protoName": "dd_modifier_index"
+        },
+        "ddAbilityId": {
+          "type": "int32",
+          "id": 28,
+          "protoName": "dd_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "illusionLabel": {
+          "type": "string",
+          "id": 29,
+          "protoName": "illusion_label"
+        },
+        "active": {
+          "type": "bool",
+          "id": 30
+        },
+        "playerIds": {
+          "type": "string",
+          "id": 31,
+          "protoName": "player_ids"
+        },
+        "luaName": {
+          "type": "string",
+          "id": 32,
+          "protoName": "lua_name"
+        },
+        "attackSpeed": {
+          "type": "int32",
+          "id": 33,
+          "protoName": "attack_speed"
+        },
+        "auraOwner": {
+          "type": "uint32",
+          "id": 34,
+          "protoName": "aura_owner",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "bonusAllStats": {
+          "type": "int32",
+          "id": 35,
+          "protoName": "bonus_all_stats"
+        },
+        "bonusHealth": {
+          "type": "int32",
+          "id": 36,
+          "protoName": "bonus_health"
+        },
+        "bonusMana": {
+          "type": "int32",
+          "id": 37,
+          "protoName": "bonus_mana"
+        },
+        "customEntity": {
+          "type": "uint32",
+          "id": 38,
+          "protoName": "custom_entity",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "auraWithinRange": {
+          "type": "bool",
+          "id": 39,
+          "protoName": "aura_within_range"
+        },
+        "moveSlow": {
+          "type": "float",
+          "id": 40,
+          "protoName": "move_slow"
+        },
+        "hasScepter": {
+          "type": "bool",
+          "id": 41,
+          "protoName": "has_scepter"
+        },
+        "hasShard": {
+          "type": "bool",
+          "id": 42,
+          "protoName": "has_shard"
+        },
+        "customIntValues": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 43,
+          "protoName": "custom_int_values"
+        },
+        "customFloatValues": {
+          "rule": "repeated",
+          "type": "float",
+          "id": 44,
+          "protoName": "custom_float_values"
         }
       }
     },
@@ -1953,7 +2338,8 @@
         "CHAT_MESSAGE_CRAFTING_XP": 122,
         "CHAT_MESSAGE_ROSHAN_ROAR": 123,
         "CHAT_MESSAGE_STONE_OF_RECALL_USED": 124,
-        "CHAT_MESSAGE_DEITY_BLESSING": 125
+        "CHAT_MESSAGE_DEITY_BLESSING": 125,
+        "CHAT_MESSAGE_SMOKE_ACTIVATED": 126
       }
     },
     "DOTA_ABILITY_PING_TYPE": {
@@ -6998,6 +7384,11 @@
           "type": ".CMsgVector",
           "id": 14,
           "protoName": "position_objectspace"
+        },
+        "normalObjectspace": {
+          "type": ".CMsgVector",
+          "id": 15,
+          "protoName": "normal_objectspace"
         }
       }
     },
@@ -7655,9 +8046,10 @@
           "type": ".CMsgVoiceAudio",
           "id": 1
         },
-        "client": {
+        "clientDeprecated": {
           "type": "int32",
           "id": 2,
+          "protoName": "client_deprecated",
           "options": {
             "default": -1
           }
@@ -7682,6 +8074,13 @@
         "passthrough": {
           "type": "int32",
           "id": 7
+        },
+        "entity": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
         }
       }
     },
@@ -7875,6 +8274,11 @@
           "type": "int32",
           "id": 5,
           "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
         }
       }
     },
