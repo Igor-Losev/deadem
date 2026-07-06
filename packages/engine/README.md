@@ -14,10 +14,19 @@
 
 It provides the packet pipeline, mutable demo state, replay player, interceptor lifecycle, broadcast client, and configuration primitives. The engine itself carries no game-specific protobuf schemas or message types — using it directly requires a prepared `SchemaRegistry`. Ready-to-run packages are listed below.
 
+| Package | Game | Links |
+| --- | --- | --- |
+| `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
+| `@deademx/cs2` | Counter-Strike 2 | [npm](https://www.npmjs.com/package/@deademx/cs2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) |
+| `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
+
+> [!NOTE]
+> `@deademx/engine` is not runnable on its own. It depends on upstream proto files, decoders, and string table parsing instructions. A game package supplies all three.
+>
+> This document shows every example using `deadem` (Deadlock). The API is identical across games — only the import and entity class names change.
+
 ## Contents
 
-- [Implementations](#implementations)<br/>
-  Game-specific packages built on top of the engine.
 - [Quick Start](#quick-start)<br/>
   Parse a replay, print stats.
 - [How It Works](#how-it-works)<br/>
@@ -65,19 +74,6 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
 - [License](#license)<br/>
   MIT.
 
-## Implementations
-
-| Package | Game | Links |
-| --- | --- | --- |
-| `deadem` | Deadlock | [npm](https://www.npmjs.com/package/deadem) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/deadem) |
-| `@deademx/cs2` | Counter-Strike 2 | [npm](https://www.npmjs.com/package/@deademx/cs2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/cs2) |
-| `@deademx/dota2` | Dota 2 | [npm](https://www.npmjs.com/package/@deademx/dota2) · [docs](https://github.com/Igor-Losev/deadem/tree/main/packages/dota2) |
-
-> [!NOTE]
-> `@deademx/engine` is not runnable on its own. It depends on upstream proto files, decoders, and string table parsing instructions. A game package supplies all three.
->
-> This document shows every example using `deadem` (Deadlock). The same code works with `@deademx/cs2` and `@deademx/dota2` — only the import changes.
-
 ## Quick Start
 
 ```bash
@@ -102,17 +98,21 @@ await parser.dispose(); // cleanup state and resources
 
 ## How It Works
 
-[`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) reads a byte stream and processes it packet by packet, mutating internal state as it goes. Interceptors hook into any packet before or after processing. Once parsing ends, `Parser` holds the game state — `dispose()` releases it.
+[`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) reads a byte stream and processes it packet by packet, mutating internal state. Interceptors hook into any packet. Once parsing ends, `Parser` holds the game state — `dispose()` releases it. [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) works the same way but buffers the demo in memory, adding seeking and playback.
+
+The engine provides raw parsed data — it does not compute statistics, interpret game state, or make analytical decisions.
 
 ## Demo
 
 [`Demo`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Demo.js) is the state that [`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) and [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) mutate as they read. Access with `parser.getDemo()` or `player.getDemo()`.
 
-A demo file is a stream of outer packets, called [`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js). Most carry protobuf-decoded data relevant to that packet type. Three outer packet types — [`DEM_PACKET`, `DEM_SIGNON_PACKET`, `DEM_FULL_PACKET`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js) — are different: they carry an array of inner packets, called [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js). Each represents a network message — entity deltas, string table operations, user messages — identified by its [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js).
+A demo file is a stream of outer packets, called [`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js) in this project. Most carry protobuf-decoded data relevant to that packet type. Three outer packet types — [`DEM_PACKET`, `DEM_SIGNON_PACKET`, `DEM_FULL_PACKET`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/DemoPacketType.js) — are different: they carry an array of inner packets, called [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js) in this project. Each represents a network message — entity deltas, string table operations, user messages — identified by its [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js).
 
 [`MessagePacketType.SVC_PACKET_ENTITIES`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/MessagePacketType.js) carries packed entity deltas, sent every tick. Once unpacked, they become part of `Demo`. `Demo` also holds string tables.
 
 ### Entities
+
+`Demo` provides access to current entity state.
 
 | Method | Returns |
 | --- | --- |
@@ -121,24 +121,15 @@ A demo file is a stream of outer packets, called [`DemoPacket`](https://github.c
 | `demo.getEntity(index)` | Entity by index |
 | `demo.getEntityByHandle(handle)`* | Entity by handle |
 | `demo.getClasses()` | All registered entity classes |
-| `demo.getClassByName(name)` | Entity class by name |
+| `demo.getClassByName(name)` | Entity [`Class`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Class.js) by name |
 
-\* — entity fields like `m_hOwnerEntity` store handles pointing to other entities
+\* — entity fields like `m_hOwnerEntity` store handles pointing to other entities. `demo.getEntityByHandle(handle)` resolves references between entities.
 
-[`Entity`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js) has these properties:
-
-| Property | Returns |
-| --- | --- |
-| `entity.index` | Slot index in `Demo` |
-| `entity.serial` | Generation counter — changes when a new entity reuses a previous entity's index |
-| `entity.class` | The entity's [`Class`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Class.js) — `.id`, `.name` |
-| `entity.handle` | `index` and `serial` packed into one number |
-
-Decoded fields:
+Each entity is an instance of [`Entity`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js). Entity exposes methods for reading data:
 
 | Method | Returns |
 | --- | --- |
-| `entity.getField(name)` | Value at the given dot-separated path — the array/struct if the path stops short of a leaf, the scalar if it reaches one, `undefined` if unresolved. Indices are zero-padded to 4 digits (`0000`, `0001`, ...). |
+| `entity.getField(name)` | Value by flattened name. Dot notation accesses sub-fields, e.g. `'CBodyComponent.m_cellX'`. `undefined` if not present |
 | `entity.hasField(name)` | Whether the named field is currently set |
 | `entity.getFieldCount()` | Number of fields currently set |
 | `entity.fieldEntries()` | Iterator of `[ name, value ]` pairs for present fields |
@@ -151,20 +142,20 @@ The engine registers common [`StringTableType`](https://github.com/Igor-Losev/de
 
 | `StringTableType` | Content |
 | --- | --- |
-| `StringTableType.ANIM_ASSET_DATA` | Animation asset names, raw binary values |
-| `StringTableType.ANIM_TASK_TYPES` | Animation task type names, static |
-| `StringTableType.DECAL_PRE_CACHE` | Decal cache |
-| `StringTableType.EFFECT_DISPATCH` | Effect dispatch keys, static |
-| `StringTableType.ENTITY_NAMES` | Key-only registry of entity class names |
-| `StringTableType.GENERIC_PRE_CACHE` | Single-entry metadata |
-| `StringTableType.INFO_PANEL` | Info panel data |
+| `StringTableType.ANIM_ASSET_DATA` | Animation asset paths (.vnmgraph/.vnmskel). Values are unparsed binary |
+| `StringTableType.ANIM_TASK_TYPES` | Key-only anim-task class names. Always co-occurs with `ANIM_ASSET_DATA` |
+| `StringTableType.DECAL_PRE_CACHE` | Decal paths keyed by path. Absent in newer builds for all three games |
+| `StringTableType.EFFECT_DISPATCH` | Key-only names. Fixed per-game set |
+| `StringTableType.ENTITY_NAMES` | Key-only registry of named entities |
+| `StringTableType.GENERIC_PRE_CACHE` | — |
+| `StringTableType.INFO_PANEL` | — |
 | `StringTableType.INSTANCE_BASE_LINE` | Entity class baselines, consumed internally for entity decoding |
-| `StringTableType.LIGHT_STYLES` | Light style definitions, engine-internal |
-| `StringTableType.RESPONSE_KEYS` | Response key definitions |
-| `StringTableType.SCENES` | Scene names, static |
-| `StringTableType.SERVER_QUERY_INFO` | Single-entry metadata |
+| `StringTableType.LIGHT_STYLES` | — |
+| `StringTableType.RESPONSE_KEYS` | — |
+| `StringTableType.SCENES` | — |
+| `StringTableType.SERVER_QUERY_INFO` | — |
 | `StringTableType.USER_INFO` | Player name, Steam ID, userid — decoded `CMsgPlayerInfo` per slot |
-| `StringTableType.V_GUI_SCREEN` | VGUI screen data |
+| `StringTableType.V_GUI_SCREEN` | — |
 
 > [!NOTE]
 > `StringTableType.USER_INFO` slots hold values only while a player is connected. Players disconnect after the match ends — by the time `parse()` returns, most slots are empty.
@@ -211,9 +202,9 @@ There are three [`InterceptorStage`](https://github.com/Igor-Losev/deadem/blob/m
 
 | Stage | Hook signature |
 | --- | --- |
-| `DEMO_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`) => void` |
-| `MESSAGE_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`, `[`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)`) => void` |
-| `ENTITY_PACKET` | `(`[`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)`, `[`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)`, Array<`[`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)`>) => void` |
+| `DEMO_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)) => void |
+| `MESSAGE_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js), [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)) => void |
+| `ENTITY_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js), [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js), Array<[`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)>) => void |
 
 ### `InterceptorStage.DEMO_PACKET`
 
@@ -225,7 +216,7 @@ import { InterceptorStage, Parser } from 'deadem';
 const parser = new Parser();
 
 parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
-    console.log(demoPacket.type.code, demoPacket.tick);
+    console.log(`Tick [ ${demoPacket.tick} ] | Type [ ${demoPacket.type.code} ]`);
 });
 ```
 
@@ -258,12 +249,12 @@ import { EntityOperation } from 'deadem';
 parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
     for (const event of events) {
         if (event.operation !== EntityOperation.UPDATE) continue;
-        if (event.entity.class.name !== 'CCitadelPlayerPawn') continue; // Deadlock hero entity
+        if (event.entity.class.name !== 'CCitadelPlayerPawn') continue; // Deadlock player pawn entity
 
         const [health] = event.getChanges(['m_iHealth']);
 
         if (health !== undefined) {
-            console.log(`Tick [ ${demoPacket.tick} ] | Entity [ ${event.entity.class.name}|${event.entity.index} ] | m_iHealth = ${health}`);
+            console.log(`Tick [ ${demoPacket.tick} ] | Entity [ ${event.entity.class.name}|${event.entity.index} ] | Health [ ${health} ]`);
         }
     }
 });
@@ -276,7 +267,7 @@ Each event exposes:
 | `event.operation` | [`EntityOperation`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/EntityOperation.js) — `CREATE`, `UPDATE`, `LEAVE`, or `DELETE` |
 | `event.entity` | Affected [`Entity`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js) |
 
-`event.getChanges()` — object of all changed fields. `event.getChanges(names)` — same-order array, `undefined` for missing fields.
+`event.getChanges()` — object of all changed fields. `event.getChanges(names)` — array of values in the same order as `names`, `undefined` for fields not in the event.
 
 | Operation | When | Batch |
 |---|---|---|
@@ -284,8 +275,6 @@ Each event exposes:
 | `UPDATE` | Entity fields changed | Changed fields only |
 | `LEAVE` | Entity deactivated, slot reserved | Empty |
 | `DELETE` | Entity permanently removed | Empty |
-
-`PRE` fires before `Demo` is mutated. `POST` fires after.
 
 ### Parse Order
 
@@ -334,7 +323,7 @@ for (const controller of controllers) {
     const name = controller.getField('m_iszPlayerName');
     const netWorth = controller.getField('m_iGoldNetWorth');
 
-    console.log(`[ ${name} ] | m_iGoldNetWorth = ${netWorth}`);
+    console.log(`[ ${name} ] | m_iGoldNetWorth [ ${netWorth} ]`);
 }
 
 await player.dispose();
@@ -344,15 +333,26 @@ await player.dispose();
 
 `Player` follows a state machine:
 
-| `player.state` | Meaning | Moves to |
-| --- | --- | --- |
-| `IDLE` | Created, nothing loaded | `LOADED` |
-| `LOADED` | Holds a tick, ready for navigation | `PLAYING`, `SEEKING` |
-| `PLAYING` | `play()` in progress | `LOADED` |
-| `SEEKING` | `seekToTick()` in progress | `LOADED` |
-| `DISPOSED` | Released, unusable | — |
+```text
+IDLE
+ ├── load()        → LOADED
+ └── dispose()     → DISPOSED
 
-Any state can move to `DISPOSED` via `dispose()`. A failed seek still returns to `LOADED`.
+LOADED
+ ├── play()        → PLAYING
+ ├── seekToTick()  → SEEKING → LOADED
+ └── dispose()     → DISPOSED
+
+PLAYING
+ ├── pause() / end → LOADED
+ └── dispose()     → DISPOSED
+
+SEEKING
+ ├── (completes)   → LOADED
+ └── dispose()     → DISPOSED
+```
+
+A failed seek still returns to `LOADED`.
 
 ### Navigation
 
@@ -483,7 +483,7 @@ For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blo
 
 - Throttle per-tick logic when frame-level precision isn't required. A UI renderer rarely needs health changes every tick — sampling once per second is usually enough. Depending on server tick rate, that's every 64 ticks (Deadlock), every 30 ticks (Dota 2), or similar for CS2.
 
-- Use `getField('name')` for reading entity state — point reads are cheap (~0.08 µs per scalar). A 500 MB Deadlock demo may produce ~10M [`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)s carrying ~100M individual field updates. Entity state stays in TypedArrays internally, keeping memory compact — values materialize into JS objects on read. See [`Entity.getField`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js#L109) JSDoc for detailed overhead.
+- Read as much as needed. Prefer point reads via `getField('name')` over `unpackFlattened` or iterators. A 500 MB Deadlock demo may produce ~10M [`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)s carrying ~100M individual field updates — entity state stays in TypedArrays internally, keeping memory compact. Values materialize into JS objects on read. See [`Entity.getField`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/Entity.js) JSDoc for detailed overhead.
 
 ## License
 

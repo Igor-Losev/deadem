@@ -95,7 +95,7 @@ Dota 2-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/ma
 
 | Table | Entries | Content |
 | --- | --- | --- |
-| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. |
+| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Decoded into `CDOTAModifierBuffTableEntry` lazily on first `entry.value` read. |
 | `StringTableType.COMBAT_LOG_NAMES` | hundreds | Resolves combat log entity/ability/item ids to names. |
 | `StringTableType.COOLDOWN_NAMES` | hundreds | Resolves ability cooldown ids to names. |
 | `StringTableType.DOWNLOADABLES` | hundreds | — |

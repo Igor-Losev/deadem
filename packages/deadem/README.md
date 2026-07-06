@@ -95,7 +95,7 @@ Deadlock-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/
 
 | Table | Entries | Content |
 | --- | --- | --- |
-| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Updated on roughly two thirds of all ticks. |
+| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Decoded into [`CModifierTableEntry`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/proto/source/base_modifier.proto) lazily on first `entry.value` read. Updated on roughly two thirds of all ticks. |
 
 ### Decoders
 

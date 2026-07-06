@@ -125,12 +125,6 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 | --- | --- | --- | --- |
 | 200 | Load, seek, play, and pause a replay | [200_play.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/200_play.js) | `node ./packages/examples-node-cs2/scripts/200_play.js` |
 
-### Browser
-
-| # | Description | Command |
-| --- | --- | --- |
-| 01 | Deadem Explorer | `npm start` |
-
 ## Compatibility
 
 - **Game builds:** tested with Counter-Strike 2 demos from version `1.41.6.0`.
