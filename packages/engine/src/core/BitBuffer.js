@@ -368,13 +368,13 @@ class BitBuffer {
                 break;
             }
 
-            const buffer = this.read(BITS_PER_BYTE);
+            const byte = this.readBitsAsUInt(8);
 
-            if (buffer[0] === 0) {
+            if (byte === 0) {
                 break;
             }
 
-            bytes.push(buffer[0]);
+            bytes.push(byte);
         }
 
         return textDecoder.decode(new Uint8Array(bytes));
@@ -391,9 +391,7 @@ class BitBuffer {
             return this._buffer[this._pByte++] >>> 0;
         }
 
-        const buffer = this.read(BITS_PER_BYTE);
-
-        return buffer[0] >>> 0;
+        return this.readBitsAsUInt(8);
     }
 
     /**
