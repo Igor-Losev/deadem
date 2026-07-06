@@ -11,11 +11,11 @@
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41b-darkGreen" /></a>
 
-**@deademx/dota2** is the Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md).
+**@deademx/dota2** is the Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
-The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Dota 2-specific details only.
+The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Dota 2-specific details only.
 
-Sibling packages: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README2.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README2.md) (Counter-Strike 2).
+Sibling packages: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2).
 
 ## Contents
 
@@ -145,7 +145,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 
 Runtime: Node.js v22.14.0.
 
-See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README2.md#performance) for optimization tips.
+See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for optimization tips.
 
 ## License
 
