@@ -3,7 +3,8 @@ import {
   CompareArrows as CompareArrowsIcon,
   Email as EmailIcon,
   Groups as GroupsIcon,
-  Info as InfoIcon
+  Info as InfoIcon,
+  Storage as StorageIcon
 } from '@mui/icons-material';
 import { Alert, Box, Chip, Paper, Snackbar } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
@@ -19,6 +20,7 @@ import InfoExplorer from './components/InfoExplorer/InfoExplorer';
 import MatchSummary from './components/MatchSummary/MatchSummary';
 import PacketExplorer from './components/PacketExplorer/PacketExplorer';
 import ParserLanding from './components/ParserLanding/ParserLanding';
+import StringTables from './components/StringTables/StringTables';
 import UploadForm from './components/UploadForm/UploadForm';
 
 import usePlayer from './hooks/usePlayer';
@@ -45,6 +47,11 @@ const TABS = [
     key: 'entities',
     overflow: null,
     props: { icon: <CategoryIcon />, label: 'Entities', sx: TAB_STYLE }
+  },
+  {
+    key: 'stringtables',
+    overflow: null,
+    props: { icon: <StorageIcon />, label: 'Tables', sx: TAB_STYLE }
   },
   {
     key: 'diff',
@@ -156,9 +163,12 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
                 <EntityExplorer demo={demo} contentVersion={contentVersion} />
               </TabPanel>
               <TabPanel active={tabIndex === 3}>
-                <EntityDiff diff={diff} />
+                <StringTables contentVersion={contentVersion} demo={demo} />
               </TabPanel>
               <TabPanel active={tabIndex === 4}>
+                <EntityDiff diff={diff} />
+              </TabPanel>
+              <TabPanel active={tabIndex === 5}>
                 <InfoExplorer demo={demo} fileHeader={fileHeader} />
               </TabPanel>
             </Box>
