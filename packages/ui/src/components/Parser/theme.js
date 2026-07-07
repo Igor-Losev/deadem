@@ -7,6 +7,8 @@ export const COLORS = {
   accent: '#b388ff'
 };
 
+export const FONT_MONO = '\'SF Mono\', \'Fira Code\', \'Fira Mono\', Menlo, Consolas, monospace';
+
 export const FONT_SIZE = {
   xs: '0.6875rem',
   sm: '0.75rem',
