@@ -3,6 +3,7 @@ import { InboxOutlined as InboxOutlinedIcon } from '@mui/icons-material';
 import EmptyState from './../EmptyState';
 
 import { COLORS, FONT_SIZE } from './../../theme';
+import { jsonReplacer } from './../../utils';
 
 const MONO_FONT = "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace";
 
@@ -102,12 +103,14 @@ function formatValue(value) {
     return `${value}n`;
   }
 
-  if (Array.isArray(value)) {
-    return `[${value.map(formatValue).join(', ')}]`;
+  if (Array.isArray(value) || ArrayBuffer.isView(value)) {
+    const items = Array.isArray(value) ? value : Array.from(value);
+
+    return `[${items.map(formatValue).join(', ')}]`;
   }
 
   if (value !== null && typeof value === 'object') {
-    return JSON.stringify(value, (key, item) => typeof item === 'bigint' ? `${item}n` : item);
+    return JSON.stringify(value, jsonReplacer);
   }
 
   return String(value);

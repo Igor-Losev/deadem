@@ -1,3 +1,5 @@
+import { jsonReplacer } from './../../utils';
+
 export function getEntityId(entity) {
   return `${entity.index}-${entity.class.id}-${entity.serial}`;
 }
@@ -22,9 +24,5 @@ export function groupEntities(entities) {
 }
 
 export function stringifyEntity(entity) {
-  return JSON.stringify(
-    entity.unpackFlattened(),
-    (key, value) => typeof value === 'bigint' ? `${value.toString()}n` : value,
-    2
-  );
+  return JSON.stringify(entity.unpackFlattened(), jsonReplacer, 2);
 }

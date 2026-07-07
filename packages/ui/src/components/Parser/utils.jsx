@@ -36,6 +36,18 @@ export function HighlightedJson({ json }) {
   return parts;
 }
 
+export function jsonReplacer(key, value) {
+  if (typeof value === 'bigint') {
+    return `${value.toString()}n`;
+  }
+
+  if (ArrayBuffer.isView(value)) {
+    return Array.from(value);
+  }
+
+  return value;
+}
+
 export function compare(a, b) {
   if (typeof a === 'string') {
     return a.localeCompare(b);
