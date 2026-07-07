@@ -74,7 +74,7 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
   const isCs2 = library?.gameCode === 'cs2';
 
   const {
-    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
+    demo, fileName, fileHeader, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
     fileInputRef, historyRef, entityDiffRef,
     clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
@@ -97,8 +97,8 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
   }), [contentVersion]);
 
   const gameInfo = useMemo(
-    () => isCs2 ? <Cs2GameInfo demo={demo} mapName={mapName} /> : null,
-    [isCs2, demo, mapName, contentVersion]
+    () => isCs2 ? <Cs2GameInfo demo={demo} fileHeader={fileHeader} /> : null,
+    [isCs2, demo, fileHeader, contentVersion]
   );
 
   const handleReset = () => {
@@ -159,7 +159,7 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
                 <EntityDiff diff={diff} />
               </TabPanel>
               <TabPanel active={tabIndex === 4}>
-                <InfoExplorer demo={demo} />
+                <InfoExplorer demo={demo} fileHeader={fileHeader} />
               </TabPanel>
             </Box>
           </Box>

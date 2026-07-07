@@ -32,7 +32,7 @@ export default function usePlayer(library, updatesEnabled = true) {
   tickStoreRef.current ??= createTickStore();
 
   const [ fileName, setFileName ] = useState(null);
-  const [ mapName, setMapName ] = useState(null);
+  const [ fileHeader, setFileHeader ] = useState(null);
   const [ seeking, setSeeking ] = useState(false);
   const [ player, setPlayer ] = useState(null);
   const [ playing, setPlaying ] = useState(false);
@@ -68,7 +68,7 @@ export default function usePlayer(library, updatesEnabled = true) {
 
     setPlayer(null);
     setFileName(null);
-    setMapName(null);
+    setFileHeader(null);
     setPlaying(false);
     setRate(1);
     setSeeking(false);
@@ -166,7 +166,7 @@ export default function usePlayer(library, updatesEnabled = true) {
 
       newPlayer.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
         if (demoPacket.type === DemoPacketType.DEM_FILE_HEADER) {
-          setMapName(demoPacket.data.mapName || null);
+          setFileHeader((current) => current ?? demoPacket.data);
         }
 
         const history = historyRef.current;
@@ -367,7 +367,7 @@ export default function usePlayer(library, updatesEnabled = true) {
   const demo = player?.getDemo() ?? null;
 
   return {
-    demo, fileName, mapName, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError, frozen,
+    demo, fileName, fileHeader, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError, frozen,
     fileInputRef, historyRef, entityDiffRef,
     clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,

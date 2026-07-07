@@ -19,35 +19,37 @@ const GENERAL_COLUMNS = [
 
 const SERVER_COLUMNS = [
   { label: 'Max Clients', selector: (server) => server.maxClients },
+  { label: 'Max Classes', selector: (server) => server.maxClasses },
   { label: 'Class ID Size (bits)', selector: (server) => server.classIdSizeBits },
   { label: 'Tick Interval', selector: (server) => server.tickInterval, format: (value) => formatFixedNumber(value, 5) },
   { label: 'Tick Rate', selector: (server) => server.tickRate }
 ];
 
-function buildStringTableColumns(tables) {
-  return tables.map((table, index) => ({
-    label: table.type.code,
-    selector: (source) => source[index].getEntriesCount()
-  }));
-}
+const REPLAY_COLUMNS = [
+  { label: 'Map', selector: (header) => header.mapName },
+  { label: 'Server', selector: (header) => header.serverName },
+  { label: 'Client', selector: (header) => header.clientName },
+  { label: 'Game Directory', selector: (header) => header.gameDirectory },
+  { label: 'Build', selector: (header) => header.buildNum },
+  { label: 'Demo Version', selector: (header) => header.demoVersionName },
+  { label: 'Patch', selector: (header) => header.patchVersion },
+  { label: 'Addons', selector: (header) => header.addons }
+];
 
-export default function InfoExplorer({ demo }) {
+export default function InfoExplorer({ demo, fileHeader }) {
   const server = demo?.server ?? null;
   const general = demo?.getStats() ?? null;
-  const tables = demo?.stringTableContainer?.getTables() ?? [];
-  const stringTables = tables.length > 0 ? tables : null;
-  const stringTableColumns = buildStringTableColumns(tables);
 
   return (
     <Grid container padding={2} spacing={3} justifyContent='space-around'>
-      <Grid size={{ md: 4, sm: 6, xs: 12 }}>
+      <Grid size={{ sm: 6, xs: 12 }}>
         <Widget header='General' columns={GENERAL_COLUMNS} data={general} />
       </Grid>
-      <Grid size={{ md: 4, sm: 6, xs: 12 }}>
+      <Grid size={{ sm: 6, xs: 12 }}>
         <Widget header='Server' columns={SERVER_COLUMNS} data={server} />
       </Grid>
-      <Grid size={{ md: 4, sm: 12, xs: 12 }}>
-        <Widget header='String Table Entries' columns={stringTableColumns} data={stringTables} />
+      <Grid size={12}>
+        <Widget header='Replay' columns={REPLAY_COLUMNS} data={fileHeader ?? null} valueAlign='left' />
       </Grid>
     </Grid>
   );

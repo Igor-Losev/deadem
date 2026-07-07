@@ -70,7 +70,8 @@ function TeamLabel({ color, mirrored = false, name, score }) {
   );
 }
 
-export default function Cs2GameInfo({ demo, mapName }) {
+export default function Cs2GameInfo({ demo, fileHeader }) {
+  const mapName = fileHeader?.mapName ?? null;
   const teams = readTeams(demo);
 
   if (teams === null) {

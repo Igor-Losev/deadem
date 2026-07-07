@@ -1,32 +1,46 @@
-import { Box, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Table, TableBody, TableCell, TableRow, Typography } from '@mui/material';
 
 import EmptyState from './../EmptyState';
 
 import { COLORS, FONT_SIZE } from '../../theme';
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0
-  }
-}));
+const HEADER_SURFACE_SX = {
+  alignItems: 'center',
+  backgroundColor: 'rgba(255,255,255,0.025)',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+  display: 'flex',
+  height: 36,
+  px: 1.5
+};
+
+const TABLE_SX = {
+  '& td': { borderColor: 'rgba(255,255,255,0.06)', py: 0.75 },
+  '& tr:last-of-type td': { borderBottom: 'none' }
+};
+
+const LABEL_SX = {
+  color: 'text.secondary',
+  fontSize: FONT_SIZE.sm,
+  whiteSpace: 'nowrap'
+};
+
+const VALUE_SX = {
+  fontFamily: "'SF Mono', 'Fira Code', Menlo, monospace",
+  fontSize: FONT_SIZE.sm,
+  wordBreak: 'break-word'
+};
 
 function formatValue(value) {
+  if (value === null || value === undefined || value === '') {
+    return <span style={{ color: 'rgba(255,255,255,0.3)' }}>—</span>;
+  }
+
   if (typeof value !== 'number') {
-    return value;
+    return <span style={{ color: COLORS.jsonString }}>{value}</span>;
   }
 
   return (
-    <span
-      style={{
-        color: COLORS.jsonNumber,
-        fontFamily: "'SF Mono', 'Fira Code', Menlo, monospace",
-        fontVariantNumeric: 'tabular-nums'
-      }}
-    >
+    <span style={{ color: COLORS.jsonNumber, fontVariantNumeric: 'tabular-nums' }}>
       {value.toLocaleString('en-US')}
     </span>
   );
@@ -34,29 +48,27 @@ function formatValue(value) {
 
 export { formatValue };
 
-export default function Widget({ header, columns, data }) {
+export default function Widget({ header, columns, data, valueAlign = 'right' }) {
   return (
-    <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1 }}>
-      <Box paddingY={1} textAlign='center'>
-        <Typography component='div' sx={{ color: COLORS.accent, fontSize: FONT_SIZE.lg, fontWeight: 600 }}>
+    <Box sx={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', overflow: 'hidden' }}>
+      <Box sx={HEADER_SURFACE_SX}>
+        <Typography sx={{ color: COLORS.accent, fontSize: FONT_SIZE.md, fontWeight: 600 }}>
           {header}
         </Typography>
       </Box>
 
-      <Divider />
-
       {data ? (
-        <Table size='small'>
+        <Table size='small' sx={TABLE_SX}>
           <TableBody>
             {columns.map((column) => (
-              <StyledTableRow key={column.label}>
-                <TableCell sx={{ color: 'text.secondary', fontSize: FONT_SIZE.md }}>{column.label}</TableCell>
-                <TableCell align='right' sx={{ fontSize: FONT_SIZE.md }}>
+              <TableRow key={column.label}>
+                <TableCell sx={LABEL_SX}>{column.label}</TableCell>
+                <TableCell align={valueAlign} sx={VALUE_SX}>
                   {column.format
                     ? column.format(column.selector(data))
                     : formatValue(column.selector(data))}
                 </TableCell>
-              </StyledTableRow>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
