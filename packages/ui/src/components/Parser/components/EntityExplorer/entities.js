@@ -1,4 +1,5 @@
 import { jsonReplacer } from './../../utils';
+import { buildTypeMap, normalizeFieldKey } from './../SchemaExplorer/schema';
 
 export function getEntityId(entity) {
   return `${entity.index}-${entity.class.id}-${entity.serial}`;
@@ -25,4 +26,22 @@ export function groupEntities(entities) {
 
 export function stringifyEntity(entity) {
   return JSON.stringify(entity.unpackFlattened(), jsonReplacer, 2);
+}
+
+export function buildTypedFields(entity) {
+  const typeMap = buildTypeMap(entity.class);
+  const fields = entity.unpackFlattened();
+  const entries = [];
+
+  for (const key of Object.keys(fields)) {
+    const normalized = normalizeFieldKey(key);
+
+    entries.push({
+      key,
+      type: typeMap.get(normalized) ?? null,
+      value: fields[key]
+    });
+  }
+
+  return entries;
 }

@@ -1,42 +1,181 @@
-import { ContentCopy as ContentCopyIcon } from '@mui/icons-material';
-import { Box, Divider, IconButton, Tooltip, Typography } from '@mui/material';
+import { ContentCopy as ContentCopyIcon, Search as SearchIcon, SortByAlpha as SortByAlphaIcon } from '@mui/icons-material';
+import { Box, Divider, IconButton, InputAdornment, TextField, Tooltip, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
 
-import { FONT_SIZE } from './../../theme';
-import { HighlightedJson } from './../../utils';
+import { COLORS, FONT_MONO, FONT_SIZE, TYPE_BADGE_STYLE } from './../../theme';
+import { jsonReplacer } from './../../utils';
 
 const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
 
-export default function EntityDetails({ entity, json, copied, onCopy }) {
+const ROW_STYLE = {
+  alignItems: 'baseline',
+  display: 'flex',
+  gap: 6,
+  lineHeight: '22px',
+  padding: '2px 8px',
+  whiteSpace: 'nowrap'
+};
+
+function formatValue(value) {
+  if (value === null || value === undefined) {
+    return <span style={{ color: 'rgba(255,255,255,0.3)' }}>—</span>;
+  }
+
+  if (typeof value === 'bigint') {
+    return <span style={{ color: COLORS.jsonNumber }}>{value.toString()}n</span>;
+  }
+
+  if (typeof value === 'boolean') {
+    return <span style={{ color: COLORS.jsonBoolean }}>{String(value)}</span>;
+  }
+
+  if (typeof value === 'number') {
+    return <span style={{ color: COLORS.jsonNumber, fontVariantNumeric: 'tabular-nums' }}>{String(value)}</span>;
+  }
+
+  if (typeof value === 'string') {
+    if (value === '') {
+      return <span style={{ color: 'rgba(255,255,255,0.3)' }}>—</span>;
+    }
+
+    return <span style={{ color: COLORS.jsonString }}>{value}</span>;
+  }
+
+  if (Array.isArray(value) || ArrayBuffer.isView(value)) {
+    const items = Array.isArray(value) ? value : Array.from(value);
+
+    return (
+      <span style={{ color: COLORS.jsonNumber }}>
+        [{items.map((item, i) => (
+          <span key={i}>
+            {i > 0 && ', '}
+            {typeof item === 'bigint' ? `${item.toString()}n` : typeof item === 'string' ? `"${item}"` : String(item)}
+          </span>
+        ))}]
+      </span>
+    );
+  }
+
+  return (
+    <span style={{ color: 'rgba(255,255,255,0.7)' }}>
+      {JSON.stringify(value, jsonReplacer)}
+    </span>
+  );
+}
+
+export default function EntityDetails({ entity, typedFields, copied, onCopy }) {
+  const [sortAlpha, setSortAlpha] = useState(false);
+  const [filter, setFilter] = useState('');
+
+  const trimmedFilter = filter.trim();
+
+  const fields = useMemo(() => {
+    let result = typedFields;
+
+    if (trimmedFilter) {
+      const lower = trimmedFilter.toLowerCase();
+
+      result = typedFields.filter((field) => field.key.toLowerCase().includes(lower));
+    }
+
+    if (sortAlpha) {
+      result = [...result].sort((left, right) => left.key.localeCompare(right.key));
+    }
+
+    return result;
+  }, [typedFields, sortAlpha, trimmedFilter]);
+
   return (
     <>
       <Box alignItems='center' display='flex' justifyContent='space-between' px={1} sx={HEADER_SURFACE_SX}>
-        <Typography color='text.secondary' fontSize={FONT_SIZE.sm} noWrap>
+        <Typography color='text.secondary' fontSize={FONT_SIZE.md} fontWeight={600} noWrap>
           {entity.class.name}
-          <Typography component='span' color='text.disabled' fontSize={FONT_SIZE.sm}>
+          <Typography component='span' color='text.disabled' fontSize={FONT_SIZE.md}>
             {' '}/ index={entity.index}
           </Typography>
         </Typography>
-        <Tooltip title={copied ? 'Copied!' : 'Copy JSON'} arrow>
-          <IconButton onClick={onCopy} size='small'>
-            <ContentCopyIcon sx={{ fontSize: FONT_SIZE.lg }} />
-          </IconButton>
-        </Tooltip>
+        <Box alignItems='center' display='flex' gap={0.5}>
+          <Typography color='text.disabled' fontSize={FONT_SIZE.sm}>
+            {trimmedFilter ? `${fields.length.toLocaleString('en-US')} / ${typedFields.length.toLocaleString('en-US')} fields` : `${fields.length.toLocaleString('en-US')} fields`}
+          </Typography>
+          <Tooltip title={sortAlpha ? 'Natural order' : 'Sort alphabetically'} arrow>
+            <IconButton onClick={() => setSortAlpha((value) => !value)} size='small'>
+              <SortByAlphaIcon sx={{ color: sortAlpha ? COLORS.accent : 'text.disabled', fontSize: '1rem' }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={copied ? 'Copied!' : 'Copy JSON'} arrow>
+            <IconButton onClick={onCopy} size='small'>
+              <ContentCopyIcon sx={{ fontSize: '1rem' }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
 
       <Divider />
 
-      <Box flex={1} overflow='auto' px={1.5} py={1}>
-        <pre
-          style={{
-            color: 'rgba(255, 255, 255, 0.8)',
-            fontFamily: "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace",
-            fontSize: FONT_SIZE.sm,
-            lineHeight: 1.65,
-            margin: 0
+      <Box alignItems='center' display='flex' px={1} sx={{ height: 40 }}>
+        <TextField
+          fullWidth
+          onChange={(event) => setFilter(event.target.value)}
+          placeholder='Filter fields...'
+          size='small'
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon sx={{ fontSize: '1rem', color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+              sx: { fontSize: FONT_SIZE.md, height: 32 }
+            }
           }}
-        >
-          <HighlightedJson json={json} />
-        </pre>
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: 'rgba(255,255,255,0.08)' },
+              '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.15)' },
+              '&.Mui-focused fieldset': { borderColor: COLORS.jsonBoolean }
+            }
+          }}
+          value={filter}
+        />
+      </Box>
+      <Divider />
+
+      <Box flex={1} overflow='auto' py={0.5}>
+        {fields.map((field) => (
+          <div
+            key={field.key}
+            onMouseEnter={(event) => { event.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)'; }}
+            onMouseLeave={(event) => { event.currentTarget.style.backgroundColor = 'transparent'; }}
+            style={ROW_STYLE}
+          >
+            <span
+              style={{
+                color: 'rgba(255,255,255,0.55)',
+                flexShrink: 0,
+                fontFamily: FONT_MONO,
+                fontSize: FONT_SIZE.sm,
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {field.key}
+            </span>
+            <span style={TYPE_BADGE_STYLE}>
+              {field.type ?? '?'}
+            </span>
+            <span
+              style={{
+                flex: 1,
+                fontFamily: FONT_MONO,
+                fontSize: FONT_SIZE.sm,
+                minWidth: 0,
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {formatValue(field.value)}
+            </span>
+          </div>
+        ))}
       </Box>
     </>
   );

@@ -13,7 +13,7 @@ import { COLORS, FONT_SIZE } from './../../theme';
 import EntityDetails from './EntityDetails';
 import EntityTree from './EntityTree';
 
-import { groupEntities, stringifyEntity } from './entities';
+import { buildTypedFields, groupEntities, stringifyEntity } from './entities';
 
 const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
 
@@ -31,8 +31,8 @@ export default function EntityExplorer({ demo, contentVersion }) {
     ? entityContainers.byId.get(selectedEntityId) ?? null
     : null;
 
-  const unpackedEntity = useMemo(
-    () => selectedEntity === null ? null : stringifyEntity(selectedEntity),
+  const typedFields = useMemo(
+    () => selectedEntity === null ? [] : buildTypedFields(selectedEntity),
     [selectedEntity, contentVersion]
   );
 
@@ -46,15 +46,15 @@ export default function EntityExplorer({ demo, contentVersion }) {
   };
 
   const handleCopyClicked = useCallback(() => {
-    if (!unpackedEntity) {
+    if (selectedEntity === null) {
       return;
     }
 
-    navigator.clipboard.writeText(unpackedEntity).then(() => {
+    navigator.clipboard.writeText(stringifyEntity(selectedEntity)).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }, [unpackedEntity]);
+  }, [selectedEntity]);
 
   const entityClasses = useMemo(() => {
     const classes = Array.from(entityContainers.byClass.keys());
@@ -146,10 +146,10 @@ export default function EntityExplorer({ demo, contentVersion }) {
       <Divider orientation='vertical' flexItem />
 
       <Box display='flex' flex={1} flexDirection='column' minWidth={0}>
-        {unpackedEntity ? (
+        {selectedEntity ? (
           <EntityDetails
             entity={selectedEntity}
-            json={unpackedEntity}
+            typedFields={typedFields}
             copied={copied}
             onCopy={handleCopyClicked}
           />
