@@ -174,7 +174,7 @@ export default function EntityDiff({ diff }) {
 
             {event.fields.map((field) => (
               <div key={field.name} style={FIELD_STYLE}>
-                <span style={NAME_STYLE}>{field.name}<span style={TYPE_BADGE_STYLE}>{field.type}</span>:</span>
+                <span style={NAME_STYLE}>{field.name}<span style={{ ...TYPE_BADGE_STYLE, marginLeft: 3 }}>{field.type}</span>:</span>
                 <span style={VALUE_STYLE}>
                   {field.previous === undefined ? (
                     <span style={NEXT_STYLE}>{formatValue(field.next)}</span>

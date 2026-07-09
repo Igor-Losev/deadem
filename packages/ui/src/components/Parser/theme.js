@@ -24,6 +24,5 @@ export const TYPE_BADGE_STYLE = {
   fontSize: FONT_SIZE.xs,
   fontWeight: 600,
   lineHeight: '18px',
-  marginLeft: 2,
   padding: '0 5px'
 };
