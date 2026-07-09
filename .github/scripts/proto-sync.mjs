@@ -74,7 +74,8 @@ const TARGETS = {
             'source2_steam_stats.proto',
             'steammessages.proto',
             'te.proto',
-            'usermessages.proto'
+            'usermessages.proto',
+            'valveextensions.proto'
         ]
     }
 };

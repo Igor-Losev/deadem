@@ -47,7 +47,6 @@ class Bootstrap {
         const pp = registry.getProtoProvider();
 
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_SAY_TEXT, pp.USER_MESSAGES.lookupType('CUserMessageSayText'));
-        registry.registerMessageType(MessagePacketType.ENTITY_MESSAGE_REMOVE_ALL_DECALS, pp.USER_MESSAGES.lookupType('CEntityMessageRemoveAllDecals'));
 
         registry.registerMessageType(MessagePacketType.CS_UM_VGUI_MENU, pp.CS_USER_MESSAGES.lookupType('CCSUsrMsg_VGUIMenu'));
         registry.registerMessageType(MessagePacketType.CS_UM_HUD_TEXT, pp.CS_USER_MESSAGES.lookupType('CCSUsrMsg_HudText'));
