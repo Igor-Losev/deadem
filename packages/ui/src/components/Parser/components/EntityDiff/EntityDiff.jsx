@@ -2,10 +2,8 @@ import { InboxOutlined as InboxOutlinedIcon } from '@mui/icons-material';
 
 import EmptyState from './../EmptyState';
 
-import { COLORS, FONT_SIZE } from './../../theme';
+import { COLORS, FONT_MONO, FONT_SIZE, TYPE_BADGE_STYLE } from './../../theme';
 import { jsonReplacer } from './../../utils';
-
-const MONO_FONT = "'SF Mono', 'Fira Code', 'Fira Mono', Menlo, Consolas, monospace";
 
 const OPERATION_COLOR = {
   CREATE: '#69f0ae',
@@ -60,7 +58,7 @@ const TICK_STYLE = {
   border: '1px solid rgba(179,136,255,0.28)',
   borderRadius: 6,
   color: COLORS.accent,
-  fontFamily: MONO_FONT,
+  fontFamily: FONT_MONO,
   fontSize: FONT_SIZE.sm,
   fontWeight: 700,
   lineHeight: '24px',
@@ -80,15 +78,14 @@ const SUMMARY_ITEM_STYLE = {
   whiteSpace: 'nowrap'
 };
 const SUMMARY_LABEL_STYLE = { color: 'rgba(255,255,255,0.46)', fontSize: FONT_SIZE.xs, fontWeight: 700 };
-const SUMMARY_VALUE_STYLE = { fontFamily: MONO_FONT, fontSize: FONT_SIZE.sm, fontWeight: 700 };
+const SUMMARY_VALUE_STYLE = { fontFamily: FONT_MONO, fontSize: FONT_SIZE.sm, fontWeight: 700 };
 const LIST_STYLE = { flex: 1, minHeight: 0, overflow: 'auto', padding: '8px 12px' };
 const BLOCK_STYLE = { marginBottom: 10 };
 const HEAD_STYLE = { alignItems: 'center', display: 'flex', gap: 8, marginBottom: 2 };
 const CLASS_STYLE = { color: COLORS.entityClass, fontSize: FONT_SIZE.sm };
 const INDEX_STYLE = { color: 'rgba(255,255,255,0.4)', fontSize: FONT_SIZE.sm };
-const FIELD_STYLE = { display: 'flex', fontFamily: MONO_FONT, fontSize: FONT_SIZE.sm, lineHeight: 1.6, paddingLeft: 16, whiteSpace: 'nowrap' };
-const NAME_STYLE = { color: 'rgba(255,255,255,0.6)', flexShrink: 0, paddingRight: 8 };
-const TYPE_STYLE = { color: 'rgba(255,255,255,0.3)' };
+const FIELD_STYLE = { display: 'flex', fontFamily: FONT_MONO, fontSize: FONT_SIZE.sm, lineHeight: 1.6, paddingLeft: 16, whiteSpace: 'nowrap' };
+const NAME_STYLE = { color: 'rgba(255,255,255,0.6)', flexShrink: 0, paddingRight: 6 };
 const VALUE_STYLE = { color: 'rgba(255,255,255,0.85)' };
 const PREV_STYLE = { color: 'rgba(255,255,255,0.4)' };
 const ARROW_STYLE = { color: 'rgba(255,255,255,0.3)' };
@@ -177,7 +174,7 @@ export default function EntityDiff({ diff }) {
 
             {event.fields.map((field) => (
               <div key={field.name} style={FIELD_STYLE}>
-                <span style={NAME_STYLE}>{field.name}<span style={TYPE_STYLE}> ({field.type})</span>:</span>
+                <span style={NAME_STYLE}>{field.name}<span style={TYPE_BADGE_STYLE}>{field.type}</span>:</span>
                 <span style={VALUE_STYLE}>
                   {field.previous === undefined ? (
                     <span style={NEXT_STYLE}>{formatValue(field.next)}</span>

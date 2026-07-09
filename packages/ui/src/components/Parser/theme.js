@@ -15,3 +15,15 @@ export const FONT_SIZE = {
   md: '0.8125rem',
   lg: '0.875rem'
 };
+
+export const TYPE_BADGE_STYLE = {
+  backgroundColor: 'rgba(255,255,255,0.08)',
+  borderRadius: 8,
+  color: COLORS.jsonString,
+  flexShrink: 0,
+  fontSize: FONT_SIZE.xs,
+  fontWeight: 600,
+  lineHeight: '18px',
+  marginLeft: 2,
+  padding: '0 5px'
+};
