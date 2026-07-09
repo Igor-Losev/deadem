@@ -104,7 +104,7 @@ class StringTableHandler {
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
-                const entry = new StringTableEntry(stringTable, index, entryData.str, entryData.data || null);
+                const entry = new StringTableEntry(stringTable, index, entryData.str, normalizeEntryData(entryData.data));
 
                 stringTable.registerEntry(entry);
 
@@ -138,7 +138,7 @@ class StringTableHandler {
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
-                const entry = new StringTableEntry(existingTable, index, entryData.str, entryData.data || null);
+                const entry = new StringTableEntry(existingTable, index, entryData.str, normalizeEntryData(entryData.data));
 
                 existingTable.registerEntry(entry);
 
@@ -202,6 +202,22 @@ class StringTableHandler {
 
         return type;
     }
+}
+
+/**
+ * @param {Uint8Array|Array|null|undefined} data
+ * @returns {Uint8Array|Array|null}
+ */
+function normalizeEntryData(data) {
+    if (!data) {
+        return null;
+    }
+
+    if (ArrayBuffer.isView(data) || Array.isArray(data)) {
+        return data.length > 0 ? data : null;
+    }
+
+    return data;
 }
 
 export default StringTableHandler;
