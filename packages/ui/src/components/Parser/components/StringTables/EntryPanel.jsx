@@ -1,6 +1,6 @@
 import { Search as SearchIcon, SearchOff as SearchOffIcon } from '@mui/icons-material';
 import { Box, Divider, InputAdornment, TextField } from '@mui/material';
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 import EmptyState from './../EmptyState';
 
@@ -85,32 +85,30 @@ export default function EntryPanel({ contentVersion, table }) {
   const [scrollTop, setScrollTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
 
-  const scrollRef = useRef(null);
+  const [scrollNode, setScrollNode] = useState(null);
 
   const handleFilterChanged = (event) => {
     setFilter(event.target.value);
     setScrollTop(0);
 
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
+    if (scrollNode) {
+      scrollNode.scrollTop = 0;
     }
   };
 
   useLayoutEffect(() => {
-    const node = scrollRef.current;
-
-    if (!node) {
+    if (scrollNode === null) {
       return undefined;
     }
 
-    setViewportHeight(node.clientHeight);
+    setViewportHeight(scrollNode.clientHeight);
 
     const observer = new ResizeObserver(([observed]) => setViewportHeight(observed.contentRect.height));
 
-    observer.observe(node);
+    observer.observe(scrollNode);
 
     return () => observer.disconnect();
-  }, []);
+  }, [scrollNode]);
 
   const entries = useMemo(() => table.getEntries(), [table, contentVersion]);
 
@@ -204,7 +202,7 @@ export default function EntryPanel({ contentVersion, table }) {
           text={entries.length === 0 ? 'No entries' : 'No entries match your filter'}
         />
       ) : (
-        <Box onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)} ref={scrollRef} sx={{ flex: 1, overflow: 'auto' }}>
+        <Box onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)} ref={setScrollNode} sx={{ flex: 1, overflow: 'auto' }}>
           <div style={{ height: total * ROW_HEIGHT, position: 'relative' }}>
             {visibleEntries.map((entry, index) => (
               <EntryRow
