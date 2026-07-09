@@ -1,6 +1,6 @@
 import { COLORS } from './theme';
 
-const TOKEN_RE = /("(?:\\.|[^"\\])*")\s*(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g;
+const TOKEN_RE = /("(?:\\.|[^"\\])*")(:)?|(\b(?:true|false|null)\b)|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?n?\b)/g;
 
 export function HighlightedJson({ json }) {
   const parts = [];
