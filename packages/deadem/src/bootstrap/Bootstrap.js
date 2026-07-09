@@ -29,7 +29,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelFieldRules(registry) {
-        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_UINT_32);
     }
 
     /**
