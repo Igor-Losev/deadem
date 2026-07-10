@@ -84,16 +84,16 @@ function EntityRow({ entity, index, isSelected, onClick }) {
 
 export default function EntityTree({ entityClasses, entityContainers, numericFilter = null, onEntityClick, selectedEntityId }) {
   const [expanded, setExpanded] = useState(new Set());
-  const [collapsed, setCollapsed] = useState(new Set());
+  const [filterToggled, setFilterToggled] = useState(new Set());
 
   const isFiltering = numericFilter !== null;
 
   useEffect(() => {
-    setCollapsed(new Set());
+    setFilterToggled(new Set());
   }, [numericFilter]);
 
   const toggleExpand = (classId) => {
-    const setState = isFiltering ? setCollapsed : setExpanded;
+    const setState = isFiltering ? setFilterToggled : setExpanded;
 
     setState((previous) => {
       const next = new Set(previous);
@@ -117,7 +117,9 @@ export default function EntityTree({ entityClasses, entityContainers, numericFil
           ? allEntities.filter((entity) => matchesNumericFilter(entity, numericFilter))
           : allEntities;
         const classId = entityClass.id;
-        const isExpanded = isFiltering ? !collapsed.has(classId) : expanded.has(classId);
+        const isExpanded = isFiltering
+          ? (entities.length === 1) !== filterToggled.has(classId)
+          : expanded.has(classId);
 
         return (
           <div key={classId}>
