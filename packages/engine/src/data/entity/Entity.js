@@ -100,6 +100,24 @@ class Entity {
 
     /**
      * @public
+     * @param {EntityMutationBatch} batch
+     */
+    applyFromBatch(batch) {
+        for (let i = 0; i < batch.ids.length; i++) {
+            this.updateByFieldPathId(batch.ids[i], batch.values[i]);
+        }
+    }
+
+    /**
+     * @public
+     * @param {EntityMutationExtractor} extractor
+     */
+    applyFromExtractor(extractor) {
+        extractor.forEach((id, value) => this.updateByFieldPathId(id, value));
+    }
+
+    /**
+     * @public
      */
     deactivate() {
         this._active = false;

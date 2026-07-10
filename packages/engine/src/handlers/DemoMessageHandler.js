@@ -139,7 +139,7 @@ class DemoMessageHandler {
                                 entity.activate();
                             }
 
-                            extractor.applyTo(entity);
+                            entity.applyFromExtractor(extractor);
                         } else {
                             events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, extractor.all()));
                         }
@@ -192,21 +192,20 @@ class DemoMessageHandler {
                     extractor.serializer = entity.class.serializer;
 
                     if (allowed) {
-                        const baseline = this._demo.getClassBaselineById(classId);
+                        const baseline = this._demo.getClassBaseline(classId);
 
                         if (baseline === null) {
                             throw new Error(`Baseline not found [ ${classId} ]`);
                         }
 
-                        const baselineExtractor = new EntityMutationExtractor(new BitBuffer(baseline), entity.class.serializer);
+                        const baselineBatch = baseline.getBatch(entity.class.serializer);
 
                         if (events === null) {
                             this._demo.registerEntity(entity);
 
-                            baselineExtractor.applyTo(entity);
-                            extractor.applyTo(entity);
+                            entity.applyFromBatch(baselineBatch);
+                            entity.applyFromExtractor(extractor);
                         } else {
-                            const baselineBatch = baselineExtractor.all();
                             const packetBatch = extractor.all();
 
                             events.push(new EntityMutationEvent(

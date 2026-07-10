@@ -1,6 +1,7 @@
 import Assert from '#core/Assert.js';
 
 import Class from './Class.js';
+import ClassBaseline from './ClassBaseline.js';
 import Server from './Server.js';
 
 import Entity from './entity/Entity.js';
@@ -82,9 +83,9 @@ class Demo {
     /**
      * @public
      * @param {number} id
-     * @returns {Buffer|null}
+     * @returns {ClassBaseline|null}
      */
-    getClassBaselineById(id) {
+    getClassBaseline(id) {
         Assert.isTrue(Number.isInteger(id));
 
         return this._classBaselines.get(id) || null;
@@ -306,41 +307,22 @@ class Demo {
     }
 
     /**
-     * @private
-     * @param {Entity} entity
-     */
-    _removeEntityFromClassIndex(entity) {
-        const entities = this._entities.byClassName.get(entity.class.name) || null;
-
-        if (entities === null) {
-            return;
-        }
-
-        entities.delete(entity);
-
-        if (entities.size === 0) {
-            this._entities.byClassName.delete(entity.class.name);
-        }
-    }
-
-    /**
      * @protected
      * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
+     * @param {Array<StringTableEntry>} entries — the affected entries only
      */
-    _handleTableChanged(stringTableContainer, stringTable) {
+    _handleTableChanged(stringTableContainer, stringTable, entries) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
-                const entries = stringTable.getEntries();
-
                 entries.forEach((entry) => {
-                    const key = parseInt(entry.key);
+                    const classId = parseInt(entry.key);
 
-                    if (Number.isNaN(key)) {
-                        throw new Error(`Unexpected key [ ${entry.key} ] for table [ ${stringTable.type.code} ]`);
+                    if (Number.isNaN(classId)) {
+                        throw new Error(`Unexpected classId [ ${entry.key} ] for table [ ${stringTable.type.code} ]`);
                     }
 
-                    this._classBaselines.set(key, entry.value);
+                    this._registerClassBaseline(classId, entry.value);
                 });
 
                 break;
@@ -366,6 +348,40 @@ class Demo {
             default: {
                 break;
             }
+        }
+    }
+
+    /**
+     * @protected
+     * @param {number} classId
+     * @param {Uint8Array|null} raw
+     */
+    _registerClassBaseline(classId, raw) {
+        const incoming = new ClassBaseline(classId, raw);
+        const existing = this._classBaselines.get(classId) || null;
+
+        if (existing !== null && existing.compare(incoming)) {
+            return;
+        }
+
+        this._classBaselines.set(classId, incoming);
+    }
+
+    /**
+     * @private
+     * @param {Entity} entity
+     */
+    _removeEntityFromClassIndex(entity) {
+        const entities = this._entities.byClassName.get(entity.class.name) || null;
+
+        if (entities === null) {
+            return;
+        }
+
+        entities.delete(entity);
+
+        if (entities.size === 0) {
+            this._entities.byClassName.delete(entity.class.name);
         }
     }
 }

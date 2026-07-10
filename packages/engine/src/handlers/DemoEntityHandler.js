@@ -24,9 +24,7 @@ class DemoEntityHandler {
                 case EntityOperation.CREATE:
                     this._demo.registerEntity(entity);
 
-                    for (let i = 0; i < event.batch.length; i++) {
-                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
-                    }
+                    entity.applyFromBatch(event.batch);
 
                     break;
                 case EntityOperation.UPDATE:
@@ -34,9 +32,7 @@ class DemoEntityHandler {
                         entity.activate();
                     }
 
-                    for (let i = 0; i < event.batch.length; i++) {
-                        entity.updateByFieldPathId(event.batch.ids[i], event.batch.values[i]);
-                    }
+                    entity.applyFromBatch(event.batch);
 
                     break;
                 case EntityOperation.DELETE:

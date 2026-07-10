@@ -43,7 +43,7 @@ class EntityMutationBatch {
     /**
      * @public
      * @static
-     * @returns {EntityMutationBatch} 
+     * @returns {EntityMutationBatch}
      */
     static get EMPTY() {
         return empty;

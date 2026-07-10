@@ -71,22 +71,20 @@ class EntityMutationExtractor {
     }
 
     /**
-     * Decodes all entity mutations and applies them directly to the entity.
+     * Decodes all mutations in bit-stream order and invokes
+     * `callback(id, value)` for each one.
      *
      * @public
-     * @param {Entity} entity
+     * @param {Function} callback
      */
-    applyTo(entity) {
+    forEach(callback) {
         const ids = this._fieldPathExtractor.allIds();
 
         for (let i = 0; i < ids.length; i++) {
-            const id = ids[i];
-            const value = this._serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
-
-            entity.updateByFieldPathId(id, value);
+            callback(ids[i], this._serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
         }
     }
- 
+
     /**
      * Advances the buffer past one entity's worth of mutations without
      * producing any output. Decoders still run so the bit-stream stays
