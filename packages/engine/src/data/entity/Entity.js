@@ -13,6 +13,7 @@ const INITIAL_TYPED_ARRAY_SIZE = 8;
 
 const ENTITY_INDEX_BITS = 14;
 const ENTITY_INDEX_MAX = 1 << ENTITY_INDEX_BITS;
+const ENTITY_INDEX_MASK = ENTITY_INDEX_MAX - 1;
 
 class Entity {
     /**
@@ -43,6 +44,15 @@ class Entity {
 
         this._changed = null;
         this._snapshot = null;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {number}
+     */
+    static get INDEX_MASK() {
+        return ENTITY_INDEX_MASK;
     }
 
     /**

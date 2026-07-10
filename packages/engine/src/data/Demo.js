@@ -178,7 +178,13 @@ class Demo {
     getEntityByHandle(handle) {
         Assert.isTrue(Number.isInteger(handle));
 
-        return this._entities.byIndex[handle & 0x3FFF] || null;
+        const entity = this._entities.byIndex[handle & Entity.INDEX_MASK] || null;
+
+        if (entity === null || entity.handle !== handle) {
+            return null;
+        }
+
+        return entity;
     }
 
     /**
