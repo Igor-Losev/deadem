@@ -5,7 +5,17 @@ import { useMemo, useState } from 'react';
 import { COLORS, FONT_MONO, FONT_SIZE, TYPE_BADGE_STYLE } from './../../theme';
 import { jsonReplacer } from './../../utils';
 
+import { isHandleField } from './entities';
+
 const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
+
+const HANDLE_LINK_STYLE = {
+  color: COLORS.jsonNumber,
+  cursor: 'pointer',
+  fontVariantNumeric: 'tabular-nums',
+  textDecoration: 'underline dashed rgba(105,240,174,0.45)',
+  textUnderlineOffset: 3
+};
 
 const ROW_STYLE = {
   alignItems: 'baseline',
@@ -63,7 +73,7 @@ function formatValue(value) {
   );
 }
 
-export default function EntityDetails({ entity, typedFields, copied, onCopy }) {
+export default function EntityDetails({ entity, typedFields, copied, onCopy, onHandleClick }) {
   const [sortAlpha, setSortAlpha] = useState(false);
   const [filter, setFilter] = useState('');
 
@@ -172,7 +182,15 @@ export default function EntityDetails({ entity, typedFields, copied, onCopy }) {
                 whiteSpace: 'nowrap'
               }}
             >
-              {formatValue(field.value)}
+              {isHandleField(field) ? (
+                <span
+                  onClick={() => onHandleClick(field.value)}
+                  style={HANDLE_LINK_STYLE}
+                  title='Filter by this handle'
+                >
+                  {String(field.value)}
+                </span>
+              ) : formatValue(field.value)}
             </span>
           </div>
         ))}

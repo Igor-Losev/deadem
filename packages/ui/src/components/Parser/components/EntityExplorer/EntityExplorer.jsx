@@ -152,6 +152,7 @@ export default function EntityExplorer({ demo, contentVersion }) {
             typedFields={typedFields}
             copied={copied}
             onCopy={handleCopyClicked}
+            onHandleClick={(handle) => setFilter(String(handle))}
           />
         ) : (
           <EmptyState

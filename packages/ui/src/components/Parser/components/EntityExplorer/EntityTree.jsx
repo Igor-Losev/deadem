@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { COLORS, FONT_SIZE } from './../../theme';
 
@@ -75,15 +75,27 @@ function EntityRow({ entity, index, isSelected, onClick }) {
       <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: FONT_SIZE.md }}>
         serial=<span style={{ color: 'rgba(255,255,255,0.55)' }}>{entity.serial}</span>
       </span>
+      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: FONT_SIZE.md }}>
+        handle=<span style={{ color: 'rgba(255,255,255,0.55)' }}>{entity.handle}</span>
+      </span>
     </div>
   );
 }
 
 export default function EntityTree({ entityClasses, entityContainers, numericFilter = null, onEntityClick, selectedEntityId }) {
   const [expanded, setExpanded] = useState(new Set());
+  const [collapsed, setCollapsed] = useState(new Set());
+
+  const isFiltering = numericFilter !== null;
+
+  useEffect(() => {
+    setCollapsed(new Set());
+  }, [numericFilter]);
 
   const toggleExpand = (classId) => {
-    setExpanded((previous) => {
+    const setState = isFiltering ? setCollapsed : setExpanded;
+
+    setState((previous) => {
       const next = new Set(previous);
 
       if (next.has(classId)) {
@@ -105,7 +117,7 @@ export default function EntityTree({ entityClasses, entityContainers, numericFil
           ? allEntities.filter((entity) => matchesNumericFilter(entity, numericFilter))
           : allEntities;
         const classId = entityClass.id;
-        const isExpanded = numericFilter !== null || expanded.has(classId);
+        const isExpanded = isFiltering ? !collapsed.has(classId) : expanded.has(classId);
 
         return (
           <div key={classId}>

@@ -9,6 +9,20 @@ export function matchesNumericFilter(entity, digits) {
   return String(entity.index).startsWith(digits) || String(entity.handle).startsWith(digits);
 }
 
+const NULL_HANDLE = 0xFFFFFF;
+
+export function isHandleField(field) {
+  if (typeof field.value !== 'number' || field.value === NULL_HANDLE || field.type === null) {
+    return false;
+  }
+
+  if (field.type.startsWith('CHandle<')) {
+    return true;
+  }
+
+  return field.type.includes('<CHandle<') && /\.\d+$/.test(field.key);
+}
+
 export function groupEntities(entities) {
   const containers = { byClass: new Map(), byId: new Map() };
 
