@@ -22,7 +22,7 @@ const ROW_STYLE = {
   display: 'flex',
   gap: 6,
   lineHeight: '22px',
-  padding: '2px 8px',
+  padding: '2px 12px',
   whiteSpace: 'nowrap'
 };
 
@@ -160,7 +160,7 @@ export default function EntityDetails({ entity, typedFields, copied, onCopy, onH
       </Box>
       <Divider />
 
-      <Box flex={1} overflow='auto' py={0.5}>
+      <Box flex={1} overflow='auto'>
         {fields.map((field) => (
           <div
             key={field.key}

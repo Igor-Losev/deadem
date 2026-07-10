@@ -49,7 +49,7 @@ export default function InfoExplorer({ demo, fileHeader }) {
         <Widget header='Server' columns={SERVER_COLUMNS} data={server} />
       </Grid>
       <Grid size={12}>
-        <Widget header='Replay' columns={REPLAY_COLUMNS} data={fileHeader ?? null} valueAlign='left' />
+        <Widget header='File Header' columns={REPLAY_COLUMNS} data={fileHeader ?? null} valueAlign='left' />
       </Grid>
     </Grid>
   );

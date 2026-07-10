@@ -1,4 +1,4 @@
-import { Search as SearchIcon, SearchOff as SearchOffIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Search as SearchIcon, SearchOff as SearchOffIcon } from '@mui/icons-material';
 import { Box, Divider, InputAdornment, TextField } from '@mui/material';
 import { useLayoutEffect, useMemo, useState } from 'react';
 
@@ -157,10 +157,19 @@ export default function EntryPanel({ contentVersion, table }) {
         <TextField
           fullWidth
           onChange={handleFilterChanged}
+          onKeyDown={(event) => { if (event.key === 'Escape') setFilter(''); }}
           placeholder='Filter by key or id...'
           size='small'
           slotProps={{
             input: {
+              endAdornment: trimmedFilter ? (
+                <InputAdornment position='end'>
+                  <CloseIcon
+                    onClick={() => setFilter('')}
+                    sx={{ color: 'text.disabled', cursor: 'pointer', fontSize: '1rem' }}
+                  />
+                </InputAdornment>
+              ) : null,
               startAdornment: (
                 <InputAdornment position='start'>
                   <SearchIcon sx={{ fontSize: '1rem', color: 'text.disabled' }} />
