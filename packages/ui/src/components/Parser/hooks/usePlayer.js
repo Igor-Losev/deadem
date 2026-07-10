@@ -26,6 +26,7 @@ export default function usePlayer(library, updatesEnabled = true) {
   const fileInputRef = useRef(null);
   const historyRef = useRef([]);
   const entityDiffRef = useRef({ events: [], fullSnapshot: false, prevTick: -1, tick: -1 });
+  const stringTableDiffRef = useRef({ events: [], fullSnapshot: false, prevTick: -1, tick: -1 });
   const loadRequestIdRef = useRef(0);
   const tickStoreRef = useRef(null);
 
@@ -62,6 +63,7 @@ export default function usePlayer(library, updatesEnabled = true) {
 
     historyRef.current = [];
     entityDiffRef.current = { events: [], fullSnapshot: false, prevTick: -1, tick: -1 };
+    stringTableDiffRef.current = { events: [], fullSnapshot: false, prevTick: -1, tick: -1 };
     runtimeErrorsRef.current = { PlaybackInterruptedError: null };
 
     tickStoreRef.current.setCurrent(-1);
@@ -156,7 +158,7 @@ export default function usePlayer(library, updatesEnabled = true) {
         return;
       }
 
-      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError } = runtimeLibrary;
+      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError, StringTableEvent } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
         breakInterval: 100
       });
@@ -226,6 +228,71 @@ export default function usePlayer(library, updatesEnabled = true) {
             operation: operation.code,
             serial: entity.serial
           });
+        }
+      });
+
+      newPlayer.registerPreInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
+        const buffer = stringTableDiffRef.current;
+
+        if (demoPacket.tick !== buffer.tick) {
+          buffer.prevTick = buffer.tick;
+          buffer.tick = demoPacket.tick;
+          buffer.events = [];
+          buffer.fullSnapshot = false;
+        }
+
+        if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
+          buffer.fullSnapshot = true;
+          buffer.events = [];
+        }
+      });
+
+      const stringTableContainer = newPlayer.getDemo().stringTableContainer;
+      const shadowByTable = new Map();
+
+      stringTableContainer.subscribe(StringTableEvent.TABLE_CREATED, (sender, table, entries) => {
+        shadowByTable.set(table.id, new Map(entries.map((entry) => [ entry.id, entry ])));
+
+        const buffer = stringTableDiffRef.current;
+
+        if (!buffer.fullSnapshot) {
+          buffer.events.push({ entries: [], entryCount: entries.length, operation: 'CREATE', tableCode: table.type.code });
+        }
+      });
+
+      stringTableContainer.subscribe(StringTableEvent.TABLE_UPDATED, (sender, table, entries) => {
+        const buffer = stringTableDiffRef.current;
+
+        if (buffer.fullSnapshot) {
+          return;
+        }
+
+        const shadow = shadowByTable.get(table.id);
+        const changes = [];
+
+        for (const entry of entries) {
+          const previous = shadow?.get(entry.id) ?? null;
+
+          if (previous !== entry) {
+            changes.push({ id: entry.id, key: entry.key, next: entry, previous });
+          }
+        }
+
+        if (changes.length > 0) {
+          buffer.events.push({ entries: changes, entryCount: changes.length, operation: 'UPDATE', tableCode: table.type.code });
+        }
+      });
+
+      stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, (sender, table, entries) => {
+        let shadow = shadowByTable.get(table.id);
+
+        if (shadow === undefined) {
+          shadow = new Map();
+          shadowByTable.set(table.id, shadow);
+        }
+
+        for (const entry of entries) {
+          shadow.set(entry.id, entry);
         }
       });
 
@@ -368,7 +435,7 @@ export default function usePlayer(library, updatesEnabled = true) {
 
   return {
     demo, fileName, fileHeader, playing, rate, seeking, ticks, tickStore: tickStoreRef.current, contentVersion, playerError, frozen,
-    fileInputRef, historyRef, entityDiffRef,
+    fileInputRef, historyRef, entityDiffRef, stringTableDiffRef,
     clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,

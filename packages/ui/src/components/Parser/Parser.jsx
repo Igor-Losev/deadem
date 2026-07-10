@@ -13,7 +13,7 @@ import Navigation from './../Navigation/Navigation';
 
 import BottomBar from './components/BottomBar/BottomBar';
 import Cs2GameInfo from './components/BottomBar/Cs2GameInfo';
-import EntityDiff from './components/EntityDiff/EntityDiff';
+import DiffExplorer from './components/EntityDiff/DiffExplorer';
 import EntityExplorer from './components/EntityExplorer/EntityExplorer';
 import FreezeToggle from './components/FreezeToggle/FreezeToggle';
 import InfoExplorer from './components/InfoExplorer/InfoExplorer';
@@ -82,7 +82,7 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
 
   const {
     demo, fileName, fileHeader, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
-    fileInputRef, historyRef, entityDiffRef,
+    fileInputRef, historyRef, entityDiffRef, stringTableDiffRef,
     clearPlayerError, toggleFrozen,
     handleFileChanged, handleResetClicked,
     handlePlayClicked, handlePauseClicked, handleRateChange,
@@ -96,11 +96,18 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
 
   const history = useMemo(() => [...historyRef.current], [contentVersion]);
 
-  const diff = useMemo(() => ({
+  const entityDiff = useMemo(() => ({
     events: [...entityDiffRef.current.events],
     fullSnapshot: entityDiffRef.current.fullSnapshot,
     prevTick: entityDiffRef.current.prevTick,
     tick: entityDiffRef.current.tick
+  }), [contentVersion]);
+
+  const stringTableDiff = useMemo(() => ({
+    events: [...stringTableDiffRef.current.events],
+    fullSnapshot: stringTableDiffRef.current.fullSnapshot,
+    prevTick: stringTableDiffRef.current.prevTick,
+    tick: stringTableDiffRef.current.tick
   }), [contentVersion]);
 
   const gameInfo = useMemo(
@@ -166,7 +173,7 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
                 <StringTables contentVersion={contentVersion} demo={demo} />
               </TabPanel>
               <TabPanel active={tabIndex === 4}>
-                <EntityDiff diff={diff} />
+                <DiffExplorer entityDiff={entityDiff} stringTableDiff={stringTableDiff} />
               </TabPanel>
               <TabPanel active={tabIndex === 5}>
                 <InfoExplorer demo={demo} fileHeader={fileHeader} />
