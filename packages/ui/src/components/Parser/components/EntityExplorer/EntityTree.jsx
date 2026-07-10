@@ -109,7 +109,7 @@ export default function EntityTree({ entityClasses, entityContainers, numericFil
   };
 
   return (
-    <div style={{ padding: '4px 0' }}>
+    <div>
       {entityClasses.map((entityClass) => {
         const allEntities = entityContainers.byClass.get(entityClass);
 

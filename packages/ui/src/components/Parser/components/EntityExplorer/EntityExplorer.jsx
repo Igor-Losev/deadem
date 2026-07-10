@@ -1,5 +1,6 @@
 import {
   Category as CategoryIcon,
+  Close as CloseIcon,
   DataObject as DataObjectIcon,
   SearchOff as SearchOffIcon
 } from '@mui/icons-material';
@@ -102,10 +103,19 @@ export default function EntityExplorer({ demo, contentVersion }) {
           <TextField
             fullWidth
             onChange={(event) => setFilter(event.target.value)}
+            onKeyDown={(event) => { if (event.key === 'Escape') setFilter(''); }}
             placeholder='Filter by class, index or handle...'
             size='small'
             slotProps={{
               input: {
+                endAdornment: trimmedFilter ? (
+                  <InputAdornment position='end'>
+                    <CloseIcon
+                      onClick={() => setFilter('')}
+                      sx={{ color: 'text.disabled', cursor: 'pointer', fontSize: '1rem' }}
+                    />
+                  </InputAdornment>
+                ) : null,
                 startAdornment: (
                   <InputAdornment position='start'>
                     <CategoryIcon sx={{ fontSize: '1rem', color: 'text.disabled' }} />

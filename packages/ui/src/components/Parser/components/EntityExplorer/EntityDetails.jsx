@@ -1,4 +1,4 @@
-import { ContentCopy as ContentCopyIcon, Search as SearchIcon, SortByAlpha as SortByAlphaIcon } from '@mui/icons-material';
+import { Close as CloseIcon, ContentCopy as ContentCopyIcon, Search as SearchIcon, SortByAlpha as SortByAlphaIcon } from '@mui/icons-material';
 import { Box, Divider, IconButton, InputAdornment, TextField, Tooltip, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
@@ -123,14 +123,23 @@ export default function EntityDetails({ entity, typedFields, copied, onCopy, onH
 
       <Divider />
 
-      <Box alignItems='center' display='flex' px={1} sx={{ height: 40 }}>
+      <Box alignItems='center' display='flex' px={1} sx={{ backgroundColor: HEADER_SURFACE_SX.backgroundColor, height: 40 }}>
         <TextField
           fullWidth
           onChange={(event) => setFilter(event.target.value)}
+          onKeyDown={(event) => { if (event.key === 'Escape') setFilter(''); }}
           placeholder='Filter fields...'
           size='small'
           slotProps={{
             input: {
+              endAdornment: trimmedFilter ? (
+                <InputAdornment position='end'>
+                  <CloseIcon
+                    onClick={() => setFilter('')}
+                    sx={{ color: 'text.disabled', cursor: 'pointer', fontSize: '1rem' }}
+                  />
+                </InputAdornment>
+              ) : null,
               startAdornment: (
                 <InputAdornment position='start'>
                   <SearchIcon sx={{ fontSize: '1rem', color: 'text.disabled' }} />
