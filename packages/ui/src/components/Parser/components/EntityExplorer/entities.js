@@ -5,6 +5,10 @@ export function getEntityId(entity) {
   return `${entity.index}-${entity.class.id}-${entity.serial}`;
 }
 
+export function matchesNumericFilter(entity, digits) {
+  return String(entity.index).startsWith(digits) || String(entity.handle).startsWith(digits);
+}
+
 export function groupEntities(entities) {
   const containers = { byClass: new Map(), byId: new Map() };
 

@@ -13,7 +13,7 @@ import { COLORS, FONT_SIZE } from './../../theme';
 import EntityDetails from './EntityDetails';
 import EntityTree from './EntityTree';
 
-import { buildTypedFields, groupEntities, stringifyEntity } from './entities';
+import { buildTypedFields, groupEntities, matchesNumericFilter, stringifyEntity } from './entities';
 
 const HEADER_SURFACE_SX = { backgroundColor: 'rgba(255,255,255,0.025)', height: 44 };
 
@@ -65,22 +65,22 @@ export default function EntityExplorer({ demo, contentVersion }) {
   }, [entityContainers]);
 
   const trimmedFilter = filter.trim();
-  const indexFilter = /^\d+$/.test(trimmedFilter) ? trimmedFilter : null;
+  const numericFilter = /^\d+$/.test(trimmedFilter) ? trimmedFilter : null;
 
   const filteredClasses = useMemo(() => {
     if (!trimmedFilter) {
       return entityClasses;
     }
 
-    if (indexFilter !== null) {
+    if (numericFilter !== null) {
       return entityClasses.filter((entityClass) =>
-        entityContainers.byClass.get(entityClass).some((entity) => String(entity.index).startsWith(indexFilter)));
+        entityContainers.byClass.get(entityClass).some((entity) => matchesNumericFilter(entity, numericFilter)));
     }
 
     const lower = trimmedFilter.toLowerCase();
 
     return entityClasses.filter((entityClass) => entityClass.name.toLowerCase().includes(lower));
-  }, [entityClasses, entityContainers, trimmedFilter, indexFilter]);
+  }, [entityClasses, entityContainers, trimmedFilter, numericFilter]);
 
   const hasEntities = entityClasses.length > 0;
 
@@ -102,7 +102,7 @@ export default function EntityExplorer({ demo, contentVersion }) {
           <TextField
             fullWidth
             onChange={(event) => setFilter(event.target.value)}
-            placeholder='Filter by class or index...'
+            placeholder='Filter by class, index or handle...'
             size='small'
             slotProps={{
               input: {
@@ -130,7 +130,7 @@ export default function EntityExplorer({ demo, contentVersion }) {
             <EntityTree
               entityClasses={filteredClasses}
               entityContainers={entityContainers}
-              indexFilter={indexFilter}
+              numericFilter={numericFilter}
               onEntityClick={handleEntityClick}
               selectedEntityId={selectedEntityId}
             />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { COLORS, FONT_SIZE } from './../../theme';
 
-import { getEntityId } from './entities';
+import { getEntityId, matchesNumericFilter } from './entities';
 
 const ROW_STYLE = {
   alignItems: 'center',
@@ -79,7 +79,7 @@ function EntityRow({ entity, index, isSelected, onClick }) {
   );
 }
 
-export default function EntityTree({ entityClasses, entityContainers, indexFilter = null, onEntityClick, selectedEntityId }) {
+export default function EntityTree({ entityClasses, entityContainers, numericFilter = null, onEntityClick, selectedEntityId }) {
   const [expanded, setExpanded] = useState(new Set());
 
   const toggleExpand = (classId) => {
@@ -101,11 +101,11 @@ export default function EntityTree({ entityClasses, entityContainers, indexFilte
       {entityClasses.map((entityClass) => {
         const allEntities = entityContainers.byClass.get(entityClass);
 
-        const entities = indexFilter !== null
-          ? allEntities.filter((entity) => String(entity.index).startsWith(indexFilter))
+        const entities = numericFilter !== null
+          ? allEntities.filter((entity) => matchesNumericFilter(entity, numericFilter))
           : allEntities;
         const classId = entityClass.id;
-        const isExpanded = indexFilter !== null || expanded.has(classId);
+        const isExpanded = numericFilter !== null || expanded.has(classId);
 
         return (
           <div key={classId}>
