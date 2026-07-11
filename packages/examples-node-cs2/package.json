@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-cs2",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Node.js example scripts, benchmarks, and diagnostics for @deademx/cs2",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "3.3.0",
-    "@deademx/cs2": "3.3.0"
+    "@deademx/examples-common": "3.4.0",
+    "@deademx/cs2": "3.4.0"
   }
 }
