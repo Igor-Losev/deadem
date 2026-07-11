@@ -359,19 +359,6 @@
         }
       }
     },
-    "CEntityMsg": {
-      "edition": "proto2",
-      "fields": {
-        "targetEntity": {
-          "type": "uint32",
-          "id": 1,
-          "protoName": "target_entity",
-          "options": {
-            "default": 16777215
-          }
-        }
-      }
-    },
     "CMsg_CVars": {
       "edition": "proto2",
       "fields": {
@@ -4132,21 +4119,6 @@
           "type": "bool",
           "id": 3,
           "protoName": "mod_enable"
-        }
-      }
-    },
-    "CEntityMessageRemoveAllDecals": {
-      "edition": "proto2",
-      "fields": {
-        "removeDecals": {
-          "type": "bool",
-          "id": 1,
-          "protoName": "remove_decals"
-        },
-        "entityMsg": {
-          "type": ".CEntityMsg",
-          "id": 2,
-          "protoName": "entity_msg"
         }
       }
     },
