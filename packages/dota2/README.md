@@ -122,7 +122,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | 102 | Parse selected message types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
 | 103 | Print chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
 | 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
-| 110 | Print the combat log, names resolved through `CombatLogNames` | [110_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/110_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/110_parse_combat_log.js` |
+| 105 | Print the combat log, names resolved through `CombatLogNames` | [105_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/105_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/105_parse_combat_log.js` |
 
 ### Player
 
