@@ -371,7 +371,7 @@ class Player {
         const msPerTick = (this._engine.demo.server.tickInterval / rate) * 1000;
 
         const anchor = performance.now();
-        let ticksProcessed = 0;
+        const anchorTick = this._ticks.current;
 
         const deferred = this._playback.deferred;
 
@@ -388,9 +388,7 @@ class Player {
                 return;
             }
 
-            ticksProcessed++;
-
-            const expectedTime = anchor + ticksProcessed * msPerTick;
+            const expectedTime = anchor + (this._ticks.current - anchorTick) * msPerTick;
             const delay = expectedTime - performance.now();
 
             if (delay > 1) {
