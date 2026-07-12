@@ -1,7 +1,11 @@
+/**
+ * @typedef {'paused'|'stopped'|'disposed'} PlaybackInterruptionReason
+ */
+
 class PlaybackInterruptedError extends Error {
     /**
      * @constructor
-     * @param {string} reason
+     * @param {PlaybackInterruptionReason} reason
      */
     constructor(reason) {
         super(`Playback interrupted: ${reason}`);
@@ -13,7 +17,7 @@ class PlaybackInterruptedError extends Error {
 
     /**
      * @public
-     * @returns {string}
+     * @returns {PlaybackInterruptionReason}
      */
     get reason() {
         return this._reason;
@@ -22,7 +26,7 @@ class PlaybackInterruptedError extends Error {
     /**
      * @public
      * @static
-     * @returns {string}
+     * @returns {'paused'}
      */
     static get PAUSED() {
         return 'paused';
@@ -31,7 +35,7 @@ class PlaybackInterruptedError extends Error {
     /**
      * @public
      * @static
-     * @returns {string}
+     * @returns {'stopped'}
      */
     static get STOPPED() {
         return 'stopped';
@@ -40,7 +44,7 @@ class PlaybackInterruptedError extends Error {
     /**
      * @public
      * @static
-     * @returns {string}
+     * @returns {'disposed'}
      */
     static get DISPOSED() {
         return 'disposed';

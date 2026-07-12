@@ -3,6 +3,7 @@
 
 /** @import DemoSource from '#data/enums/DemoSource.js' */
 
+import Assert from '#core/Assert.js';
 import ReadableArray from '#core/stream/ReadableArray.js';
 
 import DeferredPromise from '#data/DeferredPromise.js';
@@ -23,10 +24,15 @@ class ParserSession {
         this._source = source;
 
         this._closed = false;
+
+        /** @type {Error|null} */
         this._error = null;
+
         this._started = false;
 
+        /** @type {ReadableArray|null} */
         this._reader = null;
+        /** @type {Promise<void>|null} */
         this._parsePromise = null;
 
         this._pending = new Set();
@@ -186,8 +192,12 @@ class ParserSession {
         this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
         this._pending.add(teardown);
 
+        const reader = this._reader;
+
+        Assert.exists(reader, 'Session reader is not initialized');
+
         for (let i = 0; i < count; i++) {
-            this._reader.release();
+            reader.release();
         }
 
         return deferred.promise;
@@ -212,8 +222,12 @@ class ParserSession {
             throw this._error;
         }
 
+        const reader = this._reader;
+
+        Assert.exists(reader, 'Session reader is not initialized');
+
         for (let i = 0; i < count; i++) {
-            this._reader.release();
+            reader.release();
         }
     }
 
@@ -253,7 +267,7 @@ class ParserSession {
     /**
      * @private
      * @static
-     * @param {Error} error
+     * @param {*} error
      * @returns {boolean}
      */
     static _getIsAbortError(error) {

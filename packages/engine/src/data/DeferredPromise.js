@@ -47,13 +47,13 @@ class DeferredPromise {
 
     /**
      * @public
-     * @param {T} value
+     * @param {T} [value]
      */
     resolve(value) {
         this._fulfilled = true;
         this._settled = true;
 
-        this._resolve(value);
+        this._resolve(/** @type {T} */ (value));
     }
 
     /**

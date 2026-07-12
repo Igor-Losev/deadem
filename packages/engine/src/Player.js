@@ -3,6 +3,8 @@
 /** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
 
 /** @import Demo from '#data/Demo.js' */
+/** @import { PlaybackInterruptionReason } from '#errors/PlaybackInterruptedError.js' */
+/** @import { InterceptorFn } from '#root/src/ParserEngine.js' */
 /** @import InterceptorStage from '#data/enums/InterceptorStage.js' */
 
 /** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
@@ -38,7 +40,7 @@ class Player {
         this._state = PlayerState.IDLE;
 
         this._playback = {
-            /** @type {DeferredPromise<any>|null} */
+            /** @type {DeferredPromise<void>|null} */
             deferred: null
         };
 
@@ -49,8 +51,11 @@ class Player {
             position: -1
         };
 
+        /** @type {PlayerPacketIndex|null} */
         this._index = null;
+        /** @type {ParserSession|null} */
         this._session = null;
+        /** @type {DemoSource|null} */
         this._source = null;
     }
 
@@ -243,7 +248,11 @@ class Player {
     async prevTick() {
         this._requireState(PlayerState.LOADED, 'Unable to go to previous tick');
 
-        const prev = this._index.retreat(this._ticks.position);
+        const index = this._index;
+
+        Assert.exists(index, 'Player index is not initialized');
+
+        const prev = index.retreat(this._ticks.position);
 
         if (prev === null) {
             return false;
@@ -257,7 +266,7 @@ class Player {
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -266,7 +275,7 @@ class Player {
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);
@@ -292,10 +301,16 @@ class Player {
                 await this._session.close();
             }
 
-            this._session = new ParserSession(this._engine, this._index, this._source);
+            const index = this._index;
+            const source = this._source;
+
+            Assert.exists(index, 'Player index is not initialized');
+            Assert.exists(source, 'Player source is not initialized');
+
+            this._session = new ParserSession(this._engine, index, source);
 
             this._ticks.current = await this._session.seekToTick(tick);
-            this._ticks.position = this._index.getTickPosition(this._ticks.current);
+            this._ticks.position = index.getTickPosition(this._ticks.current);
         } finally {
             this._state = PlayerState.LOADED;
         }
@@ -345,14 +360,20 @@ class Player {
      * @returns {Promise<boolean>} Returns false if there are no more ticks.
      */
     async _advanceTick() {
-        const next = this._index.advance(this._ticks.position);
+        const index = this._index;
+        const session = this._session;
+
+        Assert.exists(index, 'Player index is not initialized');
+        Assert.exists(session, 'Player session is not initialized');
+
+        const next = index.advance(this._ticks.position);
 
         if (next === null) {
             return false;
         }
 
         this._ticks.position = next.position;
-        this._ticks.current = await this._session.process(next.count);
+        this._ticks.current = await session.process(next.count);
 
         return true;
     }
@@ -376,12 +397,16 @@ class Player {
      * @param {number} rate
      */
     async _runPlayback(rate) {
-        const msPerTick = (this._engine.demo.server.tickInterval / rate) * 1000;
+        const server = this._engine.demo.server;
+        const deferred = this._playback.deferred;
+
+        Assert.exists(server, 'Server info is not available');
+        Assert.exists(deferred, 'Playback deferred is not initialized');
+
+        const msPerTick = (server.tickInterval / rate) * 1000;
 
         const anchor = performance.now();
         const anchorTick = this._ticks.current;
-
-        const deferred = this._playback.deferred;
 
         while (!deferred.settled) {
             const hasMore = await this._advanceTick();
@@ -426,12 +451,17 @@ class Player {
      */
     /**
      * @protected
-     * @param {'paused'|'stopped'|'disposed'} reason
+     * @param {PlaybackInterruptionReason} reason
      */
     _stopPlayback(reason) {
         this._transition(PlayerState.LOADED);
 
-        this._playback.deferred.reject(new PlaybackInterruptedError(reason));
+        const deferred = this._playback.deferred;
+
+        Assert.exists(deferred, 'Playback deferred is not initialized');
+
+        deferred.reject(new PlaybackInterruptedError(reason));
+
         this._playback.deferred = null;
     }
 

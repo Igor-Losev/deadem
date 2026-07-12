@@ -20,14 +20,15 @@ class PlayerPacketIndex {
         this._codec = codec;
         this._packets = packets;
 
-        /** @type {Array<*>} */
+        /** @type {Array<number>} */
         this._bootstrap = [];
-        /** @type {Array<*>} */
+        /** @type {Array<number>} */
         this._keyframes = [];
+        /** @type {Map<number, *>} */
         this._stringTableSnapshots = new Map();
 
-        this._uniqueTicks = null;
-        this._tickOffsets = null;
+        this._uniqueTicks = new Int32Array(0);
+        this._tickOffsets = new Int32Array(0);
 
         this._build();
     }

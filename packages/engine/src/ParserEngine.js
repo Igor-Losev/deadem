@@ -35,6 +35,13 @@ import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
 import SchemaRegistry from './SchemaRegistry.js';
 
+/**
+ * Interceptor callback. Receives stage-specific arguments — see
+ * {@link InterceptorStage} for the shapes passed at each stage.
+ *
+ * @typedef {(...args: Array<*>) => void} InterceptorFn
+ */
+
 class ParserEngine {
     /**
      * @public
@@ -82,6 +89,8 @@ class ParserEngine {
         this._started = false;
 
         this._paused = false;
+
+        /** @type {DeferredPromise<void>|null} */
         this._pausePromise = null;
     }
 
@@ -119,7 +128,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {{pre: *[], post: *[]}}
+     * @returns {{pre: Array<Array<InterceptorFn>>, post: Array<Array<InterceptorFn>>}}
      */
     get interceptors() {
         return this._interceptors;
@@ -143,7 +152,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {DeferredPromise<any>|null}
+     * @returns {DeferredPromise<void>|null}
      */
     get pausePromise() {
         return this._pausePromise;
@@ -321,7 +330,7 @@ class ParserEngine {
 
             const collector = new WritableSink((packet) => packets.push(packet));
 
-            this._pipeline = new Pipeline(reader, chain, collector);
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, collector);
 
             await this._pipeline.ready();
 
@@ -383,7 +392,7 @@ class ParserEngine {
             this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            this._pipeline = new Pipeline(reader, chain);
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain);
 
             await this._pipeline.ready();
         } catch (error) {
@@ -420,13 +429,13 @@ class ParserEngine {
         }
 
         this._paused = true;
-        this._pausePromise = new DeferredPromise();
+        this._pausePromise = /** @type {DeferredPromise<void>} */ (new DeferredPromise());
     }
 
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         Assert.isTrue(stage instanceof InterceptorStage);
@@ -438,7 +447,7 @@ class ParserEngine {
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         Assert.isTrue(stage instanceof InterceptorStage);
@@ -528,12 +537,16 @@ class ParserEngine {
      * @protected
      */
     _unpause() {
-        if (!this._paused) {
+        const pausePromise = this._pausePromise;
+
+        if (pausePromise === null) {
             return;
         }
 
         this._paused = false;
-        this._pausePromise.resolve();
+
+        pausePromise.resolve();
+
         this._pausePromise = null;
     }
 
@@ -550,7 +563,7 @@ class ParserEngine {
 
     /**
      * @private
-     * @returns {{pre: Array[], post: Array[]}}
+     * @returns {{pre: Array<Array<InterceptorFn>>, post: Array<Array<InterceptorFn>>}}
      */
     _createInterceptors() {
         return {
@@ -569,7 +582,7 @@ class ParserEngine {
 
     /**
      * @private
-     * @param {Error} error
+     * @param {*} error
      * @returns {boolean}
      */
     _getIsAbortError(error) {
