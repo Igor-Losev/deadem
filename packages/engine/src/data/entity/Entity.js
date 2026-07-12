@@ -128,7 +128,7 @@ class Entity {
      * @param {EntityMutationExtractor} extractor
      */
     applyFromExtractor(extractor) {
-        extractor.forEach((id, value) => this.updateByFieldPathId(id, value));
+        extractor.forEach((/** @type {number} */ id, /** @type {*} */ value) => this.updateByFieldPathId(id, value));
     }
 
     /**
@@ -183,7 +183,7 @@ class Entity {
             return undefined;
         }
 
-        const readField = fieldPath => this.getFieldById(fieldPath.id);
+        const readField = /** @type {function(*): *} */ (fieldPath => this.getFieldById(fieldPath.id));
 
         return accessor.read(readField);
     }

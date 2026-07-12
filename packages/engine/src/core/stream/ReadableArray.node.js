@@ -34,6 +34,10 @@ class ReadableArrayNode extends Readable {
         this._gate.release();
     }
 
+    /**
+     * @param {Error|null} error
+     * @param {Function} callback
+     */
     _destroy(error, callback) {
         if (this._gate !== null) {
             this._gate.destroy();

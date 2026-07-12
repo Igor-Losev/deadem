@@ -75,7 +75,7 @@ class ParserSession {
 
         const { bootstrap, stringTableSnapshots, packets, remaining } = this._index.getPacketsForTick(tick);
 
-        const bootstrapInterceptor = (demoPacket) => {
+        const bootstrapInterceptor = (/** @type {*} */ demoPacket) => {
             if (demoPacket.sequence === bootstrap[bootstrap.length - 1].sequence) {
                 stringTableSnapshots.forEach((snapshot) => {
                     this._engine.getStringTableHandler().handleSnapshot(snapshot);
@@ -162,7 +162,7 @@ class ParserSession {
         let processed = 0;
         let tick = -1;
 
-        const interceptor = (demoPacket) => {
+        const interceptor = (/** @type {*} */ demoPacket) => {
             processed++;
 
             tick = demoPacket.tick;
@@ -174,7 +174,7 @@ class ParserSession {
             }
         };
 
-        const teardown = (error) => {
+        const teardown = (/** @type {*} */ error) => {
             this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
             this._pending.delete(teardown);
 

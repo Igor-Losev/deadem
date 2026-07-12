@@ -33,6 +33,10 @@ class ParserConfiguration {
      * @param {{ breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, splitterChunkSize?: number, streamHighWaterMark?: number }} options
      */
     constructor(options) {
+        /**
+         * @param {string} key
+         * @returns {*}
+         */
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
 
         const breakInterval = getOption(OPTIONS.BREAK_INTERVAL);

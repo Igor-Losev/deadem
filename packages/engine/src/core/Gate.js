@@ -5,6 +5,7 @@ class Gate {
      */
     constructor() {
         this._tokens = 0;
+        /** @type {Array<Function>} */
         this._queue = [];
     }
 

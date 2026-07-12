@@ -20,7 +20,9 @@ class PlayerPacketIndex {
         this._codec = codec;
         this._packets = packets;
 
+        /** @type {Array<*>} */
         this._bootstrap = [];
+        /** @type {Array<*>} */
         this._keyframes = [];
         this._stringTableSnapshots = new Map();
 

@@ -694,6 +694,7 @@ const REUSABLE_BUFFER_SIZE = 8;
 
 const reusable = new Uint8Array(REUSABLE_BUFFER_SIZE);
 
+/** @type {Array<Uint8Array>} */
 const pool = [ ];
 
 for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {

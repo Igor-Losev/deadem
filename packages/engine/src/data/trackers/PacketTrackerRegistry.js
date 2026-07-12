@@ -27,6 +27,7 @@ class PacketTrackerRegistry {
      * @returns {Array<PacketTrackerUnpackedItem>}
      */
     unpack() {
+        /** @type {Array<PacketTrackerUnpackedItem>} */
         const unpacked = [ ];
 
         const keys = Array.from(this._registry.keys());
@@ -101,7 +102,7 @@ function createUnpackedItem(type, count) {
 }
 
 /**
- * @typedef {{children: Array<PacketTrackerUnpackedItem>, count: number, type: number}} PacketTrackerUnpackedItem
+ * @typedef {{children: Array<PacketTrackerUnpackedItem>, code: string, count: number, type: number}} PacketTrackerUnpackedItem
  */
 
 export default PacketTrackerRegistry;

@@ -54,7 +54,7 @@ class DemoPacketHandler {
         const symbols = decoded.symbols;
 
         // Step 1: initialize serializers
-        decoded.serializers.forEach((serializerRaw) => {
+        decoded.serializers.forEach((/** @type {*} */ serializerRaw) => {
             const name = decoded.symbols[serializerRaw.serializerNameSym];
             const version = serializerRaw.serializerVersion;
 
@@ -64,7 +64,7 @@ class DemoPacketHandler {
         });
 
         // Step 2: adding fields
-        decoded.serializers.forEach((serializerRaw) => {
+        decoded.serializers.forEach((/** @type {*} */ serializerRaw) => {
             const name = decoded.symbols[serializerRaw.serializerNameSym];
             const version = serializerRaw.serializerVersion;
 
@@ -72,7 +72,7 @@ class DemoPacketHandler {
 
             const serializer = this._demo.getSerializerByKey(serializerKey);
 
-            serializerRaw.fieldsIndex.forEach((fieldIndex) => {
+            serializerRaw.fieldsIndex.forEach((/** @type {number} */ fieldIndex) => {
                 let field = fields.get(fieldIndex) || null;
 
                 if (field === null) {
@@ -117,7 +117,7 @@ class DemoPacketHandler {
                         valueHigh: typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null
                     };
 
-                    const sendNode = symbols[sendNodeSym].split('.').filter(s => s.length > 0);
+                    const sendNode = symbols[sendNodeSym].split('.').filter(/** @type {function(string): boolean} */ (s => s.length > 0));
 
                     // TODO: polymorphic types
 
@@ -140,7 +140,7 @@ class DemoPacketHandler {
     handleDemClassInfo(demoPacket) {
         const classInfo = demoPacket.data;
 
-        classInfo.classes.forEach((data) => {
+        classInfo.classes.forEach((/** @type {*} */ data) => {
             const key = new SerializerKey(data.networkName, 0);
             const serializer = this._demo.getSerializerByKey(key);
 

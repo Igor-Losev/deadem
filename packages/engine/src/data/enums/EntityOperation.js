@@ -6,6 +6,11 @@ const registry = {
 };
 
 class EntityOperation {
+    /**
+     * @constructor
+     * @param {string} code
+     * @param {number} id
+     */
     constructor(code, id) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));

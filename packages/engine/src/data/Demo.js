@@ -69,6 +69,7 @@ class Demo {
     deleteEntity(index) {
         Assert.isTrue(Number.isInteger(index));
 
+        /** @type {Entity} */
         const entity = this._entities.byIndex[index];
 
         if (entity === undefined) {
@@ -181,6 +182,7 @@ class Demo {
     getEntityByHandle(handle) {
         Assert.isTrue(Number.isInteger(handle));
 
+        /** @type {Entity|null} */
         const entity = this._entities.byIndex[handle & Entity.INDEX_MASK] || null;
 
         if (entity === null || entity.handle !== handle) {
@@ -197,6 +199,7 @@ class Demo {
      * @returns {IterableIterator<Entity>}
      */
     * getEntityIterator() {
+        /** @type {Array<Entity>} */
         const byIndex = this._entities.byIndex;
 
         for (let i = 0; i < byIndex.length; i++) {
@@ -250,6 +253,7 @@ class Demo {
     registerEntity(entity) {
         Assert.isTrue(entity instanceof Entity);
 
+        /** @type {Entity|null} */
         const previous = this._entities.byIndex[entity.index] ?? null;
 
         if (previous !== null) {

@@ -48,6 +48,7 @@ class PerformanceTracker extends Tracker {
 }
 
 /**
+ * @this {PerformanceTracker}
  * @param {PerformanceTrackerNode=} reference
  * @returns {PerformanceTrackerNode}
  */

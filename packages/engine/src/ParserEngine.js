@@ -304,6 +304,7 @@ class ParserEngine {
     async extract(reader, source) {
         await this._prepareRun();
 
+        /** @type {Array<*>} */
         const packets = [];
 
         const chain = [

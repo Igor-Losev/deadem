@@ -39,6 +39,14 @@ class FieldDecoderInstructionsFactory {
     }
 }
 
+/**
+ * @param {string|null} encoder
+ * @param {number|null} encoderFlags
+ * @param {number|null} bitCount
+ * @param {number|null} valueLow
+ * @param {number|null} valueHigh
+ * @returns {string}
+ */
 function getKey(encoder, encoderFlags, bitCount, valueLow, valueHigh) {
     return `${encoder}|${encoderFlags}|${bitCount}|${valueLow}|${valueHigh}`;
 }

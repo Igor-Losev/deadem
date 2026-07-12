@@ -13,7 +13,6 @@ class WritableSinkNode extends Stream.Writable {
     }
 
     /**
-     * @overload
      * @param {*} chunk
      * @param {BufferEncoding} encoding
      * @param {(error?: Error | null) => void} callback

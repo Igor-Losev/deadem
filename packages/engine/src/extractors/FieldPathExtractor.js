@@ -20,6 +20,7 @@ class FieldPathExtractor {
         this._bitBuffer = bitBuffer;
 
         this._fieldPathBuilder = new FieldPathBuilder();
+        /** @type {Array<number>} */
         this._ids = [ ];
     }
 

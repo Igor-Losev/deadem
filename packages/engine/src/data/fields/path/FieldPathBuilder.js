@@ -36,6 +36,7 @@ class FieldPathBuilder {
      */
     static build(path) {
         if (path.length === 1) {
+            /** @type {FieldPath|undefined} */
             const existing = cache.bySingle[path[0]];
 
             if (existing !== undefined) {

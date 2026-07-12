@@ -11,9 +11,10 @@ class BinaryHeap {
         Assert.isTrue(!extractor || typeof extractor === 'function');
         Assert.isTrue(!comparator || typeof comparator === 'function');
 
-        this._extractor = extractor || (i => i);
+        this._extractor = extractor || (/** @type {function(number): number} */ (i => i));
         this._comparator = comparator || BinaryHeap.MIN_HEAP_COMPARATOR;
 
+        /** @type {Array<*>} */
         this._heap = [ ];
     }
 

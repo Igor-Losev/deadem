@@ -45,10 +45,12 @@ class DemoStreamPacketParser extends Transform {
         }
 
         if (demoPacket.type.heavy) {
+            /** @type {Array<*>} */
             const parsed = [ ];
+            /** @type {Array<*>} */
             const unparsed = [ ];
 
-            demoPacket.data.messagePackets.forEach((messagePacketOrRaw) => {
+            demoPacket.data.messagePackets.forEach((/** @type {*} */ messagePacketOrRaw) => {
                 if (messagePacketOrRaw instanceof MessagePacket) {
                     parsed.push(messagePacketOrRaw);
                 } else {

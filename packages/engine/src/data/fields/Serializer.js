@@ -32,9 +32,13 @@ class Serializer {
         this._key = new SerializerKey(name, version);
         this._fields = fields;
 
+        /** @type {Array<*>} */
         this._decoderCache = [];
+        /** @type {Array<*>} */
         this._definitionCache = [];
+        /** @type {Array<*>} */
         this._nameCache = [];
+        /** @type {Array<*>} */
         this._storageCache = [];
     }
 

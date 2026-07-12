@@ -60,7 +60,7 @@ class EventEmitter {
         Assert.isTrue(typeof handler === 'function');
 
         const registrations = this._registrations.get(eventName) || [ ];
-        const registrationIndex = registrations.findIndex(r => r === handler);
+        const registrationIndex = registrations.findIndex(/** @type {function(*): boolean} */ (r => r === handler));
 
         if (registrationIndex !== -1) {
             registrations.splice(registrationIndex, 1);

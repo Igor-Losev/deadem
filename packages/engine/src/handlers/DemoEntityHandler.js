@@ -7,6 +7,10 @@ import Demo from '#data/Demo.js';
 import EntityOperation from '#data/enums/EntityOperation.js';
 
 class DemoEntityHandler {
+    /**
+     * @constructor
+     * @param {Demo} demo
+     */
     constructor(demo) {
         Assert.isTrue(demo instanceof Demo);
 

@@ -45,6 +45,10 @@ class DemoStreamEventLoopBreaker extends Transform {
     }
 }
 
+/**
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
 function pauseTimeout(ms) {
     return new Promise((resolve) => {
         setTimeout(() => {

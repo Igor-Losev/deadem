@@ -134,8 +134,11 @@ class Printer {
      * @param {Array<PacketTrackerUnpackedItem>} partition
      */
     _printPacketStatsPartition(partition) {
+        /** @type {(type: number) => string} */
         const getColumnForType = type => `${type}`.padStart(3, '0'); 
+        /** @type {(code: string) => string} */
         const getColumnForCode = code => `${code}`.padEnd(40, ' '); 
+        /** @type {(count: number) => string} */
         const getColumnForCount = count => `${count}`.padStart(10, ' ');
 
         partition.forEach((parent) => {
@@ -156,6 +159,10 @@ class Printer {
     _printPerformanceStats(performanceStats) {
         this._log(this._highlight('<Performance>'));
 
+        /**
+         * @param {PerformanceTrackerStats} node
+         * @param {number} [depth=0]
+         */
         const walk = (node, depth = 0) => {
             const indent = this._indent(depth);
 
@@ -165,7 +172,7 @@ class Printer {
 
             this._log(`${indent}[ ${node.category.code} ]: total [ ${total} ] ms, [ ${count} ] run(s) with [ ${avg} ] ms in average`);
 
-            node.children.forEach((child) => {
+            node.children.forEach((/** @type {PerformanceTrackerStats} */ child) => {
                 walk(child, depth + 1);
             });
         };
@@ -176,6 +183,10 @@ class Printer {
     }
 }
 
+/**
+ * @param {number} bytes
+ * @returns {number}
+ */
 function bytesToMegabytes(bytes) {
     return bytes / (1024 * 1024);
 }

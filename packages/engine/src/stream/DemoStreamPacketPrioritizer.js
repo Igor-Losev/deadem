@@ -43,7 +43,7 @@ class DemoStreamPacketPrioritizer extends Transform {
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
-        demoPacket.data.messagePackets.sort((a, b) => {
+        demoPacket.data.messagePackets.sort((/** @type {*} */ a, /** @type {*} */ b) => {
             const priorityA = getPacketPriority(a.type);
             const priorityB = getPacketPriority(b.type);
 
@@ -56,6 +56,10 @@ class DemoStreamPacketPrioritizer extends Transform {
     }
 }
 
+/**
+ * @param {MessagePacketType} type
+ * @returns {number}
+ */
 function getPacketPriority(type) {
     switch (type) {
         case MessagePacketType.NET_TICK:

@@ -3,6 +3,10 @@
 import Stream from 'node:stream';
 
 class TransformNode extends Stream.Transform {
+    /**
+     * @constructor
+     * @param {number} highWaterMark
+     */
     constructor(highWaterMark) {
         super({ objectMode: true, highWaterMark });
     }

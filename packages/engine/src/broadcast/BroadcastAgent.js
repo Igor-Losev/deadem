@@ -31,6 +31,7 @@ class BroadcastAgent {
         this._match = match;
         this._logger = logger;
 
+        /** @type {Array<Function>} */
         this._listeners = [ ];
 
         this._finished = false;
@@ -286,11 +287,14 @@ async function backoff(action, attempts, delay = 500) {
         } catch (error) {
             attempt += 1;
 
+            // @ts-ignore — 'this' is class context in method
             this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${error.message} ]`);
 
             if (attempt >= attempts) {
+                // @ts-ignore — 'this' is class context in method
                 this._logger.error(error);
 
+                // @ts-ignore — 'this' is class context in method
                 this.stop();
 
                 throw error;
