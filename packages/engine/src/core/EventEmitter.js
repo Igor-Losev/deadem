@@ -1,5 +1,9 @@
 import Assert from '#core/Assert.js';
 
+/**
+ * @typedef {(sender: *, ...args: Array<*>) => void} EventEmitterHandler
+ */
+
 class EventEmitter {
     /**
      * @constructor
@@ -8,6 +12,7 @@ class EventEmitter {
     constructor(sender) {
         this._sender = sender;
 
+        /** @type {Map<string, Array<EventEmitterHandler>>} */
         this._registrations = new Map();
     }
 
@@ -36,7 +41,7 @@ class EventEmitter {
     /**
      * @public
      * @param {string} eventName
-     * @param {Function} handler
+     * @param {EventEmitterHandler} handler
      */
     register(eventName, handler) {
         Assert.isTrue(typeof eventName === 'string');
@@ -52,7 +57,7 @@ class EventEmitter {
     /**
      * @public
      * @param {string} eventName
-     * @param {Function} handler
+     * @param {EventEmitterHandler} handler
      * @returns {boolean}
      */
     unregister(eventName, handler) {
@@ -60,7 +65,7 @@ class EventEmitter {
         Assert.isTrue(typeof handler === 'function');
 
         const registrations = this._registrations.get(eventName) || [ ];
-        const registrationIndex = registrations.findIndex(/** @type {function(*): boolean} */ (r => r === handler));
+        const registrationIndex = registrations.findIndex(r => r === handler);
 
         if (registrationIndex !== -1) {
             registrations.splice(registrationIndex, 1);

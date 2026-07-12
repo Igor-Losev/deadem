@@ -1,3 +1,4 @@
+/** @import { EventEmitterHandler } from '#core/EventEmitter.js' */
 /** @import StringTableType from '#data/enums/StringTableType.js' */
 
 /** @import StringTableEntry from './StringTableEntry.js' */
@@ -74,7 +75,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] - affected entries (all new entries for a create)
+     * @param {Array<StringTableEntry>|null} [entries] - affected entries (all new entries for a create)
      */
     register(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
@@ -93,7 +94,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] - only the entries that changed
+     * @param {Array<StringTableEntry>|null} [entries] - only the entries that changed
      */
     markUpdated(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
@@ -110,7 +111,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] - resupplied entries, if known
+     * @param {Array<StringTableEntry>|null} [entries] - resupplied entries, if known
      */
     markChanged(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
@@ -137,7 +138,7 @@ class StringTableContainer {
     /**
      * @public
      * @param {StringTableEvent} event
-     * @param {Function} callback
+     * @param {EventEmitterHandler} callback
      */
     subscribe(event, callback) {
         Assert.isTrue(event instanceof StringTableEvent);
@@ -149,7 +150,7 @@ class StringTableContainer {
     /**
      * @public
      * @param {StringTableEvent} event
-     * @param {Function} callback
+     * @param {EventEmitterHandler} callback
      */
     unsubscribe(event, callback) {
         Assert.isTrue(event instanceof StringTableEvent);

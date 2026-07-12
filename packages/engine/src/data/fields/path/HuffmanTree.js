@@ -14,9 +14,9 @@ class HuffmanTree {
      * @public
      * @constructor
      * @param {HuffmanTreePriority} priority
-     * @param {FieldPathOperation=} operation
-     * @param {HuffmanTree=} leftChild
-     * @param {HuffmanTree=} rightChild
+     * @param {FieldPathOperation|null} [operation]
+     * @param {HuffmanTree} [leftChild]
+     * @param {HuffmanTree} [rightChild]
      */
     constructor(priority, operation, leftChild, rightChild) {
         Assert.isTrue(priority instanceof HuffmanTreePriority);
@@ -25,8 +25,12 @@ class HuffmanTree {
         Assert.isTrue(!rightChild || rightChild instanceof HuffmanTree);
 
         this._priority = priority;
+
+        /** @type {FieldPathOperation|null} */
         this._operation = operation || null;
+        /** @type {HuffmanTree|null} */
         this._leftChild = leftChild || null;
+        /** @type {HuffmanTree|null} */
         this._rightChild = rightChild || null;
     }
 
@@ -55,7 +59,7 @@ class HuffmanTree {
      * bit lengths and operation indices.
      *
      * @static
-     * @returns {{ bits: Buffer, operations: Buffer }}
+     * @returns {{ bits: Uint8Array, operations: Uint8Array }}
      */
     static get PRECALCULATED_TABLE() {
         return PRECALCULATED_TABLE;
@@ -116,12 +120,14 @@ class HuffmanTree {
     }
 }
 
+/** @type {{ codeTable: Map<number, HuffmanTree>, depth: number, root: HuffmanTree }} */
 const TREE = {
     codeTable: new Map(),
     depth: 0,
     root: build()
 };
 
+/** @type {{ bits: Uint8Array, operations: Uint8Array }} */
 let PRECALCULATED_TABLE;
 
 (() => {
@@ -139,8 +145,12 @@ let PRECALCULATED_TABLE;
     for (let code = 0; code < MAX_CODE; code++) {
         const { bits, node } = getNodeByCode(code);
 
+        const operation = node.operation;
+
+        Assert.exists(operation, `HuffmanTree leaf for code [ ${code} ] has no operation`);
+
         PRECALCULATED_TABLE.bits[code] = bits;
-        PRECALCULATED_TABLE.operations[code] = node.operation.sequence;
+        PRECALCULATED_TABLE.operations[code] = operation.sequence;
     }
 })();
 
@@ -150,8 +160,10 @@ let PRECALCULATED_TABLE;
  * @returns {HuffmanTree} - The root.
  */
 function build() {
+    /** @type {(operation: FieldPathOperation) => number} */
     const weigh = operation => Math.max(operation.weight, 1);
 
+    /** @type {BinaryHeap<HuffmanTree, HuffmanTreePriority>} */
     const heap = new BinaryHeap(huffmanTree => huffmanTree.priority, (priorityA, priorityB) => priorityA.compare(priorityB));
 
     OPERATIONS.forEach((operation) => {
@@ -169,6 +181,9 @@ function build() {
         const childA = heap.extract();
         const childB = heap.extract();
 
+        Assert.exists(childA);
+        Assert.exists(childB);
+
         const huffmanTreePriority = new HuffmanTreePriority(childA.priority.weight + childB.priority.weight, sequence);
         const huffmanTree = new HuffmanTree(huffmanTreePriority, null, childA, childB);
 
@@ -177,7 +192,11 @@ function build() {
         heap.insert(huffmanTree);
     }
 
-    return heap.extract();
+    const root = heap.extract();
+
+    Assert.exists(root, 'HuffmanTree build produced an empty heap');
+
+    return root;
 }
 
 /**
@@ -230,8 +249,10 @@ function getNodeByCode(code) {
 
         bits += 1;
 
-        if (TREE.codeTable.has(prefix)) {
-            return { bits, node: TREE.codeTable.get(prefix) };
+        const node = TREE.codeTable.get(prefix);
+
+        if (node !== undefined) {
+            return { bits, node };
         }
     }
 
