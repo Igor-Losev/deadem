@@ -2,6 +2,7 @@
 /** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
 /** @import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js' */
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import { FieldDecoderFn } from '#data/fields/decoding/FieldDecoder.js' */
 
 import Assert from '#core/Assert.js';
 
@@ -43,7 +44,7 @@ class FieldArrayVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, index) {
         return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).fn;

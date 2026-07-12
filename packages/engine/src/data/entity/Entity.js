@@ -1,5 +1,6 @@
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
 /** @import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js' */
+/** @import { EntityFieldMeta } from './EntityStateLayout.js' */
 
 /** @import EntityMutationBatch from './EntityMutationBatch.js' */
 
@@ -40,6 +41,7 @@ class Entity {
 
         this._active = true;
 
+        /** @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, *>|null, presence: Uint8Array }} */
         this._state = {
             float32: new Float32Array(clazz.layout.getFloatLength()),
             int32: new Int32Array(clazz.layout.getIntLength()),
@@ -47,7 +49,9 @@ class Entity {
             presence: new Uint8Array(clazz.layout.getPresenceLength())
         };
 
+        /** @type {Set<number>|null} */
         this._changed = null;
+        /** @type {Record<string, *>|null} */
         this._snapshot = null;
     }
 
@@ -128,7 +132,7 @@ class Entity {
      * @param {EntityMutationExtractor} extractor
      */
     applyFromExtractor(extractor) {
-        extractor.forEach((/** @type {number} */ id, /** @type {*} */ value) => this.updateByFieldPathId(id, value));
+        extractor.forEach((id, value) => this.updateByFieldPathId(id, value));
     }
 
     /**
@@ -183,9 +187,7 @@ class Entity {
             return undefined;
         }
 
-        const readField = /** @type {function(*): *} */ (fieldPath => this.getFieldById(fieldPath.id));
-
-        return accessor.read(readField);
+        return accessor.read(fieldPath => this.getFieldById(fieldPath.id));
     }
 
     /**
@@ -299,7 +301,11 @@ class Entity {
 
         const metas = this._class.layout.getMetas();
 
-        if (this._snapshot === null) {
+        const snapshot = this._snapshot;
+        const changed = this._changed;
+
+        if (snapshot === null || changed === null) {
+            /** @type {Record<string, *>} */
             const unpacked = { };
 
             for (let i = 0; i < metas.length; i++) {
@@ -316,19 +322,17 @@ class Entity {
             return unpacked;
         }
 
-        const unpacked = this._snapshot;
-
-        this._changed.forEach((id) => {
+        changed.forEach((id) => {
             const meta = layout.peekOrAssign(id);
 
             if (!this._getIsContainer(meta)) {
-                unpacked[serializer.getNameForFieldPathId(id)] = this._read(meta);
+                snapshot[serializer.getNameForFieldPathId(id)] = this._read(meta);
             }
         });
 
-        this._changed.clear();
+        changed.clear();
 
-        return unpacked;
+        return snapshot;
     }
 
     /**
@@ -398,7 +402,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {boolean}
      */
     _getIsContainer(meta) {
@@ -407,7 +411,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {boolean}
      */
     _getIsPresent(meta) {
@@ -432,7 +436,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {*}
      */
     _read(meta) {
@@ -460,15 +464,16 @@ class Entity {
             return vector;
         }
 
-        return this._state.misc.get(meta.id);
+        return /** @type {Map<number, *>} */ (this._state.misc).get(meta.id);
     }
 }
 
 /**
- * @param {Float32Array|Int32Array|Uint8Array} current
- * @param {Function} Ctor
+ * @template {Float32Array|Int32Array|Uint8Array} T
+ * @param {T} current
+ * @param {new (length: number) => T} Ctor
  * @param {number} min
- * @returns {Float32Array|Int32Array|Uint8Array}
+ * @returns {T}
  */
 function grow(current, Ctor, min) {
     let length = current.length === 0 ? INITIAL_TYPED_ARRAY_SIZE : current.length;

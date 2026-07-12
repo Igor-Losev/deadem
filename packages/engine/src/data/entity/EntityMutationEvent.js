@@ -101,6 +101,7 @@ class EntityMutationEvent {
                 return this._changes;
             }
 
+            /** @type {Record<string, *>} */
             const changes = {};
             const serializer = this._entity.class.serializer;
 

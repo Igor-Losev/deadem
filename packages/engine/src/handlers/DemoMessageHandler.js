@@ -110,7 +110,8 @@ class DemoMessageHandler {
 
         const hasFilter = this._entityClassFilter !== null;
         const payloadSizes = hasFilter ? createPayloadIterator(message, startLoop) : null;
-        const events = direct ? null : [];
+        /** @type {Array<EntityMutationEvent>|null} */
+        const events = direct ? null : [ ];
         const extractor = new EntityMutationExtractor(bitBuffer);
 
         let index = startIndex;

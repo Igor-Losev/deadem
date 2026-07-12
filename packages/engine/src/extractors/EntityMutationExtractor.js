@@ -1,6 +1,7 @@
 /** @import BitBuffer from '#core/BitBuffer.js' */
 
 /** @import Serializer from '#data/fields/Serializer.js' */
+/** @import { FieldDecoderFn } from '#data/fields/decoding/FieldDecoder.js' */
 
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 
@@ -15,6 +16,8 @@ class EntityMutationExtractor {
      */
     constructor(bitBuffer, serializer = null) {
         this._bitBuffer = bitBuffer;
+
+        /** @type {Serializer|null} */
         this._serializer = serializer;
 
         this._fieldPathExtractor = new FieldPathExtractor(bitBuffer);
@@ -35,6 +38,8 @@ class EntityMutationExtractor {
      * @returns {EntityMutationBatch}
      */
     all() {
+        const serializer = /** @type {Serializer} */ (this._serializer);
+
         const fieldPathIds = this._fieldPathExtractor.allIds();
 
         const ids = new Uint32Array(fieldPathIds.length);
@@ -44,7 +49,7 @@ class EntityMutationExtractor {
             const id = fieldPathIds[i];
 
             ids[i] = id;
-            values[i] = this._serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
+            values[i] = serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
         }
 
         return new EntityMutationBatch(ids, values);
@@ -55,13 +60,15 @@ class EntityMutationExtractor {
      * `callback(id, value)` for each one.
      *
      * @public
-     * @param {Function} callback
+     * @param {(id: number, value: *) => void} callback
      */
     forEach(callback) {
+        const serializer = /** @type {Serializer} */ (this._serializer);
+
         const ids = this._fieldPathExtractor.allIds();
 
         for (let i = 0; i < ids.length; i++) {
-            callback(ids[i], this._serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
+            callback(ids[i], serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
         }
     }
 
@@ -73,10 +80,12 @@ class EntityMutationExtractor {
      * @public
      */
     skip() {
+        const serializer = /** @type {Serializer} */ (this._serializer);
+
         const ids = this._fieldPathExtractor.allIds();
 
         for (let i = 0; i < ids.length; i++) {
-            const decoder = this._serializer.getDecoderForFieldPathId(ids[i]);
+            const decoder = serializer.getDecoderForFieldPathId(ids[i]);
 
             decoder(this._bitBuffer);
         }

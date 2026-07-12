@@ -5,6 +5,13 @@ import FieldStorageType from '#data/enums/FieldStorageType.js';
 import Serializer from '#data/fields/Serializer.js';
 
 /**
+ * Storage classification for a single field path: which backing store holds
+ * the value (float32/int32/misc), its slot, and its scalar interpretation.
+ *
+ * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean }} EntityFieldMeta
+ */
+
+/**
  * Storage plan for entity state.
  */
 class EntityStateLayout {
@@ -24,6 +31,7 @@ class EntityStateLayout {
             presence: 0
         };
 
+        /** @type {{ byId: Map<number, EntityFieldMeta>, order: Array<EntityFieldMeta> }} */
         this._metas = {
             byId: new Map(),
             order: [ ]
@@ -54,7 +62,7 @@ class EntityStateLayout {
      * All assigned field metas in assignment order.
      *
      * @public
-     * @returns {Array<object>}
+     * @returns {Array<EntityFieldMeta>}
      */
     getMetas() {
         return this._metas.order;
@@ -75,7 +83,7 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {object|null}
+     * @returns {EntityFieldMeta|null}
      */
     peek(fieldPathId) {
         return this._metas.byId.get(fieldPathId) || null;
@@ -87,7 +95,7 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {object}
+     * @returns {EntityFieldMeta}
      */
     peekOrAssign(fieldPathId) {
         const existing = this.peek(fieldPathId);
@@ -107,7 +115,7 @@ class EntityStateLayout {
     /**
      * @protected
      * @param {number} fieldPathId
-     * @returns {object}
+     * @returns {EntityFieldMeta}
      */
     _classify(fieldPathId) {
         const container = this._serializer.getIsContainerForFieldPathId(fieldPathId);
@@ -144,7 +152,7 @@ class EntityStateLayout {
  * @param {boolean} container
  * @param {boolean} signed
  * @param {boolean} bool
- * @returns {object}
+ * @returns {EntityFieldMeta}
  */
 function createMeta(id, storage, offset, dim, present, container, signed, bool) {
     return { id, storage, offset, dim, present, container, signed, bool };

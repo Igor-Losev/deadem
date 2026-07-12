@@ -1,4 +1,4 @@
-/** @import FieldDecoder from './decoding/FieldDecoder.js' */
+/** @import { FieldDecoderFn } from './decoding/FieldDecoder.js' */
 /** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
 /** @import FieldPath from './path/FieldPath.js' */
 
@@ -33,6 +33,7 @@ class Serializer {
         this._fields = fields;
 
         /** @type {Array<*>} */
+        /** @type {Array<FieldDecoderFn|undefined>} */
         this._decoderCache = [];
         /** @type {Array<*>} */
         this._definitionCache = [];
@@ -91,7 +92,7 @@ class Serializer {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number=} fieldPathIndex
-     * @returns {FieldDecoder}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
         if (fieldPathIndex === 0) {
@@ -117,7 +118,7 @@ class Serializer {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {FieldDecoder}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPathId(fieldPathId) {
         const cached = this._decoderCache[fieldPathId] ?? null;

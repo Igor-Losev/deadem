@@ -4,6 +4,7 @@
 /** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
 
 /** @import FieldExtractor from './FieldExtractor.js' */
+/** @import { FieldDecoderFn } from '#data/fields/decoding/FieldDecoder.js' */
 
 import Assert from '#core/Assert.js';
 
@@ -64,7 +65,7 @@ class Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, index) {
         throw new Error('Abstract: getDecoderForFieldPath()');
