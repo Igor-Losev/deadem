@@ -1,3 +1,6 @@
+/**
+ * @template T
+ */
 class DeferredPromise {
     constructor() {
         this._fulfilled = false;
@@ -20,7 +23,7 @@ class DeferredPromise {
 
     /**
      * @public
-     * @returns {Promise<any>}
+     * @returns {Promise<T>}
      */
     get promise() {
         return this._promise;
@@ -44,24 +47,24 @@ class DeferredPromise {
 
     /**
      * @public
-     * @param {...any} args
+     * @param {T} value
      */
-    resolve(...args) {
+    resolve(value) {
         this._fulfilled = true;
         this._settled = true;
 
-        this._resolve(...args);
+        this._resolve(value);
     }
 
     /**
      * @public
-     * @param {...any} args
+     * @param {any} reason
      */
-    reject(...args) {
+    reject(reason) {
         this._rejected = true;
         this._settled = true;
 
-        this._reject(...args);
+        this._reject(reason);
     }
 }
 

@@ -110,7 +110,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [changedEntries=null] — resupplied entries, if known
+     * @param {Array<StringTableEntry>} [entries=null] — resupplied entries, if known
      */
     markChanged(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);

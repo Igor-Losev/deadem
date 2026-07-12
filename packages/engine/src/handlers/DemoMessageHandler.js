@@ -78,7 +78,6 @@ class DemoMessageHandler {
      * Handles a {@link MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES} (ID = 51).
      *
      * @public
-     * @param {MessagePacket} messagePacket
      */
     handleSvcClearAllStringTables() {
         this._stringTableHandler.handleClear();

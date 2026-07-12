@@ -76,7 +76,7 @@ class Field {
      * @param {number} index
      * @returns {FieldDefinition}
      */
-    getDefinitionForFieldPath() {
+    getDefinitionForFieldPath(fieldPath, index) {
         return this._definition;
     }
 
@@ -89,7 +89,7 @@ class Field {
      * @param {number} index
      * @returns {boolean}
      */
-    getIsContainerForFieldPath() {
+    getIsContainerForFieldPath(fieldPath, index) {
         throw new Error('Abstract: getIsContainerForFieldPath()');
     }
 
@@ -124,7 +124,7 @@ class Field {
      * @param {FieldExtractor} extractor
      * @returns {*}
      */
-    unpack() {
+    unpack(extractor) {
         throw new Error('Abstract: unpack()');
     }
 
@@ -137,7 +137,7 @@ class Field {
      * @param {number} index
      * @returns {*}
      */
-    unpackElement(extractor, _index) {
+    unpackElement(extractor, index) {
         return this.unpack(extractor);
     }
 }

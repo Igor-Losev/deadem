@@ -42,6 +42,7 @@ class Player {
         this._state = PlayerState.IDLE;
 
         this._playback = {
+            /** @type {DeferredPromise<any>|null} */
             deferred: null
         };
 

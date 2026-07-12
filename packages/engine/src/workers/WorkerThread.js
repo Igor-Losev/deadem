@@ -51,7 +51,7 @@ class WorkerThread {
 
     /**
      * @public
-     * @returns {Promise<*>|null}
+     * @returns {DeferredPromise<any>|null}
      */
     get deferred() {
         return this._deferred;

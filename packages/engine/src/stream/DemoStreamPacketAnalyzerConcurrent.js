@@ -133,7 +133,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {DeferredPromise|null} deferred
+     * @param {DeferredPromise<any>|null} deferred
      */
     _enqueue(demoPacket, deferred = null) {
         this._queue.push({ demoPacket, deferred });
@@ -142,7 +142,7 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {DeferredPromise} deferred
+     * @param {DeferredPromise<any>} deferred
      * @returns {Promise<void>}
      */
     async _handlePacket(demoPacket, deferred) {

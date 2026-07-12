@@ -161,7 +161,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {DeferredPromise|null}
+     * @returns {DeferredPromise<any>|null}
      */
     get pausePromise() {
         return this._pausePromise;
