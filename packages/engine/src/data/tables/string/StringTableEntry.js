@@ -11,7 +11,7 @@ class StringTableEntry {
      * @param {StringTable} table
      * @param {number} id
      * @param {string} key
-     * @param {Uint8Array|null} raw
+     * @param {Uint8Array|Array<*>|null} raw
      */
     constructor(table, id, key, raw) {
         Assert.isTrue(typeof id === 'number' && Number.isInteger(id));

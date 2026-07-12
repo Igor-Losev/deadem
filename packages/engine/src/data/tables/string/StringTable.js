@@ -6,6 +6,12 @@ import StringTableType from '#data/enums/StringTableType.js';
 
 import StringTableInstructions from './StringTableInstructions.js';
 
+/**
+ * Decodes a raw string-table entry payload into a structured value.
+ *
+ * @typedef {(buffer: Uint8Array) => *} StringTableDecoderFn
+ */
+
 class StringTable {
     /**
      * @public
@@ -13,7 +19,7 @@ class StringTable {
      * @param {StringTableType} type
      * @param {number} flags
      * @param {StringTableInstructions|null=} instructions
-     * @param {Function|null} [decoder=null]
+     * @param {StringTableDecoderFn|null} [decoder]
      */
     constructor(id, type, flags, instructions, decoder = null) {
         Assert.isTrue(Number.isInteger(id) && id >= 0);

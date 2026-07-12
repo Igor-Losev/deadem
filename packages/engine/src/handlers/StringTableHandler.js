@@ -1,4 +1,13 @@
-/** @import { Message as CDemoStringTables, Message as CSVCMsg_CreateStringTable, Message as CSVCMsg_UpdateStringTable } from 'protobufjs' */
+/**
+ * Interim structural shapes for the protobuf messages consumed here — only
+ * the fields this handler actually reads. Superseded by generated proto types.
+ *
+ * @typedef {{ name: string, userDataSizeBits: number, userDataFixedSize: boolean, usingVarintBitcounts: boolean, dataCompressed: boolean, stringData: Uint8Array, flags: number, numEntries: number }} CSVCMsg_CreateStringTable
+ * @typedef {{ tableId: number, numChangedEntries: number, stringData: Uint8Array }} CSVCMsg_UpdateStringTable
+ * @typedef {{ str: string, data?: Uint8Array }} CDemoStringTablesItem
+ * @typedef {{ tableName: string, tableFlags: number, items: Array<CDemoStringTablesItem> }} CDemoStringTablesTable
+ * @typedef {{ tables: Array<CDemoStringTablesTable> }} CDemoStringTables
+ */
 
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
@@ -103,6 +112,7 @@ class StringTableHandler {
                     this._registry.getStringTableDecoder(stringTableType));
             }
 
+            /** @type {Array<StringTableEntry>} */
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
@@ -121,7 +131,7 @@ class StringTableHandler {
 
     /**
      * @public
-     * @param {*} snapshotData
+     * @param {CDemoStringTables} snapshotData
      */
     handleSnapshot(snapshotData) {
         snapshotData.tables.forEach((tableData) => {
@@ -137,6 +147,7 @@ class StringTableHandler {
                 return;
             }
 
+            /** @type {Array<StringTableEntry>} */
             const entries = [ ];
 
             tableData.items.forEach((entryData, index) => {
@@ -207,8 +218,8 @@ class StringTableHandler {
 }
 
 /**
- * @param {Uint8Array|Array|null|undefined} data
- * @returns {Uint8Array|Array|null}
+ * @param {Uint8Array|Array<*>|null|undefined} data
+ * @returns {Uint8Array|Array<*>|null}
  */
 function normalizeEntryData(data) {
     if (!data) {

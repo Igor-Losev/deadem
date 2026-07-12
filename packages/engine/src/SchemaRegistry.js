@@ -1,4 +1,5 @@
 /** @import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js' */
+/** @import { StringTableDecoderFn } from '#data/tables/string/StringTable.js' */
 
 /** @import DemoPacketType from '#data/enums/DemoPacketType.js' */
 /** @import MessagePacketType from '#data/enums/MessagePacketType.js' */
@@ -98,7 +99,7 @@ class SchemaRegistry {
     /**
      * @public
      * @param {StringTableType} type
-     * @returns {protobuf.Type|null}
+     * @returns {StringTableDecoderFn|null}
      */
     getStringTableDecoder(type) {
         return this._protos.stringTableDecoders.get(type.name) || null;
@@ -164,7 +165,7 @@ class SchemaRegistry {
     /**
      * @public
      * @param {StringTableType} type
-     * @param {((buffer: Uint8Array) => *)|null} [decoder=null]
+     * @param {StringTableDecoderFn|null} [decoder]
      */
     registerStringTableType(type, decoder = null) {
         this._types.stringTableByName.set(type.name, type);
@@ -237,7 +238,7 @@ class SchemaRegistry {
 }
 
 /**
- * @typedef {{ provider: ProtoProvider, demo: Map<number, protobuf.Type>, message: Map<number, protobuf.Type>, stringTableDecoders: Map<string, protobuf.Type> }} SchemaRegistryProtos
+ * @typedef {{ provider: ProtoProvider, demo: Map<number, protobuf.Type>, message: Map<number, protobuf.Type>, stringTableDecoders: Map<string, StringTableDecoderFn> }} SchemaRegistryProtos
  *
  * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<string, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<string, MessagePacketType>, stringTableByName: Map<string, StringTableType> }} SchemaRegistryTypes
  *

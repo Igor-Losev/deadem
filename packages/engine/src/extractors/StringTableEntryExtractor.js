@@ -1,3 +1,5 @@
+/** @import StringTableInstructions from '#data/tables/string/StringTableInstructions.js' */
+
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
@@ -28,6 +30,9 @@ class StringTableEntryExtractor {
     *retrieve() {
         this._bitBuffer.reset();
 
+        const instructions = /** @type {StringTableInstructions} */ (this._table.instructions);
+
+        /** @type {Array<string>} */
         const history = [ ];
 
         let index = -1;
@@ -78,14 +83,14 @@ class StringTableEntryExtractor {
                 let bitSize = 0;
                 let isCompressed = false;
 
-                if (this._table.instructions.userDataFixedSize) {
-                    bitSize = this._table.instructions.userDataSizeBits;
+                if (instructions.userDataFixedSize) {
+                    bitSize = instructions.userDataSizeBits;
                 } else {
                     if (this._table.getIsValueCompressionSupported()) {
                         isCompressed = this._bitBuffer.readBit();
                     }
 
-                    if (this._table.instructions.usingVarintBitcounts) {
+                    if (instructions.usingVarintBitcounts) {
                         bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
                     } else {
                         bitSize = this._bitBuffer.readBitsAsUInt(17) * BitBuffer.BITS_PER_BYTE;
