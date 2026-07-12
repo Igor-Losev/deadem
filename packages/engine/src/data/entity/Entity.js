@@ -1,4 +1,7 @@
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import EntityMutationExtractor from '#data/extractors/EntityMutationExtractor.js' */
+
+/** @import EntityMutationBatch from './EntityMutationBatch.js' */
 
 import Assert from '#core/Assert.js';
 

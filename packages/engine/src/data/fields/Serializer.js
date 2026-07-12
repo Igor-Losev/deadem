@@ -1,7 +1,9 @@
 /** @import FieldDecoder from './decoding/FieldDecoder.js' */
 /** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
-
 /** @import FieldPath from './path/FieldPath.js' */
+
+/** @import FieldDefinition from './FieldDefinition.js' */
+/** @import FieldExtractor from './FieldExtractor.js' */
 
 import Assert from '#core/Assert.js';
 

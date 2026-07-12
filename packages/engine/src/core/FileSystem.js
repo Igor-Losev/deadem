@@ -1,4 +1,4 @@
-/** @import { Stream } from 'node:stream' */
+/** @import { Readable, Writable } from 'node:stream' */
 
 import fs from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -15,7 +15,7 @@ class FileSystem {
      * @public
      * @static
      * @param {...*} args
-     * @returns {Stream.Write}
+     * @returns {Readable}
      */
     static createReadStream(...args) {
         return fs.createReadStream(...args);
@@ -25,7 +25,7 @@ class FileSystem {
      * @public
      * @static
      * @param {...*} args
-     * @returns {Stream.Write}
+     * @returns {Writable}
      */
     static createWriteStream(...args) {
         return fs.createWriteStream(...args);

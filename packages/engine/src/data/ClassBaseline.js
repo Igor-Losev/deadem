@@ -1,3 +1,5 @@
+/** @import Serializer from '#data/fields/Serializer.js' */
+
 import Assert from '#core/Assert.js';
 import BitBuffer from '#core/BitBuffer.js';
 

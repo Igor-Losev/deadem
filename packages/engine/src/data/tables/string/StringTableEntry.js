@@ -1,3 +1,7 @@
+/** @import StringTableType from '#data/enums/StringTableType.js' */
+
+/** @import StringTable from './StringTable.js' */
+
 import Assert from '#core/Assert.js';
 
 class StringTableEntry {

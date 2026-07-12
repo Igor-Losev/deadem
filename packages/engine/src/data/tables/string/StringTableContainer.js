@@ -1,3 +1,7 @@
+/** @import StringTableType from '#data/enums/StringTableType.js' */
+
+/** @import StringTableEntry from './StringTableEntry.js' */
+
 import Assert from '#core/Assert.js';
 import EventEmitter from '#core/EventEmitter.js';
 

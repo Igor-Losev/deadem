@@ -1,4 +1,5 @@
 /** @import StringTable from './tables/string/StringTable.js' */
+/** @import StringTableEntry from './tables/string/StringTableEntry.js' */
 
 import Assert from '#core/Assert.js';
 

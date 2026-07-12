@@ -1,3 +1,5 @@
+/** @import FieldAccessor from '#data/fields/FieldAccessor.js' */
+
 import Assert from '#core/Assert.js';
 
 import Serializer from './fields/Serializer.js';

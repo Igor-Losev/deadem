@@ -1,3 +1,4 @@
+/** @import FieldExtractor from '#data/fields/FieldExtractor.js' */
 /** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
 /** @import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js' */
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
