@@ -46,7 +46,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2UserMessages(registry) {
-        const pp = registry.getProtoProvider();
+        const pp = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
 
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_SAY_TEXT, pp.USER_MESSAGES.lookupType('CUserMessageSayText'));
 
@@ -81,7 +81,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2GameEvents(registry) {
-        const ge = registry.getProtoProvider().CS_GAME_EVENTS;
+        const ge = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider()).CS_GAME_EVENTS;
 
         registry.registerMessageType(MessagePacketType.GE_PLAYER_ANIM_EVENT, ge.lookupType('CMsgTEPlayerAnimEvent'));
         registry.registerMessageType(MessagePacketType.GE_RADIO_ICON_EVENT, ge.lookupType('CMsgTERadioIcon'));
@@ -95,7 +95,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2TemporaryEntities(registry) {
-        const te = registry.getProtoProvider().TEMPORARY_ENTITIES;
+        const te = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider()).TEMPORARY_ENTITIES;
 
         registry.registerMessageType(MessagePacketType.TE_DECAL, te.lookupType('CMsgTEDecal'));
         registry.registerMessageType(MessagePacketType.TE_WORLD_DECAL, te.lookupType('CMsgTEWorldDecal'));

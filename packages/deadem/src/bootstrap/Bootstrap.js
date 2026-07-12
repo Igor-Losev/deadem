@@ -40,7 +40,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelUserMessages(registry) {
-        const pp = registry.getProtoProvider();
+        const pp = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
 
         registry.registerMessageType(MessagePacketType.ENTITY_MESSAGE_REMOVE_ALL_DECALS, pp.USER_MESSAGES.lookupType('CEntityMessageRemoveAllDecals'));
 
@@ -113,7 +113,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelGameEvents(registry) {
-        const ge = registry.getProtoProvider().CITADEL_GAME_EVENTS;
+        const ge = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider()).CITADEL_GAME_EVENTS;
 
         registry.registerMessageType(MessagePacketType.GE_FIRE_BULLETS, ge.lookupType('CMsgFireBullets'));
         registry.registerMessageType(MessagePacketType.GE_PLAYER_ANIM_EVENT, ge.lookupType('CMsgPlayerAnimEvent'));
@@ -133,7 +133,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelStringTableTypes(registry) {
-        const pp = registry.getProtoProvider();
+        const pp = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
 
         const modifierProto = pp.BASE_MODIFIER.lookupType('CModifierTableEntry');
         const modifierDecoder = buffer => modifierProto.decode(buffer);
