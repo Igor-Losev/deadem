@@ -1,5 +1,5 @@
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
-/** @import EntityMutationExtractor from '#data/extractors/EntityMutationExtractor.js' */
+/** @import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js' */
 
 /** @import EntityMutationBatch from './EntityMutationBatch.js' */
 

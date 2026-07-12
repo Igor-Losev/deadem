@@ -74,7 +74,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] — affected entries (all new entries for a create)
+     * @param {Array<StringTableEntry>} [entries=null] - affected entries (all new entries for a create)
      */
     register(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
@@ -93,7 +93,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] — only the entries that changed
+     * @param {Array<StringTableEntry>} [entries=null] - only the entries that changed
      */
     markUpdated(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);
@@ -110,7 +110,7 @@ class StringTableContainer {
      *
      * @public
      * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>} [entries=null] — resupplied entries, if known
+     * @param {Array<StringTableEntry>} [entries=null] - resupplied entries, if known
      */
     markChanged(stringTable, entries = null) {
         Assert.isTrue(stringTable instanceof StringTable);

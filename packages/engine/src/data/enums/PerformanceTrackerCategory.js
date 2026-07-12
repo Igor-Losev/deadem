@@ -6,7 +6,7 @@ const registry = {
 
 class PerformanceTrackerCategory {
     /**
-     * @private
+     * @public
      * @constructor
      * @param {string} code
      * @param {string} description
