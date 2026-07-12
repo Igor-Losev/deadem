@@ -1,7 +1,5 @@
 /** @import BitBuffer from '#core/BitBuffer.js' */
 
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
-
 import FieldPathOperation from '#data/enums/FieldPathOperation.js';
 
 import HuffmanTree from '#data/fields/path/HuffmanTree.js';
@@ -23,48 +21,6 @@ class FieldPathExtractor {
 
         this._fieldPathBuilder = new FieldPathBuilder();
         this._ids = [ ];
-    }
-
-    /**
-     * @deprecated
-     *
-     * @public
-     * @returns {Array<FieldPath>}
-     */
-    all() {
-        const bitBuffer = this._bitBuffer;
-        const builder = this._fieldPathBuilder;
-
-        builder.reset();
-
-        const fieldPaths = [ ];
-
-        for (;;) {
-            const unread = bitBuffer.getUnreadCount();
-
-            if (unread <= 0) {
-                break;
-            }
-
-            const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
-
-            const code = bitBuffer.readBitsAsUInt(bits);
-
-            const bitsUsed = BITS_TABLE[code];
-            const operation = OPERATIONS[OPS_TABLE[code]];
-
-            bitBuffer.moveBack(bits - bitsUsed);
-
-            if (operation === FieldPathOperation.FINISH) {
-                break;
-            }
-
-            operation._executor(bitBuffer, builder);
-
-            fieldPaths.push(builder.build());
-        }
-
-        return fieldPaths;
     }
 
     /**

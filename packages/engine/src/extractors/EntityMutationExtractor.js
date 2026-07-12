@@ -1,6 +1,5 @@
 /** @import BitBuffer from '#core/BitBuffer.js' */
 
-/** @import Entity from '#data/entity/Entity.js' */
 /** @import Serializer from '#data/fields/Serializer.js' */
 
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
@@ -49,30 +48,6 @@ class EntityMutationExtractor {
         }
 
         return new EntityMutationBatch(ids, values);
-    }
-
-    /**
-     * Extracts mutations in a packed (transferable) format suitable for
-     * transmission between threads.
-     *
-     * @public
-     * @returns {Array<bigint|*>}
-     */
-    allPacked() {
-        const fieldPaths = this._fieldPathExtractor.all();
-
-        const mutations = [ ];
-
-        for (let i = 0; i < fieldPaths.length; i++) {
-            const fieldPath = fieldPaths[i];
-
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
-            const value = decoder(this._bitBuffer);
-
-            mutations.push(fieldPath.transferCode, value);
-        }
-
-        return mutations;
     }
 
     /**

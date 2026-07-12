@@ -22,22 +22,14 @@ import StringTableHandler from '#handlers/StringTableHandler.js';
 import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from '#stream/DemoStreamEventLoopBreaker.js';
 import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
-import DemoStreamPacketAnalyzerConcurrent from '#stream/DemoStreamPacketAnalyzerConcurrent.js';
-import DemoStreamPacketBatcher from '#stream/DemoStreamPacketBatcher.js';
-import DemoStreamPacketCoordinator from '#stream/DemoStreamPacketCoordinator.js';
 import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
-import DemoStreamPacketParserConcurrent from '#stream/DemoStreamPacketParserConcurrent.js';
 import DemoStreamPacketPrioritizer from '#stream/DemoStreamPacketPrioritizer.js';
 import DemoStreamPacketResequencer from '#stream/DemoStreamPacketResequencer.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
 import PacketTracker from '#trackers/PacketTracker.js';
 import PerformanceTracker from '#trackers/PerformanceTracker.js';
-
-import WorkerRequestBootstrap from '#workers/requests/WorkerRequestBootstrap.js';
-import WorkerRequestDemoClear from '#workers/requests/WorkerRequestDemoClear.js';
-import WorkerManager from '#workers/WorkerManager.js';
 
 import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
@@ -76,14 +68,6 @@ class ParserEngine {
             stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
         };
 
-        if (configuration.parserThreads === 0) {
-            this._workerManager = null;
-        } else {
-            logger.warn('ParserEngine: parserThreads > 0 is deprecated and will be removed in the next major release');
-
-            this._workerManager = new WorkerManager(configuration.parserThreads, logger);
-        }
-
         this._interceptors = this._createInterceptors();
 
         this._trackers = {
@@ -96,8 +80,6 @@ class ParserEngine {
         this._finished = false;
         this._pipeline = null;
         this._started = false;
-
-        this._workersBootstrapped = false;
 
         this._paused = false;
         this._pausePromise = null;
@@ -184,14 +166,6 @@ class ParserEngine {
     }
 
     /**
-     * @public
-     * @returns {WorkerManager|null}
-     */
-    get workerManager() {
-        return this._workerManager;
-    }
-
-    /**
      * Aborts the currently running pipeline, if any.
      *
      * @public
@@ -209,7 +183,7 @@ class ParserEngine {
     }
 
     /**
-     * Disposes the engine, terminating workers and clearing all state.
+     * Disposes the engine, clearing all state.
      * After disposal, the engine cannot be used.
      *
      * @public
@@ -224,12 +198,6 @@ class ParserEngine {
 
         this._demo.reset();
         this._interceptors = this._createInterceptors();
-
-        if (this._workerManager !== null) {
-            await this._workerManager.terminate();
-
-            this._workerManager = null;
-        }
     }
 
     /**
@@ -268,14 +236,6 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {boolean}
-     */
-    getIsMultiThreaded() {
-        return this._configuration.parserThreads > 0;
-    }
-
-    /**
-     * @public
      * @returns {MemoryTracker}
      */
     getMemoryTracker() {
@@ -304,14 +264,6 @@ class ParserEngine {
      */
     getStringTableHandler() {
         return this._handlers.stringTable;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    getThreadsCount() {
-        return this._configuration.parserThreads;
     }
 
     /**
@@ -416,21 +368,11 @@ class ParserEngine {
 
         chain.push(new DemoStreamEventLoopBreaker(this, highWaterMark, this._configuration.breakInterval));
 
-        if (this.getIsMultiThreaded()) {
-            chain.push(
-                new DemoStreamPacketBatcher(this, highWaterMark, this._configuration.batcherChunkSize, this._configuration.batcherThresholdMilliseconds),
-                new DemoStreamPacketParserConcurrent(this, highWaterMark, this._filters.message),
-                new DemoStreamPacketCoordinator(this, highWaterMark),
-                new DemoStreamPacketPrioritizer(this, highWaterMark),
-                new DemoStreamPacketAnalyzerConcurrent(this, highWaterMark)
-            );
-        } else {
-            chain.push(
-                new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
-                new DemoStreamPacketPrioritizer(this, highWaterMark),
-                new DemoStreamPacketAnalyzer(this, highWaterMark)
-            );
-        }
+        chain.push(
+            new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
+            new DemoStreamPacketPrioritizer(this, highWaterMark),
+            new DemoStreamPacketAnalyzer(this, highWaterMark)
+        );
 
         this._started = true;
 
@@ -577,18 +519,6 @@ class ParserEngine {
 
         this._started = false;
         this._finished = false;
-
-        if (this._workerManager !== null) {
-            if (!this._workersBootstrapped) {
-                const snapshot = this._registry.export();
-
-                await this._workerManager.broadcast(new WorkerRequestBootstrap(snapshot));
-
-                this._workersBootstrapped = true;
-            }
-
-            await this._workerManager.broadcast(new WorkerRequestDemoClear());
-        }
     }
 
     /**

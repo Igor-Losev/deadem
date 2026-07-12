@@ -40,7 +40,7 @@ class Parser {
     }
 
     /**
-     * Disposes the parser, terminating workers and clearing all state.
+     * Disposes the parser, clearing all state.
      * After disposal, the parser cannot be used.
      *
      * @public

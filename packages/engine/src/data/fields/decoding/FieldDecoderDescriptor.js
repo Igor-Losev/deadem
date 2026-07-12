@@ -34,17 +34,6 @@ class FieldDecoderDescriptor {
 
     /**
      * @public
-     * @returns {{type: string, options: object}}
-     */
-    export() {
-        return {
-            type: this._type.code,
-            options: this._options
-        };
-    }
-
-    /**
-     * @public
      * @static
      * @param {number} dimension
      * @returns {FieldDecoderDescriptor}
@@ -53,18 +42,6 @@ class FieldDecoderDescriptor {
         Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
 
         return new FieldDecoderDescriptor(FieldDecoderType.VECTOR, { dimension });
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {{type: string, options: object}} data
-     * @returns {FieldDecoderDescriptor}
-     */
-    static reconstruct(data) {
-        Assert.isTrue(data !== null && typeof data === 'object');
-
-        return new FieldDecoderDescriptor(FieldDecoderType.parse(data.type), data.options || {});
     }
 
     static get BINARY_BLOCK() { return binaryBlock; }

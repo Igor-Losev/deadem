@@ -24,24 +24,6 @@ class FieldDecoderType {
         return this._code;
     }
 
-    /**
-     * @public
-     * @static
-     * @param {string} code
-     * @returns {FieldDecoderType}
-     */
-    static parse(code) {
-        Assert.isTrue(typeof code === 'string' && code.length > 0);
-
-        const type = registry.get(code) || null;
-
-        if (type === null) {
-            throw new Error(`Unknown field decoder type [ ${code} ]`);
-        }
-
-        return type;
-    }
-
     static get BINARY_BLOCK() { return binaryBlock; }
     static get BOOLEAN() { return boolean; }
     static get COORDINATE() { return coordinate; }

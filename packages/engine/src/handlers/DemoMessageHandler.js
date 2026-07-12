@@ -9,7 +9,6 @@ import Server from '#data/Server.js';
 import Entity from '#data/entity/Entity.js';
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
-import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
 
 import EntityOperation from '#data/enums/EntityOperation.js';
 
@@ -246,57 +245,6 @@ class DemoMessageHandler {
 
                     break;
                 }
-            }
-        }
-
-        return events;
-    }
-
-    /**
-     * Handles a partial of the {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
-     *
-     * @public
-     * @param {MessagePacket} messagePacket
-     * @returns {Array<EntityMutationPartialEvent>}
-     */
-    handleSvcPacketEntitiesPartial(messagePacket) {
-        const message = messagePacket.data;
-
-        const events = [];
-
-        const bitBuffer = new BitBuffer(message.entityData);
-
-        let index = -1;
-
-        for (let i = 0; i < message.updatedEntries; i++) {
-            index += bitBuffer.readUVarInt() + 1;
-
-            const command = bitBuffer.readBitsAsUInt(2);
-
-            switch (command) {
-                case EntityOperation.UPDATE.id: {
-                    const entity = this._demo.getEntity(index);
-
-                    if (entity === null) {
-                        return events;
-                    }
-
-                    try {
-                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
-
-                        const mutations = extractor.allPacked();
-
-                        const event = new EntityMutationPartialEvent(bitBuffer.getReadCount(), index, entity.class.id, mutations);
-
-                        events.push(event);
-                    } catch {
-                        return events;
-                    }
-
-                    break;
-                }
-                default:
-                    return events;
             }
         }
 

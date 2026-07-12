@@ -21,29 +21,6 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @returns {FieldRuleRegistrySnapshot}
-     */
-    export() {
-        return {
-            fieldDecoderOverrides: [ ...this._fieldDecoderOverrides ].map(([ name, descriptor ]) => ({
-                name,
-                descriptor: descriptor.export()
-            })),
-            fieldEncoderOverrides: [ ...this._fieldEncoderOverrides ].map(([ name, encoder ]) => ({
-                name,
-                encoder
-            })),
-            fixedTableTypes: [ ...this._fixedTableTypes ],
-            typeDecoders: [ ...this._typeDecoders ].map(([ baseType, descriptor ]) => ({
-                baseType,
-                descriptor: descriptor.export()
-            })),
-            variableArrayTypes: [ ...this._variableArrayTypes ]
-        };
-    }
-
-    /**
-     * @public
      * @param {string} name
      * @returns {FieldDecoderDescriptor|null}
      */
@@ -95,42 +72,6 @@ class FieldRuleRegistry {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
 
         return this._variableArrayTypes.has(baseType);
-    }
-
-    /**
-     * @public
-     * @static
-     * @param {FieldRuleRegistrySnapshot|null} data
-     * @returns {FieldRuleRegistry}
-     */
-    static reconstruct(data) {
-        const registry = new FieldRuleRegistry();
-
-        if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-            return registry;
-        }
-
-        (Array.isArray(data.fieldDecoderOverrides) ? data.fieldDecoderOverrides : []).forEach(({ name, descriptor }) => {
-            registry.registerFieldDecoderOverride(name, FieldDecoderDescriptor.reconstruct(descriptor));
-        });
-
-        (Array.isArray(data.fieldEncoderOverrides) ? data.fieldEncoderOverrides : []).forEach(({ name, encoder }) => {
-            registry.registerFieldEncoderOverride(name, encoder);
-        });
-
-        (Array.isArray(data.fixedTableTypes) ? data.fixedTableTypes : []).forEach(baseType => {
-            registry.registerFixedTableType(baseType);
-        });
-
-        (Array.isArray(data.typeDecoders) ? data.typeDecoders : []).forEach(({ baseType, descriptor }) => {
-            registry.registerFieldTypeDecoder(baseType, FieldDecoderDescriptor.reconstruct(descriptor));
-        });
-
-        (Array.isArray(data.variableArrayTypes) ? data.variableArrayTypes : []).forEach(baseType => {
-            registry.registerVariableArrayType(baseType);
-        });
-
-        return registry;
     }
 
     /**
@@ -194,17 +135,6 @@ class FieldRuleRegistry {
  * @typedef {Map<string, FieldDecoderDescriptor>} FieldDecoderDescriptorMap
  * @typedef {Map<string, string>} StringMap
  * @typedef {Set<string>} StringSet
- * @typedef {{ type: string, options: object }} FieldDecoderDescriptorSnapshot
- * @typedef {{ name: string, descriptor: FieldDecoderDescriptorSnapshot }} FieldDecoderOverrideSnapshot
- * @typedef {{ name: string, encoder: string }} FieldEncoderOverrideSnapshot
- * @typedef {{ baseType: string, descriptor: FieldDecoderDescriptorSnapshot }} FieldTypeDecoderSnapshot
- * @typedef {{
- *   fieldDecoderOverrides: FieldDecoderOverrideSnapshot[],
- *   fieldEncoderOverrides: FieldEncoderOverrideSnapshot[],
- *   fixedTableTypes: string[],
- *   typeDecoders: FieldTypeDecoderSnapshot[],
- *   variableArrayTypes: string[]
- * }} FieldRuleRegistrySnapshot
  */
 
 export default FieldRuleRegistry;
