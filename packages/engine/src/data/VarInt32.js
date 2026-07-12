@@ -46,7 +46,7 @@ class VarInt32 {
      *
      * @public
      * @static
-     * @param {Buffer} buffer - The buffer from which to parse the value.
+     * @param {Uint8Array} buffer - The buffer from which to parse the value.
      * @returns {VarInt32|null} - The parsed {@link VarInt32} or null if parsing failed.
      */
     static parse(buffer) {

@@ -57,7 +57,7 @@ class FieldPathExtractor {
                 break;
             }
 
-            operation._executor(bitBuffer, builder);
+            /** @type {Function} */ (operation._executor)(bitBuffer, builder);
 
             ids[count++] = builder.build().id;
         }

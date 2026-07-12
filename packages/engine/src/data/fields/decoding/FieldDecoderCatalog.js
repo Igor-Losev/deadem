@@ -45,7 +45,7 @@ class FieldDecoderCatalog {
             case FieldDecoderType.QUANTIZED_FLOAT:
                 return this._factory.createQuantizedFloat(decoderInstructions);
             case FieldDecoderType.VECTOR:
-                return this._factory.createVector(decoderInstructions, descriptor.options.dimension);
+                return this._factory.createVector(decoderInstructions, /** @type {number} */ (descriptor.options.dimension));
             default:
                 throw new Error(`Unhandled field decoder type [ ${descriptor.type.code} ]`);
         }

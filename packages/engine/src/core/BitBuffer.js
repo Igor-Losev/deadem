@@ -361,10 +361,12 @@ class BitBuffer {
      * @returns {string} The decoded string.
      */
     readString(length) {
+        const limit = typeof length === 'number' ? length : Infinity;
+
         const bytes = [ ];
 
         while (true) {
-            if (Number.isInteger(length) && bytes.length >= length) {
+            if (bytes.length >= limit) {
                 break;
             }
 
@@ -517,6 +519,8 @@ class BitBuffer {
 
             offset += 1;
         }
+
+        throw new Error('UVarInt32 exceeds the maximum size');
     }
 
     /**

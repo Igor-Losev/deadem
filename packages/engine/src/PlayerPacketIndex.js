@@ -197,7 +197,7 @@ class PlayerPacketIndex {
             const packet = this._packets[i];
             const typeId = packet.getTypeId();
             const tick = packet.tick.value;
-            
+
             if (this._codec.getIsBootstrap(packet)) {
                 this._bootstrap.push(i);
             }

@@ -2,6 +2,14 @@ import FieldPath from './FieldPath.js';
 
 const MAX_LENGTH = 7;
 
+/**
+ * Trie node: children keyed by path element, with a `fieldPath` expando
+ * set on nodes that terminate a cached path.
+ *
+ * @typedef {Map<number, any> & { fieldPath?: FieldPath }} PathTrieNode
+ */
+
+/** @type {{ byId: Array<FieldPath>, byPath: PathTrieNode, bySingle: Array<FieldPath|undefined>, byPair: Map<number, FieldPath> }} */
 const cache = {
     byId: [ ],
     byPath: new Map(),
@@ -193,11 +201,13 @@ function getByPath(path) {
     let node = cache.byPath;
 
     for (let i = 0; i < path.length; i++) {
-        node = node.get(path[i]);
+        const next = node.get(path[i]);
 
-        if (node === undefined) {
+        if (next === undefined) {
             return undefined;
         }
+
+        node = next;
     }
 
     return node.fieldPath;

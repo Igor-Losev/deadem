@@ -1,6 +1,7 @@
 /** @import { Stream } from 'node:stream' */
 
 /** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+/** @import { InterceptorFn } from '#root/src/ParserEngine.js' */
 
 /** @import Demo from '#data/Demo.js' */
 /** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
@@ -73,7 +74,7 @@ class Parser {
 
     /**
      * @public
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     getIsDisposed() {
         return this._engine.disposed;
@@ -139,7 +140,7 @@ class Parser {
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -148,7 +149,7 @@ class Parser {
     /**
      * @public
      * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @param {InterceptorFn} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);

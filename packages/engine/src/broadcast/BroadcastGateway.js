@@ -52,16 +52,16 @@ class BroadcastGateway {
             throw this._createHttpError(response);
         }
 
-        return response.json();
+        return /** @type {Promise<SyncObject>} */ (response.json());
     }
 
     /**
      * @protected
-     * @param {Response} response 
+     * @param {Response} response
      * @returns {Error}
      */
     _createHttpError(response) {
-        const error = new Error(`HTTP code [ ${response.status} ]`);
+        const error = /** @type {Error & { details?: { status: number, statusText: string, url: string } }} */ (new Error(`HTTP code [ ${response.status} ]`));
 
         error.details = {
             status: response.status,

@@ -4,7 +4,7 @@ class MessagePacketRaw {
      * @constructor
      * @param {number} type
      * @param {number} size
-     * @param {Buffer} payload
+     * @param {Uint8Array} payload
      */
     constructor(type, size, payload) {
         this._type = type;
@@ -30,7 +30,7 @@ class MessagePacketRaw {
 
     /**
      * @public
-     * @returns {Buffer}
+     * @returns {Uint8Array}
      */
     get payload() {
         return this._payload;

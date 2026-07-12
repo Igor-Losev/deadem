@@ -19,14 +19,14 @@ class BroadcastFragmentType {
     }
 
     /**
-     * @returns {string} 
+     * @returns {string}
      */
     get code() {
         return this._code;
     }
 
     /**
-     * @returns {string} 
+     * @returns {string}
      */
     get endpoint() {
         return this._endpoint;
@@ -35,21 +35,21 @@ class BroadcastFragmentType {
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get DELTA() { return delta; }
-    
+
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get FULL() { return full; }
-    
+
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get START() { return start; }
 }

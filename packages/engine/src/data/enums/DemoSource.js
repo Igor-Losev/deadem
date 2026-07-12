@@ -7,7 +7,7 @@ class DemoSource {
     /**
      * @constructor
      * @param {string} code
-     * @param {number} id 
+     * @param {number} id
      */
     constructor(code, id) {
         this._code = code;
@@ -18,14 +18,14 @@ class DemoSource {
     }
 
     /**
-     * @returns {string} 
+     * @returns {string}
      */
     get code() {
         return this._code;
     }
 
     /**
-     * @returns {number} 
+     * @returns {number}
      */
     get id() {
         return this._id;
@@ -33,8 +33,8 @@ class DemoSource {
 
     /**
      * @public
-     * @param {string} code 
-     * @returns {DemoSource|null} 
+     * @param {string} code
+     * @returns {DemoSource|null}
      */
     static parse(code) {
         return registry.byCode.get(code) || null;
@@ -42,8 +42,8 @@ class DemoSource {
 
     /**
      * @public
-     * @param {number} id 
-     * @returns {DemoSource|null} 
+     * @param {number} id
+     * @returns {DemoSource|null}
      */
     static parseById(id) {
         return registry.byId.get(id) || null;
@@ -52,7 +52,7 @@ class DemoSource {
     /**
      * @public
      * @static
-     * @returns {DemoSource} 
+     * @returns {DemoSource}
      */
     static get HTTP_BROADCAST() {
         return httpBroadcast;
@@ -61,7 +61,7 @@ class DemoSource {
     /**
      * @public
      * @static
-     * @returns {DemoSource} 
+     * @returns {DemoSource}
      */
     static get REPLAY() {
         return replay;

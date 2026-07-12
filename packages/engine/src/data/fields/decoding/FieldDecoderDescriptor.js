@@ -6,7 +6,7 @@ class FieldDecoderDescriptor {
     /**
      * @constructor
      * @param {FieldDecoderType} type
-     * @param {object} [options={}]
+     * @param {{ dimension?: number }} [options={}]
      */
     constructor(type, options = {}) {
         Assert.isTrue(type instanceof FieldDecoderType);
@@ -26,7 +26,7 @@ class FieldDecoderDescriptor {
 
     /**
      * @public
-     * @returns {object}
+     * @returns {{ dimension?: number }}
      */
     get options() {
         return this._options;

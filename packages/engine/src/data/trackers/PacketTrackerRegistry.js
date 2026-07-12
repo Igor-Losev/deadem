@@ -4,6 +4,7 @@ const MAX_SAFE_ID = 100000;
 
 class PacketTrackerRegistry {
     constructor() {
+        /** @type {Map<number, number>} */
         this._registry = new Map();
     }
 
@@ -13,7 +14,7 @@ class PacketTrackerRegistry {
      * @param {number=} messagePacketId
      */
     register(demoPacketId, messagePacketId) {
-        Assert.isTrue(demoPacketId <= MAX_SAFE_ID || messagePacketId <= MAX_SAFE_ID || messagePacketId === 0);
+        Assert.isTrue(demoPacketId <= MAX_SAFE_ID || (messagePacketId !== undefined && messagePacketId <= MAX_SAFE_ID) || messagePacketId === 0);
 
         const key = this._encode(demoPacketId, messagePacketId);
 
@@ -43,7 +44,7 @@ class PacketTrackerRegistry {
                 let count;
 
                 if (messagePacketId === null) {
-                    count = this._registry.get(encoded);
+                    count = /** @type {number} */ (this._registry.get(encoded));
                 } else {
                     count = 0;
                 }
@@ -54,7 +55,7 @@ class PacketTrackerRegistry {
             }
 
             if (messagePacketId !== null) {
-                const count = this._registry.get(encoded);
+                const count = /** @type {number} */ (this._registry.get(encoded));
 
                 const child = createUnpackedItem(messagePacketId, count);
 
@@ -68,13 +69,13 @@ class PacketTrackerRegistry {
     /**
      * @protected
      * @param {number} encoded
-     * @returns [number, number|null]
+     * @returns {[number, number|null]}
      */
     _decode(encoded) {
         const demoPacketId = Math.trunc(encoded / MAX_SAFE_ID);
         const messagePacketId = encoded % MAX_SAFE_ID;
 
-        return [ demoPacketId, messagePacketId || null ];
+        return /** @type {[number, number|null]} */ ([ demoPacketId, messagePacketId || null ]);
     }
 
     /**
@@ -102,7 +103,7 @@ function createUnpackedItem(type, count) {
 }
 
 /**
- * @typedef {{children: Array<PacketTrackerUnpackedItem>, code: string, count: number, type: number}} PacketTrackerUnpackedItem
+ * @typedef {{children: Array<PacketTrackerUnpackedItem>, count: number, type: number}} PacketTrackerUnpackedItem
  */
 
 export default PacketTrackerRegistry;

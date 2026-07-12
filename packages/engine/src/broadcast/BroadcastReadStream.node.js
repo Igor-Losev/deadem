@@ -8,7 +8,7 @@ class BroadcastReadStreamNode extends Stream.Readable {
     /**
      * @constructor
      * @param {BroadcastAgent} agent
-     * @param {*} [options={}] 
+     * @param {*} [options={}]
      */
     constructor(agent, options = { }) {
         super(options);
@@ -33,15 +33,15 @@ class BroadcastReadStreamNode extends Stream.Readable {
             }
         });
     }
-    
-    /** 
+
+    /**
      * @public
      */
     start() {
         this._agent.start();
     }
 
-    /** 
+    /**
      * @public
      */
     stop() {

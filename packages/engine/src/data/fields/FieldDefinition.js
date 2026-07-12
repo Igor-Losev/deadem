@@ -48,7 +48,12 @@ class FieldDefinition {
     static parse(varType) {
         Assert.isTrue(typeof varType === 'string');
 
-        const groups = REGEX.exec(varType).groups;
+        const match = REGEX.exec(varType);
+
+        Assert.exists(match, `Unable to parse field definition [ ${varType} ]`);
+        Assert.exists(match.groups, 'Field definition regex must produce named groups');
+
+        const groups = match.groups;
 
         const baseType = groups.base;
         const generic = groups.generic ? FieldDefinition.parse(groups.generic) : null;

@@ -39,7 +39,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaUserMessages(registry) {
-        const pp = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
+        const pp = /** @type {import('./../providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
 
         registry.registerMessageType(MessagePacketType.DOTA_UM_AI_DEBUG_LINE, pp.DOTA_USER_MESSAGES.lookupType('CDOTAUserMsg_AIDebugLine'));
         registry.registerMessageType(MessagePacketType.DOTA_UM_CHAT_EVENT, pp.DOTA_USER_MESSAGES.lookupType('CDOTAUserMsg_ChatEvent'));
@@ -209,12 +209,14 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaStringTableTypes(registry) {
-        const pp = /** @type {import('#providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
+        const pp = /** @type {import('./../providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
 
         const econItemsProto = pp.ECON_ITEMS.lookupType('CSOEconItem');
         const modifierProto = pp.DOTA_MODIFIERS.lookupType('CDOTAModifierBuffTableEntry');
 
+        /** @type {(buffer: Uint8Array) => *} */
         const econItemsDecoer = buffer => econItemsProto.decode(buffer);
+        /** @type {(buffer: Uint8Array) => *} */
         const modifierDecoder = buffer => modifierProto.decode(buffer);
 
         registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, modifierDecoder);

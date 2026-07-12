@@ -108,8 +108,8 @@ class DemoMessageHandler {
 
         bitBuffer.move(startPointer);
 
-        const hasFilter = this._entityClassFilter !== null;
-        const payloadSizes = hasFilter ? createPayloadIterator(message, startLoop) : null;
+        const entityClassFilter = this._entityClassFilter;
+        const payloadSizes = entityClassFilter !== null ? createPayloadIterator(message, startLoop) : null;
         /** @type {Array<EntityMutationEvent>|null} */
         const events = direct ? null : [ ];
         const extractor = new EntityMutationExtractor(bitBuffer);
@@ -131,8 +131,8 @@ class DemoMessageHandler {
 
                     extractor.serializer = entity.class.serializer;
 
-                    const allowed = !hasFilter || this._entityClassFilter(entity.class.name);
-                    const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
+                    const allowed = entityClassFilter === null || entityClassFilter(entity.class.name);
+                    const payloadBits = payloadSizes !== null ? /** @type {number} */ (payloadSizes.next().value) : null;
 
                     if (allowed) {
                         if (events === null) {
@@ -163,7 +163,7 @@ class DemoMessageHandler {
                         throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
+                    if (events === null || (entityClassFilter !== null && !entityClassFilter(entity.class.name))) {
                         entity.deactivate();
                     } else {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
@@ -187,8 +187,8 @@ class DemoMessageHandler {
 
                     const entity = new Entity(index, serial, clazz);
 
-                    const allowed = !hasFilter || this._entityClassFilter(clazz.name);
-                    const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
+                    const allowed = entityClassFilter === null || entityClassFilter(clazz.name);
+                    const payloadBits = payloadSizes !== null ? /** @type {number} */ (payloadSizes.next().value) : null;
 
                     extractor.serializer = entity.class.serializer;
 
@@ -238,7 +238,7 @@ class DemoMessageHandler {
                         throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
+                    if (events === null || (entityClassFilter !== null && !entityClassFilter(entity.class.name))) {
                         this._demo.deleteEntity(index);
                     } else {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
@@ -256,7 +256,7 @@ class DemoMessageHandler {
 /**
  * Builds a payload-size iterator over the packet's `serializedEntities` index.
  *
- * @param {object} message
+ * @param {{ serializedEntities?: Uint8Array }} message
  * @param {number} [startLoop=0]
  * @returns {Generator<number, void, *>|null}
  */

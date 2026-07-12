@@ -1,3 +1,7 @@
+/**
+ * @typedef {{ resolve: () => void, reject: (reason: Error) => void }} GateWaiter
+ */
+
 class Gate {
     /**
      * @public
@@ -5,7 +9,7 @@ class Gate {
      */
     constructor() {
         this._tokens = 0;
-        /** @type {Array<Function>} */
+        /** @type {Array<GateWaiter>} */
         this._queue = [];
     }
 
@@ -35,7 +39,7 @@ class Gate {
      */
     destroy() {
         while (this._queue.length > 0) {
-            const { reject } = this._queue.shift();
+            const { reject } = /** @type {GateWaiter} */ (this._queue.shift());
 
             reject(new Error('Gate destroyed'));
         }
@@ -49,7 +53,7 @@ class Gate {
      */
     release() {
         if (this._queue.length > 0) {
-            const { resolve } = this._queue.shift();
+            const { resolve } = /** @type {GateWaiter} */ (this._queue.shift());
 
             resolve();
         } else {

@@ -513,7 +513,7 @@ class ParserEngine {
         return true;
     }
 
-    /** 
+    /**
      * @protected
      */
     async _prepareRun() {

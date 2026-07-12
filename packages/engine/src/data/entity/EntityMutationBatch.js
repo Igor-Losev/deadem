@@ -18,7 +18,7 @@ class EntityMutationBatch {
 
     /**
      * @public
-     * @returns {Uint32Array} 
+     * @returns {Uint32Array}
      */
     get ids() {
         return this._ids;
@@ -34,7 +34,7 @@ class EntityMutationBatch {
 
     /**
      * @public
-     * @returns {Readonly<Array<*>>} 
+     * @returns {Readonly<Array<*>>}
      */
     get values() {
         return this._values;

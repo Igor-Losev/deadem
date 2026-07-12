@@ -33,8 +33,10 @@ class DemoStreamPacketAnalyzer extends Transform {
      * @param {DemoPacket} demoPacket
      */
     async _handle(demoPacket) {
-        if (this._engine.paused) {
-            await this._engine.pausePromise.promise;
+        const pausePromise = this._engine.pausePromise;
+
+        if (pausePromise !== null) {
+            await pausePromise.promise;
         }
 
         this._engine.interceptPre(InterceptorStage.DEMO_PACKET, demoPacket);

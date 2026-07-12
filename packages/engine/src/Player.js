@@ -61,7 +61,7 @@ class Player {
 
     /**
      * @public
-     * @returns {PlayerState} 
+     * @returns {PlayerState}
      */
     get state() {
         return this._state;

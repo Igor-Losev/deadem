@@ -73,9 +73,9 @@ class FieldFactory {
 
                 return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
+                return new FieldTableFixed(name, sendNode, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
+                return new FieldTableVariable(name, sendNode, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }
@@ -96,7 +96,7 @@ class FieldFactory {
             return FieldModel.TABLE_VARIABLE;
         }
 
-        if (definition.count > 0 && definition.baseType !== 'char') {
+        if (definition.count !== null && definition.count > 0 && definition.baseType !== 'char') {
             return FieldModel.ARRAY_FIXED;
         }
 

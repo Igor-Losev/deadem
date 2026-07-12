@@ -49,7 +49,7 @@ class FieldAccessor {
     read(readField) {
         const extractor = new FieldExtractor(readField, this._fieldPath.path);
 
-        if (Number.isInteger(this._elementIndex)) {
+        if (this._elementIndex !== null) {
             return this._field.unpackElement(extractor, this._elementIndex);
         }
 

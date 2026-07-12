@@ -83,7 +83,7 @@ class FieldArrayFixed extends Field {
      * @returns {Array<*>|undefined}
      */
     unpack(extractor) {
-        const count = this._definition.count;
+        const count = /** @type {number} */ (this._definition.count);
         const out = new Array(count);
 
         let present = 0;

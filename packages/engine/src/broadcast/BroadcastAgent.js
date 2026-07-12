@@ -18,8 +18,8 @@ const STREAM_INACTIVITY_TIMEOUT_MILLISECONDS = 30 * 1000;
 
 class BroadcastAgent {
     /**
-     * @param {BroadcastGateway} gateway 
-     * @param {number} match 
+     * @param {BroadcastGateway} gateway
+     * @param {number} match
      * @param {Logger} [logger=Logger.CONSOLE_INFO]
      */
     constructor(gateway, match, logger = Logger.CONSOLE_DEBUG) {
@@ -37,27 +37,27 @@ class BroadcastAgent {
         this._finished = false;
         this._paused = false;
         this._started = false;
-        
+
         this._pause = new DeferredPromise();
         this._pause.resolve();
     }
 
     /**
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     get finished() {
         return this._finished;
     }
 
     /**
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     get paused() {
         return this._paused;
     }
 
     /**
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     get started() {
         return this._started;
@@ -81,7 +81,7 @@ class BroadcastAgent {
         }
     }
 
-    /** 
+    /**
      * @public
      */
     resume() {
@@ -99,7 +99,7 @@ class BroadcastAgent {
         }
     }
 
-    /** 
+    /**
      * @public
      * @param {boolean} [fromStart=false]
      * @returns {void}
@@ -119,7 +119,7 @@ class BroadcastAgent {
             this._logger.debug('Querying [ SYNC ]');
 
             let sync = await this._getSync();
-            
+
             let currentFragment;
 
             if (fromStart) {
@@ -168,12 +168,12 @@ class BroadcastAgent {
                 this._logger.debug(`Querying [ ${BroadcastFragmentType.DELTA.code} ] [ ${currentFragment} ]`);
 
                 const delta = await this._getFragment(BroadcastFragmentType.DELTA, currentFragment);
-                
+
                 lastFragmentAt = Date.now();
                 currentFragment += 1;
 
                 await this._pause.promise;
-                
+
                 this._send(delta);
 
                 await wait(REQUEST_DELAY_MILLISECONDS);
@@ -183,7 +183,7 @@ class BroadcastAgent {
         monitor();
     }
 
-    /** 
+    /**
      * @public
      */
     stop() {
@@ -200,7 +200,7 @@ class BroadcastAgent {
         this._finished = true;
     }
 
-    /** 
+    /**
      * @public
      * @param {boolean} [fromStart = false]
      * @param {*} [options={ }]
@@ -216,7 +216,7 @@ class BroadcastAgent {
 
     /**
     * @public
-    * @param {function((Buffer|null)): void} listener 
+    * @param {function((Buffer|null)): void} listener
     */
     subscribe(listener) {
         this._listeners.push(listener);
@@ -241,9 +241,9 @@ class BroadcastAgent {
 
     /**
      * @protected
-     * @param {BroadcastFragmentType} fragmentType 
-     * @param {number} fragment 
-     * @returns {Promise<Buffer>} 
+     * @param {BroadcastFragmentType} fragmentType
+     * @param {number} fragment
+     * @returns {Promise<Buffer>}
      */
     _getFragment(fragmentType, fragment) {
         return backoff.call(this, () => this._gateway.getFragment(this._match, fragmentType, fragment), REQUEST_RETRIES);
@@ -251,7 +251,7 @@ class BroadcastAgent {
 
     /**
      * @protected
-     * @returns {Promise<SyncObject>} 
+     * @returns {Promise<SyncObject>}
      */
     _getSync() {
         return backoff.call(this, () => this._gateway.getSync(this._match), REQUEST_RETRIES);
@@ -259,7 +259,7 @@ class BroadcastAgent {
 
     /**
     * @protected
-    * @param {Buffer|null} bufferOrNull 
+    * @param {Buffer|null} bufferOrNull
     */
     _send(bufferOrNull) {
         this._listeners.forEach((listener) => {
@@ -269,7 +269,7 @@ class BroadcastAgent {
 }
 
 /**
- * @param {() => Promise<*>} action 
+ * @param {() => Promise<*>} action
  * @param {number} attempts
  * @param {number} [delay=500]
  * @returns {Promise<*>}

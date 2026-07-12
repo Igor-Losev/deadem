@@ -71,14 +71,25 @@ class FileSystem {
     }
 
     /**
-     * @public
-     * @static
-     * @param {...*} args
+     * @overload
+     * @param {string} path
+     * @param {BufferEncoding} encoding
+     * @returns {string}
+     */
+    /**
+     * @overload
+     * @param {string} path
      * @returns {Buffer}
      */
-    static readFileSync(...args) {
-        // @ts-ignore — forwarding variadic to fs
-        return fs.readFileSync(...args);
+    /**
+     * @public
+     * @static
+     * @param {string} path
+     * @param {BufferEncoding} [encoding]
+     * @returns {string|Buffer}
+     */
+    static readFileSync(path, encoding) {
+        return fs.readFileSync(path, encoding);
     }
 }
 

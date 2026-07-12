@@ -23,20 +23,26 @@ class Demo {
      * @constructor
      */
     constructor() {
+        /** @type {Map<number, ClassBaseline>} */
         this._classBaselines = new Map();
 
+        /** @type {{ byId: Map<number, Class>, byName: Map<string, Class> }} */
         this._classes = {
             byId: new Map(),
             byName: new Map()
         };
-        
+
+        /** @type {{ byIndex: Array<Entity|undefined>, byClassName: Map<string, Set<Entity>>, count: number }} */
         this._entities = {
             byIndex: [ ],
             byClassName: new Map(),
             count: 0
         };
 
+        /** @type {Map<string, Serializer>} */
         this._serializers = new Map();
+
+        /** @type {Server|null} */
         this._server = null;
 
         this._stringTableContainer = new StringTableContainer();
@@ -69,7 +75,6 @@ class Demo {
     deleteEntity(index) {
         Assert.isTrue(Number.isInteger(index));
 
-        /** @type {Entity} */
         const entity = this._entities.byIndex[index];
 
         if (entity === undefined) {
@@ -182,7 +187,6 @@ class Demo {
     getEntityByHandle(handle) {
         Assert.isTrue(Number.isInteger(handle));
 
-        /** @type {Entity|null} */
         const entity = this._entities.byIndex[handle & Entity.INDEX_MASK] || null;
 
         if (entity === null || entity.handle !== handle) {
@@ -199,7 +203,6 @@ class Demo {
      * @returns {IterableIterator<Entity>}
      */
     * getEntityIterator() {
-        /** @type {Array<Entity>} */
         const byIndex = this._entities.byIndex;
 
         for (let i = 0; i < byIndex.length; i++) {
@@ -224,7 +227,7 @@ class Demo {
 
     /**
      * @public
-     * @returns {{ classBaselines: number, classes: number, entities: number, serializers: number }} 
+     * @returns {{ classBaselines: number, classes: number, entities: number, serializers: number }}
      */
     getStats() {
         return {
@@ -253,7 +256,6 @@ class Demo {
     registerEntity(entity) {
         Assert.isTrue(entity instanceof Entity);
 
-        /** @type {Entity|null} */
         const previous = this._entities.byIndex[entity.index] ?? null;
 
         if (previous !== null) {

@@ -145,8 +145,8 @@ class FieldDecoderQuantizedFloat {
 }
 
 /**
+ * @this {FieldDecoderQuantizedFloat}
  * @param {number} steps
- * @returns {number}
  */
 function assignMultipliers(steps) {
     Assert.isTrue(Number.isInteger(steps));
@@ -192,6 +192,7 @@ function assignMultipliers(steps) {
 /**
  * Validates and recalculates decoder flags for quantized float decoding.
  *
+ * @this {FieldDecoderQuantizedFloat}
  * @param {number} candidate
  * @returns {number}
  */

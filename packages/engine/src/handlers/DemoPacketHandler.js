@@ -48,7 +48,11 @@ class DemoPacketHandler {
         const size = bitBuffer.readUVarInt32();
         const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
 
-        const decoded = this._registry.getSendTablesSerializerDecoder().decode(payload);
+        const sendTablesDecoder = this._registry.getSendTablesSerializerDecoder();
+
+        Assert.exists(sendTablesDecoder, 'SendTables serializer decoder is not registered');
+
+        const decoded = sendTablesDecoder.decode(payload);
 
         const fields = new Map();
         const symbols = decoded.symbols;
@@ -71,6 +75,8 @@ class DemoPacketHandler {
             const serializerKey = new SerializerKey(name, version);
 
             const serializer = this._demo.getSerializerByKey(serializerKey);
+
+            Assert.exists(serializer, `Serializer [ ${serializerKey.toString()} ] is not registered`);
 
             serializerRaw.fieldsIndex.forEach((/** @type {number} */ fieldIndex) => {
                 let field = fields.get(fieldIndex) || null;
@@ -117,7 +123,7 @@ class DemoPacketHandler {
                         valueHigh: typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null
                     };
 
-                    const sendNode = symbols[sendNodeSym].split('.').filter(/** @type {function(string): boolean} */ (s => s.length > 0));
+                    const sendNode = symbols[sendNodeSym].split('.').filter((/** @type {string} */ s) => s.length > 0);
 
                     // TODO: polymorphic types
 

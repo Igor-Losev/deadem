@@ -2,14 +2,14 @@ import Assert from '#core/Assert.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
 
-const OPTIONS = {
+const OPTIONS = /** @type {const} */ ({
     BREAK_INTERVAL: 'breakInterval',
     ENTITY_CLASSES: 'entityClasses',
     MESSAGE_PACKET_TYPES: 'messagePacketTypes',
     MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude',
     SPLITTER_CHUNK_SIZE: 'splitterChunkSize',
     STREAM_HIGH_WATER_MARK: 'streamHighWaterMark'
-};
+});
 
 const CRITICAL_MESSAGE_PACKET_TYPES = new Set([
     MessagePacketType.SVC_SERVER_INFO,
@@ -27,14 +27,18 @@ const DEFAULTS = {
     [OPTIONS.STREAM_HIGH_WATER_MARK]: 6
 };
 
+/**
+ * @typedef {{ breakInterval?: number, entityClasses?: Array<string>|null, messagePacketTypes?: Array<MessagePacketType>|null, messagePacketTypesExclude?: Array<MessagePacketType>|null, splitterChunkSize?: number, streamHighWaterMark?: number }} ParserConfigurationOptions
+ */
+
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, splitterChunkSize?: number, streamHighWaterMark?: number }} options
+     * @param {ParserConfigurationOptions} [options]
      */
     constructor(options) {
         /**
-         * @param {string} key
+         * @param {keyof ParserConfigurationOptions} key
          * @returns {*}
          */
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];

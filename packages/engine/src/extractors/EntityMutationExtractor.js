@@ -25,7 +25,7 @@ class EntityMutationExtractor {
 
     /**
      * @public
-     * @param {Serializer} serializer 
+     * @param {Serializer} serializer
      */
     set serializer(serializer) {
         this._serializer = serializer;

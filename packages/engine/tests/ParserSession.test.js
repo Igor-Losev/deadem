@@ -206,8 +206,8 @@ describe('ParserSession', () => {
             premature.code = 'ERR_STREAM_PREMATURE_CLOSE';
 
             engine.failParse(premature);
-  
-            await Promise.resolve(); // microtask flush 
+
+            await Promise.resolve(); // microtask flush
 
             expect(session.error).toBe(null);
         });

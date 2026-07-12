@@ -35,14 +35,14 @@ class Protocol {
     /**
      * @static
      * @public
-     * @returns {Protocol} 
+     * @returns {Protocol}
      */
     static get HTTP() { return http; }
 
     /**
      * @static
      * @public
-     * @returns {Protocol} 
+     * @returns {Protocol}
      */
     static get HTTPS() { return https; }
 }

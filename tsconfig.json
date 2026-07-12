@@ -1,8 +1,12 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2023"],
-    "types": ["node"]
+    "lib": [
+      "ES2023"
+    ],
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "packages/engine/index.js",
@@ -12,7 +16,14 @@
     "packages/dota2/index.js",
     "packages/dota2/src/**/*.js",
     "packages/deadem/index.js",
-    "packages/deadem/src/**/*.js"
+    "packages/deadem/src/**/*.js",
+    "packages/engine/src/**/*.d.ts"
   ],
-  "exclude": ["**/node_modules", "**/dist", "**/tests", "**/*.browser.js"]
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "**/tests",
+    "**/*.browser.js",
+    "**/*.browser.*.js"
+  ]
 }

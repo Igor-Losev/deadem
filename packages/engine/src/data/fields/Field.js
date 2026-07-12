@@ -63,21 +63,21 @@ class Field {
     /**
      * @abstract
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} index
+     * @param {FieldPath} _fieldPath
+     * @param {number} _index
      * @returns {FieldDecoderFn}
      */
-    getDecoderForFieldPath(fieldPath, index) {
+    getDecoderForFieldPath(_fieldPath, _index) {
         throw new Error('Abstract: getDecoderForFieldPath()');
     }
 
     /**
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} index
+     * @param {FieldPath} _fieldPath
+     * @param {number} _index
      * @returns {FieldDefinition}
      */
-    getDefinitionForFieldPath(fieldPath, index) {
+    getDefinitionForFieldPath(_fieldPath, _index) {
         return this._definition;
     }
 
@@ -86,33 +86,33 @@ class Field {
      *
      * @abstract
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} index
+     * @param {FieldPath} _fieldPath
+     * @param {number} _index
      * @returns {boolean}
      */
-    getIsContainerForFieldPath(fieldPath, index) {
+    getIsContainerForFieldPath(_fieldPath, _index) {
         throw new Error('Abstract: getIsContainerForFieldPath()');
     }
 
     /**
      * @abstract
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} [index=0]
+     * @param {FieldPath} _fieldPath
+     * @param {number} [_index=0]
      * @returns {string}
      */
-    getNameForFieldPath(fieldPath, index = 0) {
+    getNameForFieldPath(_fieldPath, _index = 0) {
         throw new Error('Abstract: getNameForFieldPath()');
     }
 
     /**
      * @abstract
      * @public
-     * @param {FieldPath} fieldPath
-     * @param {number} index
+     * @param {FieldPath} _fieldPath
+     * @param {number} _index
      * @returns {FieldStorageDescriptor}
      */
-    getStorageForFieldPath(fieldPath, index) {
+    getStorageForFieldPath(_fieldPath, _index) {
         throw new Error('Abstract: getStorageForFieldPath()');
     }
 
@@ -122,10 +122,10 @@ class Field {
      *
      * @abstract
      * @public
-     * @param {FieldExtractor} extractor
+     * @param {FieldExtractor} _extractor
      * @returns {*}
      */
-    unpack(extractor) {
+    unpack(_extractor) {
         throw new Error('Abstract: unpack()');
     }
 
@@ -135,10 +135,10 @@ class Field {
      *
      * @public
      * @param {FieldExtractor} extractor
-     * @param {number} index
+     * @param {number} _index
      * @returns {*}
      */
-    unpackElement(extractor, index) {
+    unpackElement(extractor, _index) {
         return this.unpack(extractor);
     }
 }

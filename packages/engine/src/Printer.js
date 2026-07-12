@@ -2,7 +2,7 @@ import Logger from '#core/Logger.js';
 
 /** @import Parser from '#root/src/Parser.js' */
 
-/** @import { PacketTrackerUnpackedItem } from '#data/trackers/PacketTrackerRegistry.js' */
+/** @import { PacketTrackerPrintableItem } from '#trackers/PacketTracker.js' */
 /** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
 /** @import { PacketTrackerStats } from '#trackers/PacketTracker.js' */
 /** @import { PerformanceTrackerStats } from '#trackers/PerformanceTracker.js' */
@@ -131,14 +131,14 @@ class Printer {
 
     /**
      * @protected
-     * @param {Array<PacketTrackerUnpackedItem>} partition
+     * @param {Array<PacketTrackerPrintableItem>} partition
      */
     _printPacketStatsPartition(partition) {
         /** @type {(type: number) => string} */
-        const getColumnForType = type => `${type}`.padStart(3, '0'); 
+        const getColumnForType = type => `${type}`.padStart(3, '0');
         /** @type {(code: string) => string} */
-        const getColumnForCode = code => `${code}`.padEnd(40, ' '); 
-        /** @type {(count: number) => string} */
+        const getColumnForCode = code => `${code}`.padEnd(40, ' ');
+        /** @type {(count: string) => string} */
         const getColumnForCount = count => `${count}`.padStart(10, ' ');
 
         partition.forEach((parent) => {
@@ -166,13 +166,17 @@ class Printer {
         const walk = (node, depth = 0) => {
             const indent = this._indent(depth);
 
-            const avg = this._formatNumber(node.stats.avg);
-            const count = this._formatNumber(node.stats.count);
-            const total = this._formatNumber(node.stats.sum);
+            const stats = node.stats;
 
-            this._log(`${indent}[ ${node.category.code} ]: total [ ${total} ] ms, [ ${count} ] run(s) with [ ${avg} ] ms in average`);
+            if (stats !== null) {
+                const avg = this._formatNumber(stats.avg);
+                const count = this._formatNumber(stats.count);
+                const total = this._formatNumber(stats.sum);
 
-            node.children.forEach((/** @type {PerformanceTrackerStats} */ child) => {
+                this._log(`${indent}[ ${node.category.code} ]: total [ ${total} ] ms, [ ${count} ] run(s) with [ ${avg} ] ms in average`);
+            }
+
+            node.children.forEach((child) => {
                 walk(child, depth + 1);
             });
         };

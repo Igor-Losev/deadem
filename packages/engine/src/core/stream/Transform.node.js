@@ -28,17 +28,17 @@ class TransformNode extends Stream.Transform {
 
             callback();
         } catch (error) {
-            callback(error);
+            callback(/** @type {Error} */ (error));
         }
     }
 
     /**
      * @protected
      * @abstract
-     * @param {*} chunk
+     * @param {*} _chunk
      * @returns {Promise<void>}
      */
-    async _handle(chunk) {
+    async _handle(_chunk) {
         throw new Error('TransformNode.handle() is not implemented');
     }
 
@@ -61,7 +61,7 @@ class TransformNode extends Stream.Transform {
 
             callback();
         } catch (error) {
-            callback(error);
+            callback(/** @type {Error} */ (error));
         }
     }
 }

@@ -9,7 +9,7 @@ class DemoPacketRawReplayExtractor {
     /**
      * @public
      * @constructor
-     * @param {Buffer} buffer
+     * @param {Uint8Array} buffer
      */
     constructor(buffer) {
         this._buffer = buffer;
@@ -19,7 +19,7 @@ class DemoPacketRawReplayExtractor {
 
     /**
      * @public
-     * @returns {Buffer}
+     * @returns {Uint8Array}
      */
     get tail() {
         return this._tail;

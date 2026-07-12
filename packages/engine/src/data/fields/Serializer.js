@@ -1,3 +1,5 @@
+/** @import FieldTableFixed from './models/FieldTableFixed.js' */
+/** @import FieldTableVariable from './models/FieldTableVariable.js' */
 /** @import { FieldDecoderFn } from './decoding/FieldDecoder.js' */
 /** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
 /** @import FieldPath from './path/FieldPath.js' */
@@ -194,6 +196,7 @@ class Serializer {
 
         const path = [ ];
 
+        /** @type {Serializer} */
         let serializer = this;
         let field = null;
         let i = 0;
@@ -244,12 +247,12 @@ class Serializer {
 
                     path.push(elementIndex);
 
-                    serializer = field.serializer;
+                    serializer = /** @type {FieldTableVariable} */ (field).serializer;
 
                     break;
                 }
                 case FieldModel.TABLE_FIXED: {
-                    serializer = field.serializer;
+                    serializer = /** @type {FieldTableFixed} */ (field).serializer;
 
                     break;
                 }
@@ -401,6 +404,7 @@ class Serializer {
      * @returns {Object|undefined}
      */
     unpack(extractor) {
+        /** @type {Record<string, *>|null} */
         let out = null;
 
         for (let i = 0; i < this._fields.length; i++) {
