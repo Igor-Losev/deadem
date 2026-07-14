@@ -18,7 +18,7 @@ class FileSystem {
      * @returns {Readable}
      */
     static createReadStream(...args) {
-        // @ts-ignore — forwarding variadic to fs
+        // @ts-ignore — forwarding to fs
         return fs.createReadStream(...args);
     }
 
@@ -29,7 +29,7 @@ class FileSystem {
      * @returns {Writable}
      */
     static createWriteStream(...args) {
-        // @ts-ignore — forwarding variadic to fs
+        // @ts-ignore — forwarding to fs
         return fs.createWriteStream(...args);
     }
 

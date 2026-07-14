@@ -7,8 +7,8 @@ class SnappyDecompressor {
 
     /**
      * @public
-     * @param {Buffer|Uint8Array} buffer
-     * @returns {Buffer|Uint8Array}
+     * @param {Uint8Array} buffer
+     * @returns {Uint8Array}
      */
     decompress(buffer) {
         return snappy.uncompress(buffer);

@@ -1,18 +1,22 @@
 import Assert from '#core/Assert.js';
 
 /**
- * @typedef {(sender: *, ...args: Array<*>) => void} EventEmitterHandler
+ * @template T
+ * @typedef {(sender: T, ...args: Array<*>) => void} EventEmitterHandler
  */
 
+/**
+ * @template T
+ */
 class EventEmitter {
     /**
      * @constructor
-     * @param {*} sender
+     * @param {T} sender
      */
     constructor(sender) {
+        /** @type {T} */
         this._sender = sender;
-
-        /** @type {Map<string, Array<EventEmitterHandler>>} */
+        /** @type {Map<string, Array<EventEmitterHandler<T>>>} */
         this._registrations = new Map();
     }
 
@@ -41,7 +45,7 @@ class EventEmitter {
     /**
      * @public
      * @param {string} eventName
-     * @param {EventEmitterHandler} handler
+     * @param {EventEmitterHandler<T>} handler
      */
     register(eventName, handler) {
         Assert.isTrue(typeof eventName === 'string');
@@ -57,7 +61,7 @@ class EventEmitter {
     /**
      * @public
      * @param {string} eventName
-     * @param {EventEmitterHandler} handler
+     * @param {EventEmitterHandler<T>} handler
      * @returns {boolean}
      */
     unregister(eventName, handler) {

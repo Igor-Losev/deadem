@@ -5,13 +5,6 @@ import FieldStorageType from '#data/enums/FieldStorageType.js';
 import Serializer from '#data/fields/Serializer.js';
 
 /**
- * Storage classification for a single field path: which backing store holds
- * the value (float32/int32/misc), its slot, and its scalar interpretation.
- *
- * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean }} EntityFieldMeta
- */
-
-/**
  * Storage plan for entity state.
  */
 class EntityStateLayout {
@@ -142,6 +135,12 @@ class EntityStateLayout {
         }
     }
 }
+
+/**
+ * Storage classification for a single field path.
+ *
+ * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean }} EntityFieldMeta
+ */
 
 /**
  * @param {number} id

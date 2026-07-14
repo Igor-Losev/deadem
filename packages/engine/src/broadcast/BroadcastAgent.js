@@ -1,4 +1,5 @@
 /** @import { Stream } from 'node:stream' */
+
 /** @import { SyncObject } from '#broadcast/BroadcastGateway.js' */
 
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';

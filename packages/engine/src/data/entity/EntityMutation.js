@@ -4,7 +4,7 @@ class EntityMutation {
     /**
      * @constructor
      * @param {FieldPath} fieldPath
-     * @param {*} value
+     * @param {unknown} value
      */
     constructor(fieldPath, value) {
         this._fieldPath = fieldPath;
@@ -21,7 +21,7 @@ class EntityMutation {
 
     /**
      * @public
-     * @returns {*}
+     * @returns {unknown}
      */
     get value() {
         return this._value;

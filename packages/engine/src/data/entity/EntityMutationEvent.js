@@ -91,7 +91,7 @@ class EntityMutationEvent {
      *
      * @public
      * @param {Array<string>|null} [names=null]
-     * @returns {Record<string, *>|Array<*>}
+     * @returns {Record<string, unknown>|Array<unknown>}
      */
     getChanges(names = null) {
         const batch = this._batch;
@@ -101,7 +101,7 @@ class EntityMutationEvent {
                 return this._changes;
             }
 
-            /** @type {Record<string, *>} */
+            /** @type {Record<string, unknown>} */
             const changes = {};
             const serializer = this._entity.class.serializer;
 

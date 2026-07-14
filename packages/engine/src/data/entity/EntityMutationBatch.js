@@ -5,7 +5,7 @@ class EntityMutationBatch {
      * @public
      * @constructor
      * @param {Uint32Array} ids
-     * @param {Readonly<Array<*>>} values
+     * @param {Readonly<Array<unknown>>} values
      */
     constructor(ids, values) {
         Assert.isTrue(ids instanceof Uint32Array);
@@ -34,7 +34,7 @@ class EntityMutationBatch {
 
     /**
      * @public
-     * @returns {Readonly<Array<*>>}
+     * @returns {Readonly<Array<unknown>>}
      */
     get values() {
         return this._values;

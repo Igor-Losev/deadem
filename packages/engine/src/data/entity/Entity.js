@@ -1,8 +1,9 @@
 /** @import FieldPath from '#data/fields/path/FieldPath.js' */
+
 /** @import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js' */
-/** @import { EntityFieldMeta } from './EntityStateLayout.js' */
 
 /** @import EntityMutationBatch from './EntityMutationBatch.js' */
+/** @import { EntityFieldMeta } from './EntityStateLayout.js' */
 
 import Assert from '#core/Assert.js';
 
@@ -41,7 +42,7 @@ class Entity {
 
         this._active = true;
 
-        /** @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, *>|null, presence: Uint8Array }} */
+        /** @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, unknown>|null, presence: Uint8Array }} */
         this._state = {
             float32: new Float32Array(clazz.layout.getFloatLength()),
             int32: new Int32Array(clazz.layout.getIntLength()),
@@ -51,7 +52,7 @@ class Entity {
 
         /** @type {Set<number>|null} */
         this._changed = null;
-        /** @type {Record<string, *>|null} */
+        /** @type {Record<string, unknown>|null} */
         this._snapshot = null;
     }
 
@@ -178,7 +179,7 @@ class Entity {
      *
      * @public
      * @param {string} name
-     * @returns {*}
+     * @returns {unknown}
      */
     getField(name) {
         const accessor = this._class.getFieldAccessor(name);
@@ -195,7 +196,7 @@ class Entity {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {*}
+     * @returns {unknown}
      */
     getFieldById(fieldPathId) {
         const meta = this._class.layout.peek(fieldPathId);
@@ -237,7 +238,7 @@ class Entity {
      * Iterates `[ name, value ]` pairs for all fields currently present.
      *
      * @public
-     * @returns {IterableIterator<[ string, * ]>}
+     * @returns {IterableIterator<[ string, unknown ]>}
      */
     * fieldEntries() {
         const metas = this._class.layout.getMetas();
@@ -293,7 +294,7 @@ class Entity {
      * Use {@link #getField} unless you are debugging.
      *
      * @public
-     * @returns {*}
+     * @returns {unknown}
      */
     unpackFlattened() {
         const layout = this._class.layout;
@@ -305,7 +306,7 @@ class Entity {
         const changed = this._changed;
 
         if (snapshot === null || changed === null) {
-            /** @type {Record<string, *>} */
+            /** @type {Record<string, unknown>} */
             const unpacked = { };
 
             for (let i = 0; i < metas.length; i++) {
