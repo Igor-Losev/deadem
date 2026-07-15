@@ -193,6 +193,10 @@ class DemoStreamPacketAnalyzerConcurrent extends Transform {
                             this._engine.getDemoMessageHandler().handleSvcClearAllStringTables();
 
                             break;
+                        case MessagePacketType.SVC_USER_COMMANDS:
+                            this._engine.getDemoMessageHandler().handleSvcUserCommands(messagePacket);
+
+                            break;
                         case MessagePacketType.SVC_PACKET_ENTITIES: {
                             let partialEvents;
 

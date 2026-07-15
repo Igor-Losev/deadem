@@ -41,8 +41,9 @@ class SchemaRegistry {
             stringTableByName: new Map()
         };
 
-        this._serializers = {
-            sendTables: null
+        this._decoders = {
+            sendTables: null,
+            userCommand: null
         };
 
         this._fieldRules = new FieldRuleRegistry();
@@ -98,7 +99,8 @@ class SchemaRegistry {
             messageTypes,
             stringTableTypes,
             fieldRules: this._fieldRules.export(),
-            sendTablesSerializerDecoder: this._serializers.sendTables ? this._serializers.sendTables.fullName : null
+            sendTablesSerializerDecoder: this._decoders.sendTables ? this._decoders.sendTables.fullName : null,
+            userCommandDecoder: this._decoders.userCommand ? this._decoders.userCommand.fullName : null
         };
     }
 
@@ -124,7 +126,15 @@ class SchemaRegistry {
      * @returns {protobuf.Type|null}
      */
     getSendTablesSerializerDecoder() {
-        return this._serializers.sendTables;
+        return this._decoders.sendTables;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Type|null}
+     */
+    getUserCommandDecoder() {
+        return this._decoders.userCommand;
     }
 
     /**
@@ -236,7 +246,15 @@ class SchemaRegistry {
      * @param {protobuf.Type} proto
      */
     setSendTablesSerializerDecoder(proto) {
-        this._serializers.sendTables = proto;
+        this._decoders.sendTables = proto;
+    }
+
+    /**
+     * @public
+     * @param {protobuf.Type} proto
+     */
+    setUserCommandDecoder(proto) {
+        this._decoders.userCommand = proto;
     }
 
     /**
@@ -319,6 +337,10 @@ class SchemaRegistry {
 
         if (snapshot.sendTablesSerializerDecoder !== null) {
             registry.setSendTablesSerializerDecoder(protoProvider.root.lookupType(snapshot.sendTablesSerializerDecoder));
+        }
+
+        if (snapshot.userCommandDecoder !== null) {
+            registry.setUserCommandDecoder(protoProvider.root.lookupType(snapshot.userCommandDecoder));
         }
 
         return registry;

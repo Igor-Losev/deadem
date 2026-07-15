@@ -83,6 +83,38 @@ class DemoMessageHandler {
     }
 
     /**
+     * Handles a {@link MessagePacketType.SVC_USER_COMMANDS} (ID = 76).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     */
+    handleSvcUserCommands(messagePacket) {
+        const decoder = this._registry.getUserCommandDecoder();
+
+        if (decoder === null) {
+            return;
+        }
+
+        const commands = messagePacket.data?.commands ?? null;
+
+        if (commands === null) {
+            return;
+        }
+
+        for (let i = 0; i < commands.length; i++) {
+            const command = commands[i];
+
+            if (command.data && command.data.length > 0) {
+                try {
+                    command.data = decoder.decode(command.data);
+                } catch {
+                    // malformed payload — leave the raw bytes in place
+                }
+            }
+        }
+    }
+
+    /**
      * Handles a {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
      *
      * @public

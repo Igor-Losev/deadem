@@ -104,6 +104,11 @@ class DemoStreamPacketAnalyzer extends Transform {
 
                     break;
                 }
+                case MessagePacketType.SVC_USER_COMMANDS: {
+                    this._engine.getDemoMessageHandler().handleSvcUserCommands(messagePacket);
+
+                    break;
+                }
                 case MessagePacketType.SVC_PACKET_ENTITIES: {
                     const direct = !this._engine.getIsInterceptorRegistered(InterceptorStage.ENTITY_PACKET);
 
