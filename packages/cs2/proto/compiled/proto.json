@@ -239,6 +239,9 @@
     },
     "CMsgVector": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -260,6 +263,9 @@
     },
     "CMsgVector2D": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -273,6 +279,9 @@
     },
     "CMsgQAngle": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -290,6 +299,9 @@
     },
     "CMsgQuaternion": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -311,6 +323,9 @@
     },
     "CMsgRGBA": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "r": {
           "type": "int32",
@@ -1745,6 +1760,10 @@
           "type": "fixed32",
           "id": 7,
           "protoName": "source_soundscapeid"
+        },
+        "stealth": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
@@ -2812,6 +2831,11 @@
           "type": ".CMsgVector",
           "id": 14,
           "protoName": "position_objectspace"
+        },
+        "normalObjectspace": {
+          "type": ".CMsgVector",
+          "id": 15,
+          "protoName": "normal_objectspace"
         }
       }
     },
@@ -3469,9 +3493,10 @@
           "type": ".CMsgVoiceAudio",
           "id": 1
         },
-        "client": {
+        "clientDeprecated": {
           "type": "int32",
           "id": 2,
+          "protoName": "client_deprecated",
           "options": {
             "default": -1
           }
@@ -3496,6 +3521,13 @@
         "passthrough": {
           "type": "int32",
           "id": 7
+        },
+        "entity": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
         }
       }
     },
@@ -3689,6 +3721,11 @@
           "type": "int32",
           "id": 5,
           "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
         }
       }
     },
