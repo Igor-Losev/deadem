@@ -1,6 +1,6 @@
 {
   "name": "@deademx/cs2",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Counter-Strike 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -64,6 +64,6 @@
     }
   },
   "dependencies": {
-    "@deademx/engine": "3.4.0"
+    "@deademx/engine": "3.4.1"
   }
 }
