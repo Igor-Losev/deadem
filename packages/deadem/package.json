@@ -43,7 +43,8 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "node ./../../scripts/proto-schema-build.js --package=deadem"
+    "proto:json": "node ./../../scripts/proto-schema-build.js --package=deadem",
+    "proto:sync": "node ./../../.github/scripts/proto-sync.mjs deadem"
   },
   "files": [
     "dist/**",
