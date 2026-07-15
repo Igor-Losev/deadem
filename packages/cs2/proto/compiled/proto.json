@@ -4007,6 +4007,190 @@
         }
       }
     },
+    "CInButtonStatePB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "buttonstate1": {
+          "type": "uint64",
+          "id": 1
+        },
+        "buttonstate2": {
+          "type": "uint64",
+          "id": 2
+        },
+        "buttonstate3": {
+          "type": "uint64",
+          "id": 3
+        }
+      }
+    },
+    "CSubtickMoveStep": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "button": {
+          "type": "uint64",
+          "id": 1
+        },
+        "pressed": {
+          "type": "bool",
+          "id": 2
+        },
+        "when": {
+          "type": "float",
+          "id": 3
+        },
+        "analogForwardDelta": {
+          "type": "float",
+          "id": 4,
+          "protoName": "analog_forward_delta"
+        },
+        "analogLeftDelta": {
+          "type": "float",
+          "id": 5,
+          "protoName": "analog_left_delta"
+        },
+        "pitchDelta": {
+          "type": "float",
+          "id": 8,
+          "protoName": "pitch_delta"
+        },
+        "yawDelta": {
+          "type": "float",
+          "id": 9,
+          "protoName": "yaw_delta"
+        }
+      }
+    },
+    "CBaseUserCmdExecutionNotes": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "ignoredReason": {
+          "type": "string",
+          "id": 1,
+          "protoName": "ignored_reason"
+        }
+      }
+    },
+    "CBaseUserCmdPB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "legacyCommandNumber": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "legacy_command_number"
+        },
+        "clientTick": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "client_tick"
+        },
+        "predictionOffsetTicksX256": {
+          "type": "uint32",
+          "id": 17,
+          "protoName": "prediction_offset_ticks_x256"
+        },
+        "buttonsPb": {
+          "type": ".CInButtonStatePB",
+          "id": 3,
+          "protoName": "buttons_pb"
+        },
+        "viewangles": {
+          "type": ".CMsgQAngle",
+          "id": 4
+        },
+        "forwardmove": {
+          "type": "float",
+          "id": 5
+        },
+        "leftmove": {
+          "type": "float",
+          "id": 6
+        },
+        "upmove": {
+          "type": "float",
+          "id": 7
+        },
+        "impulse": {
+          "type": "int32",
+          "id": 8
+        },
+        "weaponselect": {
+          "type": "int32",
+          "id": 9
+        },
+        "randomSeed": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "random_seed"
+        },
+        "mousedx": {
+          "type": "int32",
+          "id": 11
+        },
+        "mousedy": {
+          "type": "int32",
+          "id": 12
+        },
+        "pawnEntityHandle": {
+          "type": "uint32",
+          "id": 14,
+          "protoName": "pawn_entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "subtickMoves": {
+          "rule": "repeated",
+          "type": ".CSubtickMoveStep",
+          "id": 18,
+          "protoName": "subtick_moves"
+        },
+        "moveCrc": {
+          "type": "bytes",
+          "id": 19,
+          "protoName": "move_crc"
+        },
+        "consumedServerAngleChanges": {
+          "type": "uint32",
+          "id": 20,
+          "protoName": "consumed_server_angle_changes"
+        },
+        "cmdFlags": {
+          "type": "int32",
+          "id": 21,
+          "protoName": "cmd_flags"
+        },
+        "executionNotes": {
+          "type": ".CBaseUserCmdExecutionNotes",
+          "id": 22,
+          "protoName": "execution_notes"
+        }
+      }
+    },
+    "CUserCmdBasePB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "base": {
+          "type": ".CBaseUserCmdPB",
+          "id": 1
+        }
+      }
+    },
     "PARTICLE_MESSAGE": {
       "edition": "proto2",
       "values": {
