@@ -28,6 +28,7 @@ const TARGETS = {
             'steammessages_steamlearn.steamworkssdk.proto',
             'steammessages_unified_base.steamworkssdk.proto',
             'te.proto',
+            'usercmd.proto',
             'usermessages.proto',
             'valveextensions.proto'
         ]
