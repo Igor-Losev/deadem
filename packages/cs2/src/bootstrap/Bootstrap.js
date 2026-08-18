@@ -119,7 +119,7 @@ class Bootstrap {
     static _registerCs2UserCommands(registry) {
         const pp = registry.getProtoProvider();
 
-        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CUserCmdBasePB'));
+        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CSGOUserCmdPB'));
     }
 }
 

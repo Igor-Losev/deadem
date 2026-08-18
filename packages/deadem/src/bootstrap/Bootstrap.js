@@ -148,7 +148,7 @@ class Bootstrap {
     static _registerCitadelUserCommands(registry) {
         const pp = registry.getProtoProvider();
 
-        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CUserCmdBasePB'));
+        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CCitadelUserCmdPB'));
     }
 }
 

@@ -1473,6 +1473,230 @@
         }
       }
     },
+    "CCitadelUserCmdPB": {
+      "edition": "proto2",
+      "fields": {
+        "base": {
+          "type": ".CBaseUserCmdPB",
+          "id": 1
+        },
+        "vecCameraPosition": {
+          "type": ".CMsgVector",
+          "id": 2,
+          "protoName": "vec_camera_position"
+        },
+        "angCameraAngles": {
+          "type": ".CMsgQAngle",
+          "id": 3,
+          "protoName": "ang_camera_angles"
+        },
+        "executeAbilityIndices": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "execute_ability_indices"
+        },
+        "inShop": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "in_shop"
+        },
+        "cameraRoamingSpeed": {
+          "type": "float",
+          "id": 6,
+          "protoName": "camera_roaming_speed"
+        },
+        "usingFreeCursor": {
+          "type": "bool",
+          "id": 8,
+          "protoName": "using_free_cursor"
+        },
+        "enemyHeroAimedAt": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "enemy_hero_aimed_at",
+          "options": {
+            "default": -1
+          }
+        },
+        "viewDeltaX": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 11,
+          "protoName": "view_delta_x"
+        },
+        "viewDeltaY": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 12,
+          "protoName": "view_delta_y"
+        },
+        "isInThirdPersonView": {
+          "type": "bool",
+          "id": 13,
+          "protoName": "is_in_third_person_view"
+        }
+      }
+    },
+    "CInButtonStatePB": {
+      "edition": "proto2",
+      "fields": {
+        "buttonstate1": {
+          "type": "uint64",
+          "id": 1
+        },
+        "buttonstate2": {
+          "type": "uint64",
+          "id": 2
+        },
+        "buttonstate3": {
+          "type": "uint64",
+          "id": 3
+        }
+      }
+    },
+    "CSubtickMoveStep": {
+      "edition": "proto2",
+      "fields": {
+        "button": {
+          "type": "uint64",
+          "id": 1
+        },
+        "pressed": {
+          "type": "bool",
+          "id": 2
+        },
+        "when": {
+          "type": "float",
+          "id": 3
+        },
+        "analogForwardDelta": {
+          "type": "float",
+          "id": 4,
+          "protoName": "analog_forward_delta"
+        },
+        "analogLeftDelta": {
+          "type": "float",
+          "id": 5,
+          "protoName": "analog_left_delta"
+        },
+        "pitchDelta": {
+          "type": "float",
+          "id": 8,
+          "protoName": "pitch_delta"
+        },
+        "yawDelta": {
+          "type": "float",
+          "id": 9,
+          "protoName": "yaw_delta"
+        }
+      }
+    },
+    "CBaseUserCmdExecutionNotes": {
+      "edition": "proto2",
+      "fields": {
+        "ignoredReason": {
+          "type": "string",
+          "id": 1,
+          "protoName": "ignored_reason"
+        }
+      }
+    },
+    "CBaseUserCmdPB": {
+      "edition": "proto2",
+      "fields": {
+        "legacyCommandNumber": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "legacy_command_number"
+        },
+        "clientTick": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "client_tick"
+        },
+        "predictionOffsetTicksX256": {
+          "type": "uint32",
+          "id": 17,
+          "protoName": "prediction_offset_ticks_x256"
+        },
+        "buttonsPb": {
+          "type": ".CInButtonStatePB",
+          "id": 3,
+          "protoName": "buttons_pb"
+        },
+        "viewangles": {
+          "type": ".CMsgQAngle",
+          "id": 4
+        },
+        "forwardmove": {
+          "type": "float",
+          "id": 5
+        },
+        "leftmove": {
+          "type": "float",
+          "id": 6
+        },
+        "upmove": {
+          "type": "float",
+          "id": 7
+        },
+        "impulse": {
+          "type": "int32",
+          "id": 8
+        },
+        "weaponselect": {
+          "type": "int32",
+          "id": 9
+        },
+        "randomSeed": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "random_seed"
+        },
+        "mousedx": {
+          "type": "int32",
+          "id": 11
+        },
+        "mousedy": {
+          "type": "int32",
+          "id": 12
+        },
+        "pawnEntityHandle": {
+          "type": "uint32",
+          "id": 14,
+          "protoName": "pawn_entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "subtickMoves": {
+          "rule": "repeated",
+          "type": ".CSubtickMoveStep",
+          "id": 18,
+          "protoName": "subtick_moves"
+        },
+        "moveCrc": {
+          "type": "bytes",
+          "id": 19,
+          "protoName": "move_crc"
+        },
+        "consumedServerAngleChanges": {
+          "type": "uint32",
+          "id": 20,
+          "protoName": "consumed_server_angle_changes"
+        },
+        "cmdFlags": {
+          "type": "int32",
+          "id": 21,
+          "protoName": "cmd_flags"
+        },
+        "executionNotes": {
+          "type": ".CBaseUserCmdExecutionNotes",
+          "id": 22,
+          "protoName": "execution_notes"
+        }
+      }
+    },
     "ChatMsgPingMarkerInfo": {
       "edition": "proto2",
       "valuesOptions": {
@@ -3064,6 +3288,11 @@
         "gametime": {
           "type": "float",
           "id": 7
+        },
+        "playSound": {
+          "type": "bool",
+          "id": 8,
+          "protoName": "play_sound"
         }
       }
     },
@@ -5267,175 +5496,6 @@
       "fields": {
         "effectdata": {
           "type": ".CMsgEffectData",
-          "id": 1
-        }
-      }
-    },
-    "CInButtonStatePB": {
-      "edition": "proto2",
-      "fields": {
-        "buttonstate1": {
-          "type": "uint64",
-          "id": 1
-        },
-        "buttonstate2": {
-          "type": "uint64",
-          "id": 2
-        },
-        "buttonstate3": {
-          "type": "uint64",
-          "id": 3
-        }
-      }
-    },
-    "CSubtickMoveStep": {
-      "edition": "proto2",
-      "fields": {
-        "button": {
-          "type": "uint64",
-          "id": 1
-        },
-        "pressed": {
-          "type": "bool",
-          "id": 2
-        },
-        "when": {
-          "type": "float",
-          "id": 3
-        },
-        "analogForwardDelta": {
-          "type": "float",
-          "id": 4,
-          "protoName": "analog_forward_delta"
-        },
-        "analogLeftDelta": {
-          "type": "float",
-          "id": 5,
-          "protoName": "analog_left_delta"
-        },
-        "pitchDelta": {
-          "type": "float",
-          "id": 8,
-          "protoName": "pitch_delta"
-        },
-        "yawDelta": {
-          "type": "float",
-          "id": 9,
-          "protoName": "yaw_delta"
-        }
-      }
-    },
-    "CBaseUserCmdExecutionNotes": {
-      "edition": "proto2",
-      "fields": {
-        "ignoredReason": {
-          "type": "string",
-          "id": 1,
-          "protoName": "ignored_reason"
-        }
-      }
-    },
-    "CBaseUserCmdPB": {
-      "edition": "proto2",
-      "fields": {
-        "legacyCommandNumber": {
-          "type": "int32",
-          "id": 1,
-          "protoName": "legacy_command_number"
-        },
-        "clientTick": {
-          "type": "int32",
-          "id": 2,
-          "protoName": "client_tick"
-        },
-        "predictionOffsetTicksX256": {
-          "type": "uint32",
-          "id": 17,
-          "protoName": "prediction_offset_ticks_x256"
-        },
-        "buttonsPb": {
-          "type": ".CInButtonStatePB",
-          "id": 3,
-          "protoName": "buttons_pb"
-        },
-        "viewangles": {
-          "type": ".CMsgQAngle",
-          "id": 4
-        },
-        "forwardmove": {
-          "type": "float",
-          "id": 5
-        },
-        "leftmove": {
-          "type": "float",
-          "id": 6
-        },
-        "upmove": {
-          "type": "float",
-          "id": 7
-        },
-        "impulse": {
-          "type": "int32",
-          "id": 8
-        },
-        "weaponselect": {
-          "type": "int32",
-          "id": 9
-        },
-        "randomSeed": {
-          "type": "int32",
-          "id": 10,
-          "protoName": "random_seed"
-        },
-        "mousedx": {
-          "type": "int32",
-          "id": 11
-        },
-        "mousedy": {
-          "type": "int32",
-          "id": 12
-        },
-        "pawnEntityHandle": {
-          "type": "uint32",
-          "id": 14,
-          "protoName": "pawn_entity_handle",
-          "options": {
-            "default": 16777215
-          }
-        },
-        "subtickMoves": {
-          "rule": "repeated",
-          "type": ".CSubtickMoveStep",
-          "id": 18,
-          "protoName": "subtick_moves"
-        },
-        "moveCrc": {
-          "type": "bytes",
-          "id": 19,
-          "protoName": "move_crc"
-        },
-        "consumedServerAngleChanges": {
-          "type": "uint32",
-          "id": 20,
-          "protoName": "consumed_server_angle_changes"
-        },
-        "cmdFlags": {
-          "type": "int32",
-          "id": 21,
-          "protoName": "cmd_flags"
-        },
-        "executionNotes": {
-          "type": ".CBaseUserCmdExecutionNotes",
-          "id": 22,
-          "protoName": "execution_notes"
-        }
-      }
-    },
-    "CUserCmdBasePB": {
-      "edition": "proto2",
-      "fields": {
-        "base": {
-          "type": ".CBaseUserCmdPB",
           "id": 1
         }
       }
