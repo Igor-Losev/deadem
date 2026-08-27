@@ -3,6 +3,7 @@ import Assert from '#core/Assert.js';
 import Class from './Class.js';
 import ClassBaseline from './ClassBaseline.js';
 import Server from './Server.js';
+import UserCommand from './UserCommand.js';
 
 import Entity from './entity/Entity.js';
 
@@ -40,6 +41,8 @@ class Demo {
 
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
+
+        this._userCommands = new Map();
     }
 
     /**
@@ -78,6 +81,21 @@ class Demo {
         this._removeEntityFromClassIndex(entity);
 
         return entity;
+    }
+
+    /**
+     * @public
+     * @param {number} slot
+     * @returns {UserCommand|null}
+     */
+    deleteUserCommand(slot) {
+        Assert.isTrue(Number.isInteger(slot));
+
+        const command = this._userCommands.get(slot) || null;
+
+        this._userCommands.delete(slot);
+
+        return command;
     }
 
     /**
@@ -231,6 +249,25 @@ class Demo {
 
     /**
      * @public
+     * @param {number} slot
+     * @returns {UserCommand|null}
+     */
+    getUserCommand(slot) {
+        Assert.isTrue(Number.isInteger(slot));
+
+        return this._userCommands.get(slot) || null;
+    }
+
+    /**
+     * @public
+     * @returns {Array<UserCommand>}
+     */
+    getUserCommands() {
+        return Array.from(this._userCommands.values()).sort((left, right) => left.slot - right.slot);
+    }
+
+    /**
+     * @public
      * @param {Class} clazz
      */
     registerClass(clazz) {
@@ -280,6 +317,16 @@ class Demo {
     }
 
     /**
+     * @public
+     * @param {UserCommand} command
+     */
+    registerUserCommand(command) {
+        Assert.isTrue(command instanceof UserCommand);
+
+        this._userCommands.set(command.slot, command);
+    }
+
+    /**
      * Resets all state to its initial values.
      *
      * @public
@@ -294,6 +341,7 @@ class Demo {
         this._serializers.clear();
         this._server = null;
         this._stringTableContainer.clear();
+        this._userCommands.clear();
     }
 
     /**

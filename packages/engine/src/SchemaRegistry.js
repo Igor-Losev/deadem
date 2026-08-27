@@ -123,22 +123,6 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @returns {protobuf.Type|null}
-     */
-    getSendTablesSerializerDecoder() {
-        return this._decoders.sendTables;
-    }
-
-    /**
-     * @public
-     * @returns {protobuf.Type|null}
-     */
-    getUserCommandDecoder() {
-        return this._decoders.userCommand;
-    }
-
-    /**
-     * @public
      * @param {MessagePacketType} type
      * @returns {protobuf.Type|null}
      */
@@ -156,11 +140,27 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @returns {protobuf.Type|null}
+     */
+    getSendTablesSerializerDecoder() {
+        return this._decoders.sendTables;
+    }
+
+    /**
+     * @public
      * @param {StringTableType} type
      * @returns {protobuf.Type|null}
      */
     getStringTableDecoder(type) {
         return this._protos.stringTableDecoders.get(type.name) || null;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Type|null}
+     */
+    getUserCommandDecoder() {
+        return this._decoders.userCommand;
     }
 
     /**
