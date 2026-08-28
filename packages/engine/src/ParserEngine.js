@@ -485,6 +485,10 @@ class ParserEngine {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
+        if (stage === InterceptorStage.USER_COMMAND && this._registry.getUserCommandDecoder() === null) {
+            throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
+        }
+
         this._interceptors.post[stage.id] = [ ...this._interceptors.post[stage.id], interceptor ];
     }
 

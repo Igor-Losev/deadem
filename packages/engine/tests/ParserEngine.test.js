@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
+import InterceptorStage from '#data/enums/InterceptorStage.js';
+
 import ParserEngine from '#src/ParserEngine.js';
 import ParserConfiguration from '#src/ParserConfiguration.js';
 import ProtoProvider from '#providers/ProtoProvider.js';
@@ -178,6 +180,39 @@ describe('ParserEngine', () => {
             await engine.dispose();
 
             await expect(async () => engine.dispose()).rejects.toThrow('disposed');
+        });
+    });
+
+    describe('registerPostInterceptor', () => {
+        test('It should reject USER_COMMAND when the game registers no decoder', () => {
+            const engine = createEngine();
+
+            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
+        });
+
+        test('It should accept USER_COMMAND once a decoder is registered', () => {
+            const provider = new ProtoProvider({ nested: { TestUserCmd: { fields: { tick: { type: 'int32', id: 1 } } } } });
+            const supported = new SchemaRegistry(provider);
+
+            supported.setUserCommandDecoder(provider.root.lookupType('TestUserCmd'));
+
+            const engine = new ParserEngine(supported, ParserConfiguration.DEFAULT, Logger.NOOP);
+
+            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).not.toThrow();
+        });
+
+        test('It should accept the other stages regardless of the decoder', () => {
+            const engine = createEngine();
+
+            expect(() => engine.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, () => { })).not.toThrow();
+        });
+    });
+
+    describe('registerPreInterceptor', () => {
+        test('It should reject USER_COMMAND, which has no pre phase', () => {
+            const engine = createEngine();
+
+            expect(() => engine.registerPreInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('no pre phase');
         });
     });
 });
