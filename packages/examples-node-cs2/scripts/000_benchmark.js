@@ -6,22 +6,29 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const CASES = [
     {
         id: 1,
-        label: 'No filters (full replay state)',
+        label: 'Everything — `ParserConfiguration.DEFAULT`',
         configuration: ParserConfiguration.DEFAULT
     },
     {
         id: 2,
-        label: '`messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` (chat-only)',
+        label: 'Chat — `messagePacketTypes: [ USER_MESSAGE_SAY_TEXT_2 ]`',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.USER_MESSAGE_SAY_TEXT_2 ]
         })
     },
     {
         id: 3,
-        label: '`messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCSPlayerController ]`',
+        label: 'One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CCSPlayerController ]`',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
             entityClasses: [ 'CCSPlayerController' ]
+        })
+    },
+    {
+        id: 4,
+        label: 'Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`',
+        configuration: new ParserConfiguration({
+            messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS ]
         })
     }
 ];
@@ -35,7 +42,7 @@ if (cases.length === 0) {
 
 await BenchmarkRunner({
     Parser,
-    demoFile: DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2,
+    demoFile: DemoFile.CS2_REPLAY_20260815_SPIRIT_VS_BIG_M3_MIRAGE,
     tickRate: 64,
     cases,
     repeats: args.repeats
