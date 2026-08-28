@@ -118,6 +118,7 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 | 106 | Parse mid boss spawn and kill events | [106_parse_mid_boss_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js) | `node ./packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js` |
 | 107 | Parse tower destruction events | [107_parse_tower_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/107_parse_tower_deaths.js) | `node ./packages/examples-node-deadem/scripts/107_parse_tower_deaths.js` |
 | 108 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [108_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js) | `node ./packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js` |
+| 109 | Per-player input actions from `SVC_USER_COMMANDS` | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-deadem/scripts/109_parse_input_activity.js` |
 
 ### Player
 
@@ -138,16 +139,17 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 
 ## Compatibility
 
-- **Game builds:** tested with Deadlock demos from build `6448` and below.
+- **Game builds:** tested with Deadlock demos from build `6679` and below.
 - **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
-| # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 12 115 +- 2.80% | ~9.51              | 43 +- 3.65%  | 17 +- 9.48%          | 187 +- 2.74% |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 73 277 +- 3.41% | ~1.57              | 32 +- 6.58%  | 30 +- 7.74%          | 241 +- 3.38% |
-| 3 | `entityClasses` allowlist                                      | 55 834 +- 2.08% | ~2.06              | 45 +- 15.71% | 23 +- 5.53%          | 239 +- 5.09% |
+| # | Configuration                                                                            | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---------------------------------------------------------------------------------------- | --------------- | ------------------ | ------------ | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                               | 10 004 +- 3.91% | ~11.52             | 46 +- 1.90%  | 20 +- 12.74%         | 193 +- 2.93% |
+| 2 | Chat — `messagePacketTypes: [ CITADEL_USER_MESSAGE_CHAT_MESSAGE ]`                       | 78 553 +- 1.56% | ~1.47              | 37 +- 8.36%  | 34 +- 5.52%          | 272 +- 7.35% |
+| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCitadelPlayerController  ]` | 57 577 +- 1.13% | ~2.00              | 44 +- 18.86% | 26 +- 10.19%         | 259 +- 7.75% |
+| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                               | 25 224 +- 4.40% | ~4.57              | 37 +- 3.30%  | 22 +- 42.41%         | 191 +- 7.74% |
 
 Runtime: Node.js v22.14.0.
 
