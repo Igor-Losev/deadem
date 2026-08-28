@@ -118,7 +118,7 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 | 106 | Print kill feed with weapon, headshot, distance, and flags | [106_parse_kill_feed.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/106_parse_kill_feed.js) | `node ./packages/examples-node-cs2/scripts/106_parse_kill_feed.js` |
 | 107 | Print bomb timeline (pickup / drop / plant / defuse / explode) | [107_parse_bomb_timeline.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/107_parse_bomb_timeline.js) | `node ./packages/examples-node-cs2/scripts/107_parse_bomb_timeline.js` |
 | 108 | Aggregate match scoreboard (K/D/A/HS%) and match-end accolades | [108_parse_match_summary.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/108_parse_match_summary.js) | `node ./packages/examples-node-cs2/scripts/108_parse_match_summary.js` |
-| 109 | Per-player button presses and mouse travel from `SVC_USER_COMMANDS` | [109_parse_button_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/109_parse_button_activity.js) | `node ./packages/examples-node-cs2/scripts/109_parse_button_activity.js` |
+| 109 | Rank input fields in `SVC_USER_COMMANDS` by how often they are present and change | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-cs2/scripts/109_parse_input_activity.js` |
 
 ### Player
 

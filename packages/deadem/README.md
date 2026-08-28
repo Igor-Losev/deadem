@@ -118,7 +118,7 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 | 106 | Parse mid boss spawn and kill events | [106_parse_mid_boss_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js) | `node ./packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js` |
 | 107 | Parse tower destruction events | [107_parse_tower_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/107_parse_tower_deaths.js) | `node ./packages/examples-node-deadem/scripts/107_parse_tower_deaths.js` |
 | 108 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [108_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js) | `node ./packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js` |
-| 109 | Per-player input actions from `SVC_USER_COMMANDS` | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-deadem/scripts/109_parse_input_activity.js` |
+| 109 | Rank input fields in `SVC_USER_COMMANDS` by how often they are present and change | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-deadem/scripts/109_parse_input_activity.js` |
 
 ### Player
 

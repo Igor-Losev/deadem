@@ -123,7 +123,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | 103 | Print chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
 | 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
 | 105 | Print the combat log, names resolved through `CombatLogNames` | [105_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/105_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/105_parse_combat_log.js` |
-| 106 | Unit orders by type, and per-player order counts | [106_parse_unit_orders.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/106_parse_unit_orders.js) | `node ./packages/examples-node-dota2/scripts/106_parse_unit_orders.js` |
+| 106 | Rank unit order fields by how often they are present and change | [106_parse_unit_orders.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/106_parse_unit_orders.js) | `node ./packages/examples-node-dota2/scripts/106_parse_unit_orders.js` |
 
 ### Player
 
