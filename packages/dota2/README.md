@@ -123,6 +123,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 | 103 | Print chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
 | 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
 | 105 | Print the combat log, names resolved through `CombatLogNames` | [105_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/105_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/105_parse_combat_log.js` |
+| 106 | Unit orders by type, and per-player order counts | [106_parse_unit_orders.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/106_parse_unit_orders.js) | `node ./packages/examples-node-dota2/scripts/106_parse_unit_orders.js` |
 
 ### Player
 
@@ -137,11 +138,11 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 
 ## Performance
 
-| # | Configuration                                                  | Ticks/sec        | 30-min replay, sec | Max Heap, MB  | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ---                                                            | ---              | ---                | ---           | ---                  | ---          |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 25 464 +- 3.63%  | ~2.12              | 104 +- 18.28% | 48 +- 28.16%         | 330 +- 0.92% |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 168 743 +- 3.21% | ~0.32              | 39 +- 6.07%   | 22 +- 13.72%         | 232 +- 6.87% |
-| 3 | `entityClasses` allowlist                                      | 89 779 +- 0.75%  | ~0.60              | 75 +- 23.59%  | 17 +- 20.27%         | 250 +- 2.96% |
+| # | Configuration                                                                         | Ticks/sec        | 30-min replay, sec | Max Heap, MB  | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ------------------------------------------------------------------------------------- | ---------------- | ------------------ | ------------- | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                            | 25 464 +- 3.63%  | ~2.12              | 104 +- 18.28% | 48 +- 28.16%         | 330 +- 0.92% |
+| 2 | Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`                                 | 168 743 +- 3.21% | ~0.32              | 39 +- 6.07%   | 22 +- 13.72%         | 232 +- 6.87% |
+| 3 | One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]` | 89 779 +- 0.75%  | ~0.60              | 75 +- 23.59%  | 17 +- 20.27%         | 250 +- 2.96% |
 
 Runtime: Node.js v22.14.0.
 

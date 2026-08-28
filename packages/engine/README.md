@@ -35,6 +35,8 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
   Structure of Source 2 demo.
   - [Entities](#entities)<br/>
     Entity identity, decoded fields, query API.
+  - [User Commands](#user-commands)<br/>
+    Player input accumulated per slot.
   - [String Tables](#string-tables)<br/>
     Container, entries, subscription events.
 - [Interceptors](#interceptors)<br/>
@@ -45,6 +47,8 @@ It provides the packet pipeline, mutable demo state, replay player, interceptor 
     Inner message packets — string tables, entities, user messages.
   - [`InterceptorStage.ENTITY_PACKET`](#interceptorstageentity_packet)<br/>
     Per-entity mutation events — delta reads, operation table.
+  - [`InterceptorStage.USER_COMMAND`](#interceptorstageuser_command)<br/>
+    Per-command player input events.
   - [Interceptor Flow](#interceptor-flow)<br/>
     Nesting diagram of all interceptor stages.
 - [Player](#player)<br/>
@@ -83,15 +87,17 @@ npm install deadem
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, Printer } from 'deadem';
+import { Parser } from 'deadem';
 
 const parser = new Parser();
-const readable = createReadStream('./match.dem');
 
-await parser.parse(readable);
+await parser.parse(createReadStream('./match.dem'));
 
-const printer = new Printer(parser);
-printer.printStats();
+const demo = parser.getDemo();
+
+for (const controller of demo.getEntitiesByClassName('CCitadelPlayerController')) {
+    console.log(controller.getField('m_iszPlayerName'), controller.getField('m_iPlayerKills'));
+}
 
 await parser.dispose(); // cleanup state and resources
 ```
@@ -122,6 +128,9 @@ A demo file is a stream of outer packets, called [`DemoPacket`](https://github.c
 | `demo.getEntityByHandle(handle)`* | Entity by handle |
 | `demo.getClasses()` | All registered entity classes |
 | `demo.getClassByName(name)` | Entity [`Class`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Class.js) by name |
+| `demo.getEntityIterator()` | Same as `getEntities()`, without building the array |
+| `demo.getEntitiesByClassNameIterator(name)` | Same as `getEntitiesByClassName()`, without building the array |
+| `demo.server` | [`Server`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/Server.js) — `tickRate`, `tickInterval`, `maxClients`; `null` until `SVC_SERVER_INFO` is read |
 
 \* — entity fields like `m_hOwnerEntity` store handles pointing to other entities. `demo.getEntityByHandle(handle)` resolves references between entities.
 
@@ -135,6 +144,39 @@ Each entity is an instance of [`Entity`](https://github.com/Igor-Losev/deadem/bl
 | `entity.fieldEntries()` | Iterator of `[ name, value ]` pairs for present fields |
 | `entity.fieldNames()` | Iterator of present field names |
 | `entity.unpackFlattened()` | Plain object keyed by field name |
+
+```js
+for (const pawn of demo.getEntitiesByClassName('CCitadelPlayerPawn')) {
+    const health = pawn.getField('m_iHealth');
+    const cellX = pawn.getField('CBodyComponent.m_cellX');
+
+    const controller = demo.getEntityByHandle(pawn.getField('m_hController'));
+
+    console.log(controller?.getField('m_iszPlayerName'), health, cellX);
+}
+```
+
+### User Commands
+
+Player input — buttons, view angles, movement — arrives as `SVC_USER_COMMANDS` and is accumulated per player slot. **Counter-Strike 2 and Deadlock only:** Dota 2 replays carry no user command payload.
+
+
+| Method | Returns |
+| --- | --- |
+| `demo.getUserCommand(slot)` | The slot's [`UserCommand`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/UserCommand.js), or `null` |
+| `demo.getUserCommands()` | Every accumulator, in slot order |
+
+
+```js
+for (const command of demo.getUserCommands()) {
+    const base = command.state.base;
+
+    console.log(command.slot, base.viewangles, base.forwardmove, base.buttonsPb?.buttonstate1);
+}
+```
+
+> [!NOTE]
+> `state` is the live accumulator, not a copy at any depth — it keeps mutating as later commands are applied. Read what is needed and move on; a snapshot that outlives the current tick must be copied.
 
 ### String Tables
 
@@ -184,27 +226,47 @@ An entry is a [`StringTableEntry`](https://github.com/Igor-Losev/deadem/blob/mai
 | `entry.key` | String key |
 | `entry.value` | `null` for key-only entries. Otherwise a decoded value or the raw `Uint8Array` payload. |
 
+```js
+const table = demo.stringTableContainer.getByType(StringTableType.USER_INFO);
+
+for (const entry of table.getEntries()) {
+    console.log(entry.id, entry.key, entry.value?.name);
+}
+```
+
 `StringTableContainer` reports table changes through [`StringTableEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/StringTableEvent.js):
 
 | Event | Fires when |
 | --- | --- |
 | `TABLE_CREATED` | A table is registered |
 | `TABLE_UPDATED` | An existing table's entries change |
+| `TABLE_CHANGED` | Either of the above — fires alongside both |
 | `TABLE_REMOVED` | A table is removed |
 
-Subscribe with `demo.stringTableContainer.subscribe(StringTableEvent.TABLE_UPDATED, callback)`, unsubscribe the same way. The callback receives `(StringTableContainer, StringTable, Array<StringTableEntry>|null)`.
+Subscribe with `demo.stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, callback)`, unsubscribe the same way. The callback receives `(StringTableContainer, StringTable, Array<StringTableEntry>|null)`.
+
+```js
+demo.stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, (container, table, entries) => {
+    if (table.type !== StringTableType.USER_INFO) return;
+
+    for (const entry of entries) {
+        console.log(entry.id, entry.value === null ? 'N/A' : entry.value.name);
+    }
+});
+```
 
 ## Interceptors
 
 Interceptors capture data in flight — per packet, before or after it reaches `Demo`. [`Parser`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Parser.js) and [`Player`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/Player.js) expose `registerPreInterceptor(stage, callback)`, `registerPostInterceptor(stage, callback)`, `unregisterPreInterceptor(stage, callback)`, and `unregisterPostInterceptor(stage, callback)`. Unregistration uses reference equality — the same function instance must be passed. `PRE` fires before a stage's data reaches `Demo`; `POST` fires after.
 
-There are three [`InterceptorStage`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/InterceptorStage.js) values:
+There are four [`InterceptorStage`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/enums/InterceptorStage.js) values:
 
 | Stage | Hook signature |
 | --- | --- |
 | `DEMO_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js)) => void |
 | `MESSAGE_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js), [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js)) => void |
 | `ENTITY_PACKET` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js), [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js), Array<[`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js)>) => void |
+| `USER_COMMAND` | ([`DemoPacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/DemoPacket.js), [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/MessagePacket.js), Array<[`UserCommandEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/UserCommandEvent.js)>) => void |
 
 ### `InterceptorStage.DEMO_PACKET`
 
@@ -276,6 +338,24 @@ Each event exposes:
 | `LEAVE` | Entity deactivated, slot reserved | Empty |
 | `DELETE` | Entity permanently removed | Empty |
 
+### `InterceptorStage.USER_COMMAND`
+
+One call per `SVC_USER_COMMANDS`, with an array of [`UserCommandEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/UserCommandEvent.js) — one per command in that packet:
+
+```js
+parser.registerPostInterceptor(InterceptorStage.USER_COMMAND, (demoPacket, messagePacket, events) => {
+    for (const event of events) {
+        const buttons = event.userCommand.state.base?.buttonsPb;
+
+        if (buttons?.buttonstate1 !== undefined) {
+            console.log(`Tick [ ${demoPacket.tick} ] | Slot [ ${event.userCommand.slot} ] | Buttons [ ${buttons.buttonstate1} ]`);
+        }
+    }
+});
+```
+
+`event.getChanges()` — what this command carried, in the same shape as `state`.
+
 ### Interceptor Flow
 
 ```text
@@ -294,6 +374,10 @@ PRE DEMO_PACKET
      │       ├─ PRE ENTITY_PACKET
      │       │   └─ events
      │       └─ POST ENTITY_PACKET
+     ├─ POST MESSAGE_PACKET
+     ├─ PRE MESSAGE_PACKET
+     │   └─ SVC_USER_COMMANDS
+     │       └─ POST USER_COMMAND
      ├─ POST MESSAGE_PACKET
      └─ ...
 POST DEMO_PACKET
@@ -368,6 +452,16 @@ A failed seek still returns to `LOADED`.
 `nextTick()` advances the open session — cheap. `seekToTick()` closes it and opens a new one from the nearest keyframe — expensive. `prevTick()` calls `seekToTick()` internally: the name is symmetric, the cost is not.
 
 Every seek clears `Demo` internals — entities and tables from a previous tick are stale. The `Demo` instance remains the same, its contents are rebuilt.
+
+```js
+await player.seekToTick(10000);
+
+while (await player.nextTick()) {
+    if (player.getCurrentTick() % 64 === 0) {
+        console.log(player.getCurrentTick(), player.getDemo().getStats().entities);
+    }
+}
+```
 
 ### Playback
 
@@ -461,12 +555,13 @@ await parser.parse(agent.stream(), DemoSource.HTTP_BROADCAST);
 
 ## Performance
 
-Entity-packet decoding (`SVC_PACKET_ENTITIES`) accounts for most of the parser's work — everything else combined is under ~20%. Three configurations cover typical use cases:
+Entity-packet decoding (`SVC_PACKET_ENTITIES`) accounts for most of the parser's work. `SVC_USER_COMMANDS` is a distant second. Everything else combined is minor.
 
 | # | Configuration | Speedup |
 | --- | --- | --- |
 | 1 | No filters | 1× (baseline) |
 | 2 | Exclude `SVC_PACKET_ENTITIES` entirely | ~4–6× |
+| 4 | Exclude `SVC_USER_COMMANDS` entirely | ~1–2× |
 | 3 | `entityClasses` allowlist | ~1–5× |
 
 For concrete numbers see the [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance), or [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance) performance sections.
