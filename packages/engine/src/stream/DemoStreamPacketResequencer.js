@@ -3,8 +3,8 @@ import Transform from '#core/stream/Transform.js';
 /**
  * Assigns sequential {@link DemoPacketRaw#ordinal} values (0, 1, 2, ...)
  * to packets passing through the stream. This is used during replay
- * to ensure the {@link DemoStreamPacketCoordinator} can reorder packets
- * correctly, regardless of their original {@link DemoPacketRaw#sequence}.
+ * to preserve arrival order, regardless of their original
+ * {@link DemoPacketRaw#sequence}.
  */
 class DemoStreamPacketResequencer extends Transform {
     /**

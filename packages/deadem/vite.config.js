@@ -14,13 +14,6 @@ const configuration = defineConfig((_) => {
             },
             emptyOutDir: true,
             sourcemap: true
-        },
-        worker: {
-            rollupOptions: {
-                output: {
-                    file: 'deadem-worker.min.js'
-                }
-            }
         }
     };
 });

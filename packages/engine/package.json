@@ -57,7 +57,6 @@
     "#providers/*.js": "./src/providers/*.js",
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
-    "#workers/*.js": "./src/workers/*.js",
     "#broadcast/BroadcastReadStream.js": {
       "node": "./src/broadcast/BroadcastReadStream.node.js",
       "browser": "./src/broadcast/BroadcastReadStream.browser.js"
@@ -81,10 +80,6 @@
     "#trackers/MemoryTracker.js": {
       "node": "./src/trackers/MemoryTracker.node.js",
       "browser": "./src/trackers/MemoryTracker.browser.js"
-    },
-    "#workers/WorkerManager.js": {
-      "node": "./src/workers/WorkerManager.node.js",
-      "browser": "./src/workers/WorkerManager.browser.js"
     }
   },
   "dependencies": {
