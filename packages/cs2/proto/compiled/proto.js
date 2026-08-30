@@ -1,4 +1,4 @@
-{
+export default {
   "nested": {
     "CMsgTEPlayerAnimEvent": {
       "edition": "proto2",
@@ -5600,4 +5600,4 @@
       }
     }
   }
-}
+};

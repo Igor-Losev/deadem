@@ -56,10 +56,7 @@
     "#src/*.js": "./src/*.js",
     "#bootstrap/*.js": "./src/bootstrap/*.js",
     "#data/*.js": "./src/data/*.js",
-    "#providers/ProtoProvider.instance.js": {
-      "node": "./src/providers/ProtoProvider.node.instance.js",
-      "browser": "./src/providers/ProtoProvider.browser.instance.js"
-    }
+    "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
   },
   "dependencies": {
     "@deademx/engine": "3.4.1"

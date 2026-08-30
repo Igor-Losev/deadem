@@ -1,4 +1,4 @@
-{
+export default {
   "options": {
     "optimize_for": "SPEED",
     "cc_generic_services": false
@@ -9594,4 +9594,4 @@
       }
     }
   }
-}
+};
