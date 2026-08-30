@@ -36,6 +36,7 @@
   ],
   "type": "module",
   "main": "index.js",
+  "sideEffects": false,
   "scripts": {
     "lint": "eslint",
     "test": "vitest run"

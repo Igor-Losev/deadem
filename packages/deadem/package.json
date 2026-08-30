@@ -40,6 +40,7 @@
   ],
   "type": "module",
   "main": "index.js",
+  "sideEffects": false,
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
