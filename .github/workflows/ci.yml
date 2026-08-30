@@ -53,11 +53,13 @@ jobs:
               51543455-6140
               75438101-6448
               75439032-6448
+              100576005-6679
             demo_cdn_prefix: https://deadem.com/demos/deadlock
             parser_script: ./packages/examples-node-deadem/scripts/101_parse_multiple.js
           - name: cs2
             demo_dir: demos/cs2
             demo_files: |
+              2026-08-15-spirit-vs-big-m3-mirage
               2026-05-15-natus-vincere-vs-vitality-m3-inferno
               2026-05-11-furia-vs-spirit-m1-dust2
               2025-03-07-falcons-vs-liquid-m2-dust2
@@ -73,6 +75,7 @@ jobs:
               8777738576
               8783006717
               8783086929
+              8960991322
             demo_cdn_prefix: https://deadem.com/demos/dota2
             parser_script: ./packages/examples-node-dota2/scripts/101_parse_multiple.js
 

@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41b-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41e-darkGreen" /></a>
 
 **@deademx/dota2** is the Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
@@ -133,7 +133,7 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 
 ## Compatibility
 
-- **Game patch:** tested with Dota 2 demos from patch `7.41b` and below.
+- **Game patch:** tested with Dota 2 demos from patch `7.41e` and below.
 - **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance
