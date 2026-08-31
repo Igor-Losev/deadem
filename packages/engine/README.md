@@ -152,13 +152,13 @@ for (const pawn of demo.getEntitiesByClassName('CCitadelPlayerPawn')) {
 
     const controller = demo.getEntityByHandle(pawn.getField('m_hController'));
 
-    console.log(controller?.getField('m_iszPlayerName'), health, cellX);
+    console.log(controller.getField('m_iszPlayerName'), health, cellX);
 }
 ```
 
 ### User Commands
 
-Player input — buttons, view angles, movement — arrives as `SVC_USER_COMMANDS` and is accumulated per player slot. **Counter-Strike 2 and Deadlock only:** Dota 2 replays carry no user command payload.
+Not every game records player input. Counter-Strike 2 and Deadlock send it as `SVC_USER_COMMANDS` — buttons, view angles, movement — which the engine accumulates per player slot. Dota 2 does not: its replays carry no user command payload.
 
 
 | Method | Returns |
@@ -171,12 +171,12 @@ Player input — buttons, view angles, movement — arrives as `SVC_USER_COMMAND
 for (const command of demo.getUserCommands()) {
     const base = command.state.base;
 
-    console.log(command.slot, base.viewangles, base.forwardmove, base.buttonsPb?.buttonstate1);
+    console.log(command.slot, base.viewangles, base.forwardmove);
 }
 ```
 
 > [!NOTE]
-> `state` is the live accumulator, not a copy at any depth — it keeps mutating as later commands are applied. Read what is needed and move on; a snapshot that outlives the current tick must be copied.
+> `state` is the live accumulator, not a copy at any depth — it keeps mutating as later commands are applied. A snapshot that outlives the current tick must be copied.
 
 ### String Tables
 
