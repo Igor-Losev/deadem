@@ -62,5 +62,5 @@ jobs:
             Automated sync of `.proto` files from `SteamTracking/${{ matrix.repo }}`:
             - `packages/${{ matrix.target }}/proto/source/`
 
-            Includes regenerated `proto/compiled/proto.json`.
+            Includes regenerated `proto/compiled/proto.js`.
           labels: proto-sync

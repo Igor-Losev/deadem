@@ -1,3 +1,4 @@
+import Assert from '#core/Assert.js';
 import VarInt32 from '#data/VarInt32.js';
 
 /**
@@ -231,6 +232,27 @@ class BitBuffer {
         }
 
         return value;
+    }
+
+    /**
+     * Reads bytes from the buffer. Requires a byte alignment. Returns a view.
+     *
+     * @public
+     * @param {number} count
+     * @returns {Uint8Array}
+     */
+    readBytes(count) {
+        Assert.isTrue(this._pBit === 0, 'readBytes requires byte alignment');
+
+        if (this._pByte + count > this._buffer.length) {
+            throw new Error(`Cannot read [ ${count} ] byte(s) - only [ ${this._buffer.length - this._pByte} ] byte(s) left`);
+        }
+
+        const start = this._pByte;
+
+        this._pByte += count;
+
+        return this._buffer.subarray(start, this._pByte);
     }
 
     /**
@@ -700,8 +722,9 @@ for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {
     pool.push(reusable.subarray(0, i + 1));
 }
 
-const textDecoder = new TextDecoder();
 const dataViewBuffer = new ArrayBuffer(8);
 const dataView = new DataView(dataViewBuffer);
+
+const textDecoder = new TextDecoder();
 
 export default BitBuffer;

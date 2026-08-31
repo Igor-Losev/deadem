@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.6.0-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.7.5-darkGreen" /></a>
 
 **@deademx/cs2** is the Counter-Strike 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
@@ -118,6 +118,7 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 | 106 | Print kill feed with weapon, headshot, distance, and flags | [106_parse_kill_feed.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/106_parse_kill_feed.js) | `node ./packages/examples-node-cs2/scripts/106_parse_kill_feed.js` |
 | 107 | Print bomb timeline (pickup / drop / plant / defuse / explode) | [107_parse_bomb_timeline.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/107_parse_bomb_timeline.js) | `node ./packages/examples-node-cs2/scripts/107_parse_bomb_timeline.js` |
 | 108 | Aggregate match scoreboard (K/D/A/HS%) and match-end accolades | [108_parse_match_summary.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/108_parse_match_summary.js) | `node ./packages/examples-node-cs2/scripts/108_parse_match_summary.js` |
+| 109 | Rank input fields in `SVC_USER_COMMANDS` by how often they are present and change | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-cs2/scripts/109_parse_input_activity.js` |
 
 ### Player
 
@@ -127,16 +128,17 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 
 ## Compatibility
 
-- **Game builds:** tested with Counter-Strike 2 demos from version `1.41.6.0`.
+- **Game builds:** tested with Counter-Strike 2 demos from version `1.41.7.5` and below.
 - **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance
 
-| # | Configuration                                                  | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ---                                                            | ---             | ---                | ---          | ---                  | ---          |
-| 1 | No filters (`ParserConfiguration.DEFAULT`)                     | 24 165 +- 0.88% | ~4.77              | 38 +- 4.99%  | 21 +- 18.99%         | 209 +- 5.59% |
-| 2 | `messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` | 71 858 +- 1.40% | ~1.60              | 27 +- 6.44%  | 37 +- 7.55%          | 239 +- 7.29% |
-| 3 | `entityClasses` allowlist                                      | 54 103 +- 2.37% | ~2.13              | 30 +- 9.73%  | 26 +- 2.66%          | 241 +- 6.35% |
+| # | Configuration                                                                       | Ticks/sec        | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ----------------------------------------------------------------------------------- | ---------------- | ------------------ | ------------ | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                          | 21 528 +- 3.46%  | ~5.35              | 39 +- 2.96%  | 18 +- 33.39%         | 191 +- 4.85% |
+| 2 | Chat — `messagePacketTypes: [ USER_MESSAGE_SAY_TEXT_2 ]`                            | 100 452 +- 1.22% | ~1.15              | 29 +- 6.61%  | 31 +- 4.26%          | 231 +- 5.01% |
+| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCSPlayerController ]` | 72 352 +- 5.28%  | ~1.59              | 36 +- 6.68%  | 25 +- 11.53%         | 230 +- 6.84% |
+| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                          | 43 500 +- 2.87%  | ~2.65              | 34 +- 5.26%  | 21 +- 36.07%         | 199 +- 4.43% |
 
 Runtime: Node.js v22.14.0.
 

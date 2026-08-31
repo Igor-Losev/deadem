@@ -20,26 +20,29 @@
   "keywords": [
     "deadem",
     "deadlock",
+    "citadel",
     "deadlock-parser",
     "deadlock-demo-parser",
     "deadlock-replay-parser",
     "valve",
     "source-2",
-    "source2",
     "dem",
     "demo",
     "replay",
     "parser",
     "player",
     "demo-parser",
-    "demoparser",
     "replay-parser",
-    "replayparser",
     "nodejs",
-    "browser"
+    "browser",
+    "deno",
+    "bun"
   ],
   "type": "module",
   "main": "index.js",
+  "unpkg": "dist/deadem.min.js",
+  "jsdelivr": "dist/deadem.min.js",
+  "sideEffects": false,
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
@@ -56,10 +59,7 @@
     "#src/*.js": "./src/*.js",
     "#bootstrap/*.js": "./src/bootstrap/*.js",
     "#data/*.js": "./src/data/*.js",
-    "#providers/ProtoProvider.instance.js": {
-      "node": "./src/providers/ProtoProvider.node.instance.js",
-      "browser": "./src/providers/ProtoProvider.browser.instance.js"
-    }
+    "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
   },
   "dependencies": {
     "@deademx/engine": "3.4.1"

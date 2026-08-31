@@ -16,6 +16,7 @@ const TARGETS = {
             'base_modifier.proto',
             'citadel_gameevents.proto',
             'citadel_gcmessages_common.proto',
+            'citadel_usercmd.proto',
             'citadel_usermessages.proto',
             'demo.proto',
             'gameevents.proto',
@@ -28,6 +29,7 @@ const TARGETS = {
             'steammessages_steamlearn.steamworkssdk.proto',
             'steammessages_unified_base.steamworkssdk.proto',
             'te.proto',
+            'usercmd.proto',
             'usermessages.proto',
             'valveextensions.proto'
         ]
@@ -62,6 +64,7 @@ const TARGETS = {
         localDir: 'packages/cs2/proto/source',
         files: [
             'cs_gameevents.proto',
+            'cs_usercmd.proto',
             'cstrike15_gcmessages.proto',
             'cstrike15_usermessages.proto',
             'demo.proto',
@@ -74,6 +77,7 @@ const TARGETS = {
             'source2_steam_stats.proto',
             'steammessages.proto',
             'te.proto',
+            'usercmd.proto',
             'usermessages.proto',
             'valveextensions.proto'
         ]

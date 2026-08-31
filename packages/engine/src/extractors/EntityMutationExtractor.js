@@ -47,30 +47,6 @@ class EntityMutationExtractor {
     }
 
     /**
-     * Extracts mutations in a packed (transferable) format suitable for
-     * transmission between threads.
-     *
-     * @public
-     * @returns {Array<bigint|*>}
-     */
-    allPacked() {
-        const fieldPaths = this._fieldPathExtractor.all();
-
-        const mutations = [ ];
-
-        for (let i = 0; i < fieldPaths.length; i++) {
-            const fieldPath = fieldPaths[i];
-
-            const decoder = this._serializer.getDecoderForFieldPath(fieldPath);
-            const value = decoder(this._bitBuffer);
-
-            mutations.push(fieldPath.transferCode, value);
-        }
-
-        return mutations;
-    }
-
-    /**
      * Decodes all mutations in bit-stream order and invokes
      * `callback(id, value)` for each one.
      *

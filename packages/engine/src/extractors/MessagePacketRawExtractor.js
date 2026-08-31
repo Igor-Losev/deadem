@@ -41,45 +41,11 @@ class MessagePacketRawExtractor {
     }
 
     /**
-     * Extracts and returns all message packets from the buffer
-     * in a packed (transferable) format, suitable for transmission
-     * between threads.
-     *
-     * @public
-     * @returns {MessagePacketRawPacked}
-     */
-    allPacked() {
-        const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
-
-        const buffer = new Uint8Array(bytes);
-        const meta = [ ];
-
-        let pointer = 0;
-
-        while (this._bitBuffer.getUnreadCount() >= BitBuffer.BITS_PER_BYTE) {
-            const type = this._bitBuffer.readUVarInt();
-            const size = this._bitBuffer.readUVarInt32();
-
-            meta.push(type, pointer, size);
-
-            this._bitBuffer.readInBuffer(size * BitBuffer.BITS_PER_BYTE, buffer.subarray(pointer, pointer + size));
-
-            pointer += size;
-        }
-
-        return { buffer, meta };
-    }
-
-    /**
      * @public
      */
     reset() {
         this._bitBuffer.reset();
     }
 }
-
-/**
- * @typedef {{ meta: Array<number>, buffer: Uint8Array }} MessagePacketRawPacked
- */
 
 export default MessagePacketRawExtractor;

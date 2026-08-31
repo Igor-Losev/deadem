@@ -5,5 +5,5 @@ import ProfileRunner from '@deademx/examples-common/data/ProfileRunner.js';
 
 await ProfileRunner({
     Parser,
-    demoFile: DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2
+    demoFile: DemoFile.CS2_REPLAY_20260815_SPIRIT_VS_BIG_M3_MIRAGE
 });

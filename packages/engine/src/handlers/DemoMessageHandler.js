@@ -3,11 +3,12 @@ import BitBuffer from '#core/BitBuffer.js';
 
 import Demo from '#data/Demo.js';
 import Server from '#data/Server.js';
+import UserCommand from '#data/UserCommand.js';
+import UserCommandEvent from '#data/UserCommandEvent.js';
 
 import Entity from '#data/entity/Entity.js';
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
 import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
-import EntityMutationPartialEvent from '#data/entity/EntityMutationPartialEvent.js';
 
 import EntityOperation from '#data/enums/EntityOperation.js';
 
@@ -252,50 +253,56 @@ class DemoMessageHandler {
     }
 
     /**
-     * Handles a partial of the {@link MessagePacketType.SVC_PACKET_ENTITIES} (ID = 55).
+     * Handles a {@link MessagePacketType.SVC_USER_COMMANDS} (ID = 76).
      *
      * @public
      * @param {MessagePacket} messagePacket
-     * @returns {Array<EntityMutationPartialEvent>}
+     * @param {boolean} [snapshot=false] - `true` when the packet belongs to the snapshot.
+     * @param {boolean} [collectEvents=true] - `true` when collecting events (more GC pressure).
+     * @returns {Array<UserCommandEvent>}
      */
-    handleSvcPacketEntitiesPartial(messagePacket) {
-        const message = messagePacket.data;
+    handleSvcUserCommands(messagePacket, snapshot = false, collectEvents = true) {
+        const commandsRaw = messagePacket.data?.commands ?? null;
+        const commandProto = this._registry.getUserCommandDecoder();
 
-        const events = [];
+        if (commandsRaw === null || commandProto === null) {
+            return [ ];
+        }
 
-        const bitBuffer = new BitBuffer(message.entityData);
+        const events = [ ];
 
-        let index = -1;
+        for (let i = 0; i < commandsRaw.length; i++) {
+            const commandRaw = commandsRaw[i];
+            const slot = commandRaw.playerSlot;
 
-        for (let i = 0; i < message.updatedEntries; i++) {
-            index += bitBuffer.readUVarInt() + 1;
+            const existing = this._demo.getUserCommand(slot);
 
-            const command = bitBuffer.readBitsAsUInt(2);
+            if (snapshot && existing !== null) {
+                continue;
+            }
 
-            switch (command) {
-                case EntityOperation.UPDATE.id: {
-                    const entity = this._demo.getEntity(index);
+            const isKeyframe = commandRaw.data && commandRaw.data.length > 0;
+            const isDelta = commandRaw.deltaData && commandRaw.deltaData.length > 0;
 
-                    if (entity === null) {
-                        return events;
-                    }
+            let command;
+            let gap = 0;
 
-                    try {
-                        const extractor = new EntityMutationExtractor(bitBuffer, entity.class.serializer);
+            if (isKeyframe) {
+                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandProto);
 
-                        const mutations = extractor.allPacked();
+                this._demo.registerUserCommand(command);
+            } else if (isDelta && existing !== null) {
+                gap = Math.max(0, commandRaw.cmdNumber - existing.number - 1);
 
-                        const event = new EntityMutationPartialEvent(bitBuffer.getReadCount(), index, entity.class.id, mutations);
+                existing.applyDelta(commandRaw.cmdNumber, commandRaw.deltaData);
 
-                        events.push(event);
-                    } catch {
-                        return events;
-                    }
+                command = existing;
+            } else {
+                continue;
+            }
 
-                    break;
-                }
-                default:
-                    return events;
+            if (collectEvents) {
+                events.push(new UserCommandEvent(command, gap, isKeyframe ? null : commandRaw.deltaData));
             }
         }
 

@@ -1,0 +1,9597 @@
+export default {
+  "options": {
+    "optimize_for": "SPEED",
+    "cc_generic_services": false
+  },
+  "nested": {
+    "CSOEconItemAttribute": {
+      "edition": "proto2",
+      "fields": {
+        "defIndex": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "def_index",
+          "options": {
+            "default": 65535
+          }
+        },
+        "value": {
+          "type": "uint32",
+          "id": 2
+        },
+        "valueBytes": {
+          "type": "bytes",
+          "id": 3,
+          "protoName": "value_bytes"
+        }
+      }
+    },
+    "CSOEconItemEquipped": {
+      "edition": "proto2",
+      "fields": {
+        "newClass": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "new_class"
+        },
+        "newSlot": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "new_slot"
+        }
+      }
+    },
+    "CSOEconItem": {
+      "edition": "proto2",
+      "fields": {
+        "id": {
+          "type": "uint64",
+          "id": 1
+        },
+        "accountId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "account_id"
+        },
+        "inventory": {
+          "type": "uint32",
+          "id": 3
+        },
+        "defIndex": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "def_index"
+        },
+        "quantity": {
+          "type": "uint32",
+          "id": 5,
+          "options": {
+            "default": 1
+          }
+        },
+        "level": {
+          "type": "uint32",
+          "id": 6,
+          "options": {
+            "default": 1
+          }
+        },
+        "quality": {
+          "type": "uint32",
+          "id": 7,
+          "options": {
+            "default": 4
+          }
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 8,
+          "options": {
+            "default": 0
+          }
+        },
+        "origin": {
+          "type": "uint32",
+          "id": 9,
+          "options": {
+            "default": 0
+          }
+        },
+        "attribute": {
+          "rule": "repeated",
+          "type": ".CSOEconItemAttribute",
+          "id": 12
+        },
+        "interiorItem": {
+          "type": ".CSOEconItem",
+          "id": 13,
+          "protoName": "interior_item"
+        },
+        "style": {
+          "type": "uint32",
+          "id": 15,
+          "options": {
+            "default": 0
+          }
+        },
+        "originalId": {
+          "type": "uint64",
+          "id": 16,
+          "protoName": "original_id"
+        },
+        "equippedState": {
+          "rule": "repeated",
+          "type": ".CSOEconItemEquipped",
+          "id": 18,
+          "protoName": "equipped_state"
+        }
+      }
+    },
+    "CDemoFileHeader": {
+      "edition": "proto2",
+      "fields": {
+        "demoFileStamp": {
+          "rule": "required",
+          "type": "string",
+          "id": 1,
+          "protoName": "demo_file_stamp"
+        },
+        "patchVersion": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "patch_version"
+        },
+        "serverName": {
+          "type": "string",
+          "id": 3,
+          "protoName": "server_name"
+        },
+        "clientName": {
+          "type": "string",
+          "id": 4,
+          "protoName": "client_name"
+        },
+        "mapName": {
+          "type": "string",
+          "id": 5,
+          "protoName": "map_name"
+        },
+        "gameDirectory": {
+          "type": "string",
+          "id": 6,
+          "protoName": "game_directory"
+        },
+        "fullpacketsVersion": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "fullpackets_version"
+        },
+        "allowClientsideEntities": {
+          "type": "bool",
+          "id": 8,
+          "protoName": "allow_clientside_entities"
+        },
+        "allowClientsideParticles": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "allow_clientside_particles"
+        },
+        "addons": {
+          "type": "string",
+          "id": 10
+        },
+        "demoVersionName": {
+          "type": "string",
+          "id": 11,
+          "protoName": "demo_version_name"
+        },
+        "demoVersionGuid": {
+          "type": "string",
+          "id": 12,
+          "protoName": "demo_version_guid"
+        },
+        "buildNum": {
+          "type": "int32",
+          "id": 13,
+          "protoName": "build_num"
+        },
+        "game": {
+          "type": "string",
+          "id": 14
+        },
+        "serverStartTick": {
+          "type": "int32",
+          "id": 15,
+          "protoName": "server_start_tick"
+        }
+      }
+    },
+    "CGameInfo": {
+      "edition": "proto2",
+      "fields": {
+        "dota": {
+          "type": ".CGameInfo.CDotaGameInfo",
+          "id": 4
+        },
+        "cs": {
+          "type": ".CGameInfo.CCSGameInfo",
+          "id": 5
+        }
+      },
+      "nested": {
+        "CDotaGameInfo": {
+          "fields": {
+            "matchId": {
+              "type": "uint64",
+              "id": 1,
+              "protoName": "match_id"
+            },
+            "gameMode": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "game_mode"
+            },
+            "gameWinner": {
+              "type": "int32",
+              "id": 3,
+              "protoName": "game_winner"
+            },
+            "playerInfo": {
+              "rule": "repeated",
+              "type": ".CGameInfo.CDotaGameInfo.CPlayerInfo",
+              "id": 4,
+              "protoName": "player_info"
+            },
+            "leagueid": {
+              "type": "uint32",
+              "id": 5
+            },
+            "picksBans": {
+              "rule": "repeated",
+              "type": ".CGameInfo.CDotaGameInfo.CHeroSelectEvent",
+              "id": 6,
+              "protoName": "picks_bans"
+            },
+            "radiantTeamId": {
+              "type": "uint32",
+              "id": 7,
+              "protoName": "radiant_team_id"
+            },
+            "direTeamId": {
+              "type": "uint32",
+              "id": 8,
+              "protoName": "dire_team_id"
+            },
+            "radiantTeamTag": {
+              "type": "string",
+              "id": 9,
+              "protoName": "radiant_team_tag"
+            },
+            "direTeamTag": {
+              "type": "string",
+              "id": 10,
+              "protoName": "dire_team_tag"
+            },
+            "endTime": {
+              "type": "uint32",
+              "id": 11,
+              "protoName": "end_time"
+            }
+          },
+          "nested": {
+            "CPlayerInfo": {
+              "fields": {
+                "heroName": {
+                  "type": "string",
+                  "id": 1,
+                  "protoName": "hero_name"
+                },
+                "playerName": {
+                  "type": "string",
+                  "id": 2,
+                  "protoName": "player_name"
+                },
+                "isFakeClient": {
+                  "type": "bool",
+                  "id": 3,
+                  "protoName": "is_fake_client"
+                },
+                "steamid": {
+                  "type": "uint64",
+                  "id": 4
+                },
+                "gameTeam": {
+                  "type": "int32",
+                  "id": 5,
+                  "protoName": "game_team"
+                }
+              }
+            },
+            "CHeroSelectEvent": {
+              "fields": {
+                "isPick": {
+                  "type": "bool",
+                  "id": 1,
+                  "protoName": "is_pick"
+                },
+                "team": {
+                  "type": "uint32",
+                  "id": 2
+                },
+                "heroId": {
+                  "type": "int32",
+                  "id": 3,
+                  "protoName": "hero_id"
+                }
+              }
+            }
+          }
+        },
+        "CCSGameInfo": {
+          "fields": {
+            "roundStartTicks": {
+              "rule": "repeated",
+              "type": "int32",
+              "id": 1,
+              "protoName": "round_start_ticks"
+            }
+          }
+        }
+      }
+    },
+    "CDemoFileInfo": {
+      "edition": "proto2",
+      "fields": {
+        "playbackTime": {
+          "type": "float",
+          "id": 1,
+          "protoName": "playback_time"
+        },
+        "playbackTicks": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "playback_ticks"
+        },
+        "playbackFrames": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "playback_frames"
+        },
+        "gameInfo": {
+          "type": ".CGameInfo",
+          "id": 4,
+          "protoName": "game_info"
+        }
+      }
+    },
+    "CDemoPacket": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoFullPacket": {
+      "edition": "proto2",
+      "fields": {
+        "stringTable": {
+          "type": ".CDemoStringTables",
+          "id": 1,
+          "protoName": "string_table"
+        },
+        "packet": {
+          "type": ".CDemoPacket",
+          "id": 2
+        }
+      }
+    },
+    "CDemoSaveGame": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        },
+        "steamId": {
+          "type": "fixed64",
+          "id": 2,
+          "protoName": "steam_id"
+        },
+        "signature": {
+          "type": "fixed64",
+          "id": 3
+        },
+        "version": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CDemoSyncTick": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDemoConsoleCmd": {
+      "edition": "proto2",
+      "fields": {
+        "cmdstring": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "CDemoSendTables": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
+    "CDemoClassInfo": {
+      "edition": "proto2",
+      "fields": {
+        "classes": {
+          "rule": "repeated",
+          "type": ".CDemoClassInfo.class_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "class_t": {
+          "fields": {
+            "classId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "class_id"
+            },
+            "networkName": {
+              "type": "string",
+              "id": 2,
+              "protoName": "network_name"
+            },
+            "tableName": {
+              "type": "string",
+              "id": 3,
+              "protoName": "table_name"
+            }
+          }
+        }
+      }
+    },
+    "CDemoCustomData": {
+      "edition": "proto2",
+      "fields": {
+        "callbackIndex": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "callback_index"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 2
+        }
+      }
+    },
+    "CDemoCustomDataCallbacks": {
+      "edition": "proto2",
+      "fields": {
+        "saveId": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 1,
+          "protoName": "save_id"
+        }
+      }
+    },
+    "CDemoAnimationHeader": {
+      "edition": "proto2",
+      "fields": {
+        "entityId": {
+          "type": "sint32",
+          "id": 1,
+          "protoName": "entity_id"
+        },
+        "tick": {
+          "type": "int32",
+          "id": 2
+        },
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoAnimationData": {
+      "edition": "proto2",
+      "fields": {
+        "entityId": {
+          "type": "sint32",
+          "id": 1,
+          "protoName": "entity_id"
+        },
+        "startTick": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "start_tick"
+        },
+        "endTick": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "end_tick"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 4
+        },
+        "dataChecksum": {
+          "type": "int64",
+          "id": 5,
+          "protoName": "data_checksum"
+        }
+      }
+    },
+    "CDemoStringTables": {
+      "edition": "proto2",
+      "fields": {
+        "tables": {
+          "rule": "repeated",
+          "type": ".CDemoStringTables.table_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "items_t": {
+          "fields": {
+            "str": {
+              "type": "string",
+              "id": 1
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "table_t": {
+          "fields": {
+            "tableName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "table_name"
+            },
+            "items": {
+              "rule": "repeated",
+              "type": ".CDemoStringTables.items_t",
+              "id": 2
+            },
+            "itemsClientside": {
+              "rule": "repeated",
+              "type": ".CDemoStringTables.items_t",
+              "id": 3,
+              "protoName": "items_clientside"
+            },
+            "tableFlags": {
+              "type": "int32",
+              "id": 4,
+              "protoName": "table_flags"
+            }
+          }
+        }
+      }
+    },
+    "CDemoStop": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDemoUserCmd": {
+      "edition": "proto2",
+      "fields": {
+        "cmdNumber": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "cmd_number"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 2
+        }
+      }
+    },
+    "CDemoSpawnGroups": {
+      "edition": "proto2",
+      "fields": {
+        "msgs": {
+          "rule": "repeated",
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDemoRecovery": {
+      "edition": "proto2",
+      "fields": {
+        "initialSpawnGroup": {
+          "type": ".CDemoRecovery.DemoInitialSpawnGroupEntry",
+          "id": 1,
+          "protoName": "initial_spawn_group"
+        },
+        "spawnGroupMessage": {
+          "type": "bytes",
+          "id": 2,
+          "protoName": "spawn_group_message"
+        }
+      },
+      "nested": {
+        "DemoInitialSpawnGroupEntry": {
+          "fields": {
+            "spawngrouphandle": {
+              "type": "uint32",
+              "id": 1
+            },
+            "wasCreated": {
+              "type": "bool",
+              "id": 2,
+              "protoName": "was_created"
+            }
+          }
+        }
+      }
+    },
+    "EPingSource": {
+      "edition": "proto2",
+      "values": {
+        "k_ePingSource_Default": 0,
+        "k_ePingSource_Warning": 1,
+        "k_ePingSource_Wheel": 2,
+        "k_ePingSource_System": 3
+      }
+    },
+    "EDOTAStatPopupTypes": {
+      "edition": "proto2",
+      "values": {
+        "k_EDOTA_SPT_Textline": 0,
+        "k_EDOTA_SPT_Basic": 1,
+        "k_EDOTA_SPT_Poll": 2,
+        "k_EDOTA_SPT_Grid": 3,
+        "k_EDOTA_SPT_DualImage": 4,
+        "k_EDOTA_SPT_Movie": 5
+      }
+    },
+    "EDOTAVersusScenePlayerBehavior": {
+      "edition": "proto2",
+      "values": {
+        "VS_PLAYER_BEHAVIOR_PLAY_ACTIVITY": 1,
+        "VS_PLAYER_BEHAVIOR_CHAT_WHEEL": 2,
+        "VS_PLAYER_BEHAVIOR_PLAYBACK_RATE": 3
+      }
+    },
+    "CDOTAMsg_PingWaypointPath": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "gridNavDirections": {
+          "type": "bytes",
+          "id": 3,
+          "protoName": "grid_nav_directions"
+        }
+      }
+    },
+    "CDOTAMsg_LocationPing": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "target": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "directPing": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "direct_ping"
+        },
+        "type": {
+          "type": "uint32",
+          "id": 5,
+          "options": {
+            "default": 4294967295
+          }
+        },
+        "pingSource": {
+          "type": ".EPingSource",
+          "id": 6,
+          "protoName": "ping_source",
+          "options": {
+            "default": "k_ePingSource_Default"
+          }
+        },
+        "waypointPath": {
+          "type": ".CDOTAMsg_PingWaypointPath",
+          "id": 7,
+          "protoName": "waypoint_path"
+        }
+      }
+    },
+    "CDOTAMsg_ItemAlert": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAMsg_MapLine": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "initial": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAMsg_WorldLine": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "int32",
+          "id": 1
+        },
+        "y": {
+          "type": "int32",
+          "id": 2
+        },
+        "z": {
+          "type": "int32",
+          "id": 3
+        },
+        "initial": {
+          "type": "bool",
+          "id": 4
+        },
+        "end": {
+          "type": "bool",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAMsg_SendStatPopup": {
+      "edition": "proto2",
+      "fields": {
+        "style": {
+          "type": ".EDOTAStatPopupTypes",
+          "id": 1,
+          "options": {
+            "default": "k_EDOTA_SPT_Textline"
+          }
+        },
+        "statStrings": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2,
+          "protoName": "stat_strings"
+        },
+        "statImages": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 3,
+          "protoName": "stat_images"
+        },
+        "statImageTypes": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 4,
+          "protoName": "stat_image_types"
+        },
+        "duration": {
+          "type": "float",
+          "id": 5
+        },
+        "useHtml": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "use_html"
+        },
+        "movieName": {
+          "type": "string",
+          "id": 7,
+          "protoName": "movie_name"
+        }
+      }
+    },
+    "CDOTAMsg_DismissAllStatPopups": {
+      "edition": "proto2",
+      "fields": {
+        "timeDelay": {
+          "type": "float",
+          "id": 1,
+          "protoName": "time_delay"
+        }
+      }
+    },
+    "CDOTAMsg_CoachHUDPing": {
+      "edition": "proto2",
+      "fields": {
+        "x": {
+          "type": "uint32",
+          "id": 1
+        },
+        "y": {
+          "type": "uint32",
+          "id": 2
+        },
+        "tgtpath": {
+          "type": "string",
+          "id": 3
+        }
+      }
+    },
+    "VersusScene_PlayActivity": {
+      "edition": "proto2",
+      "fields": {
+        "activities": {
+          "rule": "repeated",
+          "type": ".VersusScene_PlayActivity.ActivityInfo",
+          "id": 1
+        },
+        "playbackRate": {
+          "type": "float",
+          "id": 2,
+          "protoName": "playback_rate"
+        }
+      },
+      "nested": {
+        "ActivityInfo": {
+          "fields": {
+            "activity": {
+              "type": "string",
+              "id": 1
+            },
+            "disableAutoKill": {
+              "type": "bool",
+              "id": 2,
+              "protoName": "disable_auto_kill"
+            },
+            "forceLooping": {
+              "type": "bool",
+              "id": 3,
+              "protoName": "force_looping"
+            }
+          }
+        }
+      }
+    },
+    "VersusScene_ChatWheel": {
+      "edition": "proto2",
+      "fields": {
+        "chatMessageId": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "chat_message_id",
+          "options": {
+            "default": 4294967295
+          }
+        },
+        "emoticonId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "emoticon_id"
+        }
+      }
+    },
+    "VersusScene_PlaybackRate": {
+      "edition": "proto2",
+      "fields": {
+        "rate": {
+          "type": "float",
+          "id": 1
+        }
+      }
+    },
+    "SignonState_t": {
+      "edition": "proto2",
+      "values": {
+        "SIGNONSTATE_NONE": 0,
+        "SIGNONSTATE_CHALLENGE": 1,
+        "SIGNONSTATE_CONNECTED": 2,
+        "SIGNONSTATE_NEW": 3,
+        "SIGNONSTATE_PRESPAWN": 4,
+        "SIGNONSTATE_SPAWN": 5,
+        "SIGNONSTATE_FULL": 6,
+        "SIGNONSTATE_CHANGELEVEL": 7
+      }
+    },
+    "CMsgVector": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgVector2D": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        }
+      }
+    },
+    "CMsgQAngle": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        }
+      }
+    },
+    "CMsgQuaternion": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "x": {
+          "type": "float",
+          "id": 1
+        },
+        "y": {
+          "type": "float",
+          "id": 2
+        },
+        "z": {
+          "type": "float",
+          "id": 3
+        },
+        "w": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CMsgPlayerInfo": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "xuid": {
+          "type": "fixed64",
+          "id": 2
+        },
+        "userid": {
+          "type": "int32",
+          "id": 3
+        },
+        "steamid": {
+          "type": "fixed64",
+          "id": 4
+        },
+        "fakeplayer": {
+          "type": "bool",
+          "id": 5
+        },
+        "ishltv": {
+          "type": "bool",
+          "id": 6
+        }
+      }
+    },
+    "CMsg_CVars": {
+      "edition": "proto2",
+      "fields": {
+        "cvars": {
+          "rule": "repeated",
+          "type": ".CMsg_CVars.CVar",
+          "id": 1
+        }
+      },
+      "nested": {
+        "CVar": {
+          "fields": {
+            "name": {
+              "type": "string",
+              "id": 1
+            },
+            "value": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CNETMsg_Tick": {
+      "edition": "proto2",
+      "fields": {
+        "tick": {
+          "type": "uint32",
+          "id": 1
+        },
+        "hostComputationtime": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "host_computationtime"
+        },
+        "hostComputationtimeStdDeviation": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "host_computationtime_std_deviation"
+        },
+        "legacyHostLoss": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "legacy_host_loss"
+        },
+        "hostUnfilteredFrametime": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "host_unfiltered_frametime"
+        },
+        "hltvReplayFlags": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "hltv_replay_flags"
+        },
+        "expectedLongTick": {
+          "type": "uint32",
+          "id": 10,
+          "protoName": "expected_long_tick"
+        },
+        "expectedLongTickReason": {
+          "type": "string",
+          "id": 11,
+          "protoName": "expected_long_tick_reason"
+        },
+        "hostFrameDroppedPctX10": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "host_frame_dropped_pct_x10"
+        },
+        "hostFrameIrregularArrivalPctX10": {
+          "type": "uint32",
+          "id": 13,
+          "protoName": "host_frame_irregular_arrival_pct_x10"
+        }
+      }
+    },
+    "CNETMsg_SetConVar": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
+      "fields": {
+        "convars": {
+          "type": ".CMsg_CVars",
+          "id": 1
+        }
+      }
+    },
+    "CNETMsg_SignonState": {
+      "edition": "proto2",
+      "fields": {
+        "signonState": {
+          "type": ".SignonState_t",
+          "id": 1,
+          "protoName": "signon_state",
+          "options": {
+            "default": "SIGNONSTATE_NONE"
+          }
+        },
+        "spawnCount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "spawn_count"
+        },
+        "numServerPlayers": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "num_server_players"
+        },
+        "playersNetworkids": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4,
+          "protoName": "players_networkids"
+        },
+        "mapName": {
+          "type": "string",
+          "id": 5,
+          "protoName": "map_name"
+        },
+        "addons": {
+          "type": "string",
+          "id": 6
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_Load": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 131072
+      },
+      "fields": {
+        "worldname": {
+          "type": "string",
+          "id": 1
+        },
+        "entitylumpname": {
+          "type": "string",
+          "id": 2
+        },
+        "entityfiltername": {
+          "type": "string",
+          "id": 3
+        },
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 4
+        },
+        "spawngroupownerhandle": {
+          "type": "uint32",
+          "id": 5
+        },
+        "worldOffsetPos": {
+          "type": ".CMsgVector",
+          "id": 6,
+          "protoName": "world_offset_pos"
+        },
+        "worldOffsetAngle": {
+          "type": ".CMsgQAngle",
+          "id": 7,
+          "protoName": "world_offset_angle"
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 8
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 9
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 10
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 11
+        },
+        "localnamefixup": {
+          "type": "string",
+          "id": 12
+        },
+        "parentnamefixup": {
+          "type": "string",
+          "id": 13
+        },
+        "manifestloadpriority": {
+          "type": "int32",
+          "id": 14
+        },
+        "worldgroupid": {
+          "type": "uint32",
+          "id": 15
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 16
+        },
+        "savegamefilename": {
+          "type": "string",
+          "id": 17
+        },
+        "spawngroupparenthandle": {
+          "type": "uint32",
+          "id": 18
+        },
+        "leveltransition": {
+          "type": "bool",
+          "id": 19
+        },
+        "worldgroupname": {
+          "type": "string",
+          "id": 20
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_ManifestUpdate": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 2048
+      },
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "spawngroupmanifest": {
+          "type": "bytes",
+          "id": 2
+        },
+        "manifestincomplete": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CNETMsg_SpawnGroup_SetCreationTick": {
+      "edition": "proto2",
+      "fields": {
+        "spawngrouphandle": {
+          "type": "uint32",
+          "id": 1
+        },
+        "tickcount": {
+          "type": "int32",
+          "id": 2
+        },
+        "creationsequence": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CSVCMsg_GameSessionConfiguration": {
+      "edition": "proto2",
+      "fields": {
+        "isMultiplayer": {
+          "type": "bool",
+          "id": 1,
+          "protoName": "is_multiplayer"
+        },
+        "isLoadsavegame": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "is_loadsavegame"
+        },
+        "isBackgroundMap": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "is_background_map"
+        },
+        "isHeadless": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "is_headless"
+        },
+        "minClientLimit": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "min_client_limit"
+        },
+        "maxClientLimit": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "max_client_limit"
+        },
+        "maxClients": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "max_clients"
+        },
+        "tickInterval": {
+          "type": "fixed32",
+          "id": 8,
+          "protoName": "tick_interval"
+        },
+        "hostname": {
+          "type": "string",
+          "id": 9
+        },
+        "savegamename": {
+          "type": "string",
+          "id": 10
+        },
+        "s1Mapname": {
+          "type": "string",
+          "id": 11,
+          "protoName": "s1_mapname"
+        },
+        "gamemode": {
+          "type": "string",
+          "id": 12
+        },
+        "serverIpAddress": {
+          "type": "string",
+          "id": 13,
+          "protoName": "server_ip_address"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 14
+        },
+        "isLocalonly": {
+          "type": "bool",
+          "id": 15,
+          "protoName": "is_localonly"
+        },
+        "noSteamServer": {
+          "type": "bool",
+          "id": 19,
+          "protoName": "no_steam_server"
+        },
+        "isTransition": {
+          "type": "bool",
+          "id": 16,
+          "protoName": "is_transition"
+        },
+        "previouslevel": {
+          "type": "string",
+          "id": 17
+        },
+        "landmarkname": {
+          "type": "string",
+          "id": 18
+        }
+      }
+    },
+    "DOTA_MODIFIER_ENTRY_TYPE": {
+      "edition": "proto2",
+      "values": {
+        "DOTA_MODIFIER_ENTRY_TYPE_ACTIVE": 1,
+        "DOTA_MODIFIER_ENTRY_TYPE_REMOVED": 2
+      }
+    },
+    "CDOTAModifierBuffTableEntry": {
+      "edition": "proto2",
+      "fields": {
+        "entryType": {
+          "type": ".DOTA_MODIFIER_ENTRY_TYPE",
+          "id": 1,
+          "protoName": "entry_type",
+          "options": {
+            "default": "DOTA_MODIFIER_ENTRY_TYPE_ACTIVE"
+          }
+        },
+        "parent": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "index": {
+          "type": "int32",
+          "id": 3
+        },
+        "serialNum": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "serial_num"
+        },
+        "modifierClass": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "modifier_class"
+        },
+        "abilityLevel": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "ability_level"
+        },
+        "stackCount": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "stack_count"
+        },
+        "creationTime": {
+          "type": "float",
+          "id": 8,
+          "protoName": "creation_time"
+        },
+        "duration": {
+          "type": "float",
+          "id": 9,
+          "options": {
+            "default": -1
+          }
+        },
+        "caster": {
+          "type": "uint32",
+          "id": 10,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "ability": {
+          "type": "uint32",
+          "id": 11,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "armor": {
+          "type": "int32",
+          "id": 12
+        },
+        "fadeTime": {
+          "type": "float",
+          "id": 13,
+          "protoName": "fade_time"
+        },
+        "subtle": {
+          "type": "bool",
+          "id": 14
+        },
+        "channelTime": {
+          "type": "float",
+          "id": 15,
+          "protoName": "channel_time"
+        },
+        "vStart": {
+          "type": ".CMsgVector",
+          "id": 16,
+          "protoName": "v_start"
+        },
+        "vEnd": {
+          "type": ".CMsgVector",
+          "id": 17,
+          "protoName": "v_end"
+        },
+        "portalLoopAppear": {
+          "type": "string",
+          "id": 18,
+          "protoName": "portal_loop_appear"
+        },
+        "portalLoopDisappear": {
+          "type": "string",
+          "id": 19,
+          "protoName": "portal_loop_disappear"
+        },
+        "heroLoopAppear": {
+          "type": "string",
+          "id": 20,
+          "protoName": "hero_loop_appear"
+        },
+        "heroLoopDisappear": {
+          "type": "string",
+          "id": 21,
+          "protoName": "hero_loop_disappear"
+        },
+        "movementSpeed": {
+          "type": "int32",
+          "id": 22,
+          "protoName": "movement_speed"
+        },
+        "aura": {
+          "type": "bool",
+          "id": 23
+        },
+        "activity": {
+          "type": "int32",
+          "id": 24
+        },
+        "damage": {
+          "type": "int32",
+          "id": 25
+        },
+        "range": {
+          "type": "int32",
+          "id": 26
+        },
+        "ddModifierIndex": {
+          "type": "int32",
+          "id": 27,
+          "protoName": "dd_modifier_index"
+        },
+        "ddAbilityId": {
+          "type": "int32",
+          "id": 28,
+          "protoName": "dd_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "illusionLabel": {
+          "type": "string",
+          "id": 29,
+          "protoName": "illusion_label"
+        },
+        "active": {
+          "type": "bool",
+          "id": 30
+        },
+        "playerIds": {
+          "type": "string",
+          "id": 31,
+          "protoName": "player_ids"
+        },
+        "luaName": {
+          "type": "string",
+          "id": 32,
+          "protoName": "lua_name"
+        },
+        "attackSpeed": {
+          "type": "int32",
+          "id": 33,
+          "protoName": "attack_speed"
+        },
+        "auraOwner": {
+          "type": "uint32",
+          "id": 34,
+          "protoName": "aura_owner",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "bonusAllStats": {
+          "type": "int32",
+          "id": 35,
+          "protoName": "bonus_all_stats"
+        },
+        "bonusHealth": {
+          "type": "int32",
+          "id": 36,
+          "protoName": "bonus_health"
+        },
+        "bonusMana": {
+          "type": "int32",
+          "id": 37,
+          "protoName": "bonus_mana"
+        },
+        "customEntity": {
+          "type": "uint32",
+          "id": 38,
+          "protoName": "custom_entity",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "auraWithinRange": {
+          "type": "bool",
+          "id": 39,
+          "protoName": "aura_within_range"
+        },
+        "moveSlow": {
+          "type": "float",
+          "id": 40,
+          "protoName": "move_slow"
+        },
+        "hasScepter": {
+          "type": "bool",
+          "id": 41,
+          "protoName": "has_scepter"
+        },
+        "hasShard": {
+          "type": "bool",
+          "id": 42,
+          "protoName": "has_shard"
+        },
+        "customIntValues": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 43,
+          "protoName": "custom_int_values"
+        },
+        "customFloatValues": {
+          "rule": "repeated",
+          "type": "float",
+          "id": 44,
+          "protoName": "custom_float_values"
+        }
+      }
+    },
+    "DOTA_COMBATLOG_TYPES": {
+      "edition": "proto2",
+      "values": {
+        "DOTA_COMBATLOG_INVALID": -1,
+        "DOTA_COMBATLOG_DAMAGE": 0,
+        "DOTA_COMBATLOG_HEAL": 1,
+        "DOTA_COMBATLOG_MODIFIER_ADD": 2,
+        "DOTA_COMBATLOG_MODIFIER_REMOVE": 3,
+        "DOTA_COMBATLOG_DEATH": 4,
+        "DOTA_COMBATLOG_ABILITY": 5,
+        "DOTA_COMBATLOG_ITEM": 6,
+        "DOTA_COMBATLOG_LOCATION": 7,
+        "DOTA_COMBATLOG_GOLD": 8,
+        "DOTA_COMBATLOG_GAME_STATE": 9,
+        "DOTA_COMBATLOG_XP": 10,
+        "DOTA_COMBATLOG_PURCHASE": 11,
+        "DOTA_COMBATLOG_BUYBACK": 12,
+        "DOTA_COMBATLOG_ABILITY_TRIGGER": 13,
+        "DOTA_COMBATLOG_PLAYERSTATS": 14,
+        "DOTA_COMBATLOG_MULTIKILL": 15,
+        "DOTA_COMBATLOG_KILLSTREAK": 16,
+        "DOTA_COMBATLOG_TEAM_BUILDING_KILL": 17,
+        "DOTA_COMBATLOG_FIRST_BLOOD": 18,
+        "DOTA_COMBATLOG_MODIFIER_STACK_EVENT": 19,
+        "DOTA_COMBATLOG_NEUTRAL_CAMP_STACK": 20,
+        "DOTA_COMBATLOG_PICKUP_RUNE": 21,
+        "DOTA_COMBATLOG_REVEALED_INVISIBLE": 22,
+        "DOTA_COMBATLOG_HERO_SAVED": 23,
+        "DOTA_COMBATLOG_MANA_RESTORED": 24,
+        "DOTA_COMBATLOG_HERO_LEVELUP": 25,
+        "DOTA_COMBATLOG_BOTTLE_HEAL_ALLY": 26,
+        "DOTA_COMBATLOG_ENDGAME_STATS": 27,
+        "DOTA_COMBATLOG_INTERRUPT_CHANNEL": 28,
+        "DOTA_COMBATLOG_ALLIED_GOLD": 29,
+        "DOTA_COMBATLOG_AEGIS_TAKEN": 30,
+        "DOTA_COMBATLOG_MANA_DAMAGE": 31,
+        "DOTA_COMBATLOG_PHYSICAL_DAMAGE_PREVENTED": 32,
+        "DOTA_COMBATLOG_UNIT_SUMMONED": 33,
+        "DOTA_COMBATLOG_ATTACK_EVADE": 34,
+        "DOTA_COMBATLOG_TREE_CUT": 35,
+        "DOTA_COMBATLOG_SUCCESSFUL_SCAN": 36,
+        "DOTA_COMBATLOG_END_KILLSTREAK": 37,
+        "DOTA_COMBATLOG_BLOODSTONE_CHARGE": 38,
+        "DOTA_COMBATLOG_CRITICAL_DAMAGE": 39,
+        "DOTA_COMBATLOG_SPELL_ABSORB": 40,
+        "DOTA_COMBATLOG_UNIT_TELEPORTED": 41,
+        "DOTA_COMBATLOG_KILL_EATER_EVENT": 42,
+        "DOTA_COMBATLOG_NEUTRAL_ITEM_EARNED": 43,
+        "DOTA_COMBATLOG_STAT_TRACKER_PLAYER": 44
+      }
+    },
+    "ETimerAlertType": {
+      "edition": "proto2",
+      "values": {
+        "k_TimerAlertType_PowerRune": 1,
+        "k_TimerAlertType_BountyRune": 2,
+        "k_TimerAlertType_WisdomShrine": 3,
+        "k_TimerAlertType_JungleCamps": 4,
+        "k_TimerAlertType_LotusPool": 5
+      }
+    },
+    "CMsgDOTACombatLogEntry": {
+      "edition": "proto2",
+      "fields": {
+        "type": {
+          "type": ".DOTA_COMBATLOG_TYPES",
+          "id": 1,
+          "options": {
+            "default": "DOTA_COMBATLOG_INVALID"
+          }
+        },
+        "targetName": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "target_name"
+        },
+        "targetSourceName": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "target_source_name"
+        },
+        "attackerName": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "attacker_name"
+        },
+        "damageSourceName": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "damage_source_name"
+        },
+        "inflictorName": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "inflictor_name"
+        },
+        "isAttackerIllusion": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "is_attacker_illusion"
+        },
+        "isAttackerHero": {
+          "type": "bool",
+          "id": 8,
+          "protoName": "is_attacker_hero"
+        },
+        "isTargetIllusion": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "is_target_illusion"
+        },
+        "isTargetHero": {
+          "type": "bool",
+          "id": 10,
+          "protoName": "is_target_hero"
+        },
+        "isVisibleRadiant": {
+          "type": "bool",
+          "id": 11,
+          "protoName": "is_visible_radiant"
+        },
+        "isVisibleDire": {
+          "type": "bool",
+          "id": 12,
+          "protoName": "is_visible_dire"
+        },
+        "value": {
+          "type": "uint32",
+          "id": 13
+        },
+        "health": {
+          "type": "int32",
+          "id": 14
+        },
+        "timestamp": {
+          "type": "float",
+          "id": 15
+        },
+        "stunDuration": {
+          "type": "float",
+          "id": 16,
+          "protoName": "stun_duration"
+        },
+        "slowDuration": {
+          "type": "float",
+          "id": 17,
+          "protoName": "slow_duration"
+        },
+        "isAbilityToggleOn": {
+          "type": "bool",
+          "id": 18,
+          "protoName": "is_ability_toggle_on"
+        },
+        "isAbilityToggleOff": {
+          "type": "bool",
+          "id": 19,
+          "protoName": "is_ability_toggle_off"
+        },
+        "abilityLevel": {
+          "type": "uint32",
+          "id": 20,
+          "protoName": "ability_level"
+        },
+        "locationX": {
+          "type": "float",
+          "id": 21,
+          "protoName": "location_x"
+        },
+        "locationY": {
+          "type": "float",
+          "id": 22,
+          "protoName": "location_y"
+        },
+        "goldReason": {
+          "type": "uint32",
+          "id": 23,
+          "protoName": "gold_reason"
+        },
+        "timestampRaw": {
+          "type": "float",
+          "id": 24,
+          "protoName": "timestamp_raw"
+        },
+        "modifierDuration": {
+          "type": "float",
+          "id": 25,
+          "protoName": "modifier_duration"
+        },
+        "xpReason": {
+          "type": "uint32",
+          "id": 26,
+          "protoName": "xp_reason"
+        },
+        "lastHits": {
+          "type": "uint32",
+          "id": 27,
+          "protoName": "last_hits"
+        },
+        "attackerTeam": {
+          "type": "uint32",
+          "id": 28,
+          "protoName": "attacker_team"
+        },
+        "targetTeam": {
+          "type": "uint32",
+          "id": 29,
+          "protoName": "target_team"
+        },
+        "obsWardsPlaced": {
+          "type": "uint32",
+          "id": 30,
+          "protoName": "obs_wards_placed"
+        },
+        "assistPlayer0": {
+          "type": "uint32",
+          "id": 31,
+          "protoName": "assist_player0"
+        },
+        "assistPlayer1": {
+          "type": "uint32",
+          "id": 32,
+          "protoName": "assist_player1"
+        },
+        "assistPlayer2": {
+          "type": "uint32",
+          "id": 33,
+          "protoName": "assist_player2"
+        },
+        "assistPlayer3": {
+          "type": "uint32",
+          "id": 34,
+          "protoName": "assist_player3"
+        },
+        "stackCount": {
+          "type": "uint32",
+          "id": 35,
+          "protoName": "stack_count"
+        },
+        "hiddenModifier": {
+          "type": "bool",
+          "id": 36,
+          "protoName": "hidden_modifier"
+        },
+        "isTargetBuilding": {
+          "type": "bool",
+          "id": 37,
+          "protoName": "is_target_building"
+        },
+        "neutralCampType": {
+          "type": "uint32",
+          "id": 38,
+          "protoName": "neutral_camp_type"
+        },
+        "runeType": {
+          "type": "uint32",
+          "id": 39,
+          "protoName": "rune_type"
+        },
+        "assistPlayers": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 40,
+          "protoName": "assist_players"
+        },
+        "isHealSave": {
+          "type": "bool",
+          "id": 41,
+          "protoName": "is_heal_save"
+        },
+        "isUltimateAbility": {
+          "type": "bool",
+          "id": 42,
+          "protoName": "is_ultimate_ability"
+        },
+        "attackerHeroLevel": {
+          "type": "uint32",
+          "id": 43,
+          "protoName": "attacker_hero_level"
+        },
+        "targetHeroLevel": {
+          "type": "uint32",
+          "id": 44,
+          "protoName": "target_hero_level"
+        },
+        "xpm": {
+          "type": "uint32",
+          "id": 45
+        },
+        "gpm": {
+          "type": "uint32",
+          "id": 46
+        },
+        "eventLocation": {
+          "type": "uint32",
+          "id": 47,
+          "protoName": "event_location"
+        },
+        "targetIsSelf": {
+          "type": "bool",
+          "id": 48,
+          "protoName": "target_is_self"
+        },
+        "damageType": {
+          "type": "uint32",
+          "id": 49,
+          "protoName": "damage_type"
+        },
+        "invisibilityModifier": {
+          "type": "bool",
+          "id": 50,
+          "protoName": "invisibility_modifier"
+        },
+        "damageCategory": {
+          "type": "uint32",
+          "id": 51,
+          "protoName": "damage_category"
+        },
+        "networth": {
+          "type": "uint32",
+          "id": 52
+        },
+        "buildingType": {
+          "type": "uint32",
+          "id": 53,
+          "protoName": "building_type"
+        },
+        "modifierElapsedDuration": {
+          "type": "float",
+          "id": 54,
+          "protoName": "modifier_elapsed_duration"
+        },
+        "silenceModifier": {
+          "type": "bool",
+          "id": 55,
+          "protoName": "silence_modifier"
+        },
+        "healFromLifesteal": {
+          "type": "bool",
+          "id": 56,
+          "protoName": "heal_from_lifesteal"
+        },
+        "modifierPurged": {
+          "type": "bool",
+          "id": 57,
+          "protoName": "modifier_purged"
+        },
+        "spellEvaded": {
+          "type": "bool",
+          "id": 58,
+          "protoName": "spell_evaded"
+        },
+        "motionControllerModifier": {
+          "type": "bool",
+          "id": 59,
+          "protoName": "motion_controller_modifier"
+        },
+        "longRangeKill": {
+          "type": "bool",
+          "id": 60,
+          "protoName": "long_range_kill"
+        },
+        "modifierPurgeAbility": {
+          "type": "uint32",
+          "id": 61,
+          "protoName": "modifier_purge_ability"
+        },
+        "modifierPurgeNpc": {
+          "type": "uint32",
+          "id": 62,
+          "protoName": "modifier_purge_npc"
+        },
+        "rootModifier": {
+          "type": "bool",
+          "id": 63,
+          "protoName": "root_modifier"
+        },
+        "totalUnitDeathCount": {
+          "type": "uint32",
+          "id": 64,
+          "protoName": "total_unit_death_count"
+        },
+        "auraModifier": {
+          "type": "bool",
+          "id": 65,
+          "protoName": "aura_modifier"
+        },
+        "armorDebuffModifier": {
+          "type": "bool",
+          "id": 66,
+          "protoName": "armor_debuff_modifier"
+        },
+        "noPhysicalDamageModifier": {
+          "type": "bool",
+          "id": 67,
+          "protoName": "no_physical_damage_modifier"
+        },
+        "modifierAbility": {
+          "type": "uint32",
+          "id": 68,
+          "protoName": "modifier_ability"
+        },
+        "modifierHidden": {
+          "type": "bool",
+          "id": 69,
+          "protoName": "modifier_hidden"
+        },
+        "inflictorIsStolenAbility": {
+          "type": "bool",
+          "id": 70,
+          "protoName": "inflictor_is_stolen_ability"
+        },
+        "killEaterEvent": {
+          "type": "uint32",
+          "id": 71,
+          "protoName": "kill_eater_event"
+        },
+        "unitStatusLabel": {
+          "type": "uint32",
+          "id": 72,
+          "protoName": "unit_status_label"
+        },
+        "spellGeneratedAttack": {
+          "type": "bool",
+          "id": 73,
+          "protoName": "spell_generated_attack"
+        },
+        "atNightTime": {
+          "type": "bool",
+          "id": 74,
+          "protoName": "at_night_time"
+        },
+        "attackerHasScepter": {
+          "type": "bool",
+          "id": 75,
+          "protoName": "attacker_has_scepter"
+        },
+        "neutralCampTeam": {
+          "type": "uint32",
+          "id": 76,
+          "protoName": "neutral_camp_team"
+        },
+        "regeneratedHealth": {
+          "type": "float",
+          "id": 77,
+          "protoName": "regenerated_health"
+        },
+        "willReincarnate": {
+          "type": "bool",
+          "id": 78,
+          "protoName": "will_reincarnate"
+        },
+        "usesCharges": {
+          "type": "bool",
+          "id": 79,
+          "protoName": "uses_charges"
+        },
+        "trackedStatId": {
+          "type": "uint32",
+          "id": 80,
+          "protoName": "tracked_stat_id"
+        },
+        "modifierPurgedDuration": {
+          "type": "float",
+          "id": 81,
+          "protoName": "modifier_purged_duration"
+        },
+        "healFromRegen": {
+          "type": "bool",
+          "id": 82,
+          "protoName": "heal_from_regen"
+        }
+      }
+    },
+    "CMsgMonsterHunterMaterialQuantity": {
+      "edition": "proto2",
+      "fields": {
+        "materialCounts": {
+          "rule": "repeated",
+          "type": ".CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry",
+          "id": 1,
+          "protoName": "material_counts"
+        }
+      },
+      "nested": {
+        "MaterialCountsEntry": {
+          "fields": {
+            "key": {
+              "type": "uint32",
+              "id": 1
+            },
+            "value": {
+              "type": "int32",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CMsgMonsterHunterInvestigation": {
+      "edition": "proto2",
+      "fields": {
+        "heroId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "hero_id"
+        },
+        "personaId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "persona_id"
+        },
+        "matchRewards": {
+          "type": ".CMsgMonsterHunterMaterialQuantity",
+          "id": 3,
+          "protoName": "match_rewards"
+        },
+        "huntRewards": {
+          "type": ".CMsgMonsterHunterMaterialQuantity",
+          "id": 4,
+          "protoName": "hunt_rewards"
+        },
+        "successState": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "success_state"
+        }
+      }
+    },
+    "CMsgMonsterHunterInvestigationGameState": {
+      "edition": "proto2",
+      "fields": {
+        "selectedInvestigation": {
+          "type": ".CMsgMonsterHunterInvestigation",
+          "id": 1,
+          "protoName": "selected_investigation"
+        },
+        "huntedBy": {
+          "rule": "repeated",
+          "type": ".CMsgMonsterHunterInvestigationGameState.HuntedBy",
+          "id": 2,
+          "protoName": "hunted_by"
+        }
+      },
+      "nested": {
+        "HuntedBy": {
+          "fields": {
+            "heroId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "hero_id"
+            },
+            "personaId": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "persona_id"
+            },
+            "huntRewards": {
+              "type": ".CMsgMonsterHunterMaterialQuantity",
+              "id": 3,
+              "protoName": "hunt_rewards"
+            },
+            "successState": {
+              "type": "bool",
+              "id": 4,
+              "protoName": "success_state"
+            }
+          }
+        }
+      }
+    },
+    "DOTA_CHAT_MESSAGE": {
+      "edition": "proto2",
+      "values": {
+        "CHAT_MESSAGE_INVALID": -1,
+        "CHAT_MESSAGE_HERO_KILL": 0,
+        "CHAT_MESSAGE_HERO_DENY": 1,
+        "CHAT_MESSAGE_BARRACKS_KILL": 2,
+        "CHAT_MESSAGE_TOWER_KILL": 3,
+        "CHAT_MESSAGE_TOWER_DENY": 4,
+        "CHAT_MESSAGE_FIRSTBLOOD": 5,
+        "CHAT_MESSAGE_STREAK_KILL": 6,
+        "CHAT_MESSAGE_BUYBACK": 7,
+        "CHAT_MESSAGE_AEGIS": 8,
+        "CHAT_MESSAGE_ROSHAN_KILL": 9,
+        "CHAT_MESSAGE_COURIER_LOST": 10,
+        "CHAT_MESSAGE_COURIER_RESPAWNED": 11,
+        "CHAT_MESSAGE_GLYPH_USED": 12,
+        "CHAT_MESSAGE_ITEM_PURCHASE": 13,
+        "CHAT_MESSAGE_CONNECT": 14,
+        "CHAT_MESSAGE_DISCONNECT": 15,
+        "CHAT_MESSAGE_DISCONNECT_WAIT_FOR_RECONNECT": 16,
+        "CHAT_MESSAGE_DISCONNECT_TIME_REMAINING": 17,
+        "CHAT_MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL": 18,
+        "CHAT_MESSAGE_RECONNECT": 19,
+        "CHAT_MESSAGE_PLAYER_LEFT": 20,
+        "CHAT_MESSAGE_SAFE_TO_LEAVE": 21,
+        "CHAT_MESSAGE_RUNE_PICKUP": 22,
+        "CHAT_MESSAGE_RUNE_BOTTLE": 23,
+        "CHAT_MESSAGE_RUNE_DENY": 114,
+        "CHAT_MESSAGE_INTHEBAG": 24,
+        "CHAT_MESSAGE_SECRETSHOP": 25,
+        "CHAT_MESSAGE_ITEM_AUTOPURCHASED": 26,
+        "CHAT_MESSAGE_ITEMS_COMBINED": 27,
+        "CHAT_MESSAGE_SUPER_CREEPS": 28,
+        "CHAT_MESSAGE_CANT_USE_ACTION_ITEM": 29,
+        "CHAT_MESSAGE_CANTPAUSE": 31,
+        "CHAT_MESSAGE_NOPAUSESLEFT": 32,
+        "CHAT_MESSAGE_CANTPAUSEYET": 33,
+        "CHAT_MESSAGE_PAUSED": 34,
+        "CHAT_MESSAGE_UNPAUSE_COUNTDOWN": 35,
+        "CHAT_MESSAGE_UNPAUSED": 36,
+        "CHAT_MESSAGE_AUTO_UNPAUSED": 37,
+        "CHAT_MESSAGE_YOUPAUSED": 38,
+        "CHAT_MESSAGE_CANTUNPAUSETEAM": 39,
+        "CHAT_MESSAGE_VOICE_TEXT_BANNED": 41,
+        "CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME": 42,
+        "CHAT_MESSAGE_REPORT_REMINDER": 43,
+        "CHAT_MESSAGE_ECON_ITEM": 44,
+        "CHAT_MESSAGE_TAUNT": 45,
+        "CHAT_MESSAGE_RANDOM": 46,
+        "CHAT_MESSAGE_RD_TURN": 47,
+        "CHAT_MESSAGE_DROP_RATE_BONUS": 49,
+        "CHAT_MESSAGE_NO_BATTLE_POINTS": 50,
+        "CHAT_MESSAGE_DENIED_AEGIS": 51,
+        "CHAT_MESSAGE_INFORMATIONAL": 52,
+        "CHAT_MESSAGE_AEGIS_STOLEN": 53,
+        "CHAT_MESSAGE_ROSHAN_CANDY": 54,
+        "CHAT_MESSAGE_ITEM_GIFTED": 55,
+        "CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL": 56,
+        "CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED": 57,
+        "CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED": 58,
+        "CHAT_MESSAGE_HOLDOUT_WALL_FINISHED": 59,
+        "CHAT_MESSAGE_PLAYER_LEFT_LIMITED_HERO": 62,
+        "CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION": 63,
+        "CHAT_MESSAGE_DISCONNECT_LIMITED_HERO": 64,
+        "CHAT_MESSAGE_LOW_PRIORITY_COMPLETED_EXPLANATION": 65,
+        "CHAT_MESSAGE_RECRUITMENT_DROP_RATE_BONUS": 66,
+        "CHAT_MESSAGE_FROSTIVUS_SHINING_BOOSTER_ACTIVE": 67,
+        "CHAT_MESSAGE_PLAYER_LEFT_AFK": 73,
+        "CHAT_MESSAGE_PLAYER_LEFT_DISCONNECTED_TOO_LONG": 74,
+        "CHAT_MESSAGE_PLAYER_ABANDONED": 75,
+        "CHAT_MESSAGE_PLAYER_ABANDONED_AFK": 76,
+        "CHAT_MESSAGE_PLAYER_ABANDONED_DISCONNECTED_TOO_LONG": 77,
+        "CHAT_MESSAGE_WILL_NOT_BE_SCORED": 78,
+        "CHAT_MESSAGE_WILL_NOT_BE_SCORED_RANKED": 79,
+        "CHAT_MESSAGE_WILL_NOT_BE_SCORED_NETWORK": 80,
+        "CHAT_MESSAGE_WILL_NOT_BE_SCORED_NETWORK_RANKED": 81,
+        "CHAT_MESSAGE_CAN_QUIT_WITHOUT_ABANDON": 82,
+        "CHAT_MESSAGE_RANKED_GAME_STILL_SCORED_LEAVERS_GET_LOSS": 83,
+        "CHAT_MESSAGE_ABANDON_RANKED_BEFORE_FIRST_BLOOD_PARTY": 84,
+        "CHAT_MESSAGE_COMPENDIUM_LEVEL": 85,
+        "CHAT_MESSAGE_VICTORY_PREDICTION_STREAK": 86,
+        "CHAT_MESSAGE_ASSASSIN_ANNOUNCE": 87,
+        "CHAT_MESSAGE_ASSASSIN_SUCCESS": 88,
+        "CHAT_MESSAGE_ASSASSIN_DENIED": 89,
+        "CHAT_MESSAGE_VICTORY_PREDICTION_SINGLE_USER_CONFIRM": 90,
+        "CHAT_MESSAGE_EFFIGY_KILL": 91,
+        "CHAT_MESSAGE_VOICE_TEXT_BANNED_OVERFLOW": 92,
+        "CHAT_MESSAGE_YEAR_BEAST_KILLED": 93,
+        "CHAT_MESSAGE_PAUSE_COUNTDOWN": 94,
+        "CHAT_MESSAGE_COINS_WAGERED": 95,
+        "CHAT_MESSAGE_HERO_NOMINATED_BAN": 96,
+        "CHAT_MESSAGE_HERO_BANNED": 97,
+        "CHAT_MESSAGE_HERO_BAN_COUNT": 98,
+        "CHAT_MESSAGE_RIVER_PAINTED": 99,
+        "CHAT_MESSAGE_SCAN_USED": 100,
+        "CHAT_MESSAGE_SHRINE_KILLED": 101,
+        "CHAT_MESSAGE_WAGER_TOKEN_SPENT": 102,
+        "CHAT_MESSAGE_RANK_WAGER": 103,
+        "CHAT_MESSAGE_NEW_PLAYER_REMINDER": 104,
+        "CHAT_MESSAGE_OBSERVER_WARD_KILLED": 105,
+        "CHAT_MESSAGE_SENTRY_WARD_KILLED": 106,
+        "CHAT_MESSAGE_ITEM_PLACED_IN_NEUTRAL_STASH": 107,
+        "CHAT_MESSAGE_HERO_CHOICE_INVALID": 108,
+        "CHAT_MESSAGE_BOUNTY": 109,
+        "CHAT_MESSAGE_ABILITY_DRAFT_START": 110,
+        "CHAT_MESSAGE_HERO_FOUND_CANDY": 111,
+        "CHAT_MESSAGE_ABILITY_DRAFT_RANDOMED": 112,
+        "CHAT_MESSAGE_PRIVATE_COACH_CONNECTED": 113,
+        "CHAT_MESSAGE_CANT_PAUSE_TOO_EARLY": 115,
+        "CHAT_MESSAGE_HERO_KILL_WITH_PENGUIN": 116,
+        "CHAT_MESSAGE_MINIBOSS_KILL": 117,
+        "CHAT_MESSAGE_PLAYER_IN_GAME_BAN_TEXT": 118,
+        "CHAT_MESSAGE_BANNER_PLANTED": 119,
+        "CHAT_MESSAGE_ALCHEMIST_GRANTED_SCEPTER": 120,
+        "CHAT_MESSAGE_PROTECTOR_SPAWNED": 121,
+        "CHAT_MESSAGE_CRAFTING_XP": 122,
+        "CHAT_MESSAGE_ROSHAN_ROAR": 123,
+        "CHAT_MESSAGE_STONE_OF_RECALL_USED": 124,
+        "CHAT_MESSAGE_DEITY_BLESSING": 125,
+        "CHAT_MESSAGE_SMOKE_ACTIVATED": 126
+      }
+    },
+    "DOTA_ABILITY_PING_TYPE": {
+      "edition": "proto2",
+      "values": {
+        "ABILITY_PING_READY": 1,
+        "ABILITY_PING_MANA": 2,
+        "ABILITY_PING_COOLDOWN": 3,
+        "ABILITY_PING_ENEMY": 4,
+        "ABILITY_PING_UNLEARNED": 5,
+        "ABILITY_PING_INBACKPACK": 6,
+        "ABILITY_PING_INSTASH": 7,
+        "ABILITY_PING_ONCOURIER": 8,
+        "ABILITY_PING_ALLY": 9,
+        "ABILITY_PING_LEARN_READY": 10,
+        "ABILITY_PING_WILL_LEARN": 11,
+        "ABILITY_PING_FUTURE_LEARN": 12,
+        "ABILITY_PING_NEUTRAL_OFFER": 13,
+        "ABILITY_PING_NEUTRAL_REQUEST": 14,
+        "ABILITY_PING_NEUTRAL_EQUIP": 15,
+        "ABILITY_PING_INCOURIERBACKPACK": 16
+      }
+    },
+    "EDotaEntityMessages": {
+      "edition": "proto2",
+      "values": {
+        "DOTA_UNIT_SPEECH": 0,
+        "DOTA_UNIT_SPEECH_MUTE": 1,
+        "DOTA_UNIT_ADD_GESTURE": 2,
+        "DOTA_UNIT_REMOVE_GESTURE": 3,
+        "DOTA_UNIT_REMOVE_ALL_GESTURES": 4,
+        "DOTA_UNIT_FADE_GESTURE": 6,
+        "DOTA_UNIT_SPEECH_CLIENTSIDE_RULES": 7
+      }
+    },
+    "DOTA_OVERHEAD_ALERT": {
+      "edition": "proto2",
+      "values": {
+        "OVERHEAD_ALERT_GOLD": 0,
+        "OVERHEAD_ALERT_DENY": 1,
+        "OVERHEAD_ALERT_CRITICAL": 2,
+        "OVERHEAD_ALERT_XP": 3,
+        "OVERHEAD_ALERT_BONUS_SPELL_DAMAGE": 4,
+        "OVERHEAD_ALERT_MISS": 5,
+        "OVERHEAD_ALERT_DAMAGE": 6,
+        "OVERHEAD_ALERT_EVADE": 7,
+        "OVERHEAD_ALERT_BLOCK": 8,
+        "OVERHEAD_ALERT_BONUS_POISON_DAMAGE": 9,
+        "OVERHEAD_ALERT_HEAL": 10,
+        "OVERHEAD_ALERT_MANA_ADD": 11,
+        "OVERHEAD_ALERT_MANA_LOSS": 12,
+        "OVERHEAD_ALERT_MAGICAL_BLOCK": 16,
+        "OVERHEAD_ALERT_INCOMING_DAMAGE": 17,
+        "OVERHEAD_ALERT_OUTGOING_DAMAGE": 18,
+        "OVERHEAD_ALERT_DISABLE_RESIST": 19,
+        "OVERHEAD_ALERT_DEATH": 20,
+        "OVERHEAD_ALERT_BLOCKED": 21,
+        "OVERHEAD_ALERT_ITEM_RECEIVED": 22,
+        "OVERHEAD_ALERT_SHARD": 23,
+        "OVERHEAD_ALERT_DEADLY_BLOW": 24,
+        "OVERHEAD_ALERT_FORCE_MISS": 25,
+        "OVERHEAD_ALERT_AEGIS": 26,
+        "OVERHEAD_ALERT_DISPEL": 27,
+        "OVERHEAD_ALERT_BONUS_PURE_DAMAGE": 28
+      }
+    },
+    "DOTA_ROSHAN_PHASE": {
+      "edition": "proto2",
+      "values": {
+        "k_SRSP_ROSHAN_ALIVE": 0,
+        "k_SRSP_ROSHAN_BASE_TIMER": 1,
+        "k_SRSP_ROSHAN_VISIBLE_TIMER": 2
+      }
+    },
+    "DOTA_POSITION_CATEGORY": {
+      "edition": "proto2",
+      "values": {
+        "DOTA_POSITION_NONE": 0,
+        "DOTA_POSITION_BOTTOM_LANE": 1,
+        "DOTA_POSITION_MID_LANE": 2,
+        "DOTA_POSITION_TOP_LANE": 3,
+        "DOTA_POSITION_RADIANT_JUNGLE": 4,
+        "DOTA_POSITION_DIRE_JUNGLE": 5,
+        "DOTA_POSITION_RADIANT_ANCIENTS": 6,
+        "DOTA_POSITION_DIRE_ANCIENTS": 7,
+        "DOTA_POSITION_RADIANT_SECRET_SHOP": 8,
+        "DOTA_POSITION_DIRE_SECRET_SHOP": 9,
+        "DOTA_POSITION_RIVER": 10,
+        "DOTA_POSITION_ROSHAN_PIT": 11,
+        "DOTA_POSITION_RADIANT_BASE": 12,
+        "DOTA_POSITION_DIRE_BASE": 13,
+        "DOTA_POSITION_FOUNTAIN": 14,
+        "DOTA_POSITION_OTHER": 15
+      }
+    },
+    "EProjectionEvent": {
+      "edition": "proto2",
+      "values": {
+        "ePE_FirstBlood": 0,
+        "ePE_Killstreak_godlike": 1
+      }
+    },
+    "CDOTAUserMsg_AIDebugLine": {
+      "edition": "proto2",
+      "fields": {
+        "message": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_Ping": {
+      "edition": "proto2",
+      "fields": {
+        "ping": {
+          "type": "uint32",
+          "id": 2
+        },
+        "loss": {
+          "type": "uint32",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_SwapVerify": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ChatEvent": {
+      "edition": "proto2",
+      "fields": {
+        "type": {
+          "type": ".DOTA_CHAT_MESSAGE",
+          "id": 1,
+          "options": {
+            "default": "CHAT_MESSAGE_INVALID"
+          }
+        },
+        "value": {
+          "type": "uint32",
+          "id": 2
+        },
+        "playerid_1": {
+          "type": "sint32",
+          "id": 3,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerid_2": {
+          "type": "sint32",
+          "id": 4,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerid_3": {
+          "type": "sint32",
+          "id": 5,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerid_4": {
+          "type": "sint32",
+          "id": 6,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerid_5": {
+          "type": "sint32",
+          "id": 7,
+          "options": {
+            "default": -1
+          }
+        },
+        "playerid_6": {
+          "type": "sint32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
+        },
+        "value2": {
+          "type": "uint32",
+          "id": 9
+        },
+        "value3": {
+          "type": "uint32",
+          "id": 10
+        },
+        "time": {
+          "type": "float",
+          "id": 11
+        }
+      }
+    },
+    "CDOTAUserMsg_BotChat": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "message": {
+          "type": "string",
+          "id": 3
+        },
+        "target": {
+          "type": "string",
+          "id": 4
+        },
+        "teamOnly": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "team_only"
+        }
+      }
+    },
+    "CDOTAUserMsg_CombatHeroPositions": {
+      "edition": "proto2",
+      "fields": {
+        "index": {
+          "type": "uint32",
+          "id": 1
+        },
+        "time": {
+          "type": "int32",
+          "id": 2
+        },
+        "worldPos": {
+          "type": ".CMsgVector2D",
+          "id": 3,
+          "protoName": "world_pos"
+        },
+        "health": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_CombatLogBulkData": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
+      "fields": {
+        "combatEntries": {
+          "rule": "repeated",
+          "type": ".CMsgDOTACombatLogEntry",
+          "id": 1,
+          "protoName": "combat_entries"
+        },
+        "timestamp": {
+          "type": "float",
+          "id": 2
+        },
+        "duration": {
+          "type": "float",
+          "id": 3
+        },
+        "playerId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "requestTime": {
+          "type": "float",
+          "id": 5,
+          "protoName": "request_time"
+        }
+      }
+    },
+    "CDOTAUserMsg_ProjectileParticleCPData": {
+      "edition": "proto2",
+      "fields": {
+        "controlPoint": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "control_point"
+        },
+        "vector": {
+          "type": ".CMsgVector",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_UpdateLinearProjectileCPData": {
+      "edition": "proto2",
+      "fields": {
+        "handle": {
+          "type": "int32",
+          "id": 1
+        },
+        "controlPoint": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "control_point"
+        },
+        "vector": {
+          "type": ".CMsgVector",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_MiniKillCamInfo": {
+      "edition": "proto2",
+      "fields": {
+        "attackers": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_MiniKillCamInfo.Attacker",
+          "id": 1
+        }
+      },
+      "nested": {
+        "Attacker": {
+          "fields": {
+            "attacker": {
+              "type": "uint32",
+              "id": 1,
+              "options": {
+                "default": 16777215
+              }
+            },
+            "totalDamage": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "total_damage"
+            },
+            "abilities": {
+              "rule": "repeated",
+              "type": ".CDOTAUserMsg_MiniKillCamInfo.Attacker.Ability",
+              "id": 3
+            },
+            "attackerName": {
+              "type": "string",
+              "id": 4,
+              "protoName": "attacker_name"
+            }
+          },
+          "nested": {
+            "Ability": {
+              "fields": {
+                "abilityId": {
+                  "type": "int32",
+                  "id": 1,
+                  "protoName": "ability_id",
+                  "options": {
+                    "default": -1
+                  }
+                },
+                "damage": {
+                  "type": "int32",
+                  "id": 2
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_GlobalLightColor": {
+      "edition": "proto2",
+      "fields": {
+        "color": {
+          "type": "uint32",
+          "id": 1
+        },
+        "duration": {
+          "type": "float",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_GlobalLightDirection": {
+      "edition": "proto2",
+      "fields": {
+        "direction": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "duration": {
+          "type": "float",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_LocationPing": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "locationPing": {
+          "type": ".CDOTAMsg_LocationPing",
+          "id": 2,
+          "protoName": "location_ping"
+        }
+      }
+    },
+    "CDOTAUserMsg_PingConfirmation": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdOfOriginalPinger": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_of_original_pinger",
+          "options": {
+            "default": -1
+          }
+        },
+        "entityIndex": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "entity_index"
+        },
+        "iconType": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "icon_type"
+        },
+        "location": {
+          "type": ".CMsgVector",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_ItemAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemAlert": {
+          "type": ".CDOTAMsg_ItemAlert",
+          "id": 2,
+          "protoName": "item_alert"
+        }
+      }
+    },
+    "CDOTAUserMsg_EnemyItemAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "runeType": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "rune_type",
+          "options": {
+            "default": -1
+          }
+        },
+        "entityId": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "entity_id"
+        },
+        "itemLevel": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "item_level",
+          "options": {
+            "default": -1
+          }
+        },
+        "primaryCharges": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "primary_charges",
+          "options": {
+            "default": -1
+          }
+        },
+        "secondaryCharges": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "secondary_charges",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ModifierAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "className": {
+          "type": "string",
+          "id": 2,
+          "protoName": "class_name"
+        },
+        "stackCount": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "stack_count"
+        },
+        "isDebuff": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "is_debuff"
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "secondsRemaining": {
+          "type": "float",
+          "id": 6,
+          "protoName": "seconds_remaining"
+        }
+      }
+    },
+    "CDOTAUserMsg_HPManaAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "showRawValues": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "show_raw_values"
+        }
+      }
+    },
+    "CDOTAUserMsg_NeutralCampAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "spawnerEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "spawner_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "unitEntindex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "unit_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "stackCount": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "stack_count"
+        },
+        "campType": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "camp_type"
+        },
+        "stackRequest": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "stack_request"
+        },
+        "stackIntention": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "stack_intention"
+        }
+      }
+    },
+    "CDOTAUserMsg_GlyphAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "negative": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_RadarAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "negative": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_RoshanTimer": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "negative": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_TormentorTimer": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "negative": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_WillPurchaseAlert": {
+      "edition": "proto2",
+      "fields": {
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "goldRemaining": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "gold_remaining"
+        },
+        "suggestionPlayerId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "suggestion_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_EmptyTeleportAlert": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "cooldownSeconds": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "cooldown_seconds"
+        }
+      }
+    },
+    "CDOTAUserMsg_MarsArenaOfBloodAttack": {
+      "edition": "proto2",
+      "fields": {
+        "sourceEhandle": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "source_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "targetEhandle": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "target_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "warriorIndex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "warrior_index"
+        }
+      }
+    },
+    "CDOTAUserMsg_BuyBackStateAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_QuickBuyAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "goldCost": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "gold_cost"
+        },
+        "itemCooldownSeconds": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "item_cooldown_seconds"
+        },
+        "showBuyback": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "show_buyback"
+        }
+      }
+    },
+    "CDOTAUserMsg_CourierKilledAlert": {
+      "edition": "proto2",
+      "fields": {
+        "team": {
+          "type": "uint32",
+          "id": 1
+        },
+        "goldValue": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "gold_value"
+        },
+        "entityHandle": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "timestamp": {
+          "type": "int32",
+          "id": 4
+        },
+        "lostItems": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_CourierKilledAlert.LostItem",
+          "id": 5,
+          "protoName": "lost_items"
+        },
+        "killerPlayerId": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "killer_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "owningPlayerId": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "owning_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      },
+      "nested": {
+        "LostItem": {
+          "fields": {
+            "itemAbilityId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "item_ability_id",
+              "options": {
+                "default": -1
+              }
+            },
+            "quantity": {
+              "type": "uint32",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MinimapEvent": {
+      "edition": "proto2",
+      "fields": {
+        "eventType": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "event_type"
+        },
+        "entityHandle": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "x": {
+          "type": "int32",
+          "id": 3
+        },
+        "y": {
+          "type": "int32",
+          "id": 4
+        },
+        "duration": {
+          "type": "int32",
+          "id": 5
+        },
+        "targetEntityHandle": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "target_entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MapLine": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "mapline": {
+          "type": ".CDOTAMsg_MapLine",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_MinimapDebugPoint": {
+      "edition": "proto2",
+      "fields": {
+        "location": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "color": {
+          "type": "uint32",
+          "id": 2
+        },
+        "size": {
+          "type": "int32",
+          "id": 3
+        },
+        "duration": {
+          "type": "float",
+          "id": 4
+        },
+        "index": {
+          "type": "int32",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAUserMsg_CreateLinearProjectile": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "velocity": {
+          "type": ".CMsgVector2D",
+          "id": 2
+        },
+        "entindex": {
+          "type": "int32",
+          "id": 4,
+          "options": {
+            "default": -1
+          }
+        },
+        "particleIndex": {
+          "type": "uint64",
+          "id": 5,
+          "protoName": "particle_index"
+        },
+        "handle": {
+          "type": "int32",
+          "id": 6
+        },
+        "acceleration": {
+          "type": ".CMsgVector2D",
+          "id": 7
+        },
+        "maxSpeed": {
+          "type": "float",
+          "id": 8,
+          "protoName": "max_speed"
+        },
+        "fowRadius": {
+          "type": "float",
+          "id": 9,
+          "protoName": "fow_radius"
+        },
+        "stickyFowReveal": {
+          "type": "bool",
+          "id": 10,
+          "protoName": "sticky_fow_reveal"
+        },
+        "distance": {
+          "type": "float",
+          "id": 11
+        },
+        "colorgemcolor": {
+          "type": "fixed32",
+          "id": 12
+        },
+        "particleCpData": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_ProjectileParticleCPData",
+          "id": 13,
+          "protoName": "particle_cp_data"
+        }
+      }
+    },
+    "CDOTAUserMsg_DestroyLinearProjectile": {
+      "edition": "proto2",
+      "fields": {
+        "handle": {
+          "type": "int32",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_DodgeTrackingProjectiles": {
+      "edition": "proto2",
+      "fields": {
+        "entindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "attacksOnly": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "attacks_only"
+        }
+      }
+    },
+    "CDOTAUserMsg_SpectatorPlayerClick": {
+      "edition": "proto2",
+      "fields": {
+        "entindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "orderType": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "order_type"
+        },
+        "targetIndex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "target_index",
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_SpectatorPlayerUnitOrders": {
+      "edition": "proto2",
+      "fields": {
+        "entindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "orderType": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "order_type"
+        },
+        "units": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 3
+        },
+        "targetIndex": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "target_index",
+          "options": {
+            "default": 0
+          }
+        },
+        "abilityId": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "position": {
+          "type": ".CMsgVector",
+          "id": 6
+        },
+        "queue": {
+          "type": "bool",
+          "id": 7
+        },
+        "sequenceNumber": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "sequence_number"
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 9
+        },
+        "lastOrderLatency": {
+          "type": "uint32",
+          "id": 10,
+          "protoName": "last_order_latency"
+        },
+        "ping": {
+          "type": "uint32",
+          "id": 11
+        }
+      }
+    },
+    "CDOTAUserMsg_NevermoreRequiem": {
+      "edition": "proto2",
+      "fields": {
+        "entityHandle": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "lines": {
+          "type": "int32",
+          "id": 2
+        },
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "reverse": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_InvalidCommand": {
+      "edition": "proto2",
+      "fields": {
+        "message": {
+          "type": "string",
+          "id": 1
+        },
+        "sequenceNumber": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "sequence_number"
+        }
+      }
+    },
+    "CDOTAUserMsg_HudError": {
+      "edition": "proto2",
+      "fields": {
+        "orderId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "order_id"
+        },
+        "sequenceNumber": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "sequence_number"
+        }
+      }
+    },
+    "CDOTAUserMsg_SharedCooldown": {
+      "edition": "proto2",
+      "fields": {
+        "entindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "name": {
+          "type": "string",
+          "id": 2
+        },
+        "cooldown": {
+          "type": "float",
+          "id": 3
+        },
+        "nameIndex": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "name_index"
+        }
+      }
+    },
+    "CDOTAUserMsg_SetNextAutobuyItem": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_HalloweenDrops": {
+      "edition": "proto2",
+      "fields": {
+        "itemDefs": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1,
+          "protoName": "item_defs"
+        },
+        "playerIds": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_ids"
+        },
+        "prizeList": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "prize_list"
+        }
+      }
+    },
+    "CDOTAUserMsg_CourierLeftFountainAlert": {
+      "edition": "proto2",
+      "fields": {
+        "owningPlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "owning_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAResponseQuerySerialized": {
+      "edition": "proto2",
+      "fields": {
+        "facts": {
+          "rule": "repeated",
+          "type": ".CDOTAResponseQuerySerialized.Fact",
+          "id": 1
+        }
+      },
+      "nested": {
+        "Fact": {
+          "fields": {
+            "key": {
+              "type": "int32",
+              "id": 1
+            },
+            "valtype": {
+              "type": ".CDOTAResponseQuerySerialized.Fact.ValueType",
+              "id": 2,
+              "options": {
+                "default": "NUMERIC"
+              }
+            },
+            "valNumeric": {
+              "type": "float",
+              "id": 3,
+              "protoName": "val_numeric"
+            },
+            "valString": {
+              "type": "string",
+              "id": 4,
+              "protoName": "val_string"
+            },
+            "valStringtableIndex": {
+              "type": "int32",
+              "id": 5,
+              "protoName": "val_stringtable_index"
+            },
+            "valIntNumeric": {
+              "type": "sint32",
+              "id": 6,
+              "protoName": "val_int_numeric"
+            }
+          },
+          "nested": {
+            "ValueType": {
+              "values": {
+                "NUMERIC": 1,
+                "STRING": 2,
+                "STRINGTABLE_INDEX": 3,
+                "INT_NUMERIC": 4
+              }
+            }
+          }
+        }
+      }
+    },
+    "CDOTASpeechMatchOnClient": {
+      "edition": "proto2",
+      "fields": {
+        "speechConcept": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "speech_concept"
+        },
+        "recipientType": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "recipient_type"
+        },
+        "responsequery": {
+          "type": ".CDOTAResponseQuerySerialized",
+          "id": 3
+        },
+        "randomseed": {
+          "type": "sfixed32",
+          "id": 4,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_UnitEvent": {
+      "edition": "proto2",
+      "fields": {
+        "msgType": {
+          "type": ".EDotaEntityMessages",
+          "id": 1,
+          "protoName": "msg_type",
+          "options": {
+            "default": "DOTA_UNIT_SPEECH"
+          }
+        },
+        "entityIndex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "entity_index"
+        },
+        "speech": {
+          "type": ".CDOTAUserMsg_UnitEvent.Speech",
+          "id": 3
+        },
+        "speechMute": {
+          "type": ".CDOTAUserMsg_UnitEvent.SpeechMute",
+          "id": 4,
+          "protoName": "speech_mute"
+        },
+        "addGesture": {
+          "type": ".CDOTAUserMsg_UnitEvent.AddGesture",
+          "id": 5,
+          "protoName": "add_gesture"
+        },
+        "removeGesture": {
+          "type": ".CDOTAUserMsg_UnitEvent.RemoveGesture",
+          "id": 6,
+          "protoName": "remove_gesture"
+        },
+        "bloodImpact": {
+          "type": ".CDOTAUserMsg_UnitEvent.BloodImpact",
+          "id": 7,
+          "protoName": "blood_impact"
+        },
+        "fadeGesture": {
+          "type": ".CDOTAUserMsg_UnitEvent.FadeGesture",
+          "id": 8,
+          "protoName": "fade_gesture"
+        },
+        "speechMatchOnClient": {
+          "type": ".CDOTASpeechMatchOnClient",
+          "id": 9,
+          "protoName": "speech_match_on_client"
+        }
+      },
+      "nested": {
+        "Interval": {
+          "fields": {
+            "start": {
+              "type": "float",
+              "id": 1
+            },
+            "range": {
+              "type": "float",
+              "id": 2
+            }
+          }
+        },
+        "Speech": {
+          "fields": {
+            "speechConcept": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "speech_concept"
+            },
+            "response": {
+              "type": "string",
+              "id": 2
+            },
+            "recipientType": {
+              "type": "int32",
+              "id": 3,
+              "protoName": "recipient_type"
+            },
+            "muteable": {
+              "type": "bool",
+              "id": 5,
+              "options": {
+                "default": false
+              }
+            },
+            "predelay": {
+              "type": ".CDOTAUserMsg_UnitEvent.Interval",
+              "id": 6
+            },
+            "flags": {
+              "type": "uint32",
+              "id": 7
+            },
+            "responseType": {
+              "type": "int32",
+              "id": 8,
+              "protoName": "response_type"
+            }
+          }
+        },
+        "SpeechMute": {
+          "fields": {
+            "delay": {
+              "type": "float",
+              "id": 1,
+              "options": {
+                "default": 0.5
+              }
+            }
+          }
+        },
+        "AddGesture": {
+          "fields": {
+            "activity": {
+              "type": "int32",
+              "id": 1
+            },
+            "slot": {
+              "type": "int32",
+              "id": 2
+            },
+            "fadeIn": {
+              "type": "float",
+              "id": 3,
+              "protoName": "fade_in",
+              "options": {
+                "default": 0
+              }
+            },
+            "fadeOut": {
+              "type": "float",
+              "id": 4,
+              "protoName": "fade_out",
+              "options": {
+                "default": 0.1
+              }
+            },
+            "playbackRate": {
+              "type": "float",
+              "id": 5,
+              "protoName": "playback_rate",
+              "options": {
+                "default": 1
+              }
+            },
+            "sequenceVariant": {
+              "type": "int32",
+              "id": 6,
+              "protoName": "sequence_variant"
+            }
+          }
+        },
+        "RemoveGesture": {
+          "fields": {
+            "activity": {
+              "type": "int32",
+              "id": 1
+            }
+          }
+        },
+        "BloodImpact": {
+          "fields": {
+            "scale": {
+              "type": "int32",
+              "id": 1
+            },
+            "xNormal": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "x_normal"
+            },
+            "yNormal": {
+              "type": "int32",
+              "id": 3,
+              "protoName": "y_normal"
+            }
+          }
+        },
+        "FadeGesture": {
+          "fields": {
+            "activity": {
+              "type": "int32",
+              "id": 1
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ItemPurchased": {
+      "edition": "proto2",
+      "fields": {
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "fromCombine": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "from_combine"
+        }
+      }
+    },
+    "CDOTAUserMsg_ItemSold": {
+      "edition": "proto2",
+      "fields": {
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ItemFound": {
+      "edition": "proto2",
+      "fields": {
+        "player": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "quality": {
+          "type": "int32",
+          "id": 2
+        },
+        "rarity": {
+          "type": "int32",
+          "id": 3
+        },
+        "method": {
+          "type": "int32",
+          "id": 4
+        },
+        "itemdef": {
+          "type": "uint32",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAUserMsg_OverheadEvent": {
+      "edition": "proto2",
+      "fields": {
+        "messageType": {
+          "type": ".DOTA_OVERHEAD_ALERT",
+          "id": 1,
+          "protoName": "message_type",
+          "options": {
+            "default": "OVERHEAD_ALERT_GOLD"
+          }
+        },
+        "value": {
+          "type": "int32",
+          "id": 2
+        },
+        "targetPlayerEntindex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "target_player_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "sourcePlayerEntindex": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "source_player_entindex",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_TutorialTipInfo": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "progress": {
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_TutorialFinish": {
+      "edition": "proto2",
+      "fields": {
+        "heading": {
+          "type": "string",
+          "id": 1
+        },
+        "emblem": {
+          "type": "string",
+          "id": 2
+        },
+        "body": {
+          "type": "string",
+          "id": 3
+        },
+        "success": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_TutorialMinimapPosition": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDOTAUserMsg_SendGenericToolTip": {
+      "edition": "proto2",
+      "fields": {
+        "title": {
+          "type": "string",
+          "id": 1
+        },
+        "text": {
+          "type": "string",
+          "id": 2
+        },
+        "entindex": {
+          "type": "int32",
+          "id": 3
+        },
+        "close": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_WorldLine": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "worldline": {
+          "type": ".CDOTAMsg_WorldLine",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_ChatWheel": {
+      "edition": "proto2",
+      "fields": {
+        "chatMessageId": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "chat_message_id",
+          "options": {
+            "default": 4294967295
+          }
+        },
+        "playerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "accountId": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "account_id"
+        },
+        "paramHeroId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "param_hero_id"
+        },
+        "emoticonId": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "emoticon_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_ReceivedXmasGift": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemName": {
+          "type": "string",
+          "id": 2,
+          "protoName": "item_name"
+        },
+        "inventorySlot": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "inventory_slot"
+        }
+      }
+    },
+    "CDOTAUserMsg_ShowSurvey": {
+      "edition": "proto2",
+      "fields": {
+        "surveyId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "survey_id"
+        },
+        "matchId": {
+          "type": "uint64",
+          "id": 2,
+          "protoName": "match_id"
+        },
+        "responseStyle": {
+          "type": "string",
+          "id": 3,
+          "protoName": "response_style"
+        },
+        "teammateHeroId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "teammate_hero_id"
+        },
+        "teammateName": {
+          "type": "string",
+          "id": 5,
+          "protoName": "teammate_name"
+        },
+        "teammateAccountId": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "teammate_account_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_UpdateSharedContent": {
+      "edition": "proto2",
+      "fields": {
+        "slotType": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "slot_type"
+        }
+      }
+    },
+    "CDOTAUserMsg_TutorialRequestExp": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDOTAUserMsg_TutorialFade": {
+      "edition": "proto2",
+      "fields": {
+        "tgtAlpha": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "tgt_alpha"
+        }
+      }
+    },
+    "CDOTAUserMsg_TutorialPingMinimap": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "posX": {
+          "type": "float",
+          "id": 2,
+          "protoName": "pos_x"
+        },
+        "posY": {
+          "type": "float",
+          "id": 3,
+          "protoName": "pos_y"
+        },
+        "posZ": {
+          "type": "float",
+          "id": 4,
+          "protoName": "pos_z"
+        },
+        "entityIndex": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "entity_index"
+        }
+      }
+    },
+    "CDOTAUserMsg_GamerulesStateChanged": {
+      "edition": "proto2",
+      "fields": {
+        "state": {
+          "type": "uint32",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_AddQuestLogEntry": {
+      "edition": "proto2",
+      "fields": {
+        "npcName": {
+          "type": "string",
+          "id": 1,
+          "protoName": "npc_name"
+        },
+        "npcDialog": {
+          "type": "string",
+          "id": 2,
+          "protoName": "npc_dialog"
+        }
+      }
+    },
+    "CDOTAUserMsg_SendStatPopup": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "statpopup": {
+          "type": ".CDOTAMsg_SendStatPopup",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_DismissAllStatPopups": {
+      "edition": "proto2",
+      "fields": {
+        "dismissallmsg": {
+          "type": ".CDOTAMsg_DismissAllStatPopups",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_SendRoshanSpectatorPhase": {
+      "edition": "proto2",
+      "fields": {
+        "phase": {
+          "type": ".DOTA_ROSHAN_PHASE",
+          "id": 1,
+          "options": {
+            "default": "k_SRSP_ROSHAN_ALIVE"
+          }
+        },
+        "phaseStartTime": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "phase_start_time"
+        },
+        "phaseLength": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "phase_length"
+        }
+      }
+    },
+    "CDOTAUserMsg_SendRoshanPopup": {
+      "edition": "proto2",
+      "fields": {
+        "reclaimed": {
+          "type": "bool",
+          "id": 1
+        },
+        "gametime": {
+          "type": "int32",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_SendFinalGold": {
+      "edition": "proto2",
+      "fields": {
+        "reliableGold": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1,
+          "protoName": "reliable_gold"
+        },
+        "unreliableGold": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2,
+          "protoName": "unreliable_gold"
+        }
+      }
+    },
+    "CDOTAUserMsg_CustomMsg": {
+      "edition": "proto2",
+      "fields": {
+        "message": {
+          "type": "string",
+          "id": 1
+        },
+        "playerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "value": {
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_CoachHUDPing": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "hudPing": {
+          "type": ".CDOTAMsg_CoachHUDPing",
+          "id": 2,
+          "protoName": "hud_ping"
+        }
+      }
+    },
+    "CDOTAUserMsg_ClientLoadGridNav": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDOTAUserMsg_TE_Projectile": {
+      "edition": "proto2",
+      "fields": {
+        "source": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "target": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "moveSpeed": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "move_speed"
+        },
+        "sourceAttachment": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "source_attachment"
+        },
+        "particleSystemHandle": {
+          "type": "int64",
+          "id": 5,
+          "protoName": "particle_system_handle"
+        },
+        "dodgeable": {
+          "type": "bool",
+          "id": 6
+        },
+        "isAttack": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "is_attack"
+        },
+        "expireTime": {
+          "type": "float",
+          "id": 9,
+          "protoName": "expire_time"
+        },
+        "maximpacttime": {
+          "type": "float",
+          "id": 10
+        },
+        "colorgemcolor": {
+          "type": "fixed32",
+          "id": 11
+        },
+        "launchTick": {
+          "type": "int32",
+          "id": 12,
+          "protoName": "launch_tick"
+        },
+        "handle": {
+          "type": "int32",
+          "id": 13
+        },
+        "targetLoc": {
+          "type": ".CMsgVector",
+          "id": 14,
+          "protoName": "target_loc"
+        },
+        "particleCpData": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_ProjectileParticleCPData",
+          "id": 15,
+          "protoName": "particle_cp_data"
+        },
+        "additionalParticleSystemHandle": {
+          "type": "int64",
+          "id": 16,
+          "protoName": "additional_particle_system_handle"
+        },
+        "originalMoveSpeed": {
+          "type": "int32",
+          "id": 17,
+          "protoName": "original_move_speed"
+        },
+        "ability": {
+          "type": "uint32",
+          "id": 18,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "targetProjectileHandle": {
+          "type": "int32",
+          "id": 19,
+          "protoName": "target_projectile_handle"
+        }
+      }
+    },
+    "CDOTAUserMsg_TE_ProjectileLoc": {
+      "edition": "proto2",
+      "fields": {
+        "sourceLoc": {
+          "type": ".CMsgVector",
+          "id": 1,
+          "protoName": "source_loc"
+        },
+        "target": {
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "moveSpeed": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "move_speed"
+        },
+        "particleSystemHandle": {
+          "type": "int64",
+          "id": 4,
+          "protoName": "particle_system_handle"
+        },
+        "dodgeable": {
+          "type": "bool",
+          "id": 5
+        },
+        "isAttack": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "is_attack"
+        },
+        "expireTime": {
+          "type": "float",
+          "id": 9,
+          "protoName": "expire_time"
+        },
+        "targetLoc": {
+          "type": ".CMsgVector",
+          "id": 10,
+          "protoName": "target_loc"
+        },
+        "colorgemcolor": {
+          "type": "fixed32",
+          "id": 11
+        },
+        "launchTick": {
+          "type": "int32",
+          "id": 12,
+          "protoName": "launch_tick"
+        },
+        "handle": {
+          "type": "int32",
+          "id": 13
+        },
+        "source": {
+          "type": "uint32",
+          "id": 14,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "sourceAttachment": {
+          "type": "int32",
+          "id": 15,
+          "protoName": "source_attachment"
+        },
+        "particleCpData": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_ProjectileParticleCPData",
+          "id": 16,
+          "protoName": "particle_cp_data"
+        },
+        "additionalParticleSystemHandle": {
+          "type": "int64",
+          "id": 17,
+          "protoName": "additional_particle_system_handle"
+        },
+        "originalMoveSpeed": {
+          "type": "int32",
+          "id": 18,
+          "protoName": "original_move_speed"
+        }
+      }
+    },
+    "CDOTAUserMsg_TE_DestroyProjectile": {
+      "edition": "proto2",
+      "fields": {
+        "handle": {
+          "type": "int32",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_TE_DotaBloodImpact": {
+      "edition": "proto2",
+      "fields": {
+        "entity": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "scale": {
+          "type": "float",
+          "id": 2
+        },
+        "xnormal": {
+          "type": "float",
+          "id": 3
+        },
+        "ynormal": {
+          "type": "float",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_AbilityPing": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "type": {
+          "type": ".DOTA_ABILITY_PING_TYPE",
+          "id": 3,
+          "options": {
+            "default": "ABILITY_PING_READY"
+          }
+        },
+        "cooldownSeconds": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "cooldown_seconds"
+        },
+        "level": {
+          "type": "uint32",
+          "id": 5
+        },
+        "passive": {
+          "type": "bool",
+          "id": 6
+        },
+        "manaNeeded": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "mana_needed"
+        },
+        "entityId": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "entity_id"
+        },
+        "primaryCharges": {
+          "type": "int32",
+          "id": 9,
+          "protoName": "primary_charges"
+        },
+        "secondaryCharges": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "secondary_charges"
+        },
+        "ctrlHeld": {
+          "type": "bool",
+          "id": 12,
+          "protoName": "ctrl_held"
+        },
+        "reclaimTime": {
+          "type": "float",
+          "id": 13,
+          "protoName": "reclaim_time"
+        },
+        "ownerEntity": {
+          "type": "int32",
+          "id": 14,
+          "protoName": "owner_entity",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_TE_UnitAnimation": {
+      "edition": "proto2",
+      "fields": {
+        "entity": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "sequenceVariant": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "sequence_variant"
+        },
+        "playbackrate": {
+          "type": "float",
+          "id": 3
+        },
+        "castpoint": {
+          "type": "float",
+          "id": 4
+        },
+        "type": {
+          "type": "int32",
+          "id": 5
+        },
+        "activity": {
+          "type": "int32",
+          "id": 6
+        },
+        "lagCompensationTime": {
+          "type": "float",
+          "id": 7,
+          "protoName": "lag_compensation_time"
+        }
+      }
+    },
+    "CDOTAUserMsg_TE_UnitAnimationEnd": {
+      "edition": "proto2",
+      "fields": {
+        "entity": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "snap": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_ShowGenericPopup": {
+      "edition": "proto2",
+      "fields": {
+        "header": {
+          "type": "string",
+          "id": 1
+        },
+        "body": {
+          "type": "string",
+          "id": 2
+        },
+        "param1": {
+          "type": "string",
+          "id": 3
+        },
+        "param2": {
+          "type": "string",
+          "id": 4
+        },
+        "tintScreen": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "tint_screen"
+        },
+        "showNoOtherDialogs": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "show_no_other_dialogs"
+        }
+      }
+    },
+    "CDOTAUserMsg_VoteStart": {
+      "edition": "proto2",
+      "fields": {
+        "title": {
+          "type": "string",
+          "id": 1
+        },
+        "duration": {
+          "type": "float",
+          "id": 2
+        },
+        "choiceCount": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "choice_count"
+        },
+        "choices": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_VoteUpdate": {
+      "edition": "proto2",
+      "fields": {
+        "choiceCounts": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 1,
+          "protoName": "choice_counts"
+        }
+      }
+    },
+    "CDOTAUserMsg_VoteEnd": {
+      "edition": "proto2",
+      "fields": {
+        "selectedChoice": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "selected_choice"
+        }
+      }
+    },
+    "CDOTAUserMsg_BoosterStatePlayer": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "bonus": {
+          "type": "float",
+          "id": 2
+        },
+        "eventBonus": {
+          "type": "float",
+          "id": 3,
+          "protoName": "event_bonus"
+        },
+        "bonusItemId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "bonus_item_id"
+        },
+        "eventBonusItemId": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "event_bonus_item_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_BoosterState": {
+      "edition": "proto2",
+      "fields": {
+        "boostedPlayers": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_BoosterStatePlayer",
+          "id": 1,
+          "protoName": "boosted_players"
+        }
+      }
+    },
+    "CDOTAUserMsg_AbilitySteal": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityLevel": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "ability_level"
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsHeroLookup": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "heroId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "hero_id"
+        },
+        "heroName": {
+          "type": "string",
+          "id": 3,
+          "protoName": "hero_name"
+        },
+        "persona": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsHeroPositionInfo": {
+      "edition": "proto2",
+      "fields": {
+        "averagePosition": {
+          "type": "float",
+          "id": 1,
+          "protoName": "average_position"
+        },
+        "positionDetails": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsHeroPositionInfo.PositionPair",
+          "id": 2,
+          "protoName": "position_details"
+        }
+      },
+      "nested": {
+        "PositionPair": {
+          "fields": {
+            "positionCategory": {
+              "type": ".DOTA_POSITION_CATEGORY",
+              "id": 1,
+              "protoName": "position_category",
+              "options": {
+                "default": "DOTA_POSITION_NONE"
+              }
+            },
+            "positionCount": {
+              "type": "uint32",
+              "id": 2,
+              "protoName": "position_count"
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsHeroMinuteDetails": {
+      "edition": "proto2",
+      "fields": {
+        "lastHits": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "last_hits"
+        },
+        "heroKills": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "hero_kills"
+        },
+        "heroDamage": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "hero_damage"
+        },
+        "towerDamage": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "tower_damage"
+        },
+        "positionInfo": {
+          "type": ".CDOTAUserMsg_StatsHeroPositionInfo",
+          "id": 5,
+          "protoName": "position_info"
+        },
+        "totalXp": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "total_xp"
+        },
+        "netWorth": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "net_worth"
+        },
+        "harvestedCreepGold": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "harvested_creep_gold"
+        },
+        "claimedFarm": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "claimed_farm"
+        },
+        "wardsPlaced": {
+          "type": "uint32",
+          "id": 10,
+          "protoName": "wards_placed"
+        },
+        "runesCollected": {
+          "type": "uint32",
+          "id": 11,
+          "protoName": "runes_collected"
+        },
+        "tpsUsed": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "tps_used"
+        },
+        "manaSpent": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 13,
+          "protoName": "mana_spent"
+        },
+        "damageAbsorbed": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 14,
+          "protoName": "damage_absorbed"
+        },
+        "damageDone": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 15,
+          "protoName": "damage_done"
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsTeamMinuteDetails": {
+      "edition": "proto2",
+      "fields": {
+        "playerStats": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsHeroMinuteDetails",
+          "id": 1,
+          "protoName": "player_stats"
+        },
+        "towerKills": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "tower_kills"
+        },
+        "barrackKills": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "barrack_kills"
+        },
+        "availableLaneCreepGold": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "available_lane_creep_gold"
+        },
+        "balanceKillValue": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "balance_kill_value"
+        },
+        "balanceTowerValue": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "balance_tower_value"
+        },
+        "balanceBarracksValue": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "balance_barracks_value"
+        },
+        "balanceGoldValue": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "balance_gold_value"
+        },
+        "balanceXpValue": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "balance_xp_value"
+        },
+        "lanePerformance": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsTeamMinuteDetails.LocationPerformance",
+          "id": 10,
+          "protoName": "lane_performance"
+        }
+      },
+      "nested": {
+        "LocationPerformance": {
+          "fields": {
+            "locationCategory": {
+              "type": "uint32",
+              "id": 1,
+              "protoName": "location_category"
+            },
+            "statType": {
+              "type": "uint32",
+              "id": 2,
+              "protoName": "stat_type"
+            },
+            "value": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsPlayerKillShare": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "killSharePercent": {
+          "type": "float",
+          "id": 2,
+          "protoName": "kill_share_percent"
+        },
+        "playerLocX": {
+          "type": "float",
+          "id": 3,
+          "protoName": "player_loc_x"
+        },
+        "playerLocY": {
+          "type": "float",
+          "id": 4,
+          "protoName": "player_loc_y"
+        },
+        "healthPercent": {
+          "type": "float",
+          "id": 5,
+          "protoName": "health_percent"
+        },
+        "manaPercent": {
+          "type": "float",
+          "id": 6,
+          "protoName": "mana_percent"
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsKillDetails": {
+      "edition": "proto2",
+      "fields": {
+        "victimId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "victim_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "killShares": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsPlayerKillShare",
+          "id": 2,
+          "protoName": "kill_shares"
+        },
+        "damageToKill": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "damage_to_kill"
+        },
+        "effectiveHealth": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "effective_health"
+        },
+        "deathTime": {
+          "type": "float",
+          "id": 5,
+          "protoName": "death_time"
+        },
+        "killerId": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "killer_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_StatsMatchDetails": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 1000000
+      },
+      "fields": {
+        "heroLookup": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsHeroLookup",
+          "id": 1,
+          "protoName": "hero_lookup"
+        },
+        "radiantStats": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsTeamMinuteDetails",
+          "id": 2,
+          "protoName": "radiant_stats"
+        },
+        "direStats": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsTeamMinuteDetails",
+          "id": 3,
+          "protoName": "dire_stats"
+        },
+        "radiantKills": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsKillDetails",
+          "id": 4,
+          "protoName": "radiant_kills"
+        },
+        "direKills": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsKillDetails",
+          "id": 5,
+          "protoName": "dire_kills"
+        },
+        "fightDetails": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightDetails",
+          "id": 6,
+          "protoName": "fight_details"
+        }
+      },
+      "nested": {
+        "CDOTAUserMsg_StatsFightTeamDetails": {
+          "fields": {
+            "participants": {
+              "rule": "repeated",
+              "type": "int32",
+              "id": 1
+            },
+            "deaths": {
+              "rule": "repeated",
+              "type": "int32",
+              "id": 2
+            },
+            "goldDelta": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "gold_delta"
+            },
+            "xpDelta": {
+              "type": "uint32",
+              "id": 4,
+              "protoName": "xp_delta"
+            }
+          }
+        },
+        "CDOTAUserMsg_StatsFightDetails": {
+          "fields": {
+            "startTime": {
+              "type": "float",
+              "id": 1,
+              "protoName": "start_time"
+            },
+            "endTime": {
+              "type": "float",
+              "id": 2,
+              "protoName": "end_time"
+            },
+            "radiantFightDetails": {
+              "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightTeamDetails",
+              "id": 3,
+              "protoName": "radiant_fight_details"
+            },
+            "direFightDetails": {
+              "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightTeamDetails",
+              "id": 4,
+              "protoName": "dire_fight_details"
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MiniTaunt": {
+      "edition": "proto2",
+      "fields": {
+        "tauntingPlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "taunting_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_SpeechBubble": {
+      "edition": "proto2",
+      "fields": {
+        "destroyAll": {
+          "type": "bool",
+          "id": 1,
+          "protoName": "destroy_all"
+        }
+      }
+    },
+    "CDOTAUserMsg_CustomHeaderMessage": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "duration": {
+          "type": "float",
+          "id": 2
+        },
+        "message": {
+          "type": "string",
+          "id": 3
+        },
+        "value": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_BeastChat": {
+      "edition": "proto2",
+      "fields": {
+        "team": {
+          "type": "uint32",
+          "id": 1
+        },
+        "format": {
+          "type": "string",
+          "id": 2
+        },
+        "message": {
+          "type": "string",
+          "id": 3
+        },
+        "target": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_CustomHudElement_Create": {
+      "edition": "proto2",
+      "fields": {
+        "elementId": {
+          "type": "string",
+          "id": 1,
+          "protoName": "element_id"
+        },
+        "layoutFilename": {
+          "type": "string",
+          "id": 2,
+          "protoName": "layout_filename"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_CustomHudElement_Modify": {
+      "edition": "proto2",
+      "fields": {
+        "elementId": {
+          "type": "string",
+          "id": 1,
+          "protoName": "element_id"
+        },
+        "modifyVisible": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "modify_visible"
+        },
+        "data": {
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_CustomHudElement_Destroy": {
+      "edition": "proto2",
+      "fields": {
+        "elementId": {
+          "type": "string",
+          "id": 1,
+          "protoName": "element_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_CompendiumStatePlayer": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "level": {
+          "type": "uint32",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_CompendiumState": {
+      "edition": "proto2",
+      "fields": {
+        "compendiumPlayers": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_CompendiumStatePlayer",
+          "id": 1,
+          "protoName": "compendium_players"
+        }
+      }
+    },
+    "CDOTAUserMsg_ProjectionAbility": {
+      "edition": "proto2",
+      "fields": {
+        "abilityId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "casterEntIndex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "caster_ent_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "casterTeam": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "caster_team"
+        },
+        "channelEnd": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "channel_end"
+        },
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 5
+        },
+        "trackCasterOnly": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "track_caster_only"
+        },
+        "endTime": {
+          "type": "float",
+          "id": 7,
+          "protoName": "end_time"
+        },
+        "victimEntIndex": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "victim_ent_index",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ProjectionEvent": {
+      "edition": "proto2",
+      "fields": {
+        "eventId": {
+          "type": ".EProjectionEvent",
+          "id": 1,
+          "protoName": "event_id",
+          "options": {
+            "default": "ePE_FirstBlood"
+          }
+        },
+        "team": {
+          "type": "uint32",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_XPAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_TalentTreeAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "abilityId": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "slot": {
+          "type": "int32",
+          "id": 4
+        },
+        "learned": {
+          "type": "bool",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAUserMsg_UpdateQuestProgress": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDOTAUserMsg_QuestStatus": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "questId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "quest_id"
+        },
+        "challengeId": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "challenge_id"
+        },
+        "progress": {
+          "type": "uint32",
+          "id": 4
+        },
+        "goal": {
+          "type": "uint32",
+          "id": 5
+        },
+        "query": {
+          "type": "uint32",
+          "id": 6
+        },
+        "failGametime": {
+          "type": "float",
+          "id": 7,
+          "protoName": "fail_gametime"
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_SuggestHeroPick": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "heroId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "hero_id"
+        },
+        "ban": {
+          "type": "bool",
+          "id": 3
+        },
+        "facetId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "facet_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_SuggestHeroRole": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "heroRole": {
+          "type": "string",
+          "id": 2,
+          "protoName": "hero_role"
+        }
+      }
+    },
+    "CDOTAUserMsg_KillcamDamageTaken": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "damageTaken": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "damage_taken"
+        },
+        "itemType": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "item_type"
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "heroName": {
+          "type": "string",
+          "id": 5,
+          "protoName": "hero_name"
+        },
+        "damageColor": {
+          "type": "string",
+          "id": 6,
+          "protoName": "damage_color"
+        }
+      }
+    },
+    "CDOTAUserMsg_SelectPenaltyGold": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "cost": {
+          "type": "sint32",
+          "id": 2
+        }
+      }
+    },
+    "CDOTAUserMsg_RollDiceResult": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "channelType": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "channel_type"
+        },
+        "rollMin": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "roll_min"
+        },
+        "rollMax": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "roll_max"
+        },
+        "result": {
+          "type": "uint32",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAUserMsg_FlipCoinResult": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "channelType": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "channel_type"
+        },
+        "result": {
+          "type": "bool",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMessage_RequestItemSuggestions": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMessage_TeamCaptainChanged": {
+      "edition": "proto2",
+      "fields": {
+        "team": {
+          "type": "uint32",
+          "id": 1
+        },
+        "captainPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "captain_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ChatWheelCooldown": {
+      "edition": "proto2",
+      "fields": {
+        "messageId": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "message_id",
+          "options": {
+            "default": 4294967295
+          }
+        },
+        "cooldownRemaining": {
+          "type": "float",
+          "id": 2,
+          "protoName": "cooldown_remaining"
+        }
+      }
+    },
+    "CDOTAUserMsg_HeroRelicProgress": {
+      "edition": "proto2",
+      "fields": {
+        "heroRelicType": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "hero_relic_type"
+        },
+        "value": {
+          "type": "uint32",
+          "id": 2
+        },
+        "ehandle": {
+          "type": "uint32",
+          "id": 3,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "eventId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "event_id"
+        },
+        "valueDisplay": {
+          "type": "float",
+          "id": 5,
+          "protoName": "value_display"
+        }
+      }
+    },
+    "CDOTAUserMsg_AbilityDraftRequestAbility": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "requestedAbilityId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "requested_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "ctrlIsDown": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "ctrl_is_down"
+        },
+        "requestedHeroId": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "requested_hero_id"
+        },
+        "requestedFacetKey": {
+          "type": "uint64",
+          "id": 5,
+          "protoName": "requested_facet_key"
+        }
+      }
+    },
+    "CDOTAUserMsg_DamageReport": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetHeroId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_hero_id"
+        },
+        "sourceHeroId": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "source_hero_id"
+        },
+        "damageAmount": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "damage_amount"
+        },
+        "broadcast": {
+          "type": "bool",
+          "id": 5
+        }
+      }
+    },
+    "CDOTAUserMsg_SalutePlayer": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "tipAmount": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "tip_amount"
+        },
+        "eventId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "event_id"
+        },
+        "customTipStyle": {
+          "type": "string",
+          "id": 5,
+          "protoName": "custom_tip_style"
+        },
+        "numRecentTips": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "num_recent_tips"
+        }
+      }
+    },
+    "CDOTAUserMsg_GiftPlayer": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "giftItemDefIndex": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "gift_item_def_index"
+        }
+      }
+    },
+    "CDOTAUserMsg_TipAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "tipText": {
+          "type": "string",
+          "id": 2,
+          "protoName": "tip_text"
+        }
+      }
+    },
+    "CDOTAUserMsg_ReplaceQueryUnit": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "sourceEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "source_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ESArcanaCombo": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "comboCount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "combo_count"
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "arcana_level"
+        }
+      }
+    },
+    "CDOTAUserMsg_ESArcanaComboSummary": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "comboCount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "combo_count"
+        },
+        "damageAmount": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "damage_amount"
+        }
+      }
+    },
+    "CDOTAUserMsg_OMArcanaCombo": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "multicastAmount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "multicast_amount"
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "arcana_level"
+        },
+        "multicastChance": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "multicast_chance"
+        }
+      }
+    },
+    "CDOTAUserMsg_HighFiveCompleted": {
+      "edition": "proto2",
+      "fields": {
+        "playerId_1": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_1",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerId_2": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_2",
+          "options": {
+            "default": -1
+          }
+        },
+        "specialHighFive": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "special_high_five"
+        },
+        "specialEntindex": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "special_entindex",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_HighFiveLeftHanging": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_ShovelUnearth": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "allChat": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "all_chat"
+        },
+        "locstring": {
+          "type": "string",
+          "id": 3
+        },
+        "quantity": {
+          "type": "uint32",
+          "id": 4
+        }
+      }
+    },
+    "CDOTAUserMsg_AllStarEvent": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "pointAmount": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "point_amount"
+        },
+        "eventId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "event_id"
+        },
+        "playerScores": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_AllStarEvent.PlayerScore",
+          "id": 5,
+          "protoName": "player_scores"
+        }
+      },
+      "nested": {
+        "PlayerScore": {
+          "fields": {
+            "playerId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "player_id",
+              "options": {
+                "default": -1
+              }
+            },
+            "scoreSansKda": {
+              "type": "uint32",
+              "id": 2,
+              "protoName": "score_sans_kda"
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_QueuedOrderRemoved": {
+      "edition": "proto2",
+      "fields": {
+        "unitOrderSequence": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1,
+          "protoName": "unit_order_sequence"
+        }
+      }
+    },
+    "CDOTAUserMsg_DebugChallenge": {
+      "edition": "proto2",
+      "fields": {
+        "challengeType": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "challenge_type"
+        },
+        "challengeQueryId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "challenge_query_id"
+        },
+        "eventId": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "event_id"
+        },
+        "instanceId": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "instance_id"
+        },
+        "challengeVar_0": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "challenge_var_0"
+        },
+        "challengeVar_1": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "challenge_var_1"
+        },
+        "challengeMaxRank": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "challenge_max_rank"
+        }
+      }
+    },
+    "CDOTAUserMsg_FoundNeutralItem": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemAbilityId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "item_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "itemTier": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "item_tier"
+        },
+        "tierItemCount": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "tier_item_count"
+        },
+        "enhancementAbilityId": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "enhancement_ability_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "enhancementLevel": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "enhancement_level"
+        },
+        "trinketLevel": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "trinket_level"
+        }
+      }
+    },
+    "CDOTAUserMsg_OutpostCaptured": {
+      "edition": "proto2",
+      "fields": {
+        "outpostEntindex": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "outpost_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "teamId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "team_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_OutpostGrantedXP": {
+      "edition": "proto2",
+      "fields": {
+        "teamId": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "team_id"
+        },
+        "xpAmount": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "xp_amount"
+        }
+      }
+    },
+    "CDOTAUserMsg_MoveCameraToUnit": {
+      "edition": "proto2",
+      "fields": {
+        "unitEhandle": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "unit_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_PauseMinigameData": {
+      "edition": "proto2",
+      "fields": {
+        "dataBits": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_PauseMinigameData.DataBit",
+          "id": 1,
+          "protoName": "data_bits"
+        }
+      },
+      "nested": {
+        "DataBit": {
+          "fields": {
+            "index": {
+              "type": "uint32",
+              "id": 1
+            },
+            "data": {
+              "type": "int32",
+              "id": 2
+            },
+            "dataExtra": {
+              "type": "int64",
+              "id": 3,
+              "protoName": "data_extra"
+            }
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_VersusScene_PlayerBehavior": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "behavior": {
+          "type": ".EDOTAVersusScenePlayerBehavior",
+          "id": 2,
+          "options": {
+            "default": "VS_PLAYER_BEHAVIOR_PLAY_ACTIVITY"
+          }
+        },
+        "playActivity": {
+          "type": ".VersusScene_PlayActivity",
+          "id": 3,
+          "protoName": "play_activity"
+        },
+        "chatWheel": {
+          "type": ".VersusScene_ChatWheel",
+          "id": 4,
+          "protoName": "chat_wheel"
+        },
+        "playbackRate": {
+          "type": ".VersusScene_PlaybackRate",
+          "id": 5,
+          "protoName": "playback_rate"
+        }
+      }
+    },
+    "CDOTAUserMsg_QoP_ArcanaSummary": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "arcana_level"
+        },
+        "playersHit": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "players_hit"
+        },
+        "playersKilled": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "players_killed"
+        }
+      }
+    },
+    "CDOTAUserMsg_HotPotato_Created": {
+      "edition": "proto2",
+      "fields": {
+        "playerId_1": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_1",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerId_2": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_2",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_HotPotato_Exploded": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_WK_Arcana_Progress": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "arcana_level"
+        },
+        "heroId": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "hero_id"
+        }
+      }
+    },
+    "CDOTAUserMsg_GuildChallenge_Progress": {
+      "edition": "proto2",
+      "fields": {
+        "playerProgress": {
+          "rule": "repeated",
+          "type": ".CDOTAUserMsg_GuildChallenge_Progress.PlayerProgress",
+          "id": 1,
+          "protoName": "player_progress"
+        },
+        "guildId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "guild_id"
+        },
+        "challengeInstanceId": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "challenge_instance_id"
+        },
+        "challengeParameter": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "challenge_parameter"
+        },
+        "challengeType": {
+          "type": ".CDOTAUserMsg_GuildChallenge_Progress.EChallengeType",
+          "id": 5,
+          "protoName": "challenge_type",
+          "options": {
+            "default": "k_EChallengeType_Invalid"
+          }
+        },
+        "challengeProgressAtStart": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "challenge_progress_at_start"
+        },
+        "complete": {
+          "type": "bool",
+          "id": 8
+        }
+      },
+      "nested": {
+        "PlayerProgress": {
+          "fields": {
+            "playerId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "player_id",
+              "options": {
+                "default": -1
+              }
+            },
+            "progress": {
+              "type": "uint32",
+              "id": 6
+            }
+          }
+        },
+        "EChallengeType": {
+          "values": {
+            "k_EChallengeType_Invalid": 0,
+            "k_EChallengeType_Cooperative": 1,
+            "k_EChallengeType_Contract": 2
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_WRArcanaProgress": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "targetEhandle": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "target_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "arrowsLanded": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "arrows_landed"
+        },
+        "damageDealt": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "damage_dealt"
+        },
+        "targetHp": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "target_hp"
+        },
+        "targetMaxHp": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "target_max_hp"
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "arcana_level"
+        }
+      }
+    },
+    "CDOTAUserMsg_WRArcanaSummary": {
+      "edition": "proto2",
+      "fields": {
+        "ehandle": {
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "targetEhandle": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "target_ehandle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "arrowsLanded": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "arrows_landed"
+        },
+        "damageDealt": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "damage_dealt"
+        },
+        "targetHp": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "target_hp"
+        },
+        "targetMaxHp": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "target_max_hp"
+        },
+        "arcanaLevel": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "arcana_level"
+        },
+        "success": {
+          "type": "bool",
+          "id": 8
+        }
+      }
+    },
+    "CDOTAUserMsg_EmptyItemSlotAlert": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "slotIndex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "slot_index"
+        },
+        "cooldownSeconds": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "cooldown_seconds"
+        }
+      }
+    },
+    "CDOTAUserMsg_AghsStatusAlert": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "alertType": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "alert_type"
+        },
+        "hasScepter": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "has_scepter"
+        },
+        "hasShard": {
+          "type": "bool",
+          "id": 6,
+          "protoName": "has_shard"
+        }
+      }
+    },
+    "CDOTAUserMsg_MutedPlayers": {
+      "edition": "proto2",
+      "fields": {
+        "textMutedPlayerIds": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 1,
+          "protoName": "text_muted_player_ids"
+        },
+        "voiceMutedPlayerIds": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2,
+          "protoName": "voice_muted_player_ids"
+        }
+      }
+    },
+    "CDOTAUserMsg_ContextualTip": {
+      "edition": "proto2",
+      "fields": {
+        "tipId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "tip_id"
+        },
+        "referencedAbilities": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2,
+          "protoName": "referenced_abilities"
+        },
+        "referencedUnits": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 3,
+          "protoName": "referenced_units"
+        },
+        "panoramaClasses": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 4,
+          "protoName": "panorama_classes"
+        },
+        "forceAnnotation": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "force_annotation"
+        },
+        "variant": {
+          "type": "int32",
+          "id": 6
+        },
+        "intParam": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "int_param"
+        },
+        "intParam2": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "int_param2"
+        },
+        "floatParam": {
+          "type": "float",
+          "id": 9,
+          "protoName": "float_param"
+        },
+        "floatParam2": {
+          "type": "float",
+          "id": 10,
+          "protoName": "float_param2"
+        },
+        "stringParam": {
+          "type": "string",
+          "id": 11,
+          "protoName": "string_param"
+        },
+        "stringParam2": {
+          "type": "string",
+          "id": 12,
+          "protoName": "string_param2"
+        },
+        "tipTextOverride": {
+          "type": "string",
+          "id": 13,
+          "protoName": "tip_text_override"
+        },
+        "tipAnnotationOverride": {
+          "type": "string",
+          "id": 14,
+          "protoName": "tip_annotation_override"
+        },
+        "panoramaSnippet": {
+          "type": "string",
+          "id": 15,
+          "protoName": "panorama_snippet"
+        }
+      }
+    },
+    "CDOTAUserMsg_ChatMessage": {
+      "edition": "proto2",
+      "fields": {
+        "sourcePlayerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "source_player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "channelType": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "channel_type"
+        },
+        "messageText": {
+          "type": "string",
+          "id": 3,
+          "protoName": "message_text"
+        }
+      }
+    },
+    "CDOTAUserMsg_RockPaperScissorsStarted": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdSource": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_source",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerIdTarget": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_target",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_RockPaperScissorsFinished": {
+      "edition": "proto2",
+      "fields": {
+        "playerId_1": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_1",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerId_2": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_2",
+          "options": {
+            "default": -1
+          }
+        },
+        "player_1Choice": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "player_1_choice"
+        },
+        "player_2Choice": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "player_2_choice"
+        }
+      }
+    },
+    "CDOTAUserMsg_DuelOpponentKilled": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdWinner": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_winner"
+        },
+        "playerIdLoser": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_loser"
+        }
+      }
+    },
+    "CDOTAUserMsg_DuelAccepted": {
+      "edition": "proto2",
+      "fields": {
+        "playerId_1": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_1"
+        },
+        "playerId_2": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_2"
+        }
+      }
+    },
+    "CDOTAUserMsg_DuelRequested": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdRequestor": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_requestor",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MuertaReleaseEvent_AssignedTargetKilled": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdKiller": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_killer",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerIdTarget": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_target",
+          "options": {
+            "default": -1
+          }
+        },
+        "points": {
+          "type": "int32",
+          "id": 3
+        },
+        "pointsTotal": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "points_total"
+        },
+        "lastHit": {
+          "type": "bool",
+          "id": 5,
+          "protoName": "last_hit"
+        }
+      }
+    },
+    "CDOTAUserMsg_PlayerDraftSuggestPick": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "suggestionPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "suggestion_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_PlayerDraftPick": {
+      "edition": "proto2",
+      "fields": {
+        "playerIdCaptain": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id_captain",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerIdTarget": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_id_target",
+          "options": {
+            "default": -1
+          }
+        },
+        "team": {
+          "type": "int32",
+          "id": 3
+        }
+      }
+    },
+    "CDOTAUserMsg_FacetPing": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "facetStrhash": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "facet_strhash"
+        },
+        "entityId": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "entity_id"
+        },
+        "allChat": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "all_chat"
+        }
+      }
+    },
+    "CDOTAUserMsg_InnatePing": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "entityId": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "entity_id"
+        },
+        "allChat": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "all_chat"
+        }
+      }
+    },
+    "CDOTAUserMsg_NeutralCraftAvailable": {
+      "edition": "proto2",
+      "fields": {}
+    },
+    "CDOTAUserMsg_TimerAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "timerAlertType": {
+          "type": ".ETimerAlertType",
+          "id": 2,
+          "protoName": "timer_alert_type",
+          "options": {
+            "default": "k_TimerAlertType_PowerRune"
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MadstoneAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "targetEntindex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "target_entindex",
+          "options": {
+            "default": -1
+          }
+        },
+        "tier": {
+          "type": "int32",
+          "id": 3
+        },
+        "madstoneAlertType": {
+          "type": ".CDOTAUserMsg_MadstoneAlert.EMadstoneAlertType",
+          "id": 4,
+          "protoName": "madstone_alert_type",
+          "options": {
+            "default": "CraftAvailable"
+          }
+        },
+        "value": {
+          "type": "int32",
+          "id": 5
+        }
+      },
+      "nested": {
+        "EMadstoneAlertType": {
+          "values": {
+            "CraftAvailable": 0,
+            "NeedMadstone": 1,
+            "WaitingForNextTier": 2
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_MonsterHunter_InvestigationsAvailable": {
+      "edition": "proto2",
+      "fields": {
+        "investigations": {
+          "rule": "repeated",
+          "type": ".CMsgMonsterHunterInvestigation",
+          "id": 1
+        }
+      }
+    },
+    "CDOTAUserMsg_MonsterHunter_InvestigationGameState": {
+      "edition": "proto2",
+      "fields": {
+        "investigationGameState": {
+          "type": ".CMsgMonsterHunterInvestigationGameState",
+          "id": 1,
+          "protoName": "investigation_game_state"
+        },
+        "investigationsLocked": {
+          "type": "bool",
+          "id": 2,
+          "protoName": "investigations_locked"
+        }
+      }
+    },
+    "CDOTAUserMsg_MonsterHunter_HuntAlert": {
+      "edition": "proto2",
+      "fields": {
+        "playerId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "player_id",
+          "options": {
+            "default": -1
+          }
+        },
+        "heroId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "hero_id"
+        },
+        "huntAlertType": {
+          "type": ".CDOTAUserMsg_MonsterHunter_HuntAlert.EHuntAlertType",
+          "id": 3,
+          "protoName": "hunt_alert_type",
+          "options": {
+            "default": "MainObjective"
+          }
+        },
+        "huntStatusType": {
+          "type": ".CDOTAUserMsg_MonsterHunter_HuntAlert.EHuntStatusType",
+          "id": 4,
+          "protoName": "hunt_status_type",
+          "options": {
+            "default": "Pending"
+          }
+        },
+        "index": {
+          "type": "int32",
+          "id": 5
+        }
+      },
+      "nested": {
+        "EHuntAlertType": {
+          "values": {
+            "MainObjective": 0,
+            "MainObjectiveAll": 1,
+            "HuntedBy": 2,
+            "HuntedByAll": 3,
+            "HunterDuel": 4,
+            "HunterDuelAll": 5,
+            "HuntSelection": 6
+          }
+        },
+        "EHuntStatusType": {
+          "values": {
+            "Pending": 0,
+            "Success": 1,
+            "Failed": 2
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_KillEffect": {
+      "edition": "proto2",
+      "fields": {
+        "victimEntIndex": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "victim_ent_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "killerPlayerId": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "killer_player_id",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CDOTAUserMsg_GiveItem": {
+      "edition": "proto2",
+      "fields": {
+        "giverEntIndex": {
+          "type": "uint32",
+          "id": 1,
+          "protoName": "giver_ent_index",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "receiverEntIndex": {
+          "type": "uint32",
+          "id": 2,
+          "protoName": "receiver_ent_index",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "itemEntIndex": {
+          "type": "uint32",
+          "id": 3,
+          "protoName": "item_ent_index",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "giveStatus": {
+          "type": ".CDOTAUserMsg_GiveItem.EGiveStatus",
+          "id": 4,
+          "protoName": "give_status",
+          "options": {
+            "default": "Start"
+          }
+        }
+      },
+      "nested": {
+        "EGiveStatus": {
+          "values": {
+            "Start": 0,
+            "End": 1
+          }
+        }
+      }
+    },
+    "CMsgPlaceDecalEvent": {
+      "edition": "proto2",
+      "fields": {
+        "position": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "saxis": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "boneindex": {
+          "type": "int32",
+          "id": 4
+        },
+        "triangleindex": {
+          "type": "int32",
+          "id": 13
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 5
+        },
+        "color": {
+          "type": "fixed32",
+          "id": 6
+        },
+        "randomSeed": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "random_seed"
+        },
+        "decalGroupName": {
+          "type": "uint32",
+          "id": 8,
+          "protoName": "decal_group_name"
+        },
+        "sizeOverride": {
+          "type": "float",
+          "id": 9,
+          "protoName": "size_override"
+        },
+        "entityhandle": {
+          "type": "uint32",
+          "id": 10,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "materialId": {
+          "type": "uint64",
+          "id": 11,
+          "protoName": "material_id"
+        },
+        "sequenceName": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "sequence_name"
+        },
+        "positionObjectspace": {
+          "type": ".CMsgVector",
+          "id": 14,
+          "protoName": "position_objectspace"
+        },
+        "normalObjectspace": {
+          "type": ".CMsgVector",
+          "id": 15,
+          "protoName": "normal_objectspace"
+        }
+      }
+    },
+    "CMsgSource1LegacyGameEventList": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 32768
+      },
+      "fields": {
+        "descriptors": {
+          "rule": "repeated",
+          "type": ".CMsgSource1LegacyGameEventList.descriptor_t",
+          "id": 1
+        }
+      },
+      "nested": {
+        "key_t": {
+          "fields": {
+            "type": {
+              "type": "int32",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            }
+          }
+        },
+        "descriptor_t": {
+          "fields": {
+            "eventid": {
+              "type": "int32",
+              "id": 1
+            },
+            "name": {
+              "type": "string",
+              "id": 2
+            },
+            "keys": {
+              "rule": "repeated",
+              "type": ".CMsgSource1LegacyGameEventList.key_t",
+              "id": 3
+            }
+          }
+        }
+      }
+    },
+    "CMsgSource1LegacyGameEvent": {
+      "edition": "proto2",
+      "fields": {
+        "eventName": {
+          "type": "string",
+          "id": 1,
+          "protoName": "event_name"
+        },
+        "eventid": {
+          "type": "int32",
+          "id": 2
+        },
+        "keys": {
+          "rule": "repeated",
+          "type": ".CMsgSource1LegacyGameEvent.key_t",
+          "id": 3
+        },
+        "serverTick": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "server_tick"
+        },
+        "passthrough": {
+          "type": "int32",
+          "id": 5
+        }
+      },
+      "nested": {
+        "key_t": {
+          "fields": {
+            "type": {
+              "type": "int32",
+              "id": 1
+            },
+            "valString": {
+              "type": "string",
+              "id": 2,
+              "protoName": "val_string"
+            },
+            "valFloat": {
+              "type": "float",
+              "id": 3,
+              "protoName": "val_float"
+            },
+            "valLong": {
+              "type": "int32",
+              "id": 4,
+              "protoName": "val_long"
+            },
+            "valShort": {
+              "type": "int32",
+              "id": 5,
+              "protoName": "val_short"
+            },
+            "valByte": {
+              "type": "int32",
+              "id": 6,
+              "protoName": "val_byte"
+            },
+            "valBool": {
+              "type": "bool",
+              "id": 7,
+              "protoName": "val_bool"
+            },
+            "valUint64": {
+              "type": "uint64",
+              "id": 8,
+              "protoName": "val_uint64"
+            }
+          }
+        }
+      }
+    },
+    "CMsgSosStartSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "soundevent_guid"
+        },
+        "soundeventHash": {
+          "type": "fixed32",
+          "id": 2,
+          "protoName": "soundevent_hash"
+        },
+        "sourceEntityIndex": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "source_entity_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "seed": {
+          "type": "int32",
+          "id": 4
+        },
+        "packedParams": {
+          "type": "bytes",
+          "id": 5,
+          "protoName": "packed_params"
+        },
+        "startTime": {
+          "type": "float",
+          "id": 6,
+          "protoName": "start_time"
+        }
+      }
+    },
+    "CMsgSosStopSoundEvent": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "soundevent_guid"
+        }
+      }
+    },
+    "CMsgSosStopSoundEventHash": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventHash": {
+          "type": "fixed32",
+          "id": 1,
+          "protoName": "soundevent_hash"
+        },
+        "sourceEntityIndex": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "source_entity_index",
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CMsgSosSetSoundEventParams": {
+      "edition": "proto2",
+      "fields": {
+        "soundeventGuid": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "soundevent_guid"
+        },
+        "packedParams": {
+          "type": "bytes",
+          "id": 5,
+          "protoName": "packed_params"
+        }
+      }
+    },
+    "VoiceDataFormat_t": {
+      "edition": "proto2",
+      "values": {
+        "VOICEDATA_FORMAT_STEAM": 0,
+        "VOICEDATA_FORMAT_ENGINE": 1,
+        "VOICEDATA_FORMAT_OPUS": 2
+      }
+    },
+    "CMsgVoiceAudio": {
+      "edition": "proto2",
+      "fields": {
+        "format": {
+          "type": ".VoiceDataFormat_t",
+          "id": 1,
+          "options": {
+            "default": "VOICEDATA_FORMAT_STEAM"
+          }
+        },
+        "voiceData": {
+          "type": "bytes",
+          "id": 2,
+          "protoName": "voice_data"
+        },
+        "sequenceBytes": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "sequence_bytes"
+        },
+        "sectionNumber": {
+          "type": "uint32",
+          "id": 4,
+          "protoName": "section_number"
+        },
+        "sampleRate": {
+          "type": "uint32",
+          "id": 5,
+          "protoName": "sample_rate"
+        },
+        "uncompressedSampleOffset": {
+          "type": "uint32",
+          "id": 6,
+          "protoName": "uncompressed_sample_offset"
+        },
+        "numPackets": {
+          "type": "uint32",
+          "id": 7,
+          "protoName": "num_packets"
+        },
+        "packetOffsets": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 8,
+          "protoName": "packet_offsets",
+          "options": {
+            "packed": true
+          }
+        },
+        "voiceLevel": {
+          "type": "float",
+          "id": 9,
+          "protoName": "voice_level"
+        }
+      }
+    },
+    "CSVCMsg_ServerInfo": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 409600
+      },
+      "fields": {
+        "protocol": {
+          "type": "int32",
+          "id": 1
+        },
+        "serverCount": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "server_count"
+        },
+        "isDedicated": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "is_dedicated"
+        },
+        "isHltv": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "is_hltv"
+        },
+        "cOs": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "c_os"
+        },
+        "maxClients": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "max_clients"
+        },
+        "maxClasses": {
+          "type": "int32",
+          "id": 11,
+          "protoName": "max_classes"
+        },
+        "playerSlot": {
+          "type": "int32",
+          "id": 12,
+          "protoName": "player_slot",
+          "options": {
+            "default": -1
+          }
+        },
+        "tickInterval": {
+          "type": "float",
+          "id": 13,
+          "protoName": "tick_interval"
+        },
+        "gameDir": {
+          "type": "string",
+          "id": 14,
+          "protoName": "game_dir"
+        },
+        "mapName": {
+          "type": "string",
+          "id": 15,
+          "protoName": "map_name"
+        },
+        "skyName": {
+          "type": "string",
+          "id": 16,
+          "protoName": "sky_name"
+        },
+        "hostName": {
+          "type": "string",
+          "id": 17,
+          "protoName": "host_name"
+        },
+        "addonName": {
+          "type": "string",
+          "id": 18,
+          "protoName": "addon_name"
+        },
+        "gameSessionConfig": {
+          "type": ".CSVCMsg_GameSessionConfiguration",
+          "id": 19,
+          "protoName": "game_session_config"
+        },
+        "gameSessionManifest": {
+          "type": "bytes",
+          "id": 20,
+          "protoName": "game_session_manifest"
+        }
+      }
+    },
+    "CSVCMsg_ClassInfo": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 8192
+      },
+      "fields": {
+        "createOnClient": {
+          "type": "bool",
+          "id": 1,
+          "protoName": "create_on_client"
+        },
+        "classes": {
+          "rule": "repeated",
+          "type": ".CSVCMsg_ClassInfo.class_t",
+          "id": 2
+        }
+      },
+      "nested": {
+        "class_t": {
+          "fields": {
+            "classId": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "class_id"
+            },
+            "className": {
+              "type": "string",
+              "id": 3,
+              "protoName": "class_name"
+            }
+          }
+        }
+      }
+    },
+    "CSVCMsg_VoiceInit": {
+      "edition": "proto2",
+      "fields": {
+        "quality": {
+          "type": "int32",
+          "id": 1
+        },
+        "codec": {
+          "type": "string",
+          "id": 2
+        },
+        "version": {
+          "type": "int32",
+          "id": 3,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CSVCMsg_PacketEntities": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
+      "fields": {
+        "maxEntries": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "max_entries"
+        },
+        "updatedEntries": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "updated_entries"
+        },
+        "legacyIsDelta": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "legacy_is_delta"
+        },
+        "updateBaseline": {
+          "type": "bool",
+          "id": 4,
+          "protoName": "update_baseline"
+        },
+        "baseline": {
+          "type": "int32",
+          "id": 5
+        },
+        "deltaFrom": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "delta_from"
+        },
+        "entityData": {
+          "type": "bytes",
+          "id": 7,
+          "protoName": "entity_data"
+        },
+        "pendingFullFrame": {
+          "type": "bool",
+          "id": 8,
+          "protoName": "pending_full_frame"
+        },
+        "activeSpawngroupHandle": {
+          "type": "uint32",
+          "id": 9,
+          "protoName": "active_spawngroup_handle"
+        },
+        "maxSpawngroupCreationsequence": {
+          "type": "uint32",
+          "id": 10,
+          "protoName": "max_spawngroup_creationsequence"
+        },
+        "lastCmdNumberExecuted": {
+          "type": "uint32",
+          "id": 11,
+          "protoName": "last_cmd_number_executed"
+        },
+        "lastCmdNumberRecvDelta": {
+          "type": "sint32",
+          "id": 17,
+          "protoName": "last_cmd_number_recv_delta"
+        },
+        "serverTick": {
+          "type": "uint32",
+          "id": 12,
+          "protoName": "server_tick"
+        },
+        "serializedEntities": {
+          "type": "bytes",
+          "id": 13,
+          "protoName": "serialized_entities"
+        },
+        "alternateBaselines": {
+          "rule": "repeated",
+          "type": ".CSVCMsg_PacketEntities.alternate_baseline_t",
+          "id": 15,
+          "protoName": "alternate_baselines"
+        },
+        "hasPvsVisBitsDeprecated": {
+          "type": "uint32",
+          "id": 16,
+          "protoName": "has_pvs_vis_bits_deprecated"
+        },
+        "cmdRecvStatus": {
+          "rule": "repeated",
+          "type": "sint32",
+          "id": 22,
+          "protoName": "cmd_recv_status",
+          "options": {
+            "packed": true
+          }
+        },
+        "nonTransmittedEntities": {
+          "type": ".CSVCMsg_PacketEntities.non_transmitted_entities_t",
+          "id": 19,
+          "protoName": "non_transmitted_entities"
+        },
+        "cqStarvedCommandTicks": {
+          "type": "uint32",
+          "id": 20,
+          "protoName": "cq_starved_command_ticks"
+        },
+        "cqDiscardedCommandTicks": {
+          "type": "uint32",
+          "id": 21,
+          "protoName": "cq_discarded_command_ticks"
+        },
+        "outofpvsEntityUpdates": {
+          "type": ".CSVCMsg_PacketEntities.outofpvs_entity_updates_t",
+          "id": 23,
+          "protoName": "outofpvs_entity_updates"
+        },
+        "devPadding": {
+          "type": "bytes",
+          "id": 999,
+          "protoName": "dev_padding"
+        }
+      },
+      "nested": {
+        "alternate_baseline_t": {
+          "fields": {
+            "entityIndex": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "entity_index"
+            },
+            "baselineIndex": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "baseline_index"
+            }
+          }
+        },
+        "non_transmitted_entities_t": {
+          "fields": {
+            "headerCount": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "header_count"
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "outofpvs_entity_updates_t": {
+          "fields": {
+            "count": {
+              "type": "int32",
+              "id": 1
+            },
+            "data": {
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CSVCMsg_CreateStringTable": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 102400
+      },
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "numEntries": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "num_entries"
+        },
+        "userDataFixedSize": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "user_data_fixed_size"
+        },
+        "userDataSize": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "user_data_size"
+        },
+        "userDataSizeBits": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "user_data_size_bits"
+        },
+        "flags": {
+          "type": "int32",
+          "id": 6
+        },
+        "stringData": {
+          "type": "bytes",
+          "id": 7,
+          "protoName": "string_data"
+        },
+        "uncompressedSize": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "uncompressed_size"
+        },
+        "dataCompressed": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "data_compressed"
+        },
+        "usingVarintBitcounts": {
+          "type": "bool",
+          "id": 10,
+          "protoName": "using_varint_bitcounts"
+        }
+      }
+    },
+    "CSVCMsg_UpdateStringTable": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 262144
+      },
+      "fields": {
+        "tableId": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "table_id"
+        },
+        "numChangedEntries": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "num_changed_entries"
+        },
+        "stringData": {
+          "type": "bytes",
+          "id": 3,
+          "protoName": "string_data"
+        }
+      }
+    },
+    "CSVCMsg_VoiceData": {
+      "edition": "proto2",
+      "fields": {
+        "audio": {
+          "type": ".CMsgVoiceAudio",
+          "id": 1
+        },
+        "clientDeprecated": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "client_deprecated",
+          "options": {
+            "default": -1
+          }
+        },
+        "proximity": {
+          "type": "bool",
+          "id": 3
+        },
+        "xuid": {
+          "type": "fixed64",
+          "id": 4
+        },
+        "audibleMask": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "audible_mask"
+        },
+        "tick": {
+          "type": "uint32",
+          "id": 6
+        },
+        "passthrough": {
+          "type": "int32",
+          "id": 7
+        },
+        "entity": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
+        }
+      }
+    },
+    "CSVCMsg_HLTVStatus": {
+      "edition": "proto2",
+      "fields": {
+        "master": {
+          "type": "string",
+          "id": 1
+        },
+        "clients": {
+          "type": "int32",
+          "id": 2
+        },
+        "slots": {
+          "type": "int32",
+          "id": 3
+        },
+        "proxies": {
+          "type": "int32",
+          "id": 4
+        }
+      }
+    },
+    "CSVCMsg_ClearAllStringTables": {
+      "edition": "proto2",
+      "fields": {
+        "mapname": {
+          "type": "string",
+          "id": 1
+        },
+        "createTablesSkipped": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "create_tables_skipped"
+        }
+      }
+    },
+    "ProtoFlattenedSerializerField_t": {
+      "edition": "proto2",
+      "fields": {
+        "varTypeSym": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "var_type_sym"
+        },
+        "varNameSym": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "var_name_sym"
+        },
+        "bitCount": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "bit_count"
+        },
+        "lowValue": {
+          "type": "float",
+          "id": 4,
+          "protoName": "low_value"
+        },
+        "highValue": {
+          "type": "float",
+          "id": 5,
+          "protoName": "high_value"
+        },
+        "encodeFlags": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "encode_flags"
+        },
+        "fieldSerializerNameSym": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "field_serializer_name_sym"
+        },
+        "fieldSerializerVersion": {
+          "type": "int32",
+          "id": 8,
+          "protoName": "field_serializer_version"
+        },
+        "sendNodeSym": {
+          "type": "int32",
+          "id": 9,
+          "protoName": "send_node_sym"
+        },
+        "varEncoderSym": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "var_encoder_sym"
+        },
+        "polymorphicTypes": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializerField_t.polymorphic_field_t",
+          "id": 11,
+          "protoName": "polymorphic_types"
+        },
+        "varSerializerSym": {
+          "type": "int32",
+          "id": 12,
+          "protoName": "var_serializer_sym"
+        }
+      },
+      "nested": {
+        "polymorphic_field_t": {
+          "fields": {
+            "polymorphicFieldSerializerNameSym": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "polymorphic_field_serializer_name_sym"
+            },
+            "polymorphicFieldSerializerVersion": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "polymorphic_field_serializer_version"
+            }
+          }
+        }
+      }
+    },
+    "ProtoFlattenedSerializer_t": {
+      "edition": "proto2",
+      "fields": {
+        "serializerNameSym": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "serializer_name_sym"
+        },
+        "serializerVersion": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "serializer_version"
+        },
+        "fieldsIndex": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 3,
+          "protoName": "fields_index"
+        }
+      }
+    },
+    "CSVCMsg_FlattenedSerializer": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 0
+      },
+      "fields": {
+        "serializers": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializer_t",
+          "id": 1
+        },
+        "symbols": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2
+        },
+        "fields": {
+          "rule": "repeated",
+          "type": ".ProtoFlattenedSerializerField_t",
+          "id": 3
+        }
+      }
+    },
+    "CMsgServerUserCmd": {
+      "edition": "proto2",
+      "fields": {
+        "data": {
+          "type": "bytes",
+          "id": 1
+        },
+        "cmdNumber": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "cmd_number"
+        },
+        "playerSlot": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "player_slot",
+          "options": {
+            "default": -1
+          }
+        },
+        "serverTickExecuted": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "server_tick_executed"
+        },
+        "clientTick": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
+        }
+      }
+    },
+    "CSVCMsg_UserCommands": {
+      "edition": "proto2",
+      "fields": {
+        "commands": {
+          "rule": "repeated",
+          "type": ".CMsgServerUserCmd",
+          "id": 1
+        }
+      }
+    },
+    "CMsgEffectData": {
+      "edition": "proto2",
+      "fields": {
+        "origin": {
+          "type": ".CMsgVector",
+          "id": 1
+        },
+        "start": {
+          "type": ".CMsgVector",
+          "id": 2
+        },
+        "normal": {
+          "type": ".CMsgVector",
+          "id": 3
+        },
+        "angles": {
+          "type": ".CMsgQAngle",
+          "id": 4
+        },
+        "entity": {
+          "type": "fixed32",
+          "id": 5,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "otherentity": {
+          "type": "fixed32",
+          "id": 6,
+          "options": {
+            "default": 16777215
+          }
+        },
+        "scale": {
+          "type": "float",
+          "id": 7
+        },
+        "magnitude": {
+          "type": "float",
+          "id": 8
+        },
+        "radius": {
+          "type": "float",
+          "id": 9
+        },
+        "surfaceprop": {
+          "type": "fixed32",
+          "id": 10
+        },
+        "effectindex": {
+          "type": "fixed64",
+          "id": 11
+        },
+        "damagetype": {
+          "type": "uint32",
+          "id": 12
+        },
+        "material": {
+          "type": "uint32",
+          "id": 13
+        },
+        "hitbox": {
+          "type": "uint32",
+          "id": 14
+        },
+        "color": {
+          "type": "uint32",
+          "id": 15
+        },
+        "flags": {
+          "type": "uint32",
+          "id": 16
+        },
+        "attachmentindex": {
+          "type": "int32",
+          "id": 17
+        },
+        "effectname": {
+          "type": "uint32",
+          "id": 18
+        },
+        "attachmentname": {
+          "type": "uint32",
+          "id": 19,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CMsgTEEffectDispatch": {
+      "edition": "proto2",
+      "fields": {
+        "effectdata": {
+          "type": ".CMsgEffectData",
+          "id": 1
+        }
+      }
+    },
+    "PARTICLE_MESSAGE": {
+      "edition": "proto2",
+      "values": {
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE": 0,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE": 1,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD": 2,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION": 3,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK": 4,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENT": 5,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET": 6,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY": 7,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING": 8,
+        "GAME_PARTICLE_MANAGER_EVENT_RELEASE": 9,
+        "GAME_PARTICLE_MANAGER_EVENT_LATENCY": 10,
+        "GAME_PARTICLE_MANAGER_EVENT_SHOULD_DRAW": 11,
+        "GAME_PARTICLE_MANAGER_EVENT_FROZEN": 12,
+        "GAME_PARTICLE_MANAGER_EVENT_CHANGE_CONTROL_POINT_ATTACHMENT": 13,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_ENTITY_POSITION": 14,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_FOW_PROPERTIES": 15,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_TEXT": 16,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SHOULD_CHECK_FOW": 17,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_MODEL": 18,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_SNAPSHOT": 19,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_TEXTURE_ATTRIBUTE": 20,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_GENERIC_FLAG": 21,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_SCENE_OBJECT_TINT_AND_DESAT": 22,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_NAMED": 23,
+        "GAME_PARTICLE_MANAGER_EVENT_SKIP_TO_TIME": 24,
+        "GAME_PARTICLE_MANAGER_EVENT_CAN_FREEZE": 25,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_NAMED_VALUE_CONTEXT": 26,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_TRANSFORM": 27,
+        "GAME_PARTICLE_MANAGER_EVENT_FREEZE_TRANSITION_OVERRIDE": 28,
+        "GAME_PARTICLE_MANAGER_EVENT_FREEZE_INVOLVING": 29,
+        "GAME_PARTICLE_MANAGER_EVENT_ADD_MODELLIST_OVERRIDE_ELEMENT": 30,
+        "GAME_PARTICLE_MANAGER_EVENT_CLEAR_MODELLIST_OVERRIDE": 31,
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE_PHYSICS_SIM": 32,
+        "GAME_PARTICLE_MANAGER_EVENT_DESTROY_PHYSICS_SIM": 33,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_VDATA": 34,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_MATERIAL_OVERRIDE": 35,
+        "GAME_PARTICLE_MANAGER_EVENT_ADD_FAN": 36,
+        "GAME_PARTICLE_MANAGER_EVENT_UPDATE_FAN": 37,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_CLUSTER_GROWTH": 38,
+        "GAME_PARTICLE_MANAGER_EVENT_REMOVE_FAN": 39,
+        "GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID": 40,
+        "GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE": 41
+      }
+    },
+    "CUserMessageSayText2": {
+      "edition": "proto2",
+      "fields": {
+        "entityindex": {
+          "type": "int32",
+          "id": 1,
+          "options": {
+            "default": -1
+          }
+        },
+        "chat": {
+          "type": "bool",
+          "id": 2
+        },
+        "messagename": {
+          "type": "string",
+          "id": 3
+        },
+        "param1": {
+          "type": "string",
+          "id": 4
+        },
+        "param2": {
+          "type": "string",
+          "id": 5
+        },
+        "param3": {
+          "type": "string",
+          "id": 6
+        },
+        "param4": {
+          "type": "string",
+          "id": 7
+        }
+      }
+    },
+    "CUserMessageTextMsg": {
+      "edition": "proto2",
+      "fields": {
+        "dest": {
+          "type": "uint32",
+          "id": 1
+        },
+        "param": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "CUserMessageSendAudio": {
+      "edition": "proto2",
+      "fields": {
+        "soundname": {
+          "type": "string",
+          "id": 1
+        },
+        "stop": {
+          "type": "bool",
+          "id": 2
+        }
+      }
+    },
+    "CUserMessageVoiceMask": {
+      "edition": "proto2",
+      "fields": {
+        "gamerulesMasks": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1,
+          "protoName": "gamerules_masks"
+        },
+        "banMasks": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2,
+          "protoName": "ban_masks"
+        },
+        "modEnable": {
+          "type": "bool",
+          "id": 3,
+          "protoName": "mod_enable"
+        }
+      }
+    },
+    "CUserMsg_ParticleManager": {
+      "edition": "proto2",
+      "options": {
+        "(maximum_size_bytes)": 4096
+      },
+      "fields": {
+        "type": {
+          "type": ".PARTICLE_MESSAGE",
+          "id": 1,
+          "options": {
+            "default": "GAME_PARTICLE_MANAGER_EVENT_CREATE"
+          }
+        },
+        "index": {
+          "type": "uint32",
+          "id": 2
+        },
+        "releaseParticleIndex": {
+          "type": ".CUserMsg_ParticleManager.ReleaseParticleIndex",
+          "id": 3,
+          "protoName": "release_particle_index"
+        },
+        "createParticle": {
+          "type": ".CUserMsg_ParticleManager.CreateParticle",
+          "id": 4,
+          "protoName": "create_particle"
+        },
+        "destroyParticle": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticle",
+          "id": 5,
+          "protoName": "destroy_particle"
+        },
+        "destroyParticleInvolving": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticleInvolving",
+          "id": 6,
+          "protoName": "destroy_particle_involving"
+        },
+        "updateParticle": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticle_OBSOLETE",
+          "id": 7,
+          "protoName": "update_particle"
+        },
+        "updateParticleFwd": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleFwd_OBSOLETE",
+          "id": 8,
+          "protoName": "update_particle_fwd"
+        },
+        "updateParticleOrient": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleOrient_OBSOLETE",
+          "id": 9,
+          "protoName": "update_particle_orient"
+        },
+        "updateParticleFallback": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleFallback",
+          "id": 10,
+          "protoName": "update_particle_fallback"
+        },
+        "updateParticleOffset": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleOffset",
+          "id": 11,
+          "protoName": "update_particle_offset"
+        },
+        "updateParticleEnt": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleEnt",
+          "id": 12,
+          "protoName": "update_particle_ent"
+        },
+        "updateParticleShouldDraw": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleShouldDraw",
+          "id": 14,
+          "protoName": "update_particle_should_draw"
+        },
+        "updateParticleSetFrozen": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleSetFrozen",
+          "id": 15,
+          "protoName": "update_particle_set_frozen"
+        },
+        "changeControlPointAttachment": {
+          "type": ".CUserMsg_ParticleManager.ChangeControlPointAttachment",
+          "id": 16,
+          "protoName": "change_control_point_attachment"
+        },
+        "updateEntityPosition": {
+          "type": ".CUserMsg_ParticleManager.UpdateEntityPosition",
+          "id": 17,
+          "protoName": "update_entity_position"
+        },
+        "setParticleFowProperties": {
+          "type": ".CUserMsg_ParticleManager.SetParticleFoWProperties",
+          "id": 18,
+          "protoName": "set_particle_fow_properties"
+        },
+        "setParticleText": {
+          "type": ".CUserMsg_ParticleManager.SetParticleText",
+          "id": 19,
+          "protoName": "set_particle_text"
+        },
+        "setParticleShouldCheckFow": {
+          "type": ".CUserMsg_ParticleManager.SetParticleShouldCheckFoW",
+          "id": 20,
+          "protoName": "set_particle_should_check_fow"
+        },
+        "setControlPointModel": {
+          "type": ".CUserMsg_ParticleManager.SetControlPointModel",
+          "id": 21,
+          "protoName": "set_control_point_model"
+        },
+        "setControlPointSnapshot": {
+          "type": ".CUserMsg_ParticleManager.SetControlPointSnapshot",
+          "id": 22,
+          "protoName": "set_control_point_snapshot"
+        },
+        "setTextureAttribute": {
+          "type": ".CUserMsg_ParticleManager.SetTextureAttribute",
+          "id": 23,
+          "protoName": "set_texture_attribute"
+        },
+        "setSceneObjectGenericFlag": {
+          "type": ".CUserMsg_ParticleManager.SetSceneObjectGenericFlag",
+          "id": 24,
+          "protoName": "set_scene_object_generic_flag"
+        },
+        "setSceneObjectTintAndDesat": {
+          "type": ".CUserMsg_ParticleManager.SetSceneObjectTintAndDesat",
+          "id": 25,
+          "protoName": "set_scene_object_tint_and_desat"
+        },
+        "destroyParticleNamed": {
+          "type": ".CUserMsg_ParticleManager.DestroyParticleNamed",
+          "id": 26,
+          "protoName": "destroy_particle_named"
+        },
+        "particleSkipToTime": {
+          "type": ".CUserMsg_ParticleManager.ParticleSkipToTime",
+          "id": 27,
+          "protoName": "particle_skip_to_time"
+        },
+        "particleCanFreeze": {
+          "type": ".CUserMsg_ParticleManager.ParticleCanFreeze",
+          "id": 28,
+          "protoName": "particle_can_freeze"
+        },
+        "setNamedValueContext": {
+          "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext",
+          "id": 29,
+          "protoName": "set_named_value_context"
+        },
+        "updateParticleTransform": {
+          "type": ".CUserMsg_ParticleManager.UpdateParticleTransform",
+          "id": 30,
+          "protoName": "update_particle_transform"
+        },
+        "particleFreezeTransitionOverride": {
+          "type": ".CUserMsg_ParticleManager.ParticleFreezeTransitionOverride",
+          "id": 31,
+          "protoName": "particle_freeze_transition_override"
+        },
+        "freezeParticleInvolving": {
+          "type": ".CUserMsg_ParticleManager.FreezeParticleInvolving",
+          "id": 32,
+          "protoName": "freeze_particle_involving"
+        },
+        "addModellistOverrideElement": {
+          "type": ".CUserMsg_ParticleManager.AddModellistOverrideElement",
+          "id": 33,
+          "protoName": "add_modellist_override_element"
+        },
+        "clearModellistOverride": {
+          "type": ".CUserMsg_ParticleManager.ClearModellistOverride",
+          "id": 34,
+          "protoName": "clear_modellist_override"
+        },
+        "createPhysicsSim": {
+          "type": ".CUserMsg_ParticleManager.CreatePhysicsSim",
+          "id": 35,
+          "protoName": "create_physics_sim"
+        },
+        "destroyPhysicsSim": {
+          "type": ".CUserMsg_ParticleManager.DestroyPhysicsSim",
+          "id": 36,
+          "protoName": "destroy_physics_sim"
+        },
+        "setVdata": {
+          "type": ".CUserMsg_ParticleManager.SetVData",
+          "id": 37,
+          "protoName": "set_vdata"
+        },
+        "setMaterialOverride": {
+          "type": ".CUserMsg_ParticleManager.SetMaterialOverride",
+          "id": 38,
+          "protoName": "set_material_override"
+        },
+        "addFan": {
+          "type": ".CUserMsg_ParticleManager.AddFan",
+          "id": 39,
+          "protoName": "add_fan"
+        },
+        "updateFan": {
+          "type": ".CUserMsg_ParticleManager.UpdateFan",
+          "id": 40,
+          "protoName": "update_fan"
+        },
+        "setParticleClusterGrowth": {
+          "type": ".CUserMsg_ParticleManager.SetParticleClusterGrowth",
+          "id": 41,
+          "protoName": "set_particle_cluster_growth"
+        },
+        "removeFan": {
+          "type": ".CUserMsg_ParticleManager.RemoveFan",
+          "id": 42,
+          "protoName": "remove_fan"
+        },
+        "createSmokeGrid": {
+          "type": ".CUserMsg_ParticleManager.CreateSmokeGrid",
+          "id": 43,
+          "protoName": "create_smoke_grid"
+        },
+        "setOverrideTexture": {
+          "type": ".CUserMsg_ParticleManager.SetOverrideTexture",
+          "id": 44,
+          "protoName": "set_override_texture"
+        }
+      },
+      "nested": {
+        "ReleaseParticleIndex": {
+          "fields": {}
+        },
+        "CreateParticle": {
+          "fields": {
+            "particleNameIndex": {
+              "type": "fixed64",
+              "id": 1,
+              "protoName": "particle_name_index"
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "attach_type"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "entityHandleForModifiers": {
+              "type": "uint32",
+              "id": 4,
+              "protoName": "entity_handle_for_modifiers",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "applyVoiceBanRules": {
+              "type": "bool",
+              "id": 5,
+              "protoName": "apply_voice_ban_rules"
+            },
+            "teamBehavior": {
+              "type": "int32",
+              "id": 6,
+              "protoName": "team_behavior"
+            },
+            "controlPointConfiguration": {
+              "type": "string",
+              "id": 7,
+              "protoName": "control_point_configuration"
+            },
+            "cluster": {
+              "type": "bool",
+              "id": 8
+            },
+            "endcapTime": {
+              "type": "float",
+              "id": 9,
+              "protoName": "endcap_time"
+            },
+            "aggregationPosition": {
+              "type": ".CMsgVector",
+              "id": 10,
+              "protoName": "aggregation_position"
+            }
+          }
+        },
+        "DestroyParticle": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "destroy_immediately"
+            }
+          }
+        },
+        "DestroyParticleInvolving": {
+          "fields": {
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "destroy_immediately"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "DestroyParticleNamed": {
+          "fields": {
+            "particleNameIndex": {
+              "type": "fixed64",
+              "id": 1,
+              "protoName": "particle_name_index"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 2,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "destroyImmediately": {
+              "type": "bool",
+              "id": 3,
+              "protoName": "destroy_immediately"
+            },
+            "playEndcap": {
+              "type": "bool",
+              "id": 4,
+              "protoName": "play_endcap"
+            }
+          }
+        },
+        "UpdateParticle_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleFwd_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleOrient_OBSOLETE": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "forward": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "deprecatedRight": {
+              "type": ".CMsgVector",
+              "id": 3,
+              "protoName": "deprecated_right"
+            },
+            "up": {
+              "type": ".CMsgVector",
+              "id": 4
+            },
+            "left": {
+              "type": ".CMsgVector",
+              "id": 5
+            }
+          }
+        },
+        "UpdateParticleTransform": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            },
+            "orientation": {
+              "type": ".CMsgQuaternion",
+              "id": 3
+            },
+            "interpolationInterval": {
+              "type": "float",
+              "id": 4,
+              "protoName": "interpolation_interval"
+            }
+          }
+        },
+        "UpdateParticleFallback": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "UpdateParticleOffset": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "originOffset": {
+              "type": ".CMsgVector",
+              "id": 2,
+              "protoName": "origin_offset"
+            },
+            "angleOffset": {
+              "type": ".CMsgQAngle",
+              "id": 3,
+              "protoName": "angle_offset"
+            }
+          }
+        },
+        "UpdateParticleEnt": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 2,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachType": {
+              "type": "int32",
+              "id": 3,
+              "protoName": "attach_type"
+            },
+            "attachment": {
+              "type": "int32",
+              "id": 4
+            },
+            "fallbackPosition": {
+              "type": ".CMsgVector",
+              "id": 5,
+              "protoName": "fallback_position"
+            },
+            "includeWearables": {
+              "type": "bool",
+              "id": 6,
+              "protoName": "include_wearables"
+            },
+            "offsetPosition": {
+              "type": ".CMsgVector",
+              "id": 7,
+              "protoName": "offset_position"
+            },
+            "offsetAngles": {
+              "type": ".CMsgQAngle",
+              "id": 8,
+              "protoName": "offset_angles"
+            }
+          }
+        },
+        "UpdateParticleSetFrozen": {
+          "fields": {
+            "setFrozen": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "set_frozen"
+            },
+            "transitionDuration": {
+              "type": "float",
+              "id": 2,
+              "protoName": "transition_duration"
+            }
+          }
+        },
+        "UpdateParticleShouldDraw": {
+          "fields": {
+            "shouldDraw": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "should_draw"
+            }
+          }
+        },
+        "ChangeControlPointAttachment": {
+          "fields": {
+            "attachmentOld": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "attachment_old"
+            },
+            "attachmentNew": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "attachment_new"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "UpdateEntityPosition": {
+          "fields": {
+            "entityHandle": {
+              "type": "uint32",
+              "id": 1,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "position": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        },
+        "SetParticleFoWProperties": {
+          "fields": {
+            "fowControlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "fow_control_point"
+            },
+            "fowControlPoint2": {
+              "type": "int32",
+              "id": 2,
+              "protoName": "fow_control_point2"
+            },
+            "fowRadius": {
+              "type": "float",
+              "id": 3,
+              "protoName": "fow_radius"
+            }
+          }
+        },
+        "SetParticleShouldCheckFoW": {
+          "fields": {
+            "checkFow": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "check_fow"
+            }
+          }
+        },
+        "SetControlPointModel": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "modelName": {
+              "type": "string",
+              "id": 2,
+              "protoName": "model_name"
+            }
+          }
+        },
+        "SetControlPointSnapshot": {
+          "fields": {
+            "controlPoint": {
+              "type": "int32",
+              "id": 1,
+              "protoName": "control_point"
+            },
+            "snapshotName": {
+              "type": "string",
+              "id": 2,
+              "protoName": "snapshot_name"
+            }
+          }
+        },
+        "SetParticleText": {
+          "fields": {
+            "text": {
+              "type": "string",
+              "id": 1
+            },
+            "localize": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        },
+        "SetTextureAttribute": {
+          "fields": {
+            "attributeName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "attribute_name"
+            },
+            "textureName": {
+              "type": "string",
+              "id": 2,
+              "protoName": "texture_name"
+            }
+          }
+        },
+        "SetOverrideTexture": {
+          "fields": {
+            "textureName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "texture_name"
+            }
+          }
+        },
+        "SetSceneObjectGenericFlag": {
+          "fields": {
+            "flagValue": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "flag_value"
+            }
+          }
+        },
+        "SetSceneObjectTintAndDesat": {
+          "fields": {
+            "tint": {
+              "type": "fixed32",
+              "id": 1
+            },
+            "desat": {
+              "type": "float",
+              "id": 2
+            }
+          }
+        },
+        "ParticleSkipToTime": {
+          "fields": {
+            "skipToTime": {
+              "type": "float",
+              "id": 1,
+              "protoName": "skip_to_time"
+            }
+          }
+        },
+        "ParticleCanFreeze": {
+          "fields": {
+            "canFreeze": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "can_freeze"
+            }
+          }
+        },
+        "ParticleFreezeTransitionOverride": {
+          "fields": {
+            "freezeTransitionOverride": {
+              "type": "float",
+              "id": 1,
+              "protoName": "freeze_transition_override"
+            }
+          }
+        },
+        "FreezeParticleInvolving": {
+          "fields": {
+            "setFrozen": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "set_frozen"
+            },
+            "transitionDuration": {
+              "type": "float",
+              "id": 2,
+              "protoName": "transition_duration"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            }
+          }
+        },
+        "AddModellistOverrideElement": {
+          "fields": {
+            "modelName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "model_name"
+            },
+            "spawnProbability": {
+              "type": "float",
+              "id": 2,
+              "protoName": "spawn_probability"
+            },
+            "groupid": {
+              "type": "uint32",
+              "id": 3
+            }
+          }
+        },
+        "ClearModellistOverride": {
+          "fields": {
+            "groupid": {
+              "type": "uint32",
+              "id": 1
+            }
+          }
+        },
+        "SetParticleNamedValueContext": {
+          "fields": {
+            "floatValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.FloatContextValue",
+              "id": 1,
+              "protoName": "float_values"
+            },
+            "vectorValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.VectorContextValue",
+              "id": 2,
+              "protoName": "vector_values"
+            },
+            "transformValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.TransformContextValue",
+              "id": 3,
+              "protoName": "transform_values"
+            },
+            "ehandleValues": {
+              "rule": "repeated",
+              "type": ".CUserMsg_ParticleManager.SetParticleNamedValueContext.EHandleContext",
+              "id": 4,
+              "protoName": "ehandle_values"
+            }
+          },
+          "nested": {
+            "FloatContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1,
+                  "protoName": "value_name_hash"
+                },
+                "value": {
+                  "type": "float",
+                  "id": 2
+                }
+              }
+            },
+            "VectorContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1,
+                  "protoName": "value_name_hash"
+                },
+                "value": {
+                  "type": ".CMsgVector",
+                  "id": 2
+                }
+              }
+            },
+            "TransformContextValue": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1,
+                  "protoName": "value_name_hash"
+                },
+                "angles": {
+                  "type": ".CMsgQAngle",
+                  "id": 2
+                },
+                "translation": {
+                  "type": ".CMsgVector",
+                  "id": 3
+                }
+              }
+            },
+            "EHandleContext": {
+              "fields": {
+                "valueNameHash": {
+                  "type": "uint32",
+                  "id": 1,
+                  "protoName": "value_name_hash"
+                },
+                "entIndex": {
+                  "type": "uint32",
+                  "id": 2,
+                  "protoName": "ent_index",
+                  "options": {
+                    "default": 16777215
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CreatePhysicsSim": {
+          "fields": {
+            "propGroupName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "prop_group_name"
+            },
+            "useHighQualitySimulation": {
+              "type": "bool",
+              "id": 2,
+              "protoName": "use_high_quality_simulation"
+            },
+            "maxParticleCount": {
+              "type": "uint32",
+              "id": 3,
+              "protoName": "max_particle_count"
+            }
+          }
+        },
+        "DestroyPhysicsSim": {
+          "fields": {}
+        },
+        "CreateSmokeGrid": {
+          "fields": {
+            "vdataName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "vdata_name"
+            }
+          }
+        },
+        "SetVData": {
+          "fields": {
+            "vdataName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "vdata_name"
+            }
+          }
+        },
+        "SetMaterialOverride": {
+          "fields": {
+            "materialName": {
+              "type": "string",
+              "id": 1,
+              "protoName": "material_name"
+            },
+            "includeChildren": {
+              "type": "bool",
+              "id": 2,
+              "protoName": "include_children"
+            }
+          }
+        },
+        "AddFan": {
+          "fields": {
+            "active": {
+              "type": "bool",
+              "id": 1
+            },
+            "boundsMins": {
+              "type": ".CMsgVector",
+              "id": 2,
+              "protoName": "bounds_mins"
+            },
+            "boundsMaxs": {
+              "type": ".CMsgVector",
+              "id": 3,
+              "protoName": "bounds_maxs"
+            },
+            "fanOrigin": {
+              "type": ".CMsgVector",
+              "id": 4,
+              "protoName": "fan_origin"
+            },
+            "fanOriginOffset": {
+              "type": ".CMsgVector",
+              "id": 5,
+              "protoName": "fan_origin_offset"
+            },
+            "fanDirection": {
+              "type": ".CMsgVector",
+              "id": 6,
+              "protoName": "fan_direction"
+            },
+            "force": {
+              "type": "float",
+              "id": 7
+            },
+            "fanForceCurve": {
+              "type": "string",
+              "id": 8,
+              "protoName": "fan_force_curve"
+            },
+            "falloff": {
+              "type": "bool",
+              "id": 9
+            },
+            "pullTowardsPoint": {
+              "type": "bool",
+              "id": 10,
+              "protoName": "pull_towards_point"
+            },
+            "curveMinDist": {
+              "type": "float",
+              "id": 11,
+              "protoName": "curve_min_dist"
+            },
+            "curveMaxDist": {
+              "type": "float",
+              "id": 12,
+              "protoName": "curve_max_dist"
+            },
+            "fanType": {
+              "type": "uint32",
+              "id": 13,
+              "protoName": "fan_type"
+            },
+            "coneStartRadius": {
+              "type": "float",
+              "id": 14,
+              "protoName": "cone_start_radius"
+            },
+            "coneEndRadius": {
+              "type": "float",
+              "id": 15,
+              "protoName": "cone_end_radius"
+            },
+            "coneLength": {
+              "type": "float",
+              "id": 16,
+              "protoName": "cone_length"
+            },
+            "entityHandle": {
+              "type": "uint32",
+              "id": 17,
+              "protoName": "entity_handle",
+              "options": {
+                "default": 16777215
+              }
+            },
+            "attachmentName": {
+              "type": "string",
+              "id": 18,
+              "protoName": "attachment_name"
+            }
+          }
+        },
+        "UpdateFan": {
+          "fields": {
+            "active": {
+              "type": "bool",
+              "id": 1
+            },
+            "fanOrigin": {
+              "type": ".CMsgVector",
+              "id": 2,
+              "protoName": "fan_origin"
+            },
+            "fanOriginOffset": {
+              "type": ".CMsgVector",
+              "id": 3,
+              "protoName": "fan_origin_offset"
+            },
+            "fanDirection": {
+              "type": ".CMsgVector",
+              "id": 4,
+              "protoName": "fan_direction"
+            },
+            "fanRampRatio": {
+              "type": "float",
+              "id": 7,
+              "protoName": "fan_ramp_ratio"
+            },
+            "boundsMins": {
+              "type": ".CMsgVector",
+              "id": 5,
+              "protoName": "bounds_mins"
+            },
+            "boundsMaxs": {
+              "type": ".CMsgVector",
+              "id": 6,
+              "protoName": "bounds_maxs"
+            }
+          }
+        },
+        "RemoveFan": {
+          "fields": {}
+        },
+        "SetParticleClusterGrowth": {
+          "fields": {
+            "duration": {
+              "type": "float",
+              "id": 1
+            },
+            "origin": {
+              "type": ".CMsgVector",
+              "id": 2
+            }
+          }
+        }
+      }
+    },
+    "CUserMessage_PlayResponseConditional": {
+      "edition": "proto2",
+      "fields": {
+        "entIndex": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "ent_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "playerSlots": {
+          "rule": "repeated",
+          "type": "int32",
+          "id": 2,
+          "protoName": "player_slots"
+        },
+        "response": {
+          "type": "string",
+          "id": 3
+        },
+        "entOrigin": {
+          "type": ".CMsgVector",
+          "id": 4,
+          "protoName": "ent_origin"
+        },
+        "preDelay": {
+          "type": "float",
+          "id": 5,
+          "protoName": "pre_delay"
+        },
+        "mixPriority": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "mix_priority"
+        }
+      }
+    }
+  }
+};

@@ -21,6 +21,7 @@ class Bootstrap {
         Bootstrap._registerCitadelUserMessages(registry);
         Bootstrap._registerCitadelGameEvents(registry);
         Bootstrap._registerCitadelStringTableTypes(registry);
+        Bootstrap._registerCitadelUserCommands(registry);
     }
 
     /**
@@ -137,6 +138,17 @@ class Bootstrap {
         const modifierDecoder = buffer => modifierProto.decode(buffer);
 
         registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, modifierDecoder);
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerCitadelUserCommands(registry) {
+        const pp = registry.getProtoProvider();
+
+        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CCitadelUserCmdPB'));
     }
 }
 

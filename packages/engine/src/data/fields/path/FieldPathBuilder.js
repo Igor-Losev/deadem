@@ -1,9 +1,5 @@
 import FieldPath from './FieldPath.js';
 
-const BITS_PER_ELEMENT = 16;
-const BITS_PER_ELEMENT_BIG = BigInt(BITS_PER_ELEMENT);
-const MASK = (1 << BITS_PER_ELEMENT) - 1;
-const MASK_BIG = BigInt(MASK);
 const MAX_LENGTH = 7;
 
 const cache = {
@@ -78,47 +74,6 @@ class FieldPathBuilder {
      */
     static getById(id) {
         return cache.byId[id];
-    }
-
-    /**
-     * Reconstructs a {@link FieldPath} from a BigInt code or a Number transferCode.
-     *
-     * @public
-     * @static
-     * @param {BigInt|number} code
-     * @returns {FieldPath}
-     */
-    static reconstruct(code) {
-        if (typeof code === 'number') {
-            const { length, p0, p1 } = FieldPath.decodeTransferCode(code);
-
-            if (length === 1) {
-                const existing = cache.bySingle[p0];
-
-                if (existing !== undefined) {
-                    return existing;
-                }
-
-                return FieldPathBuilder.build([ p0 ]);
-            }
-
-            const existing = cache.byPair.get(toPairKey(p0, p1));
-
-            if (existing !== undefined) {
-                return existing;
-            }
-
-            return FieldPathBuilder.build([ p0, p1 ]);
-        }
-
-        const path = fromCode(code);
-        const existing = getByPath(path);
-
-        if (existing !== undefined) {
-            return existing;
-        }
-
-        return createAndCache(path);
     }
 
     /**
@@ -214,7 +169,7 @@ function toPairKey(p0, p1) {
  * @returns {FieldPath}
  */
 function createAndCache(path) {
-    const fieldPath = new FieldPath(path.slice(), toCode(path), cache.byId.length);
+    const fieldPath = new FieldPath(path.slice(), cache.byId.length);
 
     cache.byId[fieldPath.id] = fieldPath;
 
@@ -269,42 +224,6 @@ function setByPath(path, fieldPath) {
     }
 
     node.fieldPath = fieldPath;
-}
-
-/**
- * @param {bigint} code
- * @returns {Array<number>}
- */
-function fromCode(code) {
-    const path = [ ];
-
-    let remainder = code;
-
-    const length = remainder & MASK_BIG;
-
-    for (let i = 1; i <= length; i++) {
-        remainder = remainder >> BITS_PER_ELEMENT_BIG;
-
-        path.push(Number(remainder & MASK_BIG));
-    }
-
-    return path;
-}
-
-/**
- * @param {Array<number>} path
- * @returns {bigint}
- */
-function toCode(path) {
-    let code = 0n;
-
-    for (let i = path.length - 1; i >= 0; i--) {
-        code = (code << BITS_PER_ELEMENT_BIG) | BigInt(path[i]);
-    }
-
-    code = (code << BITS_PER_ELEMENT_BIG) | BigInt(path.length);
-
-    return code;
 }
 
 export default FieldPathBuilder;

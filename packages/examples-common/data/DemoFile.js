@@ -1,5 +1,6 @@
+import { DemoSource } from '@deademx/engine';
+
 import Assert from '@deademx/engine/src/core/Assert.js';
-import DemoSource from '@deademx/engine/src/data/enums/DemoSource.js';
 
 import Game from './Game.js';
 
@@ -126,6 +127,8 @@ class DemoFile {
     static get DEADLOCK_REPLAY_51544119() { return deadlockReplay51544119; }
     static get DEADLOCK_REPLAY_75438101() { return deadlockReplay75438101; }
     static get DEADLOCK_REPLAY_75439032() { return deadlockReplay75439032; }
+    static get DEADLOCK_REPLAY_100576005() { return deadlockReplay100576005; }
+    static get DEADLOCK_REPLAY_100576291() { return deadlockReplay100576291; }
     static get DEADLOCK_BROADCAST_38625795() { return deadlockBroadcast38625795; }
 
     // === DOTA2 ===
@@ -136,6 +139,7 @@ class DemoFile {
     static get DOTA2_REPLAY_8777738576() { return dota2Replay8777738576; }
     static get DOTA2_REPLAY_8783006717() { return dota2Replay8783006717; }
     static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
+    static get DOTA2_REPLAY_8960991322() { return dota2Replay8960991322; }
 
     // === CS2 ===
     static get CS2_REPLAY_20240819_NINJAS_IN_PYJAMAS_VS_PARIVISION_M1_ANCIENT() { return cs2Replay20240819NinjasInPyjamasVsParivisionM1Ancient; }
@@ -144,6 +148,7 @@ class DemoFile {
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M1_DUST2() { return cs2Replay20260515NatusVincereVsVitalityM1Dust2; }
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M2_ANUBIS() { return cs2Replay20260515NatusVincereVsVitalityM2Anubis; }
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M3_INFERNO() { return cs2Replay20260515NatusVincereVsVitalityM3Inferno; }
+    static get CS2_REPLAY_20260815_SPIRIT_VS_BIG_M3_MIRAGE() { return cs2Replay20260815SpiritVsBigM3Mirage; }
 
     /**
      * @public
@@ -200,6 +205,8 @@ const deadlockReplay51543455 = new DemoFile(DemoSource.REPLAY, 51543455, Game.DE
 const deadlockReplay51544119 = new DemoFile(DemoSource.REPLAY, 51544119, Game.DEADLOCK, 6140, { date: '2026-01-23', mode: 'Street Brawl', size: 104331564 });
 const deadlockReplay75438101 = new DemoFile(DemoSource.REPLAY, 75438101, Game.DEADLOCK, 6448, { date: '2026-04-13', size: 501038364 });
 const deadlockReplay75439032 = new DemoFile(DemoSource.REPLAY, 75439032, Game.DEADLOCK, 6448, { date: '2026-04-13', mode: 'Street Brawl', size: 143222996 });
+const deadlockReplay100576005 = new DemoFile(DemoSource.REPLAY, 100576005, Game.DEADLOCK, 6679, { date: '2026-08-20', size: 349435805 });
+const deadlockReplay100576291 = new DemoFile(DemoSource.REPLAY, 100576291, Game.DEADLOCK, 6679, { date: '2026-08-20', size: 483242317 });
 
 // === DOTA2 ===
 const dota2Replay5177640686 = new DemoFile(DemoSource.REPLAY, 5177640686, Game.DOTA2, '7.23', {
@@ -224,6 +231,12 @@ const dota2Replay8773493455 = new DemoFile(DemoSource.REPLAY, 8773493455, Game.D
 const dota2Replay8777738576 = new DemoFile(DemoSource.REPLAY, 8777738576, Game.DOTA2, '7.41b', { date: '2026-04-19', mode: 'Captains Mode', size: 138711012 });
 const dota2Replay8783006717 = new DemoFile(DemoSource.REPLAY, 8783006717, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'Captains Mode', size: 172651462 });
 const dota2Replay8783086929 = new DemoFile(DemoSource.REPLAY, 8783086929, Game.DOTA2, '7.41b', { date: '2026-04-23', mode: 'All Draft', size: 77530595 });
+const dota2Replay8960991322 = new DemoFile(DemoSource.REPLAY, 8960991322, Game.DOTA2, '7.41e', {
+    date: '2026-08-23',
+    mode: 'Captains Mode',
+    size: 381878716,
+    match: { team1: 'Team Spirit', team2: 'Team Vision', event: 'The International 2026', mapNumber: 5 }
+});
 
 // === CS2 ===
 const cs2Replay20240819NinjasInPyjamasVsParivisionM1Ancient = new DemoFile(DemoSource.REPLAY, '2024-08-19-ninjas-in-pyjamas-vs-parivision-m1-ancient', Game.CS2, null, {
@@ -255,6 +268,11 @@ const cs2Replay20260515NatusVincereVsVitalityM3Inferno = new DemoFile(DemoSource
     date: '2026-05-15',
     size: 398503687,
     match: { team1: 'Natus Vincere', team2: 'Vitality', event: 'IEM Atlanta 2026', map: 'Inferno', mapNumber: 3 }
+});
+const cs2Replay20260815SpiritVsBigM3Mirage = new DemoFile(DemoSource.REPLAY, '2026-08-15-spirit-vs-big-m3-mirage', Game.CS2, '1.41.7.5', {
+    date: '2026-08-15',
+    size: 314563250,
+    match: { team1: 'Spirit', team2: 'BIG', event: 'Esports World Cup \'26', map: 'Mirage', mapNumber: 3 }
 });
 
 /**

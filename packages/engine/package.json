@@ -21,21 +21,21 @@
     "deadem",
     "valve",
     "source-2",
-    "source2",
     "dem",
     "demo",
     "replay",
     "parser",
     "player",
     "demo-parser",
-    "demoparser",
     "replay-parser",
-    "replayparser",
     "nodejs",
-    "browser"
+    "browser",
+    "deno",
+    "bun"
   ],
   "type": "module",
   "main": "index.js",
+  "sideEffects": false,
   "scripts": {
     "lint": "eslint",
     "test": "vitest run"
@@ -57,34 +57,59 @@
     "#providers/*.js": "./src/providers/*.js",
     "#stream/*.js": "./src/stream/*.js",
     "#trackers/*.js": "./src/trackers/*.js",
-    "#workers/*.js": "./src/workers/*.js",
     "#broadcast/BroadcastReadStream.js": {
+      "electron": {
+        "browser": "./src/broadcast/BroadcastReadStream.browser.js",
+        "default": "./src/broadcast/BroadcastReadStream.node.js"
+      },
       "node": "./src/broadcast/BroadcastReadStream.node.js",
-      "browser": "./src/broadcast/BroadcastReadStream.browser.js"
+      "browser": "./src/broadcast/BroadcastReadStream.browser.js",
+      "default": "./src/broadcast/BroadcastReadStream.browser.js"
     },
     "#core/stream/Pipeline.js": {
+      "electron": {
+        "browser": "./src/core/stream/Pipeline.browser.js",
+        "default": "./src/core/stream/Pipeline.node.js"
+      },
       "node": "./src/core/stream/Pipeline.node.js",
-      "browser": "./src/core/stream/Pipeline.browser.js"
+      "browser": "./src/core/stream/Pipeline.browser.js",
+      "default": "./src/core/stream/Pipeline.browser.js"
     },
     "#core/stream/ReadableArray.js": {
+      "electron": {
+        "browser": "./src/core/stream/ReadableArray.browser.js",
+        "default": "./src/core/stream/ReadableArray.node.js"
+      },
       "node": "./src/core/stream/ReadableArray.node.js",
-      "browser": "./src/core/stream/ReadableArray.browser.js"
+      "browser": "./src/core/stream/ReadableArray.browser.js",
+      "default": "./src/core/stream/ReadableArray.browser.js"
     },
     "#core/stream/Transform.js": {
+      "electron": {
+        "browser": "./src/core/stream/Transform.browser.js",
+        "default": "./src/core/stream/Transform.node.js"
+      },
       "node": "./src/core/stream/Transform.node.js",
-      "browser": "./src/core/stream/Transform.browser.js"
+      "browser": "./src/core/stream/Transform.browser.js",
+      "default": "./src/core/stream/Transform.browser.js"
     },
     "#core/stream/WritableSink.js": {
+      "electron": {
+        "browser": "./src/core/stream/WritableSink.browser.js",
+        "default": "./src/core/stream/WritableSink.node.js"
+      },
       "node": "./src/core/stream/WritableSink.node.js",
-      "browser": "./src/core/stream/WritableSink.browser.js"
+      "browser": "./src/core/stream/WritableSink.browser.js",
+      "default": "./src/core/stream/WritableSink.browser.js"
     },
     "#trackers/MemoryTracker.js": {
+      "electron": {
+        "browser": "./src/trackers/MemoryTracker.browser.js",
+        "default": "./src/trackers/MemoryTracker.node.js"
+      },
       "node": "./src/trackers/MemoryTracker.node.js",
-      "browser": "./src/trackers/MemoryTracker.browser.js"
-    },
-    "#workers/WorkerManager.js": {
-      "node": "./src/workers/WorkerManager.node.js",
-      "browser": "./src/workers/WorkerManager.browser.js"
+      "browser": "./src/trackers/MemoryTracker.browser.js",
+      "default": "./src/trackers/MemoryTracker.browser.js"
     }
   },
   "dependencies": {

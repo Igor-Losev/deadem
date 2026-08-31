@@ -13,8 +13,7 @@
         "#player/*": [ "./src/player/*" ],
         "#providers/*": [ "./src/providers/*" ],
         "#stream/*": [ "./src/stream/*" ],
-        "#trackers/*": [ "./src/trackers/*" ],
-        "#workers/*": [ "./src/workers/*" ]
+        "#trackers/*": [ "./src/trackers/*" ]
     },
     "moduleResolution": "nodenext",
     "checkJs": true,
