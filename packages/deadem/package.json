@@ -1,6 +1,6 @@
 {
   "name": "deadem",
-  "version": "3.4.1",
+  "version": "4.0.0",
   "description": "Deadlock (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -68,6 +68,6 @@
     "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
   },
   "dependencies": {
-    "@deademx/engine": "3.4.1"
+    "@deademx/engine": "4.0.0"
   }
 }

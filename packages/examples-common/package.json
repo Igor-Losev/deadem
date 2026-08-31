@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-common",
-  "version": "3.4.1",
+  "version": "4.0.0",
   "description": "Shared helpers, fixtures, and support code for deadem example packages",
   "private": true,
   "type": "module",
@@ -8,6 +8,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@deademx/engine": "3.4.1"
+    "@deademx/engine": "4.0.0"
   }
 }
