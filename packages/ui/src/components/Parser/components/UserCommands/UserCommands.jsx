@@ -85,7 +85,7 @@ export default function UserCommands({ contentVersion, demo }) {
         ) : (
           <EmptyState
             icon={<TouchAppIcon sx={{ fontSize: '1.5rem', color: 'text.disabled' }} />}
-            text='Select a player to view their current input state'
+            text='Select a player to view the current input state'
           />
         )}
       </Box>
