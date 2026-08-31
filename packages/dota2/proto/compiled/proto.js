@@ -7306,6 +7306,10 @@ export default {
           "options": {
             "default": "Start"
           }
+        },
+        "id": {
+          "type": "uint32",
+          "id": 5
         }
       },
       "nested": {
