@@ -40,6 +40,12 @@
   ],
   "type": "module",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
   "unpkg": "dist/deadem-dota2.min.js",
   "jsdelivr": "dist/deadem-dota2.min.js",
   "sideEffects": false,

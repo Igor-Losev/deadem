@@ -40,18 +40,31 @@ class Player extends EnginePlayer {
 
 export {
     BroadcastAgent,
+    BroadcastFragmentType,
     BroadcastGateway,
+    Class,
+    Demo,
+    DemoPacket,
     DemoPacketType,
     DemoSource,
+    Entity,
+    EntityMutationEvent,
     EntityOperation,
     InterceptorStage,
     Logger,
+    MessagePacket,
     ParserConfiguration,
     PlaybackInterruptedError,
     PlayerState,
     Printer,
     Protocol,
-    StringTableEvent
+    Server,
+    StringTable,
+    StringTableContainer,
+    StringTableEntry,
+    StringTableEvent,
+    UserCommand,
+    UserCommandEvent
 } from '@deademx/engine';
 
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';

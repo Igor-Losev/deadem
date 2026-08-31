@@ -41,6 +41,12 @@
   ],
   "type": "module",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
   "unpkg": "dist/deadem-cs2.min.js",
   "jsdelivr": "dist/deadem-cs2.min.js",
   "sideEffects": false,

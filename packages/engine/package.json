@@ -35,6 +35,12 @@
   ],
   "type": "module",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
   "sideEffects": false,
   "scripts": {
     "lint": "eslint",
