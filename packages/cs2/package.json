@@ -53,7 +53,7 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "node ./../../scripts/proto-schema-build.js --package=cs2",
+    "proto:js": "node ./../../scripts/proto-schema-build.js --package=cs2",
     "proto:sync": "node ./../../.github/scripts/proto-sync.mjs cs2"
   },
   "files": [

@@ -52,7 +52,7 @@
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:json": "node ./../../scripts/proto-schema-build.js --package=dota2",
+    "proto:js": "node ./../../scripts/proto-schema-build.js --package=dota2",
     "proto:sync": "node ./../../.github/scripts/proto-sync.mjs dota2"
   },
   "files": [

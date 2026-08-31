@@ -32,7 +32,7 @@ get_pre_mode() {
 }
 
 build() {
-    npm run proto:json
+    npm run proto:js
     npm run build
 }
 
