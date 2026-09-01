@@ -39,7 +39,8 @@
     ".": {
       "import": "./index.js",
       "default": "./index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {

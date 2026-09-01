@@ -26,7 +26,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
 
         for (const entry of userInfo.getEntries()) {
-            if (!Number.isInteger(entry.value.userid)) {
+            if (entry.value === null || !Number.isInteger(entry.value.userid)) {
                 continue;
             }
 

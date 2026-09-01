@@ -45,7 +45,8 @@
     ".": {
       "import": "./index.js",
       "default": "./index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "unpkg": "dist/deadem-cs2.min.js",
   "jsdelivr": "dist/deadem-cs2.min.js",
