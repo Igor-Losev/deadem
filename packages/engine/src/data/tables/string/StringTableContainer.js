@@ -138,7 +138,7 @@ class StringTableContainer {
     /**
      * @public
      * @param {StringTableEvent} event
-     * @param {EventEmitterHandler} callback
+     * @param {EventEmitterHandler<StringTableContainer>} callback
      */
     subscribe(event, callback) {
         Assert.isTrue(event instanceof StringTableEvent);
@@ -150,7 +150,7 @@ class StringTableContainer {
     /**
      * @public
      * @param {StringTableEvent} event
-     * @param {EventEmitterHandler} callback
+     * @param {EventEmitterHandler<StringTableContainer>} callback
      */
     unsubscribe(event, callback) {
         Assert.isTrue(event instanceof StringTableEvent);
