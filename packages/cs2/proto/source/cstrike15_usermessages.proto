@@ -240,6 +240,7 @@ message CCSUsrMsg_WeaponSound {
 	optional string sound = 5;
 	optional float game_timestamp = 6;
 	optional fixed32 source_soundscapeid = 7;
+	optional bool stealth = 8;
 }
 
 message CCSUsrMsg_WeaponMagDrop {
@@ -629,4 +630,16 @@ message CCSUsrMsg_SendPlayerLoadout {
 
 	repeated .CCSUsrMsg_SendPlayerLoadout.LoadoutItem loadout = 1;
 	optional int32 playerslot = 2 [default = -1];
+}
+
+message CVacNet_GetReviewerInfo_Request {
+	optional uint32 appid = 1;
+}
+
+message CVacnetReviewerInfo {
+	repeated string permissions = 1;
+}
+
+message CVacNet_GetReviewerInfo_Response {
+	optional .CVacnetReviewerInfo reviewer_info = 1;
 }

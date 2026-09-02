@@ -1,3 +1,7 @@
+const registry = {
+    byId: new Map()
+};
+
 class InterceptorStage {
     /**
      * @constructor
@@ -7,6 +11,8 @@ class InterceptorStage {
     constructor(code, id) {
         this._code = code;
         this._id = id;
+
+        registry.byId.set(id, this);
     }
 
     /**
@@ -23,6 +29,15 @@ class InterceptorStage {
      */
     get id() {
         return this._id;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {Array<InterceptorStage>}
+     */
+    static getAll() {
+        return Array.from(registry.byId.values());
     }
 
     /**
@@ -51,10 +66,20 @@ class InterceptorStage {
     static get MESSAGE_PACKET() {
         return messagePacket;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {InterceptorStage}
+     */
+    static get USER_COMMAND() {
+        return userCommand;
+    }
 }
 
 const demoPacket = new InterceptorStage('DEMO_PACKET', 0);
 const messagePacket = new InterceptorStage('MESSAGE_PACKET', 1);
 const entityPacket = new InterceptorStage('ENTITY_PACKET', 2);
+const userCommand = new InterceptorStage('USER_COMMAND', 3);
 
 export default InterceptorStage;

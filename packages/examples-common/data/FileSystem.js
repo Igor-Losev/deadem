@@ -4,8 +4,6 @@ import fs from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import Assert from './Assert.js';
-
 class FileSystem {
     constructor() {
 
@@ -61,35 +59,10 @@ class FileSystem {
      * @returns {string}
      */
     static getAbsolutePath(importMetaUrl, path) {
-        Assert.isTrue(typeof importMetaUrl === 'string');
-        Assert.isTrue(typeof path === 'string');
-
         const __filename = fileURLToPath(importMetaUrl);
         const __dirname = dirname(__filename);
 
         return join(__dirname, path);
-    }
-
-    /**
-     * @overload
-     * @param {string} path
-     * @param {BufferEncoding} encoding
-     * @returns {string}
-     */
-    /**
-     * @overload
-     * @param {string} path
-     * @returns {Buffer}
-     */
-    /**
-     * @public
-     * @static
-     * @param {string} path
-     * @param {BufferEncoding} [encoding]
-     * @returns {string|Buffer}
-     */
-    static readFileSync(path, encoding) {
-        return fs.readFileSync(path, encoding);
     }
 }
 

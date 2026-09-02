@@ -67,7 +67,7 @@ function getBootstrapFile(packageName) {
 }
 
 function getOutputFile(packageName) {
-    return path.join(DIRECTORY_PACKAGES, packageName, 'proto/compiled/proto.json');
+    return path.join(DIRECTORY_PACKAGES, packageName, 'proto/compiled/proto.js');
 }
 
 function getPackageArgument(args) {
@@ -135,7 +135,7 @@ function writeSchema(file, schema) {
 
     const temporaryFile = path.join(path.dirname(file), `.${path.basename(file)}.${process.pid}.tmp`);
 
-    fs.writeFileSync(temporaryFile, `${JSON.stringify(schema, null, 2)}\n`);
+    fs.writeFileSync(temporaryFile, `export default ${JSON.stringify(schema, null, 2)};\n`);
     fs.renameSync(temporaryFile, file);
 }
 

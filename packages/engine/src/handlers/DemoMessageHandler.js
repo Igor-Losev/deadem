@@ -5,6 +5,8 @@ import BitBuffer from '#core/BitBuffer.js';
 
 import Demo from '#data/Demo.js';
 import Server from '#data/Server.js';
+import UserCommand from '#data/UserCommand.js';
+import UserCommandEvent from '#data/UserCommandEvent.js';
 
 import Entity from '#data/entity/Entity.js';
 import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
@@ -246,6 +248,63 @@ class DemoMessageHandler {
 
                     break;
                 }
+            }
+        }
+
+        return events;
+    }
+
+    /**
+     * Handles a {@link MessagePacketType.SVC_USER_COMMANDS} (ID = 76).
+     *
+     * @public
+     * @param {MessagePacket} messagePacket
+     * @param {boolean} [snapshot=false] - `true` when the packet belongs to the snapshot.
+     * @param {boolean} [collectEvents=true] - `true` when collecting events (more GC pressure).
+     * @returns {Array<UserCommandEvent>}
+     */
+    handleSvcUserCommands(messagePacket, snapshot = false, collectEvents = true) {
+        const commandsRaw = messagePacket.data?.commands ?? null;
+        const commandProto = this._registry.getUserCommandDecoder();
+
+        if (commandsRaw === null || commandProto === null) {
+            return [ ];
+        }
+
+        const events = [ ];
+
+        for (let i = 0; i < commandsRaw.length; i++) {
+            const commandRaw = commandsRaw[i];
+            const slot = commandRaw.playerSlot;
+
+            const existing = this._demo.getUserCommand(slot);
+
+            if (snapshot && existing !== null) {
+                continue;
+            }
+
+            const isKeyframe = commandRaw.data && commandRaw.data.length > 0;
+            const isDelta = commandRaw.deltaData && commandRaw.deltaData.length > 0;
+
+            let command;
+            let gap = 0;
+
+            if (isKeyframe) {
+                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandProto);
+
+                this._demo.registerUserCommand(command);
+            } else if (isDelta && existing !== null) {
+                gap = Math.max(0, commandRaw.cmdNumber - existing.number - 1);
+
+                existing.applyDelta(commandRaw.cmdNumber, commandRaw.deltaData);
+
+                command = existing;
+            } else {
+                continue;
+            }
+
+            if (collectEvents) {
+                events.push(new UserCommandEvent(command, gap, isKeyframe ? null : commandRaw.deltaData));
             }
         }
 

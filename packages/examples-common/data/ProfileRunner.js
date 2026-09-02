@@ -6,9 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 import { ParserConfiguration } from '@deademx/engine';
 
-import FileSystem from '@deademx/engine/src/core/FileSystem.js';
-
 import DemoProvider from './DemoProvider.js';
+import FileSystem from './FileSystem.js';
 
 const REPO_ROOT = FileSystem.getAbsolutePath(import.meta.url, './../../..');
 const PACKAGES_ROOT = path.join(REPO_ROOT, 'packages');

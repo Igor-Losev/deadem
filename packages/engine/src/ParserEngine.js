@@ -281,7 +281,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPost(stage, ...args) {
-        const interceptors = [ ...this._interceptors.post[stage.id] ];
+        const interceptors = this._interceptors.post[stage.id];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
@@ -294,7 +294,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPre(stage, ...args) {
-        const interceptors = [ ...this._interceptors.pre[stage.id] ];
+        const interceptors = this._interceptors.pre[stage.id];
 
         for (let i = 0; i < interceptors.length; i++) {
             interceptors[i](...args);
@@ -441,7 +441,11 @@ class ParserEngine {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        this._interceptors.post[stage.id].push(interceptor);
+        if (stage === InterceptorStage.USER_COMMAND && this._registry.getUserCommandDecoder() === null) {
+            throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
+        }
+
+        this._interceptors.post[stage.id] = [ ...this._interceptors.post[stage.id], interceptor ];
     }
 
     /**
@@ -453,7 +457,11 @@ class ParserEngine {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        this._interceptors.pre[stage.id].push(interceptor);
+        if (stage === InterceptorStage.USER_COMMAND) {
+            throw new Error('InterceptorStage.USER_COMMAND has no pre phase: use registerPostInterceptor');
+        }
+
+        this._interceptors.pre[stage.id] = [ ...this._interceptors.pre[stage.id], interceptor ];
     }
 
     /**
@@ -481,13 +489,14 @@ class ParserEngine {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        const index = this._interceptors.post[stage.id].findIndex(i => i === interceptor);
+        const interceptors = this._interceptors.post[stage.id];
+        const filtered = interceptors.filter(i => i !== interceptor);
 
-        if (index === -1) {
+        if (filtered.length === interceptors.length) {
             return false;
         }
 
-        this._interceptors.post[stage.id].splice(index, 1);
+        this._interceptors.post[stage.id] = filtered;
 
         return true;
     }
@@ -502,13 +511,14 @@ class ParserEngine {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
-        const index = this._interceptors.pre[stage.id].findIndex(i => i === interceptor);
+        const interceptors = this._interceptors.pre[stage.id];
+        const filtered = interceptors.filter(i => i !== interceptor);
 
-        if (index === -1) {
+        if (filtered.length === interceptors.length) {
             return false;
         }
 
-        this._interceptors.pre[stage.id].splice(index, 1);
+        this._interceptors.pre[stage.id] = filtered;
 
         return true;
     }
@@ -566,17 +576,11 @@ class ParserEngine {
      * @returns {{pre: Array<Array<InterceptorFn>>, post: Array<Array<InterceptorFn>>}}
      */
     _createInterceptors() {
+        const size = InterceptorStage.getAll().length;
+
         return {
-            pre: [
-                [],
-                [],
-                []
-            ],
-            post: [
-                [],
-                [],
-                []
-            ]
+            pre: Array.from({ length: size }, () => []),
+            post: Array.from({ length: size }, () => [])
         };
     }
 

@@ -1,4 +1,4 @@
-{
+export default {
   "nested": {
     "CMsgTEPlayerAnimEvent": {
       "edition": "proto2",
@@ -239,6 +239,9 @@
     },
     "CMsgVector": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -260,6 +263,9 @@
     },
     "CMsgVector2D": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -273,6 +279,9 @@
     },
     "CMsgQAngle": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -290,6 +299,9 @@
     },
     "CMsgQuaternion": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "x": {
           "type": "float",
@@ -311,6 +323,9 @@
     },
     "CMsgRGBA": {
       "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
       "fields": {
         "r": {
           "type": "int32",
@@ -705,6 +720,376 @@
         "landmarkname": {
           "type": "string",
           "id": 18
+        }
+      }
+    },
+    "CSGOInterpolationInfoPB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "srcTick": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "src_tick",
+          "options": {
+            "default": -1
+          }
+        },
+        "dstTick": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "dst_tick",
+          "options": {
+            "default": -1
+          }
+        },
+        "frac": {
+          "type": "float",
+          "id": 3,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CSGOInterpolationInfoPB_CL": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "frac": {
+          "type": "float",
+          "id": 3,
+          "options": {
+            "default": 0
+          }
+        }
+      }
+    },
+    "CSGOInputHistoryEntryPB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "viewAngles": {
+          "type": ".CMsgQAngle",
+          "id": 2,
+          "protoName": "view_angles"
+        },
+        "renderTickCount": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "render_tick_count"
+        },
+        "renderTickFraction": {
+          "type": "float",
+          "id": 5,
+          "protoName": "render_tick_fraction"
+        },
+        "playerTickCount": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "player_tick_count"
+        },
+        "playerTickFraction": {
+          "type": "float",
+          "id": 7,
+          "protoName": "player_tick_fraction"
+        },
+        "clInterp": {
+          "type": ".CSGOInterpolationInfoPB_CL",
+          "id": 12,
+          "protoName": "cl_interp"
+        },
+        "svInterp0": {
+          "type": ".CSGOInterpolationInfoPB",
+          "id": 13,
+          "protoName": "sv_interp0"
+        },
+        "svInterp1": {
+          "type": ".CSGOInterpolationInfoPB",
+          "id": 14,
+          "protoName": "sv_interp1"
+        },
+        "playerInterp": {
+          "type": ".CSGOInterpolationInfoPB",
+          "id": 15,
+          "protoName": "player_interp"
+        },
+        "frameNumber": {
+          "type": "int32",
+          "id": 64,
+          "protoName": "frame_number"
+        },
+        "targetEntIndex": {
+          "type": "int32",
+          "id": 65,
+          "protoName": "target_ent_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "shootPosition": {
+          "type": ".CMsgVector",
+          "id": 66,
+          "protoName": "shoot_position"
+        },
+        "targetHeadPosCheck": {
+          "type": ".CMsgVector",
+          "id": 67,
+          "protoName": "target_head_pos_check"
+        },
+        "targetAbsPosCheck": {
+          "type": ".CMsgVector",
+          "id": 68,
+          "protoName": "target_abs_pos_check"
+        },
+        "targetAbsAngCheck": {
+          "type": ".CMsgQAngle",
+          "id": 69,
+          "protoName": "target_abs_ang_check"
+        }
+      }
+    },
+    "CSGOUserCmdPB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "base": {
+          "type": ".CBaseUserCmdPB",
+          "id": 1
+        },
+        "inputHistory": {
+          "rule": "repeated",
+          "type": ".CSGOInputHistoryEntryPB",
+          "id": 2,
+          "protoName": "input_history"
+        },
+        "attack1StartHistoryIndex": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "attack1_start_history_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "attack2StartHistoryIndex": {
+          "type": "int32",
+          "id": 7,
+          "protoName": "attack2_start_history_index",
+          "options": {
+            "default": -1
+          }
+        },
+        "leftHandDesired": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "left_hand_desired",
+          "options": {
+            "default": false
+          }
+        },
+        "isPredictingBodyShotFx": {
+          "type": "bool",
+          "id": 11,
+          "protoName": "is_predicting_body_shot_fx",
+          "options": {
+            "default": false
+          }
+        },
+        "isPredictingHeadShotFx": {
+          "type": "bool",
+          "id": 12,
+          "protoName": "is_predicting_head_shot_fx",
+          "options": {
+            "default": false
+          }
+        },
+        "isPredictingKillRagdolls": {
+          "type": "bool",
+          "id": 13,
+          "protoName": "is_predicting_kill_ragdolls",
+          "options": {
+            "default": false
+          }
+        }
+      }
+    },
+    "CInButtonStatePB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "buttonstate1": {
+          "type": "uint64",
+          "id": 1
+        },
+        "buttonstate2": {
+          "type": "uint64",
+          "id": 2
+        },
+        "buttonstate3": {
+          "type": "uint64",
+          "id": 3
+        }
+      }
+    },
+    "CSubtickMoveStep": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "button": {
+          "type": "uint64",
+          "id": 1
+        },
+        "pressed": {
+          "type": "bool",
+          "id": 2
+        },
+        "when": {
+          "type": "float",
+          "id": 3
+        },
+        "analogForwardDelta": {
+          "type": "float",
+          "id": 4,
+          "protoName": "analog_forward_delta"
+        },
+        "analogLeftDelta": {
+          "type": "float",
+          "id": 5,
+          "protoName": "analog_left_delta"
+        },
+        "pitchDelta": {
+          "type": "float",
+          "id": 8,
+          "protoName": "pitch_delta"
+        },
+        "yawDelta": {
+          "type": "float",
+          "id": 9,
+          "protoName": "yaw_delta"
+        }
+      }
+    },
+    "CBaseUserCmdExecutionNotes": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "ignoredReason": {
+          "type": "string",
+          "id": 1,
+          "protoName": "ignored_reason"
+        }
+      }
+    },
+    "CBaseUserCmdPB": {
+      "edition": "proto2",
+      "options": {
+        "(codegen_delta_encoder)": true
+      },
+      "fields": {
+        "legacyCommandNumber": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "legacy_command_number"
+        },
+        "clientTick": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "client_tick"
+        },
+        "predictionOffsetTicksX256": {
+          "type": "uint32",
+          "id": 17,
+          "protoName": "prediction_offset_ticks_x256"
+        },
+        "buttonsPb": {
+          "type": ".CInButtonStatePB",
+          "id": 3,
+          "protoName": "buttons_pb"
+        },
+        "viewangles": {
+          "type": ".CMsgQAngle",
+          "id": 4
+        },
+        "forwardmove": {
+          "type": "float",
+          "id": 5
+        },
+        "leftmove": {
+          "type": "float",
+          "id": 6
+        },
+        "upmove": {
+          "type": "float",
+          "id": 7
+        },
+        "impulse": {
+          "type": "int32",
+          "id": 8
+        },
+        "weaponselect": {
+          "type": "int32",
+          "id": 9
+        },
+        "randomSeed": {
+          "type": "int32",
+          "id": 10,
+          "protoName": "random_seed"
+        },
+        "mousedx": {
+          "type": "int32",
+          "id": 11
+        },
+        "mousedy": {
+          "type": "int32",
+          "id": 12
+        },
+        "pawnEntityHandle": {
+          "type": "uint32",
+          "id": 14,
+          "protoName": "pawn_entity_handle",
+          "options": {
+            "default": 16777215
+          }
+        },
+        "subtickMoves": {
+          "rule": "repeated",
+          "type": ".CSubtickMoveStep",
+          "id": 18,
+          "protoName": "subtick_moves"
+        },
+        "moveCrc": {
+          "type": "bytes",
+          "id": 19,
+          "protoName": "move_crc"
+        },
+        "consumedServerAngleChanges": {
+          "type": "uint32",
+          "id": 20,
+          "protoName": "consumed_server_angle_changes"
+        },
+        "cmdFlags": {
+          "type": "int32",
+          "id": 21,
+          "protoName": "cmd_flags"
+        },
+        "executionNotes": {
+          "type": ".CBaseUserCmdExecutionNotes",
+          "id": 22,
+          "protoName": "execution_notes"
         }
       }
     },
@@ -1745,6 +2130,10 @@
           "type": "fixed32",
           "id": 7,
           "protoName": "source_soundscapeid"
+        },
+        "stealth": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
@@ -2812,6 +3201,11 @@
           "type": ".CMsgVector",
           "id": 14,
           "protoName": "position_objectspace"
+        },
+        "normalObjectspace": {
+          "type": ".CMsgVector",
+          "id": 15,
+          "protoName": "normal_objectspace"
         }
       }
     },
@@ -3469,9 +3863,10 @@
           "type": ".CMsgVoiceAudio",
           "id": 1
         },
-        "client": {
+        "clientDeprecated": {
           "type": "int32",
           "id": 2,
+          "protoName": "client_deprecated",
           "options": {
             "default": -1
           }
@@ -3496,6 +3891,13 @@
         "passthrough": {
           "type": "int32",
           "id": 7
+        },
+        "entity": {
+          "type": "int32",
+          "id": 8,
+          "options": {
+            "default": -1
+          }
         }
       }
     },
@@ -3689,6 +4091,11 @@
           "type": "int32",
           "id": 5,
           "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
         }
       }
     },
@@ -5193,4 +5600,4 @@
       }
     }
   }
-}
+};

@@ -6,19 +6,19 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const CASES = [
     {
         id: 1,
-        label: 'No filters (full replay state)',
+        label: 'Everything — `ParserConfiguration.DEFAULT`',
         configuration: ParserConfiguration.DEFAULT
     },
     {
         id: 2,
-        label: '`messagePacketTypes` allowlist excluding `SVC_PACKET_ENTITIES` (chat-only)',
+        label: 'Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.DOTA_UM_CHAT_MESSAGE ]
         })
     },
     {
         id: 3,
-        label: '`messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CDOTAPlayerController ]`',
+        label: 'One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]`',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
             entityClasses: [ 'CDOTAPlayerController' ]

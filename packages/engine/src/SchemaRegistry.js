@@ -46,9 +46,10 @@ class SchemaRegistry {
             stringTableByName: new Map()
         };
 
-        /** @type {SchemaRegistrySerializers} */
-        this._serializers = {
-            sendTables: null
+        /** @type {SchemaRegistryDecoders} */
+        this._decoders = {
+            sendTables: null,
+            userCommand: null
         };
 
         this._fieldRules = new FieldRuleRegistry();
@@ -73,14 +74,6 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @returns {protobuf.Type|null}
-     */
-    getSendTablesSerializerDecoder() {
-        return this._serializers.sendTables;
-    }
-
-    /**
-     * @public
      * @param {MessagePacketType} type
      * @returns {protobuf.Type|null}
      */
@@ -98,11 +91,27 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @returns {protobuf.Type|null}
+     */
+    getSendTablesSerializerDecoder() {
+        return this._decoders.sendTables;
+    }
+
+    /**
+     * @public
      * @param {StringTableType} type
      * @returns {StringTableDecoderFn|null}
      */
     getStringTableDecoder(type) {
         return this._protos.stringTableDecoders.get(type.name) || null;
+    }
+
+    /**
+     * @public
+     * @returns {protobuf.Type|null}
+     */
+    getUserCommandDecoder() {
+        return this._decoders.userCommand;
     }
 
     /**
@@ -188,7 +197,15 @@ class SchemaRegistry {
      * @param {protobuf.Type} proto
      */
     setSendTablesSerializerDecoder(proto) {
-        this._serializers.sendTables = proto;
+        this._decoders.sendTables = proto;
+    }
+
+    /**
+     * @public
+     * @param {protobuf.Type} proto
+     */
+    setUserCommandDecoder(proto) {
+        this._decoders.userCommand = proto;
     }
 
     /**
@@ -242,7 +259,7 @@ class SchemaRegistry {
  *
  * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<string, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<string, MessagePacketType>, stringTableByName: Map<string, StringTableType> }} SchemaRegistryTypes
  *
- * @typedef {{ sendTables: protobuf.Type|null }} SchemaRegistrySerializers
+ * @typedef {{ sendTables: protobuf.Type|null, userCommand: protobuf.Type|null }} SchemaRegistryDecoders
  */
 
 export default SchemaRegistry;

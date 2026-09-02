@@ -23,6 +23,7 @@ class Bootstrap {
         Bootstrap._registerCs2GameEvents(registry);
         Bootstrap._registerCs2TemporaryEntities(registry);
         Bootstrap._registerCs2StringTableTypes(registry);
+        Bootstrap._registerCs2UserCommands(registry);
     }
 
     /**
@@ -110,6 +111,17 @@ class Bootstrap {
      */
     static _registerCs2StringTableTypes(registry) {
         registry.registerStringTableType(StringTableType.SERVER_AVATAR_OVERRIDES);
+    }
+
+    /**
+     * @protected
+     * @static
+     * @param {SchemaRegistry} registry
+     */
+    static _registerCs2UserCommands(registry) {
+        const pp = registry.getProtoProvider();
+
+        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CSGOUserCmdPB'));
     }
 }
 

@@ -4,6 +4,7 @@ import {
   Email as EmailIcon,
   Groups as GroupsIcon,
   Info as InfoIcon,
+  Keyboard as KeyboardIcon,
   Storage as StorageIcon
 } from '@mui/icons-material';
 import { Alert, Box, Chip, Paper, Snackbar } from '@mui/material';
@@ -22,6 +23,7 @@ import PacketExplorer from './components/PacketExplorer/PacketExplorer';
 import ParserLanding from './components/ParserLanding/ParserLanding';
 import StringTables from './components/StringTables/StringTables';
 import UploadForm from './components/UploadForm/UploadForm';
+import UserCommands from './components/UserCommands/UserCommands';
 
 import usePlayer from './hooks/usePlayer';
 
@@ -54,6 +56,11 @@ const TABS = [
     props: { icon: <StorageIcon />, label: 'Tables', sx: TAB_STYLE }
   },
   {
+    key: 'usercommands',
+    overflow: null,
+    props: { icon: <KeyboardIcon />, label: 'Input', sx: TAB_STYLE }
+  },
+  {
     key: 'diff',
     overflow: null,
     props: { icon: <CompareArrowsIcon />, label: 'Diff', sx: TAB_STYLE }
@@ -64,6 +71,10 @@ const TABS = [
     props: { icon: <InfoIcon />, label: 'Info', sx: TAB_STYLE }
   }
 ];
+
+const HIDDEN_TABS = {
+  dota2: [ 'usercommands' ]
+};
 
 function TabPanel({ active, children }) {
   const frozen = useRef(children);
@@ -80,6 +91,11 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
 
   const isCs2 = library?.gameCode === 'cs2';
 
+  const tabs = useMemo(
+    () => TABS.filter((tab) => !(HIDDEN_TABS[library?.gameCode] ?? []).includes(tab.key)),
+    [library?.gameCode]
+  );
+
   const {
     demo, fileName, fileHeader, playing, rate, seeking, ticks, tickStore, contentVersion, playerError, frozen,
     fileInputRef, historyRef, entityDiffRef, stringTableDiffRef,
@@ -89,6 +105,8 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
     handleNextTick, handlePrevTick, handleSeek,
     handleSeekToStart, handleSeekToEnd
   } = usePlayer(library, isVisible);
+
+  const activeTab = Math.min(tabIndex, tabs.length - 1);
 
   const bottomBarOffset = BOTTOM_BAR_HEIGHT + (isCs2 ? CS2_GAME_INFO_HEIGHT : 0);
 
@@ -153,31 +171,35 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
           <Box component={Paper} display='flex' flexDirection='column' marginBottom={`${bottomBarOffset + 20}px`} minHeight={0}>
             <Navigation
               actions={<FreezeToggle frozen={frozen} onToggle={toggleFrozen} />}
-              active={tabIndex}
+              active={activeTab}
               onChange={handleTabChanged}
-              tabs={TABS}
+              tabs={tabs}
               tabsProps={{ allowScrollButtonsMobile: true, indicatorColor: 'secondary', scrollButtons: 'auto', sx: { minHeight: '50px' }, textColor: 'secondary', variant: 'scrollable' }}
             />
 
-            <Box display='flex' flexDirection='column' minHeight={0} overflow={TABS[tabIndex].overflow}>
-              <Box display={tabIndex === 0 ? 'contents' : 'none'}>
-                <MatchSummary active={tabIndex === 0} demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
-              </Box>
-              <TabPanel active={tabIndex === 1}>
-                <PacketExplorer history={history} />
-              </TabPanel>
-              <TabPanel active={tabIndex === 2}>
-                <EntityExplorer demo={demo} contentVersion={contentVersion} />
-              </TabPanel>
-              <TabPanel active={tabIndex === 3}>
-                <StringTables contentVersion={contentVersion} demo={demo} />
-              </TabPanel>
-              <TabPanel active={tabIndex === 4}>
-                <DiffExplorer entityDiff={entityDiff} stringTableDiff={stringTableDiff} />
-              </TabPanel>
-              <TabPanel active={tabIndex === 5}>
-                <InfoExplorer demo={demo} fileHeader={fileHeader} />
-              </TabPanel>
+            <Box display='flex' flexDirection='column' minHeight={0} overflow={tabs[activeTab].overflow}>
+              {tabs.map((tab, index) => {
+                const active = activeTab === index;
+
+                if (tab.key === 'summary') {
+                  return (
+                    <Box key={tab.key} display={active ? 'contents' : 'none'}>
+                      <MatchSummary active={active} demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
+                    </Box>
+                  );
+                }
+
+                return (
+                  <TabPanel key={tab.key} active={active}>
+                    {tab.key === 'packets' && <PacketExplorer history={history} />}
+                    {tab.key === 'entities' && <EntityExplorer demo={demo} contentVersion={contentVersion} />}
+                    {tab.key === 'stringtables' && <StringTables contentVersion={contentVersion} demo={demo} />}
+                    {tab.key === 'usercommands' && <UserCommands contentVersion={contentVersion} demo={demo} />}
+                    {tab.key === 'diff' && <DiffExplorer entityDiff={entityDiff} stringTableDiff={stringTableDiff} />}
+                    {tab.key === 'info' && <InfoExplorer demo={demo} fileHeader={fileHeader} />}
+                  </TabPanel>
+                );
+              })}
             </Box>
           </Box>
 

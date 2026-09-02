@@ -89,6 +89,14 @@ class DemoPacket {
 
     /**
      * @public
+     * @returns {boolean}
+     */
+    getIsSnapshot() {
+        return this._type === DemoPacketType.DEM_FULL_PACKET;
+    }
+
+    /**
+     * @public
      * @returns {DemoPacketObject}
      */
     toObject() {

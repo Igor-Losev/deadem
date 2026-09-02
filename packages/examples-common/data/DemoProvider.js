@@ -3,7 +3,7 @@ import nodePath from 'node:path';
 
 import { Logger } from '@deademx/engine';
 
-import FileSystem from '@deademx/engine/src/core/FileSystem.js';
+import FileSystem from './FileSystem.js';
 
 const logger = Logger.CONSOLE_DEBUG;
 
