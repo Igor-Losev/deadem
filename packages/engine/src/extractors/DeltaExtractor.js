@@ -15,6 +15,12 @@ const WIRE_RESET = 7;
 const textDecoder = new TextDecoder();
 
 /**
+ * A decoded protobuf message held as a plain record.
+ *
+ * @typedef {Record<string, *>} ProtoState
+ */
+
+/**
  * Extractor `codegen_delta_encoder` protobuf extension.
  */
 class DeltaExtractor {
@@ -36,8 +42,8 @@ class DeltaExtractor {
      * Merges extracted data into the given state.
      *
      * @public
-     * @param {Object} state
-     * @returns {Object}
+     * @param {ProtoState} state
+     * @returns {ProtoState}
      */
     merge(state) {
         return this._merge(state, this._type, this._bitBuffer.getUnreadCount());
@@ -45,10 +51,10 @@ class DeltaExtractor {
 
     /**
      * @protected
-     * @param {Object} state
+     * @param {ProtoState} state
      * @param {protobuf.Type} type
      * @param {number} bits
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     _merge(state, type, bits) {
         const bitBuffer = this._bitBuffer;
@@ -104,9 +110,9 @@ class DeltaExtractor {
                             throw new Error(`DeltaExtractor: unsupported repeated scalar field [ ${field.name} ]`);
                         }
 
-                        state[field.name] = this._mergeRepeated(state[field.name], field.resolvedType, payloadBits);
+                        state[field.name] = this._mergeRepeated(state[field.name], /** @type {protobuf.Type} */ (field.resolvedType), payloadBits);
                     } else if (field.resolvedType) {
-                        state[field.name] = this._merge(state[field.name] || { }, field.resolvedType, payloadBits);
+                        state[field.name] = this._merge(state[field.name] || { }, /** @type {protobuf.Type} */ (field.resolvedType), payloadBits);
                     } else if (field.bytes) {
                         state[field.name] = new Uint8Array(bitBuffer.readBytes(payloadBits / BITS_PER_BYTE));
                     } else if (field.type === 'string') {
@@ -153,10 +159,10 @@ class DeltaExtractor {
 
     /**
      * @protected
-     * @param {Array<Object>|undefined} previous
+     * @param {Array<ProtoState>|undefined} previous
      * @param {protobuf.Type} type
      * @param {number} bits
-     * @returns {Array<Object>}
+     * @returns {Array<ProtoState>}
      */
     _mergeRepeated(previous, type, bits) {
         const bitBuffer = this._bitBuffer;

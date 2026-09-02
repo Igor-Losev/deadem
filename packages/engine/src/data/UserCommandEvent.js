@@ -1,3 +1,7 @@
+/** @import { ProtoState } from '#extractors/DeltaExtractor.js' */
+
+/** @import UserCommand from '#data/UserCommand.js' */
+
 class UserCommandEvent {
     /**
      * @public
@@ -11,6 +15,7 @@ class UserCommandEvent {
         this._gap = gap;
         this._delta = delta;
 
+        /** @type {ProtoState|null} */
         this._changes = null;
     }
 
@@ -38,7 +43,7 @@ class UserCommandEvent {
      * Changes per {@link UserCommand}. (Lazy).
      *
      * @public
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     getChanges() {
         if (this._changes === null) {

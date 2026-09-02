@@ -1,3 +1,5 @@
+/** @import { ProtoState } from '#extractors/DeltaExtractor.js' */
+
 import Assert from '#core/Assert.js';
 
 import DeltaExtractor from '#extractors/DeltaExtractor.js';
@@ -11,7 +13,7 @@ class UserCommand {
      * @constructor
      * @param {number} slot
      * @param {number} number
-     * @param {Object} state
+     * @param {ProtoState} state
      * @param {protobuf.Type} type
      */
     constructor(slot, number, state, type) {
@@ -46,7 +48,7 @@ class UserCommand {
 
     /**
      * @public
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     get state() {
         return this._state;
@@ -62,7 +64,9 @@ class UserCommand {
      * @returns {UserCommand}
      */
     static fromData(slot, number, data, type) {
-        return new UserCommand(slot, number, extractState(type.decode(data), type), type);
+        const message = /** @type {Record<string, *>} */ (type.decode(data));
+
+        return new UserCommand(slot, number, extractState(message, type), type);
     }
 
     /**
@@ -81,7 +85,7 @@ class UserCommand {
      *
      * @public
      * @param {Uint8Array} deltaData
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     extractChanges(deltaData) {
         return new DeltaExtractor(deltaData, this._type).merge({ });
@@ -94,7 +98,7 @@ class UserCommand {
  * @returns {*}
  */
 function convertValue(value, field) {
-    if (field.resolvedType?.fieldsArray !== undefined) {
+    if (field.resolvedType && 'fieldsArray' in field.resolvedType) {
         return extractState(value, field.resolvedType);
     }
 
@@ -110,11 +114,12 @@ function convertValue(value, field) {
 }
 
 /**
- * @param {protobuf.Message} message
+ * @param {Record<string, *>} message
  * @param {protobuf.Type} type
- * @returns {Object}
+ * @returns {ProtoState}
  */
 function extractState(message, type) {
+    /** @type {ProtoState} */
     const state = { };
 
     for (const field of type.fieldsArray) {
