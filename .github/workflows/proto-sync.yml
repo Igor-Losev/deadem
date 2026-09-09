@@ -49,8 +49,8 @@ jobs:
       - name: Sync proto sources
         run: npm run proto:sync -w ${{ matrix.workspace }}
 
-      - name: Compile proto JSON
-        run: npm run proto:json -w ${{ matrix.workspace }}
+      - name: Compile proto schema
+        run: npm run proto:js -w ${{ matrix.workspace }}
 
       - name: Create or update pull request
         uses: peter-evans/create-pull-request@v8
