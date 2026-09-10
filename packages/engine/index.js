@@ -1,3 +1,18 @@
+/**
+ * @template T
+ * @typedef {import('./src/core/EventEmitter.js').EventEmitterHandler<T>} EventEmitterHandler
+ */
+
+/** @typedef {import('./src/data/DemoPacketRaw.js').default} DemoPacketRaw */
+/** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('./src/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
+/** @typedef {import('./src/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
+/** @typedef {import('./src/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */
+/** @typedef {import('./src/errors/PlaybackInterruptedError.js').PlaybackInterruptionReason} PlaybackInterruptionReason */
+/** @typedef {import('./src/extractors/DeltaExtractor.js').ProtoState} ProtoState */
+/** @typedef {import('./src/data/tables/string/StringTable.js').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('./src/broadcast/BroadcastGateway.js').SyncObject} SyncObject */
+
 export { default as Bootstrap } from './src/bootstrap/Bootstrap.js';
 export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastFragmentType } from './src/data/enums/BroadcastFragmentType.js';

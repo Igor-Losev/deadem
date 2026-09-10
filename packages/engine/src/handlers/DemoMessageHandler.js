@@ -27,7 +27,7 @@ class DemoMessageHandler {
      * @param {SchemaRegistry} registry
      * @param {Demo} demo
      * @param {StringTableHandler} stringTableHandler
-     * @param {(function(string): boolean)|null} [entityClassFilter=null]
+     * @param {((className: string) => boolean)|null} [entityClassFilter=null]
      */
     constructor(registry, demo, stringTableHandler, entityClassFilter = null) {
         Assert.isTrue(registry instanceof SchemaRegistry);

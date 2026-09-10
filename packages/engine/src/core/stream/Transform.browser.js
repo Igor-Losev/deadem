@@ -1,4 +1,11 @@
+import Assert from '#core/Assert.js';
+
 class TransformBrowser extends TransformStream {
+    /**
+     * @public
+     * @constructor
+     * @param {number} highWaterMark
+     */
     constructor(highWaterMark) {
         super({
             flush: async (controller) => {
@@ -21,7 +28,10 @@ class TransformBrowser extends TransformStream {
             }
         }, { highWaterMark }, { highWaterMark });
 
+        /** @type {Array<*>} */
         this._bufferized = [ ];
+
+        /** @type {TransformStreamDefaultController|null} */
         this._controller = null;
     }
 
@@ -29,8 +39,12 @@ class TransformBrowser extends TransformStream {
      * @protected
      */
     _drainBufferized() {
+        const controller = this._controller;
+
+        Assert.exists(controller, 'Transform controller is not available');
+
         this._bufferized.forEach((chunk) => {
-            this._controller.enqueue(chunk);
+            controller.enqueue(chunk);
         });
 
         this._bufferized = [ ];
@@ -46,8 +60,10 @@ class TransformBrowser extends TransformStream {
     /**
      * @protected
      * @abstract
+     * @param {*} _chunk
+     * @returns {Promise<void>}
      */
-    async _handle() {
+    async _handle(_chunk) {
         throw new Error('TransformBrowser.handle() is not implemented');
     }
 

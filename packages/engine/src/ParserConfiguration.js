@@ -130,7 +130,7 @@ class ParserConfiguration {
 
 /**
  * @param {Array<string>|null} include
- * @returns {(function(string): boolean)|null}
+ * @returns {((className: string) => boolean)|null}
  */
 function buildEntityClassFilter(include) {
     if (include === null) {
@@ -145,7 +145,7 @@ function buildEntityClassFilter(include) {
 /**
  * @param {Array<MessagePacketType>|null} include
  * @param {Array<MessagePacketType>|null} exclude
- * @returns {(function(number): boolean)|null}
+ * @returns {((id: number) => boolean)|null}
  */
 function buildMessagePacketFilter(include, exclude) {
     if (include !== null) {

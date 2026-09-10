@@ -180,7 +180,8 @@ class ParserSession {
             }
         };
 
-        const teardown = (/** @type {*} */ error) => {
+        /** @param {*} [error] */
+        const teardown = (error) => {
             this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
             this._pending.delete(teardown);
 

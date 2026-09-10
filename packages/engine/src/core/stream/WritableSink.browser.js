@@ -2,7 +2,7 @@ class WritableSinkBrowser extends WritableStream {
     /**
      * @public
      * @constructor
-     * @param {(function(*): void)|null} [onWrite=null] - Optional callback invoked for each chunk.
+     * @param {((chunk: *) => void)|null} [onWrite=null] - Optional callback invoked for each chunk.
      */
     constructor(onWrite = null) {
         super({

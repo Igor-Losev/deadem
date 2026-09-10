@@ -13,7 +13,7 @@ class FieldExtractor {
     /**
      * @public
      * @constructor
-     * @param {function(FieldPath): *} readField
+     * @param {(fieldPath: FieldPath) => *} readField
      * @param {Array<number>} basePath
      */
     constructor(readField, basePath) {

@@ -56,6 +56,7 @@ class BroadcastGateway {
     }
 
     /**
+     * @internal
      * @protected
      * @param {Response} response
      * @returns {Error}

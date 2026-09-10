@@ -43,7 +43,7 @@ class FieldAccessor {
 
     /**
      * @public
-     * @param {function(FieldPath): *} readField
+     * @param {(fieldPath: FieldPath) => *} readField
      * @returns {*}
      */
     read(readField) {

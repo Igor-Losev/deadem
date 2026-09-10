@@ -97,7 +97,7 @@ class PacketCodec {
     /**
      * @public
      * @param {DemoPacketRaw} raw
-     * @param {function(number): boolean} [messagePacketFilter]
+     * @param {(id: number) => boolean} [messagePacketFilter]
      * @returns {DemoPacket|null}
      */
     parseDemoPacket(raw, messagePacketFilter) {

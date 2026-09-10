@@ -2,6 +2,7 @@ import Assert from '#core/Assert.js';
 
 import BroadcastAgent from './BroadcastAgent.js';
 
+/** @extends {ReadableStream<Uint8Array>} */
 class BroadcastReadStreamBrowser extends ReadableStream {
     /**
     * @constructor

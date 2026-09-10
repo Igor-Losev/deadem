@@ -1,3 +1,18 @@
+/**
+ * @template T
+ * @typedef {import('@deademx/engine').EventEmitterHandler<T>} EventEmitterHandler
+ */
+
+/** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
+/** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
+/** @typedef {import('@deademx/engine').ParserConfigurationOptions} ParserConfigurationOptions */
+/** @typedef {import('@deademx/engine').PerformanceTrackerStats} PerformanceTrackerStats */
+/** @typedef {import('@deademx/engine').PlaybackInterruptionReason} PlaybackInterruptionReason */
+/** @typedef {import('@deademx/engine').ProtoState} ProtoState */
+/** @typedef {import('@deademx/engine').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('@deademx/engine').SyncObject} SyncObject */
+
 /** @import { Logger, ParserConfiguration } from '@deademx/engine' */
 
 import {

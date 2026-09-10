@@ -40,6 +40,7 @@ class DemoStreamPacketExtractor extends Transform {
             packets: 0
         };
 
+        /** @type {Uint8Array} */
         this._tail = new Uint8Array(0);
     }
 

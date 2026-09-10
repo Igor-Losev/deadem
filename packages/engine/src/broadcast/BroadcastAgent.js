@@ -217,7 +217,7 @@ class BroadcastAgent {
 
     /**
     * @public
-    * @param {function((Buffer|null)): void} listener
+    * @param {(chunk: Uint8Array|null) => void} listener
     */
     subscribe(listener) {
         this._listeners.push(listener);
@@ -225,7 +225,7 @@ class BroadcastAgent {
 
     /**
      * @public
-     * @param {function((Buffer|null)): void} listener
+     * @param {(chunk: Uint8Array|null) => void} listener
      * @returns {boolean}
      */
     unsubscribe(listener) {
@@ -244,7 +244,7 @@ class BroadcastAgent {
      * @protected
      * @param {BroadcastFragmentType} fragmentType
      * @param {number} fragment
-     * @returns {Promise<Buffer>}
+     * @returns {Promise<Uint8Array>}
      */
     _getFragment(fragmentType, fragment) {
         return backoff.call(this, () => this._gateway.getFragment(this._match, fragmentType, fragment), REQUEST_RETRIES);
@@ -260,7 +260,7 @@ class BroadcastAgent {
 
     /**
     * @protected
-    * @param {Buffer|null} bufferOrNull
+    * @param {Uint8Array|null} bufferOrNull
     */
     _send(bufferOrNull) {
         this._listeners.forEach((listener) => {
@@ -270,6 +270,7 @@ class BroadcastAgent {
 }
 
 /**
+ * @this {BroadcastAgent}
  * @param {() => Promise<*>} action
  * @param {number} attempts
  * @param {number} [delay=500]
@@ -288,14 +289,11 @@ async function backoff(action, attempts, delay = 500) {
         } catch (error) {
             attempt += 1;
 
-            // @ts-ignore — 'this' is class context in method
-            this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${error.message} ]`);
+            this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${/** @type {Error} */ (error).message} ]`);
 
             if (attempt >= attempts) {
-                // @ts-ignore — 'this' is class context in method
                 this._logger.error(error);
 
-                // @ts-ignore — 'this' is class context in method
                 this.stop();
 
                 throw error;
