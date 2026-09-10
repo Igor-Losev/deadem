@@ -3898,6 +3898,10 @@ export default {
           "options": {
             "default": -1
           }
+        },
+        "caster": {
+          "type": "bool",
+          "id": 9
         }
       }
     },
@@ -4441,6 +4445,10 @@ export default {
         "chat": {
           "type": "bool",
           "id": 3
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 4
         }
       }
     },
@@ -4477,6 +4485,10 @@ export default {
         "param4": {
           "type": "string",
           "id": 7
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
