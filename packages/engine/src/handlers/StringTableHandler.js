@@ -1,14 +1,3 @@
-/**
- * Interim structural shapes for the protobuf messages consumed here — only
- * the fields this handler actually reads. Superseded by generated proto types.
- *
- * @typedef {{ name: string, userDataSizeBits: number, userDataFixedSize: boolean, usingVarintBitcounts: boolean, dataCompressed: boolean, stringData: Uint8Array, flags: number, numEntries: number }} CSVCMsg_CreateStringTable
- * @typedef {{ tableId: number, numChangedEntries: number, stringData: Uint8Array }} CSVCMsg_UpdateStringTable
- * @typedef {{ str: string, data?: Uint8Array }} CDemoStringTablesItem
- * @typedef {{ tableName: string, tableFlags: number, items: Array<CDemoStringTablesItem> }} CDemoStringTablesTable
- * @typedef {{ tables: Array<CDemoStringTablesTable> }} CDemoStringTables
- */
-
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
@@ -51,7 +40,7 @@ class StringTableHandler {
 
     /**
      * @public
-     * @param {CSVCMsg_CreateStringTable} createData
+     * @param {*} createData
      */
     handleCreate(createData) {
         const stringTableType = this._resolveOrSynthesize(createData.name);
@@ -94,10 +83,10 @@ class StringTableHandler {
 
     /**
      * @public
-     * @param {CDemoStringTables} instantiateData
+     * @param {*} instantiateData
      */
     handleInstantiate(instantiateData) {
-        instantiateData.tables.forEach((tableData) => {
+        instantiateData.tables.forEach((/** @type {*} */ tableData) => {
             const stringTableType = this._resolveOrSynthesize(tableData.tableName);
 
             const existing = this._container.getByName(stringTableType.name);
@@ -115,7 +104,7 @@ class StringTableHandler {
             /** @type {Array<StringTableEntry>} */
             const entries = [ ];
 
-            tableData.items.forEach((entryData, index) => {
+            tableData.items.forEach((/** @type {*} */ entryData, /** @type {number} */ index) => {
                 const entry = new StringTableEntry(stringTable, index, entryData.str, normalizeEntryData(entryData.data));
 
                 stringTable.registerEntry(entry);
@@ -131,10 +120,10 @@ class StringTableHandler {
 
     /**
      * @public
-     * @param {CDemoStringTables} snapshotData
+     * @param {*} snapshotData
      */
     handleSnapshot(snapshotData) {
-        snapshotData.tables.forEach((tableData) => {
+        snapshotData.tables.forEach((/** @type {*} */ tableData) => {
             const type = this._registry.resolveStringTableTypeByName(tableData.tableName);
 
             const existingTable = type !== null
@@ -150,7 +139,7 @@ class StringTableHandler {
             /** @type {Array<StringTableEntry>} */
             const entries = [ ];
 
-            tableData.items.forEach((entryData, index) => {
+            tableData.items.forEach((/** @type {*} */ entryData, /** @type {number} */ index) => {
                 const entry = new StringTableEntry(existingTable, index, entryData.str, normalizeEntryData(entryData.data));
 
                 existingTable.registerEntry(entry);
@@ -164,7 +153,7 @@ class StringTableHandler {
 
     /**
      * @public
-     * @param {CSVCMsg_UpdateStringTable} updateData
+     * @param {*} updateData
      */
     handleUpdate(updateData) {
         const stringTable = this._container.getById(updateData.tableId);

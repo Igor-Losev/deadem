@@ -1,7 +1,12 @@
-/** @import { Message as CDemoStringTables } from 'protobufjs' */
 
 /** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
 /** @import MessagePacketRaw from '#data/MessagePacketRaw.js' */
+
+/**
+ * Synthesised payload.
+ *
+ * @typedef {{ messagePackets: Array<MessagePacket|MessagePacketRaw>, stringTables: * }} DemoPacketHeavyData
+ */
 
 import Assert from '#core/Assert.js';
 import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
@@ -175,7 +180,8 @@ class PacketCodec {
 
 /**
  * @param {Array<MessagePacket|MessagePacketRaw>} messagePackets
- * @param {CDemoStringTables|null} stringTables
+ * @param {*} stringTables
+ * @returns {DemoPacketHeavyData}
  */
 function createDemoPacketData(messagePackets, stringTables = null) {
     return {

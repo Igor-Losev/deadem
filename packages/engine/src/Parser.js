@@ -1,7 +1,7 @@
 /** @import { Stream } from 'node:stream' */
 
 /** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
-/** @import { InterceptorFn } from '#root/src/ParserEngine.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from '#root/src/ParserEngine.js' */
 
 /** @import Demo from '#data/Demo.js' */
 /** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
@@ -139,8 +139,9 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
+     * @template {keyof InterceptorMap} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -148,8 +149,9 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
+     * @template {InterceptorPreStage} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);

@@ -1,6 +1,10 @@
 /** @import { Stream } from 'node:stream' */
 
+/** @import DemoPacket from '#data/DemoPacket.js' */
 /** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import MessagePacket from '#data/MessagePacket.js' */
+/** @import EntityMutationEvent from '#data/entity/EntityMutationEvent.js' */
+/** @import UserCommandEvent from '#data/UserCommandEvent.js' */
 
 import Assert from '#core/Assert.js';
 import Logger from '#core/Logger.js';
@@ -40,6 +44,23 @@ import SchemaRegistry from './SchemaRegistry.js';
  * {@link InterceptorStage} for the shapes passed at each stage.
  *
  * @typedef {(...args: Array<*>) => void} InterceptorFn
+ */
+
+/**
+ * Callback shape fired at each {@link InterceptorStage}.
+ *
+ * @typedef {{
+ *     DEMO_PACKET: (demoPacket: DemoPacket) => void|Promise<void>,
+ *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<EntityMutationEvent>) => void|Promise<void>,
+ *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket) => void|Promise<void>,
+ *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<UserCommandEvent>) => void|Promise<void>
+ * }} InterceptorMap
+ */
+
+/**
+ * Stages that have a pre phase. `USER_COMMAND` is post-only.
+ *
+ * @typedef {Exclude<keyof InterceptorMap, 'USER_COMMAND'>} InterceptorPreStage
  */
 
 class ParserEngine {

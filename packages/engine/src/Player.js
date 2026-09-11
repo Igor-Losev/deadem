@@ -4,7 +4,7 @@
 
 /** @import Demo from '#data/Demo.js' */
 /** @import { PlaybackInterruptionReason } from '#errors/PlaybackInterruptedError.js' */
-/** @import { InterceptorFn } from '#root/src/ParserEngine.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from '#root/src/ParserEngine.js' */
 /** @import InterceptorStage from '#data/enums/InterceptorStage.js' */
 
 /** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
@@ -265,8 +265,9 @@ class Player {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
+     * @template {keyof InterceptorMap} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -274,8 +275,9 @@ class Player {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
+     * @template {InterceptorPreStage} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);

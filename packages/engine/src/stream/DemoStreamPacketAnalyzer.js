@@ -66,7 +66,7 @@ class DemoStreamPacketAnalyzer extends Transform {
                     this._engine.getDemoPacketHandler().handleDemFullPacketTables(demoPacket);
                 }
 
-                this._handleMessagePackets(demoPacket, demoPacket.data.messagePackets);
+                this._handleMessagePackets(demoPacket, /** @type {{ messagePackets: Array<MessagePacket> }} */ (demoPacket.data).messagePackets);
 
                 break;
             }

@@ -2,6 +2,8 @@
 
 /** @import DemoPacket from '#data/DemoPacket.js' */
 
+/** @import { DemoPacketHeavyData } from '#root/src/PacketCodec.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 import MessagePacketType from '#data/enums/MessagePacketType.js';
@@ -43,7 +45,7 @@ class DemoStreamPacketPrioritizer extends Transform {
 
         this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
 
-        demoPacket.data.messagePackets.sort((/** @type {*} */ a, /** @type {*} */ b) => {
+        /** @type {DemoPacketHeavyData} */ (demoPacket.data).messagePackets.sort((/** @type {*} */ a, /** @type {*} */ b) => {
             const priorityA = getPacketPriority(a.type);
             const priorityB = getPacketPriority(b.type);
 

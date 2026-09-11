@@ -2,6 +2,8 @@
 
 /** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
 
+/** @import { DemoPacketHeavyData } from '#root/src/PacketCodec.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 import MessagePacket from '#data/MessagePacket.js';
@@ -45,12 +47,14 @@ class DemoStreamPacketParser extends Transform {
         }
 
         if (demoPacket.type.heavy) {
+            const data = /** @type {DemoPacketHeavyData} */ (demoPacket.data);
+
             /** @type {Array<*>} */
             const parsed = [ ];
             /** @type {Array<*>} */
             const unparsed = [ ];
 
-            demoPacket.data.messagePackets.forEach((/** @type {*} */ messagePacketOrRaw) => {
+            data.messagePackets.forEach((/** @type {*} */ messagePacketOrRaw) => {
                 if (messagePacketOrRaw instanceof MessagePacket) {
                     parsed.push(messagePacketOrRaw);
                 } else {
@@ -63,7 +67,7 @@ class DemoStreamPacketParser extends Transform {
                     this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
                 });
 
-                demoPacket.data.messagePackets = parsed;
+                data.messagePackets = parsed;
             }
         }
 

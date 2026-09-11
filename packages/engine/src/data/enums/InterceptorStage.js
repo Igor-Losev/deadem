@@ -3,6 +3,10 @@ const registry = {
 };
 
 /**
+ * @typedef {'DEMO_PACKET'|'ENTITY_PACKET'|'MESSAGE_PACKET'|'USER_COMMAND'} InterceptorStageCode
+ */
+
+/**
  * @template {string} [C=string]
  */
 class InterceptorStage {
@@ -37,7 +41,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {Array<InterceptorStage>}
+     * @returns {Array<InterceptorStage<InterceptorStageCode>>}
      */
     static getAll() {
         return Array.from(registry.byId.values());
