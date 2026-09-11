@@ -54,11 +54,13 @@ class StringTableContainer {
 
     /**
      * @public
-     * @param {StringTableType} type
-     * @returns {StringTable|null}
+     * @template {string} T
+     * @template TD
+     * @param {StringTableType<T, TD>} type
+     * @returns {StringTable<T, TD>|null}
      */
     getByType(type) {
-        return this.getByName(type.name);
+        return /** @type {StringTable<T, TD>|null} */ (this.getByName(type.name));
     }
 
     /**

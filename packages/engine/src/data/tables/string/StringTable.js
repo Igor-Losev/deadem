@@ -12,11 +12,15 @@ import StringTableInstructions from './StringTableInstructions.js';
  * @typedef {(buffer: Uint8Array) => *} StringTableDecoderFn
  */
 
+/**
+ * @template {string} [C=string]
+ * @template [D=*]
+ */
 class StringTable {
     /**
      * @public
      * @param {number} id
-     * @param {StringTableType} type
+     * @param {StringTableType<C, D>} type
      * @param {number} flags
      * @param {StringTableInstructions|null=} instructions
      * @param {StringTableDecoderFn|null} [decoder]
@@ -47,7 +51,7 @@ class StringTable {
     }
 
     /**
-     * @returns {StringTableType}
+     * @returns {StringTableType<C, D>}
      */
     get type() {
         return this._type;
@@ -76,7 +80,7 @@ class StringTable {
 
     /**
      * @public
-     * @returns {Array<StringTableEntry>}
+     * @returns {Array<StringTableEntry<C, D>>}
      */
     getEntries() {
         return Array.from(this._registry.entryById.values());
@@ -93,7 +97,7 @@ class StringTable {
     /**
      * @public
      * @param {number} id
-     * @returns {StringTableEntry|null}
+     * @returns {StringTableEntry<C, D>|null}
      */
     getEntryById(id) {
         return this._registry.entryById.get(id) || null;
@@ -109,7 +113,18 @@ class StringTable {
 
     /**
      * @public
-     * @param {StringTableEntry} entry
+     * @template {string} T
+     * @template TD
+     * @param {StringTableType<T, TD>} type
+     * @returns {this is StringTable<T, TD>}
+     */
+    is(type) {
+        return /** @type {StringTableType<string, *>} */ (this._type).code === type.code;
+    }
+
+    /**
+     * @public
+     * @param {StringTableEntry<C, D>} entry
      * @returns {void}
      */
     registerEntry(entry) {

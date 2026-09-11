@@ -11,6 +11,7 @@
 /** @typedef {import('@deademx/engine').PlaybackInterruptionReason} PlaybackInterruptionReason */
 /** @typedef {import('@deademx/engine').ProtoState} ProtoState */
 /** @typedef {import('@deademx/engine').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('@deademx/engine').StringTableRawValue} StringTableRawValue */
 /** @typedef {import('@deademx/engine').SyncObject} SyncObject */
 
 /** @import { Logger, ParserConfiguration } from '@deademx/engine' */

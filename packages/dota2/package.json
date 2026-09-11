@@ -69,6 +69,6 @@
     "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
   },
   "dependencies": {
-    "@deademx/engine": "4.0.1"
+    "@deademx/engine": "^4.0.1"
   }
 }

@@ -11,6 +11,7 @@
 /** @typedef {import('./src/errors/PlaybackInterruptedError.js').PlaybackInterruptionReason} PlaybackInterruptionReason */
 /** @typedef {import('./src/extractors/DeltaExtractor.js').ProtoState} ProtoState */
 /** @typedef {import('./src/data/tables/string/StringTable.js').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('./src/data/enums/StringTableType.js').StringTableRawValue} StringTableRawValue */
 /** @typedef {import('./src/broadcast/BroadcastGateway.js').SyncObject} SyncObject */
 
 export { default as Bootstrap } from './src/bootstrap/Bootstrap.js';

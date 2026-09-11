@@ -2,10 +2,13 @@ const registry = {
     byId: new Map()
 };
 
+/**
+ * @template {string} [C=string]
+ */
 class InterceptorStage {
     /**
      * @constructor
-     * @param {string} code
+     * @param {C} code
      * @param {number} id
      */
     constructor(code, id) {
@@ -17,7 +20,7 @@ class InterceptorStage {
 
     /**
      * @public
-     * @returns {string}
+     * @returns {C}
      */
     get code() {
         return this._code;
@@ -43,7 +46,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'DEMO_PACKET'>}
      */
     static get DEMO_PACKET() {
         return demoPacket;
@@ -52,7 +55,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'ENTITY_PACKET'>}
      */
     static get ENTITY_PACKET() {
         return entityPacket;
@@ -61,7 +64,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'MESSAGE_PACKET'>}
      */
     static get MESSAGE_PACKET() {
         return messagePacket;
@@ -70,7 +73,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'USER_COMMAND'>}
      */
     static get USER_COMMAND() {
         return userCommand;

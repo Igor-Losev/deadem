@@ -4,11 +4,15 @@
 
 import Assert from '#core/Assert.js';
 
+/**
+ * @template {string} [C=string]
+ * @template [D=*]
+ */
 class StringTableEntry {
     /**
      * @public
      * @constructor
-     * @param {StringTable} table
+     * @param {StringTable<C, D>} table
      * @param {number} id
      * @param {string} key
      * @param {Uint8Array|Array<*>|null} raw
@@ -41,7 +45,7 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {StringTableType}
+     * @returns {StringTableType<C, D>}
      */
     get type() {
         return this._table.type;
@@ -62,7 +66,7 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {Uint8Array|null|*}
+     * @returns {D}
      */
     get value() {
         if (this._decoded) {
@@ -76,7 +80,18 @@ class StringTableEntry {
             return this._value;
         }
 
-        return this._raw;
+        return /** @type {D} */ (this._raw);
+    }
+
+    /**
+     * @public
+     * @template {string} T
+     * @template TD
+     * @param {StringTableType<T, TD>} type
+     * @returns {this is StringTableEntry<T, TD>}
+     */
+    is(type) {
+        return /** @type {StringTableType<string, *>} */ (this._table.type).code === type.code;
     }
 }
 
