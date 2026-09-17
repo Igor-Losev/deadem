@@ -1,7 +1,5 @@
 import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
-
-const BITS_PER_BYTE = BitBuffer.BITS_PER_BYTE;
+import WireReader from '#core/WireReader.js';
 
 const TAG_SHIFT = 3;
 const TAG_MASK = 0x07;
@@ -34,7 +32,7 @@ class DeltaExtractor {
         Assert.isTrue(data instanceof Uint8Array);
         Assert.isTrue(type?.fieldsById !== undefined);
 
-        this._bitBuffer = new BitBuffer(data);
+        this._reader = new WireReader(data);
         this._type = type;
     }
 
@@ -46,23 +44,23 @@ class DeltaExtractor {
      * @returns {ProtoState}
      */
     merge(state) {
-        return this._merge(state, this._type, this._bitBuffer.getUnreadCount());
+        return this._merge(state, this._type, this._reader.getUnreadCount());
     }
 
     /**
      * @protected
      * @param {ProtoState} state
      * @param {protobuf.Type} type
-     * @param {number} bits
+     * @param {number} length
      * @returns {ProtoState}
      */
-    _merge(state, type, bits) {
-        const bitBuffer = this._bitBuffer;
+    _merge(state, type, length) {
+        const reader = this._reader;
 
-        const end = bitBuffer.getReadCount() + bits;
+        const end = reader.offset + length;
 
-        while (end - bitBuffer.getReadCount() >= BITS_PER_BYTE) {
-            const tag = bitBuffer.readUVarInt32();
+        while (reader.offset < end) {
+            const tag = reader.readUVarInt32();
 
             const id = tag >>> TAG_SHIFT;
             const wire = tag & TAG_MASK;
@@ -76,15 +74,15 @@ class DeltaExtractor {
             switch (wire) {
                 case WIRE_VAR_INT:
                     if (field === null) {
-                        bitBuffer.readUVarInt64();
+                        reader.readUVarInt64();
                     } else if (field.type === 'bool') {
-                        state[field.name] = bitBuffer.readUVarInt32() !== 0;
+                        state[field.name] = reader.readBoolean();
                     } else if (field.type === 'int32') {
-                        state[field.name] = bitBuffer.readUVarInt32() | 0;
+                        state[field.name] = reader.readVarInt32();
                     } else if (field.type === 'uint32') {
-                        state[field.name] = bitBuffer.readUVarInt32();
+                        state[field.name] = reader.readUVarInt32();
                     } else if (field.type === 'uint64') {
-                        state[field.name] = bitBuffer.readUVarInt64().toString();
+                        state[field.name] = reader.readUVarInt64().toString();
                     } else {
                         throw new Error(`DeltaExtractor: unsupported varint type [ ${field.type} ] for field [ ${field.name} ]`);
                     }
@@ -92,31 +90,31 @@ class DeltaExtractor {
                     break;
                 case WIRE_FIXED_64:
                     if (field === null) {
-                        bitBuffer.readUInt64();
+                        reader.readUInt64();
                     } else if (field.type === 'double') {
                         throw new Error(`DeltaExtractor: unsupported double field [ ${field.name} ]`);
                     } else {
-                        state[field.name] = bitBuffer.readUInt64().toString();
+                        state[field.name] = reader.readUInt64().toString();
                     }
 
                     break;
                 case WIRE_LENGTH_DELIMITED: {
-                    const payloadBits = bitBuffer.readUVarInt32() * BITS_PER_BYTE;
+                    const payload = reader.readUVarInt32();
 
                     if (field === null) {
-                        bitBuffer.move(payloadBits);
+                        reader.offset += payload;
                     } else if (field.repeated) {
                         if (!field.resolvedType) {
                             throw new Error(`DeltaExtractor: unsupported repeated scalar field [ ${field.name} ]`);
                         }
 
-                        state[field.name] = this._mergeRepeated(state[field.name], /** @type {protobuf.Type} */ (field.resolvedType), payloadBits);
+                        state[field.name] = this._mergeRepeated(state[field.name], /** @type {protobuf.Type} */ (field.resolvedType), payload);
                     } else if (field.resolvedType) {
-                        state[field.name] = this._merge(state[field.name] || { }, /** @type {protobuf.Type} */ (field.resolvedType), payloadBits);
+                        state[field.name] = this._merge(state[field.name] || { }, /** @type {protobuf.Type} */ (field.resolvedType), payload);
                     } else if (field.bytes) {
-                        state[field.name] = new Uint8Array(bitBuffer.readBytes(payloadBits / BITS_PER_BYTE));
+                        state[field.name] = new Uint8Array(reader.read(payload));
                     } else if (field.type === 'string') {
-                        state[field.name] = textDecoder.decode(bitBuffer.readBytes(payloadBits / BITS_PER_BYTE));
+                        state[field.name] = textDecoder.decode(reader.read(payload));
                     } else {
                         throw new Error(`DeltaExtractor: unsupported length-delimited type [ ${field.type} ] for field [ ${field.name} ]`);
                     }
@@ -125,11 +123,11 @@ class DeltaExtractor {
                 }
                 case WIRE_FIXED_32:
                     if (field === null) {
-                        bitBuffer.readUInt32();
+                        reader.readUInt32();
                     } else if (field.type === 'float') {
-                        state[field.name] = bitBuffer.readFloat32();
+                        state[field.name] = reader.readFloat32();
                     } else {
-                        state[field.name] = bitBuffer.readUInt32();
+                        state[field.name] = reader.readUInt32();
                     }
 
                     break;
@@ -161,21 +159,21 @@ class DeltaExtractor {
      * @protected
      * @param {Array<ProtoState>|undefined} previous
      * @param {protobuf.Type} type
-     * @param {number} bits
+     * @param {number} length
      * @returns {Array<ProtoState>}
      */
-    _mergeRepeated(previous, type, bits) {
-        const bitBuffer = this._bitBuffer;
+    _mergeRepeated(previous, type, length) {
+        const reader = this._reader;
 
-        const end = bitBuffer.getReadCount() + bits;
+        const end = reader.offset + length;
 
         const updates = [ ];
 
         let declared = null;
         let highest = -1;
 
-        while (end - bitBuffer.getReadCount() >= BITS_PER_BYTE) {
-            const tag = bitBuffer.readUVarInt32();
+        while (reader.offset < end) {
+            const tag = reader.readUVarInt32();
 
             const index = tag >>> TAG_SHIFT;
             const wire = tag & TAG_MASK;
@@ -190,9 +188,9 @@ class DeltaExtractor {
                 throw new Error(`DeltaExtractor: unsupported wire type [ ${wire} ] in a repeated field`);
             }
 
-            const elementBits = bitBuffer.readUVarInt32() * BITS_PER_BYTE;
+            const element = reader.readUVarInt32();
 
-            updates[index] = this._merge(previous?.[index] || { }, type, elementBits);
+            updates[index] = this._merge(previous?.[index] || { }, type, element);
 
             if (index > highest) {
                 highest = index;
@@ -220,13 +218,13 @@ class DeltaExtractor {
      * @param {number} end
      */
     _seek(end) {
-        const remaining = end - this._bitBuffer.getReadCount();
+        const remaining = end - this._reader.offset;
 
         if (remaining < 0) {
-            throw new Error(`DeltaExtractor: read [ ${-remaining} ] bit(s) past the end of a sub-payload`);
+            throw new Error(`DeltaExtractor: read [ ${-remaining} ] byte(s) past the end of a sub-payload`);
         }
 
-        this._bitBuffer.move(remaining);
+        this._reader.offset = end;
     }
 }
 
