@@ -5631,21 +5631,6 @@ export default {
         }
       }
     },
-    "CEntityMessageRemoveAllDecals": {
-      "edition": "proto2",
-      "fields": {
-        "removeDecals": {
-          "type": "bool",
-          "id": 1,
-          "protoName": "remove_decals"
-        },
-        "entityMsg": {
-          "type": ".CEntityMsg",
-          "id": 2,
-          "protoName": "entity_msg"
-        }
-      }
-    },
     "CUserMsg_ParticleManager": {
       "edition": "proto2",
       "options": {

@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import protobuf from 'protobufjs/light.js';
 
@@ -11,11 +11,10 @@ const DIRECTORY_PACKAGES = path.join(DIRECTORY_ROOT, 'packages');
 const DIRECTORY_BIN = path.join(DIRECTORY_ROOT, 'node_modules/.bin');
 
 const LOOKUP_TYPE_LITERAL_PATTERN = /\.lookupType\(\s*['"]([^'"]+)['"]\s*\)/g;
-const LOOKUP_TYPE_CALL_PATTERN = /\.lookupType\s*\(/g;
 
 const PACKAGE_NAME_ENGINE = 'engine';
 
-function main() {
+async function main() {
     const context = { };
 
     context.package = getPackageArgument(process.argv.slice(2));
@@ -29,6 +28,10 @@ function main() {
     context.messages = new Set();
     context.protos = scanProtoFiles(context.directories.proto);
 
+    for (const name of await collectRegisteredMessages(context.package)) {
+        context.messages.add(name);
+    }
+
     const bootstrap = [
         getBootstrapFile(PACKAGE_NAME_ENGINE),
         getBootstrapFile(context.package)
@@ -36,13 +39,6 @@ function main() {
 
     bootstrap.forEach((filePath) => {
         const content = fs.readFileSync(filePath, 'utf-8');
-
-        const countOfCalls = (content.match(LOOKUP_TYPE_CALL_PATTERN) || []).length;
-        const countOfLiterals = (content.match(LOOKUP_TYPE_LITERAL_PATTERN) || []).length;
-
-        if (countOfCalls !== countOfLiterals) {
-            throw new Error(`Non-literal lookupType(...) call detected in [ ${filePath} ] - only string literals are supported.`);
-        }
 
         for (const match of content.matchAll(LOOKUP_TYPE_LITERAL_PATTERN)) {
             context.messages.add(match[1].replace(/^\./, ''));
@@ -60,7 +56,37 @@ function main() {
     writeSchema(context.files.output, context.schema);
 }
 
-main();
+await main();
+
+/**
+ * @param {string} packageName
+ * @returns {Promise<Array<string>>}
+ */
+async function collectRegisteredMessages(packageName) {
+    const names = [ ];
+
+    for (const [ pkg, file ] of [
+        [ PACKAGE_NAME_ENGINE, 'DemoPacketType.js' ],
+        [ PACKAGE_NAME_ENGINE, 'MessagePacketType.js' ],
+        [ packageName, 'MessagePacketType.js' ]
+    ]) {
+        const enumFile = path.join(DIRECTORY_PACKAGES, pkg, 'src/data/enums', file);
+
+        if (!fs.existsSync(enumFile)) {
+            continue;
+        }
+
+        const { default: type } = await import(pathToFileURL(enumFile).href);
+
+        for (const member of type.getAll()) {
+            if (member.protoName !== null) {
+                names.push(member.protoName.replace(/^\./, ''));
+            }
+        }
+    }
+
+    return names;
+}
 
 function getBootstrapFile(packageName) {
     return path.join(DIRECTORY_PACKAGES, packageName, 'src/bootstrap/Bootstrap.js');

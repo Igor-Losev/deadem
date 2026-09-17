@@ -38,40 +38,40 @@ class MessagePacketType extends EngineMessagePacketType {
     static get TE_PHYSICS_PROP() { return tePhysicsProp; }
 }
 
-const umSayText = new MessagePacketType('UM_SayText', 117);
+const umSayText = new MessagePacketType('UM_SayText', 117, 'CUserMessageSayText');
 
-const csUmVguiMenu = new MessagePacketType('CS_UM_VGUIMenu', 301);
-const csUmHudText = new MessagePacketType('CS_UM_HudText', 304);
-const csUmHudMsg = new MessagePacketType('CS_UM_HudMsg', 308);
-const csUmShake = new MessagePacketType('CS_UM_Shake', 312);
-const csUmFade = new MessagePacketType('CS_UM_Fade', 313);
-const csUmDamage = new MessagePacketType('CS_UM_Damage', 321);
-const csUmRadioText = new MessagePacketType('CS_UM_RadioText', 322);
-const csUmHintText = new MessagePacketType('CS_UM_HintText', 323);
-const csUmAdjustMoney = new MessagePacketType('CS_UM_AdjustMoney', 327);
-const csUmKillCam = new MessagePacketType('CS_UM_KillCam', 330);
-const csUmMatchEndConditions = new MessagePacketType('CS_UM_MatchEndConditions', 334);
-const csUmPlayerStatsUpdate = new MessagePacketType('CS_UM_PlayerStatsUpdate', 336);
-const csUmVoteStart = new MessagePacketType('CS_UM_VoteStart', 346);
-const csUmVotePass = new MessagePacketType('CS_UM_VotePass', 347);
-const csUmVoteFailed = new MessagePacketType('CS_UM_VoteFailed', 348);
-const csUmServerRankRevealAll = new MessagePacketType('CS_UM_ServerRankRevealAll', 350);
-const csUmSendPlayerItemFound = new MessagePacketType('CS_UM_SendPlayerItemFound', 363);
-const csUmReportHit = new MessagePacketType('CS_UM_ReportHit', 364);
-const csUmWeaponSound = new MessagePacketType('CS_UM_WeaponSound', 369);
-const csUmXpUpdate = new MessagePacketType('CS_UM_XpUpdate', 365);
-const csUmEndOfMatchAllPlayersData = new MessagePacketType('CS_UM_EndOfMatchAllPlayersData', 375);
-const csUmRoundEndReportData = new MessagePacketType('CS_UM_RoundEndReportData', 379);
-const csUmWeaponMagDrop = new MessagePacketType('CS_UM_WeaponMagDrop', 389);
+const csUmVguiMenu = new MessagePacketType('CS_UM_VGUIMenu', 301, 'CCSUsrMsg_VGUIMenu');
+const csUmHudText = new MessagePacketType('CS_UM_HudText', 304, 'CCSUsrMsg_HudText');
+const csUmHudMsg = new MessagePacketType('CS_UM_HudMsg', 308, 'CCSUsrMsg_HudMsg');
+const csUmShake = new MessagePacketType('CS_UM_Shake', 312, 'CCSUsrMsg_Shake');
+const csUmFade = new MessagePacketType('CS_UM_Fade', 313, 'CCSUsrMsg_Fade');
+const csUmDamage = new MessagePacketType('CS_UM_Damage', 321, 'CCSUsrMsg_Damage');
+const csUmRadioText = new MessagePacketType('CS_UM_RadioText', 322, 'CCSUsrMsg_RadioText');
+const csUmHintText = new MessagePacketType('CS_UM_HintText', 323, 'CCSUsrMsg_HintText');
+const csUmAdjustMoney = new MessagePacketType('CS_UM_AdjustMoney', 327, 'CCSUsrMsg_AdjustMoney');
+const csUmKillCam = new MessagePacketType('CS_UM_KillCam', 330, 'CCSUsrMsg_KillCam');
+const csUmMatchEndConditions = new MessagePacketType('CS_UM_MatchEndConditions', 334, 'CCSUsrMsg_MatchEndConditions');
+const csUmPlayerStatsUpdate = new MessagePacketType('CS_UM_PlayerStatsUpdate', 336, 'CCSUsrMsg_PlayerStatsUpdate');
+const csUmVoteStart = new MessagePacketType('CS_UM_VoteStart', 346, 'CCSUsrMsg_VoteStart');
+const csUmVotePass = new MessagePacketType('CS_UM_VotePass', 347, 'CCSUsrMsg_VotePass');
+const csUmVoteFailed = new MessagePacketType('CS_UM_VoteFailed', 348, 'CCSUsrMsg_VoteFailed');
+const csUmServerRankRevealAll = new MessagePacketType('CS_UM_ServerRankRevealAll', 350, 'CCSUsrMsg_ServerRankRevealAll');
+const csUmSendPlayerItemFound = new MessagePacketType('CS_UM_SendPlayerItemFound', 363, 'CCSUsrMsg_SendPlayerItemFound');
+const csUmReportHit = new MessagePacketType('CS_UM_ReportHit', 364, 'CCSUsrMsg_ReportHit');
+const csUmWeaponSound = new MessagePacketType('CS_UM_WeaponSound', 369, 'CCSUsrMsg_WeaponSound');
+const csUmXpUpdate = new MessagePacketType('CS_UM_XpUpdate', 365, 'CCSUsrMsg_XpUpdate');
+const csUmEndOfMatchAllPlayersData = new MessagePacketType('CS_UM_EndOfMatchAllPlayersData', 375, 'CCSUsrMsg_EndOfMatchAllPlayersData');
+const csUmRoundEndReportData = new MessagePacketType('CS_UM_RoundEndReportData', 379, 'CCSUsrMsg_RoundEndReportData');
+const csUmWeaponMagDrop = new MessagePacketType('CS_UM_WeaponMagDrop', 389, 'CCSUsrMsg_WeaponMagDrop');
 
-const gePlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEventId', 450);
-const geRadioIconEvent = new MessagePacketType('GE_RadioIconEventId', 451);
-const geFireBullets = new MessagePacketType('GE_FireBulletsId', 452);
-const gePlayerBulletHit = new MessagePacketType('GE_PlayerBulletHitId', 453);
+const gePlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEventId', 450, 'CMsgTEPlayerAnimEvent');
+const geRadioIconEvent = new MessagePacketType('GE_RadioIconEventId', 451, 'CMsgTERadioIcon');
+const geFireBullets = new MessagePacketType('GE_FireBulletsId', 452, 'CMsgTEFireBullets');
+const gePlayerBulletHit = new MessagePacketType('GE_PlayerBulletHitId', 453, 'CMsgPlayerBulletHit');
 
-const teDecal = new MessagePacketType('TE_Decal', 410);
-const teWorldDecal = new MessagePacketType('TE_WorldDecal', 411);
-const teExplosion = new MessagePacketType('TE_Explosion', 419);
-const tePhysicsProp = new MessagePacketType('TE_PhysicsProp', 423);
+const teDecal = new MessagePacketType('TE_Decal', 410, 'CMsgTEDecal');
+const teWorldDecal = new MessagePacketType('TE_WorldDecal', 411, 'CMsgTEWorldDecal');
+const teExplosion = new MessagePacketType('TE_Explosion', 419, 'CMsgTEExplosion');
+const tePhysicsProp = new MessagePacketType('TE_PhysicsProp', 423, 'CMsgTEPhysicsProp');
 
 export default MessagePacketType;
