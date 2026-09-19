@@ -178,14 +178,15 @@ class Entity {
      * Throttle such calls.
      *
      * @public
+     * @template [T=unknown]
      * @param {string} name
-     * @returns {unknown}
+     * @returns {T}
      */
     getField(name) {
         const accessor = this._class.getFieldAccessor(name);
 
         if (accessor === null) {
-            return undefined;
+            return /** @type {T} */ (undefined);
         }
 
         return accessor.read(fieldPath => this.getFieldById(fieldPath.id));
@@ -195,14 +196,15 @@ class Entity {
      * Reads a single field by its field path id.
      *
      * @public
+     * @template [T=unknown]
      * @param {number} fieldPathId
-     * @returns {unknown}
+     * @returns {T}
      */
     getFieldById(fieldPathId) {
         const meta = this._class.layout.peek(fieldPathId);
 
         if (meta === null || !this._getIsPresent(meta)) {
-            return undefined;
+            return /** @type {T} */ (undefined);
         }
 
         return this._read(meta);
@@ -294,7 +296,8 @@ class Entity {
      * Use {@link #getField} unless you are debugging.
      *
      * @public
-     * @returns {unknown}
+     * @template [T=Record<string, unknown>]
+     * @returns {T}
      */
     unpackFlattened() {
         const layout = this._class.layout;
@@ -320,7 +323,7 @@ class Entity {
             this._snapshot = unpacked;
             this._changed = new Set();
 
-            return unpacked;
+            return /** @type {T} */ (unpacked);
         }
 
         changed.forEach((id) => {
@@ -333,7 +336,7 @@ class Entity {
 
         changed.clear();
 
-        return snapshot;
+        return /** @type {T} */ (snapshot);
     }
 
     /**
