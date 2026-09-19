@@ -1,29 +1,25 @@
-import FieldPath from './FieldPath.js';
+/** @import FieldPath from './FieldPath.js' */
+
+import FieldPathTrie from './FieldPathTrie.js';
 
 const MAX_LENGTH = 7;
 
+/** @type {Array<FieldPath>} */
+const paths = [ ];
+
+const root = new FieldPathTrie();
+const initial = root.descend(-1);
+
 /**
- * Trie node: children keyed by path element, with a `fieldPath` expando
- * set on nodes that terminate a cached path.
- *
- * @typedef {Map<number, any> & { fieldPath?: FieldPath }} PathTrieNode
+ * Builds {@link FieldPath} instances over a trie of every path ever seen.
  */
-
-/** @type {{ byId: Array<FieldPath>, byPath: PathTrieNode, bySingle: Array<FieldPath|undefined>, byPair: Map<number, FieldPath> }} */
-const cache = {
-    byId: [ ],
-    byPath: new Map(),
-    bySingle: [ ],
-    byPair: new Map()
-};
-
 class FieldPathBuilder {
     /**
      * @public
      * @constructor
      */
     constructor() {
-        this._path = [ -1 ];
+        this._node = initial;
     }
 
     /**
@@ -31,7 +27,7 @@ class FieldPathBuilder {
      * @returns {number}
      */
     get length() {
-        return this._path.length;
+        return this._node.depth;
     }
 
     /**
@@ -43,34 +39,7 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     static build(path) {
-        if (path.length === 1) {
-            /** @type {FieldPath|undefined} */
-            const existing = cache.bySingle[path[0]];
-
-            if (existing !== undefined) {
-                return existing;
-            }
-
-            return createAndCache(path);
-        }
-
-        if (path.length === 2) {
-            const existing = cache.byPair.get(toPairKey(path[0], path[1]));
-
-            if (existing !== undefined) {
-                return existing;
-            }
-
-            return createAndCache(path);
-        }
-
-        const existing = getByPath(path);
-
-        if (existing !== undefined) {
-            return existing;
-        }
-
-        return createAndCache(path);
+        return register(root.reach(path));
     }
 
     /**
@@ -82,7 +51,7 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     static getById(id) {
-        return cache.byId[id];
+        return paths[id];
     }
 
     /**
@@ -92,16 +61,28 @@ class FieldPathBuilder {
      * @param {number} value
      * @param {number=} index
      */
-    add(value, index = this._path.length - 1) {
-        if (this._path.length === 0) {
+    add(value, index) {
+        const last = this._node.depth - 1;
+
+        if (last < 0) {
             throw new Error(`Unable to add value [ ${value} ] - path is empty`);
         }
 
-        if (index >= this._path.length) {
-            throw new Error(`Unable to add value [ ${value} ] - index [ ${index} ] is bigger than path length [ ${this._path.length} ]`);
+        if (index === undefined || index === last) {
+            this._node = this._node.parent.descend(this._node.value + value);
+
+            return;
         }
 
-        this._path[index] += value;
+        if (index > last) {
+            throw new Error(`Unable to add value [ ${value} ] - index [ ${index} ] is bigger than path length [ ${this._node.depth} ]`);
+        }
+
+        const path = this._node.toPath();
+
+        path[index] += value;
+
+        this._node = root.reach(path);
     }
 
     /**
@@ -111,7 +92,7 @@ class FieldPathBuilder {
      * @returns {FieldPath}
      */
     build() {
-        return FieldPathBuilder.build(this._path);
+        return this._node.fieldPath !== null ? this._node.fieldPath : register(this._node);
     }
 
     /**
@@ -121,11 +102,13 @@ class FieldPathBuilder {
      * @param {number} count
      */
     drop(count) {
-        if (count > this._path.length) {
-            throw new Error(`Unable to drop [ ${count} ] items - path has only [ ${this._path.length} ] items`);
+        if (count > this._node.depth) {
+            throw new Error(`Unable to drop [ ${count} ] items - path has only [ ${this._node.depth} ] items`);
         }
 
-        this._path.length -= count;
+        for (let i = 0; i < count; i++) {
+            this._node = this._node.parent;
+        }
     }
 
     /**
@@ -135,11 +118,11 @@ class FieldPathBuilder {
      * @param {number} value
      */
     push(value) {
-        if (this.length >= MAX_LENGTH) {
+        if (this._node.depth >= MAX_LENGTH) {
             throw new Error(`Unable to push value [ ${value} ] - path is full`);
         }
 
-        this._path.push(value);
+        this._node = this._node.descend(value);
     }
 
     /**
@@ -148,8 +131,7 @@ class FieldPathBuilder {
      * @public
      */
     reset() {
-        this._path.length = 1;
-        this._path[0] = -1;
+        this._node = initial;
     }
 
     /**
@@ -157,84 +139,37 @@ class FieldPathBuilder {
      *
      * @public
      * @param {number} value
-     * @param {number} index
+     * @param {number=} index
      */
-    set(value, index = this._path.length - 1) {
-        this._path[index] = value;
+    set(value, index) {
+        if (index === undefined || index === this._node.depth - 1) {
+            this._node = this._node.parent.descend(value);
+
+            return;
+        }
+
+        const path = this._node.toPath();
+
+        path[index] = value;
+
+        this._node = root.reach(path);
     }
 }
 
 /**
- * @param {number} p0
- * @param {number} p1
- * @returns {number}
- */
-function toPairKey(p0, p1) {
-    return p0 + p1 * 0x10000;
-}
-
-/**
- * @param {Array<number>} path
+ * @param {FieldPathTrie} node
  * @returns {FieldPath}
  */
-function createAndCache(path) {
-    const fieldPath = new FieldPath(path.slice(), cache.byId.length);
-
-    cache.byId[fieldPath.id] = fieldPath;
-
-    if (path.length === 1) {
-        cache.bySingle[path[0]] = fieldPath;
-    } else if (path.length === 2) {
-        cache.byPair.set(toPairKey(path[0], path[1]), fieldPath);
-    } else {
-        setByPath(path, fieldPath);
+function register(node) {
+    if (node.fieldPath !== null) {
+        return node.fieldPath;
     }
+
+    const fieldPath = node.resolve(paths.length);
+
+    paths.push(fieldPath);
 
     return fieldPath;
-}
-
-/**
- * @param {Array<number>} path
- * @returns {FieldPath|undefined}
- */
-function getByPath(path) {
-    let node = cache.byPath;
-
-    for (let i = 0; i < path.length; i++) {
-        const next = node.get(path[i]);
-
-        if (next === undefined) {
-            return undefined;
-        }
-
-        node = next;
-    }
-
-    return node.fieldPath;
-}
-
-/**
- * @param {Array<number>} path
- * @param {FieldPath} fieldPath
- */
-function setByPath(path, fieldPath) {
-    let node = cache.byPath;
-
-    for (let i = 0; i < path.length; i++) {
-        const value = path[i];
-
-        let next = node.get(value);
-
-        if (next === undefined) {
-            next = new Map();
-
-            node.set(value, next);
-        }
-
-        node = next;
-    }
-
-    node.fieldPath = fieldPath;
 }
 
 export default FieldPathBuilder;
