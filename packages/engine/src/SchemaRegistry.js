@@ -29,7 +29,7 @@ class SchemaRegistry {
     constructor(protoProvider) {
         Assert.isTrue(protoProvider instanceof ProtoProvider, 'Invalid protoProvider: expected an instance of ProtoProvider');
 
-        /** @type {SchemaRegistryProtos} */
+        /** @private @type {SchemaRegistryProtos} */
         this._protos = {
             provider: protoProvider,
             demo: new Map(),
@@ -37,7 +37,7 @@ class SchemaRegistry {
             stringTableDecoders: new Map()
         };
 
-        /** @type {SchemaRegistryTypes} */
+        /** @private @type {SchemaRegistryTypes} */
         this._types = {
             demoById: new Map(),
             demoByCode: new Map(),
@@ -46,12 +46,13 @@ class SchemaRegistry {
             stringTableByName: new Map()
         };
 
-        /** @type {SchemaRegistryDecoders} */
+        /** @private @type {SchemaRegistryDecoders} */
         this._decoders = {
             sendTables: null,
             userCommand: null
         };
 
+        /** @private */
         this._fieldRules = new FieldRuleRegistry();
     }
 

@@ -4,7 +4,7 @@ const MAX_SAFE_ID = 100000;
 
 class PacketTrackerRegistry {
     constructor() {
-        /** @type {Map<number, number>} */
+        /** @private @type {Map<number, number>} */
         this._registry = new Map();
     }
 

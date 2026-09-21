@@ -15,10 +15,12 @@ class BinaryHeap {
         Assert.isTrue(!extractor || typeof extractor === 'function');
         Assert.isTrue(!comparator || typeof comparator === 'function');
 
+        /** @private */
         this._extractor = extractor || (element => /** @type {P} */ (/** @type {*} */ (element)));
+        /** @private */
         this._comparator = comparator || /** @type {(a: P, b: P) => boolean} */ (BinaryHeap.MIN_HEAP_COMPARATOR);
 
-        /** @type {Array<T>} */
+        /** @private @type {Array<T>} */
         this._heap = [ ];
     }
 

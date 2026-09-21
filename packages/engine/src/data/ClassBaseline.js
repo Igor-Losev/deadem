@@ -17,8 +17,11 @@ class ClassBaseline {
         Assert.isTrue(Number.isInteger(classId));
         Assert.isTrue(raw === null || ArrayBuffer.isView(raw));
 
+        /** @private */
         this._classId = classId;
+        /** @private */
         this._raw = raw;
+        /** @private */
         this._batch = null;
     }
 

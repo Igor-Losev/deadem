@@ -33,7 +33,9 @@ class StringTableHandler {
         Assert.isTrue(container instanceof StringTableContainer, 'Invalid container: expected an instance of StringTableContainer');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._container = container;
         this._logger = logger;
     }

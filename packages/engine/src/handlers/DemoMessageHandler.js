@@ -35,9 +35,13 @@ class DemoMessageHandler {
         Assert.isTrue(stringTableHandler instanceof StringTableHandler);
         Assert.isTrue(entityClassFilter === null || typeof entityClassFilter === 'function');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._demo = demo;
+        /** @private */
         this._stringTableHandler = stringTableHandler;
+        /** @private */
         this._entityClassFilter = entityClassFilter;
     }
 

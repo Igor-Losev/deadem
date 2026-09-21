@@ -17,10 +17,15 @@ class DemoPacketType {
         Assert.isTrue(typeof heavy === 'boolean');
         Assert.isTrue(typeof bootstrap === 'boolean');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._id = id;
+        /** @private */
         this._heavy = heavy;
+        /** @private */
         this._bootstrap = bootstrap;
+        /** @private */
         this._protoName = protoName;
 
         const owner = new.target;

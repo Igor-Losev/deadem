@@ -26,6 +26,7 @@ class FieldArrayFixed extends Field {
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 
+        /** @private */
         this._fieldDecoder = fieldDecoder;
     }
 

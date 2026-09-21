@@ -12,7 +12,9 @@ class FieldDecoderDescriptor {
         Assert.isTrue(type instanceof FieldDecoderType);
         Assert.isTrue(options !== null && typeof options === 'object' && !Array.isArray(options));
 
+        /** @private */
         this._type = type;
+        /** @private */
         this._options = options;
     }
 

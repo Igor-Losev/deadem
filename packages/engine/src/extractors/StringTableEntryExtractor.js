@@ -22,8 +22,11 @@ class StringTableEntryExtractor {
         Assert.isTrue(table instanceof StringTable);
         Assert.isTrue(Number.isInteger(entriesCount));
 
+        /** @private */
         this._bitBuffer = new BitBuffer(buffer);
+        /** @private */
         this._table = table;
+        /** @private */
         this._entriesCount = entriesCount;
     }
 

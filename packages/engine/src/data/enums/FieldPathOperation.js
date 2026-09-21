@@ -29,10 +29,15 @@ class FieldPathOperation {
         Assert.isTrue(Number.isInteger(sequence));
         Assert.isTrue(executor === null || typeof executor === 'function');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._name = name;
+        /** @private */
         this._weight = weight;
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._executor = executor;
 
         registry.byCode.set(code, this);

@@ -11,6 +11,7 @@ class FieldDecoderType {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(!registry.has(code), `Duplicated field decoder type [ ${code} ]`);
 
+        /** @private */
         this._code = code;
 
         registry.set(code, this);

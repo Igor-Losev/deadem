@@ -33,6 +33,7 @@ class FieldDecoderQuantizedFloat {
 
         if (bitCount === 0 || bitCount >= 32) {
             this._bitCount = 32;
+            /** @private */
             this._flags = flags;
 
             return;

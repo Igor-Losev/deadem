@@ -12,8 +12,11 @@ class StringTableInstructions {
         Assert.isTrue(typeof userDataFixedSize === 'boolean');
         Assert.isTrue(typeof  usingVarintBitcounts === 'boolean');
 
+        /** @private */
         this._userDataSizeBits = userDataSizeBits;
+        /** @private */
         this._userDataFixedSize = userDataFixedSize;
+        /** @private */
         this._usingVarintBitcounts = usingVarintBitcounts;
     }
 

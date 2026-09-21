@@ -14,6 +14,7 @@ class PlayerState {
         Assert.isTrue(typeof code === 'string');
         Assert.isTrue(Array.isArray(transitions));
 
+        /** @private */
         this._code = code;
         this._transitions = transitions;
 

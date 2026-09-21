@@ -20,7 +20,9 @@ class DemoStreamPacketResequencer extends Transform {
     constructor(engine, highWaterMark) {
         super(highWaterMark);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._ordinal = 0;
     }
 

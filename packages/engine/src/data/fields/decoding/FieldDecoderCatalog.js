@@ -14,6 +14,7 @@ class FieldDecoderCatalog {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._factory = new FieldDecoderFactory();
     }
 

@@ -27,6 +27,7 @@ class Parser {
      * @param {Logger=} logger
      */
     constructor(registry, configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
+        /** @private */
         this._engine = new ParserEngine(registry, configuration, logger);
     }
 

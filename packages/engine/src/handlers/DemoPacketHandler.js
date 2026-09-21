@@ -27,10 +27,14 @@ class DemoPacketHandler {
         Assert.isTrue(demo instanceof Demo);
         Assert.isTrue(stringTableHandler instanceof StringTableHandler);
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._demo = demo;
+        /** @private */
         this._stringTableHandler = stringTableHandler;
 
+        /** @private */
         this._fieldFactory = new FieldFactory(registry.getFieldRuleRegistry());
     }
 

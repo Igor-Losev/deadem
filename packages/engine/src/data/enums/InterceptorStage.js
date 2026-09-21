@@ -16,7 +16,9 @@ class InterceptorStage {
      * @param {number} id
      */
     constructor(code, id) {
+        /** @private */
         this._code = code;
+        /** @private */
         this._id = id;
 
         registry.byId.set(id, this);

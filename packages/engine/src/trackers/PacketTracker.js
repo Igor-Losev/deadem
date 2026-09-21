@@ -21,8 +21,11 @@ class PacketTracker extends Tracker {
         super();
         Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._parsed = new PacketTrackerRegistry();
+        /** @private */
         this._unparsed = new PacketTrackerRegistry();
     }
 

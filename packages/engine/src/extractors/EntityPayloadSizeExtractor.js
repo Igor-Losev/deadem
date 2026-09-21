@@ -12,6 +12,7 @@ class EntityPayloadSizeExtractor {
     constructor(buffer) {
         Assert.isTrue(buffer instanceof Uint8Array);
 
+        /** @private */
         this._buffer = buffer;
     }
 

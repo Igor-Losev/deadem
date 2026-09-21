@@ -14,6 +14,7 @@ class DemoEntityHandler {
     constructor(demo) {
         Assert.isTrue(demo instanceof Demo);
 
+        /** @private */
         this._demo = demo;
     }
 

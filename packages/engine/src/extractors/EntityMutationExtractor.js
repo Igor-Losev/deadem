@@ -15,11 +15,13 @@ class EntityMutationExtractor {
      * @param {Serializer|null} [serializer=null]
      */
     constructor(bitBuffer, serializer = null) {
+        /** @private */
         this._bitBuffer = bitBuffer;
 
-        /** @type {Serializer|null} */
+        /** @private @type {Serializer|null} */
         this._serializer = serializer;
 
+        /** @private */
         this._fieldPathExtractor = new FieldPathExtractor(bitBuffer);
     }
 

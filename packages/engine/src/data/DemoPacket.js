@@ -19,10 +19,15 @@ class DemoPacket {
         Assert.isTrue(type instanceof DemoPacketType);
         Assert.isTrue(Number.isInteger(tick));
 
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._ordinal = sequence;
+        /** @private */
         this._type = type;
+        /** @private */
         this._tick = tick;
+        /** @private */
         this._data = data;
     }
 

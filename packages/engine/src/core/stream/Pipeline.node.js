@@ -30,8 +30,11 @@ class PipelineNode {
             }
         );
 
+        /** @private */
         this._aborted = false;
+        /** @private */
         this._deferred = deferred;
+        /** @private */
         this._readable = readable;
     }
 

@@ -28,7 +28,9 @@ class FieldTableVariable extends Field {
         Assert.isTrue(serializer instanceof Serializer);
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
 
+        /** @private */
         this._serializer = serializer;
+        /** @private */
         this._fieldDecoderBase = fieldDecoderBase;
     }
 

@@ -58,11 +58,16 @@ class ParserConfiguration {
         Assert.isTrue(Number.isInteger(splitterChunkSize) && splitterChunkSize > 0, 'options.splitterChunkSize must be a positive integer');
         Assert.isTrue(Number.isInteger(streamHighWaterMark) && streamHighWaterMark > 0, 'options.streamHighWaterMark must be a positive integer');
 
+        /** @private */
         this._breakInterval = breakInterval;
+        /** @private */
         this._splitterChunkSize = splitterChunkSize;
+        /** @private */
         this._streamHighWaterMark = streamHighWaterMark;
 
+        /** @private */
         this._entityClassFilter = buildEntityClassFilter(entityClasses);
+        /** @private */
         this._messagePacketFilter = buildMessagePacketFilter(messagePacketTypes, messagePacketTypesExclude);
 
         if (entityClasses !== null && this._messagePacketFilter !== null) {

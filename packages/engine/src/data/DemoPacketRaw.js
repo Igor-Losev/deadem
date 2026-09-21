@@ -15,12 +15,19 @@ class DemoPacketRaw {
      * @param {Uint8Array} payload
      */
     constructor(sequence, type, source, tick, frame, payload) {
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._ordinal = sequence;
+        /** @private */
         this._type = type;
+        /** @private */
         this._source = source;
+        /** @private */
         this._tick = tick;
+        /** @private */
         this._frame = frame;
+        /** @private */
         this._payload = payload;
     }
 

@@ -7,8 +7,11 @@ class MessagePacketRaw {
      * @param {Uint8Array} payload
      */
     constructor(type, size, payload) {
+        /** @private */
         this._type = type;
+        /** @private */
         this._size = size;
+        /** @private */
         this._payload = payload;
     }
 

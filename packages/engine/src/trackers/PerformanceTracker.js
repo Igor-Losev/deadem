@@ -9,6 +9,7 @@ class PerformanceTracker extends Tracker {
     constructor() {
         super();
 
+        /** @private */
         this._registry = new Map();
     }
 
@@ -31,7 +32,34 @@ class PerformanceTracker extends Tracker {
      * @returns {PerformanceTrackerStats}
      */
     getStats() {
-        return getStatsRecursively.call(this);
+        return this._getStatsRecursively();
+    }
+
+    /**
+     * @private
+     * @param {PerformanceTrackerNode=} reference
+     * @returns {PerformanceTrackerNode}
+     */
+    _getStatsRecursively(reference = getNode()) {
+        const record = this._registry.get(reference.category) || null;
+
+        if (record === null) {
+            return reference;
+        }
+
+        reference.stats = record.getSnapshot();
+
+        reference.category.categories.forEach((category) => {
+            if (this._registry.has(category)) {
+                const child = getNode(category);
+
+                reference.children.push(child);
+
+                this._getStatsRecursively(child);
+            }
+        });
+
+        return reference;
     }
 
     /**
@@ -45,33 +73,6 @@ class PerformanceTracker extends Tracker {
 
         this._registry.set(category, record);
     }
-}
-
-/**
- * @this {PerformanceTracker}
- * @param {PerformanceTrackerNode=} reference
- * @returns {PerformanceTrackerNode}
- */
-function getStatsRecursively(reference = getNode()) {
-    const record = this._registry.get(reference.category) || null;
-
-    if (record === null) {
-        return reference;
-    }
-
-    reference.stats = record.getSnapshot();
-
-    reference.category.categories.forEach((category) => {
-        if (this._registry.has(category)) {
-            const child = getNode(category);
-
-            reference.children.push(child);
-
-            getStatsRecursively.call(this, child);
-        }
-    });
-
-    return reference;
 }
 
 /**

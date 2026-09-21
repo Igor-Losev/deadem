@@ -22,9 +22,13 @@ class UserCommand {
         Assert.isTrue(state !== null && typeof state === 'object' && !Array.isArray(state));
         Assert.isTrue(typeof type?.decode === 'function');
 
+        /** @private */
         this._slot = slot;
+        /** @private */
         this._number = number;
+        /** @private */
         this._state = state;
+        /** @private */
         this._type = type;
     }
 

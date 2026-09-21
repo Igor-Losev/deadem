@@ -31,13 +31,19 @@ class StringTable {
         Assert.isTrue(Number.isInteger(flags));
         Assert.isTrue(!instructions || instructions instanceof StringTableInstructions);
 
+        /** @private */
         this._id = id;
+        /** @private */
         this._type = type;
+        /** @private */
         this._flags = flags;
+        /** @private */
         this._instructions = instructions || null;
 
+        /** @private */
         this._decoder = decoder || null;
 
+        /** @private */
         this._registry = {
             entryById: new Map()
         };

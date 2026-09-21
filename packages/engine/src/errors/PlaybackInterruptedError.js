@@ -12,6 +12,7 @@ class PlaybackInterruptedError extends Error {
 
         this.name = 'PlaybackInterruptedError';
 
+        /** @private */
         this._reason = reason;
     }
 

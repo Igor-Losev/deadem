@@ -29,6 +29,7 @@ class DemoStreamPacketPrioritizer extends Transform {
     constructor(engine, highWaterMark) {
         super(highWaterMark);
 
+        /** @private */
         this._engine = engine;
     }
 

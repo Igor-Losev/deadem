@@ -17,10 +17,12 @@ class FieldPathExtractor {
      * @param {BitBuffer} bitBuffer
      */
     constructor(bitBuffer) {
+        /** @private */
         this._bitBuffer = bitBuffer;
 
+        /** @private */
         this._fieldPathBuilder = new FieldPathBuilder();
-        /** @type {Array<number>} */
+        /** @private @type {Array<number>} */
         this._ids = [ ];
     }
 
@@ -57,7 +59,7 @@ class FieldPathExtractor {
                 break;
             }
 
-            /** @type {Function} */ (operation._executor)(bitBuffer, builder);
+            /** @type {Function} */ (operation.executor)(bitBuffer, builder);
 
             ids[count++] = builder.build().id;
         }

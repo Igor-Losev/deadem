@@ -19,6 +19,7 @@ class FieldPathBuilder {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._node = initial;
     }
 

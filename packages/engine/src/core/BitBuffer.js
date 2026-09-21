@@ -10,10 +10,14 @@ class BitBuffer {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._buffer = buffer;
 
+        /** @private */
         this._pByte = 0;
+        /** @private */
         this._pBit = 0;
+        /** @private */
         this._totalBits = buffer.length * BITS_PER_BYTE;
     }
 

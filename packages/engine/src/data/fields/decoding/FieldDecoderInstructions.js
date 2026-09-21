@@ -17,10 +17,15 @@ class FieldDecoderInstructions {
         Assert.isTrue(valueLow === null || typeof valueLow === 'number');
         Assert.isTrue(valueHigh === null || typeof valueHigh === 'number');
 
+        /** @private */
         this._encoder = encoder;
+        /** @private */
         this._encoderFlags = encoderFlags;
+        /** @private */
         this._bitCount = bitCount;
+        /** @private */
         this._valueLow = valueLow;
+        /** @private */
         this._valueHigh = valueHigh;
     }
 

@@ -8,8 +8,9 @@ class Gate {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._tokens = 0;
-        /** @type {Array<GateWaiter>} */
+        /** @private @type {Array<GateWaiter>} */
         this._queue = [];
     }
 

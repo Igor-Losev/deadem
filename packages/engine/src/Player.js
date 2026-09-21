@@ -36,14 +36,18 @@ class Player {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        /** @private */
         this._engine = new ParserEngine(registry, configuration, logger);
+        /** @private */
         this._state = PlayerState.IDLE;
 
+        /** @private */
         this._playback = {
             /** @type {DeferredPromise<void>|null} */
             deferred: null
         };
 
+        /** @private */
         this._ticks = {
             current: -1,
             first: -1,
@@ -51,11 +55,11 @@ class Player {
             position: -1
         };
 
-        /** @type {PlayerPacketIndex|null} */
+        /** @private @type {PlayerPacketIndex|null} */
         this._index = null;
-        /** @type {ParserSession|null} */
+        /** @private @type {ParserSession|null} */
         this._session = null;
-        /** @type {DemoSource|null} */
+        /** @private @type {DemoSource|null} */
         this._source = null;
     }
 

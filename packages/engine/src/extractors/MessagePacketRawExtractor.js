@@ -9,6 +9,7 @@ class MessagePacketRawExtractor {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._bitBuffer = new BitBuffer(buffer);
     }
 

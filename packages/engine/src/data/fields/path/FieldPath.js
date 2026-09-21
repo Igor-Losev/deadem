@@ -6,7 +6,9 @@ class FieldPath {
      * @param {number} id
      */
     constructor(path, id) {
+        /** @private */
         this._path = path;
+        /** @private */
         this._id = id;
     }
 

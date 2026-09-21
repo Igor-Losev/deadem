@@ -18,11 +18,16 @@ class Class {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
         Assert.isTrue(serializer instanceof Serializer);
 
+        /** @private */
         this._id = id;
+        /** @private */
         this._name = name;
+        /** @private */
         this._serializer = serializer;
 
+        /** @private */
         this._accessors = new Map();
+        /** @private */
         this._layout = new EntityStateLayout(serializer);
     }
 

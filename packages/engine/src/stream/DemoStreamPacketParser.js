@@ -25,7 +25,9 @@ class DemoStreamPacketParser extends Transform {
     constructor(engine, highWaterMark, messagePacketFilter) {
         super(highWaterMark);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._messagePacketFilter = messagePacketFilter;
     }
 

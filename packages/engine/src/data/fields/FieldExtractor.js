@@ -20,7 +20,9 @@ class FieldExtractor {
         Assert.isTrue(typeof readField === 'function');
         Assert.isTrue(Array.isArray(basePath) && basePath.length > 0);
 
+        /** @private */
         this._readField = readField;
+        /** @private */
         this._builder = new FieldPathBuilder();
 
         this._builder.set(basePath[0], 0);

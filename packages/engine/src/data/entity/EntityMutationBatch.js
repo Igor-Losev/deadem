@@ -12,7 +12,9 @@ class EntityMutationBatch {
         Assert.isTrue(Array.isArray(values));
         Assert.isTrue(ids.length === values.length);
 
+        /** @private */
         this._ids = ids;
+        /** @private */
         this._values = values;
     }
 

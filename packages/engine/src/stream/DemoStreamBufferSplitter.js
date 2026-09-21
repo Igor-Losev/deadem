@@ -21,7 +21,9 @@ class DemoStreamBufferSplitter extends Transform {
 
         Assert.isTrue(Number.isInteger(maxChunkSize));
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._maxChunkSize = maxChunkSize;
     }
 

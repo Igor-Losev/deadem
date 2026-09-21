@@ -22,9 +22,13 @@ class FieldStorageDescriptor {
         Assert.isTrue(typeof signed === 'boolean');
         Assert.isTrue(typeof bool === 'boolean');
 
+        /** @private */
         this._type = type;
+        /** @private */
         this._dim = dim;
+        /** @private */
         this._signed = signed;
+        /** @private */
         this._bool = bool;
     }
 

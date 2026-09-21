@@ -21,13 +21,19 @@ class StringTableEntry {
         Assert.isTrue(typeof id === 'number' && Number.isInteger(id));
         Assert.isTrue(typeof key === 'string');
 
+        /** @private */
         this._table = table;
+        /** @private */
         this._id = id;
+        /** @private */
         this._key = key;
 
         if (raw === null) {
+            /** @private */
             this._decoded = true;
+            /** @private */
             this._raw = null;
+            /** @private */
             this._value = null;
 
             return;

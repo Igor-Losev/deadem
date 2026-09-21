@@ -15,6 +15,7 @@ class BroadcastReadStreamNode extends Stream.Readable {
 
         Assert.isTrue(agent instanceof BroadcastAgent);
 
+        /** @private */
         this._agent = agent;
 
         this._agent.subscribe((chunk) => {

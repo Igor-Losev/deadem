@@ -35,6 +35,7 @@ class PacketCodec {
     constructor(registry) {
         Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
 
+        /** @private */
         this._registry = registry;
     }
 

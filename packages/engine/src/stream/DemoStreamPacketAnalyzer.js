@@ -24,6 +24,7 @@ class DemoStreamPacketAnalyzer extends Transform {
     constructor(engine, highWaterMark) {
         super(highWaterMark);
 
+        /** @private */
         this._engine = engine;
     }
 

@@ -15,7 +15,9 @@ class EntityOperation {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._id = id;
 
         registry.byCode.set(code, this);

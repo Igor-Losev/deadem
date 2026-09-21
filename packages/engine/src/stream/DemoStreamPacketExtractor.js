@@ -31,16 +31,19 @@ class DemoStreamPacketExtractor extends Transform {
 
         Assert.isTrue(source instanceof DemoSource);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._source = source;
 
+        /** @private */
         this._counts = {
             bytes: 0,
             chunks: 0,
             packets: 0
         };
 
-        /** @type {Uint8Array} */
+        /** @private @type {Uint8Array} */
         this._tail = new Uint8Array(0);
     }
 

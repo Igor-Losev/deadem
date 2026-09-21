@@ -24,33 +24,35 @@ class Demo {
      * @constructor
      */
     constructor() {
-        /** @type {Map<number, ClassBaseline>} */
+        /** @private @type {Map<number, ClassBaseline>} */
         this._classBaselines = new Map();
 
-        /** @type {{ byId: Map<number, Class>, byName: Map<string, Class> }} */
+        /** @private @type {{ byId: Map<number, Class>, byName: Map<string, Class> }} */
         this._classes = {
             byId: new Map(),
             byName: new Map()
         };
 
-        /** @type {{ byIndex: Array<Entity|undefined>, byClassName: Map<string, Set<Entity>>, count: number }} */
+        /** @private @type {{ byIndex: Array<Entity|undefined>, byClassName: Map<string, Set<Entity>>, count: number }} */
         this._entities = {
             byIndex: [ ],
             byClassName: new Map(),
             count: 0
         };
 
-        /** @type {Map<string, Serializer>} */
+        /** @private @type {Map<string, Serializer>} */
         this._serializers = new Map();
 
-        /** @type {Server|null} */
+        /** @private @type {Server|null} */
         this._server = null;
 
+        /** @private */
         this._stringTableContainer = new StringTableContainer();
 
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
         this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
 
+        /** @private */
         this._userCommands = new Map();
     }
 

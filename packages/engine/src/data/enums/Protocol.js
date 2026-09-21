@@ -12,7 +12,9 @@ class Protocol {
         Assert.isTrue(typeof code === 'string');
         Assert.isTrue(typeof scheme === 'string');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._scheme = scheme;
 
         registry.set(code, this);

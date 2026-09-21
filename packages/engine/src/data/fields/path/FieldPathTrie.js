@@ -17,7 +17,7 @@ class FieldPathTrie {
         /** @type {Array<FieldPathTrie>} */
         this.children = [ ];
 
-        /** @type {FieldPath|null} */
+        /** @private @type {FieldPath|null} */
         this._fieldPath = null;
 
         this.depth = depth;

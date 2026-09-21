@@ -24,13 +24,14 @@ class HuffmanTree {
         Assert.isTrue(!leftChild || leftChild instanceof HuffmanTree);
         Assert.isTrue(!rightChild || rightChild instanceof HuffmanTree);
 
+        /** @private */
         this._priority = priority;
 
-        /** @type {FieldPathOperation|null} */
+        /** @private @type {FieldPathOperation|null} */
         this._operation = operation || null;
-        /** @type {HuffmanTree|null} */
+        /** @private @type {HuffmanTree|null} */
         this._leftChild = leftChild || null;
-        /** @type {HuffmanTree|null} */
+        /** @private @type {HuffmanTree|null} */
         this._rightChild = rightChild || null;
     }
 

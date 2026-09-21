@@ -17,9 +17,13 @@ class FieldDefinition {
         Assert.isTrue(count === null || Number.isInteger(count));
         Assert.isTrue(typeof pointer === 'boolean');
 
+        /** @private */
         this._baseType = baseType;
+        /** @private */
         this._generic = generic;
+        /** @private */
         this._count = count;
+        /** @private */
         this._pointer = pointer;
     }
 

@@ -9,11 +9,14 @@ import FieldStorageDescriptor from './FieldStorageDescriptor.js';
 
 class FieldDecoderFactory {
     constructor() {
+        /** @private */
         this._registryFloat32 = new Map();
+        /** @private */
         this._registryQAngle = new Map();
+        /** @private */
         this._registryQuantizedFloat = new Map();
 
-        /** @type {{ [dimension: number]: Map<FieldDecoderInstructions, FieldDecoder> }} */
+        /** @private @type {{ [dimension: number]: Map<FieldDecoderInstructions, FieldDecoder> }} */
         this._registryVector = {
             2: new Map(),
             3: new Map(),

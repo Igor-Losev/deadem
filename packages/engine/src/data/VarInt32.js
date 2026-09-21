@@ -12,7 +12,9 @@ class VarInt32 {
      * @param {number} size - The number of bytes consumed during decoding.
      */
     constructor(value, size) {
+        /** @private */
         this._value = value;
+        /** @private */
         this._size = size;
     }
 

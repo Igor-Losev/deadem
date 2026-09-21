@@ -14,6 +14,7 @@ class Printer {
      * @param {Logger} logger
      */
     constructor(parser, logger = Logger.CONSOLE_INFO) {
+        /** @private */
         this._parser = parser;
         this._logger = logger;
     }

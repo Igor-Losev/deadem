@@ -9,6 +9,7 @@ class FieldModel {
     constructor(code) {
         Assert.isTrue(typeof code === 'string');
 
+        /** @private */
         this._code = code;
     }
 

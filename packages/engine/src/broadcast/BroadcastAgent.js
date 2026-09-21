@@ -28,17 +28,23 @@ class BroadcastAgent {
         Assert.isTrue(Number.isInteger(match) || typeof match === 'string');
         Assert.isTrue(logger instanceof Logger);
 
+        /** @private */
         this._gateway = gateway;
+        /** @private */
         this._match = match;
         this._logger = logger;
 
-        /** @type {Array<Function>} */
+        /** @private @type {Array<Function>} */
         this._listeners = [ ];
 
+        /** @private */
         this._finished = false;
+        /** @private */
         this._paused = false;
+        /** @private */
         this._started = false;
 
+        /** @private */
         this._pause = new DeferredPromise();
         this._pause.resolve();
     }

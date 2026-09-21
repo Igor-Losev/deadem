@@ -75,20 +75,26 @@ class ParserEngine {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._configuration = configuration;
         this._logger = logger;
 
+        /** @private */
         this._codec = new PacketCodec(registry);
+        /** @private */
         this._demo = new Demo();
 
         const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
 
+        /** @private */
         this._filters = {
             entity: configuration.getIsEntityClassAllowed.bind(configuration),
             message: configuration.getIsMessagePacketTypeAllowed.bind(configuration)
         };
 
+        /** @private */
         this._handlers = {
             demoEntity: new DemoEntityHandler(this._demo),
             demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
@@ -96,22 +102,29 @@ class ParserEngine {
             stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
         };
 
+        /** @private */
         this._interceptors = this._createInterceptors();
 
+        /** @private */
         this._trackers = {
             memory: new MemoryTracker(),
             packet: new PacketTracker(registry),
             performance: new PerformanceTracker()
         };
 
+        /** @private */
         this._disposed = false;
+        /** @private */
         this._finished = false;
+        /** @private */
         this._pipeline = null;
+        /** @private */
         this._started = false;
 
+        /** @private */
         this._paused = false;
 
-        /** @type {DeferredPromise<void>|null} */
+        /** @private @type {DeferredPromise<void>|null} */
         this._pausePromise = null;
     }
 

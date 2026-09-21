@@ -14,9 +14,9 @@ class EventEmitter {
      * @param {T} sender
      */
     constructor(sender) {
-        /** @type {T} */
+        /** @private @type {T} */
         this._sender = sender;
-        /** @type {Map<string, Array<EventEmitterHandler<T>>>} */
+        /** @private @type {Map<string, Array<EventEmitterHandler<T>>>} */
         this._registrations = new Map();
     }
 

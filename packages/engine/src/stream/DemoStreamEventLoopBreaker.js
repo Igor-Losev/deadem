@@ -24,14 +24,17 @@ class DemoStreamEventLoopBreaker extends Transform {
 
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._breakInterval = breakInterval;
 
+        /** @private */
         this._counter = 0;
     }
 
     /**
-     * @public
+     * @protected
      * @param {DemoPacketRaw} demoPacketRaw
      */
     async _handle(demoPacketRaw) {

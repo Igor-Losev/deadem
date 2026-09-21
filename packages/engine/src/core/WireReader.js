@@ -21,8 +21,10 @@ class WireReader {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._buffer = buffer;
 
+        /** @private */
         this._offset = 0;
     }
 

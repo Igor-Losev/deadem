@@ -21,7 +21,9 @@ class FieldDecoder {
         Assert.isTrue(typeof fn === 'function');
         Assert.isTrue(storage instanceof FieldStorageDescriptor);
 
+        /** @private */
         this._fn = fn;
+        /** @private */
         this._storage = storage;
     }
 

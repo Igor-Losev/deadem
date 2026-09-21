@@ -13,7 +13,9 @@ class BroadcastGateway {
         Assert.isTrue(typeof baseUrl === 'string');
         Assert.isTrue(protocol instanceof Protocol);
 
+        /** @private */
         this._baseUrl = baseUrl;
+        /** @private */
         this._protocol = protocol;
     }
 

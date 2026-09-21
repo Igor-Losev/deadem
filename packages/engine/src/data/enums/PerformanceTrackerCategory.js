@@ -17,8 +17,11 @@ class PerformanceTrackerCategory {
         Assert.isTrue(typeof description === 'string' && description.length > 0);
         Assert.isTrue(Array.isArray(subcategories) && subcategories.every(s => s instanceof PerformanceTrackerCategory));
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._description = description;
+        /** @private */
         this._categories = subcategories;
 
         registry.byCode.set(code, this);

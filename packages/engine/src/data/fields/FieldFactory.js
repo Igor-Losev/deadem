@@ -31,9 +31,12 @@ class FieldFactory {
     constructor(fieldRuleRegistry) {
         Assert.isTrue(fieldRuleRegistry instanceof FieldRuleRegistry);
 
+        /** @private */
         this._fieldRuleRegistry = fieldRuleRegistry;
 
+        /** @private */
         this._decoderCatalog = new FieldDecoderCatalog();
+        /** @private */
         this._instructionsFactory = new FieldDecoderInstructionsFactory();
     }
 

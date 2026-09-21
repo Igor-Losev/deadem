@@ -7,15 +7,15 @@ class FieldRuleRegistry {
      * @constructor
      */
     constructor() {
-        /** @type {FieldDecoderDescriptorMap} */
+        /** @private @type {FieldDecoderDescriptorMap} */
         this._typeDecoders = new Map();
-        /** @type {StringSet} */
+        /** @private @type {StringSet} */
         this._fixedTableTypes = new Set();
-        /** @type {StringSet} */
+        /** @private @type {StringSet} */
         this._variableArrayTypes = new Set();
-        /** @type {FieldDecoderDescriptorMap} */
+        /** @private @type {FieldDecoderDescriptorMap} */
         this._fieldDecoderOverrides = new Map();
-        /** @type {StringMap} */
+        /** @private @type {StringMap} */
         this._fieldEncoderOverrides = new Map();
     }
 

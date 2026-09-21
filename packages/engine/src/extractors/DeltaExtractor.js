@@ -32,7 +32,9 @@ class DeltaExtractor {
         Assert.isTrue(data instanceof Uint8Array);
         Assert.isTrue(type?.fieldsById !== undefined);
 
+        /** @private */
         this._reader = new WireReader(data);
+        /** @private */
         this._type = type;
     }
 

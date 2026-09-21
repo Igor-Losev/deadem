@@ -6,7 +6,9 @@ class StringTableEvent {
      * @param {string} name
      */
     constructor(code, name) {
+        /** @private */
         this._code = code;
+        /** @private */
         this._name = name;
     }
 

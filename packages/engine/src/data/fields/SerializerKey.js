@@ -10,7 +10,9 @@ class SerializerKey {
         Assert.isTrue(typeof name === 'string');
         Assert.isTrue(Number.isInteger(version));
 
+        /** @private */
         this._name = name;
+        /** @private */
         this._version = version;
     }
 

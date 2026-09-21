@@ -20,9 +20,12 @@ class StringTableContainer {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._eventEmitter = new EventEmitter(this);
 
+        /** @private */
         this._tableById = new Map();
+        /** @private */
         this._tableByName = new Map();
     }
 

@@ -7,7 +7,9 @@ class EntityMutation {
      * @param {unknown} value
      */
     constructor(fieldPath, value) {
+        /** @private */
         this._fieldPath = fieldPath;
+        /** @private */
         this._value = value;
     }
 

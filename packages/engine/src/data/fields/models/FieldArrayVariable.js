@@ -28,7 +28,9 @@ class FieldArrayVariable extends Field {
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
         Assert.isTrue(fieldDecoderChild instanceof FieldDecoder);
 
+        /** @private */
         this._fieldDecoderBase = fieldDecoderBase;
+        /** @private */
         this._fieldDecoderChild = fieldDecoderChild;
     }
 

@@ -23,8 +23,11 @@ class Field {
         Assert.isTrue(Array.isArray(sendNode) && sendNode.every(s => s.length > 0));
         Assert.isTrue(definition instanceof FieldDefinition);
 
+        /** @protected */
         this._name = name;
+        /** @private */
         this._sendNode = sendNode;
+        /** @protected */
         this._definition = definition;
     }
 

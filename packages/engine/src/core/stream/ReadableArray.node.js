@@ -15,8 +15,11 @@ class ReadableArrayNode extends Readable {
 
         Assert.isTrue(Array.isArray(array), 'array must be an array');
 
+        /** @private */
         this._array = array;
+        /** @private */
         this._index = 0;
+        /** @private */
         this._gate = gated ? new Gate() : null;
     }
 

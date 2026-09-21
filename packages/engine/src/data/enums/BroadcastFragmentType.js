@@ -12,7 +12,9 @@ class BroadcastFragmentType {
         Assert.isTrue(typeof code === 'string');
         Assert.isTrue(typeof endpoint === 'string');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._endpoint = endpoint;
 
         registry.set(code, this);

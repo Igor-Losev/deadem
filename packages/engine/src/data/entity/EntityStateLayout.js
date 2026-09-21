@@ -16,15 +16,17 @@ class EntityStateLayout {
     constructor(serializer) {
         Assert.isTrue(serializer instanceof Serializer);
 
+        /** @private */
         this._serializer = serializer;
 
+        /** @private */
         this._lengths = {
             float: 0,
             int: 0,
             presence: 0
         };
 
-        /** @type {{ byId: Map<number, EntityFieldMeta>, order: Array<EntityFieldMeta> }} */
+        /** @private @type {{ byId: Map<number, EntityFieldMeta>, order: Array<EntityFieldMeta> }} */
         this._metas = {
             byId: new Map(),
             order: [ ]

@@ -19,22 +19,28 @@ class ParserSession {
      * @param {DemoSource} source
      */
     constructor(engine, index, source) {
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._index = index;
+        /** @private */
         this._source = source;
 
+        /** @private */
         this._closed = false;
 
-        /** @type {Error|null} */
+        /** @private @type {Error|null} */
         this._error = null;
 
+        /** @private */
         this._started = false;
 
-        /** @type {ReadableArray|null} */
+        /** @private @type {ReadableArray|null} */
         this._reader = null;
-        /** @type {Promise<void>|null} */
+        /** @private @type {Promise<void>|null} */
         this._parsePromise = null;
 
+        /** @private */
         this._pending = new Set();
     }
 

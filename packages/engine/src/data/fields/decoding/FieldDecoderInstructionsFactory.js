@@ -11,6 +11,7 @@ class FieldDecoderInstructionsFactory {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._registry = new Map();
     }
 

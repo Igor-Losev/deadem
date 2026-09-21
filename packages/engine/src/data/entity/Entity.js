@@ -34,15 +34,20 @@ class Entity {
         Assert.isTrue(Number.isInteger(serial));
         Assert.isTrue(clazz instanceof Class);
 
+        /** @private */
         this._index = index;
+        /** @private */
         this._serial = serial;
+        /** @private */
         this._class = clazz;
 
+        /** @private */
         this._handle = ((serial << ENTITY_INDEX_BITS) | index) >>> 0;
 
+        /** @private */
         this._active = true;
 
-        /** @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, unknown>|null, presence: Uint8Array }} */
+        /** @private @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, unknown>|null, presence: Uint8Array }} */
         this._state = {
             float32: new Float32Array(clazz.layout.getFloatLength()),
             int32: new Int32Array(clazz.layout.getIntLength()),
@@ -50,9 +55,9 @@ class Entity {
             presence: new Uint8Array(clazz.layout.getPresenceLength())
         };
 
-        /** @type {Set<number>|null} */
+        /** @private @type {Set<number>|null} */
         this._changed = null;
-        /** @type {Record<string, unknown>|null} */
+        /** @private @type {Record<string, unknown>|null} */
         this._snapshot = null;
     }
 

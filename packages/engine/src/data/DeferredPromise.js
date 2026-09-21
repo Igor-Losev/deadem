@@ -3,12 +3,18 @@
  */
 class DeferredPromise {
     constructor() {
+        /** @private */
         this._fulfilled = false;
+        /** @private */
         this._rejected = false;
+        /** @private */
         this._settled = false;
 
+        /** @private */
         this._promise = new Promise((resolve, reject) => {
+            /** @private */
             this._resolve = resolve;
+            /** @private */
             this._reject = reject;
         });
     }

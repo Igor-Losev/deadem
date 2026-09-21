@@ -11,7 +11,9 @@ class MessagePacket {
      * @param {*} data
      */
     constructor(type, data) {
+        /** @private */
         this._type = type;
+        /** @private */
         this._data = data;
     }
 

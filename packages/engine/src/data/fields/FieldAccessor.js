@@ -16,8 +16,11 @@ class FieldAccessor {
      * @param {number|null} [elementIndex=null]
      */
     constructor(field, fieldPath, elementIndex = null) {
+        /** @private */
         this._field = field;
+        /** @private */
         this._fieldPath = fieldPath;
+        /** @private */
         this._elementIndex = elementIndex;
     }
 

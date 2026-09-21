@@ -11,11 +11,15 @@ class PerformanceTrackerRecord {
     constructor(category) {
         Assert.isTrue(category instanceof PerformanceTrackerCategory);
 
+        /** @private */
         this._category = category;
 
+        /** @private */
         this._started = false;
+        /** @private */
         this._startedAt = null;
 
+        /** @private */
         this._stats = {
             avg: 0,
             count: 0,

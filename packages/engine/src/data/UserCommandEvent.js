@@ -11,11 +11,14 @@ class UserCommandEvent {
      * @param {Uint8Array|null} [delta=null] - `null` for a keyframe.
      */
     constructor(userCommand, gap, delta = null) {
+        /** @private */
         this._userCommand = userCommand;
+        /** @private */
         this._gap = gap;
+        /** @private */
         this._delta = delta;
 
-        /** @type {ProtoState|null} */
+        /** @private @type {ProtoState|null} */
         this._changes = null;
     }
 

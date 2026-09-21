@@ -17,17 +17,21 @@ class PlayerPacketIndex {
         Assert.isTrue(codec instanceof PacketCodec, 'Invalid codec: expected an instance of PacketCodec');
         Assert.isTrue(Array.isArray(packets), 'packets must be an array');
 
+        /** @private */
         this._codec = codec;
+        /** @private */
         this._packets = packets;
 
-        /** @type {Array<number>} */
+        /** @private @type {Array<number>} */
         this._bootstrap = [];
-        /** @type {Array<number>} */
+        /** @private @type {Array<number>} */
         this._keyframes = [];
-        /** @type {Map<number, *>} */
+        /** @private @type {Map<number, *>} */
         this._stringTableSnapshots = new Map();
 
+        /** @private */
         this._uniqueTicks = new Int32Array(0);
+        /** @private */
         this._tickOffsets = new Int32Array(0);
 
         this._build();

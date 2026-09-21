@@ -16,11 +16,16 @@ class EntityMutationEvent {
      * @param {EntityMutationBatch} batch
      */
     constructor(operation, entity, batch) {
+        /** @private */
         this._operation = operation;
+        /** @private */
         this._entity = entity;
+        /** @private */
         this._batch = batch;
 
+        /** @private */
         this._mutations = null;
+        /** @private */
         this._changes = null;
     }
 

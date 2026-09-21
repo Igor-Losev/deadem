@@ -31,17 +31,19 @@ class Serializer {
         Assert.isTrue(Number.isInteger(version));
         Assert.isTrue(Array.isArray(fields) && fields.every(f => f instanceof Field));
 
+        /** @private */
         this._key = new SerializerKey(name, version);
+        /** @private */
         this._fields = fields;
 
         /** @type {Array<*>} */
-        /** @type {Array<FieldDecoderFn|undefined>} */
+        /** @private @type {Array<FieldDecoderFn|undefined>} */
         this._decoderCache = [];
-        /** @type {Array<*>} */
+        /** @private @type {Array<*>} */
         this._definitionCache = [];
-        /** @type {Array<*>} */
+        /** @private @type {Array<*>} */
         this._nameCache = [];
-        /** @type {Array<*>} */
+        /** @private @type {Array<*>} */
         this._storageCache = [];
     }
 

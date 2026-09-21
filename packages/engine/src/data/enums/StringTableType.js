@@ -24,9 +24,13 @@ class StringTableType {
         Assert.isTrue(typeof synthesized === 'boolean');
         Assert.isTrue(typeof lazy === 'boolean');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._name = name;
+        /** @private */
         this._synthesized = synthesized;
+        /** @private */
         this._lazy = lazy;
     }
 

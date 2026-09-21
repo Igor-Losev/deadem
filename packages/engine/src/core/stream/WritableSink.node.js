@@ -9,6 +9,7 @@ class WritableSinkNode extends Stream.Writable {
     constructor(onWrite = null) {
         super({ objectMode: true });
 
+        /** @private */
         this._onWrite = onWrite;
     }
 
