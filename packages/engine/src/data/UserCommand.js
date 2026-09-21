@@ -1,8 +1,8 @@
-/** @import { ProtoState } from '#extractors/DeltaExtractor.js' */
+/** @import { ProtoState } from '../extractors/DeltaExtractor.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import DeltaExtractor from '#extractors/DeltaExtractor.js';
+import DeltaExtractor from '../extractors/DeltaExtractor.js';
 
 /**
  * A user input state.

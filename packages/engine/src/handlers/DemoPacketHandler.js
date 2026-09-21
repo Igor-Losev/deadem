@@ -1,19 +1,19 @@
-/** @import DemoPacket from '#data/DemoPacket.js' */
+/** @import DemoPacket from '../data/DemoPacket.js' */
 
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import Class from '#data/Class.js';
-import Demo from '#data/Demo.js';
+import Class from '../data/Class.js';
+import Demo from '../data/Demo.js';
 
-import FieldDefinition from '#data/fields/FieldDefinition.js';
-import FieldFactory from '#data/fields/FieldFactory.js';
-import Serializer from '#data/fields/Serializer.js';
-import SerializerKey from '#data/fields/SerializerKey.js';
+import FieldDefinition from '../data/fields/FieldDefinition.js';
+import FieldFactory from '../data/fields/FieldFactory.js';
+import Serializer from '../data/fields/Serializer.js';
+import SerializerKey from '../data/fields/SerializerKey.js';
 
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import StringTableHandler from './StringTableHandler.js';
 
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import SchemaRegistry from '../SchemaRegistry.js';
 
 class DemoPacketHandler {
     /**

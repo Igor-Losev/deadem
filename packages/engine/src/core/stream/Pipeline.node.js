@@ -2,7 +2,7 @@ import Stream from 'node:stream';
 
 import WritableSink from '#core/stream/WritableSink.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
+import DeferredPromise from '../../data/DeferredPromise.js';
 
 class PipelineNode {
     /**

@@ -1,13 +1,13 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import ParserEngine from '../ParserEngine.js' */
 
-/** @import DemoPacket from '#data/DemoPacket.js' */
+/** @import DemoPacket from '../data/DemoPacket.js' */
 
-/** @import { DemoPacketHeavyData } from '#root/src/PacketCodec.js' */
+/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
 
 import Transform from '#core/stream/Transform.js';
 
-import MessagePacketType from '#data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import MessagePacketType from '../data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Handles prioritization of internal messages for

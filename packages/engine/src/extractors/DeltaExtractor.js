@@ -1,5 +1,5 @@
-import Assert from '#core/Assert.js';
-import WireReader from '#core/WireReader.js';
+import Assert from '../core/Assert.js';
+import WireReader from '../core/WireReader.js';
 
 const TAG_SHIFT = 3;
 const TAG_MASK = 0x07;

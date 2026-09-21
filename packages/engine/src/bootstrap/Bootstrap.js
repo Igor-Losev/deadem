@@ -1,10 +1,10 @@
-/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+/** @import SchemaRegistry from '../SchemaRegistry.js' */
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
-import MessagePacketType from '#data/enums/MessagePacketType.js';
-import StringTableType from '#data/enums/StringTableType.js';
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import MessagePacketType from '../data/enums/MessagePacketType.js';
+import StringTableType from '../data/enums/StringTableType.js';
 
-import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js';
+import FieldDecoderDescriptor from '../data/fields/decoding/FieldDecoderDescriptor.js';
 
 /**
  * Populates a {@link SchemaRegistry} with engine-level protobuf types

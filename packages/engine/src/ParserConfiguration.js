@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from './core/Assert.js';
 
-import MessagePacketType from '#data/enums/MessagePacketType.js';
+import MessagePacketType from './data/enums/MessagePacketType.js';
 
 const OPTIONS = /** @type {const} */ ({
     BREAK_INTERVAL: 'breakInterval',

@@ -1,10 +1,10 @@
-/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from './core/Assert.js';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoPacketType from './data/enums/DemoPacketType.js';
 
-import PacketCodec from '#src/PacketCodec.js';
+import PacketCodec from './PacketCodec.js';
 
 class PlayerPacketIndex {
     /**

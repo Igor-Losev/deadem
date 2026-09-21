@@ -1,15 +1,15 @@
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import FieldPath from '../fields/path/FieldPath.js' */
 
-/** @import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js' */
+/** @import EntityMutationExtractor from '../../extractors/EntityMutationExtractor.js' */
 
 /** @import EntityMutationBatch from './EntityMutationBatch.js' */
 /** @import { EntityFieldMeta } from './EntityStateLayout.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import Class from '#data/Class.js';
+import Class from '../Class.js';
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+import FieldStorageType from '../enums/FieldStorageType.js';
 
 const STORAGE_FLOAT = FieldStorageType.FLOAT;
 const STORAGE_INT = FieldStorageType.INT;

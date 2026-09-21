@@ -1,12 +1,12 @@
-/** @import { EventEmitterHandler } from '#core/EventEmitter.js' */
-/** @import StringTableType from '#data/enums/StringTableType.js' */
+/** @import { EventEmitterHandler } from '../../../core/EventEmitter.js' */
+/** @import StringTableType from '../../enums/StringTableType.js' */
 
 /** @import StringTableEntry from './StringTableEntry.js' */
 
-import Assert from '#core/Assert.js';
-import EventEmitter from '#core/EventEmitter.js';
+import Assert from '../../../core/Assert.js';
+import EventEmitter from '../../../core/EventEmitter.js';
 
-import StringTableEvent from '#data/enums/StringTableEvent.js';
+import StringTableEvent from '../../enums/StringTableEvent.js';
 
 import StringTable from './StringTable.js';
 

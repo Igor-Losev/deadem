@@ -1,23 +1,23 @@
 /** @import { Stream } from 'node:stream' */
 
-/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+/** @import SchemaRegistry from './SchemaRegistry.js' */
 
-/** @import Demo from '#data/Demo.js' */
-/** @import { PlaybackInterruptionReason } from '#errors/PlaybackInterruptedError.js' */
-/** @import { InterceptorMap, InterceptorPreStage } from '#root/src/ParserEngine.js' */
-/** @import InterceptorStage from '#data/enums/InterceptorStage.js' */
+/** @import Demo from './data/Demo.js' */
+/** @import { PlaybackInterruptionReason } from './errors/PlaybackInterruptedError.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from './ParserEngine.js' */
+/** @import InterceptorStage from './data/enums/InterceptorStage.js' */
 
-/** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
-/** @import { PacketTrackerStats } from '#trackers/PacketTracker.js' */
-/** @import { PerformanceTrackerStats } from '#trackers/PerformanceTracker.js' */
+/** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from './trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from './trackers/PerformanceTracker.js' */
 
-import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
+import Assert from './core/Assert.js';
+import Logger from './core/Logger.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
-import DemoSource from '#data/enums/DemoSource.js';
-import PlaybackInterruptedError from '#errors/PlaybackInterruptedError.js';
-import PlayerState from '#data/enums/PlayerState.js';
+import DeferredPromise from './data/DeferredPromise.js';
+import DemoSource from './data/enums/DemoSource.js';
+import PlaybackInterruptedError from './errors/PlaybackInterruptedError.js';
+import PlayerState from './data/enums/PlayerState.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';

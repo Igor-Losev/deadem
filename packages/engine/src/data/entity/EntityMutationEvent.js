@@ -1,8 +1,8 @@
-/** @import EntityOperation from '#data/enums/EntityOperation.js' */
+/** @import EntityOperation from '../enums/EntityOperation.js' */
 
 /** @import Entity from './Entity.js' */
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import FieldPathBuilder from '../fields/path/FieldPathBuilder.js';
 
 import EntityMutation from './EntityMutation.js';
 import EntityMutationBatch from './EntityMutationBatch.js';

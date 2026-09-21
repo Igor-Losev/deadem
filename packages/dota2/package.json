@@ -62,12 +62,6 @@
     "proto/compiled/**",
     "src/**"
   ],
-  "imports": {
-    "#src/*.js": "./src/*.js",
-    "#bootstrap/*.js": "./src/bootstrap/*.js",
-    "#data/*.js": "./src/data/*.js",
-    "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
-  },
   "dependencies": {
     "@deademx/engine": "^4.0.1"
   }

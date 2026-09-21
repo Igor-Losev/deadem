@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from './Assert.js';
 
 const MAXIMUM_VAR_INT_64_BYTES = 10;
 

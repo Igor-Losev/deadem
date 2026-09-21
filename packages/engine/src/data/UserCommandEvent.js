@@ -1,6 +1,6 @@
-/** @import { ProtoState } from '#extractors/DeltaExtractor.js' */
+/** @import { ProtoState } from '../extractors/DeltaExtractor.js' */
 
-/** @import UserCommand from '#data/UserCommand.js' */
+/** @import UserCommand from './UserCommand.js' */
 
 class UserCommandEvent {
     /**

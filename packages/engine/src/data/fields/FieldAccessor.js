@@ -1,7 +1,7 @@
-/** @import Field from '#data/fields/Field.js' */
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import Field from './Field.js' */
+/** @import FieldPath from './path/FieldPath.js' */
 
-import FieldExtractor from '#data/fields/FieldExtractor.js';
+import FieldExtractor from './FieldExtractor.js';
 
 /**
  * Compiled, entity-independent plan for reading one field in its natural shape

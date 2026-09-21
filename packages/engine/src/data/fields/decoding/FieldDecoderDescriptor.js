@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldDecoderType from '#data/enums/FieldDecoderType.js';
+import FieldDecoderType from '../../enums/FieldDecoderType.js';
 
 class FieldDecoderDescriptor {
     /**

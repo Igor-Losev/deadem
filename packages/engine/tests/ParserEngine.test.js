@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest';
 
-import InterceptorStage from '#data/enums/InterceptorStage.js';
+import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
-import ParserEngine from '#src/ParserEngine.js';
-import ParserConfiguration from '#src/ParserConfiguration.js';
-import ProtoProvider from '#providers/ProtoProvider.js';
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import ParserEngine from '../src/ParserEngine.js';
+import ParserConfiguration from '../src/ParserConfiguration.js';
+import ProtoProvider from '../src/providers/ProtoProvider.js';
+import SchemaRegistry from '../src/SchemaRegistry.js';
 
-import Logger from '#core/Logger.js';
+import Logger from '../src/core/Logger.js';
 
 const registry = new SchemaRegistry(new ProtoProvider({}));
 

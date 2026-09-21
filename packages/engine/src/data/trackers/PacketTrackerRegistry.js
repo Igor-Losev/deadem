@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const MAX_SAFE_ID = 100000;
 

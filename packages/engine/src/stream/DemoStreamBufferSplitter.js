@@ -1,9 +1,9 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import ParserEngine from '../ParserEngine.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 import Transform from '#core/stream/Transform.js';
 
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).

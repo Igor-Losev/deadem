@@ -1,8 +1,8 @@
-/** @import StringTableType from '#data/enums/StringTableType.js' */
+/** @import StringTableType from '../../enums/StringTableType.js' */
 
 /** @import StringTable from './StringTable.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
 /**
  * @template {string} [C=string]

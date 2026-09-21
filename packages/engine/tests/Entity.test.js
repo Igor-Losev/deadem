@@ -1,22 +1,22 @@
 import { describe, expect, test } from 'vitest';
 
-import Class from '#data/Class.js';
-import Entity from '#data/entity/Entity.js';
-import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
-import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
-import Serializer from '#data/fields/Serializer.js';
-import FieldDefinition from '#data/fields/FieldDefinition.js';
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js';
+import Class from '../src/data/Class.js';
+import Entity from '../src/data/entity/Entity.js';
+import EntityMutationBatch from '../src/data/entity/EntityMutationBatch.js';
+import EntityMutationEvent from '../src/data/entity/EntityMutationEvent.js';
+import Serializer from '../src/data/fields/Serializer.js';
+import FieldDefinition from '../src/data/fields/FieldDefinition.js';
+import FieldPathBuilder from '../src/data/fields/path/FieldPathBuilder.js';
+import FieldDecoder from '../src/data/fields/decoding/FieldDecoder.js';
+import FieldStorageDescriptor from '../src/data/fields/decoding/FieldStorageDescriptor.js';
 
-import FieldArrayFixed from '#data/fields/models/FieldArrayFixed.js';
-import FieldArrayVariable from '#data/fields/models/FieldArrayVariable.js';
-import FieldScalar from '#data/fields/models/FieldScalar.js';
-import FieldTableFixed from '#data/fields/models/FieldTableFixed.js';
-import FieldTableVariable from '#data/fields/models/FieldTableVariable.js';
+import FieldArrayFixed from '../src/data/fields/models/FieldArrayFixed.js';
+import FieldArrayVariable from '../src/data/fields/models/FieldArrayVariable.js';
+import FieldScalar from '../src/data/fields/models/FieldScalar.js';
+import FieldTableFixed from '../src/data/fields/models/FieldTableFixed.js';
+import FieldTableVariable from '../src/data/fields/models/FieldTableVariable.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import EntityOperation from '../src/data/enums/EntityOperation.js';
 
 const FIELD_NAMES = [ 'm_flHealth', 'm_iScore', 'm_nCount', 'm_bFlag', 'CBodyComponent.m_vecOrigin', 'm_szName' ];
 

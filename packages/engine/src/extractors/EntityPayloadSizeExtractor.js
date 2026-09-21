@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
 /**
  * Extracts per-entity payload sizes (in bits) from {@link CSVCMsg_PacketEntities.serializedEntities}.

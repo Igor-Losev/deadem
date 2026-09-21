@@ -1,7 +1,7 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import BroadcastFragmentType from '#data/enums/BroadcastFragmentType.js';
-import Protocol from '#data/enums/Protocol.js';
+import BroadcastFragmentType from '../data/enums/BroadcastFragmentType.js';
+import Protocol from '../data/enums/Protocol.js';
 
 class BroadcastGateway {
     /**

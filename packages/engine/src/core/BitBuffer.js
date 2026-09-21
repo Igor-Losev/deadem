@@ -1,5 +1,5 @@
-import Assert from '#core/Assert.js';
-import VarInt32 from '#data/VarInt32.js';
+import Assert from './Assert.js';
+import VarInt32 from '../data/VarInt32.js';
 
 /**
  * A class for reading data at the bit level from {@link Uint8Array}.

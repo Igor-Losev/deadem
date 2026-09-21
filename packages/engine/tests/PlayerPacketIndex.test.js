@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
-import PacketCodec from '#src/PacketCodec.js';
-import PlayerPacketIndex from '#src/PlayerPacketIndex.js';
+import PacketCodec from '../src/PacketCodec.js';
+import PlayerPacketIndex from '../src/PlayerPacketIndex.js';
 
 /**
  * Creates a mock packet with the minimal interface required by PlayerPacketIndex.

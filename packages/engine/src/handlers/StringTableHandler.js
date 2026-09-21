@@ -1,17 +1,17 @@
-import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
+import Assert from '../core/Assert.js';
+import Logger from '../core/Logger.js';
+import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
 
-import StringTableType from '#data/enums/StringTableType.js';
+import StringTableType from '../data/enums/StringTableType.js';
 
-import StringTableEntryExtractor from '#extractors/StringTableEntryExtractor.js';
+import StringTableEntryExtractor from '../extractors/StringTableEntryExtractor.js';
 
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import SchemaRegistry from '../SchemaRegistry.js';
 
-import StringTable from '#data/tables/string/StringTable.js';
-import StringTableContainer from '#data/tables/string/StringTableContainer.js';
-import StringTableEntry from '#data/tables/string/StringTableEntry.js';
-import StringTableInstructions from '#data/tables/string/StringTableInstructions.js';
+import StringTable from '../data/tables/string/StringTable.js';
+import StringTableContainer from '../data/tables/string/StringTableContainer.js';
+import StringTableEntry from '../data/tables/string/StringTableEntry.js';
+import StringTableInstructions from '../data/tables/string/StringTableInstructions.js';
 
 /**
  * Translates raw string-table protobuf payloads into

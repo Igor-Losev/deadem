@@ -1,14 +1,14 @@
-/** @import DemoPacket from '#data/DemoPacket.js' */
-/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
-/** @import MessagePacketRaw from '#data/MessagePacketRaw.js' */
-/** @import MessagePacket from '#data/MessagePacket.js' */
+/** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from '../data/MessagePacketRaw.js' */
+/** @import MessagePacket from '../data/MessagePacket.js' */
 
-/** @import { PacketTrackerUnpackedItem } from '#data/trackers/PacketTrackerRegistry.js' */
+/** @import { PacketTrackerUnpackedItem } from '../data/trackers/PacketTrackerRegistry.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import PacketTrackerRegistry from '#data/trackers/PacketTrackerRegistry.js';
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import PacketTrackerRegistry from '../data/trackers/PacketTrackerRegistry.js';
+import SchemaRegistry from '../SchemaRegistry.js';
 
 import Tracker from './Tracker.js';
 

@@ -1,8 +1,8 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+import FieldStorageType from '../enums/FieldStorageType.js';
 
-import Serializer from '#data/fields/Serializer.js';
+import Serializer from '../fields/Serializer.js';
 
 /**
  * Storage plan for entity state.

@@ -1,8 +1,8 @@
-/** @import BitBuffer from '#core/BitBuffer.js' */
+/** @import BitBuffer from '../../core/BitBuffer.js' */
 
-/** @import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js' */
+/** @import FieldPathBuilder from '../fields/path/FieldPathBuilder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 /**
  * @typedef {(bitBuffer: BitBuffer, fieldPathBuilder: FieldPathBuilder) => void} FieldPathExecutor

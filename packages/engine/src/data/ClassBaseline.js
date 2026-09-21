@@ -1,9 +1,9 @@
-/** @import Serializer from '#data/fields/Serializer.js' */
+/** @import Serializer from './fields/Serializer.js' */
 
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
+import EntityMutationExtractor from '../extractors/EntityMutationExtractor.js';
 
 import EntityMutationBatch from './entity/EntityMutationBatch.js';
 

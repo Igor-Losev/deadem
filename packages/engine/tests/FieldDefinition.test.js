@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import FieldDefinition from '#data/fields/FieldDefinition.js';
+import FieldDefinition from '../src/data/fields/FieldDefinition.js';
 
 describe('FieldDefinition.parse()', () => {
     describe('When parsing "CNetworkUtlVectorBase< CHandle< CBaseEntity > >"', () => {

@@ -1,14 +1,14 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import ParserEngine from '../ParserEngine.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import DemoSource from '../data/enums/DemoSource.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketRawBroadcastExtractor from '#extractors/DemoPacketRawBroadcastExtractor.js';
-import DemoPacketRawReplayExtractor from '#extractors/DemoPacketRawReplayExtractor.js';
+import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
+import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
 
 const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 

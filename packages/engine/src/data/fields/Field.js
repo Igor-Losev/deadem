@@ -1,12 +1,12 @@
-/** @import FieldModel from '#data/enums/FieldModel.js' */
+/** @import FieldModel from '../enums/FieldModel.js' */
 
 /** @import FieldPath from './path/FieldPath.js' */
 /** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
 
 /** @import FieldExtractor from './FieldExtractor.js' */
-/** @import { FieldDecoderFn } from '#data/fields/decoding/FieldDecoder.js' */
+/** @import { FieldDecoderFn } from './decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 import FieldDefinition from './FieldDefinition.js';
 

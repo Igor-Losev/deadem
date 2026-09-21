@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 import FieldDecoderDescriptor from './decoding/FieldDecoderDescriptor.js';
 

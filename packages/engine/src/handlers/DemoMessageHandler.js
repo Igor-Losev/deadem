@@ -1,25 +1,25 @@
-/** @import MessagePacket from '#data/MessagePacket.js' */
+/** @import MessagePacket from '../data/MessagePacket.js' */
 
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import Demo from '#data/Demo.js';
-import Server from '#data/Server.js';
-import UserCommand from '#data/UserCommand.js';
-import UserCommandEvent from '#data/UserCommandEvent.js';
+import Demo from '../data/Demo.js';
+import Server from '../data/Server.js';
+import UserCommand from '../data/UserCommand.js';
+import UserCommandEvent from '../data/UserCommandEvent.js';
 
-import Entity from '#data/entity/Entity.js';
-import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
-import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
+import Entity from '../data/entity/Entity.js';
+import EntityMutationBatch from '../data/entity/EntityMutationBatch.js';
+import EntityMutationEvent from '../data/entity/EntityMutationEvent.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import EntityOperation from '../data/enums/EntityOperation.js';
 
-import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
-import EntityPayloadSizeExtractor from '#extractors/EntityPayloadSizeExtractor.js';
+import EntityMutationExtractor from '../extractors/EntityMutationExtractor.js';
+import EntityPayloadSizeExtractor from '../extractors/EntityPayloadSizeExtractor.js';
 
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import StringTableHandler from './StringTableHandler.js';
 
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import SchemaRegistry from '../SchemaRegistry.js';
 
 class DemoMessageHandler {
     /**

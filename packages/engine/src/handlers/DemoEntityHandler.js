@@ -1,10 +1,10 @@
-/** @import EntityMutationEvent from '#data/entity/EntityMutationEvent.js' */
+/** @import EntityMutationEvent from '../data/entity/EntityMutationEvent.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import Demo from '#data/Demo.js';
+import Demo from '../data/Demo.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import EntityOperation from '../data/enums/EntityOperation.js';
 
 class DemoEntityHandler {
     /**

@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+import FieldStorageType from '../../enums/FieldStorageType.js';
 
 /**
  * Describes how a decoded value is stored on an {@link Entity}: which typed-array

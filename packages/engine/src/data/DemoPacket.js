@@ -1,8 +1,8 @@
-/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+/** @import SchemaRegistry from '../SchemaRegistry.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoPacketType from './enums/DemoPacketType.js';
 
 class DemoPacket {
     /**

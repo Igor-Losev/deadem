@@ -1,7 +1,7 @@
 import protobuf from 'protobufjs';
 import { describe, expect, test } from 'vitest';
 
-import DeltaExtractor from '#extractors/DeltaExtractor.js';
+import DeltaExtractor from '../src/extractors/DeltaExtractor.js';
 
 function createStateType() {
     const root = new protobuf.Root();

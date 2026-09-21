@@ -1,14 +1,14 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
-/** @import PlayerPacketIndex from '#root/src/PlayerPacketIndex.js' */
+/** @import ParserEngine from './ParserEngine.js' */
+/** @import PlayerPacketIndex from './PlayerPacketIndex.js' */
 
-/** @import DemoSource from '#data/enums/DemoSource.js' */
+/** @import DemoSource from './data/enums/DemoSource.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from './core/Assert.js';
 import ReadableArray from '#core/stream/ReadableArray.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
+import DeferredPromise from './data/DeferredPromise.js';
 
-import InterceptorStage from '#data/enums/InterceptorStage.js';
+import InterceptorStage from './data/enums/InterceptorStage.js';
 
 class ParserSession {
     /**

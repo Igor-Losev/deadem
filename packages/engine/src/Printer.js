@@ -1,11 +1,11 @@
-import Logger from '#core/Logger.js';
+import Logger from './core/Logger.js';
 
-/** @import Parser from '#root/src/Parser.js' */
+/** @import Parser from './Parser.js' */
 
-/** @import { PacketTrackerPrintableItem } from '#trackers/PacketTracker.js' */
-/** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
-/** @import { PacketTrackerStats } from '#trackers/PacketTracker.js' */
-/** @import { PerformanceTrackerStats } from '#trackers/PerformanceTracker.js' */
+/** @import { PacketTrackerPrintableItem } from './trackers/PacketTracker.js' */
+/** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from './trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from './trackers/PerformanceTracker.js' */
 
 class Printer {
     /**

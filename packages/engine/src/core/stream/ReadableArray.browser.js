@@ -1,5 +1,5 @@
-import Assert from '#core/Assert.js';
-import Gate from '#core/Gate.js';
+import Assert from '../Assert.js';
+import Gate from '../Gate.js';
 
 /** @extends {ReadableStream<*>} */
 class ReadableArrayBrowser extends ReadableStream {

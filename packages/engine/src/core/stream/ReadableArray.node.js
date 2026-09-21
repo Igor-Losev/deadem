@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream';
 
-import Assert from '#core/Assert.js';
-import Gate from '#core/Gate.js';
+import Assert from '../Assert.js';
+import Gate from '../Gate.js';
 
 class ReadableArrayNode extends Readable {
     /**

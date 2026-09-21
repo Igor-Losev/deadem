@@ -22,9 +22,9 @@ import {
     SchemaRegistry
 } from '@deademx/engine';
 
-import Bootstrap from '#bootstrap/Bootstrap.js';
+import Bootstrap from './src/bootstrap/Bootstrap.js';
 
-import ProtoProvider from '#providers/ProtoProvider.instance.js';
+import ProtoProvider from './src/providers/ProtoProvider.instance.js';
 
 function createRegistry() {
     const registry = new SchemaRegistry(ProtoProvider);

@@ -1,8 +1,8 @@
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import FieldPath from './path/FieldPath.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import FieldPathBuilder from './path/FieldPathBuilder.js';
 
 /**
  * Stateful cursor that combines a path builder with a raw value reader.

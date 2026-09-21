@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import Class from '#data/Class.js';
-import Demo from '#data/Demo.js';
-import Entity from '#data/entity/Entity.js';
-import Serializer from '#data/fields/Serializer.js';
+import Class from '../src/data/Class.js';
+import Demo from '../src/data/Demo.js';
+import Entity from '../src/data/entity/Entity.js';
+import Serializer from '../src/data/fields/Serializer.js';
 
 function createClass(id, name) {
     return new Class(id, name, new Serializer(name, 1, []));

@@ -1,4 +1,4 @@
-/** @import { MemoryTrackerStats } from '#trackers/MemoryTracker.base.js' */
+/** @import { MemoryTrackerStats } from './MemoryTracker.base.js' */
 
 import MemoryTracker from './MemoryTracker.base.js';
 

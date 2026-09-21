@@ -7,9 +7,9 @@
 /** @import FieldDefinition from './FieldDefinition.js' */
 /** @import FieldExtractor from './FieldExtractor.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../enums/FieldModel.js';
 
 import Field from './Field.js';
 import FieldAccessor from './FieldAccessor.js';

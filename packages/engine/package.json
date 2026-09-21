@@ -52,17 +52,6 @@
     "src/**"
   ],
   "imports": {
-    "#root/*.js": "./*.js",
-    "#src/*.js": "./src/*.js",
-    "#broadcast/*.js": "./src/broadcast/*.js",
-    "#core/*.js": "./src/core/*.js",
-    "#data/*.js": "./src/data/*.js",
-    "#errors/*.js": "./src/errors/*.js",
-    "#extractors/*.js": "./src/extractors/*.js",
-    "#handlers/*.js": "./src/handlers/*.js",
-    "#providers/*.js": "./src/providers/*.js",
-    "#stream/*.js": "./src/stream/*.js",
-    "#trackers/*.js": "./src/trackers/*.js",
     "#broadcast/BroadcastReadStream.js": {
       "electron": {
         "browser": "./src/broadcast/BroadcastReadStream.browser.js",

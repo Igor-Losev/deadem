@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '#core/BitBuffer.js';
+import BitBuffer from '../src/core/BitBuffer.js';
 
-import FieldDecoderInstructions from '#data/fields/decoding/FieldDecoderInstructions.js';
-import FieldDecoderQuantizedFloat from '#data/fields/decoding/FieldDecoderQuantizedFloat.js';
+import FieldDecoderInstructions from '../src/data/fields/decoding/FieldDecoderInstructions.js';
+import FieldDecoderQuantizedFloat from '../src/data/fields/decoding/FieldDecoderQuantizedFloat.js';
 
 describe('FieldDecoderQuantizedFloat.quantize()', () => {
     describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, 0 ]', () => {

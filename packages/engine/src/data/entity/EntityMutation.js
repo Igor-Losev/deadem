@@ -1,4 +1,4 @@
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import FieldPath from '../fields/path/FieldPath.js' */
 
 class EntityMutation {
     /**

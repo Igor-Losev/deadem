@@ -1,14 +1,14 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import ParserEngine from '../ParserEngine.js' */
 
-/** @import DemoPacket from '#data/DemoPacket.js' */
-/** @import MessagePacket from '#data/MessagePacket.js' */
+/** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import MessagePacket from '../data/MessagePacket.js' */
 
 import Transform from '#core/stream/Transform.js';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
-import InterceptorStage from '#data/enums/InterceptorStage.js';
-import MessagePacketType from '#data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import InterceptorStage from '../data/enums/InterceptorStage.js';
+import MessagePacketType from '../data/enums/MessagePacketType.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Given a stream of {@link DemoPacket}, processes them sequentially,

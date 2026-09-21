@@ -1,7 +1,7 @@
 import protobuf from 'protobufjs';
 import { describe, expect, test } from 'vitest';
 
-import UserCommand from '#data/UserCommand.js';
+import UserCommand from '../src/data/UserCommand.js';
 
 function createEnvelopeType() {
     const root = new protobuf.Root();

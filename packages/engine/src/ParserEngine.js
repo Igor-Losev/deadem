@@ -1,39 +1,39 @@
 /** @import { Stream } from 'node:stream' */
 
-/** @import DemoPacket from '#data/DemoPacket.js' */
-/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
-/** @import MessagePacket from '#data/MessagePacket.js' */
-/** @import EntityMutationEvent from '#data/entity/EntityMutationEvent.js' */
-/** @import UserCommandEvent from '#data/UserCommandEvent.js' */
+/** @import DemoPacket from './data/DemoPacket.js' */
+/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
+/** @import MessagePacket from './data/MessagePacket.js' */
+/** @import EntityMutationEvent from './data/entity/EntityMutationEvent.js' */
+/** @import UserCommandEvent from './data/UserCommandEvent.js' */
 
-import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
+import Assert from './core/Assert.js';
+import Logger from './core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
-import Demo from '#data/Demo.js';
+import DeferredPromise from './data/DeferredPromise.js';
+import Demo from './data/Demo.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
-import InterceptorStage from '#data/enums/InterceptorStage.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import DemoSource from './data/enums/DemoSource.js';
+import InterceptorStage from './data/enums/InterceptorStage.js';
+import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
-import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
-import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
-import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import DemoEntityHandler from './handlers/DemoEntityHandler.js';
+import DemoMessageHandler from './handlers/DemoMessageHandler.js';
+import DemoPacketHandler from './handlers/DemoPacketHandler.js';
+import StringTableHandler from './handlers/StringTableHandler.js';
 
-import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
-import DemoStreamEventLoopBreaker from '#stream/DemoStreamEventLoopBreaker.js';
-import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
-import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
-import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
-import DemoStreamPacketPrioritizer from '#stream/DemoStreamPacketPrioritizer.js';
-import DemoStreamPacketResequencer from '#stream/DemoStreamPacketResequencer.js';
+import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
+import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
+import DemoStreamPacketAnalyzer from './stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
+import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
+import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
+import DemoStreamPacketResequencer from './stream/DemoStreamPacketResequencer.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
-import PacketTracker from '#trackers/PacketTracker.js';
-import PerformanceTracker from '#trackers/PerformanceTracker.js';
+import PacketTracker from './trackers/PacketTracker.js';
+import PerformanceTracker from './trackers/PerformanceTracker.js';
 
 import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';

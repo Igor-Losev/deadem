@@ -1,9 +1,9 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
+import DemoSource from '../data/enums/DemoSource.js';
 
-import DemoPacketRaw from '#data/DemoPacketRaw.js';
-import VarInt32 from '#data/VarInt32.js';
+import DemoPacketRaw from '../data/DemoPacketRaw.js';
+import VarInt32 from '../data/VarInt32.js';
 
 class DemoPacketRawReplayExtractor {
     /**

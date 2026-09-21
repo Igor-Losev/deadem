@@ -1,16 +1,16 @@
-/** @import FieldExtractor from '#data/fields/FieldExtractor.js' */
-/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
-/** @import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js' */
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
-/** @import { FieldDecoderFn } from '#data/fields/decoding/FieldDecoder.js' */
+/** @import FieldExtractor from '../FieldExtractor.js' */
+/** @import FieldDefinition from '../FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '../decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from '../path/FieldPath.js' */
+/** @import { FieldDecoderFn } from '../decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../../enums/FieldModel.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import Serializer from '#data/fields/Serializer.js';
+import Field from '../Field.js';
+import FieldDecoder from '../decoding/FieldDecoder.js';
+import Serializer from '../Serializer.js';
 
 class FieldTableVariable extends Field {
     /**

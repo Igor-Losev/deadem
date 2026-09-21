@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import FieldPathBuilder from '../src/data/fields/path/FieldPathBuilder.js';
 
 describe('FieldPathBuilder.build()', () => {
     const p1 = [ 1 ];

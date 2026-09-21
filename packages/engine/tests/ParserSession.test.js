@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import DeferredPromise from '#data/DeferredPromise.js';
+import DeferredPromise from '../src/data/DeferredPromise.js';
 
-import ParserSession from '#src/ParserSession.js';
+import ParserSession from '../src/ParserSession.js';
 
 /**
  * Creates a mock engine that:

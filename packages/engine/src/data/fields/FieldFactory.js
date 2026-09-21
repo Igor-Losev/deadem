@@ -3,9 +3,9 @@
 
 /** @import FieldDecoderInstructions from './decoding/FieldDecoderInstructions.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../enums/FieldModel.js';
 
 import FieldDefinition from './FieldDefinition.js';
 

@@ -1,15 +1,15 @@
-/** @import FieldDecoderDescriptor from '#data/fields/decoding/FieldDecoderDescriptor.js' */
-/** @import { StringTableDecoderFn } from '#data/tables/string/StringTable.js' */
+/** @import FieldDecoderDescriptor from './data/fields/decoding/FieldDecoderDescriptor.js' */
+/** @import { StringTableDecoderFn } from './data/tables/string/StringTable.js' */
 
-/** @import DemoPacketType from '#data/enums/DemoPacketType.js' */
-/** @import MessagePacketType from '#data/enums/MessagePacketType.js' */
-/** @import StringTableType from '#data/enums/StringTableType.js' */
+/** @import DemoPacketType from './data/enums/DemoPacketType.js' */
+/** @import MessagePacketType from './data/enums/MessagePacketType.js' */
+/** @import StringTableType from './data/enums/StringTableType.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from './core/Assert.js';
 
-import FieldRuleRegistry from '#data/fields/FieldRuleRegistry.js';
+import FieldRuleRegistry from './data/fields/FieldRuleRegistry.js';
 
-import ProtoProvider from '#providers/ProtoProvider.js';
+import ProtoProvider from './providers/ProtoProvider.js';
 
 /**
  * Instance-based registry that owns the mapping from engine-level type identities

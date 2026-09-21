@@ -1,4 +1,4 @@
-/** @import SchemaRegistry from '#root/src/SchemaRegistry.js' */
+/** @import SchemaRegistry from '../SchemaRegistry.js' */
 
 /** @import MessagePacketType from './enums/MessagePacketType.js' */
 

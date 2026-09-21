@@ -1,15 +1,15 @@
 /** @import { Stream } from 'node:stream' */
 
-/** @import { SyncObject } from '#broadcast/BroadcastGateway.js' */
+/** @import { SyncObject } from './BroadcastGateway.js' */
 
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';
 
-import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
+import Assert from '../core/Assert.js';
+import Logger from '../core/Logger.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
+import DeferredPromise from '../data/DeferredPromise.js';
 
-import BroadcastFragmentType from '#data/enums/BroadcastFragmentType.js';
+import BroadcastFragmentType from '../data/enums/BroadcastFragmentType.js';
 
 import BroadcastGateway from './BroadcastGateway.js';
 

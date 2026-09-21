@@ -1,14 +1,14 @@
-/** @import ParserEngine from '#root/src/ParserEngine.js' */
+/** @import ParserEngine from '../ParserEngine.js' */
 
-/** @import DemoPacketRaw from '#data/DemoPacketRaw.js' */
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
-/** @import { DemoPacketHeavyData } from '#root/src/PacketCodec.js' */
+/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
 
 import Transform from '#core/stream/Transform.js';
 
-import MessagePacket from '#data/MessagePacket.js';
+import MessagePacket from '../data/MessagePacket.js';
 
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload.
