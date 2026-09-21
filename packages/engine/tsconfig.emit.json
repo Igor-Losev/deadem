@@ -1,0 +1,18 @@
+{
+  "extends": "./../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./types",
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "rootDir": "."
+  },
+  "include": [
+    "index.js",
+    "src/**/*.js",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "**/*.browser.js"
+  ]
+}

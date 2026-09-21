@@ -36,6 +36,15 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Check types
+        run: npm run types:check
+
+      - name: Build bundles
+        run: npm run build
+
+      - name: Verify published types
+        run: npm run types:pack
+
   replay-regression:
     name: Replay Regression (${{ matrix.name }})
     runs-on: ubuntu-latest

@@ -5,9 +5,6 @@
       "ES2023",
       "DOM"
     ],
-    "types": [
-      "node"
-    ],
     "paths": {
       "#broadcast/BroadcastReadStream.js": [
         "./packages/engine/src/broadcast/BroadcastReadStream.browser.js"
@@ -26,6 +23,9 @@
       ],
       "#trackers/MemoryTracker.js": [
         "./packages/engine/src/trackers/MemoryTracker.browser.js"
+      ],
+      "@deademx/engine": [
+        "./packages/engine/index.js"
       ]
     }
   },

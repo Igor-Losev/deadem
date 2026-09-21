@@ -1,12 +1,29 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": [
-      "ES2023"
-    ],
-    "types": [
-      "node"
-    ]
+    "paths": {
+      "#broadcast/BroadcastReadStream.js": [
+        "./packages/engine/src/broadcast/BroadcastReadStream.node.js"
+      ],
+      "#core/stream/Pipeline.js": [
+        "./packages/engine/src/core/stream/Pipeline.node.js"
+      ],
+      "#core/stream/ReadableArray.js": [
+        "./packages/engine/src/core/stream/ReadableArray.node.js"
+      ],
+      "#core/stream/Transform.js": [
+        "./packages/engine/src/core/stream/Transform.node.js"
+      ],
+      "#core/stream/WritableSink.js": [
+        "./packages/engine/src/core/stream/WritableSink.node.js"
+      ],
+      "#trackers/MemoryTracker.js": [
+        "./packages/engine/src/trackers/MemoryTracker.node.js"
+      ],
+      "@deademx/engine": [
+        "./packages/engine/index.js"
+      ]
+    }
   },
   "include": [
     "packages/engine/index.js",
@@ -23,7 +40,6 @@
     "**/node_modules",
     "**/dist",
     "**/tests",
-    "**/*.browser.js",
-    "**/*.browser.*.js"
+    "**/*.browser.js"
   ]
 }

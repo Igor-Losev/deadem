@@ -8,3 +8,5 @@ demos
 node_modules
 
 *.dem
+packages/*/types
+packages/*/tsconfig.emit.tsbuildinfo

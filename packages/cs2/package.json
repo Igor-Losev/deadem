@@ -43,17 +43,20 @@
   "main": "index.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./index.js",
       "default": "./index.js"
     },
     "./package.json": "./package.json"
   },
+  "types": "./types/index.d.ts",
   "unpkg": "dist/deadem-cs2.min.js",
   "jsdelivr": "dist/deadem-cs2.min.js",
   "sideEffects": false,
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && tsc -b ./tsconfig.emit.json",
     "proto:js": "node ./../../scripts/proto-schema-build.js --package=cs2",
     "proto:sync": "node ./../../.github/scripts/proto-sync.mjs cs2"
   },
@@ -61,7 +64,8 @@
     "dist/**",
     "index.js",
     "proto/compiled/**",
-    "src/**"
+    "src/**",
+    "types/**"
   ],
   "dependencies": {
     "@deademx/engine": "^4.0.1"

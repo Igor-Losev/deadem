@@ -15,7 +15,9 @@
     "proto:sync": "npm run proto:sync --workspaces --if-present",
     "start": "npm run start --workspace=@deademx/ui",
     "test": "npm run test --workspaces --if-present",
-    "types:check": "tsc && tsc -p tsconfig.browser.json"
+    "types:build": "tsc -b tsconfig.emit.json --clean && tsc -b tsconfig.emit.json && tsc -p tsconfig.generated.json",
+    "types:check": "tsc && tsc -p tsconfig.browser.json",
+    "types:pack": "npm run types:build && publint packages/engine && publint packages/cs2 && publint packages/deadem && publint packages/dota2"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
@@ -25,6 +27,7 @@
     "eslint": "^9.27.0",
     "globals": "^16.2.0",
     "protobufjs-cli": "^2.5.2",
+    "publint": "^0.3.24",
     "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"

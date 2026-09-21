@@ -37,22 +37,27 @@
   "main": "index.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./index.js",
       "default": "./index.js"
     },
     "./package.json": "./package.json"
   },
+  "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "lint": "eslint",
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && tsc -b ./tsconfig.emit.json",
     "test": "vitest run"
   },
   "files": [
     "index.js",
-    "src/**"
+    "src/**",
+    "types/**"
   ],
   "imports": {
     "#broadcast/BroadcastReadStream.js": {
+      "types": "./types/src/broadcast/BroadcastReadStream.node.d.ts",
       "electron": {
         "browser": "./src/broadcast/BroadcastReadStream.browser.js",
         "default": "./src/broadcast/BroadcastReadStream.node.js"
@@ -62,6 +67,7 @@
       "default": "./src/broadcast/BroadcastReadStream.browser.js"
     },
     "#core/stream/Pipeline.js": {
+      "types": "./types/src/core/stream/Pipeline.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/Pipeline.browser.js",
         "default": "./src/core/stream/Pipeline.node.js"
@@ -71,6 +77,7 @@
       "default": "./src/core/stream/Pipeline.browser.js"
     },
     "#core/stream/ReadableArray.js": {
+      "types": "./types/src/core/stream/ReadableArray.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/ReadableArray.browser.js",
         "default": "./src/core/stream/ReadableArray.node.js"
@@ -80,6 +87,7 @@
       "default": "./src/core/stream/ReadableArray.browser.js"
     },
     "#core/stream/Transform.js": {
+      "types": "./types/src/core/stream/Transform.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/Transform.browser.js",
         "default": "./src/core/stream/Transform.node.js"
@@ -89,6 +97,7 @@
       "default": "./src/core/stream/Transform.browser.js"
     },
     "#core/stream/WritableSink.js": {
+      "types": "./types/src/core/stream/WritableSink.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/WritableSink.browser.js",
         "default": "./src/core/stream/WritableSink.node.js"
@@ -98,6 +107,7 @@
       "default": "./src/core/stream/WritableSink.browser.js"
     },
     "#trackers/MemoryTracker.js": {
+      "types": "./types/src/trackers/MemoryTracker.node.d.ts",
       "electron": {
         "browser": "./src/trackers/MemoryTracker.browser.js",
         "default": "./src/trackers/MemoryTracker.node.js"
