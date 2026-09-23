@@ -100,12 +100,12 @@ class DemoPacketHandler {
                         const serializerName = symbols[fieldSerializerNameSym];
                         const serializerVersion = fieldRaw.fieldSerializerVersion;
 
-                        const serializerKey = new SerializerKey(serializerName, serializerVersion);
+                        const fieldSerializerKey = new SerializerKey(serializerName, serializerVersion);
 
-                        const existing = this._demo.getSerializerByKey(serializerKey);
+                        const existing = this._demo.getSerializerByKey(fieldSerializerKey);
 
                         if (existing === null) {
-                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${serializerKey.toString()} ] is not registered`);
+                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${fieldSerializerKey.toString()} ] is not registered`);
                         }
 
                         fieldSerializer = existing;
@@ -116,7 +116,7 @@ class DemoPacketHandler {
                     const varTypeSym = fieldRaw.varTypeSym;
                     const sendNodeSym = fieldRaw.sendNodeSym;
 
-                    const name = symbols[varNameSym];
+                    const fieldName = symbols[varNameSym];
                     const definition = FieldDefinition.parse(symbols[varTypeSym]);
 
                     const instructionsRaw = {
@@ -131,7 +131,7 @@ class DemoPacketHandler {
 
                     // TODO: polymorphic types
 
-                    field = this._fieldFactory.create(name, definition, sendNode, instructionsRaw, fieldSerializer);
+                    field = this._fieldFactory.create(fieldName, definition, sendNode, instructionsRaw, fieldSerializer);
                 }
 
                 serializer.push(field);

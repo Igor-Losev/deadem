@@ -33,13 +33,13 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {Game} 
+     * @returns {Game}
      */
     get game() {
         return this._game;
     }
 
-    /** 
+    /**
      * @public
      */
     forceUpdate() {
@@ -48,7 +48,7 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {GameFormatted} 
+     * @returns {GameFormatted}
      */
     getGameFormatted() {
         return {
@@ -62,7 +62,7 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {string} 
+     * @returns {string}
      */
     getGameClockFormatted() {
         return formatClock(this._game.clockGame);
@@ -76,7 +76,7 @@ class DeadlockGameObserver {
         return formatClock(this._game.clockTotal);
     }
 
-    /** 
+    /**
      * @protected
      */
     /**  */

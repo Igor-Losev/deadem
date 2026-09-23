@@ -198,15 +198,15 @@ export default function usePlayer(library, updatesEnabled = true) {
         }
 
         for (let i = 0; i < events.length; i++) {
-          const event = events[i];
-          const entity = event.entity;
-          const operation = event.operation;
+          const mutationEvent = events[i];
+          const entity = mutationEvent.entity;
+          const operation = mutationEvent.operation;
 
           const fields = [];
 
           if (operation === EntityOperation.UPDATE || operation === EntityOperation.CREATE) {
             const isCreate = operation === EntityOperation.CREATE;
-            const batch = event.batch;
+            const batch = mutationEvent.batch;
             const serializer = entity.class.serializer;
 
             for (let j = 0; j < batch.length; j++) {

@@ -53,32 +53,32 @@ function createLoadedPlayer() {
     player._ticks = { current: 100, first: 100, last: 300, position: 0 };
 
     // Override seekToTick to avoid real ParserSession construction
-    player.seekToTick = async (tick) => {
-        if (player._state === PlayerState.PLAYING) {
-            player._stopPlayback(PlaybackInterruptedError.PAUSED);
+    player.seekToTick = async function (tick) {
+        if (this._state === PlayerState.PLAYING) {
+            this._stopPlayback(PlaybackInterruptedError.PAUSED);
         }
 
-        player._state = PlayerState.SEEKING;
+        this._state = PlayerState.SEEKING;
 
         try {
-            if (player._session !== null) {
-                await player._session.close();
+            if (this._session !== null) {
+                await this._session.close();
             }
 
-            player._session = {
+            this._session = {
                 close: vi.fn(async () => {}),
                 process: vi.fn(async (_) => {
-                    const next = player._index.advance(player._ticks.position);
+                    const next = this._index.advance(this._ticks.position);
 
-                    return next ? next.tick : player._ticks.current;
+                    return next ? next.tick : this._ticks.current;
                 }),
                 seekToTick: vi.fn(async (t) => t)
             };
 
-            player._ticks.current = await player._session.seekToTick(tick);
-            player._ticks.position = player._index.getTickPosition(player._ticks.current);
+            this._ticks.current = await this._session.seekToTick(tick);
+            this._ticks.position = this._index.getTickPosition(this._ticks.current);
         } finally {
-            player._state = PlayerState.LOADED;
+            this._state = PlayerState.LOADED;
         }
     };
 

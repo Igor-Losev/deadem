@@ -30,7 +30,7 @@ const mem = () => {
 
     for (let i = 0; i < ITERATIONS; i++) {
         await player.seekToTick(SEEK_TICK);
-        await new Promise(r => setTimeout(r, 0));
+        await new Promise(r => { setTimeout(r, 0); });
 
         if (i % 10 === 9) {
             console.log(`[${i + 1}/${ITERATIONS}]`);

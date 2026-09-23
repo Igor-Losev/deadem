@@ -99,7 +99,7 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
         push(rssPeak, m.maxResidentSetSize);
 
         await parser.dispose();
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => { setTimeout(r, 50); });
 
         global.gc();
     }
