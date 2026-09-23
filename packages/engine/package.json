@@ -47,7 +47,7 @@
   "sideEffects": false,
   "scripts": {
     "lint": "eslint",
-    "prepack": "tsc -b ./tsconfig.emit.json --clean && tsc -b ./tsconfig.emit.json",
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && rm -rf types && tsc -b ./tsconfig.emit.json",
     "test": "vitest run"
   },
   "files": [

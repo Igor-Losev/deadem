@@ -15,7 +15,7 @@
     "proto:sync": "npm run proto:sync --workspaces --if-present",
     "start": "npm run start --workspace=@deademx/ui",
     "test": "npm run test --workspaces --if-present",
-    "types:build": "tsc -b tsconfig.emit.json --clean && tsc -b tsconfig.emit.json && tsc -p tsconfig.generated.json",
+    "types:build": "tsc -b tsconfig.emit.json --clean && rm -rf packages/*/types && tsc -b tsconfig.emit.json && tsc -p tsconfig.generated.json",
     "types:check": "tsc && tsc -p tsconfig.browser.json",
     "types:pack": "npm run types:build && publint packages/engine && publint packages/cs2 && publint packages/deadem && publint packages/dota2"
   },
