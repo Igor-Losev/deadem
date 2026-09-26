@@ -371,6 +371,16 @@ export default {
         "ishltv": {
           "type": "bool",
           "id": 6
+        },
+        "clanMember": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "clan_member"
+        },
+        "clanOfficer": {
+          "type": "bool",
+          "id": 10,
+          "protoName": "clan_officer"
         }
       }
     },
@@ -629,6 +639,39 @@ export default {
         }
       }
     },
+    "QuantizedFloatEncoderAlias_t": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "bitCount": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "bit_count"
+        },
+        "encodeFlags": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "encode_flags"
+        },
+        "minValue": {
+          "type": "float",
+          "id": 4,
+          "protoName": "min_value"
+        },
+        "maxValue": {
+          "type": "float",
+          "id": 5,
+          "protoName": "max_value"
+        },
+        "validate": {
+          "type": "bool",
+          "id": 6
+        }
+      }
+    },
     "CSVCMsg_GameSessionConfiguration": {
       "edition": "proto2",
       "fields": {
@@ -720,6 +763,17 @@ export default {
         "landmarkname": {
           "type": "string",
           "id": 18
+        },
+        "quantizedFloatEncoderAliases": {
+          "rule": "repeated",
+          "type": ".QuantizedFloatEncoderAlias_t",
+          "id": 20,
+          "protoName": "quantized_float_encoder_aliases"
+        },
+        "maxCoord": {
+          "type": "float",
+          "id": 21,
+          "protoName": "max_coord"
         }
       }
     },
@@ -1663,6 +1717,12 @@ export default {
           "type": "uint32",
           "id": 22,
           "protoName": "match_id_additional"
+        },
+        "clanTags": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 23,
+          "protoName": "clan_tags"
         }
       }
     },
@@ -1765,7 +1825,8 @@ export default {
           "type": "uint32",
           "id": 10
         },
-        "customname": {
+        "customnames": {
+          "rule": "repeated",
           "type": "string",
           "id": 11
         },
@@ -1820,6 +1881,15 @@ export default {
           "type": "uint32",
           "id": 23,
           "protoName": "upgrade_level"
+        },
+        "petFoodExpirationDate": {
+          "type": "uint32",
+          "id": 24,
+          "protoName": "pet_food_expiration_date"
+        },
+        "blobdata": {
+          "type": "bytes",
+          "id": 25
         }
       },
       "nested": {
@@ -2130,10 +2200,6 @@ export default {
           "type": "fixed32",
           "id": 7,
           "protoName": "source_soundscapeid"
-        },
-        "stealth": {
-          "type": "bool",
-          "id": 8
         }
       }
     },
@@ -3898,6 +3964,10 @@ export default {
           "options": {
             "default": -1
           }
+        },
+        "caster": {
+          "type": "bool",
+          "id": 9
         }
       }
     },
@@ -3999,6 +4069,11 @@ export default {
           "type": "int32",
           "id": 12,
           "protoName": "var_serializer_sym"
+        },
+        "varEnumInfo": {
+          "type": ".ProtoFlattenedSerializerField_t.proto_enum_info_t",
+          "id": 13,
+          "protoName": "var_enum_info"
         }
       },
       "nested": {
@@ -4013,6 +4088,15 @@ export default {
               "type": "int32",
               "id": 2,
               "protoName": "polymorphic_field_serializer_version"
+            }
+          }
+        },
+        "proto_enum_info_t": {
+          "fields": {
+            "isSignedEnum": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "is_signed_enum"
             }
           }
         }
@@ -4039,6 +4123,41 @@ export default {
         }
       }
     },
+    "ProtoCoordSizeParams_t": {
+      "edition": "proto2",
+      "fields": {
+        "coordIntegerBits": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "coord_integer_bits"
+        },
+        "coordFractionalBits": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "coord_fractional_bits"
+        },
+        "coordIntegerBitsMp": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "coord_integer_bits_mp"
+        },
+        "coordFractionalBitsMp": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "coord_fractional_bits_mp"
+        },
+        "normalFractionalBits": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "normal_fractional_bits"
+        },
+        "angleBits": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "angle_bits"
+        }
+      }
+    },
     "CSVCMsg_FlattenedSerializer": {
       "edition": "proto2",
       "options": {
@@ -4059,6 +4178,11 @@ export default {
           "rule": "repeated",
           "type": ".ProtoFlattenedSerializerField_t",
           "id": 3
+        },
+        "coordSizeParams": {
+          "type": ".ProtoCoordSizeParams_t",
+          "id": 4,
+          "protoName": "coord_size_params"
         }
       }
     },
@@ -4096,6 +4220,11 @@ export default {
           "type": "bytes",
           "id": 6,
           "protoName": "delta_data"
+        },
+        "deltaProcessed": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "delta_processed"
         }
       }
     },
@@ -4441,6 +4570,10 @@ export default {
         "chat": {
           "type": "bool",
           "id": 3
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 4
         }
       }
     },
@@ -4477,6 +4610,10 @@ export default {
         "param4": {
           "type": "string",
           "id": 7
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
