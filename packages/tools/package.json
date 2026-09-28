@@ -1,0 +1,14 @@
+{
+  "name": "@deademx/tools",
+  "version": "4.0.1",
+  "description": "Internal tooling: generates the protobuf decoders with a protoc plugin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@bufbuild/buf": "1.73.0",
+    "@bufbuild/protobuf": "2.15.0"
+  }
+}

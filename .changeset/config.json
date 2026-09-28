@@ -12,6 +12,7 @@
       "@deademx/examples-node-deadem",
       "@deademx/examples-node-cs2",
       "@deademx/examples-node-dota2",
+      "@deademx/tools",
       "@deademx/ui"
     ]
   ],
