@@ -26,9 +26,6 @@
       ],
       "@deademx/engine": [
         "./packages/engine/index.js"
-      ],
-      "@deademx/engine/wire": [
-        "./packages/engine/src/core/WireReader.js"
       ]
     }
   },
