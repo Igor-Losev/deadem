@@ -1,13 +1,8 @@
-import Assert from './Assert.js';
+import { WireType } from '@bufbuild/protobuf/wire';
+
+import Assert from '../Assert.js';
 
 const MAXIMUM_VAR_INT_64_BYTES = 10;
-
-const WIRE_VAR_INT = 0;
-const WIRE_FIXED_64 = 1;
-const WIRE_LENGTH_DELIMITED = 2;
-const WIRE_GROUP_START = 3;
-const WIRE_GROUP_END = 4;
-const WIRE_FIXED_32 = 5;
 
 const dataView = new DataView(new ArrayBuffer(8));
 const textDecoder = new TextDecoder();
@@ -15,7 +10,7 @@ const textDecoder = new TextDecoder();
 /**
  * A class for reading protobuf wire format from {@link Uint8Array}.
  */
-class WireReader {
+class ProtoWireReader {
     /**
      * @constructor
      * @param {Uint8Array} buffer
@@ -94,7 +89,7 @@ class WireReader {
             offset += 7;
         }
 
-        throw new Error('WireReader: UVarInt32 exceeds the maximum size');
+        throw new Error('UVarInt32 exceeds the maximum size');
     }
 
     /**
@@ -119,7 +114,7 @@ class WireReader {
             offset += 7n;
         }
 
-        throw new Error('WireReader: UVarInt64 exceeds the maximum size');
+        throw new Error('UVarInt64 exceeds the maximum size');
     }
 
     /**
@@ -264,7 +259,7 @@ class WireReader {
         const end = start + count;
 
         if (end > this._buffer.length) {
-            throw new Error(`WireReader: cannot read [ ${count} ] byte(s) - only [ ${this._buffer.length - start} ] byte(s) left`);
+            throw new Error(`Unable to read [ ${count} ] byte(s), only [ ${this._buffer.length - start} ] left`);
         }
 
         this._offset = end;
@@ -282,30 +277,30 @@ class WireReader {
      */
     skip(wire, depth = 0) {
         if (depth > RECURSION_LIMIT) {
-            throw new Error('WireReader: max skip depth exceeded');
+            throw new Error(`Unexpected group depth [ ${depth} ]`);
         }
 
         switch (wire) {
-            case WIRE_VAR_INT:
+            case WireType.Varint:
                 this.readUVarInt64();
 
                 break;
-            case WIRE_FIXED_64:
+            case WireType.Bit64:
                 this._offset += 8;
 
                 break;
-            case WIRE_LENGTH_DELIMITED: {
+            case WireType.LengthDelimited: {
                 const length = this.readUVarInt32();
 
                 this._offset += length;
 
                 break;
             }
-            case WIRE_GROUP_START: {
+            case WireType.StartGroup: {
                 for (;;) {
                     const tag = this.readUVarInt32();
 
-                    if ((tag & 7) === WIRE_GROUP_END) {
+                    if ((tag & 7) === WireType.EndGroup) {
                         break;
                     }
 
@@ -314,18 +309,18 @@ class WireReader {
 
                 break;
             }
-            case WIRE_FIXED_32:
+            case WireType.Bit32:
                 this._offset += 4;
 
                 break;
             default:
-                throw new Error(`WireReader: unsupported wire type [ ${wire} ]`);
+                throw new Error(`Unsupported wire type [ ${wire} ]`);
         }
 
-        Assert.isTrue(this._offset <= this._buffer.length, 'WireReader: skipped past the end of the buffer');
+        Assert.isTrue(this._offset <= this._buffer.length, 'Skipped past the end of the buffer');
     }
 }
 
 const RECURSION_LIMIT = 64;
 
-export default WireReader;
+export default ProtoWireReader;

@@ -1,5 +1,5 @@
 import Assert from '../core/Assert.js';
-import WireReader from '../core/WireReader.js';
+import ProtoWireReader from '../core/proto/ProtoWireReader.js';
 
 const TAG_SHIFT = 3;
 const TAG_MASK = 0x07;
@@ -33,7 +33,7 @@ class DeltaExtractor {
         Assert.isTrue(type?.fieldsById !== undefined);
 
         /** @private */
-        this._reader = new WireReader(data);
+        this._reader = new ProtoWireReader(data);
         /** @private */
         this._type = type;
     }
