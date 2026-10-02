@@ -10,5 +10,8 @@
     "packages/cs2/types/index.d.ts",
     "packages/deadem/types/index.d.ts",
     "packages/dota2/types/index.d.ts"
+  ],
+  "include": [
+    "packages/*/proto/generated/*_pb.d.ts"
   ]
 }

@@ -36,6 +36,13 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Verify proto artifacts
+        run: |
+          npm run proto:js
+          npm run proto:build
+          git status --porcelain --untracked-files=all packages/*/proto
+          test -z "$(git status --porcelain --untracked-files=all packages/*/proto)"
+
       - name: Check types
         run: npm run types:check
 
