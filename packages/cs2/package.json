@@ -57,8 +57,7 @@
     "build": "vite build",
     "lint": "eslint",
     "prepack": "tsc -b ./tsconfig.emit.json --clean && rm -rf types && tsc -b ./tsconfig.emit.json",
-    "proto:js": "node ./../../scripts/proto-schema-build.js --package=cs2",
-    "proto:sync": "node ./../../.github/scripts/proto-sync.mjs cs2"
+    "proto:js": "node ./../../scripts/proto-schema-build.js --package=cs2"
   },
   "files": [
     "dist/**",

@@ -47,7 +47,7 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Sync proto sources
-        run: npm run proto:sync -w ${{ matrix.workspace }}
+        run: npm run proto:sync ${{ matrix.target }}
 
       - name: Compile proto schema
         run: npm run proto:js -w ${{ matrix.workspace }}
