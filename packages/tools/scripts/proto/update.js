@@ -1,8 +1,8 @@
-import ScriptArguments from '../src/cli/ScriptArguments.js';
+import ScriptArguments from '../../src/cli/ScriptArguments.js';
 
-import ProtoSource from '../src/enums/ProtoSource.js';
+import ProtoSource from '../../src/enums/ProtoSource.js';
 
-import ProtoSync from '../src/proto/ProtoSync.js';
+import ProtoSync from '../../src/proto/ProtoSync.js';
 
 const scriptArguments = new ScriptArguments(process.argv.slice(2));
 

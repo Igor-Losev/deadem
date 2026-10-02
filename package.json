@@ -12,7 +12,7 @@
     "lint": "npm run lint --workspaces --if-present --",
     "preview": "npm run preview --workspace=@deademx/ui",
     "proto:js": "npm run proto:js --workspaces --if-present",
-    "proto:sync": "node packages/tools/scripts/proto-sync.js",
+    "proto:sync": "node packages/tools/scripts/proto/update.js",
     "start": "npm run start --workspace=@deademx/ui",
     "test": "npm run test --workspaces --if-present",
     "types:build": "tsc -b tsconfig.emit.json --clean && rm -rf packages/*/types && tsc -b tsconfig.emit.json && tsc -p tsconfig.generated.json",

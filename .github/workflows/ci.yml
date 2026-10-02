@@ -109,7 +109,7 @@ jobs:
 
       - name: Generate Demo Cache Key
         id: demo-cache-key
-        run: echo "key=$(bash ./.github/scripts/demo-fixtures.sh cache-key)" >> "$GITHUB_OUTPUT"
+        run: echo "key=$(node ./packages/tools/scripts/demo/hash.js)" >> "$GITHUB_OUTPUT"
 
       - name: Restore Demo Cache
         uses: actions/cache@v5
@@ -120,10 +120,10 @@ jobs:
             replay-demos-v1-${{ matrix.name }}-
 
       - name: Ensure Demo Fixtures
-        run: bash ./.github/scripts/demo-fixtures.sh ensure
+        run: node ./packages/tools/scripts/demo/download.js
 
       - name: List demo files
         run: ls -lh "$DEMO_DIR"
 
       - name: Run Replay Regression
-        run: node "$PARSER_SCRIPT" --matches="$(bash ./.github/scripts/demo-fixtures.sh matches)"
+        run: node "$PARSER_SCRIPT" --matches="$(node ./packages/tools/scripts/demo/list.js)"
