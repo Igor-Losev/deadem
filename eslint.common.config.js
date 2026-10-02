@@ -5,7 +5,7 @@ import stylistic from '@stylistic/eslint-plugin';
 
 export default defineConfig([
     {
-        ignores: [ 'dist/**', 'proto/compiled/**' ]
+        ignores: [ 'dist/**', 'proto/compiled/**', 'proto/generated/**' ]
     },
     {
         files: [ '**/*.js' ],

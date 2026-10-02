@@ -11,6 +11,7 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
     "preview": "npm run preview --workspace=@deademx/ui",
+    "proto:build": "node packages/tools/scripts/proto/build.js",
     "proto:js": "npm run proto:js --workspaces --if-present",
     "proto:sync": "node packages/tools/scripts/proto/update.js",
     "start": "npm run start --workspace=@deademx/ui",

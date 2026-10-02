@@ -4,7 +4,10 @@ import Assert from '../core/Assert.js';
 
 const PACKAGES_DIRECTORY = path.resolve(import.meta.dirname, '../../..');
 
+const BOOTSTRAP_FILE = 'src/bootstrap/Bootstrap.js';
+const ENUMS_DIRECTORY = 'src/data/enums';
 const PROTO_SOURCE_DIRECTORY = 'proto/source';
+const PROTO_GENERATED_DIRECTORY = 'proto/generated';
 
 const registry = new Map();
 
@@ -21,6 +24,8 @@ class Workspace {
         Assert.isTrue(typeof game === 'boolean');
         Assert.isTrue(!registry.has(folder));
 
+        const directory = path.join(PACKAGES_DIRECTORY, folder);
+
         /** @private */
         this._code = code;
         /** @private */
@@ -28,7 +33,13 @@ class Workspace {
         /** @private */
         this._game = game;
         /** @private */
-        this._protoSourceDirectory = path.join(PACKAGES_DIRECTORY, folder, PROTO_SOURCE_DIRECTORY);
+        this._bootstrapFile = path.join(directory, BOOTSTRAP_FILE);
+        /** @private */
+        this._enumsDirectory = path.join(directory, ENUMS_DIRECTORY);
+        /** @private */
+        this._protoSourceDirectory = path.join(directory, PROTO_SOURCE_DIRECTORY);
+        /** @private */
+        this._protoGeneratedDirectory = path.join(directory, PROTO_GENERATED_DIRECTORY);
 
         registry.set(folder, this);
     }
@@ -61,8 +72,33 @@ class Workspace {
      * @public
      * @returns {string}
      */
+    get bootstrapFile() {
+        return this._bootstrapFile;
+    }
+
+    /**
+     * @public
+     * @returns {string}
+     */
     get protoSourceDirectory() {
         return this._protoSourceDirectory;
+    }
+
+    /**
+     * @public
+     * @returns {string}
+     */
+    get protoGeneratedDirectory() {
+        return this._protoGeneratedDirectory;
+    }
+
+    /**
+     * @public
+     * @param {string} file
+     * @returns {string}
+     */
+    getEnumFile(file) {
+        return path.join(this._enumsDirectory, file);
     }
 
     /**
