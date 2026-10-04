@@ -69,13 +69,13 @@ class PacketCodec {
             return { data: decompressed };
         }
 
-        const proto = this._registry.getDemoProto(demoPacketType);
+        const decoder = this._registry.getDemoDecoder(demoPacketType);
 
-        if (proto === null) {
+        if (decoder === null) {
             return null;
         }
 
-        return proto.decode(decompressed);
+        return decoder.decode(decompressed);
     }
 
     /**
@@ -161,16 +161,16 @@ class PacketCodec {
             return null;
         }
 
-        const proto = this._registry.getMessageProto(messagePacketType);
+        const decoder = this._registry.getMessageDecoder(messagePacketType);
 
-        if (proto === null) {
+        if (decoder === null) {
             return null;
         }
 
         let data;
 
         try {
-            data = proto.decode(raw.payload);
+            data = decoder.decode(raw.payload);
         } catch {
             return null;
         }

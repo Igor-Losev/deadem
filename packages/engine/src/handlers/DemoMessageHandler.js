@@ -269,9 +269,9 @@ class DemoMessageHandler {
      */
     handleSvcUserCommands(messagePacket, snapshot = false, collectEvents = true) {
         const commandsRaw = messagePacket.data?.commands ?? null;
-        const commandProto = this._registry.getUserCommandDecoder();
+        const commandDecoder = this._registry.getUserCommandDecoder();
 
-        if (commandsRaw === null || commandProto === null) {
+        if (commandsRaw === null || commandDecoder === null) {
             return [ ];
         }
 
@@ -294,7 +294,7 @@ class DemoMessageHandler {
             let gap = 0;
 
             if (isKeyframe) {
-                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandProto);
+                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandDecoder);
 
                 this._demo.registerUserCommand(command);
             } else if (isDelta && existing !== null) {
