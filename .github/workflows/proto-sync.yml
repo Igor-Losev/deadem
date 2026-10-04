@@ -49,9 +49,6 @@ jobs:
       - name: Sync proto sources
         run: npm run proto:sync ${{ matrix.target }}
 
-      - name: Compile proto schema
-        run: npm run proto:js -w ${{ matrix.workspace }}
-
       - name: Generate proto descriptors
         run: npm run proto:build ${{ matrix.target }}
 
@@ -65,5 +62,5 @@ jobs:
             Automated sync of `.proto` files from `SteamTracking/${{ matrix.repo }}`:
             - `packages/${{ matrix.target }}/proto/source/`
 
-            Includes regenerated `proto/compiled/proto.js` and `proto/generated/*_pb.{js,d.ts}`.
+            Includes regenerated `proto/generated/*`.
           labels: proto-sync

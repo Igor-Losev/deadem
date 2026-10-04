@@ -4,12 +4,13 @@ import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
 import ParserEngine from '../src/ParserEngine.js';
 import ParserConfiguration from '../src/ParserConfiguration.js';
-import ProtoProvider from '../src/providers/ProtoProvider.js';
 import SchemaRegistry from '../src/SchemaRegistry.js';
 
 import Logger from '../src/core/Logger.js';
 
-const registry = new SchemaRegistry(new ProtoProvider({}));
+import createDescriptors from './support/createDescriptors.js';
+
+const registry = new SchemaRegistry(createDescriptors({ }));
 
 function createEngine() {
     return new ParserEngine(registry, ParserConfiguration.DEFAULT, Logger.NOOP);
@@ -191,10 +192,9 @@ describe('ParserEngine', () => {
         });
 
         test('It should accept USER_COMMAND once a decoder is registered', () => {
-            const provider = new ProtoProvider({ nested: { TestUserCmd: { fields: { tick: { type: 'int32', id: 1 } } } } });
-            const supported = new SchemaRegistry(provider);
+            const supported = new SchemaRegistry(createDescriptors({ TestUserCmd: [ [ 'tick', 1, 'int32' ] ] }));
 
-            supported.setUserCommandDecoder(provider.root.lookupType('TestUserCmd'));
+            supported.setUserCommandDecoder(supported.getDecoder('TestUserCmd'));
 
             const engine = new ParserEngine(supported, ParserConfiguration.DEFAULT, Logger.NOOP);
 

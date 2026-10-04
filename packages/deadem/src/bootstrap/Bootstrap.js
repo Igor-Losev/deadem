@@ -40,11 +40,9 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerMessagePacketTypes(registry) {
-        const pp = registry.getProtoProvider();
-
         for (const type of MessagePacketType.getAll()) {
             if (type.protoName !== null) {
-                registry.registerMessageType(type, pp.root.lookupType(type.protoName));
+                registry.registerMessageType(type, registry.getDecoder(type.protoName));
             }
         }
 
@@ -56,9 +54,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelStringTableTypes(registry) {
-        const pp = /** @type {import('./../providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
-
-        const modifierProto = pp.BASE_MODIFIER.lookupType('CModifierTableEntry');
+        const modifierProto = registry.getDecoder('CModifierTableEntry');
         /** @type {(buffer: Uint8Array) => *} */
         const modifierDecoder = buffer => modifierProto.decode(buffer);
 
@@ -71,9 +67,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelUserCommands(registry) {
-        const pp = registry.getProtoProvider();
-
-        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CCitadelUserCmdPB'));
+        registry.setUserCommandDecoder(registry.getDecoder('CCitadelUserCmdPB'));
     }
 }
 

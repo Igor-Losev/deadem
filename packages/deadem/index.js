@@ -24,10 +24,10 @@ import {
 
 import Bootstrap from './src/bootstrap/Bootstrap.js';
 
-import ProtoProvider from './src/providers/ProtoProvider.instance.js';
+import { descriptors } from './proto/generated/index.js';
 
 function createRegistry() {
-    const registry = new SchemaRegistry(ProtoProvider);
+    const registry = new SchemaRegistry(descriptors);
 
     Bootstrap.run(registry);
 

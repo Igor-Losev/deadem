@@ -45,11 +45,9 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerMessagePacketTypes(registry) {
-        const pp = registry.getProtoProvider();
-
         for (const type of MessagePacketType.getAll()) {
             if (type.protoName !== null) {
-                registry.registerMessageType(type, pp.root.lookupType(type.protoName));
+                registry.registerMessageType(type, registry.getDecoder(type.protoName));
             }
         }
     }
@@ -69,9 +67,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2UserCommands(registry) {
-        const pp = registry.getProtoProvider();
-
-        registry.setUserCommandDecoder(pp.NET_MESSAGES.lookupType('CSGOUserCmdPB'));
+        registry.setUserCommandDecoder(registry.getDecoder('CSGOUserCmdPB'));
     }
 }
 

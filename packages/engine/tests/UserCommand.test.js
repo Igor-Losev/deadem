@@ -1,45 +1,60 @@
-import protobuf from 'protobufjs';
+import { create, toBinary } from '@bufbuild/protobuf';
 import { describe, expect, test } from 'vitest';
+
+import ProtoDecoder from '../src/core/proto/ProtoDecoder.js';
 
 import UserCommand from '../src/data/UserCommand.js';
 
-function createEnvelopeType() {
-    const root = new protobuf.Root();
+import createDescriptors from './support/createDescriptors.js';
 
-    const angle = new protobuf.Type('TestAngle');
+function createDescriptorsForTest() {
+    return createDescriptors({
+        TestAngle: [
+            [ 'x', 1, 'float' ],
+            [ 'y', 2, 'float' ]
+        ],
+        TestEnvelope: [
+            [ 'tick', 1, 'int32' ],
+            [ 'angle', 2, 'TestAngle' ],
+            [ 'big', 3, 'uint64' ],
+            [ 'tags', 4, 'string', true ],
+            [ 'crc', 5, 'bytes' ]
+        ],
+        TestContract: [
+            [ 'tick', 1, 'int32' ],
+            [ 'active', 2, 'bool' ],
+            [ 'big', 3, 'uint64' ],
+            [ 'ratio', 4, 'float' ],
+            [ 'note', 5, 'string' ],
+            [ 'crc', 6, 'bytes' ]
+        ]
+    });
+}
 
-    angle.add(new protobuf.Field('x', 1, 'float'));
-    angle.add(new protobuf.Field('y', 2, 'float'));
+/**
+ * @param {string} typeName
+ * @param {Record<string, *>} values
+ * @returns {{ decoder: ProtoDecoder, data: Uint8Array }}
+ */
+function encode(typeName, values) {
+    const schema = /** @type {*} */ (createDescriptorsForTest().getMessage(typeName));
 
-    const envelope = new protobuf.Type('TestEnvelope');
-
-    envelope.add(new protobuf.Field('tick', 1, 'int32'));
-    envelope.add(new protobuf.Field('angle', 2, 'TestAngle'));
-    envelope.add(new protobuf.Field('big', 3, 'uint64'));
-    envelope.add(new protobuf.Field('tags', 4, 'string', 'repeated'));
-    envelope.add(new protobuf.Field('crc', 5, 'bytes'));
-
-    root.add(angle);
-    root.add(envelope);
-    root.resolveAll();
-
-    return envelope;
+    return { decoder: ProtoDecoder.fromDescriptor(schema), data: toBinary(schema, create(schema, values)) };
 }
 
 describe('UserCommand', () => {
-    test('It should extract a nested state tree, coercing uint64 to a string', () => {
-        const type = createEnvelopeType();
+    test('It should decode nested messages and read uint64 as bigint', () => {
         const crc = new Uint8Array([ 1, 2, 3 ]);
-        const data = type.encode({ tick: 7, angle: { x: 1.5, y: -2.5 }, big: 42, tags: [ 'left', 'right' ], crc }).finish();
+        const { decoder, data } = encode('TestEnvelope', { tick: 7, angle: { x: 1.5, y: -2.5 }, big: 42n, tags: [ 'left', 'right' ], crc });
 
-        const command = UserCommand.fromData(0, 1, data, type);
+        const command = UserCommand.fromData(0, 1, data, decoder);
 
-        expect(command.state).toEqual({ tick: 7, angle: { x: 1.5, y: -2.5 }, big: '42', tags: [ 'left', 'right' ], crc });
+        expect(command.state).toEqual({ tick: 7, angle: { x: 1.5, y: -2.5 }, big: 42n, tags: [ 'left', 'right' ], crc });
     });
 
     test('It should apply a delta in place, keeping .state a live reference', () => {
-        const type = createEnvelopeType();
-        const command = UserCommand.fromData(0, 1, type.encode({ tick: 1, angle: { x: 0, y: 0 }, tags: [] }).finish(), type);
+        const { decoder, data } = encode('TestEnvelope', { tick: 1, angle: { x: 0, y: 0 }, tags: [] });
+        const command = UserCommand.fromData(0, 1, data, decoder);
         const state = command.state;
 
         command.applyDelta(2, new Uint8Array([ 0x08, 0x02 ]));
@@ -49,23 +64,10 @@ describe('UserCommand', () => {
     });
 
     test('It should represent a field the same way from a keyframe or a delta', () => {
-        const root = new protobuf.Root();
-        const type = new protobuf.Type('TestContract');
+        const { decoder, data } = encode('TestContract', { tick: 5, active: true, big: 300n, ratio: 1.5, note: 'hi', crc: new Uint8Array([ 1, 2, 3 ]) });
 
-        type.add(new protobuf.Field('tick', 1, 'int32'));
-        type.add(new protobuf.Field('active', 2, 'bool'));
-        type.add(new protobuf.Field('big', 3, 'uint64'));
-        type.add(new protobuf.Field('ratio', 4, 'float'));
-        type.add(new protobuf.Field('note', 5, 'string'));
-        type.add(new protobuf.Field('crc', 6, 'bytes'));
-
-        root.add(type);
-        root.resolveAll();
-
-        const values = { tick: 5, active: true, big: 300, ratio: 1.5, note: 'hi', crc: new Uint8Array([ 1, 2, 3 ]) };
-
-        const keyframe = UserCommand.fromData(0, 1, type.encode(values).finish(), type);
-        const delta = new UserCommand(0, 1, { }, type);
+        const keyframe = UserCommand.fromData(0, 1, data, decoder);
+        const delta = new UserCommand(0, 1, { }, decoder);
 
         delta.applyDelta(2, new Uint8Array([
             0x08, 0x05,
@@ -80,10 +82,10 @@ describe('UserCommand', () => {
     });
 
     test('It should reject a non-plain-object state', () => {
-        const type = createEnvelopeType();
+        const { decoder } = encode('TestEnvelope', { });
 
-        expect(() => new UserCommand(0, 1, null, type)).toThrow();
-        expect(() => new UserCommand(0, 1, 'nope', type)).toThrow();
-        expect(() => new UserCommand(0, 1, [], type)).toThrow();
+        expect(() => new UserCommand(0, 1, null, decoder)).toThrow();
+        expect(() => new UserCommand(0, 1, 'nope', decoder)).toThrow();
+        expect(() => new UserCommand(0, 1, [], decoder)).toThrow();
     });
 });

@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import Player from '../src/Player.js';
-import ProtoProvider from '../src/providers/ProtoProvider.js';
 import SchemaRegistry from '../src/SchemaRegistry.js';
 
 import PlaybackInterruptedError from '../src/errors/PlaybackInterruptedError.js';
 import PlayerState from '../src/data/enums/PlayerState.js';
 
-const registry = new SchemaRegistry(new ProtoProvider({}));
+import createDescriptors from './support/createDescriptors.js';
+
+const registry = new SchemaRegistry(createDescriptors({ }));
 
 /**
  * Creates a loaded Player with mocked internals.

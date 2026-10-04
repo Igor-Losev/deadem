@@ -5,7 +5,7 @@ import Assert from '../core/Assert.js';
 
 import Workspace from '../enums/Workspace.js';
 
-const LOOKUP_TYPE_PATTERN = /\.lookupType\(\s*['"]([^'"]+)['"]\s*\)/g;
+const DECODER_REFERENCE_PATTERN = /\.getDecoder\(\s*['"]([^'"]+)['"]\s*\)/g;
 
 const PACKET_TYPE_FILES = [ 'DemoPacketType.js', 'MessagePacketType.js' ];
 
@@ -65,8 +65,6 @@ class MessageRegistry {
     }
 
     /**
-     * Type names the Bootstrap of [workspace] looks up.
-     *
      * @private
      * @static
      * @param {Workspace} workspace
@@ -75,7 +73,7 @@ class MessageRegistry {
     static _collectFromBootstrap(workspace) {
         const bootstrap = fs.readFileSync(workspace.bootstrapFile, 'utf-8');
 
-        return Array.from(bootstrap.matchAll(LOOKUP_TYPE_PATTERN), match => match[1]);
+        return Array.from(bootstrap.matchAll(DECODER_REFERENCE_PATTERN), match => match[1]);
     }
 }
 

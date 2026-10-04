@@ -39,11 +39,9 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerMessagePacketTypes(registry) {
-        const pp = registry.getProtoProvider();
-
         for (const type of MessagePacketType.getAll()) {
             if (type.protoName !== null) {
-                registry.registerMessageType(type, pp.root.lookupType(type.protoName));
+                registry.registerMessageType(type, registry.getDecoder(type.protoName));
             }
         }
     }
@@ -54,10 +52,8 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaStringTableTypes(registry) {
-        const pp = /** @type {import('./../providers/ProtoProvider.js').default} */ (registry.getProtoProvider());
-
-        const econItemsProto = pp.ECON_ITEMS.lookupType('CSOEconItem');
-        const modifierProto = pp.DOTA_MODIFIERS.lookupType('CDOTAModifierBuffTableEntry');
+        const econItemsProto = registry.getDecoder('CSOEconItem');
+        const modifierProto = registry.getDecoder('CDOTAModifierBuffTableEntry');
 
         /** @type {(buffer: Uint8Array) => *} */
         const econItemsDecoer = buffer => econItemsProto.decode(buffer);

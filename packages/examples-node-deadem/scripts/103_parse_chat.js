@@ -38,7 +38,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         if (isChatMessage) {
             console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
         } else {
-            console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param_1}`);
+            console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param1}`);
         }
     });
 

@@ -32,7 +32,6 @@ get_pre_mode() {
 }
 
 build() {
-    npm run proto:js
     npm run proto:build
     npm run build
 }

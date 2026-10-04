@@ -22,9 +22,7 @@ class Bootstrap {
         Bootstrap._registerMessagePacketTypes(registry);
         Bootstrap._registerStringTableTypes(registry);
 
-        const pp = registry.getProtoProvider();
-
-        registry.setSendTablesSerializerDecoder(pp.NET_MESSAGES.lookupType('CSVCMsg_FlattenedSerializer'));
+        registry.setSendTablesSerializerDecoder(registry.getDecoder('CSVCMsg_FlattenedSerializer'));
     }
 
     /**
@@ -33,11 +31,9 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDemoPacketTypes(registry) {
-        const pp = registry.getProtoProvider();
-
         for (const type of DemoPacketType.getAll()) {
             if (type.protoName !== null) {
-                registry.registerDemoType(type, pp.root.lookupType(type.protoName));
+                registry.registerDemoType(type, registry.getDecoder(type.protoName));
             }
         }
     }
@@ -102,11 +98,9 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerMessagePacketTypes(registry) {
-        const pp = registry.getProtoProvider();
-
         for (const type of MessagePacketType.getAll()) {
             if (type.protoName !== null) {
-                registry.registerMessageType(type, pp.root.lookupType(type.protoName));
+                registry.registerMessageType(type, registry.getDecoder(type.protoName));
             }
         }
     }
@@ -117,9 +111,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerStringTableTypes(registry) {
-        const pp = registry.getProtoProvider();
-
-        const userInfoProto = pp.NETWORK_BASE_TYPES.lookupType('CMsgPlayerInfo');
+        const userInfoProto = registry.getDecoder('CMsgPlayerInfo');
 
         registry.registerStringTableType(StringTableType.DECAL_PRE_CACHE);
         registry.registerStringTableType(StringTableType.EFFECT_DISPATCH);
