@@ -46,6 +46,11 @@
       "import": "./index.js",
       "default": "./index.js"
     },
+    "./proto": {
+      "types": "./proto/generated/index.d.ts",
+      "import": "./proto/generated/index.js",
+      "default": "./proto/generated/index.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./types/index.d.ts",
@@ -62,10 +67,12 @@
     "dist/**",
     "index.js",
     "proto/compiled/**",
+    "proto/generated/**",
     "src/**",
     "types/**"
   ],
   "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
     "@deademx/engine": "^4.0.1"
   }
 }

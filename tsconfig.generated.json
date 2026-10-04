@@ -12,6 +12,6 @@
     "packages/dota2/types/index.d.ts"
   ],
   "include": [
-    "packages/*/proto/generated/*_pb.d.ts"
+    "packages/*/proto/generated/*.d.ts"
   ]
 }
