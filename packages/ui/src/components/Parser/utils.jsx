@@ -48,6 +48,29 @@ export function jsonReplacer(key, value) {
   return value;
 }
 
+export function toPlainObject(value) {
+  if (Array.isArray(value)) {
+    return value.map(toPlainObject);
+  }
+
+  if (value === null || typeof value !== 'object' || ArrayBuffer.isView(value)) {
+    return value;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  const keys = prototype === Object.prototype || prototype === null ? Object.keys(value) : Object.keys(prototype);
+
+  const plain = { };
+
+  for (const key of keys) {
+    if (value[key] !== undefined) {
+      plain[key] = toPlainObject(value[key]);
+    }
+  }
+
+  return plain;
+}
+
 export function compare(a, b) {
   if (typeof a === 'string') {
     return a.localeCompare(b);
