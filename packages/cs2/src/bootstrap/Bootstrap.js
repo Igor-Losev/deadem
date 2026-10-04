@@ -7,8 +7,7 @@ import MessagePacketType from '../data/enums/MessagePacketType.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
 /**
- * Populates a {@link SchemaRegistry} with engine-level types and then layers
- * Counter-Strike 2-specific user messages and game events on top.
+ * Populates a {@link SchemaRegistry} with the engine schema, Counter-Strike 2 field rules, message packets, string tables and user commands.
  */
 class Bootstrap {
     /**
@@ -21,7 +20,7 @@ class Bootstrap {
 
         Bootstrap._registerCs2FieldRules(registry);
         Bootstrap._registerMessagePacketTypes(registry);
-        Bootstrap._registerCs2StringTableTypes(registry);
+        Bootstrap._registerStringTableTypes(registry);
         Bootstrap._registerCs2UserCommands(registry);
     }
 
@@ -58,8 +57,10 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerCs2StringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.SERVER_AVATAR_OVERRIDES);
+    static _registerStringTableTypes(registry) {
+        for (const type of StringTableType.getAll()) {
+            registry.registerStringTableType(type);
+        }
     }
 
     /**

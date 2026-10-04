@@ -7,9 +7,7 @@ import MessagePacketType from '../data/enums/MessagePacketType.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
 /**
- * Populates a {@link SchemaRegistry} with engine-level types and then layers
- * Deadlock-specific (Citadel) field rules, user messages, game events, and
- * string table types on top.
+ * Populates a {@link SchemaRegistry} with the engine schema, Deadlock field rules, message packets, string tables and user commands.
  */
 class Bootstrap {
     /**
@@ -22,7 +20,7 @@ class Bootstrap {
 
         Bootstrap._registerCitadelFieldRules(registry);
         Bootstrap._registerMessagePacketTypes(registry);
-        Bootstrap._registerCitadelStringTableTypes(registry);
+        Bootstrap._registerStringTableTypes(registry);
         Bootstrap._registerCitadelUserCommands(registry);
     }
 
@@ -46,7 +44,6 @@ class Bootstrap {
                 registry.registerMessageType(type, registry.getDecoder(type.protoName));
             }
         }
-
     }
 
     /**
@@ -54,8 +51,10 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerCitadelStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
+    static _registerStringTableTypes(registry) {
+        for (const type of StringTableType.getAll()) {
+            registry.registerStringTableType(type);
+        }
     }
 
     /**

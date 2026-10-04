@@ -2,14 +2,11 @@
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 import EmbeddedMessageType from '../data/enums/EmbeddedMessageType.js';
-import MessagePacketType from '../data/enums/MessagePacketType.js';
-import StringTableType from '../data/enums/StringTableType.js';
 
 import FieldDecoderDescriptor from '../data/fields/decoding/FieldDecoderDescriptor.js';
 
 /**
- * Populates a {@link SchemaRegistry} with engine-level protobuf types
- * (demo packets, message packets, string table decoders, send tables serializer decoder).
+ * Populates a {@link SchemaRegistry} with demo packets, engine field rules and the send tables serializer.
  */
 class Bootstrap {
     /**
@@ -20,8 +17,6 @@ class Bootstrap {
     static run(registry) {
         Bootstrap._registerDemoPacketTypes(registry);
         Bootstrap._registerFieldRules(registry);
-        Bootstrap._registerMessagePacketTypes(registry);
-        Bootstrap._registerStringTableTypes(registry);
 
         registry.setSendTablesSerializerDecoder(registry.getDecoder(EmbeddedMessageType.SEND_TABLES_SERIALIZER.protoName));
     }
@@ -91,41 +86,6 @@ class Bootstrap {
 
         registry.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
         registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
-    }
-
-    /**
-     * @protected
-     * @static
-     * @param {SchemaRegistry} registry
-     */
-    static _registerMessagePacketTypes(registry) {
-        for (const type of MessagePacketType.getAll()) {
-            if (type.protoName !== null) {
-                registry.registerMessageType(type, registry.getDecoder(type.protoName));
-            }
-        }
-    }
-
-    /**
-     * @protected
-     * @static
-     * @param {SchemaRegistry} registry
-     */
-    static _registerStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.DECAL_PRE_CACHE);
-        registry.registerStringTableType(StringTableType.EFFECT_DISPATCH);
-        registry.registerStringTableType(StringTableType.ENTITY_NAMES);
-        registry.registerStringTableType(StringTableType.GENERIC_PRE_CACHE);
-        registry.registerStringTableType(StringTableType.INFO_PANEL);
-        registry.registerStringTableType(StringTableType.INSTANCE_BASE_LINE);
-        registry.registerStringTableType(StringTableType.LIGHT_STYLES);
-        registry.registerStringTableType(StringTableType.RESPONSE_KEYS);
-        registry.registerStringTableType(StringTableType.SCENES);
-        registry.registerStringTableType(StringTableType.SERVER_QUERY_INFO);
-        registry.registerStringTableType(StringTableType.USER_INFO);
-        registry.registerStringTableType(StringTableType.V_GUI_SCREEN);
-        registry.registerStringTableType(StringTableType.ANIM_TASK_TYPES);
-        registry.registerStringTableType(StringTableType.ANIM_ASSET_DATA);
     }
 }
 

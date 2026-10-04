@@ -6,8 +6,7 @@ import MessagePacketType from '../data/enums/MessagePacketType.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
 /**
- * Populates a {@link SchemaRegistry} with engine-level types and then layers
- * Dota 2-specific field rules, user messages, and string table types on top.
+ * Populates a {@link SchemaRegistry} with the engine schema, Dota 2 field rules, message packets and string tables.
  */
 class Bootstrap {
     /**
@@ -20,7 +19,7 @@ class Bootstrap {
 
         Bootstrap._registerDotaFieldRules(registry);
         Bootstrap._registerMessagePacketTypes(registry);
-        Bootstrap._registerDotaStringTableTypes(registry);
+        Bootstrap._registerStringTableTypes(registry);
     }
 
     /**
@@ -51,15 +50,10 @@ class Bootstrap {
      * @static
      * @param {SchemaRegistry} registry
      */
-    static _registerDotaStringTableTypes(registry) {
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
-        registry.registerStringTableType(StringTableType.MODIFIER_NAMES);
-        registry.registerStringTableType(StringTableType.COOLDOWN_NAMES);
-        registry.registerStringTableType(StringTableType.ECON_ITEMS);
-        registry.registerStringTableType(StringTableType.COMBAT_LOG_NAMES);
-        registry.registerStringTableType(StringTableType.LUA_MODIFIERS);
-        registry.registerStringTableType(StringTableType.PARTICLE_ASSETS);
-        registry.registerStringTableType(StringTableType.DOWNLOADABLES);
+    static _registerStringTableTypes(registry) {
+        for (const type of StringTableType.getAll()) {
+            registry.registerStringTableType(type);
+        }
     }
 }
 
