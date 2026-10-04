@@ -2,6 +2,7 @@
 
 import { Bootstrap as EngineBootstrap, FieldDecoderDescriptor } from '@deademx/engine';
 
+import EmbeddedMessageType from '../data/enums/EmbeddedMessageType.js';
 import MessagePacketType from '../data/enums/MessagePacketType.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
@@ -67,7 +68,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2UserCommands(registry) {
-        registry.setUserCommandDecoder(registry.getDecoder('CSGOUserCmdPB'));
+        registry.setUserCommandDecoder(registry.getDecoder(EmbeddedMessageType.USER_COMMAND.protoName));
     }
 }
 

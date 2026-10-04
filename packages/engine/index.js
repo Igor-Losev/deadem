@@ -23,6 +23,7 @@ export { default as Demo } from './src/data/Demo.js';
 export { default as DemoPacket } from './src/data/DemoPacket.js';
 export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
 export { default as DemoSource } from './src/data/enums/DemoSource.js';
+export { default as EmbeddedMessageType } from './src/data/enums/EmbeddedMessageType.js';
 export { default as Entity } from './src/data/entity/Entity.js';
 export { default as EntityMutationEvent } from './src/data/entity/EntityMutationEvent.js';
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';

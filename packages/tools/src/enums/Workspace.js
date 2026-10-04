@@ -4,7 +4,6 @@ import Assert from '../core/Assert.js';
 
 const PACKAGES_DIRECTORY = path.resolve(import.meta.dirname, '../../..');
 
-const BOOTSTRAP_FILE = 'src/bootstrap/Bootstrap.js';
 const ENUMS_DIRECTORY = 'src/data/enums';
 const PROTO_SOURCE_DIRECTORY = 'proto/source';
 const PROTO_GENERATED_DIRECTORY = 'proto/generated';
@@ -32,8 +31,6 @@ class Workspace {
         this._folder = folder;
         /** @private */
         this._game = game;
-        /** @private */
-        this._bootstrapFile = path.join(directory, BOOTSTRAP_FILE);
         /** @private */
         this._enumsDirectory = path.join(directory, ENUMS_DIRECTORY);
         /** @private */
@@ -66,14 +63,6 @@ class Workspace {
      */
     get game() {
         return this._game;
-    }
-
-    /**
-     * @public
-     * @returns {string}
-     */
-    get bootstrapFile() {
-        return this._bootstrapFile;
     }
 
     /**

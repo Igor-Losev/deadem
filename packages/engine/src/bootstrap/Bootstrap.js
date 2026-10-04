@@ -1,6 +1,7 @@
 /** @import SchemaRegistry from '../SchemaRegistry.js' */
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
+import EmbeddedMessageType from '../data/enums/EmbeddedMessageType.js';
 import MessagePacketType from '../data/enums/MessagePacketType.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
@@ -22,7 +23,7 @@ class Bootstrap {
         Bootstrap._registerMessagePacketTypes(registry);
         Bootstrap._registerStringTableTypes(registry);
 
-        registry.setSendTablesSerializerDecoder(registry.getDecoder('CSVCMsg_FlattenedSerializer'));
+        registry.setSendTablesSerializerDecoder(registry.getDecoder(EmbeddedMessageType.SEND_TABLES_SERIALIZER.protoName));
     }
 
     /**
