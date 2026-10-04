@@ -2,9 +2,6 @@ import Assert from '../core/Assert.js';
 
 import Workspace from '../enums/Workspace.js';
 
-/**
- * Command line arguments of the tools scripts.
- */
 class ScriptArguments {
     /**
      * @constructor
@@ -18,7 +15,7 @@ class ScriptArguments {
     }
 
     /**
-     * Game workspaces named by the positional arguments, all games when none given; fails on an unknown folder.
+     * Returns the game workspaces from the arguments, or all games if there are no arguments.
      *
      * @public
      * @returns {Array<Workspace>}

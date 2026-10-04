@@ -120,8 +120,7 @@ class Field {
     }
 
     /**
-     * Unpacks the entire field starting from the position the [extractor]
-     * currently points to.
+     * Unpacks the whole field from the current position of the extractor.
      *
      * @abstract
      * @public
@@ -133,8 +132,8 @@ class Field {
     }
 
     /**
-     * Unpacks a single element at [index] within this field. The default
-     * delegates to {@link #unpack}. Override for array and table fields.
+     * Unpacks one element of this field. By default calls {@link #unpack}.
+     * Override for array and table fields.
      *
      * @public
      * @param {FieldExtractor} extractor

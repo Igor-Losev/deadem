@@ -61,7 +61,7 @@ class ProtoField {
     }
 
     /**
-     * Descriptor of the value message; `null` for scalars and enums.
+     * Descriptor of the nested message, or `null` for scalars and enums.
      *
      * @public
      * @returns {DescMessage|null}
@@ -71,7 +71,7 @@ class ProtoField {
     }
 
     /**
-     * Scalar a single value travels as, enums as `int32`; `null` for messages.
+     * Scalar type of the value. Enums are `int32`, messages are `null`.
      *
      * @public
      * @returns {ScalarType|null}
@@ -91,7 +91,7 @@ class ProtoField {
     }
 
     /**
-     * Value of the field on a message that does not carry it.
+     * Value of the field when it is not set.
      *
      * @public
      * @returns {*}

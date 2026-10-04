@@ -10,12 +10,9 @@ const PROTOC_GEN_ES = require.resolve('@bufbuild/protoc-gen-es/bin/protoc-gen-es
 
 const PROTOC_GEN_ES_OPTIONS = [ 'target=js+dts', 'import_extension=js' ];
 
-/**
- * Runs the `buf` CLI (`@bufbuild/buf`).
- */
 class BufCli {
     /**
-     * Generates `protoc-gen-es` descriptors and types of the [types] of [input] and their dependencies, replacing the contents of [output].
+     * Generates descriptors and types with `protoc-gen-es`. Clears the output directory first.
      *
      * @public
      * @static

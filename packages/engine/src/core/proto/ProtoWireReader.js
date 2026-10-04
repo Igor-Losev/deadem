@@ -64,7 +64,7 @@ class ProtoWireReader {
     }
 
     /**
-     * Reads a variable-length unsigned integer; each byte contributes 7 bits.
+     * Reads a variable-length unsigned integer, 7 bits per byte.
      *
      * @public
      * @returns {number}

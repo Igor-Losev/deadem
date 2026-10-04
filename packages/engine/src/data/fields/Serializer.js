@@ -64,7 +64,7 @@ class Serializer {
     }
 
     /**
-     * Returns `true` when [segment] is an element index (e.g. `'0000'`).
+     * Returns `true` when the segment is an element index (e.g. `'0000'`).
      *
      * @public
      * @static
@@ -397,9 +397,8 @@ class Serializer {
     }
 
     /**
-     * Unpacks a struct (an object keyed by field name) for the element the
-     * [extractor] currently points to. Returns `undefined` when no field is
-     * present.
+     * Unpacks a struct (an object keyed by field name) at the current position
+     * of the extractor. Returns `undefined` when no field is present.
      *
      * @public
      * @param {FieldExtractor} extractor

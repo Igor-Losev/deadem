@@ -280,8 +280,7 @@ class Entity {
     }
 
     /**
-     * Returns whether [name] resolves to a value currently present on this
-     * entity.
+     * Returns whether the field has a value on this entity.
      *
      * Must be revisited. Reconstructs the value just to test presence.
      *

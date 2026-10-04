@@ -10,11 +10,11 @@ const DECODER_REFERENCE_PATTERN = /\.getDecoder\(\s*['"]([^'"]+)['"]\s*\)/g;
 const PACKET_TYPE_FILES = [ 'DemoPacketType.js', 'MessagePacketType.js' ];
 
 /**
- * Messages the parser registers for a game workspace: the roots buf generates descriptors for.
+ * Message names that a game decodes.
  */
 class MessageRegistry {
     /**
-     * Names from the packet type enums and Bootstrap of the engine and [workspace], sorted.
+     * Message names from the enums and Bootstraps of the engine and the game, sorted.
      *
      * @public
      * @static
@@ -35,8 +35,6 @@ class MessageRegistry {
     }
 
     /**
-     * Proto names declared by the packet type enums of [workspace].
-     *
      * @private
      * @static
      * @param {Workspace} workspace

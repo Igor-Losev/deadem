@@ -7,7 +7,7 @@ import Assert from '../core/Assert.js';
 const CACHE_KEY_LENGTH = 16;
 
 /**
- * Replay demos of the CI regression run, listed one name per line.
+ * Demos of the CI replay regression. The list has one name per line.
  */
 class DemoFixtures {
     /**
@@ -24,7 +24,7 @@ class DemoFixtures {
     }
 
     /**
-     * First 16 hex digits of the SHA-256 of the list as given.
+     * First 16 hex characters of the SHA-256 of the list.
      *
      * @public
      * @returns {string}
@@ -34,7 +34,7 @@ class DemoFixtures {
     }
 
     /**
-     * Space-separated names, the `--matches` filter of the parser scripts.
+     * Names separated by spaces, for the `--matches` argument.
      *
      * @public
      * @returns {string}
@@ -44,7 +44,7 @@ class DemoFixtures {
     }
 
     /**
-     * Downloads the demos missing from [directory], one at a time.
+     * Downloads missing demos one by one.
      *
      * @public
      * @param {string} directory

@@ -6,7 +6,7 @@ import Assert from '../core/Assert.js';
 import ProtoSource from '../enums/ProtoSource.js';
 
 /**
- * Downloads the `.proto` files of a game from SteamTracking into its `proto/source`, overwriting the ones that differ.
+ * Downloads the `.proto` files of a game from SteamTracking.
  */
 class ProtoSync {
     /**
@@ -21,7 +21,7 @@ class ProtoSync {
     }
 
     /**
-     * Downloads every file first, then writes the changed ones; returns their names.
+     * Downloads all files, then writes the changed ones and returns their names.
      *
      * @public
      * @returns {Promise<Array<string>>}
@@ -56,8 +56,6 @@ class ProtoSync {
     }
 
     /**
-     * Writes [content] unless the local file already holds it; returns whether it wrote.
-     *
      * @private
      * @param {string} file
      * @param {Buffer} content

@@ -53,7 +53,7 @@ class ProtoDecoder {
     }
 
     /**
-     * Decoder of [descriptor], one per descriptor.
+     * Returns a cached decoder for the descriptor.
      *
      * @public
      * @static
@@ -81,7 +81,7 @@ class ProtoDecoder {
     }
 
     /**
-     * An empty message: every field reads its default.
+     * Creates an empty message with default values.
      *
      * @public
      * @returns {Record<string, *>}
@@ -111,8 +111,6 @@ class ProtoDecoder {
     }
 
     /**
-     * Decoder of the message-typed field [number].
-     *
      * @public
      * @param {number} number
      * @returns {ProtoDecoder}
@@ -124,7 +122,7 @@ class ProtoDecoder {
     }
 
     /**
-     * Reads one value of the scalar or enum [field]; the tag has been consumed.
+     * Reads one scalar or enum value after its tag.
      *
      * @public
      * @param {ProtoField} field

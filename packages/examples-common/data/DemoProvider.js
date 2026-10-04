@@ -70,8 +70,8 @@ class DemoProvider {
     }
 
     /**
-     * Reads the demo passed via the `--demo=<path>` CLI argument, if present;
-     * otherwise falls back to the bundled [demoFile] (local file system or CDN).
+     * Reads the demo from the `--demo=<path>` argument if it is set.
+     * Otherwise reads the given demo file from the local file system or the CDN.
      *
      * @public
      * @static
