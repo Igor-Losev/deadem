@@ -58,13 +58,13 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {string} typeName
+     * @param {string} protoName
      * @returns {ProtoDecoder}
      */
-    getDecoder(typeName) {
-        const descriptor = this._descriptors.getMessage(typeName);
+    getDecoder(protoName) {
+        const descriptor = this._descriptors.getMessage(protoName);
 
-        Assert.exists(descriptor, `Unknown message [ ${typeName} ]`);
+        Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
 
         return ProtoDecoder.fromDescriptor(descriptor);
     }

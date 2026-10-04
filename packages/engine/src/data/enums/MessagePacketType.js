@@ -7,11 +7,12 @@ class MessagePacketType {
      * @constructor
      * @param {string} code
      * @param {number} id
-     * @param {string|null} [protoName]
+     * @param {string|null} [protoName=null]
      */
     constructor(code, id, protoName = null) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));
+        Assert.isTrue(protoName === null || (typeof protoName === 'string' && protoName.length > 0));
 
         /** @private */
         this._code = code;
@@ -59,6 +60,7 @@ class MessagePacketType {
 
     /**
      * @public
+     * @static
      * @returns {Array<MessagePacketType>}
      */
     static getAll() {
@@ -83,6 +85,7 @@ class MessagePacketType {
 
     /**
      * @public
+     * @static
      * @param {number} id
      * @returns {MessagePacketType|null}
      */
