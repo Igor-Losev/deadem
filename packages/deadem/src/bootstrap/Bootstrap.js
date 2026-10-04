@@ -54,11 +54,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelStringTableTypes(registry) {
-        const modifierProto = registry.getDecoder('CModifierTableEntry');
-        /** @type {(buffer: Uint8Array) => *} */
-        const modifierDecoder = buffer => modifierProto.decode(buffer);
-
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, modifierDecoder);
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
     }
 
     /**

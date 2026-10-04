@@ -52,16 +52,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaStringTableTypes(registry) {
-        const econItemsProto = registry.getDecoder('CSOEconItem');
-        const modifierProto = registry.getDecoder('CDOTAModifierBuffTableEntry');
-
-        /** @type {(buffer: Uint8Array) => *} */
-        const econItemsDecoer = buffer => econItemsProto.decode(buffer);
-        /** @type {(buffer: Uint8Array) => *} */
-        const modifierDecoder = buffer => modifierProto.decode(buffer);
-
-        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS, modifierDecoder);
-        registry.registerStringTableType(StringTableType.ECON_ITEMS, econItemsDecoer);
+        registry.registerStringTableType(StringTableType.ACTIVE_MODIFIERS);
         registry.registerStringTableType(StringTableType.MODIFIER_NAMES);
         registry.registerStringTableType(StringTableType.COOLDOWN_NAMES);
         registry.registerStringTableType(StringTableType.ECON_ITEMS);

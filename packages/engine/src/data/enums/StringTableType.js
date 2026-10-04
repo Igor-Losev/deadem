@@ -1,5 +1,7 @@
 import Assert from '../../core/Assert.js';
 
+const registries = new WeakMap();
+
 /**
  * Raw, undecoded entry payload.
  *
@@ -15,23 +17,43 @@ class StringTableType {
      * @constructor
      * @param {C} code
      * @param {string} name
-     * @param {boolean} synthesized
+     * @param {string|null} [protoName=null]
      * @param {boolean} [lazy=false] - decode strategy flag for table entries.
+     * @param {boolean} [synthesized=false]
      */
-    constructor(code, name, synthesized = false, lazy = false) {
+    constructor(code, name, protoName = null, lazy = false, synthesized = false) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(typeof name === 'string' && name.length > 0);
-        Assert.isTrue(typeof synthesized === 'boolean');
+        Assert.isTrue(protoName === null || (typeof protoName === 'string' && protoName.length > 0));
         Assert.isTrue(typeof lazy === 'boolean');
+        Assert.isTrue(typeof synthesized === 'boolean');
 
         /** @private */
         this._code = code;
         /** @private */
         this._name = name;
         /** @private */
-        this._synthesized = synthesized;
+        this._protoName = protoName;
         /** @private */
         this._lazy = lazy;
+        /** @private */
+        this._synthesized = synthesized;
+
+        if (synthesized) {
+            return;
+        }
+
+        const owner = new.target;
+
+        let registry = registries.get(owner) || null;
+
+        if (registry === null) {
+            registry = new Map();
+
+            registries.set(owner, registry);
+        }
+
+        registry.set(name, this);
     }
 
     /**
@@ -52,10 +74,10 @@ class StringTableType {
 
     /**
      * @public
-     * @returns {boolean}
+     * @returns {string|null}
      */
-    get synthesized() {
-        return this._synthesized;
+    get protoName() {
+        return this._protoName;
     }
 
     /**
@@ -67,6 +89,39 @@ class StringTableType {
     }
 
     /**
+     * @public
+     * @returns {boolean}
+     */
+    get synthesized() {
+        return this._synthesized;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {Array<StringTableType>}
+     */
+    static getAll() {
+        const members = new Map();
+
+        for (let owner = this; typeof owner === 'function'; owner = Object.getPrototypeOf(owner)) {
+            const registry = registries.get(owner) || null;
+
+            if (registry === null) {
+                continue;
+            }
+
+            for (const [ name, member ] of registry) {
+                if (!members.has(name)) {
+                    members.set(name, member);
+                }
+            }
+        }
+
+        return Array.from(members.values());
+    }
+
+    /**
      * Creates a runtime-synthesized type for a name not known at bootstrap time.
      *
      * @public
@@ -75,7 +130,7 @@ class StringTableType {
      * @returns {StringTableType}
      */
     static synthesize(name) {
-        return new StringTableType(name.toUpperCase(), name, true);
+        return new StringTableType(name.toUpperCase(), name, null, false, true);
     }
 
     /** @returns {StringTableType<'DECAL_PRE_CACHE', StringTableRawValue>} */
@@ -118,7 +173,7 @@ const lightStyles = new StringTableType('LIGHT_STYLES', 'lightstyles');
 const responseKeys = new StringTableType('RESPONSE_KEYS', 'ResponseKeys');
 const scenes = new StringTableType('SCENES', 'Scenes');
 const serverQueryInfo = new StringTableType('SERVER_QUERY_INFO', 'server_query_info');
-const userInfo = new StringTableType('USER_INFO', 'userinfo');
+const userInfo = new StringTableType('USER_INFO', 'userinfo', 'CMsgPlayerInfo');
 const vGuiScreen = new StringTableType('V_GUI_SCREEN', 'VguiScreen');
 const animTaskTypes = new StringTableType('ANIM_TASK_TYPES', 'AnimTaskTypes');
 const animAssetData = new StringTableType('ANIM_ASSET_DATA', 'AnimAssetData');

@@ -7,7 +7,7 @@ import Workspace from '../enums/Workspace.js';
 
 const DECODER_REFERENCE_PATTERN = /\.getDecoder\(\s*['"]([^'"]+)['"]\s*\)/g;
 
-const PACKET_TYPE_FILES = [ 'DemoPacketType.js', 'MessagePacketType.js' ];
+const ENUM_FILES = [ 'DemoPacketType.js', 'MessagePacketType.js', 'StringTableType.js' ];
 
 /**
  * Message names that a game decodes.
@@ -25,8 +25,8 @@ class MessageRegistry {
         Assert.isTrue(workspace instanceof Workspace && workspace.game);
 
         const names = [
-            ...await MessageRegistry._collectFromPacketTypes(Workspace.ENGINE),
-            ...await MessageRegistry._collectFromPacketTypes(workspace),
+            ...await MessageRegistry._collectFromEnums(Workspace.ENGINE),
+            ...await MessageRegistry._collectFromEnums(workspace),
             ...MessageRegistry._collectFromBootstrap(Workspace.ENGINE),
             ...MessageRegistry._collectFromBootstrap(workspace)
         ];
@@ -40,19 +40,19 @@ class MessageRegistry {
      * @param {Workspace} workspace
      * @returns {Promise<Array<string>>}
      */
-    static async _collectFromPacketTypes(workspace) {
+    static async _collectFromEnums(workspace) {
         const names = [ ];
 
-        for (const file of PACKET_TYPE_FILES) {
+        for (const file of ENUM_FILES) {
             const enumFile = workspace.getEnumFile(file);
 
             if (!fs.existsSync(enumFile)) {
                 continue;
             }
 
-            const { default: packetType } = await import(pathToFileURL(enumFile).href);
+            const { default: enumType } = await import(pathToFileURL(enumFile).href);
 
-            for (const member of packetType.getAll()) {
+            for (const member of enumType.getAll()) {
                 if (member.protoName !== null) {
                     names.push(member.protoName);
                 }

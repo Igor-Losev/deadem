@@ -180,13 +180,14 @@ class SchemaRegistry {
     /**
      * @public
      * @param {StringTableType} type
-     * @param {StringTableDecoderFn|null} [decoder]
      */
-    registerStringTableType(type, decoder = null) {
+    registerStringTableType(type) {
         this._types.stringTableByName.set(type.name, type);
 
-        if (decoder !== null) {
-            this._decoders.stringTables.set(type.name, decoder);
+        if (type.protoName !== null) {
+            const decoder = this.getDecoder(type.protoName);
+
+            this._decoders.stringTables.set(type.name, buffer => decoder.decode(buffer));
         }
     }
 
