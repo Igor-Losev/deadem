@@ -45,7 +45,17 @@ class DeltaExtractor {
      * @returns {ProtoState}
      */
     merge(state) {
-        return this._merge(state, this._decoder, this._reader.getUnreadCount());
+        return this._merge(state, this._decoder, this._reader.getUnreadCount(), true);
+    }
+
+    /**
+     * Fields that the delta carries, without defaults.
+     *
+     * @public
+     * @returns {ProtoState}
+     */
+    extract() {
+        return this._merge({ }, this._decoder, this._reader.getUnreadCount(), false);
     }
 
     /**
@@ -53,9 +63,10 @@ class DeltaExtractor {
      * @param {ProtoState} state
      * @param {ProtoDecoder} decoder
      * @param {number} length
+     * @param {boolean} defaults
      * @returns {ProtoState}
      */
-    _merge(state, decoder, length) {
+    _merge(state, decoder, length, defaults) {
         const reader = this._reader;
 
         const end = reader.offset + length;
@@ -85,8 +96,8 @@ class DeltaExtractor {
                 const payload = reader.readUVarInt32();
 
                 state[field.name] = field.repeated
-                    ? this._mergeRepeated(state[field.name], nested, payload)
-                    : this._merge(state[field.name] || { }, nested, payload);
+                    ? this._mergeRepeated(state[field.name], nested, payload, defaults)
+                    : this._merge(state[field.name] || DeltaExtractor._createMessage(nested, defaults), nested, payload, defaults);
             } else if (field.repeated || field.scalar === ScalarType.DOUBLE || wire !== field.wireType) {
                 throw new Error(`Unsupported wire type [ ${wire} ] for field [ ${field.name} ]`);
             } else {
@@ -104,9 +115,10 @@ class DeltaExtractor {
      * @param {Array<ProtoState>|undefined} previous
      * @param {ProtoDecoder} decoder
      * @param {number} length
+     * @param {boolean} defaults
      * @returns {Array<ProtoState>}
      */
-    _mergeRepeated(previous, decoder, length) {
+    _mergeRepeated(previous, decoder, length, defaults) {
         const reader = this._reader;
 
         const end = reader.offset + length;
@@ -134,7 +146,7 @@ class DeltaExtractor {
 
             const element = reader.readUVarInt32();
 
-            updates[index] = this._merge(previous?.[index] || { }, decoder, element);
+            updates[index] = this._merge(previous?.[index] || DeltaExtractor._createMessage(decoder, defaults), decoder, element, defaults);
 
             if (index > highest) {
                 highest = index;
@@ -151,7 +163,7 @@ class DeltaExtractor {
         const elements = new Array(count);
 
         for (let i = 0; i < count; i++) {
-            elements[i] = updates[i] || previous?.[i] || { };
+            elements[i] = updates[i] || previous?.[i] || DeltaExtractor._createMessage(decoder, defaults);
         }
 
         return elements;
@@ -169,6 +181,17 @@ class DeltaExtractor {
         }
 
         this._reader.offset = end;
+    }
+
+    /**
+     * @private
+     * @static
+     * @param {ProtoDecoder} decoder
+     * @param {boolean} defaults
+     * @returns {ProtoState}
+     */
+    static _createMessage(decoder, defaults) {
+        return defaults ? decoder.create() : { };
     }
 }
 

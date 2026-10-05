@@ -78,6 +78,32 @@ describe('DeltaExtractor', () => {
         expect(state.buttons).toEqual({ press: 7, hold: 9 });
     });
 
+    test('It should fill new nested messages and list elements with defaults', () => {
+        const decoder = createStateDecoder();
+        const state = {};
+
+        new DeltaExtractor(new Uint8Array([ 0x32, 0x02, 0x08, 0x07 ]), decoder).merge(state);
+
+        expect(state.buttons.press).toBe(7);
+        expect(state.buttons.hold).toBe(0);
+
+        new DeltaExtractor(new Uint8Array([ 0x42, 0x04, 0x0a, 0x02, 0x08, 0x05 ]), decoder).merge(state);
+
+        expect(state.entries).toHaveLength(2);
+        expect(state.entries[0].tag).toBe(0);
+        expect(state.entries[1].value).toBe(5);
+        expect(state.entries[1].tag).toBe(0);
+    });
+
+    test('It should extract only the fields that the delta carries', () => {
+        const decoder = createStateDecoder();
+
+        const changes = new DeltaExtractor(new Uint8Array([ 0x32, 0x02, 0x08, 0x07 ]), decoder).extract();
+
+        expect(changes.buttons.press).toBe(7);
+        expect(changes.buttons.hold).toBeUndefined();
+    });
+
     test('It should carry forward repeated indices absent from the wire', () => {
         const decoder = createStateDecoder();
         const state = { entries: [ { value: 100 }, { value: 200 }, { value: 300 } ] };

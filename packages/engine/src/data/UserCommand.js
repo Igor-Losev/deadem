@@ -92,7 +92,7 @@ class UserCommand {
      * @returns {ProtoState}
      */
     extractChanges(deltaData) {
-        return new DeltaExtractor(deltaData, this._decoder).merge({ });
+        return new DeltaExtractor(deltaData, this._decoder).extract();
     }
 }
 
