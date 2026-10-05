@@ -49,10 +49,10 @@ import SchemaRegistry from './SchemaRegistry.js';
  *
  * @template [M=null]
  * @typedef {{
- *     DEMO_PACKET: (demoPacket: DemoPacket) => void,
- *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
- *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>) => void,
- *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
+ *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
+ *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
+ *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
+ *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */
 

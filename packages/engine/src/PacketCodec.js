@@ -5,7 +5,8 @@
 /**
  * Synthesised payload.
  *
- * @typedef {{ messagePackets: Array<MessagePacket|MessagePacketRaw>, stringTables: * }} DemoPacketHeavyData
+ * @template [M=null]
+ * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: * }} DemoPacketHeavyData
  */
 
 import Assert from './core/Assert.js';

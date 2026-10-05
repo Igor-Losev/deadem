@@ -2,12 +2,15 @@ import Assert from '../../core/Assert.js';
 
 const registries = new WeakMap();
 
+/**
+ * @template {string|null} [N=string|null]
+ */
 class DemoPacketType {
     /**
      * @constructor
      * @param {string} code
      * @param {number} id
-     * @param {string|null} protoName
+     * @param {N} protoName
      * @param {boolean} heavy
      * @param {boolean} bootstrap
      */
@@ -60,7 +63,7 @@ class DemoPacketType {
 
     /**
      * @public
-     * @returns {string|null}
+     * @returns {N}
      */
     get protoName() {
         return this._protoName;
