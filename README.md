@@ -17,7 +17,7 @@ Collection of JavaScript packages for parsing and playing back Valve Source 2 de
 
 The parsing stack depends only on:
 
-- [`protobufjs`](https://www.npmjs.com/package/protobufjs) — Protobuf decoding.
+- [`@bufbuild/protobuf`](https://www.npmjs.com/package/@bufbuild/protobuf) — Protobuf descriptors.
 - [`snappyjs`](https://www.npmjs.com/package/snappyjs) — Snappy decompression.
 
 ## Packages

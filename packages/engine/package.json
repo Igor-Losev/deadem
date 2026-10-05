@@ -119,7 +119,6 @@
   },
   "dependencies": {
     "@bufbuild/protobuf": "2.16.0",
-    "protobufjs": "^8.4.2",
     "snappyjs": "^0.7.0"
   }
 }

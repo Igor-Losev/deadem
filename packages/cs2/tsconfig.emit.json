@@ -9,8 +9,7 @@
   },
   "include": [
     "index.js",
-    "src/**/*.js",
-    "proto/compiled/*.js"
+    "src/**/*.js"
   ],
   "references": [
     {
