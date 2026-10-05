@@ -17,7 +17,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const printer = new Printer(parser);
     const gameObserver = new DeadlockGameObserver(parser, Infinity);
 
-    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
         if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED) {
             return;
         }

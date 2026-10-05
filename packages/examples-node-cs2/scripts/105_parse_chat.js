@@ -11,7 +11,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         messagePacketTypes: [ MessagePacketType.USER_MESSAGE_SAY_TEXT_2 ]
     }));
 
-    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
         if (messagePacket.type !== MessagePacketType.USER_MESSAGE_SAY_TEXT_2) {
             return;
         }

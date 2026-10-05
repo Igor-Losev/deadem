@@ -21,7 +21,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
     let matchEnd = null;
 
-    parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, async (demoPacket) => {
+    parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
         if (players.size === 0 && !demoPacket.getIsInitial()) {
             const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
 
@@ -43,7 +43,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         }
     });
 
-    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
         if (messagePacket.type === MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST) {
             for (const descriptor of messagePacket.data.descriptors) {
                 descriptors.set(descriptor.eventid, descriptor);

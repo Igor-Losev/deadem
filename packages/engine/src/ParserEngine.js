@@ -50,10 +50,10 @@ import SchemaRegistry from './SchemaRegistry.js';
  * Callback shape fired at each {@link InterceptorStage}.
  *
  * @typedef {{
- *     DEMO_PACKET: (demoPacket: DemoPacket) => void|Promise<void>,
- *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<EntityMutationEvent>) => void|Promise<void>,
- *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket) => void|Promise<void>,
- *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<UserCommandEvent>) => void|Promise<void>
+ *     DEMO_PACKET: (demoPacket: DemoPacket) => void,
+ *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<EntityMutationEvent>) => void,
+ *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket) => void,
+ *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */
 

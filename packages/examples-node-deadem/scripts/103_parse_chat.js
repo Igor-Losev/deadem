@@ -13,7 +13,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
     const players = new Map();
 
-    parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, async (demoPacket) => {
+    parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
         if (players.size === 0 && !demoPacket.getIsInitial()) {
             const userInfo = parser.getDemo().stringTableContainer.getByName(StringTableType.USER_INFO.name);
 
@@ -27,7 +27,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
     const getUserName = slot => players.get(slot);
 
-    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, async (demoPacket, messagePacket) => {
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
         const isChatMessage = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE;
         const isChatWheel = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL;
 
