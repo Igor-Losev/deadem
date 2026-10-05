@@ -1,3 +1,5 @@
+/** @import { StringTableRawValue } from '@deademx/engine' */
+
 import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
 /**
@@ -8,19 +10,19 @@ import { StringTableType as EngineStringTableType } from '@deademx/engine';
 class StringTableType extends EngineStringTableType {
     /** @returns {StringTableType<'ACTIVE_MODIFIERS'>} */
     static get ACTIVE_MODIFIERS() { return activeModifiers; }
-    /** @returns {StringTableType<'MODIFIER_NAMES'>} */
+    /** @returns {StringTableType<'MODIFIER_NAMES', StringTableRawValue>} */
     static get MODIFIER_NAMES() { return modifierNames; }
-    /** @returns {StringTableType<'COOLDOWN_NAMES'>} */
+    /** @returns {StringTableType<'COOLDOWN_NAMES', StringTableRawValue>} */
     static get COOLDOWN_NAMES() { return cooldownNames; }
     /** @returns {StringTableType<'ECON_ITEMS'>} */
     static get ECON_ITEMS() { return econItems; }
-    /** @returns {StringTableType<'COMBAT_LOG_NAMES'>} */
+    /** @returns {StringTableType<'COMBAT_LOG_NAMES', StringTableRawValue>} */
     static get COMBAT_LOG_NAMES() { return combatLogNames; }
-    /** @returns {StringTableType<'LUA_MODIFIERS'>} */
+    /** @returns {StringTableType<'LUA_MODIFIERS', StringTableRawValue>} */
     static get LUA_MODIFIERS() { return luaModifiers; }
-    /** @returns {StringTableType<'PARTICLE_ASSETS'>} */
+    /** @returns {StringTableType<'PARTICLE_ASSETS', StringTableRawValue>} */
     static get PARTICLE_ASSETS() { return particleAssets; }
-    /** @returns {StringTableType<'DOWNLOADABLES'>} */
+    /** @returns {StringTableType<'DOWNLOADABLES', StringTableRawValue>} */
     static get DOWNLOADABLES() { return downloadables; }
 }
 
