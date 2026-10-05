@@ -1,5 +1,6 @@
 export default {
   "options": {
+    "additional_includes": "entityhandle.h",
     "optimize_for": "SPEED",
     "cc_generic_services": false
   },
@@ -12,7 +13,9 @@ export default {
           "id": 1,
           "protoName": "def_index",
           "options": {
-            "default": 65535
+            "default": 65535,
+            "boxed_type": "attrib_definition_index_t",
+            "synthetic_default": "65535"
           }
         },
         "value": {
@@ -46,7 +49,10 @@ export default {
       "fields": {
         "id": {
           "type": "uint64",
-          "id": 1
+          "id": 1,
+          "options": {
+            "boxed_type": "itemid_t"
+          }
         },
         "accountId": {
           "type": "uint32",
@@ -60,7 +66,10 @@ export default {
         "defIndex": {
           "type": "uint32",
           "id": 4,
-          "protoName": "def_index"
+          "protoName": "def_index",
+          "options": {
+            "boxed_type": "item_definition_index_t"
+          }
         },
         "quantity": {
           "type": "uint32",
@@ -111,13 +120,17 @@ export default {
           "type": "uint32",
           "id": 15,
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "style_index_t"
           }
         },
         "originalId": {
           "type": "uint64",
           "id": 16,
-          "protoName": "original_id"
+          "protoName": "original_id",
+          "options": {
+            "boxed_type": "itemid_t"
+          }
         },
         "equippedState": {
           "rule": "repeated",
@@ -702,7 +715,9 @@ export default {
           "type": "int32",
           "id": 3,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "directPing": {
@@ -714,7 +729,9 @@ export default {
           "type": "uint32",
           "id": 5,
           "options": {
-            "default": 4294967295
+            "default": 4294967295,
+            "boxed_type": "PingWheelMessageID_t",
+            "synthetic_default": "4294967295"
           }
         },
         "pingSource": {
@@ -748,7 +765,9 @@ export default {
           "id": 3,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -909,7 +928,9 @@ export default {
           "id": 1,
           "protoName": "chat_message_id",
           "options": {
-            "default": 4294967295
+            "default": 4294967295,
+            "boxed_type": "ChatWheelMessageID_t",
+            "synthetic_default": "4294967295"
           }
         },
         "emoticonId": {
@@ -1248,7 +1269,10 @@ export default {
         },
         "worldgroupid": {
           "type": "uint32",
-          "id": 15
+          "id": 15,
+          "options": {
+            "boxed_type": "WorldGroupId_t"
+          }
         },
         "creationsequence": {
           "type": "uint32",
@@ -1425,7 +1449,9 @@ export default {
           "type": "uint32",
           "id": 2,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "index": {
@@ -1455,7 +1481,10 @@ export default {
         "creationTime": {
           "type": "float",
           "id": 8,
-          "protoName": "creation_time"
+          "protoName": "creation_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "duration": {
           "type": "float",
@@ -1468,14 +1497,18 @@ export default {
           "type": "uint32",
           "id": 10,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "ability": {
           "type": "uint32",
           "id": 11,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "armor": {
@@ -1557,7 +1590,9 @@ export default {
           "id": 28,
           "protoName": "dd_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "illusionLabel": {
@@ -1589,7 +1624,9 @@ export default {
           "id": 34,
           "protoName": "aura_owner",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "bonusAllStats": {
@@ -1612,7 +1649,9 @@ export default {
           "id": 38,
           "protoName": "custom_entity",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "auraWithinRange": {
@@ -1785,7 +1824,10 @@ export default {
         },
         "timestamp": {
           "type": "float",
-          "id": 15
+          "id": 15,
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "stunDuration": {
           "type": "float",
@@ -1911,7 +1953,10 @@ export default {
           "rule": "repeated",
           "type": "int32",
           "id": 40,
-          "protoName": "assist_players"
+          "protoName": "assist_players",
+          "options": {
+            "boxed_type": "PlayerID_t"
+          }
         },
         "isHealSave": {
           "type": "bool",
@@ -2126,24 +2171,10 @@ export default {
       "edition": "proto2",
       "fields": {
         "materialCounts": {
-          "rule": "repeated",
-          "type": ".CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry",
+          "keyType": "uint32",
+          "type": "int32",
           "id": 1,
           "protoName": "material_counts"
-        }
-      },
-      "nested": {
-        "MaterialCountsEntry": {
-          "fields": {
-            "key": {
-              "type": "uint32",
-              "id": 1
-            },
-            "value": {
-              "type": "int32",
-              "id": 2
-            }
-          }
         }
       }
     },
@@ -2153,7 +2184,10 @@ export default {
         "heroId": {
           "type": "int32",
           "id": 1,
-          "protoName": "hero_id"
+          "protoName": "hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "personaId": {
           "type": "int32",
@@ -2198,7 +2232,10 @@ export default {
             "heroId": {
               "type": "int32",
               "id": 1,
-              "protoName": "hero_id"
+              "protoName": "hero_id",
+              "options": {
+                "boxed_type": "HeroID_t"
+              }
             },
             "personaId": {
               "type": "int32",
@@ -2472,7 +2509,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -2495,42 +2534,54 @@ export default {
           "type": "sint32",
           "id": 3,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerid_2": {
           "type": "sint32",
           "id": 4,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerid_3": {
           "type": "sint32",
           "id": 5,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerid_4": {
           "type": "sint32",
           "id": 6,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerid_5": {
           "type": "sint32",
           "id": 7,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerid_6": {
           "type": "sint32",
           "id": 8,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "value2": {
@@ -2543,7 +2594,10 @@ export default {
         },
         "time": {
           "type": "float",
-          "id": 11
+          "id": 11,
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         }
       }
     },
@@ -2555,7 +2609,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "message": {
@@ -2609,7 +2665,10 @@ export default {
         },
         "timestamp": {
           "type": "float",
-          "id": 2
+          "id": 2,
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "duration": {
           "type": "float",
@@ -2620,13 +2679,18 @@ export default {
           "id": 4,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "requestTime": {
           "type": "float",
           "id": 5,
-          "protoName": "request_time"
+          "protoName": "request_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         }
       }
     },
@@ -2678,7 +2742,9 @@ export default {
               "type": "uint32",
               "id": 1,
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "totalDamage": {
@@ -2705,7 +2771,9 @@ export default {
                   "id": 1,
                   "protoName": "ability_id",
                   "options": {
-                    "default": -1
+                    "default": -1,
+                    "boxed_type": "AbilityID_t",
+                    "synthetic_default": "-1"
                   }
                 },
                 "damage": {
@@ -2752,7 +2820,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "locationPing": {
@@ -2770,7 +2840,9 @@ export default {
           "id": 1,
           "protoName": "player_id_of_original_pinger",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "entityIndex": {
@@ -2797,7 +2869,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemAlert": {
@@ -2815,7 +2889,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -2823,7 +2899,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemAbilityId": {
@@ -2831,7 +2909,9 @@ export default {
           "id": 3,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "runeType": {
@@ -2881,7 +2961,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "className": {
@@ -2904,7 +2986,9 @@ export default {
           "id": 5,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "secondsRemaining": {
@@ -2922,7 +3006,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -2930,7 +3016,9 @@ export default {
           "id": 2,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "showRawValues": {
@@ -2948,7 +3036,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "spawnerEntindex": {
@@ -2956,7 +3046,9 @@ export default {
           "id": 2,
           "protoName": "spawner_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "unitEntindex": {
@@ -2964,7 +3056,9 @@ export default {
           "id": 3,
           "protoName": "unit_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "stackCount": {
@@ -2997,7 +3091,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "negative": {
@@ -3014,7 +3110,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "negative": {
@@ -3031,7 +3129,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "negative": {
@@ -3048,7 +3148,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "negative": {
@@ -3065,7 +3167,9 @@ export default {
           "id": 1,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerId": {
@@ -3073,7 +3177,9 @@ export default {
           "id": 2,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "goldRemaining": {
@@ -3086,7 +3192,9 @@ export default {
           "id": 4,
           "protoName": "suggestion_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -3099,7 +3207,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -3107,7 +3217,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "cooldownSeconds": {
@@ -3125,7 +3237,9 @@ export default {
           "id": 1,
           "protoName": "source_ehandle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "targetEhandle": {
@@ -3133,7 +3247,9 @@ export default {
           "id": 2,
           "protoName": "target_ehandle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "warriorIndex": {
@@ -3151,7 +3267,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -3164,7 +3282,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemAbilityId": {
@@ -3172,7 +3292,9 @@ export default {
           "id": 2,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "goldCost": {
@@ -3209,7 +3331,9 @@ export default {
           "id": 3,
           "protoName": "entity_handle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "timestamp": {
@@ -3227,7 +3351,9 @@ export default {
           "id": 6,
           "protoName": "killer_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "owningPlayerId": {
@@ -3235,7 +3361,9 @@ export default {
           "id": 7,
           "protoName": "owning_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       },
@@ -3247,7 +3375,9 @@ export default {
               "id": 1,
               "protoName": "item_ability_id",
               "options": {
-                "default": -1
+                "default": -1,
+                "boxed_type": "AbilityID_t",
+                "synthetic_default": "-1"
               }
             },
             "quantity": {
@@ -3271,7 +3401,9 @@ export default {
           "id": 2,
           "protoName": "entity_handle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "x": {
@@ -3291,7 +3423,9 @@ export default {
           "id": 6,
           "protoName": "target_entity_handle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         }
       }
@@ -3304,7 +3438,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "mapline": {
@@ -3353,7 +3489,9 @@ export default {
           "type": "int32",
           "id": 4,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "particleIndex": {
@@ -3416,7 +3554,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "attacksOnly": {
@@ -3433,7 +3573,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "orderType": {
@@ -3446,7 +3588,8 @@ export default {
           "id": 3,
           "protoName": "target_index",
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CEntityIndex"
           }
         }
       }
@@ -3458,7 +3601,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "orderType": {
@@ -3469,14 +3614,18 @@ export default {
         "units": {
           "rule": "repeated",
           "type": "int32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "boxed_type": "CEntityIndex"
+          }
         },
         "targetIndex": {
           "type": "int32",
           "id": 4,
           "protoName": "target_index",
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CEntityIndex"
           }
         },
         "abilityId": {
@@ -3484,7 +3633,9 @@ export default {
           "id": 5,
           "protoName": "ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "position": {
@@ -3523,7 +3674,9 @@ export default {
           "id": 1,
           "protoName": "entity_handle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "lines": {
@@ -3576,7 +3729,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "name": {
@@ -3610,13 +3765,19 @@ export default {
           "rule": "repeated",
           "type": "uint32",
           "id": 1,
-          "protoName": "item_defs"
+          "protoName": "item_defs",
+          "options": {
+            "boxed_type": "item_definition_index_t"
+          }
         },
         "playerIds": {
           "rule": "repeated",
           "type": "int32",
           "id": 2,
-          "protoName": "player_ids"
+          "protoName": "player_ids",
+          "options": {
+            "boxed_type": "PlayerID_t"
+          }
         },
         "prizeList": {
           "type": "uint32",
@@ -3633,7 +3794,9 @@ export default {
           "id": 1,
           "protoName": "owning_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -3919,7 +4082,9 @@ export default {
           "id": 1,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "fromCombine": {
@@ -3937,7 +4102,9 @@ export default {
           "id": 1,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -3949,7 +4116,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "quality": {
@@ -3966,7 +4135,10 @@ export default {
         },
         "itemdef": {
           "type": "uint32",
-          "id": 5
+          "id": 5,
+          "options": {
+            "boxed_type": "item_definition_index_t"
+          }
         }
       }
     },
@@ -3990,7 +4162,9 @@ export default {
           "id": 3,
           "protoName": "target_player_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -3998,7 +4172,9 @@ export default {
           "id": 4,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "sourcePlayerEntindex": {
@@ -4006,7 +4182,9 @@ export default {
           "id": 5,
           "protoName": "source_player_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -4078,7 +4256,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "worldline": {
@@ -4095,7 +4275,9 @@ export default {
           "id": 1,
           "protoName": "chat_message_id",
           "options": {
-            "default": 4294967295
+            "default": 4294967295,
+            "boxed_type": "ChatWheelMessageID_t",
+            "synthetic_default": "4294967295"
           }
         },
         "playerId": {
@@ -4103,7 +4285,9 @@ export default {
           "id": 2,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "accountId": {
@@ -4114,7 +4298,10 @@ export default {
         "paramHeroId": {
           "type": "int32",
           "id": 4,
-          "protoName": "param_hero_id"
+          "protoName": "param_hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "emoticonId": {
           "type": "uint32",
@@ -4131,7 +4318,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemName": {
@@ -4157,7 +4346,10 @@ export default {
         "matchId": {
           "type": "uint64",
           "id": 2,
-          "protoName": "match_id"
+          "protoName": "match_id",
+          "options": {
+            "boxed_type": "MatchID_t"
+          }
         },
         "responseStyle": {
           "type": "string",
@@ -4167,7 +4359,10 @@ export default {
         "teammateHeroId": {
           "type": "int32",
           "id": 4,
-          "protoName": "teammate_hero_id"
+          "protoName": "teammate_hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "teammateName": {
           "type": "string",
@@ -4213,7 +4408,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "posX": {
@@ -4270,7 +4467,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "statpopup": {
@@ -4352,7 +4551,9 @@ export default {
           "id": 2,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "value": {
@@ -4369,7 +4570,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "hudPing": {
@@ -4390,14 +4593,18 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "target": {
           "type": "uint32",
           "id": 2,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "moveSpeed": {
@@ -4427,11 +4634,17 @@ export default {
         "expireTime": {
           "type": "float",
           "id": 9,
-          "protoName": "expire_time"
+          "protoName": "expire_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "maximpacttime": {
           "type": "float",
-          "id": 10
+          "id": 10,
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "colorgemcolor": {
           "type": "fixed32",
@@ -4471,7 +4684,9 @@ export default {
           "type": "uint32",
           "id": 18,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "targetProjectileHandle": {
@@ -4493,7 +4708,9 @@ export default {
           "type": "uint32",
           "id": 2,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "moveSpeed": {
@@ -4518,7 +4735,10 @@ export default {
         "expireTime": {
           "type": "float",
           "id": 9,
-          "protoName": "expire_time"
+          "protoName": "expire_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "targetLoc": {
           "type": ".CMsgVector",
@@ -4542,7 +4762,9 @@ export default {
           "type": "uint32",
           "id": 14,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "sourceAttachment": {
@@ -4584,7 +4806,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "scale": {
@@ -4609,7 +4833,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "abilityId": {
@@ -4617,7 +4843,9 @@ export default {
           "id": 2,
           "protoName": "ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "type": {
@@ -4668,14 +4896,19 @@ export default {
         "reclaimTime": {
           "type": "float",
           "id": 13,
-          "protoName": "reclaim_time"
+          "protoName": "reclaim_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "ownerEntity": {
           "type": "int32",
           "id": 14,
           "protoName": "owner_entity",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -4687,7 +4920,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "sequenceVariant": {
@@ -4725,7 +4960,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "snap": {
@@ -4817,7 +5054,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "bonus": {
@@ -4860,7 +5099,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "abilityId": {
@@ -4868,7 +5109,9 @@ export default {
           "id": 2,
           "protoName": "ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "abilityLevel": {
@@ -4886,13 +5129,18 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "heroId": {
           "type": "int32",
           "id": 2,
-          "protoName": "hero_id"
+          "protoName": "hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "heroName": {
           "type": "string",
@@ -5108,7 +5356,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "killSharePercent": {
@@ -5146,7 +5396,9 @@ export default {
           "id": 1,
           "protoName": "victim_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "killShares": {
@@ -5175,7 +5427,9 @@ export default {
           "id": 6,
           "protoName": "killer_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5229,12 +5483,18 @@ export default {
             "participants": {
               "rule": "repeated",
               "type": "int32",
-              "id": 1
+              "id": 1,
+              "options": {
+                "boxed_type": "PlayerID_t"
+              }
             },
             "deaths": {
               "rule": "repeated",
               "type": "int32",
-              "id": 2
+              "id": 2,
+              "options": {
+                "boxed_type": "PlayerID_t"
+              }
             },
             "goldDelta": {
               "type": "uint32",
@@ -5253,12 +5513,18 @@ export default {
             "startTime": {
               "type": "float",
               "id": 1,
-              "protoName": "start_time"
+              "protoName": "start_time",
+              "options": {
+                "boxed_type": "GameTime_t"
+              }
             },
             "endTime": {
               "type": "float",
               "id": 2,
-              "protoName": "end_time"
+              "protoName": "end_time",
+              "options": {
+                "boxed_type": "GameTime_t"
+              }
             },
             "radiantFightDetails": {
               "type": ".CDOTAUserMsg_StatsMatchDetails.CDOTAUserMsg_StatsFightTeamDetails",
@@ -5282,7 +5548,9 @@ export default {
           "id": 1,
           "protoName": "taunting_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5305,7 +5573,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "duration": {
@@ -5399,7 +5669,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "level": {
@@ -5427,7 +5699,9 @@ export default {
           "id": 1,
           "protoName": "ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "casterEntIndex": {
@@ -5435,7 +5709,9 @@ export default {
           "id": 2,
           "protoName": "caster_ent_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "casterTeam": {
@@ -5460,14 +5736,19 @@ export default {
         "endTime": {
           "type": "float",
           "id": 7,
-          "protoName": "end_time"
+          "protoName": "end_time",
+          "options": {
+            "boxed_type": "GameTime_t"
+          }
         },
         "victimEntIndex": {
           "type": "int32",
           "id": 8,
           "protoName": "victim_ent_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5497,7 +5778,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -5505,7 +5788,9 @@ export default {
           "id": 2,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5518,7 +5803,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -5526,7 +5813,9 @@ export default {
           "id": 2,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "abilityId": {
@@ -5534,7 +5823,9 @@ export default {
           "id": 3,
           "protoName": "ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "slot": {
@@ -5559,7 +5850,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "questId": {
@@ -5594,7 +5887,9 @@ export default {
           "id": 8,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5607,13 +5902,18 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "heroId": {
           "type": "int32",
           "id": 2,
-          "protoName": "hero_id"
+          "protoName": "hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "ban": {
           "type": "bool",
@@ -5622,7 +5922,10 @@ export default {
         "facetId": {
           "type": "uint32",
           "id": 4,
-          "protoName": "facet_id"
+          "protoName": "facet_id",
+          "options": {
+            "boxed_type": "HeroFacetID_t"
+          }
         }
       }
     },
@@ -5634,7 +5937,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "heroRole": {
@@ -5652,7 +5957,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "damageTaken": {
@@ -5670,7 +5977,9 @@ export default {
           "id": 4,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "heroName": {
@@ -5693,7 +6002,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "cost": {
@@ -5710,7 +6021,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "channelType": {
@@ -5742,7 +6055,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "channelType": {
@@ -5764,7 +6079,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5781,7 +6098,9 @@ export default {
           "id": 2,
           "protoName": "captain_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -5794,7 +6113,9 @@ export default {
           "id": 1,
           "protoName": "message_id",
           "options": {
-            "default": 4294967295
+            "default": 4294967295,
+            "boxed_type": "ChatWheelMessageID_t",
+            "synthetic_default": "4294967295"
           }
         },
         "cooldownRemaining": {
@@ -5820,7 +6141,9 @@ export default {
           "type": "uint32",
           "id": 3,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "eventId": {
@@ -5843,7 +6166,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "requestedAbilityId": {
@@ -5851,7 +6176,9 @@ export default {
           "id": 2,
           "protoName": "requested_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "ctrlIsDown": {
@@ -5862,12 +6189,18 @@ export default {
         "requestedHeroId": {
           "type": "int32",
           "id": 4,
-          "protoName": "requested_hero_id"
+          "protoName": "requested_hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "requestedFacetKey": {
           "type": "uint64",
           "id": 5,
-          "protoName": "requested_facet_key"
+          "protoName": "requested_facet_key",
+          "options": {
+            "boxed_type": "HeroFacetKey_t"
+          }
         }
       }
     },
@@ -5879,18 +6212,26 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetHeroId": {
           "type": "int32",
           "id": 2,
-          "protoName": "target_hero_id"
+          "protoName": "target_hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "sourceHeroId": {
           "type": "int32",
           "id": 3,
-          "protoName": "source_hero_id"
+          "protoName": "source_hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "damageAmount": {
           "type": "int32",
@@ -5911,7 +6252,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -5919,7 +6262,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "tipAmount": {
@@ -5952,7 +6297,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -5960,13 +6307,18 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "giftItemDefIndex": {
           "type": "uint32",
           "id": 3,
-          "protoName": "gift_item_def_index"
+          "protoName": "gift_item_def_index",
+          "options": {
+            "boxed_type": "item_definition_index_t"
+          }
         }
       }
     },
@@ -5978,7 +6330,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "tipText": {
@@ -5996,7 +6350,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "sourceEntindex": {
@@ -6004,7 +6360,9 @@ export default {
           "id": 2,
           "protoName": "source_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -6012,7 +6370,9 @@ export default {
           "id": 3,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6024,7 +6384,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "comboCount": {
@@ -6046,7 +6408,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "comboCount": {
@@ -6068,7 +6432,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "multicastAmount": {
@@ -6096,7 +6462,9 @@ export default {
           "id": 1,
           "protoName": "player_id_1",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerId_2": {
@@ -6104,7 +6472,9 @@ export default {
           "id": 2,
           "protoName": "player_id_2",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "specialHighFive": {
@@ -6117,7 +6487,9 @@ export default {
           "id": 4,
           "protoName": "special_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6130,7 +6502,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6143,7 +6517,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "allChat": {
@@ -6169,7 +6545,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -6177,7 +6555,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "pointAmount": {
@@ -6205,7 +6585,9 @@ export default {
               "id": 1,
               "protoName": "player_id",
               "options": {
-                "default": -1
+                "default": -1,
+                "boxed_type": "PlayerID_t",
+                "synthetic_default": "-1"
               }
             },
             "scoreSansKda": {
@@ -6276,7 +6658,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemAbilityId": {
@@ -6284,7 +6668,9 @@ export default {
           "id": 2,
           "protoName": "item_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "itemTier": {
@@ -6302,7 +6688,9 @@ export default {
           "id": 5,
           "protoName": "enhancement_ability_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "AbilityID_t",
+            "synthetic_default": "-1"
           }
         },
         "enhancementLevel": {
@@ -6325,7 +6713,9 @@ export default {
           "id": 1,
           "protoName": "outpost_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "teamId": {
@@ -6358,7 +6748,9 @@ export default {
           "id": 1,
           "protoName": "unit_ehandle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         }
       }
@@ -6401,7 +6793,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "behavior": {
@@ -6435,7 +6829,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "arcanaLevel": {
@@ -6463,7 +6859,9 @@ export default {
           "id": 1,
           "protoName": "player_id_1",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerId_2": {
@@ -6471,7 +6869,9 @@ export default {
           "id": 2,
           "protoName": "player_id_2",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6484,7 +6884,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6496,7 +6898,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "arcanaLevel": {
@@ -6507,7 +6911,10 @@ export default {
         "heroId": {
           "type": "int32",
           "id": 3,
-          "protoName": "hero_id"
+          "protoName": "hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         }
       }
     },
@@ -6523,7 +6930,10 @@ export default {
         "guildId": {
           "type": "uint32",
           "id": 2,
-          "protoName": "guild_id"
+          "protoName": "guild_id",
+          "options": {
+            "boxed_type": "GuildID_t"
+          }
         },
         "challengeInstanceId": {
           "type": "uint32",
@@ -6561,7 +6971,9 @@ export default {
               "id": 1,
               "protoName": "player_id",
               "options": {
-                "default": -1
+                "default": -1,
+                "boxed_type": "PlayerID_t",
+                "synthetic_default": "-1"
               }
             },
             "progress": {
@@ -6586,7 +6998,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "targetEhandle": {
@@ -6594,7 +7008,9 @@ export default {
           "id": 2,
           "protoName": "target_ehandle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "arrowsLanded": {
@@ -6631,7 +7047,9 @@ export default {
           "type": "uint32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "targetEhandle": {
@@ -6639,7 +7057,9 @@ export default {
           "id": 2,
           "protoName": "target_ehandle",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "arrowsLanded": {
@@ -6681,7 +7101,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -6689,7 +7111,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "slotIndex": {
@@ -6712,7 +7136,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetPlayerId": {
@@ -6720,7 +7146,9 @@ export default {
           "id": 2,
           "protoName": "target_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -6728,7 +7156,9 @@ export default {
           "id": 3,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "alertType": {
@@ -6755,13 +7185,19 @@ export default {
           "rule": "repeated",
           "type": "int32",
           "id": 1,
-          "protoName": "text_muted_player_ids"
+          "protoName": "text_muted_player_ids",
+          "options": {
+            "boxed_type": "PlayerID_t"
+          }
         },
         "voiceMutedPlayerIds": {
           "rule": "repeated",
           "type": "int32",
           "id": 2,
-          "protoName": "voice_muted_player_ids"
+          "protoName": "voice_muted_player_ids",
+          "options": {
+            "boxed_type": "PlayerID_t"
+          }
         }
       }
     },
@@ -6855,7 +7291,9 @@ export default {
           "id": 1,
           "protoName": "source_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "channelType": {
@@ -6878,7 +7316,9 @@ export default {
           "id": 1,
           "protoName": "player_id_source",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerIdTarget": {
@@ -6886,7 +7326,9 @@ export default {
           "id": 2,
           "protoName": "player_id_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6899,7 +7341,9 @@ export default {
           "id": 1,
           "protoName": "player_id_1",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerId_2": {
@@ -6907,7 +7351,9 @@ export default {
           "id": 2,
           "protoName": "player_id_2",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "player_1Choice": {
@@ -6960,7 +7406,9 @@ export default {
           "id": 1,
           "protoName": "player_id_requestor",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -6973,7 +7421,9 @@ export default {
           "id": 1,
           "protoName": "player_id_killer",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerIdTarget": {
@@ -6981,7 +7431,9 @@ export default {
           "id": 2,
           "protoName": "player_id_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "points": {
@@ -7008,7 +7460,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "suggestionPlayerId": {
@@ -7016,7 +7470,9 @@ export default {
           "id": 2,
           "protoName": "suggestion_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -7029,7 +7485,9 @@ export default {
           "id": 1,
           "protoName": "player_id_captain",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "playerIdTarget": {
@@ -7037,7 +7495,9 @@ export default {
           "id": 2,
           "protoName": "player_id_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "team": {
@@ -7054,7 +7514,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "facetStrhash": {
@@ -7082,7 +7544,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "entityId": {
@@ -7109,7 +7573,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "timerAlertType": {
@@ -7130,7 +7596,9 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "targetEntindex": {
@@ -7138,7 +7606,9 @@ export default {
           "id": 2,
           "protoName": "target_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "tier": {
@@ -7201,13 +7671,18 @@ export default {
           "id": 1,
           "protoName": "player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         },
         "heroId": {
           "type": "int32",
           "id": 2,
-          "protoName": "hero_id"
+          "protoName": "hero_id",
+          "options": {
+            "boxed_type": "HeroID_t"
+          }
         },
         "huntAlertType": {
           "type": ".CDOTAUserMsg_MonsterHunter_HuntAlert.EHuntAlertType",
@@ -7259,7 +7734,9 @@ export default {
           "id": 1,
           "protoName": "victim_ent_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "killerPlayerId": {
@@ -7267,7 +7744,9 @@ export default {
           "id": 2,
           "protoName": "killer_player_id",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "PlayerID_t",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -7280,7 +7759,9 @@ export default {
           "id": 1,
           "protoName": "giver_ent_index",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "receiverEntIndex": {
@@ -7288,7 +7769,9 @@ export default {
           "id": 2,
           "protoName": "receiver_ent_index",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "itemEntIndex": {
@@ -7296,7 +7779,9 @@ export default {
           "id": 3,
           "protoName": "item_ent_index",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "giveStatus": {
@@ -7371,7 +7856,9 @@ export default {
           "type": "uint32",
           "id": 10,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "materialId": {
@@ -7531,7 +8018,9 @@ export default {
           "id": 3,
           "protoName": "source_entity_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "seed": {
@@ -7573,7 +8062,9 @@ export default {
           "id": 2,
           "protoName": "source_entity_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -7702,7 +8193,9 @@ export default {
           "id": 12,
           "protoName": "player_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "tickInterval": {
@@ -8055,7 +8548,9 @@ export default {
           "id": 2,
           "protoName": "client_deprecated",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "proximity": {
@@ -8083,7 +8578,9 @@ export default {
           "type": "int32",
           "id": 8,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -8266,7 +8763,9 @@ export default {
           "id": 3,
           "protoName": "player_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "serverTickExecuted": {
@@ -8319,14 +8818,18 @@ export default {
           "type": "fixed32",
           "id": 5,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "otherentity": {
           "type": "fixed32",
           "id": 6,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "scale": {
@@ -8381,7 +8884,9 @@ export default {
           "type": "uint32",
           "id": 19,
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CUtlStringToken",
+            "synthetic_default": "0"
           }
         }
       }
@@ -8449,7 +8954,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "chat": {
@@ -8771,7 +9278,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "entityHandleForModifiers": {
@@ -8779,7 +9288,9 @@ export default {
               "id": 4,
               "protoName": "entity_handle_for_modifiers",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "applyVoiceBanRules": {
@@ -8834,7 +9345,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -8851,7 +9364,9 @@ export default {
               "id": 2,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "destroyImmediately": {
@@ -8984,7 +9499,9 @@ export default {
               "id": 2,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "attachType": {
@@ -9058,7 +9575,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -9070,7 +9589,9 @@ export default {
               "id": 1,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "position": {
@@ -9235,7 +9756,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -9349,7 +9872,9 @@ export default {
                   "id": 2,
                   "protoName": "ent_index",
                   "options": {
-                    "default": 16777215
+                    "default": 16777215,
+                    "boxed_type": "CEHandleNetworkableInt",
+                    "synthetic_default": "16777215"
                   }
                 }
               }
@@ -9494,7 +10019,9 @@ export default {
               "id": 17,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "attachmentName": {
@@ -9567,14 +10094,19 @@ export default {
           "id": 1,
           "protoName": "ent_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
           "id": 2,
-          "protoName": "player_slots"
+          "protoName": "player_slots",
+          "options": {
+            "boxed_type": "CPlayerSlot"
+          }
         },
         "response": {
           "type": "string",
