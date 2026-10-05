@@ -1,5 +1,3 @@
-/** @import { Stream } from 'node:stream' */
-
 /** @import DemoPacket from './data/DemoPacket.js' */
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 /** @import MessagePacket from './data/MessagePacket.js' */
@@ -62,6 +60,8 @@ import SchemaRegistry from './SchemaRegistry.js';
  *
  * @typedef {Exclude<keyof InterceptorMap, 'USER_COMMAND'>} InterceptorPreStage
  */
+
+/** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
 
 class ParserEngine {
     /**
@@ -340,7 +340,7 @@ class ParserEngine {
      * This is a lightweight first pass that only extracts {@link DemoPacketRaw} instances.
      *
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} source
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
@@ -389,7 +389,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @param {boolean} [objectMode=false]
      * @returns {Promise<void>}

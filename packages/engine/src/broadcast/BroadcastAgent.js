@@ -1,6 +1,5 @@
-/** @import { Stream } from 'node:stream' */
-
 /** @import { SyncObject } from './BroadcastGateway.js' */
+/** @import { NodeReadable } from '../ParserEngine.js' */
 
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';
 
@@ -211,7 +210,7 @@ class BroadcastAgent {
      * @public
      * @param {boolean} [fromStart = false]
      * @param {*} [options={ }]
-     * @returns {Stream.Readable|ReadableStream}
+     * @returns {NodeReadable|ReadableStream}
      */
     stream(fromStart = false, options = { }) {
         const readableStream = new BroadcastReadStream(this, options);

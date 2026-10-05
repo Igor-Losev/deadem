@@ -1,10 +1,8 @@
-/** @import { Stream } from 'node:stream' */
-
 /** @import SchemaRegistry from './SchemaRegistry.js' */
 
 /** @import Demo from './data/Demo.js' */
 /** @import { PlaybackInterruptionReason } from './errors/PlaybackInterruptedError.js' */
-/** @import { InterceptorMap, InterceptorPreStage } from './ParserEngine.js' */
+/** @import { InterceptorMap, InterceptorPreStage, NodeReadable } from './ParserEngine.js' */
 /** @import InterceptorStage from './data/enums/InterceptorStage.js' */
 
 /** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */
@@ -158,7 +156,7 @@ class Player {
      * after this method completes.
      *
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [demoSource=DemoSource.REPLAY]
      * @returns {Promise<void>}
      */

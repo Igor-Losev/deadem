@@ -1,7 +1,5 @@
-/** @import { Stream } from 'node:stream' */
-
 /** @import SchemaRegistry from './SchemaRegistry.js' */
-/** @import { InterceptorMap, InterceptorPreStage } from './ParserEngine.js' */
+/** @import { InterceptorMap, InterceptorPreStage, NodeReadable } from './ParserEngine.js' */
 
 /** @import Demo from './data/Demo.js' */
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
@@ -57,7 +55,7 @@ class Parser {
      * This is a lightweight pass that only extracts {@link DemoPacketRaw} objects.
      *
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
@@ -119,7 +117,7 @@ class Parser {
 
     /**
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @param {boolean} [objectMode=false]
      * @returns {Promise<void>}
