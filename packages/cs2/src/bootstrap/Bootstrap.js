@@ -46,9 +46,7 @@ class Bootstrap {
      */
     static _registerMessagePacketTypes(registry) {
         for (const type of MessagePacketType.getAll()) {
-            if (type.protoName !== null) {
-                registry.registerMessageType(type, registry.getDecoder(type.protoName));
-            }
+            registry.registerMessageType(type);
         }
     }
 

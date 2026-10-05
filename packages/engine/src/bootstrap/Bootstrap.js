@@ -28,9 +28,7 @@ class Bootstrap {
      */
     static _registerDemoPacketTypes(registry) {
         for (const type of DemoPacketType.getAll()) {
-            if (type.protoName !== null) {
-                registry.registerDemoType(type, registry.getDecoder(type.protoName));
-            }
+            registry.registerDemoType(type);
         }
     }
 

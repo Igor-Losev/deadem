@@ -15,7 +15,7 @@ import FieldRuleRegistry from './data/fields/FieldRuleRegistry.js';
 
 /**
  * Instance-based registry that owns the mapping from engine-level type identities
- * (DemoPacketType, MessagePacketType, StringTableType) to their protobuf types,
+ * (DemoPacketType, MessagePacketType, StringTableType) to their decoders,
  * together with id/code lookups.
  *
  * Populated at startup by bootstrap functions. Each parser owns its own
@@ -123,12 +123,14 @@ class SchemaRegistry {
     /**
      * @public
      * @param {DemoPacketType} type
-     * @param {ProtoDecoder} decoder
      */
-    registerDemoType(type, decoder) {
-        this._decoders.demo.set(type.id, decoder);
+    registerDemoType(type) {
         this._types.demoById.set(type.id, type);
         this._types.demoByCode.set(type.code, type);
+
+        if (type.protoName !== null) {
+            this._decoders.demo.set(type.id, this.getDecoder(type.protoName));
+        }
     }
 
     /**
@@ -169,12 +171,14 @@ class SchemaRegistry {
     /**
      * @public
      * @param {MessagePacketType} type
-     * @param {ProtoDecoder} decoder
      */
-    registerMessageType(type, decoder) {
-        this._decoders.message.set(type.id, decoder);
+    registerMessageType(type) {
         this._types.messageById.set(type.id, type);
         this._types.messageByCode.set(type.code, type);
+
+        if (type.protoName !== null) {
+            this._decoders.message.set(type.id, this.getDecoder(type.protoName));
+        }
     }
 
     /**
