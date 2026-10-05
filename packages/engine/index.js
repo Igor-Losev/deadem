@@ -39,7 +39,6 @@ export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterr
 export { default as Player } from './src/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/Printer.js';
-export { default as ProtoProvider } from './src/providers/ProtoProvider.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
 export { default as SchemaRegistry } from './src/SchemaRegistry.js';
 export { default as Server } from './src/data/Server.js';
