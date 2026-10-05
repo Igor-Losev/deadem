@@ -1,5 +1,9 @@
 import { MessagePacketType as EngineMessagePacketType } from '@deademx/engine';
 
+/**
+ * @template {string|null} [N=string|null]
+ * @extends {EngineMessagePacketType<N>}
+ */
 class MessagePacketType extends EngineMessagePacketType {
     static get USER_MESSAGE_SAY_TEXT() { return umSayText; }
 

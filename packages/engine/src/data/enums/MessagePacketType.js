@@ -2,14 +2,17 @@ import Assert from '../../core/Assert.js';
 
 const registries = new WeakMap();
 
+/**
+ * @template {string|null} [N=string|null]
+ */
 class MessagePacketType {
     /**
      * @constructor
      * @param {string} code
      * @param {number} id
-     * @param {string|null} [protoName=null]
+     * @param {N} protoName
      */
-    constructor(code, id, protoName = null) {
+    constructor(code, id, protoName) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));
         Assert.isTrue(protoName === null || (typeof protoName === 'string' && protoName.length > 0));
@@ -52,7 +55,7 @@ class MessagePacketType {
 
     /**
      * @public
-     * @returns {string|null}
+     * @returns {N}
      */
     get protoName() {
         return this._protoName;

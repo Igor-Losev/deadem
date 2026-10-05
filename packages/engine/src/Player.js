@@ -22,6 +22,9 @@ import ParserEngine from './ParserEngine.js';
 import ParserSession from './ParserSession.js';
 import PlayerPacketIndex from './PlayerPacketIndex.js';
 
+/**
+ * @template [M=null]
+ */
 class Player {
     /**
      * @public
@@ -269,7 +272,7 @@ class Player {
      * @public
      * @template {keyof InterceptorMap} C
      * @param {InterceptorStage<C>} stage
-     * @param {InterceptorMap[C]} interceptor
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -279,7 +282,7 @@ class Player {
      * @public
      * @template {InterceptorPreStage} C
      * @param {InterceptorStage<C>} stage
-     * @param {InterceptorMap[C]} interceptor
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);

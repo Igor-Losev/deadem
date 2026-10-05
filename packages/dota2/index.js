@@ -15,6 +15,7 @@
 /** @typedef {import('@deademx/engine').SyncObject} SyncObject */
 
 /** @import { Logger, ParserConfiguration } from '@deademx/engine' */
+/** @import * as Proto from '@deademx/dota2/proto' */
 
 import {
     Parser as EngineParser,
@@ -34,6 +35,9 @@ function createRegistry() {
     return registry;
 }
 
+/**
+ * @extends {EngineParser<typeof Proto>}
+ */
 class Parser extends EngineParser {
     /**
      * @constructor
@@ -45,6 +49,9 @@ class Parser extends EngineParser {
     }
 }
 
+/**
+ * @extends {EnginePlayer<typeof Proto>}
+ */
 class Player extends EnginePlayer {
     /**
      * @constructor

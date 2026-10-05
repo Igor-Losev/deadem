@@ -17,6 +17,9 @@ import DemoSource from './data/enums/DemoSource.js';
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
 
+/**
+ * @template [M=null]
+ */
 class Parser {
     /**
      * @constructor
@@ -140,7 +143,7 @@ class Parser {
      * @public
      * @template {keyof InterceptorMap} C
      * @param {InterceptorStage<C>} stage
-     * @param {InterceptorMap[C]} interceptor
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
         return this._engine.registerPostInterceptor(stage, interceptor);
@@ -150,7 +153,7 @@ class Parser {
      * @public
      * @template {InterceptorPreStage} C
      * @param {InterceptorStage<C>} stage
-     * @param {InterceptorMap[C]} interceptor
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
         return this._engine.registerPreInterceptor(stage, interceptor);

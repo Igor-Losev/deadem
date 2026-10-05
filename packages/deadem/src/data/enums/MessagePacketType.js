@@ -1,5 +1,9 @@
 import { MessagePacketType as EngineMessagePacketType } from '@deademx/engine';
 
+/**
+ * @template {string|null} [N=string|null]
+ * @extends {EngineMessagePacketType<N>}
+ */
 class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_DAMAGE() { return citadelUserMessageDamage; }
     static get CITADEL_USER_MESSAGE_MAP_PING() { return citadelUserMessageMapPing; }

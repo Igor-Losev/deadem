@@ -47,11 +47,12 @@ import SchemaRegistry from './SchemaRegistry.js';
 /**
  * Callback shape fired at each {@link InterceptorStage}.
  *
+ * @template [M=null]
  * @typedef {{
  *     DEMO_PACKET: (demoPacket: DemoPacket) => void,
- *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<EntityMutationEvent>) => void,
- *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket) => void,
- *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket, events: Array<UserCommandEvent>) => void
+ *     ENTITY_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
+ *     MESSAGE_PACKET: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>) => void,
+ *     USER_COMMAND: (demoPacket: DemoPacket, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */
 

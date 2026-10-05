@@ -1,5 +1,9 @@
 import { MessagePacketType as EngineMessagePacketType } from '@deademx/engine';
 
+/**
+ * @template {string|null} [N=string|null]
+ * @extends {EngineMessagePacketType<N>}
+ */
 class MessagePacketType extends EngineMessagePacketType {
     static get DOTA_UM_AI_DEBUG_LINE() { return dotaUmAiDebugLine; }
     static get DOTA_UM_CHAT_EVENT() { return dotaUmChatEvent; }
