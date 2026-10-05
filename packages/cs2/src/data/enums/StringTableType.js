@@ -8,7 +8,7 @@ import { StringTableType as EngineStringTableType } from '@deademx/engine';
  * @extends {EngineStringTableType<C, D>}
  */
 class StringTableType extends EngineStringTableType {
-    /** @returns {StringTableType<'SERVER_AVATAR_OVERRIDES', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'SERVER_AVATAR_OVERRIDES', StringTableRawValue>} */
     static get SERVER_AVATAR_OVERRIDES() { return serverAvatarOverrides; }
 }
 

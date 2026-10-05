@@ -1,4 +1,5 @@
 /** @import { StringTableRawValue } from '@deademx/engine' */
+/** @import { CDOTAModifierBuffTableEntry, CSOEconItem } from '@deademx/dota2/proto' */
 
 import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
@@ -8,21 +9,21 @@ import { StringTableType as EngineStringTableType } from '@deademx/engine';
  * @extends {EngineStringTableType<C, D>}
  */
 class StringTableType extends EngineStringTableType {
-    /** @returns {StringTableType<'ACTIVE_MODIFIERS'>} */
+    /** @returns {EngineStringTableType<'ACTIVE_MODIFIERS', CDOTAModifierBuffTableEntry|null>} */
     static get ACTIVE_MODIFIERS() { return activeModifiers; }
-    /** @returns {StringTableType<'MODIFIER_NAMES', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'MODIFIER_NAMES', StringTableRawValue>} */
     static get MODIFIER_NAMES() { return modifierNames; }
-    /** @returns {StringTableType<'COOLDOWN_NAMES', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'COOLDOWN_NAMES', StringTableRawValue>} */
     static get COOLDOWN_NAMES() { return cooldownNames; }
-    /** @returns {StringTableType<'ECON_ITEMS'>} */
+    /** @returns {EngineStringTableType<'ECON_ITEMS', CSOEconItem|null>} */
     static get ECON_ITEMS() { return econItems; }
-    /** @returns {StringTableType<'COMBAT_LOG_NAMES', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'COMBAT_LOG_NAMES', StringTableRawValue>} */
     static get COMBAT_LOG_NAMES() { return combatLogNames; }
-    /** @returns {StringTableType<'LUA_MODIFIERS', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'LUA_MODIFIERS', StringTableRawValue>} */
     static get LUA_MODIFIERS() { return luaModifiers; }
-    /** @returns {StringTableType<'PARTICLE_ASSETS', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'PARTICLE_ASSETS', StringTableRawValue>} */
     static get PARTICLE_ASSETS() { return particleAssets; }
-    /** @returns {StringTableType<'DOWNLOADABLES', StringTableRawValue>} */
+    /** @returns {EngineStringTableType<'DOWNLOADABLES', StringTableRawValue>} */
     static get DOWNLOADABLES() { return downloadables; }
 }
 

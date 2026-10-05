@@ -1,3 +1,5 @@
+/** @import { CModifierTableEntry } from 'deadem/proto' */
+
 import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
 /**
@@ -6,7 +8,7 @@ import { StringTableType as EngineStringTableType } from '@deademx/engine';
  * @extends {EngineStringTableType<C, D>}
  */
 class StringTableType extends EngineStringTableType {
-    /** @returns {StringTableType<'ACTIVE_MODIFIERS'>} */
+    /** @returns {EngineStringTableType<'ACTIVE_MODIFIERS', CModifierTableEntry|null>} */
     static get ACTIVE_MODIFIERS() { return activeModifiers; }
 }
 
