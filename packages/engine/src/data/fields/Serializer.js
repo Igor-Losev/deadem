@@ -36,8 +36,7 @@ class Serializer {
         /** @private */
         this._fields = fields;
 
-        /** @type {Array<*>} */
-        /** @private @type {Array<FieldDecoderFn|undefined>} */
+        /** @private @type {Array<FieldDecoderFn|null>} */
         this._decoderCache = [];
         /** @private @type {Array<*>} */
         this._definitionCache = [];
@@ -100,9 +99,9 @@ class Serializer {
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
         if (fieldPathIndex === 0) {
-            const cached = this._decoderCache[fieldPath.id] ?? null;
+            const cached = this._decoderCache[fieldPath.id];
 
-            if (cached !== null) {
+            if (cached !== undefined && cached !== null) {
                 return cached;
             }
         }
@@ -111,7 +110,13 @@ class Serializer {
         const decoder = field.getDecoderForFieldPath(fieldPath, fieldPathIndex + 1);
 
         if (fieldPathIndex === 0) {
-            this._decoderCache[fieldPath.id] = decoder;
+            const cache = this._decoderCache;
+
+            for (let i = cache.length; i <= fieldPath.id; i++) {
+                cache.push(null);
+            }
+
+            cache[fieldPath.id] = decoder;
         }
 
         return decoder;
@@ -125,9 +130,9 @@ class Serializer {
      * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPathId(fieldPathId) {
-        const cached = this._decoderCache[fieldPathId] ?? null;
+        const cached = this._decoderCache[fieldPathId];
 
-        if (cached !== null) {
+        if (cached !== undefined && cached !== null) {
             return cached;
         }
 
