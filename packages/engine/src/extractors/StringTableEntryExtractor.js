@@ -78,6 +78,12 @@ class StringTableEntryExtractor {
 
                 history[cursor & (MAX_HISTORY_ENTRIES - 1)] = key;
                 cursor += 1;
+            } else {
+                const existing = this._table.getEntryById(index);
+
+                if (existing !== null) {
+                    key = existing.key;
+                }
             }
 
             const hasValue = this._bitBuffer.readBit();
