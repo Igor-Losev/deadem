@@ -1,5 +1,7 @@
 /** @import BitBuffer from '../core/BitBuffer.js' */
 
+/** @import Entity from '../data/entity/Entity.js' */
+
 /** @import Serializer from '../data/fields/Serializer.js' */
 /** @import { FieldDecoderFn } from '../data/fields/decoding/FieldDecoder.js' */
 
@@ -58,19 +60,18 @@ class EntityMutationExtractor {
     }
 
     /**
-     * Decodes all mutations in bit-stream order and invokes
-     * `callback(id, value)` for each one.
+     * Decodes all mutations in bit-stream order and applies them to the entity.
      *
      * @public
-     * @param {(id: number, value: *) => void} callback
+     * @param {Entity} entity
      */
-    forEach(callback) {
+    applyTo(entity) {
         const serializer = /** @type {Serializer} */ (this._serializer);
 
         const ids = this._fieldPathExtractor.allIds();
 
         for (let i = 0; i < ids.length; i++) {
-            callback(ids[i], serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
+            entity.updateByFieldPathId(ids[i], serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
         }
     }
 

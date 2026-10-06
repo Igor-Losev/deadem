@@ -141,7 +141,7 @@ class Entity {
      * @param {EntityMutationExtractor} extractor
      */
     applyFromExtractor(extractor) {
-        extractor.forEach((id, value) => this.updateByFieldPathId(id, value));
+        extractor.applyTo(this);
     }
 
     /**
