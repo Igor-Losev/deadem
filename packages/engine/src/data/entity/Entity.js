@@ -117,6 +117,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      */
     activate() {
@@ -124,6 +125,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {EntityMutationBatch} batch
      */
@@ -134,6 +136,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {EntityMutationExtractor} extractor
      */
@@ -142,6 +145,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      */
     deactivate() {

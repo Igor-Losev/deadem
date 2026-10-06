@@ -54,6 +54,7 @@ class DemoPacket {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} value
      */

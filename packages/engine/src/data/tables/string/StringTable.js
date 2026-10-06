@@ -129,6 +129,7 @@ class StringTable {
     }
 
     /**
+     * @internal
      * @public
      * @param {StringTableEntry<C, D>} entry
      * @returns {void}

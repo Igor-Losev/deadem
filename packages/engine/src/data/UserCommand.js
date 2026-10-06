@@ -61,6 +61,7 @@ class UserCommand {
     }
 
     /**
+     * @internal
      * @public
      * @static
      * @param {number} slot
@@ -74,6 +75,7 @@ class UserCommand {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} number
      * @param {Uint8Array} deltaData
@@ -87,6 +89,7 @@ class UserCommand {
     /**
      * Extracts delta, without applying it.
      *
+     * @internal
      * @public
      * @param {Uint8Array} deltaData
      * @returns {ProtoState}

@@ -79,6 +79,7 @@ class EntityMutationEvent {
     /**
      * Creates a mutation-less event.
      *
+     * @internal
      * @public
      * @static
      * @param {EntityOperation} operation

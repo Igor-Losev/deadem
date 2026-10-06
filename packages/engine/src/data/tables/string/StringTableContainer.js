@@ -78,6 +78,7 @@ class StringTableContainer {
      * Inserts a table into the container. Replaces any existing table
      * with the same id or name. Fires TABLE_CREATED + TABLE_CHANGED.
      *
+     * @internal
      * @public
      * @param {StringTable} stringTable
      * @param {Array<StringTableEntry>|null} [entries] - affected entries (all new entries for a create)
@@ -97,6 +98,7 @@ class StringTableContainer {
     /**
      * Signals that a table's entries were mutated. Fires TABLE_UPDATED + TABLE_CHANGED.
      *
+     * @internal
      * @public
      * @param {StringTable} stringTable
      * @param {Array<StringTableEntry>|null} [entries] - only the entries that changed
@@ -114,6 +116,7 @@ class StringTableContainer {
      * Signals that a table's state changed without an explicit update (e.g. snapshot).
      * Fires TABLE_CHANGED.
      *
+     * @internal
      * @public
      * @param {StringTable} stringTable
      * @param {Array<StringTableEntry>|null} [entries] - resupplied entries, if known
@@ -129,6 +132,7 @@ class StringTableContainer {
     /**
      * Removes all tables. Fires TABLE_REMOVED for each one before clearing.
      *
+     * @internal
      * @public
      */
     clear() {

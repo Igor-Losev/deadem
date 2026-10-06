@@ -73,6 +73,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} index
      * @returns {Entity|null}
@@ -95,6 +96,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} slot
      * @returns {UserCommand|null}
@@ -235,6 +237,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {SerializerKey} key
      * @returns {Serializer|null}
@@ -278,6 +281,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Class} clazz
      */
@@ -289,6 +293,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Entity} entity
      */
@@ -308,6 +313,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Serializer} serializer
      */
@@ -318,6 +324,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Server} server
      */
@@ -328,6 +335,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {UserCommand} command
      */
@@ -340,6 +348,7 @@ class Demo {
     /**
      * Resets all state to its initial values.
      *
+     * @internal
      * @public
      */
     reset() {

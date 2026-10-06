@@ -124,6 +124,7 @@ class StringTableType {
     /**
      * Creates a runtime-synthesized type for a name not known at bootstrap time.
      *
+     * @internal
      * @public
      * @static
      * @param {string} name

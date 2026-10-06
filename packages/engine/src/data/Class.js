@@ -58,6 +58,7 @@ class Class {
     /**
      * Per-class typed-array storage plan for entity state.
      *
+     * @internal
      * @public
      * @returns {EntityStateLayout}
      */
@@ -69,6 +70,7 @@ class Class {
      * Returns the compiled read accessor for a flattened field name, or `null`
      * when the name does not resolve. Compiled once per name and cached.
      *
+     * @internal
      * @public
      * @param {string} name
      * @returns {FieldAccessor|null}
