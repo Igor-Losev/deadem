@@ -26,9 +26,9 @@ class EntityStateLayout {
             presence: 0
         };
 
-        /** @private @type {{ byId: Map<number, EntityFieldMeta>, order: Array<EntityFieldMeta> }} */
+        /** @private @type {{ byId: Array<EntityFieldMeta|null>, order: Array<EntityFieldMeta> }} */
         this._metas = {
-            byId: new Map(),
+            byId: [ ],
             order: [ ]
         };
     }
@@ -81,7 +81,7 @@ class EntityStateLayout {
      * @returns {EntityFieldMeta|null}
      */
     peek(fieldPathId) {
-        return this._metas.byId.get(fieldPathId) || null;
+        return this._metas.byId[fieldPathId] || null;
     }
 
     /**
@@ -101,7 +101,14 @@ class EntityStateLayout {
 
         const meta = this._classify(fieldPathId);
 
-        this._metas.byId.set(fieldPathId, meta);
+        const byId = this._metas.byId;
+
+        for (let i = byId.length; i <= fieldPathId; i++) {
+            byId.push(null);
+        }
+
+        byId[fieldPathId] = meta;
+
         this._metas.order.push(meta);
 
         return meta;
