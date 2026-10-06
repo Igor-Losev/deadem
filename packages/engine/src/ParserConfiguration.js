@@ -108,6 +108,28 @@ class ParserConfiguration {
     }
 
     /**
+     * The configured entity class filter, or `null` when every class is allowed.
+     *
+     * @internal
+     * @public
+     * @returns {((className: string) => boolean)|null}
+     */
+    get entityClassFilter() {
+        return this._entityClassFilter;
+    }
+
+    /**
+     * The configured message packet filter, or `null` when every type is allowed.
+     *
+     * @internal
+     * @public
+     * @returns {((messagePacketTypeId: number) => boolean)|null}
+     */
+    get messagePacketFilter() {
+        return this._messagePacketFilter;
+    }
+
+    /**
      * Returns whether mutations of a given entity class should be processed.
      * Returns `true` when no `entityClasses` filter was configured.
      *

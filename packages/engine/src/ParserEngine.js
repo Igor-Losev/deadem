@@ -91,8 +91,8 @@ class ParserEngine {
 
         /** @private */
         this._filters = {
-            entity: configuration.getIsEntityClassAllowed.bind(configuration),
-            message: configuration.getIsMessagePacketTypeAllowed.bind(configuration)
+            entity: configuration.entityClassFilter,
+            message: configuration.messagePacketFilter
         };
 
         /** @private */

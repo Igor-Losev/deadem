@@ -20,7 +20,7 @@ class DemoStreamPacketParser extends Transform {
      * @public
      * @param {ParserEngine} engine
      * @param {number} highWaterMark
-     * @param {(id: number) => boolean} messagePacketFilter
+     * @param {((id: number) => boolean)|null} messagePacketFilter
      */
     constructor(engine, highWaterMark, messagePacketFilter) {
         super(highWaterMark);
