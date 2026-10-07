@@ -36,10 +36,10 @@ class StringTableEntryExtractor {
         const instructions = /** @type {StringTableInstructions} */ (this._table.instructions);
 
         /** @type {Array<string>} */
-        const history = [ ];
+        const history = new Array(MAX_HISTORY_ENTRIES);
 
         let index = -1;
-        let cursor = 0;
+        let count = 0;
 
         for (let i = 0; i < this._entriesCount; i++) {
             let key = '';
@@ -59,25 +59,20 @@ class StringTableEntryExtractor {
                 const useHistory = this._bitBuffer.readBit();
 
                 if (useHistory) {
-                    const base = cursor > MAX_HISTORY_ENTRIES ? cursor & (MAX_HISTORY_ENTRIES - 1) : 0;
-
-                    const offset = this._bitBuffer.readBitsAsUInt(5);
+                    const position = this._bitBuffer.readBitsAsUInt(5);
                     const size = this._bitBuffer.readBitsAsUInt(5);
-
-                    const slot = (base + offset) & (MAX_HISTORY_ENTRIES - 1);
                     const portion = this._bitBuffer.readString();
 
-                    if (cursor < slot || !history[slot] || history[slot].length < size) {
-                        key = portion;
+                    if (position < Math.min(count, MAX_HISTORY_ENTRIES)) {
+                        const oldest = Math.max(0, count - MAX_HISTORY_ENTRIES);
+
+                        key = history[(oldest + position) & (MAX_HISTORY_ENTRIES - 1)].slice(0, size) + portion;
                     } else {
-                        key = history[slot].slice(0, size) + portion;
+                        key = portion;
                     }
                 } else {
                     key = this._bitBuffer.readString();
                 }
-
-                history[cursor & (MAX_HISTORY_ENTRIES - 1)] = key;
-                cursor += 1;
             } else {
                 const existing = this._table.getEntryById(index);
 
@@ -85,6 +80,9 @@ class StringTableEntryExtractor {
                     key = existing.key;
                 }
             }
+
+            history[count & (MAX_HISTORY_ENTRIES - 1)] = key;
+            count += 1;
 
             const hasValue = this._bitBuffer.readBit();
 
