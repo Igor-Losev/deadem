@@ -125,7 +125,7 @@ class PlayerPacketIndex {
         const keyframePosition = this._keyframes.findIndex(ki => ki === keyframeIndex);
 
         const stringTableSnapshots = this._keyframes
-            .slice(0, keyframePosition)
+            .slice(0, keyframePosition + 1)
             .map(ki => this._stringTableSnapshots.get(ki));
 
         return {

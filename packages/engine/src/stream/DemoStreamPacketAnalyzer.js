@@ -63,10 +63,6 @@ class DemoStreamPacketAnalyzer extends Transform {
             case DemoPacketType.DEM_PACKET:
             case DemoPacketType.DEM_SIGNON_PACKET:
             case DemoPacketType.DEM_FULL_PACKET: {
-                if (demoPacket.type === DemoPacketType.DEM_FULL_PACKET) {
-                    this._engine.getDemoPacketHandler().handleDemFullPacketTables(demoPacket);
-                }
-
                 this._handleMessagePackets(demoPacket, /** @type {{ messagePackets: Array<MessagePacket> }} */ (demoPacket.data).messagePackets);
 
                 break;
