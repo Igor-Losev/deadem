@@ -27,7 +27,7 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
-     * @returns {(bitBuffer: BitBuffer) => string}
+     * @returns {(bitBuffer: BitBuffer) => Uint8Array}
      */
     static get BINARY_BLOCK() {
         return decodeBinaryBlock;
@@ -365,14 +365,11 @@ class FieldDecoderFactory {
     }
 }
 
-const textDecoder = new TextDecoder('utf-8', { fatal: false });
-
-/** @type {(bitBuffer: BitBuffer) => string} */
+/** @type {(bitBuffer: BitBuffer) => Uint8Array} */
 const decodeBinaryBlock = (bitBuffer) => {
     const length = bitBuffer.readUVarInt32();
-    const bytes = bitBuffer.read(length * 8, true);
 
-    return textDecoder.decode(bytes.subarray(0, length));
+    return bitBuffer.read(length * 8, true);
 };
 /** @type {(bitBuffer: BitBuffer) => boolean} */
 const decodeBoolean = bitBuffer => bitBuffer.readBit();
