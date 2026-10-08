@@ -36,6 +36,8 @@ class Bootstrap {
 
         registry.registerFixedTableType('CLightComponent');
 
+        registry.registerFieldDecoderOverride('m_iClip1', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        registry.registerFieldDecoderOverride('m_iClip2', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
         registry.registerFieldDecoderOverride('m_pGameModeRules', FieldDecoderDescriptor.GAME_MODE_RULES);
     }
 
