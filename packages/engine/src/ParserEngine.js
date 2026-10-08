@@ -24,7 +24,7 @@ import StringTableHandler from './handlers/StringTableHandler.js';
 
 import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
-import DemoStreamPacketAnalyzer from './stream/DemoStreamPacketAnalyzer.js';
+import DemoStreamPacketApplier from './stream/DemoStreamPacketApplier.js';
 import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
 import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
@@ -405,7 +405,7 @@ class ParserEngine {
         chain.push(
             new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
             new DemoStreamPacketPrioritizer(this, highWaterMark),
-            new DemoStreamPacketAnalyzer(this, highWaterMark)
+            new DemoStreamPacketApplier(this, highWaterMark)
         );
 
         this._started = true;

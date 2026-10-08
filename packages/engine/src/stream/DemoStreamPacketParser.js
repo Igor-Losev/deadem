@@ -2,17 +2,15 @@
 
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
-/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
-
 import Transform from '#core/stream/Transform.js';
 
-import MessagePacket from '../data/MessagePacket.js';
-
-import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
+import DemoPacketParser from '../processing/DemoPacketParser.js';
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload.
  * Tracks unparsed demo and message packets.
+ *
+ * Stream wrapper around {@link DemoPacketParser}.
  */
 class DemoStreamPacketParser extends Transform {
     /**
@@ -26,9 +24,7 @@ class DemoStreamPacketParser extends Transform {
         super(highWaterMark);
 
         /** @private */
-        this._engine = engine;
-        /** @private */
-        this._messagePacketFilter = messagePacketFilter;
+        this._parser = new DemoPacketParser(engine.codec, messagePacketFilter, engine.getPacketTracker(), engine.getPerformanceTracker());
     }
 
     /**
@@ -36,44 +32,11 @@ class DemoStreamPacketParser extends Transform {
      * @param {DemoPacketRaw} demoPacketRaw
      */
     async _handle(demoPacketRaw) {
-        this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
-
-        const demoPacket = this._engine.codec.parseDemoPacket(demoPacketRaw, this._messagePacketFilter);
+        const demoPacket = this._parser.parse(demoPacketRaw);
 
         if (demoPacket === null) {
-            this._engine.getPacketTracker().handleDemoPacketRaw(demoPacketRaw);
-
-            this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
-
             return;
         }
-
-        if (demoPacket.type.heavy) {
-            const data = /** @type {DemoPacketHeavyData} */ (demoPacket.data);
-
-            /** @type {Array<*>} */
-            const parsed = [ ];
-            /** @type {Array<*>} */
-            const unparsed = [ ];
-
-            data.messagePackets.forEach((/** @type {*} */ messagePacketOrRaw) => {
-                if (messagePacketOrRaw instanceof MessagePacket) {
-                    parsed.push(messagePacketOrRaw);
-                } else {
-                    unparsed.push(messagePacketOrRaw);
-                }
-            });
-
-            if (unparsed.length > 0) {
-                unparsed.forEach((messagePacketRaw) => {
-                    this._engine.getPacketTracker().handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
-                });
-
-                data.messagePackets = parsed;
-            }
-        }
-
-        this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
 
         this._push(demoPacket);
     }

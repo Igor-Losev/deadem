@@ -2,12 +2,9 @@
 
 /** @import DemoPacket from '../data/DemoPacket.js' */
 
-/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
-
 import Transform from '#core/stream/Transform.js';
 
-import MessagePacketType from '../data/enums/MessagePacketType.js';
-import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
+import DemoPacketPrioritizer from '../processing/DemoPacketPrioritizer.js';
 
 /**
  * Handles prioritization of internal messages for
@@ -18,6 +15,8 @@ import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory
  * - {@link DemoPacketType.DEM_FULL_PACKET}
  *
  * All other packet types are passed through unchanged.
+ *
+ * Stream wrapper around {@link DemoPacketPrioritizer}.
  */
 class DemoStreamPacketPrioritizer extends Transform {
     /**
@@ -30,7 +29,7 @@ class DemoStreamPacketPrioritizer extends Transform {
         super(highWaterMark);
 
         /** @private */
-        this._engine = engine;
+        this._prioritizer = new DemoPacketPrioritizer(engine.getPerformanceTracker());
     }
 
     /**
@@ -38,45 +37,9 @@ class DemoStreamPacketPrioritizer extends Transform {
      * @param {DemoPacket} demoPacket
      */
     async _handle(demoPacket) {
-        if (!demoPacket.type.heavy) {
-            this._push(demoPacket);
-
-            return;
-        }
-
-        this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
-
-        /** @type {DemoPacketHeavyData} */ (demoPacket.data).messagePackets.sort((/** @type {*} */ a, /** @type {*} */ b) => {
-            const priorityA = getPacketPriority(a.type);
-            const priorityB = getPacketPriority(b.type);
-
-            return priorityB - priorityA;
-        });
-
-        this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_PRIORITIZER);
+        this._prioritizer.prioritize(demoPacket);
 
         this._push(demoPacket);
-    }
-}
-
-/**
- * @param {MessagePacketType} type
- * @returns {number}
- */
-function getPacketPriority(type) {
-    switch (type) {
-        case MessagePacketType.NET_TICK:
-            return 100;
-        case MessagePacketType.SVC_CREATE_STRING_TABLE:
-        case MessagePacketType.SVC_UPDATE_STRING_TABLE:
-        case MessagePacketType.NET_SPAWN_GROUP_LOAD:
-            return 10;
-        case MessagePacketType.SVC_PACKET_ENTITIES:
-            return -10;
-        case MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT:
-            return -100;
-        default:
-            return 0;
     }
 }
 
