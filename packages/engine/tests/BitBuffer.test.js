@@ -127,7 +127,8 @@ describe('BitBuffer.readVarInt32()', () => {
     const buffer = new Uint8Array([
         0x7f,
         0x81, 0x7f,
-        0xf0, 0xf0, 0xf0, 0xf0, 0x7f
+        0xf0, 0xf0, 0xf0, 0xf0, 0x7f,
+        0xa0, 0xa1, 0xc7, 0xdf, 0x08
     ]);
 
     const reader = new BitBuffer(buffer);
@@ -149,10 +150,18 @@ describe('BitBuffer.readVarInt32()', () => {
     });
 
     describe('When reading Int32 from [ 0xf0, 0xf0, 0xf0, 0xf0, 0x7f ]', () => {
-        test('It should return -15852488', () => {
+        test('It should return 2131631160', () => {
             const value = reader.readVarInt32();
 
-            expect(value).toBe(-15852488);
+            expect(value).toBe(2131631160);
+        });
+    });
+
+    describe('When reading Int32 from [ 0xa0, 0xa1, 0xc7, 0xdf, 0x08 ]', () => {
+        test('It should return 1173940304', () => {
+            const value = reader.readVarInt32();
+
+            expect(value).toBe(1173940304);
         });
     });
 });

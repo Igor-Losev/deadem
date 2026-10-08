@@ -506,7 +506,7 @@ class BitBuffer {
     readVarInt32() {
         const unsigned = this.readUVarInt32();
 
-        return (unsigned >> 1) ^ -(unsigned & 1);
+        return (unsigned >>> 1) ^ -(unsigned & 1);
     }
 
     /**
