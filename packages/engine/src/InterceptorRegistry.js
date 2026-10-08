@@ -11,8 +11,14 @@ class InterceptorRegistry {
     /**
      * @public
      * @constructor
+     * @param {boolean} userCommands - Whether the game decodes user commands.
      */
-    constructor() {
+    constructor(userCommands) {
+        Assert.isTrue(typeof userCommands === 'boolean');
+
+        /** @private */
+        this._userCommands = userCommands;
+
         /** @private */
         this._pre = createStages();
         /** @private */
@@ -64,6 +70,10 @@ class InterceptorRegistry {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
 
+        if (stage === InterceptorStage.USER_COMMAND && !this._userCommands) {
+            throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
+        }
+
         this._post[stage.id] = [ ...this._post[stage.id], interceptor ];
     }
 
@@ -75,6 +85,10 @@ class InterceptorRegistry {
     registerPre(stage, interceptor) {
         Assert.isTrue(stage instanceof InterceptorStage);
         Assert.isTrue(typeof interceptor === 'function');
+
+        if (stage === InterceptorStage.USER_COMMAND) {
+            throw new Error('InterceptorStage.USER_COMMAND has no pre phase: use registerPostInterceptor');
+        }
 
         this._pre[stage.id] = [ ...this._pre[stage.id], interceptor ];
     }

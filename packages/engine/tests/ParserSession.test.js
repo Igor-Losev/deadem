@@ -29,16 +29,18 @@ function createMockEngine() {
             return this._stringTableHandler;
         },
 
-        registerPostInterceptor(_stage, fn) {
-            interceptors.add(fn);
-        },
+        interceptors: {
+            registerPost(_stage, fn) {
+                interceptors.add(fn);
+            },
 
-        unregisterPostInterceptor(_stage, fn) {
-            const existed = interceptors.has(fn);
+            unregisterPost(_stage, fn) {
+                const existed = interceptors.has(fn);
 
-            interceptors.delete(fn);
+                interceptors.delete(fn);
 
-            return existed;
+                return existed;
+            }
         },
 
         getInterceptorCount() {

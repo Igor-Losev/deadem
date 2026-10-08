@@ -97,11 +97,11 @@ class ParserSession {
         };
 
         const bootstrapTeardown = () => {
-            this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
+            this._engine.interceptors.unregisterPost(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
             this._pending.delete(bootstrapTeardown);
         };
 
-        this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
+        this._engine.interceptors.registerPost(InterceptorStage.DEMO_PACKET, bootstrapInterceptor);
         this._pending.add(bootstrapTeardown);
 
         this._reader = new ReadableArray([ ...bootstrap, ...packets, ...remaining ], true);
@@ -187,7 +187,7 @@ class ParserSession {
 
         /** @param {*} [error] */
         const teardown = (error) => {
-            this._engine.unregisterPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+            this._engine.interceptors.unregisterPost(InterceptorStage.DEMO_PACKET, interceptor);
             this._pending.delete(teardown);
 
             if (error !== undefined) {
@@ -195,7 +195,7 @@ class ParserSession {
             }
         };
 
-        this._engine.registerPostInterceptor(InterceptorStage.DEMO_PACKET, interceptor);
+        this._engine.interceptors.registerPost(InterceptorStage.DEMO_PACKET, interceptor);
         this._pending.add(teardown);
 
         const reader = this._reader;

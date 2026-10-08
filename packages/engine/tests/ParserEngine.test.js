@@ -184,11 +184,11 @@ describe('ParserEngine', () => {
         });
     });
 
-    describe('registerPostInterceptor', () => {
+    describe('interceptors.registerPost', () => {
         test('It should reject USER_COMMAND when the game registers no decoder', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
+            expect(() => engine.interceptors.registerPost(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
         });
 
         test('It should accept USER_COMMAND once a decoder is registered', () => {
@@ -198,21 +198,21 @@ describe('ParserEngine', () => {
 
             const engine = new ParserEngine(supported, ParserConfiguration.DEFAULT, Logger.NOOP);
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).not.toThrow();
+            expect(() => engine.interceptors.registerPost(InterceptorStage.USER_COMMAND, () => { })).not.toThrow();
         });
 
         test('It should accept the other stages regardless of the decoder', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, () => { })).not.toThrow();
+            expect(() => engine.interceptors.registerPost(InterceptorStage.ENTITY_PACKET, () => { })).not.toThrow();
         });
     });
 
-    describe('registerPreInterceptor', () => {
+    describe('interceptors.registerPre', () => {
         test('It should reject USER_COMMAND, which has no pre phase', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPreInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('no pre phase');
+            expect(() => engine.interceptors.registerPre(InterceptorStage.USER_COMMAND, () => { })).toThrow('no pre phase');
         });
     });
 });

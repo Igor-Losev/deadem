@@ -146,7 +146,7 @@ class Parser {
      * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        return this._engine.registerPostInterceptor(stage, interceptor);
+        return this._engine.interceptors.registerPost(stage, interceptor);
     }
 
     /**
@@ -156,7 +156,7 @@ class Parser {
      * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        return this._engine.registerPreInterceptor(stage, interceptor);
+        return this._engine.interceptors.registerPre(stage, interceptor);
     }
 
     /**
@@ -175,7 +175,7 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        return this._engine.unregisterPostInterceptor(stage, interceptor);
+        return this._engine.interceptors.unregisterPost(stage, interceptor);
     }
 
     /**
@@ -185,7 +185,7 @@ class Parser {
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        return this._engine.unregisterPreInterceptor(stage, interceptor);
+        return this._engine.interceptors.unregisterPre(stage, interceptor);
     }
 }
 

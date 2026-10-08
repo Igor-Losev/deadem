@@ -14,7 +14,6 @@ import WritableSink from '#core/stream/WritableSink.js';
 import Demo from './data/Demo.js';
 
 import DemoSource from './data/enums/DemoSource.js';
-import InterceptorStage from './data/enums/InterceptorStage.js';
 import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
 import DemoEntityHandler from './handlers/DemoEntityHandler.js';
@@ -106,7 +105,7 @@ class ParserEngine {
         };
 
         /** @private */
-        this._interceptors = new InterceptorRegistry();
+        this._interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
         /** @private */
         this._pause = new PauseControl();
 
@@ -268,15 +267,6 @@ class ParserEngine {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @returns {boolean}
-     */
-    getIsInterceptorRegistered(stage) {
-        return this._interceptors.getIsRegistered(stage);
-    }
-
-    /**
-     * @public
      * @returns {MemoryTracker}
      */
     getMemoryTracker() {
@@ -305,24 +295,6 @@ class ParserEngine {
      */
     getStringTableHandler() {
         return this._handlers.stringTable;
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    interceptPost(stage, ...args) {
-        this._interceptors.firePost(stage, ...args);
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    interceptPre(stage, ...args) {
-        this._interceptors.firePre(stage, ...args);
     }
 
     /**
@@ -452,32 +424,6 @@ class ParserEngine {
     }
 
     /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
-     */
-    registerPostInterceptor(stage, interceptor) {
-        if (stage === InterceptorStage.USER_COMMAND && this._registry.getUserCommandDecoder() === null) {
-            throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
-        }
-
-        this._interceptors.registerPost(stage, interceptor);
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {InterceptorFn} interceptor
-     */
-    registerPreInterceptor(stage, interceptor) {
-        if (stage === InterceptorStage.USER_COMMAND) {
-            throw new Error('InterceptorStage.USER_COMMAND has no pre phase: use registerPostInterceptor');
-        }
-
-        this._interceptors.registerPre(stage, interceptor);
-    }
-
-    /**
      * Resumes a paused pipeline.
      *
      * @public
@@ -486,26 +432,6 @@ class ParserEngine {
         this._validateAvailability();
 
         this._pause.resume();
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     * @returns {boolean}
-     */
-    unregisterPostInterceptor(stage, interceptor) {
-        return this._interceptors.unregisterPost(stage, interceptor);
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     * @returns {boolean}
-     */
-    unregisterPreInterceptor(stage, interceptor) {
-        return this._interceptors.unregisterPre(stage, interceptor);
     }
 
     /**
