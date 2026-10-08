@@ -1,5 +1,5 @@
 /** @import ParserEngine from './ParserEngine.js' */
-/** @import PlayerPacketIndex from './PlayerPacketIndex.js' */
+/** @import PlayerPacketIndex from './player/PlayerPacketIndex.js' */
 
 /** @import DemoSource from './data/enums/DemoSource.js' */
 

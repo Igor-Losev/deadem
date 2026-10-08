@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
 import PacketCodec from '../src/PacketCodec.js';
-import PlayerPacketIndex from '../src/PlayerPacketIndex.js';
+import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';
 
 /**
  * Creates a mock packet with the minimal interface required by PlayerPacketIndex.

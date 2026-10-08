@@ -36,7 +36,7 @@ export { default as MessagePacketType } from './src/data/enums/MessagePacketType
 export { default as Parser } from './src/Parser.js';
 export { default as ParserConfiguration } from './src/ParserConfiguration.js';
 export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterruptedError.js';
-export { default as Player } from './src/Player.js';
+export { default as Player } from './src/player/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/Printer.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';

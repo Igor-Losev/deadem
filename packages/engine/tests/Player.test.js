@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import Player from '../src/Player.js';
+import Player from '../src/player/Player.js';
 import SchemaRegistry from '../src/SchemaRegistry.js';
 
 import PlaybackInterruptedError from '../src/errors/PlaybackInterruptedError.js';
