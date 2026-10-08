@@ -239,26 +239,30 @@ class FieldDecoderFactory {
             if (instructions.bitCount !== null && instructions.encoder === 'qangle_pitch_yaw') {
                 result[0] = bitBuffer.readAngle(instructions.bitCount);
                 result[1] = bitBuffer.readAngle(instructions.bitCount);
+            } else if (instructions.bitCount !== null && instructions.bitCount >= 32) {
+                result[0] = bitBuffer.readFloat32();
+                result[1] = bitBuffer.readFloat32();
+                result[2] = bitBuffer.readFloat32();
+            } else if (instructions.encoder === 'qangle_precise') {
+                const hasPitch = bitBuffer.readBit();
+                const hasYaw = bitBuffer.readBit();
+                const hasRoll = bitBuffer.readBit();
+
+                if (hasPitch) result[0] = bitBuffer.readCoordinatePrecise();
+                if (hasYaw) result[1] = bitBuffer.readCoordinatePrecise();
+                if (hasRoll) result[2] = bitBuffer.readCoordinatePrecise();
             } else if (instructions.bitCount !== null && instructions.bitCount !== 0) {
                 result[0] = bitBuffer.readAngle(instructions.bitCount);
                 result[1] = bitBuffer.readAngle(instructions.bitCount);
                 result[2] = bitBuffer.readAngle(instructions.bitCount);
             } else {
-                const isPrecise = instructions.encoder === 'qangle_precise';
-
                 const hasPitch = bitBuffer.readBit();
                 const hasYaw = bitBuffer.readBit();
                 const hasRoll = bitBuffer.readBit();
 
-                if (isPrecise) {
-                    if (hasPitch) result[0] = bitBuffer.readCoordinatePrecise();
-                    if (hasYaw) result[1] = bitBuffer.readCoordinatePrecise();
-                    if (hasRoll) result[2] = bitBuffer.readCoordinatePrecise();
-                } else {
-                    if (hasPitch) result[0] = bitBuffer.readCoordinate();
-                    if (hasYaw) result[1] = bitBuffer.readCoordinate();
-                    if (hasRoll) result[2] = bitBuffer.readCoordinate();
-                }
+                if (hasPitch) result[0] = bitBuffer.readCoordinate();
+                if (hasYaw) result[1] = bitBuffer.readCoordinate();
+                if (hasRoll) result[2] = bitBuffer.readCoordinate();
             }
 
             return result;
