@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import DeferredPromise from '../src/data/DeferredPromise.js';
+import DeferredPromise from '../src/core/DeferredPromise.js';
 
 import ParserSession from '../src/ParserSession.js';
 

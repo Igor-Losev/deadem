@@ -10,9 +10,9 @@
 /** @import { PerformanceTrackerStats } from './trackers/PerformanceTracker.js' */
 
 import Assert from './core/Assert.js';
+import DeferredPromise from './core/DeferredPromise.js';
 import Logger from './core/Logger.js';
 
-import DeferredPromise from './data/DeferredPromise.js';
 import DemoSource from './data/enums/DemoSource.js';
 import PlaybackInterruptedError from './errors/PlaybackInterruptedError.js';
 import PlayerState from './data/enums/PlayerState.js';

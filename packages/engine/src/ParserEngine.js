@@ -1,3 +1,4 @@
+/** @import DeferredPromise from './core/DeferredPromise.js' */
 /** @import DemoPacket from './data/DemoPacket.js' */
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 /** @import MessagePacket from './data/MessagePacket.js' */
@@ -6,10 +7,10 @@
 
 import Assert from './core/Assert.js';
 import Logger from './core/Logger.js';
+import PauseControl from './core/PauseControl.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
-import DeferredPromise from './data/DeferredPromise.js';
 import Demo from './data/Demo.js';
 
 import DemoSource from './data/enums/DemoSource.js';
@@ -33,6 +34,7 @@ import MemoryTracker from '#trackers/MemoryTracker.js';
 import PacketTracker from './trackers/PacketTracker.js';
 import PerformanceTracker from './trackers/PerformanceTracker.js';
 
+import InterceptorRegistry from './InterceptorRegistry.js';
 import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
 import SchemaRegistry from './SchemaRegistry.js';
@@ -104,7 +106,9 @@ class ParserEngine {
         };
 
         /** @private */
-        this._interceptors = this._createInterceptors();
+        this._interceptors = new InterceptorRegistry();
+        /** @private */
+        this._pause = new PauseControl();
 
         /** @private */
         this._trackers = {
@@ -121,12 +125,6 @@ class ParserEngine {
         this._pipeline = null;
         /** @private */
         this._started = false;
-
-        /** @private */
-        this._paused = false;
-
-        /** @private @type {DeferredPromise<void>|null} */
-        this._pausePromise = null;
     }
 
     /**
@@ -163,7 +161,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {{pre: Array<Array<InterceptorFn>>, post: Array<Array<InterceptorFn>>}}
+     * @returns {InterceptorRegistry}
      */
     get interceptors() {
         return this._interceptors;
@@ -182,7 +180,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     get paused() {
-        return this._paused;
+        return this._pause.paused;
     }
 
     /**
@@ -190,7 +188,7 @@ class ParserEngine {
      * @returns {DeferredPromise<void>|null}
      */
     get pausePromise() {
-        return this._pausePromise;
+        return this._pause.deferred;
     }
 
     /**
@@ -217,7 +215,7 @@ class ParserEngine {
     abort() {
         this._validateAvailability();
 
-        this._unpause();
+        this._pause.release();
 
         if (this._pipeline !== null) {
             this._pipeline.abort();
@@ -241,7 +239,7 @@ class ParserEngine {
         this._disposed = true;
 
         this._demo.reset();
-        this._interceptors = this._createInterceptors();
+        this._interceptors.reset();
     }
 
     /**
@@ -274,8 +272,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     getIsInterceptorRegistered(stage) {
-        return this._interceptors.pre[stage.id].length > 0 ||
-            this._interceptors.post[stage.id].length > 0;
+        return this._interceptors.getIsRegistered(stage);
     }
 
     /**
@@ -316,11 +313,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPost(stage, ...args) {
-        const interceptors = this._interceptors.post[stage.id];
-
-        for (let i = 0; i < interceptors.length; i++) {
-            interceptors[i](...args);
-        }
+        this._interceptors.firePost(stage, ...args);
     }
 
     /**
@@ -329,11 +322,7 @@ class ParserEngine {
      * @param {...*} args
      */
     interceptPre(stage, ...args) {
-        const interceptors = this._interceptors.pre[stage.id];
-
-        for (let i = 0; i < interceptors.length; i++) {
-            interceptors[i](...args);
-        }
+        this._interceptors.firePre(stage, ...args);
     }
 
     /**
@@ -459,12 +448,7 @@ class ParserEngine {
             throw new Error('Unable to pause: engine is not running');
         }
 
-        if (this._paused) {
-            throw new Error('Unable to pause: engine is already paused');
-        }
-
-        this._paused = true;
-        this._pausePromise = /** @type {DeferredPromise<void>} */ (new DeferredPromise());
+        this._pause.pause();
     }
 
     /**
@@ -473,14 +457,11 @@ class ParserEngine {
      * @param {InterceptorFn} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
         if (stage === InterceptorStage.USER_COMMAND && this._registry.getUserCommandDecoder() === null) {
             throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
         }
 
-        this._interceptors.post[stage.id] = [ ...this._interceptors.post[stage.id], interceptor ];
+        this._interceptors.registerPost(stage, interceptor);
     }
 
     /**
@@ -489,14 +470,11 @@ class ParserEngine {
      * @param {InterceptorFn} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
         if (stage === InterceptorStage.USER_COMMAND) {
             throw new Error('InterceptorStage.USER_COMMAND has no pre phase: use registerPostInterceptor');
         }
 
-        this._interceptors.pre[stage.id] = [ ...this._interceptors.pre[stage.id], interceptor ];
+        this._interceptors.registerPre(stage, interceptor);
     }
 
     /**
@@ -507,11 +485,7 @@ class ParserEngine {
     resume() {
         this._validateAvailability();
 
-        if (!this._paused) {
-            throw new Error('Unable to resume: engine is not paused');
-        }
-
-        this._unpause();
+        this._pause.resume();
     }
 
     /**
@@ -521,19 +495,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const interceptors = this._interceptors.post[stage.id];
-        const filtered = interceptors.filter(i => i !== interceptor);
-
-        if (filtered.length === interceptors.length) {
-            return false;
-        }
-
-        this._interceptors.post[stage.id] = filtered;
-
-        return true;
+        return this._interceptors.unregisterPost(stage, interceptor);
     }
 
     /**
@@ -543,19 +505,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const interceptors = this._interceptors.pre[stage.id];
-        const filtered = interceptors.filter(i => i !== interceptor);
-
-        if (filtered.length === interceptors.length) {
-            return false;
-        }
-
-        this._interceptors.pre[stage.id] = filtered;
-
-        return true;
+        return this._interceptors.unregisterPre(stage, interceptor);
     }
 
     /**
@@ -568,31 +518,12 @@ class ParserEngine {
             throw new Error('Unable to run parser: engine is already running');
         }
 
-        this._unpause();
+        this._pause.release();
 
         this._demo.reset();
 
         this._started = false;
         this._finished = false;
-    }
-
-    /**
-     * Resolves the pause promise and clears pause state.
-     *
-     * @protected
-     */
-    _unpause() {
-        const pausePromise = this._pausePromise;
-
-        if (pausePromise === null) {
-            return;
-        }
-
-        this._paused = false;
-
-        pausePromise.resolve();
-
-        this._pausePromise = null;
     }
 
     /**
@@ -604,19 +535,6 @@ class ParserEngine {
         if (this._disposed) {
             throw new Error('Parser is not available: engine has been disposed');
         }
-    }
-
-    /**
-     * @private
-     * @returns {{pre: Array<Array<InterceptorFn>>, post: Array<Array<InterceptorFn>>}}
-     */
-    _createInterceptors() {
-        const size = InterceptorStage.getAll().length;
-
-        return {
-            pre: Array.from({ length: size }, () => []),
-            post: Array.from({ length: size }, () => [])
-        };
     }
 
     /**

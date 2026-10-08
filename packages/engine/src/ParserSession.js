@@ -4,9 +4,8 @@
 /** @import DemoSource from './data/enums/DemoSource.js' */
 
 import Assert from './core/Assert.js';
+import DeferredPromise from './core/DeferredPromise.js';
 import ReadableArray from '#core/stream/ReadableArray.js';
-
-import DeferredPromise from './data/DeferredPromise.js';
 
 import InterceptorStage from './data/enums/InterceptorStage.js';
 

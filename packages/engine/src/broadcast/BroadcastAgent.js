@@ -4,9 +4,8 @@
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';
 
 import Assert from '../core/Assert.js';
+import DeferredPromise from '../core/DeferredPromise.js';
 import Logger from '../core/Logger.js';
-
-import DeferredPromise from '../data/DeferredPromise.js';
 
 import BroadcastFragmentType from '../data/enums/BroadcastFragmentType.js';
 
