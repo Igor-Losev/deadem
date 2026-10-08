@@ -56,6 +56,8 @@ class Bootstrap {
 
         registry.registerFieldTypeDecoder('CEntityIndex', FieldDecoderDescriptor.VAR_INT_32);
 
+        registry.registerFieldTypeDecoder('HSequence', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+
         registry.registerFieldTypeDecoder('float32', FieldDecoderDescriptor.DYNAMIC_FLOAT_32);
 
         registry.registerFieldTypeDecoder('QAngle', FieldDecoderDescriptor.QANGLE);

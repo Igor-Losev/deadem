@@ -117,6 +117,15 @@ class FieldDecoderFactory {
     /**
      * @public
      * @static
+     * @returns {(bitBuffer: BitBuffer) => number}
+     */
+    static get VAR_UINT_32_MINUS_ONE() {
+        return decodeUVarInt32MinusOne;
+    }
+
+    /**
+     * @public
+     * @static
      * @returns {(bitBuffer: BitBuffer) => bigint}
      */
     static get VAR_UINT_64() {
@@ -395,6 +404,8 @@ const decodeString = bitBuffer => bitBuffer.readString();
 const decodeUInt64 = bitBuffer => bitBuffer.readUInt64();
 /** @type {(bitBuffer: BitBuffer) => number} */
 const decodeUVarInt32 = bitBuffer => bitBuffer.readUVarInt32();
+/** @type {(bitBuffer: BitBuffer) => number} */
+const decodeUVarInt32MinusOne = bitBuffer => bitBuffer.readUVarInt32() - 1;
 /** @type {(bitBuffer: BitBuffer) => bigint} */
 const decodeUVarInt64 = bitBuffer => bitBuffer.readUVarInt64();
 /** @type {(bitBuffer: BitBuffer) => number} */

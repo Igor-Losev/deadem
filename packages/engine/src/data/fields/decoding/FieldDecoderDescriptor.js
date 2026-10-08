@@ -62,6 +62,7 @@ class FieldDecoderDescriptor {
     static get VAR_INT_32() { return varInt32; }
     static get VAR_INT_64() { return varInt64; }
     static get VAR_UINT_32() { return varUint32; }
+    static get VAR_UINT_32_MINUS_ONE() { return varUint32MinusOne; }
     static get VAR_UINT_64() { return varUint64; }
 }
 
@@ -81,6 +82,7 @@ const string = new FieldDecoderDescriptor(FieldDecoderType.STRING);
 const varInt32 = new FieldDecoderDescriptor(FieldDecoderType.VAR_INT_32);
 const varInt64 = new FieldDecoderDescriptor(FieldDecoderType.VAR_INT_64);
 const varUint32 = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_32);
+const varUint32MinusOne = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_32_MINUS_ONE);
 const varUint64 = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_64);
 
 export default FieldDecoderDescriptor;

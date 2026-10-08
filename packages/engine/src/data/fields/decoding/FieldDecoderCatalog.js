@@ -70,6 +70,7 @@ registry.set(FieldDecoderType.STRING, new FieldDecoder(FieldDecoderFactory.STRIN
 registry.set(FieldDecoderType.VAR_INT_32, new FieldDecoder(FieldDecoderFactory.VAR_INT_32, FieldStorageDescriptor.INT_SIGNED));
 registry.set(FieldDecoderType.VAR_INT_64, new FieldDecoder(FieldDecoderFactory.VAR_INT_64, FieldStorageDescriptor.MISC));
 registry.set(FieldDecoderType.VAR_UINT_32, new FieldDecoder(FieldDecoderFactory.VAR_UINT_32, FieldStorageDescriptor.INT_UNSIGNED));
+registry.set(FieldDecoderType.VAR_UINT_32_MINUS_ONE, new FieldDecoder(FieldDecoderFactory.VAR_UINT_32_MINUS_ONE, FieldStorageDescriptor.INT_SIGNED));
 registry.set(FieldDecoderType.VAR_UINT_64, new FieldDecoder(FieldDecoderFactory.VAR_UINT_64, FieldStorageDescriptor.MISC));
 
 export default FieldDecoderCatalog;
