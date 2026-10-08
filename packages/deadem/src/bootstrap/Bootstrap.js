@@ -31,6 +31,7 @@ class Bootstrap {
      */
     static _registerCitadelFieldRules(registry) {
         registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_UINT_32);
+        registry.registerFieldTypeDecoder('NPC_STATE', FieldDecoderDescriptor.VAR_INT_32);
     }
 
     /**
