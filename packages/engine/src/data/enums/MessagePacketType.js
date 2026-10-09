@@ -47,6 +47,7 @@ class MessagePacketType {
     static get SVC_PACKET_ENTITIES() { return svcPacketEntities; }
     static get SVC_HLTV_STATUS() { return svcHltvStatus; }
     static get SVC_USER_COMMANDS() { return svcUserCommands; }
+    static get SVC_USER_COMMAND_KEYFRAME() { return svcUserCommandKeyframe; }
 
     static get USER_MESSAGE_SAY_TEXT_2() { return UMSayText2; }
     static get USER_MESSAGE_TEXT_MSG() { return UMTextMsg; }
@@ -85,6 +86,7 @@ const svcClearAllStringTables = new MessagePacketType('svc_ClearAllStringTables'
 const svcPacketEntities = new MessagePacketType('svc_PacketEntities', 55);
 const svcHltvStatus = new MessagePacketType('svc_HLTVStatus', 62);
 const svcUserCommands = new MessagePacketType('svc_UserCmds', 76);
+const svcUserCommandKeyframe = new MessagePacketType('svc_UserCmdKeyframe', 79);
 
 const UMSayText2 = new MessagePacketType('UM_SayText2', 118);
 const UMTextMsg = new MessagePacketType('UM_TextMsg', 124);

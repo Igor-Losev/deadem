@@ -5388,6 +5388,16 @@ export default {
           "type": "int32",
           "id": 5,
           "protoName": "client_tick"
+        },
+        "deltaData": {
+          "type": "bytes",
+          "id": 6,
+          "protoName": "delta_data"
+        },
+        "deltaProcessed": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "delta_processed"
         }
       }
     },

@@ -133,6 +133,7 @@ class Bootstrap {
         registry.registerMessageType(MessagePacketType.SVC_PACKET_ENTITIES, pp.NET_MESSAGES.lookupType('CSVCMsg_PacketEntities'));
         registry.registerMessageType(MessagePacketType.SVC_HLTV_STATUS, pp.NET_MESSAGES.lookupType('CSVCMsg_HLTVStatus'));
         registry.registerMessageType(MessagePacketType.SVC_USER_COMMANDS, pp.NET_MESSAGES.lookupType('CSVCMsg_UserCommands'));
+        registry.registerMessageType(MessagePacketType.SVC_USER_COMMAND_KEYFRAME, pp.NET_MESSAGES.lookupType('CSVCMsg_UserCommands'));
 
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_SAY_TEXT_2, pp.USER_MESSAGES.lookupType('CUserMessageSayText2'));
         registry.registerMessageType(MessagePacketType.USER_MESSAGE_TEXT_MSG, pp.USER_MESSAGES.lookupType('CUserMessageTextMsg'));

@@ -104,7 +104,8 @@ class DemoStreamPacketAnalyzer extends Transform {
 
                     break;
                 }
-                case MessagePacketType.SVC_USER_COMMANDS: {
+                case MessagePacketType.SVC_USER_COMMANDS:
+                case MessagePacketType.SVC_USER_COMMAND_KEYFRAME: {
                     const listening = this._engine.getIsInterceptorRegistered(InterceptorStage.USER_COMMAND);
 
                     const events = this._engine.getDemoMessageHandler().handleSvcUserCommands(messagePacket, demoPacket.getIsSnapshot(), listening);
