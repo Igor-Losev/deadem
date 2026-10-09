@@ -110,6 +110,10 @@ class FieldFactory {
      * @returns {FieldDecoder}
      */
     _resolveDecoder(name, definition, decoderInstructions) {
+        if (decoderInstructions.encoder === 'fixed8') {
+            return isSignedIntegerType(definition.baseType) ? FIXED_8_SIGNED_DECODER : FIXED_8_DECODER;
+        }
+
         if (definition.baseType === 'char' && definition.count === null) {
             return VAR_UINT_32_DECODER;
         }
@@ -148,5 +152,12 @@ class FieldFactory {
 
 const VAR_UINT_32_DECODER = new FieldDecoder(FieldDecoderFactory.VAR_UINT_32, FieldStorageDescriptor.INT_UNSIGNED);
 const BOOLEAN_DECODER = new FieldDecoder(FieldDecoderFactory.BOOLEAN, FieldStorageDescriptor.INT_BOOL);
+
+const FIXED_8_DECODER = new FieldDecoder(FieldDecoderFactory.FIXED_8, FieldStorageDescriptor.INT_UNSIGNED);
+const FIXED_8_SIGNED_DECODER = new FieldDecoder(FieldDecoderFactory.FIXED_8_SIGNED, FieldStorageDescriptor.INT_SIGNED);
+
+function isSignedIntegerType(baseType) {
+    return baseType === 'int8' || baseType === 'int16' || baseType === 'int32' || baseType === 'int64';
+}
 
 export default FieldFactory;
