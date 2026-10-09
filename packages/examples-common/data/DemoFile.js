@@ -129,6 +129,7 @@ class DemoFile {
     static get DEADLOCK_REPLAY_75439032() { return deadlockReplay75439032; }
     static get DEADLOCK_REPLAY_100576005() { return deadlockReplay100576005; }
     static get DEADLOCK_REPLAY_100576291() { return deadlockReplay100576291; }
+    static get DEADLOCK_REPLAY_112633589() { return deadlockReplay112633589; }
     static get DEADLOCK_BROADCAST_38625795() { return deadlockBroadcast38625795; }
 
     // === DOTA2 ===
@@ -140,6 +141,7 @@ class DemoFile {
     static get DOTA2_REPLAY_8783006717() { return dota2Replay8783006717; }
     static get DOTA2_REPLAY_8783086929() { return dota2Replay8783086929; }
     static get DOTA2_REPLAY_8960991322() { return dota2Replay8960991322; }
+    static get DOTA2_REPLAY_9036234584() { return dota2Replay9036234584; }
 
     // === CS2 ===
     static get CS2_REPLAY_20240819_NINJAS_IN_PYJAMAS_VS_PARIVISION_M1_ANCIENT() { return cs2Replay20240819NinjasInPyjamasVsParivisionM1Ancient; }
@@ -149,6 +151,7 @@ class DemoFile {
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M2_ANUBIS() { return cs2Replay20260515NatusVincereVsVitalityM2Anubis; }
     static get CS2_REPLAY_20260515_NATUS_VINCERE_VS_VITALITY_M3_INFERNO() { return cs2Replay20260515NatusVincereVsVitalityM3Inferno; }
     static get CS2_REPLAY_20260815_SPIRIT_VS_BIG_M3_MIRAGE() { return cs2Replay20260815SpiritVsBigM3Mirage; }
+    static get CS2_REPLAY_20261006_FALCONS_VS_NATUS_VINCERE_M1_INFERNO() { return cs2Replay20261006FalconsVsNatusVincereM1Inferno; }
 
     /**
      * @public
@@ -207,6 +210,11 @@ const deadlockReplay75438101 = new DemoFile(DemoSource.REPLAY, 75438101, Game.DE
 const deadlockReplay75439032 = new DemoFile(DemoSource.REPLAY, 75439032, Game.DEADLOCK, 6448, { date: '2026-04-13', mode: 'Street Brawl', size: 143222996 });
 const deadlockReplay100576005 = new DemoFile(DemoSource.REPLAY, 100576005, Game.DEADLOCK, 6679, { date: '2026-08-20', size: 349435805 });
 const deadlockReplay100576291 = new DemoFile(DemoSource.REPLAY, 100576291, Game.DEADLOCK, 6679, { date: '2026-08-20', size: 483242317 });
+const deadlockReplay112633589 = new DemoFile(DemoSource.REPLAY, 112633589, Game.DEADLOCK, 6762, {
+    date: '2026-10-07',
+    size: 452242026,
+    match: { team1: 'Buff Enjoyers', team2: 'Leviathan', event: 'Deadlock Night Shift EU', mapNumber: 2 }
+});
 
 // === DOTA2 ===
 const dota2Replay5177640686 = new DemoFile(DemoSource.REPLAY, 5177640686, Game.DOTA2, '7.23', {
@@ -236,6 +244,12 @@ const dota2Replay8960991322 = new DemoFile(DemoSource.REPLAY, 8960991322, Game.D
     mode: 'Captains Mode',
     size: 381878716,
     match: { team1: 'Team Spirit', team2: 'Team Vision', event: 'The International 2026', mapNumber: 5 }
+});
+const dota2Replay9036234584 = new DemoFile(DemoSource.REPLAY, 9036234584, Game.DOTA2, '7.41f', {
+    date: '2026-10-09',
+    mode: 'Captains Mode',
+    size: 155689747,
+    match: { team1: 'Aurora Gaming', team2: 'Team Spirit', event: 'BLAST SLAM VIII', mapNumber: 2 }
 });
 
 // === CS2 ===
@@ -273,6 +287,11 @@ const cs2Replay20260815SpiritVsBigM3Mirage = new DemoFile(DemoSource.REPLAY, '20
     date: '2026-08-15',
     size: 314563250,
     match: { team1: 'Spirit', team2: 'BIG', event: 'Esports World Cup \'26', map: 'Mirage', mapNumber: 3 }
+});
+const cs2Replay20261006FalconsVsNatusVincereM1Inferno = new DemoFile(DemoSource.REPLAY, '2026-10-06-falcons-vs-natus-vincere-m1-inferno', Game.CS2, '1.41.8.9', {
+    date: '2026-10-06',
+    size: 418390557,
+    match: { team1: 'Falcons', team2: 'Natus Vincere', event: 'ESL Pro League Season 24', map: 'Inferno', mapNumber: 1 }
 });
 
 /**
