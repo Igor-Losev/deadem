@@ -104,6 +104,24 @@ class FieldDecoderFactory {
      * @static
      * @returns {(BitBuffer) => number}
      */
+    static get FIXED_8() {
+        return decodeFixed8;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {(BitBuffer) => number}
+     */
+    static get FIXED_8_SIGNED() {
+        return decodeFixed8Signed;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {(BitBuffer) => number}
+     */
     static get VAR_UINT_32() {
         return decodeUVarInt32;
     }
@@ -361,6 +379,12 @@ const decodeBinaryBlock = (bitBuffer) => {
 };
 const decodeBoolean = bitBuffer => bitBuffer.readBit();
 const decodeCoordinate = bitBuffer => bitBuffer.readCoordinate();
+const decodeFixed8 = bitBuffer => bitBuffer.readBitsAsUInt(8);
+const decodeFixed8Signed = (bitBuffer) => {
+    const value = bitBuffer.readBitsAsUInt(8);
+
+    return value > 0x7f ? value - 0x100 : value;
+};
 const decodeGameModeRules = (bitBuffer) => {
     const value = bitBuffer.readBit();
 
