@@ -1,4 +1,7 @@
 export default {
+  "options": {
+    "additional_includes": "entityhandle.h"
+  },
   "nested": {
     "CMsgTEPlayerAnimEvent": {
       "edition": "proto2",
@@ -7,7 +10,9 @@ export default {
           "type": "fixed32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "event": {
@@ -27,7 +32,9 @@ export default {
           "type": "fixed32",
           "id": 1,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         }
       }
@@ -48,7 +55,9 @@ export default {
           "id": 3,
           "protoName": "weapon_id",
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "mode": {
@@ -63,7 +72,9 @@ export default {
           "type": "fixed32",
           "id": 6,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "inaccuracy": {
@@ -121,7 +132,10 @@ export default {
         },
         "tick": {
           "type": "int32",
-          "id": 19
+          "id": 19,
+          "options": {
+            "boxed_type": "GameTick_t"
+          }
         },
         "extra": {
           "type": ".CMsgTEFireBullets.Extra",
@@ -182,7 +196,9 @@ export default {
           "id": 1,
           "protoName": "attacker_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "victimSlot": {
@@ -190,7 +206,9 @@ export default {
           "id": 2,
           "protoName": "victim_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "victimPos": {
@@ -371,6 +389,16 @@ export default {
         "ishltv": {
           "type": "bool",
           "id": 6
+        },
+        "clanMember": {
+          "type": "bool",
+          "id": 9,
+          "protoName": "clan_member"
+        },
+        "clanOfficer": {
+          "type": "bool",
+          "id": 10,
+          "protoName": "clan_officer"
         }
       }
     },
@@ -568,7 +596,10 @@ export default {
         },
         "worldgroupid": {
           "type": "uint32",
-          "id": 15
+          "id": 15,
+          "options": {
+            "boxed_type": "WorldGroupId_t"
+          }
         },
         "creationsequence": {
           "type": "uint32",
@@ -626,6 +657,39 @@ export default {
         "creationsequence": {
           "type": "uint32",
           "id": 3
+        }
+      }
+    },
+    "QuantizedFloatEncoderAlias_t": {
+      "edition": "proto2",
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "bitCount": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "bit_count"
+        },
+        "encodeFlags": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "encode_flags"
+        },
+        "minValue": {
+          "type": "float",
+          "id": 4,
+          "protoName": "min_value"
+        },
+        "maxValue": {
+          "type": "float",
+          "id": 5,
+          "protoName": "max_value"
+        },
+        "validate": {
+          "type": "bool",
+          "id": 6
         }
       }
     },
@@ -720,6 +784,17 @@ export default {
         "landmarkname": {
           "type": "string",
           "id": 18
+        },
+        "quantizedFloatEncoderAliases": {
+          "rule": "repeated",
+          "type": ".QuantizedFloatEncoderAlias_t",
+          "id": 20,
+          "protoName": "quantized_float_encoder_aliases"
+        },
+        "maxCoord": {
+          "type": "float",
+          "id": 21,
+          "protoName": "max_coord"
         }
       }
     },
@@ -1663,6 +1738,12 @@ export default {
           "type": "uint32",
           "id": 22,
           "protoName": "match_id_additional"
+        },
+        "clanTags": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 23,
+          "protoName": "clan_tags"
         }
       }
     },
@@ -1765,7 +1846,8 @@ export default {
           "type": "uint32",
           "id": 10
         },
-        "customname": {
+        "customnames": {
+          "rule": "repeated",
           "type": "string",
           "id": 11
         },
@@ -1820,6 +1902,15 @@ export default {
           "type": "uint32",
           "id": 23,
           "protoName": "upgrade_level"
+        },
+        "petFoodExpirationDate": {
+          "type": "uint32",
+          "id": 24,
+          "protoName": "pet_food_expiration_date"
+        },
+        "blobdata": {
+          "type": "bytes",
+          "id": 25
         }
       },
       "nested": {
@@ -2035,7 +2126,9 @@ export default {
           "id": 3,
           "protoName": "victim_entindex",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -2052,7 +2145,9 @@ export default {
           "type": "int32",
           "id": 2,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "msgName": {
@@ -2087,7 +2182,9 @@ export default {
           "type": "int32",
           "id": 2,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -2099,7 +2196,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "originX": {
@@ -2130,10 +2229,6 @@ export default {
           "type": "fixed32",
           "id": 7,
           "protoName": "source_soundscapeid"
-        },
-        "stealth": {
-          "type": "bool",
-          "id": 8
         }
       }
     },
@@ -2144,7 +2239,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "secondaryData": {
@@ -2205,7 +2302,9 @@ export default {
           "id": 2,
           "protoName": "first_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "secondTarget": {
@@ -2213,7 +2312,9 @@ export default {
           "id": 3,
           "protoName": "second_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -2290,7 +2391,9 @@ export default {
           "id": 2,
           "protoName": "player_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "voteType": {
@@ -2323,7 +2426,9 @@ export default {
           "id": 8,
           "protoName": "player_slot_target",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -2413,7 +2518,9 @@ export default {
               "type": "int32",
               "id": 1,
               "options": {
-                "default": -1
+                "default": -1,
+                "boxed_type": "CPlayerSlot",
+                "synthetic_default": "-1"
               }
             },
             "xuid": {
@@ -2515,7 +2622,9 @@ export default {
                   "type": "int32",
                   "id": 2,
                   "options": {
-                    "default": -1
+                    "default": -1,
+                    "boxed_type": "CPlayerSlot",
+                    "synthetic_default": "-1"
                   }
                 },
                 "xuid": {
@@ -2553,7 +2662,9 @@ export default {
                   "id": 1,
                   "protoName": "other_playerslot",
                   "options": {
-                    "default": -1
+                    "default": -1,
+                    "boxed_type": "CPlayerSlot",
+                    "synthetic_default": "-1"
                   }
                 },
                 "otherXuid": {
@@ -3184,7 +3295,9 @@ export default {
           "type": "uint32",
           "id": 10,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "materialId": {
@@ -3344,7 +3457,9 @@ export default {
           "id": 3,
           "protoName": "source_entity_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "seed": {
@@ -3386,7 +3501,9 @@ export default {
           "id": 2,
           "protoName": "source_entity_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         }
       }
@@ -3515,7 +3632,9 @@ export default {
           "id": 12,
           "protoName": "player_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "tickInterval": {
@@ -3868,7 +3987,9 @@ export default {
           "id": 2,
           "protoName": "client_deprecated",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "proximity": {
@@ -3896,8 +4017,14 @@ export default {
           "type": "int32",
           "id": 8,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
+        },
+        "caster": {
+          "type": "bool",
+          "id": 9
         }
       }
     },
@@ -3999,6 +4126,11 @@ export default {
           "type": "int32",
           "id": 12,
           "protoName": "var_serializer_sym"
+        },
+        "varEnumInfo": {
+          "type": ".ProtoFlattenedSerializerField_t.proto_enum_info_t",
+          "id": 13,
+          "protoName": "var_enum_info"
         }
       },
       "nested": {
@@ -4013,6 +4145,15 @@ export default {
               "type": "int32",
               "id": 2,
               "protoName": "polymorphic_field_serializer_version"
+            }
+          }
+        },
+        "proto_enum_info_t": {
+          "fields": {
+            "isSignedEnum": {
+              "type": "bool",
+              "id": 1,
+              "protoName": "is_signed_enum"
             }
           }
         }
@@ -4039,6 +4180,41 @@ export default {
         }
       }
     },
+    "ProtoCoordSizeParams_t": {
+      "edition": "proto2",
+      "fields": {
+        "coordIntegerBits": {
+          "type": "int32",
+          "id": 1,
+          "protoName": "coord_integer_bits"
+        },
+        "coordFractionalBits": {
+          "type": "int32",
+          "id": 2,
+          "protoName": "coord_fractional_bits"
+        },
+        "coordIntegerBitsMp": {
+          "type": "int32",
+          "id": 3,
+          "protoName": "coord_integer_bits_mp"
+        },
+        "coordFractionalBitsMp": {
+          "type": "int32",
+          "id": 4,
+          "protoName": "coord_fractional_bits_mp"
+        },
+        "normalFractionalBits": {
+          "type": "int32",
+          "id": 5,
+          "protoName": "normal_fractional_bits"
+        },
+        "angleBits": {
+          "type": "int32",
+          "id": 6,
+          "protoName": "angle_bits"
+        }
+      }
+    },
     "CSVCMsg_FlattenedSerializer": {
       "edition": "proto2",
       "options": {
@@ -4059,6 +4235,11 @@ export default {
           "rule": "repeated",
           "type": ".ProtoFlattenedSerializerField_t",
           "id": 3
+        },
+        "coordSizeParams": {
+          "type": ".ProtoCoordSizeParams_t",
+          "id": 4,
+          "protoName": "coord_size_params"
         }
       }
     },
@@ -4079,7 +4260,9 @@ export default {
           "id": 3,
           "protoName": "player_slot",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CPlayerSlot",
+            "synthetic_default": "-1"
           }
         },
         "serverTickExecuted": {
@@ -4096,6 +4279,11 @@ export default {
           "type": "bytes",
           "id": 6,
           "protoName": "delta_data"
+        },
+        "deltaProcessed": {
+          "type": "bool",
+          "id": 7,
+          "protoName": "delta_processed"
         }
       }
     },
@@ -4124,7 +4312,9 @@ export default {
           "type": "int32",
           "id": 3,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "hitbox": {
@@ -4160,14 +4350,18 @@ export default {
           "type": "fixed32",
           "id": 5,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "otherentity": {
           "type": "fixed32",
           "id": 6,
           "options": {
-            "default": 16777215
+            "default": 16777215,
+            "boxed_type": "CEHandleNetworkableInt",
+            "synthetic_default": "16777215"
           }
         },
         "scale": {
@@ -4222,7 +4416,9 @@ export default {
           "type": "uint32",
           "id": 19,
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CUtlStringToken",
+            "synthetic_default": "0"
           }
         }
       }
@@ -4279,7 +4475,9 @@ export default {
           "id": 15,
           "protoName": "explosion_type_name",
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CUtlStringToken",
+            "synthetic_default": "0"
           }
         },
         "createDebris": {
@@ -4318,7 +4516,9 @@ export default {
           "type": "fixed32",
           "id": 4,
           "options": {
-            "default": 0
+            "default": 0,
+            "boxed_type": "CUtlStringToken",
+            "synthetic_default": "0"
           }
         },
         "flags": {
@@ -4431,7 +4631,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "text": {
@@ -4441,6 +4643,10 @@ export default {
         "chat": {
           "type": "bool",
           "id": 3
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 4
         }
       }
     },
@@ -4451,7 +4657,9 @@ export default {
           "type": "int32",
           "id": 1,
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "chat": {
@@ -4477,6 +4685,10 @@ export default {
         "param4": {
           "type": "string",
           "id": 7
+        },
+        "textallchat": {
+          "type": "bool",
+          "id": 8
         }
       }
     },
@@ -4773,7 +4985,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "entityHandleForModifiers": {
@@ -4781,7 +4995,9 @@ export default {
               "id": 4,
               "protoName": "entity_handle_for_modifiers",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "applyVoiceBanRules": {
@@ -4836,7 +5052,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -4853,7 +5071,9 @@ export default {
               "id": 2,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "destroyImmediately": {
@@ -4986,7 +5206,9 @@ export default {
               "id": 2,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "attachType": {
@@ -5060,7 +5282,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -5072,7 +5296,9 @@ export default {
               "id": 1,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "position": {
@@ -5237,7 +5463,9 @@ export default {
               "id": 3,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             }
           }
@@ -5351,7 +5579,9 @@ export default {
                   "id": 2,
                   "protoName": "ent_index",
                   "options": {
-                    "default": 16777215
+                    "default": 16777215,
+                    "boxed_type": "CEHandleNetworkableInt",
+                    "synthetic_default": "16777215"
                   }
                 }
               }
@@ -5496,7 +5726,9 @@ export default {
               "id": 17,
               "protoName": "entity_handle",
               "options": {
-                "default": 16777215
+                "default": 16777215,
+                "boxed_type": "CEHandleNetworkableInt",
+                "synthetic_default": "16777215"
               }
             },
             "attachmentName": {
@@ -5569,14 +5801,19 @@ export default {
           "id": 1,
           "protoName": "ent_index",
           "options": {
-            "default": -1
+            "default": -1,
+            "boxed_type": "CEntityIndex",
+            "synthetic_default": "-1"
           }
         },
         "playerSlots": {
           "rule": "repeated",
           "type": "int32",
           "id": 2,
-          "protoName": "player_slots"
+          "protoName": "player_slots",
+          "options": {
+            "boxed_type": "CPlayerSlot"
+          }
         },
         "response": {
           "type": "string",
