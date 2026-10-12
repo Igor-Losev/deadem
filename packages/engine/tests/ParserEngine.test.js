@@ -138,6 +138,21 @@ describe('ParserEngine', () => {
             expect(engine.paused).toBe(false);
             expect(engine.pausePromise).toBeNull();
         });
+
+        test('It should stop parsing a web ReadableStream', async () => {
+            const engine = createEngine();
+            const stream = new ReadableStream({ pull: () => new Promise(() => { }) });
+
+            const parse = engine.parse(stream);
+
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+
+            expect(() => engine.abort()).not.toThrow();
+
+            await expect(parse).resolves.toBeUndefined();
+        });
     });
 
     describe('dispose while paused', () => {

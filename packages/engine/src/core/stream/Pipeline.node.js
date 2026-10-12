@@ -7,17 +7,18 @@ class PipelineNode {
     /**
      * @public
      * @constructor
-     * @param {Stream.Readable} readable
+     * @param {Stream.Readable|ReadableStream} readable
      * @param {Array<Stream.Transform>} transforms
      * @param {Stream.Writable|null} [writable=null]
      */
     constructor(readable, transforms, writable = null) {
         const deferred = new DeferredPromise();
 
+        const source = readable instanceof ReadableStream ? Stream.Readable.fromWeb(readable) : readable;
         const destination = writable !== null ? writable : new WritableSink();
 
         Stream.pipeline(
-            readable,
+            source,
             ...transforms,
             destination,
             (error) => {
@@ -34,7 +35,7 @@ class PipelineNode {
         /** @private */
         this._deferred = deferred;
         /** @private */
-        this._readable = readable;
+        this._readable = source;
     }
 
     /**
