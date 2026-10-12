@@ -139,6 +139,10 @@ class BroadcastAgent {
 
             await this._pause.promise;
 
+            if (this._finished) {
+                return;
+            }
+
             this._send(initialization);
 
             this._logger.debug(`Querying [ ${BroadcastFragmentType.FULL.code} ] [ ${currentFragment} ]`);
@@ -147,11 +151,15 @@ class BroadcastAgent {
 
             await this._pause.promise;
 
+            if (this._finished) {
+                return;
+            }
+
             this._send(full);
 
             let lastFragmentAt = Date.now();
 
-            while (true) {
+            while (!this._finished) {
                 if ((Date.now() - lastFragmentAt) > STREAM_INACTIVITY_TIMEOUT_MILLISECONDS) {
                     this._logger.debug(`BroadcastAgent is inactive for [ ${STREAM_INACTIVITY_TIMEOUT_MILLISECONDS} ] milliseconds. Finishing...`);
 
@@ -179,13 +187,23 @@ class BroadcastAgent {
 
                 await this._pause.promise;
 
+                if (this._finished) {
+                    break;
+                }
+
                 this._send(delta);
 
                 await wait(REQUEST_DELAY_MILLISECONDS);
             }
         };
 
-        monitor();
+        monitor().catch((error) => {
+            this._logger.error(error);
+
+            if (!this._finished) {
+                this.stop();
+            }
+        });
     }
 
     /**
@@ -203,6 +221,8 @@ class BroadcastAgent {
         this._send(null);
 
         this._finished = true;
+
+        this._pause.resolve();
     }
 
     /**
@@ -296,10 +316,6 @@ async function backoff(action, attempts, delay = 500) {
             this._logger.debug(`Backoff [ ${attempt} / ${attempts} ]: [ ${/** @type {Error} */ (error).message} ]`);
 
             if (attempt >= attempts) {
-                this._logger.error(error);
-
-                this.stop();
-
                 throw error;
             }
 
