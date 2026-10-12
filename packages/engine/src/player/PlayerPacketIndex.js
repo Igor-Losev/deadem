@@ -137,6 +137,37 @@ class PlayerPacketIndex {
     }
 
     /**
+     * Returns the packets and string table snapshots to replay up to the specified tick.
+     *
+     * @public
+     * @param {number} tick
+     * @returns {{bootstrap: Array<number>, snapshots: Array<*>, from: number, to: number}}
+     */
+    getSeekPlan(tick) {
+        Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
+
+        const keyframeIndex = this._findKeyframeBefore(tick);
+        const afterTickPosition = this._findTickPositionAfter(tick);
+
+        const from = keyframeIndex !== undefined ? keyframeIndex : 0;
+        const to = afterTickPosition !== -1 ? this._tickOffsets[afterTickPosition] : this._packets.length;
+
+        const keyframePosition = this._keyframes.indexOf(keyframeIndex);
+
+        const snapshots = this._keyframes
+            .slice(0, keyframePosition + 1)
+            .map(index => this._stringTableSnapshots.get(index))
+            .filter(snapshot => snapshot !== undefined);
+
+        return {
+            bootstrap: this._bootstrap.slice(),
+            snapshots,
+            from,
+            to
+        };
+    }
+
+    /**
      * Returns the position of the given tick in the unique ticks index.
      *
      * @public
