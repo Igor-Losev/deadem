@@ -111,7 +111,6 @@ class DemoPacketHandler {
                         fieldSerializer = existing;
                     }
 
-                    const varEncoderSym = fieldRaw.varEncoderSym;
                     const varNameSym = fieldRaw.varNameSym;
                     const varTypeSym = fieldRaw.varTypeSym;
                     const sendNodeSym = fieldRaw.sendNodeSym;
@@ -120,11 +119,11 @@ class DemoPacketHandler {
                     const definition = FieldDefinition.parse(symbols[varTypeSym]);
 
                     const instructionsRaw = {
-                        encoder: typeof symbols[varEncoderSym] === 'string' ? symbols[varEncoderSym] : null,
-                        encoderFlags: Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null,
-                        bitCount: Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null,
-                        valueLow: typeof fieldRaw.lowValue === 'number' ? fieldRaw.lowValue : null,
-                        valueHigh: typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null
+                        encoder: Object.hasOwn(fieldRaw, 'varEncoderSym') ? symbols[fieldRaw.varEncoderSym] : null,
+                        encoderFlags: Object.hasOwn(fieldRaw, 'encodeFlags') ? fieldRaw.encodeFlags : null,
+                        bitCount: Object.hasOwn(fieldRaw, 'bitCount') ? fieldRaw.bitCount : null,
+                        valueLow: Object.hasOwn(fieldRaw, 'lowValue') ? fieldRaw.lowValue : null,
+                        valueHigh: Object.hasOwn(fieldRaw, 'highValue') ? fieldRaw.highValue : null
                     };
 
                     const sendNode = symbols[sendNodeSym].split('.').filter((/** @type {string} */ s) => s.length > 0);
