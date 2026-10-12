@@ -47,6 +47,8 @@ add() {
 }
 
 bump() {
+    require_clean_git_status
+
     PRE_TAG="${1:-}"
 
     if [ -n "$PRE_TAG" ]; then
