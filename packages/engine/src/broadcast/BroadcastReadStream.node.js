@@ -17,10 +17,12 @@ class BroadcastReadStreamNode extends Stream.Readable {
 
         /** @private */
         this._agent = agent;
-
-        this._agent.subscribe((chunk) => {
+        /** @private */
+        this._listener = (/** @type {Uint8Array|null} */ chunk) => {
             this.push(chunk);
-        });
+        };
+
+        this._agent.subscribe(this._listener);
 
         this.on('pause', () => {
             if (!this._agent.finished) {
@@ -51,6 +53,20 @@ class BroadcastReadStreamNode extends Stream.Readable {
 
     _read() {
 
+    }
+
+    /**
+     * @param {Error|null} error
+     * @param {(error?: Error|null) => void} callback
+     */
+    _destroy(error, callback) {
+        this._agent.unsubscribe(this._listener);
+
+        if (this._agent.started && !this._agent.finished) {
+            this._agent.stop();
+        }
+
+        callback(error);
     }
 }
 
