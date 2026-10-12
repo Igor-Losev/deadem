@@ -10,7 +10,6 @@
 /** @import { PerformanceTrackerStats } from '../trackers/PerformanceTracker.js' */
 
 import Assert from '../core/Assert.js';
-import DeferredPromise from '../core/DeferredPromise.js';
 import Logger from '../core/Logger.js';
 
 import DemoSource from '../data/enums/DemoSource.js';
@@ -19,8 +18,10 @@ import PlayerState from '../data/enums/PlayerState.js';
 
 import ParserConfiguration from '../ParserConfiguration.js';
 import ParserEngine from '../ParserEngine.js';
-import ParserSession from '../ParserSession.js';
+
+import PlaybackLoop from './PlaybackLoop.js';
 import PlayerPacketIndex from './PlayerPacketIndex.js';
+import ReplaySession from './ReplaySession.js';
 
 /**
  * @template [M=null]
@@ -38,14 +39,16 @@ class Player {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         /** @private */
+        this._configuration = configuration;
+        /** @private */
         this._engine = new ParserEngine(registry, configuration, logger);
         /** @private */
         this._state = PlayerState.IDLE;
 
         /** @private */
         this._playback = {
-            /** @type {DeferredPromise<void>|null} */
-            deferred: null
+            /** @type {PlaybackLoop|null} */
+            loop: null
         };
 
         /** @private */
@@ -58,10 +61,8 @@ class Player {
 
         /** @private @type {PlayerPacketIndex|null} */
         this._index = null;
-        /** @private @type {ParserSession|null} */
+        /** @private @type {ReplaySession|null} */
         this._session = null;
-        /** @private @type {DemoSource|null} */
-        this._source = null;
     }
 
     /**
@@ -111,21 +112,18 @@ class Player {
         this._transition(PlayerState.DISPOSED);
 
         if (this._session !== null) {
-            await this._session.close();
+            this._session.abort();
 
             this._session = null;
         }
 
-        await this._engine.dispose();
+        if (this._index !== null) {
+            this._engine.getMemoryTracker().off();
 
-        this._index = null;
-        this._source = null;
-
-        if (this._playback.deferred !== null) {
-            this._playback.deferred.reject(new PlaybackInterruptedError(PlaybackInterruptedError.DISPOSED));
-
-            this._playback.deferred = null;
+            this._index = null;
         }
+
+        await this._engine.dispose();
 
         this._ticks.current = -1;
         this._ticks.first = -1;
@@ -173,13 +171,15 @@ class Player {
         const packets = await this._engine.extract(reader, demoSource);
 
         this._index = new PlayerPacketIndex(this._engine.codec, packets);
-        this._source = demoSource;
+        this._session = new ReplaySession(this._engine, this._index, this._configuration.messagePacketFilter, this._configuration.breakInterval);
 
         const first = this._index.getOrFail(0);
         const last = this._index.getOrFail(this._index.length - 1);
 
         this._ticks.first = first.tick.value;
         this._ticks.last = last.tick.value;
+
+        this._engine.getMemoryTracker().on();
 
         this._transition(PlayerState.LOADED);
 
@@ -195,7 +195,7 @@ class Player {
     async nextTick() {
         this._requireState(PlayerState.LOADED, 'Unable to advance tick');
 
-        return this._advanceTick();
+        return this._advanceTick() !== null;
     }
 
     /**
@@ -216,32 +216,45 @@ class Player {
      * Starts continuous playback at the specified rate.
      * Resolves when playback reaches the end of the demo.
      * Rejects if playback is interrupted by {@link Player#pause} or {@link Player#stop},
-     * or if the underlying parser pipeline fails.
+     * or if packet processing fails.
      *
      * @public
      * @param {number} [rate=1.0] Playback rate multiplier (1.0 = normal speed).
      * @returns {Promise<void>}
      */
     play(rate = 1.0) {
+        Assert.isTrue(Number.isFinite(rate) && rate > 0, 'Invalid rate: expected a positive number');
+
         this._transition(PlayerState.PLAYING);
 
-        const deferred = new DeferredPromise();
+        const server = this._engine.demo.server;
 
-        this._playback.deferred = deferred;
+        Assert.exists(server, 'Server info is not available');
 
-        this._runPlayback(rate).catch((error) => {
-            if (deferred.settled) {
-                return;
+        const loop = new PlaybackLoop(() => this._advanceTick(), this._ticks.current, (server.tickInterval / rate) * 1000);
+
+        this._playback.loop = loop;
+
+        return loop.run().then(
+            () => {
+                if (this._playback.loop === loop) {
+                    this._playback.loop = null;
+
+                    this._transition(PlayerState.LOADED);
+                }
+            },
+            (error) => {
+                if (this._playback.loop === loop) {
+                    this._playback.loop = null;
+
+                    if (this._state === PlayerState.PLAYING) {
+                        this._transition(PlayerState.LOADED);
+                    }
+                }
+
+                throw error;
             }
-
-            this._transition(PlayerState.LOADED);
-
-            this._playback.deferred = null;
-
-            deferred.reject(error);
-        });
-
-        return deferred.promise;
+        );
     }
 
     /**
@@ -304,22 +317,18 @@ class Player {
         this._transition(PlayerState.SEEKING);
 
         try {
-            if (this._session !== null) {
-                await this._session.close();
-            }
-
             const index = this._index;
-            const source = this._source;
+            const session = this._session;
 
             Assert.exists(index, 'Player index is not initialized');
-            Assert.exists(source, 'Player source is not initialized');
+            Assert.exists(session, 'Player session is not initialized');
 
-            this._session = new ParserSession(this._engine, index, source);
-
-            this._ticks.current = await this._session.seekToTick(tick);
+            this._ticks.current = await session.seek(tick);
             this._ticks.position = index.getTickPosition(this._ticks.current);
         } finally {
-            this._state = PlayerState.LOADED;
+            if (this._state === PlayerState.SEEKING) {
+                this._transition(PlayerState.LOADED);
+            }
         }
     }
 
@@ -364,9 +373,9 @@ class Player {
      * Advances the demo state by one tick without validation.
      *
      * @protected
-     * @returns {Promise<boolean>} Returns false if there are no more ticks.
+     * @returns {number|null} The new tick, or null if there are no more ticks.
      */
-    async _advanceTick() {
+    _advanceTick() {
         const index = this._index;
         const session = this._session;
 
@@ -376,13 +385,13 @@ class Player {
         const next = index.advance(this._ticks.position);
 
         if (next === null) {
-            return false;
+            return null;
         }
 
         this._ticks.position = next.position;
-        this._ticks.current = await session.process(next.count);
+        this._ticks.current = session.process(next.count);
 
-        return true;
+        return this._ticks.current;
     }
 
     /**
@@ -397,79 +406,19 @@ class Player {
     }
 
     /**
-     * Runs the playback loop. Processes one tick at a time, paced by
-     * the demo's tick interval and the playback rate.
-     *
-     * @protected
-     * @param {number} rate
-     */
-    async _runPlayback(rate) {
-        const server = this._engine.demo.server;
-        const deferred = this._playback.deferred;
-
-        Assert.exists(server, 'Server info is not available');
-        Assert.exists(deferred, 'Playback deferred is not initialized');
-
-        const msPerTick = (server.tickInterval / rate) * 1000;
-
-        const anchor = performance.now();
-        const anchorTick = this._ticks.current;
-
-        while (!deferred.settled) {
-            const hasMore = await this._advanceTick();
-
-            if (!hasMore) {
-                if (!deferred.settled) {
-                    this._transition(PlayerState.LOADED);
-
-                    deferred.resolve();
-                }
-
-                return;
-            }
-
-            const expectedTime = anchor + (this._ticks.current - anchorTick) * msPerTick;
-            const delay = expectedTime - performance.now();
-
-            if (delay > 1) {
-                await this._sleep(delay);
-            }
-        }
-    }
-
-    /**
-     * @protected
-     * @param {number} ms
-     * @returns {Promise<void>}
-     */
-    _sleep(ms) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, ms);
-        });
-    }
-
-    /**
-     * Stops the current playback, cancels any pending sleep,
-     * and rejects the play() promise.
-     *
-     * @protected
-     */
-    /**
      * @protected
      * @param {PlaybackInterruptionReason} reason
      */
     _stopPlayback(reason) {
         this._transition(PlayerState.LOADED);
 
-        const deferred = this._playback.deferred;
+        const loop = this._playback.loop;
 
-        Assert.exists(deferred, 'Playback deferred is not initialized');
+        Assert.exists(loop, 'Playback loop is not initialized');
 
-        deferred.reject(new PlaybackInterruptedError(reason));
+        loop.interrupt(reason);
 
-        this._playback.deferred = null;
+        this._playback.loop = null;
     }
 
     /**
