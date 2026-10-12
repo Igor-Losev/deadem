@@ -55,6 +55,8 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('int64', FieldDecoderDescriptor.VAR_INT_64);
 
         registry.registerFieldTypeDecoder('CEntityIndex', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('CPlayerSlot', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('GameTick_t', FieldDecoderDescriptor.VAR_INT_32);
 
         registry.registerFieldTypeDecoder('HSequence', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
 

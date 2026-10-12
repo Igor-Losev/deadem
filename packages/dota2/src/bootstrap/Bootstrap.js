@@ -28,8 +28,12 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerDotaFieldRules(registry) {
+        registry.registerFieldTypeDecoder('AbilityID_t', FieldDecoderDescriptor.VAR_INT_32);
         registry.registerFieldTypeDecoder('HeroFacetKey_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
         registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_INT_32);
+        registry.registerFieldTypeDecoder('itemid_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('MatchID_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        registry.registerFieldTypeDecoder('PlayerID_t', FieldDecoderDescriptor.VAR_INT_32);
     }
 
     /**
