@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.7.5-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.8.9-darkGreen" /></a>
 
 **@deademx/cs2** is the Counter-Strike 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
 
@@ -128,7 +128,7 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 
 ## Compatibility
 
-- **Game builds:** tested with Counter-Strike 2 demos from version `1.41.7.5` and below.
+- **Game builds:** tested with Counter-Strike 2 demos from version `1.41.8.9` and below.
 - **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
 
 ## Performance

@@ -130,7 +130,8 @@ class DemoPacketApplier {
 
                     break;
                 }
-                case MessagePacketType.SVC_USER_COMMANDS: {
+                case MessagePacketType.SVC_USER_COMMANDS:
+                case MessagePacketType.SVC_USER_COMMAND_KEYFRAME: {
                     const listening = this._interceptors.getIsRegistered(InterceptorStage.USER_COMMAND);
 
                     const events = this._demoMessageHandler.handleSvcUserCommands(messagePacket, demoPacket.getIsSnapshot(), listening);

@@ -646,6 +646,8 @@ message CMsgServerUserCmd {
 	optional int32 player_slot = 3 [default = -1];
 	optional int32 server_tick_executed = 4;
 	optional int32 client_tick = 5;
+	optional bytes delta_data = 6;
+	optional bool delta_processed = 7;
 }
 
 message CSVCMsg_UserCommands {

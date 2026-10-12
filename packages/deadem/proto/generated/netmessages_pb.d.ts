@@ -767,6 +767,16 @@ export declare type CMsgServerUserCmd = Message<"CMsgServerUserCmd"> & {
    * @generated from field: optional int32 client_tick = 5;
    */
   clientTick: number;
+
+  /**
+   * @generated from field: optional bytes delta_data = 6;
+   */
+  deltaData: Uint8Array;
+
+  /**
+   * @generated from field: optional bool delta_processed = 7;
+   */
+  deltaProcessed: boolean;
 };
 
 /**
