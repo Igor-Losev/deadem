@@ -5,6 +5,9 @@
       "#broadcast/BroadcastReadStream.js": [
         "./packages/engine/src/broadcast/BroadcastReadStream.node.js"
       ],
+      "#core/EventLoop.js": [
+        "./packages/engine/src/core/EventLoop.node.js"
+      ],
       "#core/stream/Pipeline.js": [
         "./packages/engine/src/core/stream/Pipeline.node.js"
       ],

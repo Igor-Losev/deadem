@@ -66,6 +66,16 @@
       "browser": "./src/broadcast/BroadcastReadStream.browser.js",
       "default": "./src/broadcast/BroadcastReadStream.browser.js"
     },
+    "#core/EventLoop.js": {
+      "types": "./types/src/core/EventLoop.node.d.ts",
+      "electron": {
+        "browser": "./src/core/EventLoop.browser.js",
+        "default": "./src/core/EventLoop.node.js"
+      },
+      "node": "./src/core/EventLoop.node.js",
+      "browser": "./src/core/EventLoop.browser.js",
+      "default": "./src/core/EventLoop.browser.js"
+    },
     "#core/stream/Pipeline.js": {
       "types": "./types/src/core/stream/Pipeline.node.d.ts",
       "electron": {

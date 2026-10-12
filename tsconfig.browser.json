@@ -9,6 +9,9 @@
       "#broadcast/BroadcastReadStream.js": [
         "./packages/engine/src/broadcast/BroadcastReadStream.browser.js"
       ],
+      "#core/EventLoop.js": [
+        "./packages/engine/src/core/EventLoop.browser.js"
+      ],
       "#core/stream/Pipeline.js": [
         "./packages/engine/src/core/stream/Pipeline.browser.js"
       ],

@@ -4,6 +4,7 @@
 
 import Assert from '../core/Assert.js';
 
+import EventLoop from '#core/EventLoop.js';
 import Transform from '#core/stream/Transform.js';
 
 /**
@@ -41,23 +42,11 @@ class DemoStreamEventLoopBreaker extends Transform {
         this._counter += 1;
 
         if (this._counter % this._breakInterval === 0) {
-            await pauseTimeout(0);
+            await EventLoop.yield();
         }
 
         this._push(demoPacketRaw);
     }
-}
-
-/**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-function pauseTimeout(ms) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, ms);
-    });
 }
 
 export default DemoStreamEventLoopBreaker;
