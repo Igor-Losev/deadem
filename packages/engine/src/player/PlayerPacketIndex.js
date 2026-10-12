@@ -109,34 +109,6 @@ class PlayerPacketIndex {
     }
 
     /**
-     * Returns all data required to reconstruct the game state at the specified tick.
-     *
-     * @public
-     * @param {number} tick
-     * @returns {{bootstrap: Array<DemoPacketRaw>, stringTableSnapshots: Array<*>, packets: Array<DemoPacketRaw>, remaining: Array<DemoPacketRaw>}}
-     */
-    getPacketsForTick(tick) {
-        Assert.isTrue(Number.isInteger(tick), 'tick must be an integer');
-
-        const keyframeIndex = this._findKeyframeBefore(tick);
-        const afterTickPos = this._findTickPositionAfter(tick);
-        const packetIndex = afterTickPos !== -1 ? this._tickOffsets[afterTickPos] : this._packets.length - 1;
-
-        const keyframePosition = this._keyframes.findIndex(ki => ki === keyframeIndex);
-
-        const stringTableSnapshots = this._keyframes
-            .slice(0, keyframePosition + 1)
-            .map(ki => this._stringTableSnapshots.get(ki));
-
-        return {
-            bootstrap: this._bootstrap.map(i => this._packets[i]),
-            stringTableSnapshots,
-            packets: this._getRange(keyframeIndex, packetIndex),
-            remaining: this._getRange(packetIndex, this._packets.length)
-        };
-    }
-
-    /**
      * Returns the packets and string table snapshots to replay up to the specified tick.
      *
      * @public
@@ -314,21 +286,6 @@ class PlayerPacketIndex {
         }
 
         return left < this._uniqueTicks.length ? left : -1;
-    }
-
-    /**
-     * Returns packets in the specified range.
-     *
-     * @protected
-     * @param {number} from - Start index (inclusive).
-     * @param {number} to - End index (exclusive).
-     * @returns {Array<DemoPacketRaw>}
-     */
-    _getRange(from, to) {
-        Assert.isTrue(Number.isInteger(from), 'from must be an integer');
-        Assert.isTrue(Number.isInteger(to), 'to must be an integer');
-
-        return this._packets.slice(from, to);
     }
 }
 

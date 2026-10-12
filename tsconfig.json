@@ -11,9 +11,6 @@
       "#core/stream/Pipeline.js": [
         "./packages/engine/src/core/stream/Pipeline.node.js"
       ],
-      "#core/stream/ReadableArray.js": [
-        "./packages/engine/src/core/stream/ReadableArray.node.js"
-      ],
       "#core/stream/Transform.js": [
         "./packages/engine/src/core/stream/Transform.node.js"
       ],

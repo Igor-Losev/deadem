@@ -86,16 +86,6 @@
       "browser": "./src/core/stream/Pipeline.browser.js",
       "default": "./src/core/stream/Pipeline.browser.js"
     },
-    "#core/stream/ReadableArray.js": {
-      "types": "./types/src/core/stream/ReadableArray.node.d.ts",
-      "electron": {
-        "browser": "./src/core/stream/ReadableArray.browser.js",
-        "default": "./src/core/stream/ReadableArray.node.js"
-      },
-      "node": "./src/core/stream/ReadableArray.node.js",
-      "browser": "./src/core/stream/ReadableArray.browser.js",
-      "default": "./src/core/stream/ReadableArray.browser.js"
-    },
     "#core/stream/Transform.js": {
       "types": "./types/src/core/stream/Transform.node.d.ts",
       "electron": {

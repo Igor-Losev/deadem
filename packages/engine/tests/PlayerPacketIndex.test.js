@@ -155,28 +155,6 @@ describe('PlayerPacketIndex', () => {
         });
     });
 
-    describe('getPacketsForTick', () => {
-        test('It should return packets for a given tick', () => {
-            const packets = [
-                createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
-                createPacket(200),
-                createPacket(200),
-                createPacket(300)
-            ];
-
-            const stub = createCodec(new Map([
-                [ packets[0], { decoded: { stringTable: 'snapshot0' } } ]
-            ]));
-
-            const index = new PlayerPacketIndex(stub, packets);
-
-            const result = index.getPacketsForTick(200);
-
-            expect(result.packets.length).toBeGreaterThan(0);
-            expect(result.remaining.length).toBeGreaterThan(0);
-        });
-    });
-
     describe('getSeekPlan', () => {
         test('It should return the [from, to) range covering the tick', () => {
             const packets = [
