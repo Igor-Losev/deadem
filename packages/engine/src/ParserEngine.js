@@ -101,7 +101,7 @@ class ParserEngine {
             demoEntity: new DemoEntityHandler(this._demo),
             demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
             demoPacket: new DemoPacketHandler(registry, this._demo, stringTableHandler),
-            stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
+            stringTable: stringTableHandler
         };
 
         /** @private */
