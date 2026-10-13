@@ -129,6 +129,11 @@ class DemoMessageHandler {
 
             switch (command) {
                 case EntityOperation.UPDATE.id: {
+                    // For older game builds. 2 PVS bits per update; low bit = no field data.
+                    if (message.hasPvsVisBitsDeprecated > 0 && (bitBuffer.readBitsAsUInt(2) & 1) !== 0) {
+                        break;
+                    }
+
                     const entity = this._demo.getEntity(index);
 
                     if (entity === null) {
