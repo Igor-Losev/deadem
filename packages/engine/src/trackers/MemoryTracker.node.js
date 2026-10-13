@@ -63,6 +63,8 @@ class MemoryTrackerNode extends MemoryTracker {
         this._intervalId = setInterval(() => {
             this._sample();
         }, this._intervalMilliseconds);
+
+        this._intervalId.unref();
     }
 
     /**
