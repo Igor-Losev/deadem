@@ -48,6 +48,7 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('char', FieldDecoderDescriptor.STRING);
         registry.registerFieldTypeDecoder('CUtlString', FieldDecoderDescriptor.STRING);
         registry.registerFieldTypeDecoder('CUtlSymbolLarge', FieldDecoderDescriptor.STRING);
+        registry.registerFieldTypeDecoder('CGlobalSymbol', FieldDecoderDescriptor.STRING);
 
         registry.registerFieldTypeDecoder('int8', FieldDecoderDescriptor.VAR_INT_32);
         registry.registerFieldTypeDecoder('int16', FieldDecoderDescriptor.VAR_INT_32);
@@ -74,6 +75,8 @@ class Bootstrap {
         registry.registerFieldTypeDecoder('Vector', FieldDecoderDescriptor.createVector(3));
         registry.registerFieldTypeDecoder('VectorWS', FieldDecoderDescriptor.createVector(3));
         registry.registerFieldTypeDecoder('Vector4D', FieldDecoderDescriptor.createVector(4));
+        registry.registerFieldTypeDecoder('Quaternion', FieldDecoderDescriptor.createVector(4));
+        registry.registerFieldTypeDecoder('CTransform', FieldDecoderDescriptor.createVector(6));
 
         registry.registerFixedTableType('CBodyComponent');
         registry.registerFixedTableType('CEntityComponent');

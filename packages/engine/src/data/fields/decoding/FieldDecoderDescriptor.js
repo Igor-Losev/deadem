@@ -41,7 +41,7 @@ class FieldDecoderDescriptor {
      * @returns {FieldDecoderDescriptor}
      */
     static createVector(dimension) {
-        Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
+        Assert.isTrue([ 2, 3, 4, 6 ].includes(dimension));
 
         return new FieldDecoderDescriptor(FieldDecoderType.VECTOR, { dimension });
     }

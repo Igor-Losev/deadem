@@ -30,9 +30,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2FieldRules(registry) {
-        registry.registerFieldTypeDecoder('CGlobalSymbol', FieldDecoderDescriptor.STRING);
         registry.registerFieldTypeDecoder('CUtlBinaryBlock', FieldDecoderDescriptor.BINARY_BLOCK);
-        registry.registerFieldTypeDecoder('Quaternion', FieldDecoderDescriptor.createVector(4));
 
         registry.registerFixedTableType('CLightComponent');
 

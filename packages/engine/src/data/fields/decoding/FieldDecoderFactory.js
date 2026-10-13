@@ -20,7 +20,8 @@ class FieldDecoderFactory {
         this._registryVector = {
             2: new Map(),
             3: new Map(),
-            4: new Map()
+            4: new Map(),
+            6: new Map()
         };
     }
 
@@ -349,7 +350,7 @@ class FieldDecoderFactory {
      */
     _createVector(instructions, dimension) {
         Assert.isTrue(instructions instanceof FieldDecoderInstructions);
-        Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
+        Assert.isTrue([ 2, 3, 4, 6 ].includes(dimension));
 
         const registry = this._registryVector[dimension] || null;
 

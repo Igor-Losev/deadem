@@ -137,7 +137,9 @@ const vectors = [
     null,
     new FieldStorageDescriptor(FieldStorageType.VECTOR, 2, false, false),
     new FieldStorageDescriptor(FieldStorageType.VECTOR, 3, false, false),
-    new FieldStorageDescriptor(FieldStorageType.VECTOR, 4, false, false)
+    new FieldStorageDescriptor(FieldStorageType.VECTOR, 4, false, false),
+    null,
+    new FieldStorageDescriptor(FieldStorageType.VECTOR, 6, false, false)
 ];
 
 export default FieldStorageDescriptor;
