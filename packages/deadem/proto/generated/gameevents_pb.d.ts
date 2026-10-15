@@ -98,6 +98,27 @@ export declare type CMsgPlaceDecalEvent = Message<"CMsgPlaceDecalEvent"> & {
 export declare const CMsgPlaceDecalEventSchema: GenMessage<CMsgPlaceDecalEvent>;
 
 /**
+ * @generated from message CMsgClearDecalsForEntityEvent
+ */
+export declare type CMsgClearDecalsForEntityEvent = Message<"CMsgClearDecalsForEntityEvent"> & {
+  /**
+   * @generated from field: optional uint32 flagstoclear = 1;
+   */
+  flagstoclear: number;
+
+  /**
+   * @generated from field: optional uint32 entityhandle = 2 [default = 16777215];
+   */
+  entityhandle: number;
+};
+
+/**
+ * Describes the message CMsgClearDecalsForEntityEvent.
+ * Use `create(CMsgClearDecalsForEntityEventSchema)` to create a new message.
+ */
+export declare const CMsgClearDecalsForEntityEventSchema: GenMessage<CMsgClearDecalsForEntityEvent>;
+
+/**
  * @generated from message CMsgSource1LegacyGameEventList
  */
 export declare type CMsgSource1LegacyGameEventList = Message<"CMsgSource1LegacyGameEventList"> & {
@@ -366,4 +387,86 @@ export declare type CMsgSosSetLibraryStackFields = Message<"CMsgSosSetLibrarySta
  * Use `create(CMsgSosSetLibraryStackFieldsSchema)` to create a new message.
  */
 export declare const CMsgSosSetLibraryStackFieldsSchema: GenMessage<CMsgSosSetLibraryStackFields>;
+
+/**
+ * @generated from message CMsgClothStiffenAnimEvent
+ */
+export declare type CMsgClothStiffenAnimEvent = Message<"CMsgClothStiffenAnimEvent"> & {
+  /**
+   * @generated from field: optional int32 source_entity_index = 1 [default = -1];
+   */
+  sourceEntityIndex: number;
+
+  /**
+   * @generated from field: optional int32 vertex_set_hash = 2;
+   */
+  vertexSetHash: number;
+
+  /**
+   * @generated from field: optional float intensity = 3;
+   */
+  intensity: number;
+
+  /**
+   * @generated from field: optional float length = 4;
+   */
+  length: number;
+
+  /**
+   * @generated from field: optional float speed_in = 5;
+   */
+  speedIn: number;
+
+  /**
+   * @generated from field: optional float speed_out = 6;
+   */
+  speedOut: number;
+};
+
+/**
+ * Describes the message CMsgClothStiffenAnimEvent.
+ * Use `create(CMsgClothStiffenAnimEventSchema)` to create a new message.
+ */
+export declare const CMsgClothStiffenAnimEventSchema: GenMessage<CMsgClothStiffenAnimEvent>;
+
+/**
+ * @generated from message CMsgClothEffectAnimEvent
+ */
+export declare type CMsgClothEffectAnimEvent = Message<"CMsgClothEffectAnimEvent"> & {
+  /**
+   * @generated from field: optional int32 source_entity_index = 1 [default = -1];
+   */
+  sourceEntityIndex: number;
+
+  /**
+   * @generated from field: optional int32 effect_name_hash = 2;
+   */
+  effectNameHash: number;
+
+  /**
+   * @generated from field: optional int32 operation = 3;
+   */
+  operation: number;
+
+  /**
+   * @generated from field: optional int32 flags = 4;
+   */
+  flags: number;
+
+  /**
+   * @generated from field: optional string tags = 5;
+   */
+  tags: string;
+
+  /**
+   * @generated from field: optional CMsgVector pte = 6;
+   */
+  pte?: CMsgVector | undefined;
+};
+
+/**
+ * Describes the message CMsgClothEffectAnimEvent.
+ * Use `create(CMsgClothEffectAnimEventSchema)` to create a new message.
+ */
+export declare const CMsgClothEffectAnimEventSchema: GenMessage<CMsgClothEffectAnimEvent>;
 

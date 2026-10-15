@@ -10,7 +10,7 @@ import { file_valveextensions } from "./valveextensions_pb.js";
  * Describes the file gameevents.proto.
  */
 export const file_gameevents = /*@__PURE__*/
-  fileDesc("ChBnYW1lZXZlbnRzLnByb3RvIsMDChNDTXNnUGxhY2VEZWNhbEV2ZW50Eh0KCHBvc2l0aW9uGAEgASgLMgsuQ01zZ1ZlY3RvchIbCgZub3JtYWwYAiABKAsyCy5DTXNnVmVjdG9yEhoKBXNheGlzGAMgASgLMgsuQ01zZ1ZlY3RvchIRCglib25laW5kZXgYBCABKAUSFQoNdHJpYW5nbGVpbmRleBgNIAEoBRINCgVmbGFncxgFIAEoDRINCgVjb2xvchgGIAEoBxITCgtyYW5kb21fc2VlZBgHIAEoBRIYChBkZWNhbF9ncm91cF9uYW1lGAggASgNEhUKDXNpemVfb3ZlcnJpZGUYCSABKAISRgoMZW50aXR5aGFuZGxlGAogASgNOggxNjc3NzIxNUIm4oMeFkNFSGFuZGxlTmV0d29ya2FibGVJbnTqgx4IMTY3NzcyMTUSEwoLbWF0ZXJpYWxfaWQYCyABKAQSFQoNc2VxdWVuY2VfbmFtZRgMIAEoDRIpChRwb3NpdGlvbl9vYmplY3RzcGFjZRgOIAEoCzILLkNNc2dWZWN0b3ISJwoSbm9ybWFsX29iamVjdHNwYWNlGA8gASgLMgsuQ01zZ1ZlY3RvciL0AQoeQ01zZ1NvdXJjZTFMZWdhY3lHYW1lRXZlbnRMaXN0EkEKC2Rlc2NyaXB0b3JzGAEgAygLMiwuQ01zZ1NvdXJjZTFMZWdhY3lHYW1lRXZlbnRMaXN0LmRlc2NyaXB0b3JfdBojCgVrZXlfdBIMCgR0eXBlGAEgASgFEgwKBG5hbWUYAiABKAkaYgoMZGVzY3JpcHRvcl90Eg8KB2V2ZW50aWQYASABKAUSDAoEbmFtZRgCIAEoCRIzCgRrZXlzGAMgAygLMiUuQ01zZ1NvdXJjZTFMZWdhY3lHYW1lRXZlbnRMaXN0LmtleV90OgaAtRiAgAIiuAIKGkNNc2dTb3VyY2UxTGVnYWN5R2FtZUV2ZW50EhIKCmV2ZW50X25hbWUYASABKAkSDwoHZXZlbnRpZBgCIAEoBRIvCgRrZXlzGAMgAygLMiEuQ01zZ1NvdXJjZTFMZWdhY3lHYW1lRXZlbnQua2V5X3QSEwoLc2VydmVyX3RpY2sYBCABKAUSEwoLcGFzc3Rocm91Z2gYBSABKAUamQEKBWtleV90EgwKBHR5cGUYASABKAUSEgoKdmFsX3N0cmluZxgCIAEoCRIRCgl2YWxfZmxvYXQYAyABKAISEAoIdmFsX2xvbmcYBCABKAUSEQoJdmFsX3Nob3J0GAUgASgFEhAKCHZhbF9ieXRlGAYgASgFEhAKCHZhbF9ib29sGAcgASgIEhIKCnZhbF91aW50NjQYCCABKAQivAEKFkNNc2dTb3NTdGFydFNvdW5kRXZlbnQSFwoPc291bmRldmVudF9ndWlkGAEgASgFEhcKD3NvdW5kZXZlbnRfaGFzaBgCIAEoBxI3ChNzb3VyY2VfZW50aXR5X2luZGV4GAMgASgFOgItMUIW4oMeDENFbnRpdHlJbmRleOqDHgItMRIMCgRzZWVkGAQgASgFEhUKDXBhY2tlZF9wYXJhbXMYBSABKAwSEgoKc3RhcnRfdGltZRgGIAEoAiIwChVDTXNnU29zU3RvcFNvdW5kRXZlbnQSFwoPc291bmRldmVudF9ndWlkGAEgASgFIm0KGUNNc2dTb3NTdG9wU291bmRFdmVudEhhc2gSFwoPc291bmRldmVudF9oYXNoGAEgASgHEjcKE3NvdXJjZV9lbnRpdHlfaW5kZXgYAiABKAU6Ai0xQhbigx4MQ0VudGl0eUluZGV46oMeAi0xIkwKGkNNc2dTb3NTZXRTb3VuZEV2ZW50UGFyYW1zEhcKD3NvdW5kZXZlbnRfZ3VpZBgBIAEoBRIVCg1wYWNrZWRfcGFyYW1zGAUgASgMIkkKHENNc2dTb3NTZXRMaWJyYXJ5U3RhY2tGaWVsZHMSEgoKc3RhY2tfaGFzaBgBIAEoBxIVCg1wYWNrZWRfZmllbGRzGAUgASgM", [file_networkbasetypes, file_valveextensions]);
+  fileDesc("ChBnYW1lZXZlbnRzLnByb3RvIsMDChNDTXNnUGxhY2VEZWNhbEV2ZW50Eh0KCHBvc2l0aW9uGAEgASgLMgsuQ01zZ1ZlY3RvchIbCgZub3JtYWwYAiABKAsyCy5DTXNnVmVjdG9yEhoKBXNheGlzGAMgASgLMgsuQ01zZ1ZlY3RvchIRCglib25laW5kZXgYBCABKAUSFQoNdHJpYW5nbGVpbmRleBgNIAEoBRINCgVmbGFncxgFIAEoDRINCgVjb2xvchgGIAEoBxITCgtyYW5kb21fc2VlZBgHIAEoBRIYChBkZWNhbF9ncm91cF9uYW1lGAggASgNEhUKDXNpemVfb3ZlcnJpZGUYCSABKAISRgoMZW50aXR5aGFuZGxlGAogASgNOggxNjc3NzIxNUIm4oMeFkNFSGFuZGxlTmV0d29ya2FibGVJbnTqgx4IMTY3NzcyMTUSEwoLbWF0ZXJpYWxfaWQYCyABKAQSFQoNc2VxdWVuY2VfbmFtZRgMIAEoDRIpChRwb3NpdGlvbl9vYmplY3RzcGFjZRgOIAEoCzILLkNNc2dWZWN0b3ISJwoSbm9ybWFsX29iamVjdHNwYWNlGA8gASgLMgsuQ01zZ1ZlY3RvciJ9Ch1DTXNnQ2xlYXJEZWNhbHNGb3JFbnRpdHlFdmVudBIUCgxmbGFnc3RvY2xlYXIYASABKA0SRgoMZW50aXR5aGFuZGxlGAIgASgNOggxNjc3NzIxNUIm4oMeFkNFSGFuZGxlTmV0d29ya2FibGVJbnTqgx4IMTY3NzcyMTUi9AEKHkNNc2dTb3VyY2UxTGVnYWN5R2FtZUV2ZW50TGlzdBJBCgtkZXNjcmlwdG9ycxgBIAMoCzIsLkNNc2dTb3VyY2UxTGVnYWN5R2FtZUV2ZW50TGlzdC5kZXNjcmlwdG9yX3QaIwoFa2V5X3QSDAoEdHlwZRgBIAEoBRIMCgRuYW1lGAIgASgJGmIKDGRlc2NyaXB0b3JfdBIPCgdldmVudGlkGAEgASgFEgwKBG5hbWUYAiABKAkSMwoEa2V5cxgDIAMoCzIlLkNNc2dTb3VyY2UxTGVnYWN5R2FtZUV2ZW50TGlzdC5rZXlfdDoGgLUYgIACIrgCChpDTXNnU291cmNlMUxlZ2FjeUdhbWVFdmVudBISCgpldmVudF9uYW1lGAEgASgJEg8KB2V2ZW50aWQYAiABKAUSLwoEa2V5cxgDIAMoCzIhLkNNc2dTb3VyY2UxTGVnYWN5R2FtZUV2ZW50LmtleV90EhMKC3NlcnZlcl90aWNrGAQgASgFEhMKC3Bhc3N0aHJvdWdoGAUgASgFGpkBCgVrZXlfdBIMCgR0eXBlGAEgASgFEhIKCnZhbF9zdHJpbmcYAiABKAkSEQoJdmFsX2Zsb2F0GAMgASgCEhAKCHZhbF9sb25nGAQgASgFEhEKCXZhbF9zaG9ydBgFIAEoBRIQCgh2YWxfYnl0ZRgGIAEoBRIQCgh2YWxfYm9vbBgHIAEoCBISCgp2YWxfdWludDY0GAggASgEIrwBChZDTXNnU29zU3RhcnRTb3VuZEV2ZW50EhcKD3NvdW5kZXZlbnRfZ3VpZBgBIAEoBRIXCg9zb3VuZGV2ZW50X2hhc2gYAiABKAcSNwoTc291cmNlX2VudGl0eV9pbmRleBgDIAEoBToCLTFCFuKDHgxDRW50aXR5SW5kZXjqgx4CLTESDAoEc2VlZBgEIAEoBRIVCg1wYWNrZWRfcGFyYW1zGAUgASgMEhIKCnN0YXJ0X3RpbWUYBiABKAIiMAoVQ01zZ1Nvc1N0b3BTb3VuZEV2ZW50EhcKD3NvdW5kZXZlbnRfZ3VpZBgBIAEoBSJtChlDTXNnU29zU3RvcFNvdW5kRXZlbnRIYXNoEhcKD3NvdW5kZXZlbnRfaGFzaBgBIAEoBxI3ChNzb3VyY2VfZW50aXR5X2luZGV4GAIgASgFOgItMUIW4oMeDENFbnRpdHlJbmRleOqDHgItMSJMChpDTXNnU29zU2V0U291bmRFdmVudFBhcmFtcxIXCg9zb3VuZGV2ZW50X2d1aWQYASABKAUSFQoNcGFja2VkX3BhcmFtcxgFIAEoDCJJChxDTXNnU29zU2V0TGlicmFyeVN0YWNrRmllbGRzEhIKCnN0YWNrX2hhc2gYASABKAcSFQoNcGFja2VkX2ZpZWxkcxgFIAEoDCK1AQoZQ01zZ0Nsb3RoU3RpZmZlbkFuaW1FdmVudBI3ChNzb3VyY2VfZW50aXR5X2luZGV4GAEgASgFOgItMUIW4oMeDENFbnRpdHlJbmRleOqDHgItMRIXCg92ZXJ0ZXhfc2V0X2hhc2gYAiABKAUSEQoJaW50ZW5zaXR5GAMgASgCEg4KBmxlbmd0aBgEIAEoAhIQCghzcGVlZF9pbhgFIAEoAhIRCglzcGVlZF9vdXQYBiABKAIitwEKGENNc2dDbG90aEVmZmVjdEFuaW1FdmVudBI3ChNzb3VyY2VfZW50aXR5X2luZGV4GAEgASgFOgItMUIW4oMeDENFbnRpdHlJbmRleOqDHgItMRIYChBlZmZlY3RfbmFtZV9oYXNoGAIgASgFEhEKCW9wZXJhdGlvbhgDIAEoBRINCgVmbGFncxgEIAEoBRIMCgR0YWdzGAUgASgJEhgKA3B0ZRgGIAEoCzILLkNNc2dWZWN0b3I", [file_networkbasetypes, file_valveextensions]);
 
 /**
  * Describes the message CMsgPlaceDecalEvent.
@@ -20,72 +20,93 @@ export const CMsgPlaceDecalEventSchema = /*@__PURE__*/
   messageDesc(file_gameevents, 0);
 
 /**
+ * Describes the message CMsgClearDecalsForEntityEvent.
+ * Use `create(CMsgClearDecalsForEntityEventSchema)` to create a new message.
+ */
+export const CMsgClearDecalsForEntityEventSchema = /*@__PURE__*/
+  messageDesc(file_gameevents, 1);
+
+/**
  * Describes the message CMsgSource1LegacyGameEventList.
  * Use `create(CMsgSource1LegacyGameEventListSchema)` to create a new message.
  */
 export const CMsgSource1LegacyGameEventListSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 1);
+  messageDesc(file_gameevents, 2);
 
 /**
  * Describes the message CMsgSource1LegacyGameEventList.key_t.
  * Use `create(CMsgSource1LegacyGameEventList_key_tSchema)` to create a new message.
  */
 export const CMsgSource1LegacyGameEventList_key_tSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 1, 0);
+  messageDesc(file_gameevents, 2, 0);
 
 /**
  * Describes the message CMsgSource1LegacyGameEventList.descriptor_t.
  * Use `create(CMsgSource1LegacyGameEventList_descriptor_tSchema)` to create a new message.
  */
 export const CMsgSource1LegacyGameEventList_descriptor_tSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 1, 1);
+  messageDesc(file_gameevents, 2, 1);
 
 /**
  * Describes the message CMsgSource1LegacyGameEvent.
  * Use `create(CMsgSource1LegacyGameEventSchema)` to create a new message.
  */
 export const CMsgSource1LegacyGameEventSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 2);
+  messageDesc(file_gameevents, 3);
 
 /**
  * Describes the message CMsgSource1LegacyGameEvent.key_t.
  * Use `create(CMsgSource1LegacyGameEvent_key_tSchema)` to create a new message.
  */
 export const CMsgSource1LegacyGameEvent_key_tSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 2, 0);
+  messageDesc(file_gameevents, 3, 0);
 
 /**
  * Describes the message CMsgSosStartSoundEvent.
  * Use `create(CMsgSosStartSoundEventSchema)` to create a new message.
  */
 export const CMsgSosStartSoundEventSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 3);
+  messageDesc(file_gameevents, 4);
 
 /**
  * Describes the message CMsgSosStopSoundEvent.
  * Use `create(CMsgSosStopSoundEventSchema)` to create a new message.
  */
 export const CMsgSosStopSoundEventSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 4);
+  messageDesc(file_gameevents, 5);
 
 /**
  * Describes the message CMsgSosStopSoundEventHash.
  * Use `create(CMsgSosStopSoundEventHashSchema)` to create a new message.
  */
 export const CMsgSosStopSoundEventHashSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 5);
+  messageDesc(file_gameevents, 6);
 
 /**
  * Describes the message CMsgSosSetSoundEventParams.
  * Use `create(CMsgSosSetSoundEventParamsSchema)` to create a new message.
  */
 export const CMsgSosSetSoundEventParamsSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 6);
+  messageDesc(file_gameevents, 7);
 
 /**
  * Describes the message CMsgSosSetLibraryStackFields.
  * Use `create(CMsgSosSetLibraryStackFieldsSchema)` to create a new message.
  */
 export const CMsgSosSetLibraryStackFieldsSchema = /*@__PURE__*/
-  messageDesc(file_gameevents, 7);
+  messageDesc(file_gameevents, 8);
+
+/**
+ * Describes the message CMsgClothStiffenAnimEvent.
+ * Use `create(CMsgClothStiffenAnimEventSchema)` to create a new message.
+ */
+export const CMsgClothStiffenAnimEventSchema = /*@__PURE__*/
+  messageDesc(file_gameevents, 9);
+
+/**
+ * Describes the message CMsgClothEffectAnimEvent.
+ * Use `create(CMsgClothEffectAnimEventSchema)` to create a new message.
+ */
+export const CMsgClothEffectAnimEventSchema = /*@__PURE__*/
+  messageDesc(file_gameevents, 10);
 

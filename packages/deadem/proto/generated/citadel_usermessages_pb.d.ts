@@ -5,7 +5,7 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { CEntityMsg, CMsgQAngle, CMsgTransform, CMsgVector } from "./networkbasetypes_pb.js";
-import type { CMsgLaneColor, CMsgMapLine } from "./citadel_gcmessages_common_pb.js";
+import type { CMsgCitadelCombatLogEntry, CMsgLaneColor, CMsgMapLine } from "./citadel_gcmessages_common_pb.js";
 import type { CMsgSosSetLibraryStackFields, CMsgSosSetSoundEventParams, CMsgSosStartSoundEvent, CMsgSosStopSoundEvent, CMsgSosStopSoundEventHash } from "./gameevents_pb.js";
 
 /**
@@ -2488,6 +2488,136 @@ export declare type CCitadelUserMsg_BannedHeroes = Message<"CCitadelUserMsg_Bann
 export declare const CCitadelUserMsg_BannedHeroesSchema: GenMessage<CCitadelUserMsg_BannedHeroes>;
 
 /**
+ * @generated from message CCitadelUserMsg_CombatLogBulkData
+ */
+export declare type CCitadelUserMsg_CombatLogBulkData = Message<"CCitadelUserMsg_CombatLogBulkData"> & {
+  /**
+   * @generated from field: repeated CMsgCitadelCombatLogEntry combat_entries = 1;
+   */
+  combatEntries: CMsgCitadelCombatLogEntry[];
+
+  /**
+   * @generated from field: optional float timestamp = 2;
+   */
+  timestamp: number;
+
+  /**
+   * @generated from field: optional float duration = 3;
+   */
+  duration: number;
+
+  /**
+   * @generated from field: optional int32 player_slot = 4 [default = -1];
+   */
+  playerSlot: number;
+
+  /**
+   * @generated from field: optional float request_time = 5;
+   */
+  requestTime: number;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_CombatLogBulkData.
+ * Use `create(CCitadelUserMsg_CombatLogBulkDataSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_CombatLogBulkDataSchema: GenMessage<CCitadelUserMsg_CombatLogBulkData>;
+
+/**
+ * @generated from message CCitadelUserMsg_PlayerTyping
+ */
+export declare type CCitadelUserMsg_PlayerTyping = Message<"CCitadelUserMsg_PlayerTyping"> & {
+  /**
+   * @generated from field: optional int32 player_slot = 1 [default = -1];
+   */
+  playerSlot: number;
+
+  /**
+   * @generated from field: optional float game_time = 2;
+   */
+  gameTime: number;
+
+  /**
+   * @generated from field: optional bool all_chat = 3;
+   */
+  allChat: boolean;
+
+  /**
+   * @generated from field: optional bool typing = 4;
+   */
+  typing: boolean;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_PlayerTyping.
+ * Use `create(CCitadelUserMsg_PlayerTypingSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_PlayerTypingSchema: GenMessage<CCitadelUserMsg_PlayerTyping>;
+
+/**
+ * @generated from message CCitadelUserMsg_MusicQueue
+ */
+export declare type CCitadelUserMsg_MusicQueue = Message<"CCitadelUserMsg_MusicQueue"> & {
+  /**
+   * @generated from field: optional CitadelMusicMsgType queue = 1 [default = k_EMusicQueue_Invalid];
+   */
+  queue: CitadelMusicMsgType;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_MusicQueue.
+ * Use `create(CCitadelUserMsg_MusicQueueSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_MusicQueueSchema: GenMessage<CCitadelUserMsg_MusicQueue>;
+
+/**
+ * @generated from message CCitadelUserMsg_SoulBagPickup
+ */
+export declare type CCitadelUserMsg_SoulBagPickup = Message<"CCitadelUserMsg_SoulBagPickup"> & {
+  /**
+   * @generated from field: optional uint32 pickup_player = 1 [default = 16777215];
+   */
+  pickupPlayer: number;
+
+  /**
+   * @generated from field: optional uint32 victim_player = 2 [default = 16777215];
+   */
+  victimPlayer: number;
+
+  /**
+   * @generated from field: optional int32 killfeed_gold = 3;
+   */
+  killfeedGold: number;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_SoulBagPickup.
+ * Use `create(CCitadelUserMsg_SoulBagPickupSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_SoulBagPickupSchema: GenMessage<CCitadelUserMsg_SoulBagPickup>;
+
+/**
+ * @generated from message CCitadelUserMsg_HeroReleaseVote
+ */
+export declare type CCitadelUserMsg_HeroReleaseVote = Message<"CCitadelUserMsg_HeroReleaseVote"> & {
+  /**
+   * @generated from field: optional int32 player_slot = 1 [default = -1];
+   */
+  playerSlot: number;
+
+  /**
+   * @generated from field: optional uint32 voted_hero_id = 2;
+   */
+  votedHeroId: number;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_HeroReleaseVote.
+ * Use `create(CCitadelUserMsg_HeroReleaseVoteSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_HeroReleaseVoteSchema: GenMessage<CCitadelUserMsg_HeroReleaseVote>;
+
+/**
  * @generated from enum ChatMsgPingMarkerInfo
  */
 export enum ChatMsgPingMarkerInfo {
@@ -2771,4 +2901,39 @@ export enum PostProcessingGameStates {
  * Describes the enum PostProcessingGameStates.
  */
 export declare const PostProcessingGameStatesSchema: GenEnum<PostProcessingGameStates>;
+
+/**
+ * @generated from enum CitadelMusicMsgType
+ */
+export enum CitadelMusicMsgType {
+  /**
+   * @generated from enum value: k_EMusicQueue_Invalid = 0;
+   */
+  k_EMusicQueue_Invalid = 0,
+
+  /**
+   * @generated from enum value: k_EMusicQueue_IdolAnnounce = 1;
+   */
+  k_EMusicQueue_IdolAnnounce = 1,
+
+  /**
+   * @generated from enum value: k_EMusicQueue_KothAnnounce = 2;
+   */
+  k_EMusicQueue_KothAnnounce = 2,
+
+  /**
+   * @generated from enum value: k_EMusicQueue_RejuvDrop = 3;
+   */
+  k_EMusicQueue_RejuvDrop = 3,
+
+  /**
+   * @generated from enum value: k_EMusicQueue_CorruptedItemShopAnnounce = 4;
+   */
+  k_EMusicQueue_CorruptedItemShopAnnounce = 4,
+}
+
+/**
+ * Describes the enum CitadelMusicMsgType.
+ */
+export declare const CitadelMusicMsgTypeSchema: GenEnum<CitadelMusicMsgType>;
 

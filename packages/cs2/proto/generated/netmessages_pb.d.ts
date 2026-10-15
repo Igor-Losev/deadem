@@ -554,6 +554,27 @@ export declare type CSVCMsg_VoiceData = Message<"CSVCMsg_VoiceData"> & {
 export declare const CSVCMsg_VoiceDataSchema: GenMessage<CSVCMsg_VoiceData>;
 
 /**
+ * @generated from message CSVCMsg_EncryptedData
+ */
+export declare type CSVCMsg_EncryptedData = Message<"CSVCMsg_EncryptedData"> & {
+  /**
+   * @generated from field: optional bytes encrypted = 1;
+   */
+  encrypted: Uint8Array;
+
+  /**
+   * @generated from field: optional int32 key_type = 2;
+   */
+  keyType: number;
+};
+
+/**
+ * Describes the message CSVCMsg_EncryptedData.
+ * Use `create(CSVCMsg_EncryptedDataSchema)` to create a new message.
+ */
+export declare const CSVCMsg_EncryptedDataSchema: GenMessage<CSVCMsg_EncryptedData>;
+
+/**
  * @generated from message CSVCMsg_HLTVStatus
  */
 export declare type CSVCMsg_HLTVStatus = Message<"CSVCMsg_HLTVStatus"> & {

@@ -37,6 +37,297 @@ export declare type CMsgMapLine = Message<"CMsgMapLine"> & {
 export declare const CMsgMapLineSchema: GenMessage<CMsgMapLine>;
 
 /**
+ * @generated from message CMsgCitadelCombatLogEntry
+ */
+export declare type CMsgCitadelCombatLogEntry = Message<"CMsgCitadelCombatLogEntry"> & {
+  /**
+   * @generated from field: optional ECitadelCombatLogTypes type = 1 [default = k_eCitadelCombatLog_Invalid];
+   */
+  type: ECitadelCombatLogTypes;
+
+  /**
+   * @generated from field: optional uint32 target_name = 2;
+   */
+  targetName: number;
+
+  /**
+   * @generated from field: optional uint32 target_source_name = 3;
+   */
+  targetSourceName: number;
+
+  /**
+   * @generated from field: optional uint32 attacker_name = 4;
+   */
+  attackerName: number;
+
+  /**
+   * @generated from field: optional uint32 damage_source_name = 5;
+   */
+  damageSourceName: number;
+
+  /**
+   * @generated from field: optional uint32 inflictor_name = 6;
+   */
+  inflictorName: number;
+
+  /**
+   * @generated from field: optional bool is_attacker_hero = 7;
+   */
+  isAttackerHero: boolean;
+
+  /**
+   * @generated from field: optional bool is_target_hero = 8;
+   */
+  isTargetHero: boolean;
+
+  /**
+   * @generated from field: optional bool is_visible_sapphire = 9;
+   */
+  isVisibleSapphire: boolean;
+
+  /**
+   * @generated from field: optional bool is_visible_amber = 10;
+   */
+  isVisibleAmber: boolean;
+
+  /**
+   * @generated from field: optional uint32 value = 11;
+   */
+  value: number;
+
+  /**
+   * @generated from field: optional int32 health = 12;
+   */
+  health: number;
+
+  /**
+   * @generated from field: optional float timestamp = 13;
+   */
+  timestamp: number;
+
+  /**
+   * @generated from field: optional float timestamp_raw = 14;
+   */
+  timestampRaw: number;
+
+  /**
+   * @generated from field: optional uint32 attacker_team = 17;
+   */
+  attackerTeam: number;
+
+  /**
+   * @generated from field: optional uint32 target_team = 18;
+   */
+  targetTeam: number;
+
+  /**
+   * @generated from field: optional bool is_ability_toggle_on = 19;
+   */
+  isAbilityToggleOn: boolean;
+
+  /**
+   * @generated from field: optional bool is_ability_toggle_off = 20;
+   */
+  isAbilityToggleOff: boolean;
+
+  /**
+   * @generated from field: optional uint32 damage_type = 21;
+   */
+  damageType: number;
+
+  /**
+   * @generated from field: optional uint32 networth = 22;
+   */
+  networth: number;
+
+  /**
+   * @generated from field: optional uint32 currency_type = 24;
+   */
+  currencyType: number;
+
+  /**
+   * @generated from field: optional uint32 currency_source = 45;
+   */
+  currencySource: number;
+
+  /**
+   * @generated from field: optional float location_x = 25;
+   */
+  locationX: number;
+
+  /**
+   * @generated from field: optional float location_y = 26;
+   */
+  locationY: number;
+
+  /**
+   * @generated from field: optional int32 ability_upgrade_bits = 27;
+   */
+  abilityUpgradeBits: number;
+
+  /**
+   * @generated from field: optional float modifier_duration = 28;
+   */
+  modifierDuration: number;
+
+  /**
+   * @generated from field: repeated int32 assist_players = 29;
+   */
+  assistPlayers: number[];
+
+  /**
+   * @generated from field: optional uint32 target_objective_id = 23;
+   */
+  targetObjectiveId: number;
+
+  /**
+   * @generated from field: optional bool target_is_self = 31;
+   */
+  targetIsSelf: boolean;
+
+  /**
+   * @generated from field: optional int32 target_class = 54;
+   */
+  targetClass: number;
+
+  /**
+   * @generated from field: optional bool is_ultimate_ability = 32;
+   */
+  isUltimateAbility: boolean;
+
+  /**
+   * @generated from field: optional bool uses_charges = 33;
+   */
+  usesCharges: boolean;
+
+  /**
+   * @generated from field: optional bool inflictor_is_stolen_ability = 34;
+   */
+  inflictorIsStolenAbility: boolean;
+
+  /**
+   * @generated from field: optional bool spell_generated_attack = 35;
+   */
+  spellGeneratedAttack: boolean;
+
+  /**
+   * @generated from field: optional bool heal_from_lifesteal = 36;
+   */
+  healFromLifesteal: boolean;
+
+  /**
+   * @generated from field: optional float regenerated_health = 37;
+   */
+  regeneratedHealth: number;
+
+  /**
+   * @generated from field: optional bool will_reincarnate = 38;
+   */
+  willReincarnate: boolean;
+
+  /**
+   * @generated from field: optional uint32 modifier_ability = 39;
+   */
+  modifierAbility: number;
+
+  /**
+   * @generated from field: optional bool modifier_hidden = 40;
+   */
+  modifierHidden: boolean;
+
+  /**
+   * @generated from field: optional float modifier_elapsed_duration = 41;
+   */
+  modifierElapsedDuration: number;
+
+  /**
+   * @generated from field: optional bool hidden_modifier = 42;
+   */
+  hiddenModifier: boolean;
+
+  /**
+   * @generated from field: optional bool silence_modifier = 43;
+   */
+  silenceModifier: boolean;
+
+  /**
+   * @generated from field: optional bool modifier_purged = 44;
+   */
+  modifierPurged: boolean;
+
+  /**
+   * @generated from field: optional bool long_range_kill = 46;
+   */
+  longRangeKill: boolean;
+
+  /**
+   * @generated from field: optional bool aura_modifier = 47;
+   */
+  auraModifier: boolean;
+
+  /**
+   * @generated from field: optional bool immobilize_modifier = 48;
+   */
+  immobilizeModifier: boolean;
+
+  /**
+   * @generated from field: optional int32 modifier_purge_npc = 49;
+   */
+  modifierPurgeNpc: number;
+
+  /**
+   * @generated from field: optional int32 modifier_purge_ability = 50;
+   */
+  modifierPurgeAbility: number;
+
+  /**
+   * @generated from field: optional float modifier_purged_duration = 51;
+   */
+  modifierPurgedDuration: number;
+
+  /**
+   * @generated from field: optional bool movement_control_modifier = 52;
+   */
+  movementControlModifier: boolean;
+
+  /**
+   * @generated from field: optional int32 powerup_type = 53;
+   */
+  powerupType: number;
+
+  /**
+   * @generated from field: optional bool is_primary_weapon = 55;
+   */
+  isPrimaryWeapon: boolean;
+
+  /**
+   * @generated from field: optional bool is_headshot = 56;
+   */
+  isHeadshot: boolean;
+
+  /**
+   * @generated from field: optional int32 ability_name = 57;
+   */
+  abilityName: number;
+
+  /**
+   * @generated from field: optional int32 full_refresh = 59;
+   */
+  fullRefresh: number;
+
+  /**
+   * @generated from field: optional int32 hits = 60;
+   */
+  hits: number;
+};
+
+/**
+ * Describes the message CMsgCitadelCombatLogEntry.
+ * Use `create(CMsgCitadelCombatLogEntrySchema)` to create a new message.
+ */
+export declare const CMsgCitadelCombatLogEntrySchema: GenMessage<CMsgCitadelCombatLogEntry>;
+
+/**
  * @generated from enum CMsgLaneColor
  */
 export enum CMsgLaneColor {
@@ -70,4 +361,159 @@ export enum CMsgLaneColor {
  * Describes the enum CMsgLaneColor.
  */
 export declare const CMsgLaneColorSchema: GenEnum<CMsgLaneColor>;
+
+/**
+ * @generated from enum ECitadelCombatLogTypes
+ */
+export enum ECitadelCombatLogTypes {
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Invalid = -1;
+   */
+  k_eCitadelCombatLog_Invalid = -1,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Damage = 0;
+   */
+  k_eCitadelCombatLog_Damage = 0,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Heal = 1;
+   */
+  k_eCitadelCombatLog_Heal = 1,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ModifierAdd = 2;
+   */
+  k_eCitadelCombatLog_ModifierAdd = 2,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ModifierRemove = 3;
+   */
+  k_eCitadelCombatLog_ModifierRemove = 3,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Death = 4;
+   */
+  k_eCitadelCombatLog_Death = 4,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_AbilityUse = 5;
+   */
+  k_eCitadelCombatLog_AbilityUse = 5,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_AbilityTrigger = 42;
+   */
+  k_eCitadelCombatLog_AbilityTrigger = 42,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ItemUse = 6;
+   */
+  k_eCitadelCombatLog_ItemUse = 6,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Location = 7;
+   */
+  k_eCitadelCombatLog_Location = 7,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_CurrencyChange = 8;
+   */
+  k_eCitadelCombatLog_CurrencyChange = 8,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ItemPurchase = 11;
+   */
+  k_eCitadelCombatLog_ItemPurchase = 11,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_SoulSecure = 10;
+   */
+  k_eCitadelCombatLog_SoulSecure = 10,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Multikill = 15;
+   */
+  k_eCitadelCombatLog_Multikill = 15,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_Killstreak = 16;
+   */
+  k_eCitadelCombatLog_Killstreak = 16,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ObjectiveKill = 17;
+   */
+  k_eCitadelCombatLog_ObjectiveKill = 17,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_FirstBlood = 18;
+   */
+  k_eCitadelCombatLog_FirstBlood = 18,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ModifierStackEvent = 19;
+   */
+  k_eCitadelCombatLog_ModifierStackEvent = 19,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_ActivatePowerup = 21;
+   */
+  k_eCitadelCombatLog_ActivatePowerup = 21,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_HeroSaved = 23;
+   */
+  k_eCitadelCombatLog_HeroSaved = 23,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_HeroLevelup = 25;
+   */
+  k_eCitadelCombatLog_HeroLevelup = 25,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_InterruptChannel = 28;
+   */
+  k_eCitadelCombatLog_InterruptChannel = 28,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_AlliedGold = 29;
+   */
+  k_eCitadelCombatLog_AlliedGold = 29,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_RejuvTaken = 30;
+   */
+  k_eCitadelCombatLog_RejuvTaken = 30,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_UnitSummoned = 33;
+   */
+  k_eCitadelCombatLog_UnitSummoned = 33,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_EndKillstreak = 37;
+   */
+  k_eCitadelCombatLog_EndKillstreak = 37,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_CriticalDamage = 39;
+   */
+  k_eCitadelCombatLog_CriticalDamage = 39,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_SpellAbsorb = 40;
+   */
+  k_eCitadelCombatLog_SpellAbsorb = 40,
+
+  /**
+   * @generated from enum value: k_eCitadelCombatLog_UnitTeleported = 41;
+   */
+  k_eCitadelCombatLog_UnitTeleported = 41,
+}
+
+/**
+ * Describes the enum ECitadelCombatLogTypes.
+ */
+export declare const ECitadelCombatLogTypesSchema: GenEnum<ECitadelCombatLogTypes>;
 

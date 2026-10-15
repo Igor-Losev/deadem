@@ -56,6 +56,7 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_MELEE_HIT() { return citadelUserMessageMeleeHit; }
     static get CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED() { return citadelUserMessageFlexSlotUnlocked; }
     static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalKill; }
+    static get CITADEL_USER_MESSAGE_MUSIC_QUEUE() { return citadelUserMessageMusicQueue; }
     static get CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION() { return citadelUserMessageItemPurchaseNotification; }
     static get CITADEL_USER_MESSAGE_ENTITY_PORTALLED() { return citadelUserMessageEntityPortalled; }
     static get CITADEL_USER_MESSAGE_STREET_BRAWL_SCORING() { return citadelUserMessageStreetBrawlScoring; }
@@ -63,6 +64,11 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_ITEM_DRAFT_REACTION() { return citadelUserMessageItemDraftReaction; }
     static get CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED() { return citadelUserMessageImportantAbilityUsed; }
     static get CITADEL_USER_MESSAGE_BANNED_HEROES() { return citadelUserMessageBannedHeroes; }
+    static get CITADEL_USER_MESSAGE_COMBAT_LOG_ENTRY() { return citadelUserMessageCombatLogEntry; }
+    static get CITADEL_USER_MESSAGE_COMBAT_LOG_BULK_DATA() { return citadelUserMessageCombatLogBulkData; }
+    static get CITADEL_USER_MESSAGE_PLAYER_TYPING() { return citadelUserMessagePlayerTyping; }
+    static get CITADEL_USER_MESSAGE_SOUL_BAG_PICKUP() { return citadelUserMessageSoulBagPickup; }
+    static get CITADEL_USER_MESSAGE_HERO_RELEASE_VOTE() { return citadelUserMessageHeroReleaseVote; }
 
     static get GE_FIRE_BULLETS() { return GE_FireBullets; }
     static get GE_PLAYER_ANIM_EVENT() { return GE_PlayerAnimEvent; }
@@ -129,6 +135,7 @@ const citadelUserMessageCallCheaterVote = new MessagePacketType('k_EUserMsg_Call
 const citadelUserMessageMeleeHit = new MessagePacketType('k_EUserMsg_MeleeHit', 355, 'CCitadelUserMessage_MeleeHit');
 const citadelUserMessageFlexSlotUnlocked = new MessagePacketType('k_EUserMsg_FlexSlotUnlocked', 356, 'CCitadelUserMsg_FlexSlotUnlocked');
 const citadelUserMessageSeasonalKill = new MessagePacketType('k_EUserMsg_SeasonalKill', 357, 'CCitadelUserMsg_SeasonalKill');
+const citadelUserMessageMusicQueue = new MessagePacketType('k_EUserMsg_MusicQueue', 358, 'CCitadelUserMsg_MusicQueue');
 const citadelUserMessageItemPurchaseNotification = new MessagePacketType('k_EUserMsg_ItemPurchaseNotification', 360, 'CCitadelUserMessage_ItemPurchaseNotification');
 const citadelUserMessageEntityPortalled = new MessagePacketType('k_EUserMsg_EntityPortalled', 361, 'CCitadelUserMsg_EntityPortalled');
 const citadelUserMessageStreetBrawlScoring = new MessagePacketType('k_EUserMsg_StreetBrawlScoring', 362, 'CCitadelUserMsg_StreetBrawlScoring');
@@ -136,6 +143,11 @@ const citadelUserMessageHudGameAnnouncement = new MessagePacketType('k_EUserMsg_
 const citadelUserMessageItemDraftReaction = new MessagePacketType('k_EUserMsg_ItemDraftReaction', 364, 'CCitadelUserMsg_ItemDraftReaction');
 const citadelUserMessageImportantAbilityUsed = new MessagePacketType('k_EUserMsg_ImportantAbilityUsed', 365, 'CCitadelUserMessage_ImportantAbilityUsed');
 const citadelUserMessageBannedHeroes = new MessagePacketType('k_EUserMsg_BannedHeroes', 366, 'CCitadelUserMsg_BannedHeroes');
+const citadelUserMessageCombatLogEntry = new MessagePacketType('k_EUserMsg_CombatLogEntry', 367, 'CMsgCitadelCombatLogEntry');
+const citadelUserMessageCombatLogBulkData = new MessagePacketType('k_EUserMsg_CombatLogBulkData', 368, 'CCitadelUserMsg_CombatLogBulkData');
+const citadelUserMessagePlayerTyping = new MessagePacketType('k_EUserMsg_PlayerTyping', 369, 'CCitadelUserMsg_PlayerTyping');
+const citadelUserMessageSoulBagPickup = new MessagePacketType('k_EUserMsg_SoulBagPickup', 372, 'CCitadelUserMsg_SoulBagPickup');
+const citadelUserMessageHeroReleaseVote = new MessagePacketType('k_EUserMsg_HeroReleaseVote', 373, 'CCitadelUserMsg_HeroReleaseVote');
 
 const GE_FireBullets = new MessagePacketType('GE_FireBullets', 450, 'CMsgFireBullets');
 const GE_PlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEvent', 451, 'CMsgPlayerAnimEvent');

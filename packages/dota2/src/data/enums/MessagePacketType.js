@@ -165,6 +165,8 @@ class MessagePacketType extends EngineMessagePacketType {
     static get DOTA_UM_TORMENTOR_TIMER() { return dotaUmTormentorTimer; }
     static get DOTA_UM_KILL_EFFECT() { return dotaUmKillEffect; }
     static get DOTA_UM_GIVE_ITEM() { return dotaUmGiveItem; }
+    static get DOTA_UM_TIDEHUNTER_ARCANA_PROGRESS_RAVAGES() { return dotaUmTidehunterArcanaProgressRavages; }
+    static get DOTA_UM_TIDEHUNTER_ARCANA_PROGRESS_FISH() { return dotaUmTidehunterArcanaProgressFish; }
 }
 
 const dotaUmAiDebugLine = new MessagePacketType('DOTA_UM_AIDebugLine', 465, 'CDOTAUserMsg_AIDebugLine');
@@ -327,5 +329,7 @@ const dotaUmMonsterHunterHuntAlert = new MessagePacketType('DOTA_UM_MonsterHunte
 const dotaUmTormentorTimer = new MessagePacketType('DOTA_UM_TormentorTimer', 634, 'CDOTAUserMsg_TormentorTimer');
 const dotaUmKillEffect = new MessagePacketType('DOTA_UM_KillEffect', 635, 'CDOTAUserMsg_KillEffect');
 const dotaUmGiveItem = new MessagePacketType('DOTA_UM_GiveItem', 636, 'CDOTAUserMsg_GiveItem');
+const dotaUmTidehunterArcanaProgressRavages = new MessagePacketType('DOTA_UM_TidehunterArcanaProgress_Ravages', 637, 'CDOTAUserMsg_TidehunterArcanaProgress_Ravages');
+const dotaUmTidehunterArcanaProgressFish = new MessagePacketType('DOTA_UM_TidehunterArcanaProgress_Fish', 638, 'CDOTAUserMsg_TidehunterArcanaProgress_Fish');
 
 export default MessagePacketType;

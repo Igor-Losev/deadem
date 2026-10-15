@@ -5697,6 +5697,30 @@ export enum CDOTAUserMsg_GiveItem_EGiveStatus {
 export declare const CDOTAUserMsg_GiveItem_EGiveStatusSchema: GenEnum<CDOTAUserMsg_GiveItem_EGiveStatus>;
 
 /**
+ * @generated from message CDOTAUserMsg_TidehunterArcanaProgress_Ravages
+ */
+export declare type CDOTAUserMsg_TidehunterArcanaProgress_Ravages = Message<"CDOTAUserMsg_TidehunterArcanaProgress_Ravages"> & {
+};
+
+/**
+ * Describes the message CDOTAUserMsg_TidehunterArcanaProgress_Ravages.
+ * Use `create(CDOTAUserMsg_TidehunterArcanaProgress_RavagesSchema)` to create a new message.
+ */
+export declare const CDOTAUserMsg_TidehunterArcanaProgress_RavagesSchema: GenMessage<CDOTAUserMsg_TidehunterArcanaProgress_Ravages>;
+
+/**
+ * @generated from message CDOTAUserMsg_TidehunterArcanaProgress_Fish
+ */
+export declare type CDOTAUserMsg_TidehunterArcanaProgress_Fish = Message<"CDOTAUserMsg_TidehunterArcanaProgress_Fish"> & {
+};
+
+/**
+ * Describes the message CDOTAUserMsg_TidehunterArcanaProgress_Fish.
+ * Use `create(CDOTAUserMsg_TidehunterArcanaProgress_FishSchema)` to create a new message.
+ */
+export declare const CDOTAUserMsg_TidehunterArcanaProgress_FishSchema: GenMessage<CDOTAUserMsg_TidehunterArcanaProgress_Fish>;
+
+/**
  * @generated from enum DOTA_CHAT_MESSAGE
  */
 export enum DOTA_CHAT_MESSAGE {

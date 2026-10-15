@@ -127,6 +127,7 @@ class MessagePacketType {
     static get SVC_PACKET_ENTITIES() { return svcPacketEntities; }
     static get SVC_HLTV_STATUS() { return svcHltvStatus; }
     static get SVC_USER_COMMANDS() { return svcUserCommands; }
+    static get SVC_ENCRYPTED_DATA() { return svcEncryptedData; }
     static get SVC_USER_COMMAND_KEYFRAME() { return svcUserCommandKeyframe; }
 
     static get USER_MESSAGE_SAY_TEXT_2() { return UMSayText2; }
@@ -137,12 +138,15 @@ class MessagePacketType {
     static get USER_MESSAGE_PLAY_RESPONSE_CONDITIONAL() { return UMPlayResponseConditional; }
 
     static get GE_PLACE_DECAL_EVENT() { return GE_PlaceDecalEvent; }
+    static get GE_CLEAR_DECALS_FOR_ENTITY_EVENT() { return GE_ClearDecalsForEntityEvent; }
     static get GE_SOURCE1_LEGACY_GAME_EVENT_LIST() { return GESource1LegacyGameEventList; }
     static get GE_SOURCE1_LEGACY_GAME_EVENT() { return GE_Source1LegacyGameEvent; }
     static get GE_SOS_START_SOUND_EVENT() { return GE_SosStartSoundEvent; }
     static get GE_SOS_STOP_SOUND_EVENT() { return GE_SosStopSoundEvent; }
     static get GE_SOS_SET_SOUND_EVENT_PARAMS() { return GE_SosSetSoundEventParams; }
     static get GE_SOS_STOP_SOUND_EVENT_HASH() { return GE_SosStopSoundEventHash; }
+    static get GE_CLOTH_STIFFEN_ANIM_EVENT() { return GE_ClothStiffenAnimEvent; }
+    static get GE_CLOTH_EFFECT_ANIM_EVENT() { return GE_ClothEffectAnimEvent; }
 
     static get TE_EFFECT_DISPATCH() { return TE_EffectDispatch; }
 }
@@ -164,6 +168,7 @@ const svcClearAllStringTables = new MessagePacketType('svc_ClearAllStringTables'
 const svcPacketEntities = new MessagePacketType('svc_PacketEntities', 55, 'CSVCMsg_PacketEntities');
 const svcHltvStatus = new MessagePacketType('svc_HLTVStatus', 62, 'CSVCMsg_HLTVStatus');
 const svcUserCommands = new MessagePacketType('svc_UserCmds', 76, 'CSVCMsg_UserCommands');
+const svcEncryptedData = new MessagePacketType('svc_EncryptedData', 78, 'CSVCMsg_EncryptedData');
 const svcUserCommandKeyframe = new MessagePacketType('svc_UserCmdKeyframe', 79, 'CSVCMsg_UserCommands');
 
 const UMSayText2 = new MessagePacketType('UM_SayText2', 118, 'CUserMessageSayText2');
@@ -174,12 +179,15 @@ const UMParticleManager = new MessagePacketType('UM_ParticleManager', 145, 'CUse
 const UMPlayResponseConditional = new MessagePacketType('UM_PlayResponseConditional', 166, 'CUserMessage_PlayResponseConditional');
 
 const GE_PlaceDecalEvent = new MessagePacketType('GE_PlaceDecalEvent', 201, 'CMsgPlaceDecalEvent');
+const GE_ClearDecalsForEntityEvent = new MessagePacketType('GE_ClearDecalsForEntityEvent', 204, 'CMsgClearDecalsForEntityEvent');
 const GESource1LegacyGameEventList = new MessagePacketType('GE_Source1LegacyGameEventList', 205, 'CMsgSource1LegacyGameEventList');
 const GE_Source1LegacyGameEvent = new MessagePacketType('GE_Source1LegacyGameEvent', 207, 'CMsgSource1LegacyGameEvent');
 const GE_SosStartSoundEvent = new MessagePacketType('GE_SosStartSoundEvent', 208, 'CMsgSosStartSoundEvent');
 const GE_SosStopSoundEvent = new MessagePacketType('GE_SosStopSoundEvent', 209, 'CMsgSosStopSoundEvent');
 const GE_SosSetSoundEventParams = new MessagePacketType('GE_SosSetSoundEventParams', 210, 'CMsgSosSetSoundEventParams');
 const GE_SosStopSoundEventHash = new MessagePacketType('GE_SosStopSoundEventHash', 212, 'CMsgSosStopSoundEventHash');
+const GE_ClothStiffenAnimEvent = new MessagePacketType('GE_ClothStiffenAnimEvent', 213, 'CMsgClothStiffenAnimEvent');
+const GE_ClothEffectAnimEvent = new MessagePacketType('GE_ClothEffectAnimEvent', 214, 'CMsgClothEffectAnimEvent');
 
 const TE_EffectDispatch = new MessagePacketType('TE_EffectDispatch', 400, 'CMsgTEEffectDispatch');
 
