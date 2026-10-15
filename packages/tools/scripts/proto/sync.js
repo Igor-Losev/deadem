@@ -14,15 +14,16 @@ const scriptArguments = new ScriptArguments(process.argv.slice(2));
 
         log(`Syncing [ ${source.files.length} ] files from [ ${source.repository} ] ...`);
 
-        const { changed, unlisted } = await new ProtoSync(source).run();
+        const { changed, removed, unlisted } = await new ProtoSync(source).run();
 
         changed.forEach(file => log(`Updated [ ${workspace.folder}/proto/source/${file} ]`));
+        removed.forEach(file => log(`Removed [ ${workspace.folder}/proto/source/${file} ]: neither listed nor imported`));
         unlisted.forEach(file => log(`Imported [ ${file} ]: not in the file list`));
 
-        if (changed.length === 0) {
+        if (changed.length === 0 && removed.length === 0) {
             log('No changes found');
         } else {
-            log(`Changed [ ${changed.length} ] files`);
+            log(`Changed [ ${changed.length + removed.length} ] files`);
         }
     }
 })();

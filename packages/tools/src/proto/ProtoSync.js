@@ -12,6 +12,7 @@ const WELL_KNOWN_TYPES_DIRECTORY = 'google/protobuf/';
 /**
  * @typedef {object} ProtoSyncResult
  * @property {Array<string>} changed - Written files.
+ * @property {Array<string>} removed - Deleted files: neither listed nor imported anymore.
  * @property {Array<string>} unlisted - Imported files missing from `ProtoSource.files`.
  */
 
@@ -31,7 +32,7 @@ class ProtoSync {
     }
 
     /**
-     * Downloads the .proto files, normalizes them and writes the changed ones.
+     * Downloads the .proto files, normalizes them, writes the changed ones and removes the stale ones.
      *
      * @public
      * @returns {Promise<ProtoSyncResult>}
@@ -49,6 +50,7 @@ class ProtoSync {
 
         return {
             changed,
+            removed: await this._removeStale(files),
             unlisted: [ ...files.keys() ].filter(file => !this._source.files.includes(file))
         };
     }
@@ -126,6 +128,25 @@ class ProtoSync {
         await fs.writeFile(target, text);
 
         return true;
+    }
+
+    /**
+     * Removes the `.proto` files that were not downloaded: neither listed nor imported anymore.
+     *
+     * @private
+     * @param {Map<string, string>} files
+     * @returns {Promise<Array<string>>}
+     */
+    async _removeStale(files) {
+        const directory = this._source.workspace.protoSourceDirectory;
+
+        const stale = (await fs.readdir(directory)).filter(file => file.endsWith('.proto') && !files.has(file));
+
+        for (const file of stale) {
+            await fs.unlink(path.join(directory, file));
+        }
+
+        return stale;
     }
 }
 
