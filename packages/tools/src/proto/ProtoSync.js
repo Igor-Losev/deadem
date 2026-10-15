@@ -5,8 +5,18 @@ import Assert from '../core/Assert.js';
 
 import ProtoSource from '../enums/ProtoSource.js';
 
+import ProtoNormalizer from './ProtoNormalizer.js';
+
+const WELL_KNOWN_TYPES_DIRECTORY = 'google/protobuf/';
+
 /**
- * Downloads the `.proto` files of a game from SteamTracking.
+ * @typedef {object} ProtoSyncResult
+ * @property {Array<string>} changed - Written files.
+ * @property {Array<string>} unlisted - Imported files missing from `ProtoSource.files`.
+ */
+
+/**
+ * Syncs the `.proto` files of a game with SteamTracking.
  */
 class ProtoSync {
     /**
@@ -21,58 +31,99 @@ class ProtoSync {
     }
 
     /**
-     * Downloads all files, then writes the changed ones and returns their names.
+     * Downloads the .proto files, normalizes them and writes the changed ones.
      *
      * @public
-     * @returns {Promise<Array<string>>}
+     * @returns {Promise<ProtoSyncResult>}
      */
     async run() {
-        const contents = await Promise.all(this._source.files.map(file => this._download(file)));
+        const files = await this._downloadAll();
+
         const changed = [ ];
 
-        for (let i = 0; i < contents.length; i++) {
-            if (await this._write(this._source.files[i], contents[i])) {
-                changed.push(this._source.files[i]);
+        for (const [ file, text ] of files) {
+            if (await this._writeIfChanged(file, ProtoNormalizer.normalize(file, text))) {
+                changed.push(file);
             }
         }
 
-        return changed;
+        return {
+            changed,
+            unlisted: [ ...files.keys() ].filter(file => !this._source.files.includes(file))
+        };
     }
 
     /**
+     * Downloads a single file.
+     *
      * @private
      * @param {string} file
-     * @returns {Promise<Buffer>}
+     * @returns {Promise<string>}
      */
     async _download(file) {
         const url = this._source.getFileUrl(file);
+
         const response = await fetch(url);
 
         if (!response.ok) {
             throw new Error(`Download failed [ ${url} ]: HTTP ${response.status} ${response.statusText}`);
         }
 
-        return Buffer.from(await response.arrayBuffer());
+        return response.text();
     }
 
     /**
+     * Downloads the listed files and, recursively, everything they import, except the well-known types:
+     * `buf` provides them.
+     *
+     * @private
+     * @returns {Promise<Map<string, string>>}
+     */
+    async _downloadAll() {
+        const files = new Map();
+
+        let queue = [ ...this._source.files ];
+
+        while (queue.length > 0) {
+            const contents = await Promise.all(queue.map(file => this._download(file)));
+            const imports = new Set();
+
+            queue.forEach((file, index) => files.set(file, contents[index]));
+
+            for (const text of contents) {
+                for (const file of ProtoNormalizer.getImports(text)) {
+                    if (!file.startsWith(WELL_KNOWN_TYPES_DIRECTORY) && !files.has(file)) {
+                        imports.add(file);
+                    }
+                }
+            }
+
+            queue = [ ...imports ];
+        }
+
+        return files;
+    }
+
+    /**
+     * Writes the file if its content differs.
+     *
      * @private
      * @param {string} file
-     * @param {Buffer} content
-     * @returns {Promise<boolean>}
+     * @param {string} text
+     * @returns {Promise<boolean>} - `true` if the file has changed.
      */
-    async _write(file, content) {
+    async _writeIfChanged(file, text) {
         const directory = this._source.workspace.protoSourceDirectory;
 
         const target = path.join(directory, file);
-        const current = await fs.readFile(target).catch(() => null);
+        const current = await fs.readFile(target, 'utf8').catch(() => null);
 
-        if (current !== null && current.equals(content)) {
+        if (current === text) {
             return false;
         }
 
         await fs.mkdir(directory, { recursive: true });
-        await fs.writeFile(target, content);
+        await fs.writeFile(target, text);
 
         return true;
     }

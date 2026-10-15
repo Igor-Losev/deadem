@@ -10,12 +10,19 @@ const scriptArguments = new ScriptArguments(process.argv.slice(2));
     for (const workspace of scriptArguments.getWorkspaces()) {
         const source = ProtoSource.parseByWorkspace(workspace);
 
-        console.log(`Syncing [ ${source.files.length} ] files of [ ${workspace.folder} ] from [ ${source.repository} ]...`);
+        const log = (message) => { console.log(`[ ${workspace.code} ]: ${message}`); };
 
-        const changed = await new ProtoSync(source).run();
+        log(`Syncing [ ${source.files.length} ] files from [ ${source.repository} ] ...`);
 
-        changed.forEach(file => console.log(`Updated [ ${workspace.folder}/proto/source/${file} ]`));
+        const { changed, unlisted } = await new ProtoSync(source).run();
 
-        console.log(`Changed [ ${changed.length} ] of [ ${source.files.length} ] files`);
+        changed.forEach(file => log(`Updated [ ${workspace.folder}/proto/source/${file} ]`));
+        unlisted.forEach(file => log(`Imported [ ${file} ]: not in the file list`));
+
+        if (changed.length === 0) {
+            log('No changes found');
+        } else {
+            log(`Changed [ ${changed.length} ] files`);
+        }
     }
 })();
