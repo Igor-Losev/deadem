@@ -1,11 +1,13 @@
 {
   "name": "@deademx/tools",
   "version": "4.0.1",
-  "description": "Internal tooling: repository tooling scripts",
+  "description": "Internal tooling",
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint"
+    "lint": "eslint",
+    "proto:build": "node scripts/proto/build.js",
+    "proto:sync": "node scripts/proto/sync.js"
   },
   "dependencies": {
     "@bufbuild/buf": "1.73.0",
