@@ -115,7 +115,7 @@ jobs:
 
       - name: Generate Demo Cache Key
         id: demo-cache-key
-        run: echo "key=$(node ./packages/tools/scripts/demo/hash.js)" >> "$GITHUB_OUTPUT"
+        run: echo "key=$(printf '%s' "$DEMO_FILES" | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       - name: Restore Demo Cache
         uses: actions/cache@v5
@@ -126,10 +126,14 @@ jobs:
             replay-demos-v1-${{ matrix.name }}-
 
       - name: Ensure Demo Fixtures
-        run: node ./packages/tools/scripts/demo/download.js
+        run: |
+          mkdir -p "$DEMO_DIR"
+          for name in $DEMO_FILES; do
+            [ -f "$DEMO_DIR/$name.dem" ] || curl -fsSL -o "$DEMO_DIR/$name.dem" "$DEMO_CDN_PREFIX/$name.dem"
+          done
 
       - name: List demo files
         run: ls -lh "$DEMO_DIR"
 
       - name: Run Replay Regression
-        run: node "$PARSER_SCRIPT" --matches="$(node ./packages/tools/scripts/demo/list.js)"
+        run: node "$PARSER_SCRIPT" --matches="$DEMO_FILES"
