@@ -9,11 +9,23 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file valveextensions.proto.
  */
 export const file_valveextensions = /*@__PURE__*/
-  fileDesc("ChV2YWx2ZWV4dGVuc2lvbnMucHJvdG86XAoVY29kZWdlbl9kZWx0YV9lbmNvZGVyEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGMjcAyABKAg6BWZhbHNlUhNjb2RlZ2VuRGVsdGFFbmNvZGVy", [file_google_protobuf_descriptor]);
+  fileDesc("ChV2YWx2ZWV4dGVuc2lvbnMucHJvdG86XAoVY29kZWdlbl9kZWx0YV9lbmNvZGVyEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGMjcAyABKAg6BWZhbHNlUhNjb2RlZ2VuRGVsdGFFbmNvZGVyOj4KCmJveGVkX3R5cGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGLzgAyABKAlSCWJveGVkVHlwZTpMChFzeW50aGV0aWNfZGVmYXVsdBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMYveADIAEoCVIQc3ludGhldGljRGVmYXVsdA", [file_google_protobuf_descriptor]);
 
 /**
  * @generated from extension: optional bool codegen_delta_encoder = 61000 [default = false];
  */
 export const codegen_delta_encoder = /*@__PURE__*/
   extDesc(file_valveextensions, 0);
+
+/**
+ * @generated from extension: optional string boxed_type = 61500;
+ */
+export const boxed_type = /*@__PURE__*/
+  extDesc(file_valveextensions, 1);
+
+/**
+ * @generated from extension: optional string synthetic_default = 61501;
+ */
+export const synthetic_default = /*@__PURE__*/
+  extDesc(file_valveextensions, 2);
 

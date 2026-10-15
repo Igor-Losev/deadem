@@ -27,9 +27,9 @@ export declare type CCitadelUserCmdPB = Message<"CCitadelUserCmdPB"> & {
   vecCameraPosition?: CMsgVector | undefined;
 
   /**
-   * @generated from field: optional CMsgQAngle ang_camera_angles = 3;
+   * @generated from field: optional CMsgQAngle ang_camera_angles_deprecated = 3;
    */
-  angCameraAngles?: CMsgQAngle | undefined;
+  angCameraAnglesDeprecated?: CMsgQAngle | undefined;
 
   /**
    * @generated from field: optional int32 execute_ability_indices = 4;

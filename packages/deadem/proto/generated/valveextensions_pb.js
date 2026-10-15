@@ -9,11 +9,29 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file valveextensions.proto.
  */
 export const file_valveextensions = /*@__PURE__*/
-  fileDesc("ChV2YWx2ZWV4dGVuc2lvbnMucHJvdG86VAoUc2NoZW1hX2ZyaWVuZGx5X25hbWUSIS5nb29nbGUucHJvdG9idWYuRW51bVZhbHVlT3B0aW9ucxjoByABKAlSEnNjaGVtYUZyaWVuZGx5TmFtZQ", [file_google_protobuf_descriptor]);
+  fileDesc("ChV2YWx2ZWV4dGVuc2lvbnMucHJvdG86XAoVY29kZWdlbl9kZWx0YV9lbmNvZGVyEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGMjcAyABKAg6BWZhbHNlUhNjb2RlZ2VuRGVsdGFFbmNvZGVyOlQKFHNjaGVtYV9mcmllbmRseV9uYW1lEiEuZ29vZ2xlLnByb3RvYnVmLkVudW1WYWx1ZU9wdGlvbnMY6AcgASgJUhJzY2hlbWFGcmllbmRseU5hbWU6PgoKYm94ZWRfdHlwZRIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMYvOADIAEoCVIJYm94ZWRUeXBlOkwKEXN5bnRoZXRpY19kZWZhdWx0Eh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxi94AMgASgJUhBzeW50aGV0aWNEZWZhdWx0", [file_google_protobuf_descriptor]);
+
+/**
+ * @generated from extension: optional bool codegen_delta_encoder = 61000 [default = false];
+ */
+export const codegen_delta_encoder = /*@__PURE__*/
+  extDesc(file_valveextensions, 0);
 
 /**
  * @generated from extension: optional string schema_friendly_name = 1000;
  */
 export const schema_friendly_name = /*@__PURE__*/
-  extDesc(file_valveextensions, 0);
+  extDesc(file_valveextensions, 1);
+
+/**
+ * @generated from extension: optional string boxed_type = 61500;
+ */
+export const boxed_type = /*@__PURE__*/
+  extDesc(file_valveextensions, 2);
+
+/**
+ * @generated from extension: optional string synthetic_default = 61501;
+ */
+export const synthetic_default = /*@__PURE__*/
+  extDesc(file_valveextensions, 3);
 

@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenExtension, GenFile } from "@bufbuild/protobuf/codegenv2";
-import type { MessageOptions } from "@bufbuild/protobuf/wkt";
+import type { FieldOptions, MessageOptions } from "@bufbuild/protobuf/wkt";
 
 /**
  * Describes the file valveextensions.proto.
@@ -14,4 +14,14 @@ export declare const file_valveextensions: GenFile;
  * @generated from extension: optional bool codegen_delta_encoder = 61000 [default = false];
  */
 export declare const codegen_delta_encoder: GenExtension<MessageOptions, boolean>;
+
+/**
+ * @generated from extension: optional string boxed_type = 61500;
+ */
+export declare const boxed_type: GenExtension<FieldOptions, string>;
+
+/**
+ * @generated from extension: optional string synthetic_default = 61501;
+ */
+export declare const synthetic_default: GenExtension<FieldOptions, string>;
 

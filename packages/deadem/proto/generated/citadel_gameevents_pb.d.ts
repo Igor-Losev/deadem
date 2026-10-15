@@ -129,6 +129,31 @@ export declare type CMsgFireBullets = Message<"CMsgFireBullets"> & {
    * @generated from field: optional bool ability_as_bullet = 25;
    */
   abilityAsBullet: boolean;
+
+  /**
+   * @generated from field: optional bool friendly_fire = 26;
+   */
+  friendlyFire: boolean;
+
+  /**
+   * @generated from field: optional uint32 friendly_fire_damage_type = 27;
+   */
+  friendlyFireDamageType: number;
+
+  /**
+   * @generated from field: optional uint32 bullet_state = 28;
+   */
+  bulletState: number;
+
+  /**
+   * @generated from field: optional uint32 weapon_info_id = 29;
+   */
+  weaponInfoId: number;
+
+  /**
+   * @generated from field: optional CMsgVector target_pos = 30;
+   */
+  targetPos?: CMsgVector | undefined;
 };
 
 /**
@@ -216,6 +241,11 @@ export declare type CMsgBulletImpact = Message<"CMsgBulletImpact"> & {
    * @generated from field: optional float bullet_radius_override = 12;
    */
   bulletRadiusOverride: number;
+
+  /**
+   * @generated from field: optional uint32 weapon_info_id = 13;
+   */
+  weaponInfoId: number;
 };
 
 /**
@@ -698,6 +728,11 @@ export declare type CMsgEnableSatVolumesEvent = Message<"CMsgEnableSatVolumesEve
    * @generated from field: optional fixed32 outline_color = 5;
    */
   outlineColor: number;
+
+  /**
+   * @generated from field: optional float outline_width = 6;
+   */
+  outlineWidth: number;
 };
 
 /**

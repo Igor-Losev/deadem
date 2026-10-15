@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { file_valveextensions } from "./valveextensions_pb.js";
 import { file_networkbasetypes } from "./networkbasetypes_pb.js";
 import { file_usercmd } from "./usercmd_pb.js";
 
@@ -10,7 +11,7 @@ import { file_usercmd } from "./usercmd_pb.js";
  * Describes the file citadel_usercmd.proto.
  */
 export const file_citadel_usercmd = /*@__PURE__*/
-  fileDesc("ChVjaXRhZGVsX3VzZXJjbWQucHJvdG8i3QIKEUNDaXRhZGVsVXNlckNtZFBCEh0KBGJhc2UYASABKAsyDy5DQmFzZVVzZXJDbWRQQhIoChN2ZWNfY2FtZXJhX3Bvc2l0aW9uGAIgASgLMgsuQ01zZ1ZlY3RvchImChFhbmdfY2FtZXJhX2FuZ2xlcxgDIAEoCzILLkNNc2dRQW5nbGUSHwoXZXhlY3V0ZV9hYmlsaXR5X2luZGljZXMYBCABKAUSDwoHaW5fc2hvcBgFIAEoCBIcChRjYW1lcmFfcm9hbWluZ19zcGVlZBgGIAEoAhIZChF1c2luZ19mcmVlX2N1cnNvchgIIAEoCBIfChNlbmVteV9oZXJvX2FpbWVkX2F0GAogASgFOgItMRIUCgx2aWV3X2RlbHRhX3gYCyADKAUSFAoMdmlld19kZWx0YV95GAwgAygFEh8KF2lzX2luX3RoaXJkX3BlcnNvbl92aWV3GA0gASgI", [file_networkbasetypes, file_usercmd]);
+  fileDesc("ChVjaXRhZGVsX3VzZXJjbWQucHJvdG8ihgMKEUNDaXRhZGVsVXNlckNtZFBCEh0KBGJhc2UYASABKAsyDy5DQmFzZVVzZXJDbWRQQhIoChN2ZWNfY2FtZXJhX3Bvc2l0aW9uGAIgASgLMgsuQ01zZ1ZlY3RvchIxChxhbmdfY2FtZXJhX2FuZ2xlc19kZXByZWNhdGVkGAMgASgLMgsuQ01zZ1FBbmdsZRIfChdleGVjdXRlX2FiaWxpdHlfaW5kaWNlcxgEIAEoBRIPCgdpbl9zaG9wGAUgASgIEhwKFGNhbWVyYV9yb2FtaW5nX3NwZWVkGAYgASgCEhkKEXVzaW5nX2ZyZWVfY3Vyc29yGAggASgIEjcKE2VuZW15X2hlcm9fYWltZWRfYXQYCiABKAU6Ai0xQhbigx4MQ0VudGl0eUluZGV46oMeAi0xEhQKDHZpZXdfZGVsdGFfeBgLIAMoBRIUCgx2aWV3X2RlbHRhX3kYDCADKAUSHwoXaXNfaW5fdGhpcmRfcGVyc29uX3ZpZXcYDSABKAg6BMDkHQE", [file_valveextensions, file_networkbasetypes, file_usercmd]);
 
 /**
  * Describes the message CCitadelUserCmdPB.

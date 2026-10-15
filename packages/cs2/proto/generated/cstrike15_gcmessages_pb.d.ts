@@ -650,6 +650,11 @@ export declare type CMsgGCCStrike15_v2_MatchmakingGC2ServerReserve = Message<"CM
    * @generated from field: optional uint32 match_id_additional = 22;
    */
   matchIdAdditional: number;
+
+  /**
+   * @generated from field: repeated string clan_tags = 23;
+   */
+  clanTags: string[];
 };
 
 /**
@@ -774,9 +779,9 @@ export declare type CEconItemPreviewDataBlock = Message<"CEconItemPreviewDataBlo
   killeatervalue: number;
 
   /**
-   * @generated from field: optional string customname = 11;
+   * @generated from field: repeated string customnames = 11;
    */
-  customname: string;
+  customnames: string[];
 
   /**
    * @generated from field: repeated CEconItemPreviewDataBlock.Sticker stickers = 12;
@@ -837,6 +842,16 @@ export declare type CEconItemPreviewDataBlock = Message<"CEconItemPreviewDataBlo
    * @generated from field: optional uint32 upgrade_level = 23;
    */
   upgradeLevel: number;
+
+  /**
+   * @generated from field: optional uint32 pet_food_expiration_date = 24;
+   */
+  petFoodExpirationDate: number;
+
+  /**
+   * @generated from field: optional bytes blobdata = 25;
+   */
+  blobdata: Uint8Array;
 };
 
 /**

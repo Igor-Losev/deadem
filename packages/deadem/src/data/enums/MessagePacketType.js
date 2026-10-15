@@ -56,7 +56,6 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_MELEE_HIT() { return citadelUserMessageMeleeHit; }
     static get CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED() { return citadelUserMessageFlexSlotUnlocked; }
     static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalKill; }
-    static get CITADEL_USER_MESSAGE_AG2_PARAM_TRIGGER() { return citadelUserMessageAG2ParamTrigger; }
     static get CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION() { return citadelUserMessageItemPurchaseNotification; }
     static get CITADEL_USER_MESSAGE_ENTITY_PORTALLED() { return citadelUserMessageEntityPortalled; }
     static get CITADEL_USER_MESSAGE_STREET_BRAWL_SCORING() { return citadelUserMessageStreetBrawlScoring; }
@@ -110,14 +109,14 @@ const citadelUserMessageDeathReplayData = new MessagePacketType('k_EUserMsg_Deat
 const citadelUserMessagePlayerLifetimeStatInfo = new MessagePacketType('k_EUserMsg_PlayerLifetimeStatInfo', 334, 'CCitadelUserMsg_PlayerLifetimeStatInfo');
 const citadelUserMessageForceShopClosed = new MessagePacketType('k_EUserMsg_ForceShopClosed', 336, 'CCitadelUserMsg_ForceShopClosed');
 const citadelUserMessageStaminaConsumed = new MessagePacketType('k_EUserMsg_StaminaConsumed', 337, 'CCitadelUserMsg_StaminaConsumed');
-const citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', 338, 'CCitadelUserMessage_AbilityNotify');
+const citadelUserMessageAbilityNotify = new MessagePacketType('k_EUserMsg_AbilityNotify', 338, 'CCitadelUserMsg_AbilityNotify');
 const citadelUserMessageGetDamageStatsResponse = new MessagePacketType('k_EUserMsg_GetDamageStatsResponse', 339, 'CCitadelUserMsg_GetDamageStatsResponse');
 const citadelUserMessageParticipantStartSoundEvent = new MessagePacketType('k_EUserMsg_ParticipantStartSoundEvent', 340, 'CCitadelUserMsg_ParticipantStartSoundEvent');
 const citadelUserMessageParticipantStopSoundEvent = new MessagePacketType('k_EUserMsg_ParticipantStopSoundEvent', 341, 'CCitadelUserMsg_ParticipantStopSoundEvent');
 const citadelUserMessageParticipantStopSoundEventHash = new MessagePacketType('k_EUserMsg_ParticipantStopSoundEventHash', 342, 'CCitadelUserMsg_ParticipantStopSoundEventHash');
 const citadelUserMessageParticipantSetSoundEventParams = new MessagePacketType('k_EUserMsg_ParticipantSetSoundEventParams', 343, 'CCitadelUserMsg_ParticipantSetSoundEventParams');
 const citadelUserMessageParticipantSetLibraryStackFields = new MessagePacketType('k_EUserMsg_ParticipantSetLibraryStackFields', 344, 'CCitadelUserMsg_ParticipantSetLibraryStackFields');
-const citadelUserMessageCurrencyChanged = new MessagePacketType('k_EUserMsg_CurrencyChanged', 345, 'CCitadelUserMessage_CurrencyChanged');
+const citadelUserMessageCurrencyChanged = new MessagePacketType('k_EUserMsg_CurrencyChanged', 345, 'CCitadelUserMsg_CurrencyChanged');
 const citadelUserMessageGameOver = new MessagePacketType('k_EUserMsg_GameOver', 346, 'CCitadelUserMessage_GameOver');
 const citadelUserMessageBossKilled = new MessagePacketType('k_EUserMsg_BossKilled', 347, 'CCitadelUserMsg_BossKilled');
 const citadelUserMessageBossDamaged = new MessagePacketType('k_EUserMsg_BossDamaged', 348, 'CCitadelUserMsg_BossDamaged');
@@ -130,7 +129,6 @@ const citadelUserMessageCallCheaterVote = new MessagePacketType('k_EUserMsg_Call
 const citadelUserMessageMeleeHit = new MessagePacketType('k_EUserMsg_MeleeHit', 355, 'CCitadelUserMessage_MeleeHit');
 const citadelUserMessageFlexSlotUnlocked = new MessagePacketType('k_EUserMsg_FlexSlotUnlocked', 356, 'CCitadelUserMsg_FlexSlotUnlocked');
 const citadelUserMessageSeasonalKill = new MessagePacketType('k_EUserMsg_SeasonalKill', 357, 'CCitadelUserMsg_SeasonalKill');
-const citadelUserMessageAG2ParamTrigger = new MessagePacketType('k_EUserMsg_AG2ParamTrigger', 359, 'CCitadelUserMsg_AG2ParamTrigger');
 const citadelUserMessageItemPurchaseNotification = new MessagePacketType('k_EUserMsg_ItemPurchaseNotification', 360, 'CCitadelUserMessage_ItemPurchaseNotification');
 const citadelUserMessageEntityPortalled = new MessagePacketType('k_EUserMsg_EntityPortalled', 361, 'CCitadelUserMsg_EntityPortalled');
 const citadelUserMessageStreetBrawlScoring = new MessagePacketType('k_EUserMsg_StreetBrawlScoring', 362, 'CCitadelUserMsg_StreetBrawlScoring');

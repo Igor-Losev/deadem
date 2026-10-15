@@ -1603,6 +1603,11 @@ export declare type CDOTAUserMsg_UnitEvent_Speech = Message<"CDOTAUserMsg_UnitEv
    * @generated from field: optional int32 response_type = 8;
    */
   responseType: number;
+
+  /**
+   * @generated from field: optional int32 speech_target_entity_index = 9;
+   */
+  speechTargetEntityIndex: number;
 };
 
 /**

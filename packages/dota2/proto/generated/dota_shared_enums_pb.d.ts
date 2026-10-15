@@ -436,9 +436,9 @@ export declare const CMsgDOTACombatLogEntrySchema: GenMessage<CMsgDOTACombatLogE
  */
 export declare type CMsgMonsterHunterMaterialQuantity = Message<"CMsgMonsterHunterMaterialQuantity"> & {
   /**
-   * @generated from field: repeated CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry material_counts = 1;
+   * @generated from field: map<uint32, int32> material_counts = 1;
    */
-  materialCounts: CMsgMonsterHunterMaterialQuantity_MaterialCountsEntry[];
+  materialCounts: { [key: number]: number };
 };
 
 /**
@@ -446,27 +446,6 @@ export declare type CMsgMonsterHunterMaterialQuantity = Message<"CMsgMonsterHunt
  * Use `create(CMsgMonsterHunterMaterialQuantitySchema)` to create a new message.
  */
 export declare const CMsgMonsterHunterMaterialQuantitySchema: GenMessage<CMsgMonsterHunterMaterialQuantity>;
-
-/**
- * @generated from message CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry
- */
-export declare type CMsgMonsterHunterMaterialQuantity_MaterialCountsEntry = Message<"CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry"> & {
-  /**
-   * @generated from field: optional uint32 key = 1;
-   */
-  key: number;
-
-  /**
-   * @generated from field: optional int32 value = 2;
-   */
-  value: number;
-};
-
-/**
- * Describes the message CMsgMonsterHunterMaterialQuantity.MaterialCountsEntry.
- * Use `create(CMsgMonsterHunterMaterialQuantity_MaterialCountsEntrySchema)` to create a new message.
- */
-export declare const CMsgMonsterHunterMaterialQuantity_MaterialCountsEntrySchema: GenMessage<CMsgMonsterHunterMaterialQuantity_MaterialCountsEntry>;
 
 /**
  * @generated from message CMsgMonsterHunterInvestigation

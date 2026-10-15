@@ -153,6 +153,16 @@ export declare type CMsgPlayerInfo = Message<"CMsgPlayerInfo"> & {
    * @generated from field: optional bool ishltv = 6;
    */
   ishltv: boolean;
+
+  /**
+   * @generated from field: optional bool clan_member = 9;
+   */
+  clanMember: boolean;
+
+  /**
+   * @generated from field: optional bool clan_officer = 10;
+   */
+  clanOfficer: boolean;
 };
 
 /**
@@ -480,6 +490,47 @@ export declare type CNETMsg_SpawnGroup_SetCreationTick = Message<"CNETMsg_SpawnG
 export declare const CNETMsg_SpawnGroup_SetCreationTickSchema: GenMessage<CNETMsg_SpawnGroup_SetCreationTick>;
 
 /**
+ * @generated from message QuantizedFloatEncoderAlias_t
+ */
+export declare type QuantizedFloatEncoderAlias_t = Message<"QuantizedFloatEncoderAlias_t"> & {
+  /**
+   * @generated from field: optional string name = 1;
+   */
+  name: string;
+
+  /**
+   * @generated from field: optional int32 bit_count = 2;
+   */
+  bitCount: number;
+
+  /**
+   * @generated from field: optional int32 encode_flags = 3;
+   */
+  encodeFlags: number;
+
+  /**
+   * @generated from field: optional float min_value = 4;
+   */
+  minValue: number;
+
+  /**
+   * @generated from field: optional float max_value = 5;
+   */
+  maxValue: number;
+
+  /**
+   * @generated from field: optional bool validate = 6;
+   */
+  validate: boolean;
+};
+
+/**
+ * Describes the message QuantizedFloatEncoderAlias_t.
+ * Use `create(QuantizedFloatEncoderAlias_tSchema)` to create a new message.
+ */
+export declare const QuantizedFloatEncoderAlias_tSchema: GenMessage<QuantizedFloatEncoderAlias_t>;
+
+/**
  * @generated from message CSVCMsg_GameSessionConfiguration
  */
 export declare type CSVCMsg_GameSessionConfiguration = Message<"CSVCMsg_GameSessionConfiguration"> & {
@@ -577,6 +628,16 @@ export declare type CSVCMsg_GameSessionConfiguration = Message<"CSVCMsg_GameSess
    * @generated from field: optional string landmarkname = 18;
    */
   landmarkname: string;
+
+  /**
+   * @generated from field: repeated QuantizedFloatEncoderAlias_t quantized_float_encoder_aliases = 20;
+   */
+  quantizedFloatEncoderAliases: QuantizedFloatEncoderAlias_t[];
+
+  /**
+   * @generated from field: optional float max_coord = 21;
+   */
+  maxCoord: number;
 };
 
 /**

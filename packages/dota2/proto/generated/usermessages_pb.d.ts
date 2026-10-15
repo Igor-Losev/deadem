@@ -49,6 +49,11 @@ export declare type CUserMessageSayText2 = Message<"CUserMessageSayText2"> & {
    * @generated from field: optional string param4 = 7;
    */
   param4: string;
+
+  /**
+   * @generated from field: optional bool textallchat = 8;
+   */
+  textallchat: boolean;
 };
 
 /**

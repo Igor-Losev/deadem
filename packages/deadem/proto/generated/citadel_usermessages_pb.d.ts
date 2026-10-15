@@ -103,6 +103,11 @@ export declare type CCitadelUserMessage_Damage = Message<"CCitadelUserMessage_Da
   attackerClass: number;
 
   /**
+   * @generated from field: optional uint32 attacker_subclass = 31;
+   */
+  attackerSubclass: number;
+
+  /**
    * @generated from field: optional uint32 victim_class = 16;
    */
   victimClass: number;
@@ -207,6 +212,26 @@ export declare type PingCommonData = Message<"PingCommonData"> & {
    * @generated from field: optional float cooldown_time = 7;
    */
   cooldownTime: number;
+
+  /**
+   * @generated from field: optional CMsgLaneColor lane_color = 8 [default = k_ELaneColor_Invalid];
+   */
+  laneColor: CMsgLaneColor;
+
+  /**
+   * @generated from field: optional int32 ping_anim_type = 9;
+   */
+  pingAnimType: number;
+
+  /**
+   * @generated from field: optional uint32 ability_id = 10;
+   */
+  abilityId: number;
+
+  /**
+   * @generated from field: optional bool is_corrupted_item = 11;
+   */
+  isCorruptedItem: boolean;
 };
 
 /**
@@ -315,11 +340,6 @@ export declare type CCitadelUserMsg_QuickResponse = Message<"CCitadelUserMsg_Qui
    * @generated from field: optional int32 responding_to_player_slot = 3 [default = -1];
    */
   respondingToPlayerSlot: number;
-
-  /**
-   * @generated from field: optional CMsgLaneColor lane_color = 4 [default = k_ELaneColor_Invalid];
-   */
-  laneColor: CMsgLaneColor;
 };
 
 /**
@@ -503,9 +523,14 @@ export enum CCitadelUserMsg_AbilitiesChanged_Change {
   ESwappedActivatedAbility = 3,
 
   /**
-   * @generated from enum value: EFailure = 4;
+   * @generated from enum value: ELeveledUp = 4;
    */
-  EFailure = 4,
+  ELeveledUp = 4,
+
+  /**
+   * @generated from enum value: EFailure = 5;
+   */
+  EFailure = 5,
 }
 
 /**
@@ -684,6 +709,11 @@ export declare type CCitadelUserMsg_RecentDamageSummary_DamageRecord = Message<"
    * @generated from field: optional float crit_damage = 12;
    */
   critDamage: number;
+
+  /**
+   * @generated from field: optional uint32 attacker_subclass = 13;
+   */
+  attackerSubclass: number;
 };
 
 /**
@@ -937,6 +967,11 @@ export declare type CCitadelUserMsg_CameraController = Message<"CCitadelUserMsg_
    * @generated from field: optional uint32 priority = 13 [default = 1];
    */
   priority: number;
+
+  /**
+   * @generated from field: optional uint32 target_pawn = 14 [default = 16777215];
+   */
+  targetPawn: number;
 
   /**
    * @generated from field: optional CCitadelUserMsg_CameraController.Maintain maintain = 6;
@@ -1230,6 +1265,21 @@ export declare type CCitadelUserMsg_HeroKilled = Message<"CCitadelUserMsg_HeroKi
    * @generated from field: optional int32 victim_team_number = 7;
    */
   victimTeamNumber: number;
+
+  /**
+   * @generated from field: optional int32 killfeed_gold = 8;
+   */
+  killfeedGold: number;
+
+  /**
+   * @generated from field: optional uint32 killer_ability_id = 9;
+   */
+  killerAbilityId: number;
+
+  /**
+   * @generated from field: optional bool first_blood = 10;
+   */
+  firstBlood: boolean;
 };
 
 /**
@@ -1261,6 +1311,11 @@ export declare type CCitadelEntityMsg_BreakablePropSpawnDebris = Message<"CCitad
    * @generated from field: optional CMsgVector damage_force = 4;
    */
   damageForce?: CMsgVector | undefined;
+
+  /**
+   * @generated from field: optional float radial_force = 5;
+   */
+  radialForce: number;
 };
 
 /**
@@ -1623,9 +1678,9 @@ export declare const CCitadelUserMsg_PlayerLifetimeStatInfo_StatSchema: GenMessa
  */
 export declare type CCitadelUserMsg_StaminaConsumed = Message<"CCitadelUserMsg_StaminaConsumed"> & {
   /**
-   * @generated from field: optional int32 entindex_target = 1 [default = -1];
+   * @generated from field: optional uint32 target = 1 [default = 16777215];
    */
-  entindexTarget: number;
+  target: number;
 
   /**
    * @generated from field: optional float stamina_before = 3;
@@ -1656,6 +1711,11 @@ export declare type CCitadelUserMsg_StaminaConsumed = Message<"CCitadelUserMsg_S
    * @generated from field: optional bool play_sound = 8;
    */
   playSound: boolean;
+
+  /**
+   * @generated from field: optional bool periodic_update = 9;
+   */
+  periodicUpdate: boolean;
 };
 
 /**
@@ -1665,18 +1725,18 @@ export declare type CCitadelUserMsg_StaminaConsumed = Message<"CCitadelUserMsg_S
 export declare const CCitadelUserMsg_StaminaConsumedSchema: GenMessage<CCitadelUserMsg_StaminaConsumed>;
 
 /**
- * @generated from message CCitadelUserMessage_AbilityNotify
+ * @generated from message CCitadelUserMsg_AbilityNotify
  */
-export declare type CCitadelUserMessage_AbilityNotify = Message<"CCitadelUserMessage_AbilityNotify"> & {
+export declare type CCitadelUserMsg_AbilityNotify = Message<"CCitadelUserMsg_AbilityNotify"> & {
   /**
-   * @generated from field: optional int32 entindex_victim = 1 [default = -1];
+   * @generated from field: optional uint32 victim = 1 [default = 16777215];
    */
-  entindexVictim: number;
+  victim: number;
 
   /**
-   * @generated from field: optional int32 entindex_attacker = 2 [default = -1];
+   * @generated from field: optional uint32 attacker = 2 [default = 16777215];
    */
-  entindexAttacker: number;
+  attacker: number;
 
   /**
    * @generated from field: optional uint32 ability_id = 3;
@@ -1687,18 +1747,23 @@ export declare type CCitadelUserMessage_AbilityNotify = Message<"CCitadelUserMes
    * @generated from field: optional uint32 status_impact = 4;
    */
   statusImpact: number;
+
+  /**
+   * @generated from field: optional bool is_refresh = 5;
+   */
+  isRefresh: boolean;
 };
 
 /**
- * Describes the message CCitadelUserMessage_AbilityNotify.
- * Use `create(CCitadelUserMessage_AbilityNotifySchema)` to create a new message.
+ * Describes the message CCitadelUserMsg_AbilityNotify.
+ * Use `create(CCitadelUserMsg_AbilityNotifySchema)` to create a new message.
  */
-export declare const CCitadelUserMessage_AbilityNotifySchema: GenMessage<CCitadelUserMessage_AbilityNotify>;
+export declare const CCitadelUserMsg_AbilityNotifySchema: GenMessage<CCitadelUserMsg_AbilityNotify>;
 
 /**
- * @generated from message CCitadelUserMessage_CurrencyChanged
+ * @generated from message CCitadelUserMsg_CurrencyChanged
  */
-export declare type CCitadelUserMessage_CurrencyChanged = Message<"CCitadelUserMessage_CurrencyChanged"> & {
+export declare type CCitadelUserMsg_CurrencyChanged = Message<"CCitadelUserMsg_CurrencyChanged"> & {
   /**
    * @generated from field: optional int32 userid = 1 [default = -1];
    */
@@ -1725,9 +1790,9 @@ export declare type CCitadelUserMessage_CurrencyChanged = Message<"CCitadelUserM
   notification: boolean;
 
   /**
-   * @generated from field: optional int32 entindex_victim = 6 [default = -1];
+   * @generated from field: optional uint32 victim = 6 [default = 16777215];
    */
-  entindexVictim: number;
+  victim: number;
 
   /**
    * @generated from field: optional CMsgVector victim_pos = 7;
@@ -1751,10 +1816,10 @@ export declare type CCitadelUserMessage_CurrencyChanged = Message<"CCitadelUserM
 };
 
 /**
- * Describes the message CCitadelUserMessage_CurrencyChanged.
- * Use `create(CCitadelUserMessage_CurrencyChangedSchema)` to create a new message.
+ * Describes the message CCitadelUserMsg_CurrencyChanged.
+ * Use `create(CCitadelUserMsg_CurrencyChangedSchema)` to create a new message.
  */
-export declare const CCitadelUserMessage_CurrencyChangedSchema: GenMessage<CCitadelUserMessage_CurrencyChanged>;
+export declare const CCitadelUserMsg_CurrencyChangedSchema: GenMessage<CCitadelUserMsg_CurrencyChanged>;
 
 /**
  * @generated from message CCitadelUserMessage_GameOver
@@ -1977,6 +2042,16 @@ export declare type CCitadelUserMsg_BossKilled = Message<"CCitadelUserMsg_BossKi
    * @generated from field: optional CMsgVector entity_position = 8;
    */
   entityPosition?: CMsgVector | undefined;
+
+  /**
+   * @generated from field: optional int32 killfeed_gold = 9;
+   */
+  killfeedGold: number;
+
+  /**
+   * @generated from field: optional uint32 killer_ability_id = 10;
+   */
+  killerAbilityId: number;
 };
 
 /**
@@ -2113,6 +2188,11 @@ export declare type CCitadelUserMsg_TeamMsg = Message<"CCitadelUserMsg_TeamMsg">
    * @generated from field: optional uint32 player_controller = 4 [default = 16777215];
    */
   playerController: number;
+
+  /**
+   * @generated from field: optional int32 killfeed_gold = 5;
+   */
+  killfeedGold: number;
 };
 
 /**
@@ -2134,6 +2214,11 @@ export declare type CCitadelUserMsg_PlayerRespawned = Message<"CCitadelUserMsg_P
    * @generated from field: optional float facing_yaw = 2;
    */
   facingYaw: number;
+
+  /**
+   * @generated from field: optional uint32 respawn_reason = 3;
+   */
+  respawnReason: number;
 };
 
 /**
@@ -2253,27 +2338,6 @@ export declare type CCitadelUserMsg_SeasonalKill = Message<"CCitadelUserMsg_Seas
 export declare const CCitadelUserMsg_SeasonalKillSchema: GenMessage<CCitadelUserMsg_SeasonalKill>;
 
 /**
- * @generated from message CCitadelUserMsg_AG2ParamTrigger
- */
-export declare type CCitadelUserMsg_AG2ParamTrigger = Message<"CCitadelUserMsg_AG2ParamTrigger"> & {
-  /**
-   * @generated from field: optional string param_id = 1;
-   */
-  paramId: string;
-
-  /**
-   * @generated from field: optional string param_value = 2;
-   */
-  paramValue: string;
-};
-
-/**
- * Describes the message CCitadelUserMsg_AG2ParamTrigger.
- * Use `create(CCitadelUserMsg_AG2ParamTriggerSchema)` to create a new message.
- */
-export declare const CCitadelUserMsg_AG2ParamTriggerSchema: GenMessage<CCitadelUserMsg_AG2ParamTrigger>;
-
-/**
  * @generated from message CCitadelUserMsg_EntityPortalled
  */
 export declare type CCitadelUserMsg_EntityPortalled = Message<"CCitadelUserMsg_EntityPortalled"> & {
@@ -2353,6 +2417,26 @@ export declare type CCitadelUserMsg_HudGameAnnouncement = Message<"CCitadelUserM
    * @generated from field: repeated string dialog_variable_locstring = 5;
    */
   dialogVariableLocstring: string[];
+
+  /**
+   * @generated from field: optional float duration_override = 6;
+   */
+  durationOverride: number;
+
+  /**
+   * @generated from field: optional string snippet_panel = 7;
+   */
+  snippetPanel: string;
+
+  /**
+   * @generated from field: repeated string dialog_variable_int_name = 8;
+   */
+  dialogVariableIntName: string[];
+
+  /**
+   * @generated from field: repeated int32 dialog_variable_int_value = 9;
+   */
+  dialogVariableIntValue: number[];
 };
 
 /**

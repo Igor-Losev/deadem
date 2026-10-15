@@ -330,11 +330,6 @@ export declare type CCSUsrMsg_WeaponSound = Message<"CCSUsrMsg_WeaponSound"> & {
    * @generated from field: optional fixed32 source_soundscapeid = 7;
    */
   sourceSoundscapeid: number;
-
-  /**
-   * @generated from field: optional bool stealth = 8;
-   */
-  stealth: boolean;
 };
 
 /**

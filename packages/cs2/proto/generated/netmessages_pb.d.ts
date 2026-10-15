@@ -540,6 +540,11 @@ export declare type CSVCMsg_VoiceData = Message<"CSVCMsg_VoiceData"> & {
    * @generated from field: optional int32 entity = 8 [default = -1];
    */
   entity: number;
+
+  /**
+   * @generated from field: optional bool caster = 9;
+   */
+  caster: boolean;
 };
 
 /**
@@ -663,6 +668,11 @@ export declare type ProtoFlattenedSerializerField_t = Message<"ProtoFlattenedSer
    * @generated from field: optional int32 var_serializer_sym = 12;
    */
   varSerializerSym: number;
+
+  /**
+   * @generated from field: optional ProtoFlattenedSerializerField_t.proto_enum_info_t var_enum_info = 13;
+   */
+  varEnumInfo?: ProtoFlattenedSerializerField_t_proto_enum_info_t | undefined;
 };
 
 /**
@@ -693,6 +703,22 @@ export declare type ProtoFlattenedSerializerField_t_polymorphic_field_t = Messag
 export declare const ProtoFlattenedSerializerField_t_polymorphic_field_tSchema: GenMessage<ProtoFlattenedSerializerField_t_polymorphic_field_t>;
 
 /**
+ * @generated from message ProtoFlattenedSerializerField_t.proto_enum_info_t
+ */
+export declare type ProtoFlattenedSerializerField_t_proto_enum_info_t = Message<"ProtoFlattenedSerializerField_t.proto_enum_info_t"> & {
+  /**
+   * @generated from field: optional bool is_signed_enum = 1;
+   */
+  isSignedEnum: boolean;
+};
+
+/**
+ * Describes the message ProtoFlattenedSerializerField_t.proto_enum_info_t.
+ * Use `create(ProtoFlattenedSerializerField_t_proto_enum_info_tSchema)` to create a new message.
+ */
+export declare const ProtoFlattenedSerializerField_t_proto_enum_info_tSchema: GenMessage<ProtoFlattenedSerializerField_t_proto_enum_info_t>;
+
+/**
  * @generated from message ProtoFlattenedSerializer_t
  */
 export declare type ProtoFlattenedSerializer_t = Message<"ProtoFlattenedSerializer_t"> & {
@@ -719,6 +745,47 @@ export declare type ProtoFlattenedSerializer_t = Message<"ProtoFlattenedSerializ
 export declare const ProtoFlattenedSerializer_tSchema: GenMessage<ProtoFlattenedSerializer_t>;
 
 /**
+ * @generated from message ProtoCoordSizeParams_t
+ */
+export declare type ProtoCoordSizeParams_t = Message<"ProtoCoordSizeParams_t"> & {
+  /**
+   * @generated from field: optional int32 coord_integer_bits = 1;
+   */
+  coordIntegerBits: number;
+
+  /**
+   * @generated from field: optional int32 coord_fractional_bits = 2;
+   */
+  coordFractionalBits: number;
+
+  /**
+   * @generated from field: optional int32 coord_integer_bits_mp = 3;
+   */
+  coordIntegerBitsMp: number;
+
+  /**
+   * @generated from field: optional int32 coord_fractional_bits_mp = 4;
+   */
+  coordFractionalBitsMp: number;
+
+  /**
+   * @generated from field: optional int32 normal_fractional_bits = 5;
+   */
+  normalFractionalBits: number;
+
+  /**
+   * @generated from field: optional int32 angle_bits = 6;
+   */
+  angleBits: number;
+};
+
+/**
+ * Describes the message ProtoCoordSizeParams_t.
+ * Use `create(ProtoCoordSizeParams_tSchema)` to create a new message.
+ */
+export declare const ProtoCoordSizeParams_tSchema: GenMessage<ProtoCoordSizeParams_t>;
+
+/**
  * @generated from message CSVCMsg_FlattenedSerializer
  */
 export declare type CSVCMsg_FlattenedSerializer = Message<"CSVCMsg_FlattenedSerializer"> & {
@@ -736,6 +803,11 @@ export declare type CSVCMsg_FlattenedSerializer = Message<"CSVCMsg_FlattenedSeri
    * @generated from field: repeated ProtoFlattenedSerializerField_t fields = 3;
    */
   fields: ProtoFlattenedSerializerField_t[];
+
+  /**
+   * @generated from field: optional ProtoCoordSizeParams_t coord_size_params = 4;
+   */
+  coordSizeParams?: ProtoCoordSizeParams_t | undefined;
 };
 
 /**
@@ -777,6 +849,11 @@ export declare type CMsgServerUserCmd = Message<"CMsgServerUserCmd"> & {
    * @generated from field: optional bytes delta_data = 6;
    */
   deltaData: Uint8Array;
+
+  /**
+   * @generated from field: optional bool delta_processed = 7;
+   */
+  deltaProcessed: boolean;
 };
 
 /**

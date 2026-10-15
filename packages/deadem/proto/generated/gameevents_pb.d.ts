@@ -79,6 +79,16 @@ export declare type CMsgPlaceDecalEvent = Message<"CMsgPlaceDecalEvent"> & {
    * @generated from field: optional uint32 sequence_name = 12;
    */
   sequenceName: number;
+
+  /**
+   * @generated from field: optional CMsgVector position_objectspace = 14;
+   */
+  positionObjectspace?: CMsgVector | undefined;
+
+  /**
+   * @generated from field: optional CMsgVector normal_objectspace = 15;
+   */
+  normalObjectspace?: CMsgVector | undefined;
 };
 
 /**

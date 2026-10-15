@@ -49,6 +49,11 @@ export declare type CUserMessageSayText2 = Message<"CUserMessageSayText2"> & {
    * @generated from field: optional string param4 = 7;
    */
   param4: string;
+
+  /**
+   * @generated from field: optional bool textallchat = 8;
+   */
+  textallchat: boolean;
 };
 
 /**
@@ -338,6 +343,11 @@ export declare type CUserMsg_ParticleManager = Message<"CUserMsg_ParticleManager
    * @generated from field: optional CUserMsg_ParticleManager.CreateSmokeGrid create_smoke_grid = 43;
    */
   createSmokeGrid?: CUserMsg_ParticleManager_CreateSmokeGrid | undefined;
+
+  /**
+   * @generated from field: optional CUserMsg_ParticleManager.SetOverrideTexture set_override_texture = 44;
+   */
+  setOverrideTexture?: CUserMsg_ParticleManager_SetOverrideTexture | undefined;
 };
 
 /**
@@ -903,6 +913,22 @@ export declare type CUserMsg_ParticleManager_SetTextureAttribute = Message<"CUse
  * Use `create(CUserMsg_ParticleManager_SetTextureAttributeSchema)` to create a new message.
  */
 export declare const CUserMsg_ParticleManager_SetTextureAttributeSchema: GenMessage<CUserMsg_ParticleManager_SetTextureAttribute>;
+
+/**
+ * @generated from message CUserMsg_ParticleManager.SetOverrideTexture
+ */
+export declare type CUserMsg_ParticleManager_SetOverrideTexture = Message<"CUserMsg_ParticleManager.SetOverrideTexture"> & {
+  /**
+   * @generated from field: optional string texture_name = 1;
+   */
+  textureName: string;
+};
+
+/**
+ * Describes the message CUserMsg_ParticleManager.SetOverrideTexture.
+ * Use `create(CUserMsg_ParticleManager_SetOverrideTextureSchema)` to create a new message.
+ */
+export declare const CUserMsg_ParticleManager_SetOverrideTextureSchema: GenMessage<CUserMsg_ParticleManager_SetOverrideTexture>;
 
 /**
  * @generated from message CUserMsg_ParticleManager.SetSceneObjectGenericFlag
@@ -1697,6 +1723,11 @@ export enum PARTICLE_MESSAGE {
    * @generated from enum value: GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID = 40;
    */
   GAME_PARTICLE_MANAGER_EVENT_CREATE_SMOKE_GRID = 40,
+
+  /**
+   * @generated from enum value: GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE = 41;
+   */
+  GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE = 41,
 }
 
 /**

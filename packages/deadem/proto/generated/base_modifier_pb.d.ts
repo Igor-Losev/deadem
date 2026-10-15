@@ -86,6 +86,16 @@ export declare type CModifierTableEntry = Message<"CModifierTableEntry"> & {
   inAuraRange: boolean;
 
   /**
+   * @generated from field: optional float creation_time = 15;
+   */
+  creationTime: number;
+
+  /**
+   * @generated from field: optional uint32 attributes = 16;
+   */
+  attributes: number;
+
+  /**
    * @generated from field: optional bool bool1_ = 20;
    */
   bool1: boolean;
