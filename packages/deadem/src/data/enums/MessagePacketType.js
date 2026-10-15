@@ -55,7 +55,7 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_CALL_CHEATER_VOTE() { return citadelUserMessageCallCheaterVote; }
     static get CITADEL_USER_MESSAGE_MELEE_HIT() { return citadelUserMessageMeleeHit; }
     static get CITADEL_USER_MESSAGE_FLEX_SLOT_UNLOCKED() { return citadelUserMessageFlexSlotUnlocked; }
-    static get CITADEL_USER_MESSAGE_SEASONAL_ACHIEVEMENT_UNLOCKED() { return citadelUserMessageSeasonalKill; }
+    static get CITADEL_USER_MESSAGE_SEASONAL_KILL() { return citadelUserMessageSeasonalKill; }
     static get CITADEL_USER_MESSAGE_MUSIC_QUEUE() { return citadelUserMessageMusicQueue; }
     static get CITADEL_USER_MESSAGE_ITEM_PURCHASE_NOTIFICATION() { return citadelUserMessageItemPurchaseNotification; }
     static get CITADEL_USER_MESSAGE_ENTITY_PORTALLED() { return citadelUserMessageEntityPortalled; }
