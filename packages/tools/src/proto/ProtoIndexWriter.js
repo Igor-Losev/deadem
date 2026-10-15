@@ -43,7 +43,7 @@ class ProtoIndexWriter {
         return fs.readdirSync(directory)
             .filter(file => file.endsWith(GENERATED_FILE_SUFFIX))
             .sort()
-            .map(file => ({ file, descriptor: ProtoIndexWriter._getDescriptorExport(path.join(directory, file)) }));
+            .map(file => ({ file, descriptor: ProtoIndexWriter._readDescriptorExport(path.join(directory, file)) }));
     }
 
     /**
@@ -100,7 +100,7 @@ export declare const descriptors: Registry;
      * @param {string} file
      * @returns {string}
      */
-    static _getDescriptorExport(file) {
+    static _readDescriptorExport(file) {
         const match = fs.readFileSync(file, 'utf-8').match(DESCRIPTOR_EXPORT_PATTERN);
 
         Assert.isTrue(match !== null, `No file descriptor export in [ ${file} ]`);

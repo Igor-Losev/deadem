@@ -27,7 +27,9 @@ class MessageRegistry {
             ...await MessageRegistry._collectFromEnums(workspace)
         ];
 
-        return Array.from(new Set(names)).sort();
+        const unique = new Set(names);
+
+        return Array.from(unique).sort();
     }
 
     /**

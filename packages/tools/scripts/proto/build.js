@@ -10,7 +10,9 @@ const scriptArguments = new ScriptArguments(process.argv.slice(2));
     for (const workspace of scriptArguments.getWorkspaces()) {
         const types = await MessageRegistry.collect(workspace);
 
-        console.log(`Generating [ ${workspace.folder} ] from [ ${types.length} ] registered messages...`);
+        const log = (message) => { console.log(`[ ${workspace.code} ]: ${message}`); };
+
+        log(`Generating from [ ${types.length} ] registered messages...`);
 
         BufCli.generate(workspace.protoSourceDirectory, workspace.protoGeneratedDirectory, types);
 
