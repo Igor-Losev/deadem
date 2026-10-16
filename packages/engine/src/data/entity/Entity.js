@@ -338,7 +338,13 @@ class Entity {
             const meta = layout.peekOrAssign(id);
 
             if (!this._getIsContainer(meta)) {
-                snapshot[serializer.getNameForFieldPathId(id)] = this._read(meta);
+                const name = serializer.getNameForFieldPathId(id);
+
+                if (this._getIsPresent(meta)) {
+                    snapshot[name] = this._read(meta);
+                } else {
+                    delete snapshot[name];
+                }
             }
         });
 
@@ -365,6 +371,12 @@ class Entity {
      */
     updateByFieldPathId(fieldPathId, value) {
         const meta = this._class.layout.peekOrAssign(fieldPathId);
+
+        // The server sends only the new length of a shrinking collection,
+        // the fields of the removed elements have to be dropped here.
+        if (meta.elements !== null && this._getIsPresent(meta) && value < this._read(meta)) {
+            this._truncate(meta, value);
+        }
 
         if (meta.storage === STORAGE_FLOAT) {
             const offset = meta.offset;
@@ -477,6 +489,44 @@ class Entity {
         }
 
         return /** @type {Map<number, *>} */ (this._state.misc).get(meta.id);
+    }
+
+    /**
+     * Drops the fields of the collection elements at the given length and beyond.
+     *
+     * @protected
+     * @param {EntityFieldMeta} collection - The length field of the collection.
+     * @param {number} length
+     */
+    _truncate(collection, length) {
+        const elements = /** @type {Array<EntityFieldMeta>} */ (collection.elements);
+
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+
+            if (element.element < length) {
+                continue;
+            }
+
+            // A removed element takes its nested collections with it.
+            if (element.elements !== null) {
+                this._truncate(element, 0);
+            }
+
+            if (!this._getIsPresent(element)) {
+                continue;
+            }
+
+            if (element.storage === STORAGE_MISC) {
+                /** @type {Map<number, *>} */ (this._state.misc).delete(element.id);
+            } else {
+                this._state.presence[element.present] = 0;
+            }
+
+            if (this._changed !== null) {
+                this._changed.add(element.id);
+            }
+        }
     }
 }
 

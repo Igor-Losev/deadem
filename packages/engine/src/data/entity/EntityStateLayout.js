@@ -111,6 +111,22 @@ class EntityStateLayout {
 
         this._metas.order.push(meta);
 
+        // Link the field to the length field of the collection it belongs to,
+        // so that a shrinking length knows which fields to drop.
+        const element = this._serializer.getCollectionElementForFieldPathId(fieldPathId);
+
+        if (element !== null) {
+            const collection = this.peekOrAssign(element.collection);
+
+            if (collection.elements === null) {
+                collection.elements = [ ];
+            }
+
+            meta.element = element.index;
+
+            collection.elements.push(meta);
+        }
+
         return meta;
     }
 
@@ -148,7 +164,10 @@ class EntityStateLayout {
 /**
  * Storage classification for a single field path.
  *
- * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean }} EntityFieldMeta
+ * `element` is the index of the collection element the field belongs to, or -1.
+ * `elements` lists the fields of all elements when the field is the length of a collection, or is null.
+ *
+ * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean, element: number, elements: Array<EntityFieldMeta>|null }} EntityFieldMeta
  */
 
 /**
@@ -163,7 +182,7 @@ class EntityStateLayout {
  * @returns {EntityFieldMeta}
  */
 function createMeta(id, storage, offset, dim, present, container, signed, bool) {
-    return { id, storage, offset, dim, present, container, signed, bool };
+    return { id, storage, offset, dim, present, container, signed, bool, element: -1, elements: null };
 }
 
 export default EntityStateLayout;

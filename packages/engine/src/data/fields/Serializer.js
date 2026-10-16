@@ -294,6 +294,49 @@ class Serializer {
     }
 
     /**
+     * Finds the closest variable array or table that the field path is an element of.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {{ collection: number, index: number }|null} The length field path id of the collection and the element index, or null.
+     */
+    getCollectionElementForFieldPathId(fieldPathId) {
+        const path = FieldPathBuilder.getById(fieldPathId).path;
+
+        /** @type {Serializer} */
+        let serializer = this;
+        /** @type {{ collection: number, index: number }|null} */
+        let element = null;
+
+        for (let i = 0; i < path.length - 1; i++) {
+            const field = serializer._fields[path[i]];
+
+            switch (field.model) {
+                case FieldModel.ARRAY_VARIABLE:
+                    return { collection: FieldPathBuilder.build(path.slice(0, i + 1)).id, index: path[i + 1] };
+                case FieldModel.TABLE_VARIABLE: {
+                    element = { collection: FieldPathBuilder.build(path.slice(0, i + 1)).id, index: path[i + 1] };
+
+                    serializer = /** @type {FieldTableVariable} */ (field).serializer;
+
+                    i++;
+
+                    break;
+                }
+                case FieldModel.TABLE_FIXED: {
+                    serializer = /** @type {FieldTableFixed} */ (field).serializer;
+
+                    break;
+                }
+                default:
+                    return element;
+            }
+        }
+
+        return element;
+    }
+
+    /**
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
