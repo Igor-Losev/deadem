@@ -119,6 +119,7 @@ class DemoMessageHandler {
         /** @type {Array<EntityMutationEvent>|null} */
         const events = direct ? null : [ ];
         const extractor = new EntityMutationExtractor(bitBuffer);
+        const alternateBaselines = createAlternateBaselineIndex(message);
 
         let index = startIndex;
 
@@ -204,10 +205,11 @@ class DemoMessageHandler {
                     extractor.serializer = entity.class.serializer;
 
                     if (allowed) {
-                        const baseline = this._demo.getClassBaseline(classId);
+                        const baselineIndex = alternateBaselines !== null ? alternateBaselines.get(index) : undefined;
+                        const baseline = baselineIndex === undefined ? this._demo.getClassBaseline(classId) : this._demo.getAlternateBaseline(classId, baselineIndex);
 
                         if (baseline === null) {
-                            throw new Error(`Baseline not found [ ${classId} ]`);
+                            throw new Error(`Baseline not found [ ${baselineIndex === undefined ? classId : `${classId}:${baselineIndex}`} ]`);
                         }
 
                         const baselineBatch = baseline.getBatch(entity.class.serializer);
@@ -342,6 +344,22 @@ function createPayloadIterator(message, startLoop = 0) {
     }
 
     return iterator;
+}
+
+/**
+ * Maps entity indices of the packet to the alternate baselines they are created from.
+ *
+ * @param {{ alternateBaselines?: Array<{ entityIndex: number, baselineIndex: number }> }} message
+ * @returns {Map<number, number>|null}
+ */
+function createAlternateBaselineIndex(message) {
+    const references = message.alternateBaselines ?? [ ];
+
+    if (references.length === 0) {
+        return null;
+    }
+
+    return new Map(references.map(reference => [ reference.entityIndex, reference.baselineIndex ]));
 }
 
 export default DemoMessageHandler;

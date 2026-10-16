@@ -24,6 +24,9 @@ class Demo {
      * @constructor
      */
     constructor() {
+        /** @private @type {Map<number, Map<number, ClassBaseline>>} */
+        this._alternateBaselines = new Map();
+
         /** @private @type {Map<number, ClassBaseline>} */
         this._classBaselines = new Map();
 
@@ -109,6 +112,19 @@ class Demo {
         this._userCommands.delete(slot);
 
         return command;
+    }
+
+    /**
+     * @public
+     * @param {number} classId
+     * @param {number} index
+     * @returns {ClassBaseline|null}
+     */
+    getAlternateBaseline(classId, index) {
+        Assert.isTrue(Number.isInteger(classId));
+        Assert.isTrue(Number.isInteger(index));
+
+        return this._alternateBaselines.get(classId)?.get(index) || null;
     }
 
     /**
@@ -352,6 +368,7 @@ class Demo {
      * @public
      */
     reset() {
+        this._alternateBaselines.clear();
         this._classBaselines.clear();
         this._classes.byId.clear();
         this._classes.byName.clear();
@@ -390,6 +407,14 @@ class Demo {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 entries.forEach((entry) => {
+                    const alternate = ALTERNATE_BASELINE_KEY.exec(entry.key);
+
+                    if (alternate !== null) {
+                        this._registerAlternateBaseline(Number(alternate[1]), Number(alternate[2]), entry.value);
+
+                        return;
+                    }
+
                     const classId = parseInt(entry.key);
 
                     if (Number.isNaN(classId)) {
@@ -415,6 +440,7 @@ class Demo {
     _handleTableRemoved(stringTableContainer, stringTable) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
+                this._alternateBaselines.clear();
                 this._classBaselines.clear();
 
                 break;
@@ -423,6 +449,31 @@ class Demo {
                 break;
             }
         }
+    }
+
+    /**
+     * @protected
+     * @param {number} classId
+     * @param {number} index
+     * @param {Uint8Array|null} raw
+     */
+    _registerAlternateBaseline(classId, index, raw) {
+        let baselines = this._alternateBaselines.get(classId) || null;
+
+        if (baselines === null) {
+            baselines = new Map();
+
+            this._alternateBaselines.set(classId, baselines);
+        }
+
+        const incoming = new ClassBaseline(classId, raw);
+        const existing = baselines.get(index) || null;
+
+        if (existing !== null && existing.compare(incoming)) {
+            return;
+        }
+
+        baselines.set(index, incoming);
     }
 
     /**
@@ -461,5 +512,7 @@ class Demo {
 }
 
 const EMPTY_ENTITY_SET = new Set();
+
+const ALTERNATE_BASELINE_KEY = /^(\d+):(\d+)$/;
 
 export default Demo;
