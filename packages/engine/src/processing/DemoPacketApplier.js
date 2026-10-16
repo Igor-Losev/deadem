@@ -145,7 +145,7 @@ class DemoPacketApplier {
                 case MessagePacketType.SVC_PACKET_ENTITIES: {
                     const direct = !this._interceptors.getIsRegistered(InterceptorStage.ENTITY_PACKET);
 
-                    const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket, 0, 0, -1, direct);
+                    const events = this._demoMessageHandler.handleSvcPacketEntities(messagePacket, demoPacket.getIsSnapshot(), direct);
 
                     if (events !== null) {
                         this._interceptors.firePre(InterceptorStage.ENTITY_PACKET, demoPacket, messagePacket, events);

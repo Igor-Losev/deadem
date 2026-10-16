@@ -186,6 +186,14 @@ class Demo {
 
     /**
      * @public
+     * @returns {number}
+     */
+    getEntityCount() {
+        return this._entities.count;
+    }
+
+    /**
+     * @public
      * @param {string} className
      * @returns {Array<Entity>}
      */

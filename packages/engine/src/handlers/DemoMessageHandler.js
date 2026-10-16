@@ -93,14 +93,16 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
-     * @param {number} [startPointer=0]
-     * @param {number} [startLoop=0]
-     * @param {number} [startIndex=-1]
+     * @param {boolean} [snapshot=false] - `true` when the packet belongs to the snapshot.
      * @param {boolean} [direct=false]
      * @returns {Array<EntityMutationEvent>|null}
      */
-    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1, direct = false) {
+    handleSvcPacketEntities(messagePacket, snapshot = false, direct = false) {
         const message = messagePacket.data;
+
+        if (snapshot && this._demo.getEntityCount() > 0) {
+            return null;
+        }
 
         if (message.updateBaseline) {
             throw new Error('Unhandled CSVCMsg_PacketEntities.updateBaseline === true');
@@ -112,18 +114,16 @@ class DemoMessageHandler {
 
         const bitBuffer = new BitBuffer(message.entityData);
 
-        bitBuffer.move(startPointer);
-
         const entityClassFilter = this._entityClassFilter;
-        const payloadSizes = entityClassFilter !== null ? createPayloadIterator(message, startLoop) : null;
+        const payloadSizes = entityClassFilter !== null ? createPayloadIterator(message) : null;
         /** @type {Array<EntityMutationEvent>|null} */
         const events = direct ? null : [ ];
         const extractor = new EntityMutationExtractor(bitBuffer);
         const alternateBaselines = createAlternateBaselineIndex(message);
 
-        let index = startIndex;
+        let index = -1;
 
-        for (let i = startLoop; i < message.updatedEntries; i++) {
+        for (let i = 0; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
 
             const command = bitBuffer.readBitsAsUInt(2);
@@ -327,23 +327,16 @@ class DemoMessageHandler {
  * Builds a payload-size iterator over the packet's `serializedEntities` index.
  *
  * @param {{ serializedEntities?: Uint8Array }} message
- * @param {number} [startLoop=0]
  * @returns {Generator<number, void, *>|null}
  */
-function createPayloadIterator(message, startLoop = 0) {
+function createPayloadIterator(message) {
     const buffer = message.serializedEntities;
 
     if (!buffer || buffer.length === 0) {
         return null;
     }
 
-    const iterator = new EntityPayloadSizeExtractor(buffer).retrieve();
-
-    for (let i = 0; i < startLoop; i++) {
-        iterator.next();
-    }
-
-    return iterator;
+    return new EntityPayloadSizeExtractor(buffer).retrieve();
 }
 
 /**
