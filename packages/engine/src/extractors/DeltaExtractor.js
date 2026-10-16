@@ -159,7 +159,14 @@ class DeltaExtractor {
             throw new Error(`Repeated field size [ ${declared} ] is too small for index [ ${highest} ]`);
         }
 
-        const count = declared === null ? highest + 1 : declared;
+        let count;
+
+        if (declared === null) {
+            count = Math.max(previous?.length ?? 0, highest + 1);
+        } else {
+            count = declared;
+        }
+
         const elements = new Array(count);
 
         for (let i = 0; i < count; i++) {

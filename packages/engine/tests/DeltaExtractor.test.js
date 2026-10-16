@@ -95,6 +95,15 @@ describe('DeltaExtractor', () => {
         expect(state.entries[1].tag).toBe(0);
     });
 
+    test('It should keep trailing repeated elements when the wire declares no length', () => {
+        const decoder = createStateDecoder();
+        const state = { entries: [ { value: 100 }, { value: 200 }, { value: 300 }, { value: 400 } ] };
+
+        new DeltaExtractor(new Uint8Array([ 0x42, 0x08, 0x02, 0x02, 0x08, 0x0a, 0x0a, 0x02, 0x08, 0x14 ]), decoder).merge(state);
+
+        expect(state.entries).toEqual([ { value: 10 }, { value: 20 }, { value: 300 }, { value: 400 } ]);
+    });
+
     test('It should extract only the fields that the delta carries', () => {
         const decoder = createStateDecoder();
 
