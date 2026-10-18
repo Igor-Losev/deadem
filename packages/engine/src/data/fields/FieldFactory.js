@@ -1,4 +1,3 @@
-/** @import Field from './Field.js' */
 /** @import Serializer from './Serializer.js' */
 
 /** @import FieldDecoderInstructions from './decoding/FieldDecoderInstructions.js' */
@@ -7,6 +6,7 @@ import Assert from '../../core/Assert.js';
 
 import FieldModel from '../enums/FieldModel.js';
 
+import Field from './Field.js';
 import FieldDefinition from './FieldDefinition.js';
 
 import FieldDecoder from './decoding/FieldDecoder.js';
@@ -42,16 +42,18 @@ class FieldFactory {
 
     /**
      * @public
-     * @param {string} name
-     * @param {FieldDefinition} definition
      * @param {Array<string>} sendNode
+     * @param {string} varName
+     * @param {FieldDefinition} definition
      * @param {{encoder: string|null, encoderFlags: number|null, bitCount: number|null, valueLow: number|null, valueHigh: number|null}} instructionsRaw
      * @param {Serializer|null} serializer
      * @returns {Field}
      */
-    create(name, definition, sendNode, instructionsRaw, serializer) {
+    create(sendNode, varName, definition, instructionsRaw, serializer) {
         Assert.isTrue(definition instanceof FieldDefinition);
         Assert.isTrue(instructionsRaw !== null && typeof instructionsRaw === 'object' && !Array.isArray(instructionsRaw));
+
+        const name = Field.joinName([ ...sendNode, varName ]);
 
         const encoderOverride = this._fieldRuleRegistry.getFieldEncoderOverride(name);
         const encoder = encoderOverride !== null ? encoderOverride : instructionsRaw.encoder;
@@ -68,17 +70,17 @@ class FieldFactory {
 
         switch (model) {
             case FieldModel.SCALAR:
-                return new FieldScalar(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
+                return new FieldScalar(sendNode, varName, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
-                return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
+                return new FieldArrayFixed(sendNode, varName, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
-                return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
+                return new FieldArrayVariable(sendNode, varName, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
+                return new FieldTableFixed(sendNode, varName, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
+                return new FieldTableVariable(sendNode, varName, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }

@@ -19,7 +19,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         return {
             name: entity.getField('m_iszPlayerName'),
             team: entity.getField('m_iTeamNum'),
-            heroDamage: entity.getField('m_iHeroDamage') || 0
+            heroDamage: entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0
         };
     });
 

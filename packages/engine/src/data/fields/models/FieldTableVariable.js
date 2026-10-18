@@ -16,14 +16,14 @@ class FieldTableVariable extends Field {
     /**
      * @public
      * @constructor
-     * @param {string} name
      * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {Serializer} serializer
      * @param {FieldDecoder} fieldDecoderBase
      */
-    constructor(name, sendNode, definition, serializer, fieldDecoderBase) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, serializer, fieldDecoderBase) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(serializer instanceof Serializer);
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
@@ -103,7 +103,7 @@ class FieldTableVariable extends Field {
             const base = Serializer.formatElementIndex(this._name, fieldPath.get(index));
 
             if (fieldPath.length - 1 !== index) {
-                return `${base}.${this._serializer.getNameForFieldPath(fieldPath, index + 1)}`;
+                return Field.joinName([ base, this._serializer.getNameForFieldPath(fieldPath, index + 1) ]);
             }
 
             return base;

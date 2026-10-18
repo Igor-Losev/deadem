@@ -16,14 +16,14 @@ class FieldTableFixed extends Field {
     /**
      * @public
      * @constructor
-     * @param {string} name
      * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {Serializer} serializer
      * @param {FieldDecoder} fieldDecoderBase
      */
-    constructor(name, sendNode, definition, serializer, fieldDecoderBase) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, serializer, fieldDecoderBase) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(serializer instanceof Serializer);
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
@@ -100,7 +100,7 @@ class FieldTableFixed extends Field {
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 >= index) {
-            return `${this._name}.${this._serializer.getNameForFieldPath(fieldPath, index)}`;
+            return Field.joinName([ this._name, this._serializer.getNameForFieldPath(fieldPath, index) ]);
         }
 
         return this._name;

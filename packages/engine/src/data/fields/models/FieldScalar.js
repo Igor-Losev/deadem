@@ -14,13 +14,13 @@ class FieldScalar extends Field {
     /**
      * @public
      * @constructor
-     * @param {string} name
      * @param {Array<string>} sendNode
-     * @param {FieldDefinition} definition:packages/engine/src/data/fields/models/FieldSimple.js
+     * @param {string} varName
+     * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, definition, fieldDecoder) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoder) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 

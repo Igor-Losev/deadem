@@ -23,7 +23,7 @@ const FIELD_NAMES = [ 'm_flHealth', 'm_iScore', 'm_nCount', 'm_bFlag', 'CBodyCom
 function createClass() {
     const decoder = (storage) => new FieldDecoder(() => {}, storage);
     const definition = FieldDefinition.parse('uint32');
-    const scalar = (name, storage) => new FieldScalar(name, [ '0' ], definition, decoder(storage));
+    const scalar = (name, storage) => new FieldScalar([ ], name, definition, decoder(storage));
 
     const body = new Serializer('CBody', 1, [ scalar('m_vecOrigin', FieldStorageDescriptor.createVector(3)) ]);
 
@@ -32,7 +32,7 @@ function createClass() {
         scalar('m_iScore', FieldStorageDescriptor.INT_SIGNED),
         scalar('m_nCount', FieldStorageDescriptor.INT_UNSIGNED),
         scalar('m_bFlag', FieldStorageDescriptor.INT_BOOL),
-        new FieldTableFixed('CBodyComponent', [ '0' ], definition, body, decoder(FieldStorageDescriptor.INT_BOOL)),
+        new FieldTableFixed([ ], 'CBodyComponent', definition, body, decoder(FieldStorageDescriptor.INT_BOOL)),
         scalar('m_szName', FieldStorageDescriptor.MISC)
     ]);
 
@@ -164,11 +164,11 @@ describe('Entity.getField', () => {
     const decoder = () => new FieldDecoder(() => {}, FieldStorageDescriptor.INT_UNSIGNED);
 
     const sub = (fields) => new Serializer('Sub', 1, fields);
-    const scalar = (name) => new FieldScalar(name, [ '0' ], definition, decoder());
-    const array = (name) => new FieldArrayVariable(name, [ '0' ], definition, decoder(), decoder());
-    const fixed = (name, size) => new FieldArrayFixed(name, [ '0' ], new FieldDefinition('uint32', null, size, false), decoder());
-    const table = (name, serializer) => new FieldTableVariable(name, [ '0' ], definition, serializer, decoder());
-    const tableFixed = (name, serializer) => new FieldTableFixed(name, [ '0' ], definition, serializer, decoder());
+    const scalar = (name) => new FieldScalar([ ], name, definition, decoder());
+    const array = (name) => new FieldArrayVariable([ ], name, definition, decoder(), decoder());
+    const fixed = (name, size) => new FieldArrayFixed([ ], name, new FieldDefinition('uint32', null, size, false), decoder());
+    const table = (name, serializer) => new FieldTableVariable([ ], name, definition, serializer, decoder());
+    const tableFixed = (name, serializer) => new FieldTableFixed([ ], name, definition, serializer, decoder());
 
     function buildClass() {
         const stateSerializer = sub([ scalar('m_id'), scalar('m_bits') ]);

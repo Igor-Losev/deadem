@@ -86,7 +86,7 @@ class Serializer {
      * @returns {string}
      */
     static formatElementIndex(fieldName, index) {
-        return `${fieldName}.${String(index).padStart(ELEMENT_INDEX_LENGTH, '0')}`;
+        return Field.joinName([ fieldName, String(index).padStart(ELEMENT_INDEX_LENGTH, '0') ]);
     }
 
     /**
@@ -185,70 +185,61 @@ class Serializer {
 
     /**
      * Resolves a flattened name to a {@link FieldAccessor}. Walks the schema
-     * segment by segment, independently of entity state. Returns `null` when
-     * the name does not resolve.
+     * segment by segment. Returns `null` when the name does not resolve.
      *
-     *     'm_flHealth'                 // scalar
-     *     'm_vecAbilities'             // full array
-     *     'm_vecAbilities.0000'        // array element
-     *     'CBodyComponent.m_vecX'      // drill into fixed table
-     *     'm_vecState.0000.m_bits'     // drill into struct element
+     *     'm_flHealth'                                            // scalar
+     *     'm_vecAbilities'                                        // full array
+     *     'm_vecAbilities.0000'                                   // array element
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX'  // drill into fixed table
+     *     'm_vecState.0000.m_bits'                                // drill into struct element
      *
      * @public
      * @param {string} name
      * @returns {FieldAccessor|null}
      */
     getFieldAccessorForName(name) {
-        const segments = name.split('.');
-
         const path = [ ];
 
         /** @type {Serializer} */
         let serializer = this;
-        let field = null;
-        let i = 0;
+        let segments = Field.splitName(name);
 
-        while (i < segments.length) {
-            const index = serializer.getFieldIndexForName(segments[i]);
+        while (segments.length > 0) {
+            const index = serializer.getFieldIndexForSegments(segments);
 
             if (index === null) {
                 return null;
             }
 
-            field = serializer.fields[index];
+            const field = serializer.fields[index];
 
             path.push(index);
-            i++;
 
-            if (i === segments.length) {
+            segments = segments.slice(field.segments.length);
+
+            if (segments.length === 0) {
                 return new FieldAccessor(field, FieldPathBuilder.build(path));
             }
 
             switch (field.model) {
                 case FieldModel.ARRAY_VARIABLE:
                 case FieldModel.ARRAY_FIXED: {
-                    if (!Serializer.getIsElementIndex(segments[i])) {
+                    if (segments.length !== 1 || !Serializer.getIsElementIndex(segments[0])) {
                         return null;
                     }
 
-                    const elementIndex = parseInt(segments[i], 10);
-                    i++;
-
-                    if (segments.length !== i) {
-                        return null;
-                    }
-
-                    return new FieldAccessor(field, FieldPathBuilder.build(path), elementIndex);
+                    return new FieldAccessor(field, FieldPathBuilder.build(path), parseInt(segments[0], 10));
                 }
                 case FieldModel.TABLE_VARIABLE: {
-                    if (!Serializer.getIsElementIndex(segments[i])) {
+                    if (!Serializer.getIsElementIndex(segments[0])) {
                         return null;
                     }
 
-                    const elementIndex = parseInt(segments[i], 10);
-                    i++;
+                    const elementIndex = parseInt(segments[0], 10);
 
-                    if (i === segments.length) {
+                    segments = segments.slice(1);
+
+                    if (segments.length === 0) {
                         return new FieldAccessor(field, FieldPathBuilder.build(path), elementIndex);
                     }
 
@@ -272,25 +263,21 @@ class Serializer {
     }
 
     /**
-     * Resolves a field's index in this serializer by its name.
+     * Returns the index of the field that `segments` start with.
+     * Returns `null` otherwise.
      *
      * @public
-     * @param {string} name
+     * @param {Array<string>} segments
      * @returns {number|null}
      */
-    getFieldIndexForName(name) {
-        const i = this._fields.findIndex(f => f.name === name);
-
-        // IL 2026-06-25: a leaf name can repeat in one serializer when the same
-        // field is reached through different send nodes. To avoid silently
-        // returning data from the wrong duplicate, ambiguous names resolve to
-        // null. This is a safety measure — a proper disambiguation (e.g.
-        // sendNode-prefixed names) should be revisited in the future.
-        if (i === -1 || this._fields.findIndex((f, j) => j > i && f.name === name) !== -1) {
-            return null;
+    getFieldIndexForSegments(segments) {
+        for (let i = 0; i < this._fields.length; i++) {
+            if (this._fields[i].getIsPrefixOf(segments)) {
+                return i;
+            }
         }
 
-        return i;
+        return null;
     }
 
     /**
@@ -468,7 +455,15 @@ class Serializer {
                     out = { };
                 }
 
-                out[this._fields[i].name] = value;
+                const field = this._fields[i];
+
+                let target = out;
+
+                for (let j = 0; j < field.sendNode.length; j++) {
+                    target = target[field.sendNode[j]] ??= { };
+                }
+
+                target[field.varName] = value;
             }
         }
 

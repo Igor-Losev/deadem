@@ -6,6 +6,7 @@ import BitBuffer from '../core/BitBuffer.js';
 import Class from '../data/Class.js';
 import Demo from '../data/Demo.js';
 
+import Field from '../data/fields/Field.js';
 import FieldDefinition from '../data/fields/FieldDefinition.js';
 import FieldFactory from '../data/fields/FieldFactory.js';
 import Serializer from '../data/fields/Serializer.js';
@@ -115,7 +116,7 @@ class DemoPacketHandler {
                     const varTypeSym = fieldRaw.varTypeSym;
                     const sendNodeSym = fieldRaw.sendNodeSym;
 
-                    const fieldName = symbols[varNameSym];
+                    const varName = symbols[varNameSym];
                     const definition = FieldDefinition.parse(symbols[varTypeSym]);
 
                     const instructionsRaw = {
@@ -126,11 +127,11 @@ class DemoPacketHandler {
                         valueHigh: Object.hasOwn(fieldRaw, 'highValue') ? fieldRaw.highValue : null
                     };
 
-                    const sendNode = symbols[sendNodeSym].split('.').filter((/** @type {string} */ s) => s.length > 0);
+                    const sendNode = parseSendNode(symbols[sendNodeSym]);
 
                     // TODO: polymorphic types
 
-                    field = this._fieldFactory.create(fieldName, definition, sendNode, instructionsRaw, fieldSerializer);
+                    field = this._fieldFactory.create(sendNode, varName, definition, instructionsRaw, fieldSerializer);
                 }
 
                 serializer.push(field);
@@ -172,6 +173,16 @@ class DemoPacketHandler {
     handleDemStringTables(demoPacket) {
         this._stringTableHandler.handleInstantiate(demoPacket.data);
     }
+}
+
+const IGNORED_SEND_NODE_SEGMENTS = new Set([ '(root)' ]); // '(root)' comes from older dota2 demos.
+
+/**
+ * @param {string} symbol
+ * @returns {Array<string>}
+ */
+function parseSendNode(symbol) {
+    return Field.splitName(symbol).filter(segment => segment.length > 0 && !IGNORED_SEND_NODE_SEGMENTS.has(segment));
 }
 
 export default DemoPacketHandler;

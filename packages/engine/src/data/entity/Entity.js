@@ -159,10 +159,10 @@ class Entity {
      * `undefined` when the name does not resolve.
      *
      *     'm_flHealth'
-     *     'm_vecAbilities'           // full array
-     *     'm_vecAbilities.0000'      // single element
-     *     'CBodyComponent.m_vecX'    // drill into fixed table
-     *     'm_vecState.0000.m_bits'   // drill into struct element
+     *     'm_vecAbilities'                                        // full array
+     *     'm_vecAbilities.0000'                                   // single element
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX'  // drill into fixed table
+     *     'm_vecState.0000.m_bits'                                // drill into struct element
      *
      * Arrays are not guaranteed to be contiguous — indices with no data
      * appear as `undefined` in the reconstructed array. For example,
@@ -173,13 +173,13 @@ class Entity {
      * remaining cost depends on how many elements are read. Rough numbers
      * from a 556 MB Deadlock replay:
      *
-     *     'm_iHealth'                 | scalar .......... ~0.08 µs
-     *     'm_iszPlayerName'           | string .......... ~0.07 µs
-     *     'CBodyComponent.m_vecX'     | nested .......... ~0.09 µs
-     *     'm_vecAbilities.0000'       | indexed ......... ~0.11 µs
-     *     'm_vecAbilities'            | 16 × scalar ..... ~0.96 µs
-     *     'm_vecFOWEntities.0000'     | 8  × scalar ..... ~0.71 µs
-     *     'm_vecFOWEntities'          | 121 × 8 fields .. ~88   µs
+     *     'm_iHealth'                                            | scalar .......... ~0.08 µs
+     *     'm_iszPlayerName'                                      | string .......... ~0.07 µs
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX' | nested .......... ~0.09 µs
+     *     'm_vecAbilities.0000'                                  | indexed ......... ~0.11 µs
+     *     'm_vecAbilities'                                       | 16 × scalar ..... ~0.96 µs
+     *     'm_vecFOWEntities.0000'                                | 8  × scalar ..... ~0.71 µs
+     *     'm_vecFOWEntities'                                     | 121 × 8 fields .. ~88   µs
      *
      * A full array read unpacks every element — N leaf reads. For a large
      * nested structure like `'m_vecFOWEntities'` (121 elements × 8 fields),

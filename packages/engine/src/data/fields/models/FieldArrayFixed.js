@@ -16,13 +16,13 @@ class FieldArrayFixed extends Field {
     /**
      * @public
      * @constructor
-     * @param {string} name
      * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, definition, fieldDecoder) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoder) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 

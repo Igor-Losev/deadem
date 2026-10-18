@@ -16,14 +16,14 @@ class FieldArrayVariable extends Field {
     /**
      * @public
      * @constructor
-     * @param {string} name
      * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoderBase
      * @param {FieldDecoder} fieldDecoderChild
      */
-    constructor(name, sendNode, definition, fieldDecoderBase, fieldDecoderChild) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoderBase, fieldDecoderChild) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
         Assert.isTrue(fieldDecoderChild instanceof FieldDecoder);

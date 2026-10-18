@@ -16,7 +16,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
 
     const topDamageDealer = entities.reduce((accumulator, entity) => {
-        const damage = entity.getField('m_iHeroDamage') || 0;
+        const damage = entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0;
 
         if (damage > accumulator.damage) {
             accumulator.player = entity.getField('m_iszPlayerName');
