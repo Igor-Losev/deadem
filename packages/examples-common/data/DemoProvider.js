@@ -14,6 +14,7 @@ const DEFAULT_HIGH_WATER_MARK = 256 * 1024;
 const DEMO_ARGUMENT_PREFIX = '--demo=';
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../../demos');
 const CDN_BASE_URL = 'https://deadem.com';
+const USER_AGENT = 'deadem-examples';
 
 class DemoProvider {
     /**
@@ -60,7 +61,7 @@ class DemoProvider {
         const url = `${CDN_BASE_URL}/demos/${demoFile.game.code}/${demoFile.getFileName()}`;
 
         return new Promise((resolve, reject) => {
-            https.get(url, (response) => {
+            https.get(url, { headers: { 'User-Agent': USER_AGENT } }, (response) => {
                 if (response.statusCode !== 200) {
                     response.resume();
 

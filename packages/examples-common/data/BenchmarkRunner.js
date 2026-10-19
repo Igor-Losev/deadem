@@ -38,13 +38,13 @@ async function runParent({ cases, repeats }) {
 
         rows.push({ id: c.id, label: c.label, ...r });
 
-        logger.info(`  ticks/sec=${fmt(r.ticksPerSecond)}, MB/sec=${fmt(r.megabytesPerSecond, 1)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
+        logger.info(`  ticks/sec=${fmt(r.ticksPerSecond)}, MB/sec=${fmt(r.megabytesPerSecond)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
     }
 
     console.log('\nMarkdown rows:');
 
     for (const r of rows) {
-        console.log(`| ${r.id} | ${r.label} | ${fmt(r.ticksPerSecond)} | ${fmt(r.megabytesPerSecond, 1)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
+        console.log(`| ${r.id} | ${r.label} | ${fmt(r.ticksPerSecond)} | ${fmt(r.megabytesPerSecond)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
     }
 }
 
