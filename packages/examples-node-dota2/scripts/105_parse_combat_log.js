@@ -13,13 +13,13 @@ function getTypeLabel(type) {
 }
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_8783006717);
+    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_9036234584);
     const parser = new Parser(new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.DOTA_UM_COMBAT_LOG_DATA_HLTV ] }));
 
     let counter = 0;
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.DOTA_UM_COMBAT_LOG_DATA_HLTV) {
+        if (!messagePacket.is(MessagePacketType.DOTA_UM_COMBAT_LOG_DATA_HLTV)) {
             return;
         }
 

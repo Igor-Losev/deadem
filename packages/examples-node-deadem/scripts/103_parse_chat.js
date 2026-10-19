@@ -5,10 +5,10 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const parser = new Parser(new ParserConfiguration({
-        messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE, MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL ]
+        messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE ]
     }));
 
     const players = new Map();
@@ -25,21 +25,12 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
         }
     });
 
-    const getUserName = slot => players.get(slot);
-
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        const isChatMessage = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE;
-        const isChatWheel = messagePacket.type === MessagePacketType.CITADEL_USER_MESSAGE_CHAT_WHEEL;
-
-        if (!isChatMessage && !isChatWheel) {
+        if (!messagePacket.is(MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE)) {
             return;
         }
 
-        if (isChatMessage) {
-            console.log(`CHAT_MESSAGE: ${getUserName(messagePacket.data.playerSlot)} - ${messagePacket.data.text}`);
-        } else {
-            console.log(`CHAT_WHEEL: ${getUserName(messagePacket.data.accountId)} - ${messagePacket.data.chatMessageId} ${messagePacket.data.param1}`);
-        }
+        console.log(`${players.get(messagePacket.data.playerSlot)}: ${messagePacket.data.text}`);
     });
 
     await parser.parse(reader);

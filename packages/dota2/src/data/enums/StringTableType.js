@@ -25,6 +25,8 @@ class StringTableType extends EngineStringTableType {
     static get PARTICLE_ASSETS() { return particleAssets; }
     /** @returns {EngineStringTableType<'DOWNLOADABLES', StringTableRawValue>} */
     static get DOWNLOADABLES() { return downloadables; }
+    /** @returns {EngineStringTableType<'UNIT_NAMES', StringTableRawValue>} */
+    static get UNIT_NAMES() { return unitNames; }
 }
 
 const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers', 'CDOTAModifierBuffTableEntry', true);
@@ -35,5 +37,6 @@ const combatLogNames = new StringTableType('COMBAT_LOG_NAMES', 'CombatLogNames')
 const luaModifiers = new StringTableType('LUA_MODIFIERS', 'LuaModifiers');
 const particleAssets = new StringTableType('PARTICLE_ASSETS', 'ParticleAssets');
 const downloadables = new StringTableType('DOWNLOADABLES', 'downloadables');
+const unitNames = new StringTableType('UNIT_NAMES', 'UnitNames');
 
 export default StringTableType;

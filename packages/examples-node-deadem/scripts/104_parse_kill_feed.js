@@ -1,3 +1,5 @@
+/** @import { Demo, Entity } from 'deadem' */
+
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -6,7 +8,7 @@ import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObse
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED, MessagePacketType.SVC_PACKET_ENTITIES ],
@@ -17,7 +19,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const gameObserver = new DeadlockGameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED) {
+        if (!messagePacket.is(MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED)) {
             return;
         }
 
@@ -99,7 +101,7 @@ function getEntity(demo, entityIndex) {
  * @returns {Entity|null}
  */
 function getEntityOwner(demo, entity) {
-    const ownerEntityHandle = entity.getField('m_hOwnerEntity');
+    const ownerEntityHandle = /** @type {number} */ (entity.getField('m_hOwnerEntity'));
     const ownerEntity = demo.getEntityByHandle(ownerEntityHandle);
 
     if (ownerEntity === null) {

@@ -1,3 +1,6 @@
+/** @import { Logger as LoggerType, Parser, ParserConfiguration } from '@deademx/engine' */
+/** @import DemoFile from './DemoFile.js' */
+
 import { fork } from 'node:child_process';
 
 import { Logger } from '@deademx/engine';
@@ -11,7 +14,7 @@ const CASE_ID = '--bench-case-id=';
 /**
  * @public
  * @param {object} options
- * @param {Function} options.Parser
+ * @param {ParserClass} options.Parser
  * @param {DemoFile} options.demoFile
  * @param {number} options.tickRate
  * @param {Array<{id: number, label: string, configuration: ParserConfiguration}>} options.cases
@@ -68,7 +71,7 @@ function runIsolatedCase(scriptPath, caseId) {
 
         let payload = null;
 
-        child.on('message', m => { if (m?.type === 'result') payload = m.payload; });
+        child.on('message', (/** @type {{ type: string, payload: object }} */ m) => { if (m?.type === 'result') payload = m.payload; });
         child.on('error', reject);
         child.on('exit', (code, signal) => {
             if (signal !== null) reject(new Error(`Case [ ${caseId} ] killed by ${signal}`));
@@ -138,5 +141,9 @@ function fmt(stats, decimals = 0) {
 
     return `${v} +- ${std.toFixed(2)}%`;
 }
+
+/**
+ * @typedef {new (configuration?: ParserConfiguration, logger?: LoggerType) => Parser} ParserClass
+ */
 
 export default runBenchmarks;

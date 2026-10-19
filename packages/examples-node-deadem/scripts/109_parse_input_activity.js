@@ -1,3 +1,6 @@
+/** @import { Demo, Entity } from 'deadem' */
+/** @import { CCitadelUserCmdPB } from 'deadem/proto' */
+
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -7,7 +10,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 const CONTROLLER_FIELDS = [ 'm_hController', 'm_hDefaultController' ];
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_100576005);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS, MessagePacketType.SVC_PACKET_ENTITIES ],
@@ -23,7 +26,7 @@ const CONTROLLER_FIELDS = [ 'm_hController', 'm_hDefaultController' ];
         const demo = parser.getDemo();
 
         for (const event of events) {
-            const state = event.userCommand.state;
+            const state = /** @type {CCitadelUserCmdPB} */ (event.userCommand.state);
             const base = state.base;
 
             if (base?.viewangles === undefined || state.vecCameraPosition === undefined) {
@@ -141,7 +144,7 @@ function resolveName(demo, entity) {
     for (const field of CONTROLLER_FIELDS) {
         const handle = entity.getField(field);
 
-        if (!Number.isInteger(handle)) {
+        if (typeof handle !== 'number') {
             continue;
         }
 

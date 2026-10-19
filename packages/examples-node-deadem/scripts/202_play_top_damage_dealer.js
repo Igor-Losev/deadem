@@ -5,7 +5,7 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const player = new Player();
 
@@ -16,15 +16,15 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
 
     const topDamageDealer = entities.reduce((accumulator, entity) => {
-        const damage = entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0;
+        const damage = /** @type {number} */ (entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0);
 
         if (damage > accumulator.damage) {
-            accumulator.player = entity.getField('m_iszPlayerName');
+            accumulator.player = /** @type {string} */ (entity.getField('m_iszPlayerName'));
             accumulator.damage = damage;
         }
 
         return accumulator;
-    }, { damage: 0, player: null });
+    }, { damage: 0, player: /** @type {string|null} */ (null) });
 
     await player.dispose();
 

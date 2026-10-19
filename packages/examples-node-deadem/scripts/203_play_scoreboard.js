@@ -4,8 +4,10 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
+const TEAM_SPECTATOR = 1;
+
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const player = new Player();
 
@@ -15,13 +17,15 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const demo = player.getDemo();
     const entities = demo.getEntitiesByClassName('CCitadelPlayerController');
 
-    const scoreboard = entities.map((entity) => {
-        return {
-            name: entity.getField('m_iszPlayerName'),
-            team: entity.getField('m_iTeamNum'),
-            heroDamage: entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0
-        };
-    });
+    const scoreboard = entities
+        .filter(entity => entity.getField('m_iTeamNum') !== TEAM_SPECTATOR)
+        .map((entity) => {
+            return {
+                name: /** @type {string} */ (entity.getField('m_iszPlayerName')),
+                team: /** @type {number} */ (entity.getField('m_iTeamNum')),
+                heroDamage: /** @type {number} */ (entity.getField('m_PlayerDataGlobal.m_iHeroDamage') || 0)
+            };
+        });
 
     scoreboard.sort((a, b) => a.team - b.team || b.heroDamage - a.heroDamage);
 

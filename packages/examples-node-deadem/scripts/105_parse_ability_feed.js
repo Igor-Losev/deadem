@@ -1,3 +1,5 @@
+/** @import { Demo } from 'deadem' */
+
 import { InterceptorStage, Logger, MessagePacketType, Parser, ParserConfiguration, Printer } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -5,7 +7,7 @@ import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObse
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [
             MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED,
@@ -18,7 +20,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     const gameObserver = new DeadlockGameObserver(parser, Infinity);
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED) {
+        if (!messagePacket.is(MessagePacketType.CITADEL_USER_MESSAGE_IMPORTANT_ABILITY_USED)) {
             return;
         }
 

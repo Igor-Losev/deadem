@@ -1,3 +1,5 @@
+/** @import { Entity } from '@deademx/dota2' */
+
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from '@deademx/dota2';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -7,7 +9,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 const UINT32_SIGN_BIT = 2 ** 31;
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_8960991322);
+    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_9036234584);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.DOTA_UM_SPECTATOR_PLAYER_UNIT_ORDERS, MessagePacketType.SVC_PACKET_ENTITIES ],
@@ -19,7 +21,7 @@ const UINT32_SIGN_BIT = 2 ** 31;
     let orders = 0;
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.DOTA_UM_SPECTATOR_PLAYER_UNIT_ORDERS) {
+        if (!messagePacket.is(MessagePacketType.DOTA_UM_SPECTATOR_PLAYER_UNIT_ORDERS)) {
             return;
         }
 

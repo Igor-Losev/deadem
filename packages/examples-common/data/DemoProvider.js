@@ -1,3 +1,6 @@
+/** @import { Readable } from 'node:stream' */
+/** @import DemoFile from './DemoFile.js' */
+
 import https from 'node:https';
 import nodePath from 'node:path';
 
@@ -17,7 +20,7 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async read(demoFile) {
         const path = getLocalPath(demoFile);
@@ -39,7 +42,7 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async readFile(demoFile) {
         const path = getLocalPath(demoFile);
@@ -51,7 +54,7 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async readCdn(demoFile) {
         const url = `${CDN_BASE_URL}/demos/${demoFile.game.code}/${demoFile.getFileName()}`;
@@ -76,7 +79,7 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async resolve(demoFile) {
         const argument = process.argv.find(arg => arg.startsWith(DEMO_ARGUMENT_PREFIX));

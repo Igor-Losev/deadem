@@ -1,3 +1,5 @@
+/** @import { Readable } from 'node:stream' */
+
 import { BroadcastAgent, BroadcastGateway, Logger } from 'deadem';
 
 import FileSystem from '@deademx/examples-common/data/FileSystem.js';
@@ -9,7 +11,7 @@ import FileSystem from '@deademx/examples-common/data/FileSystem.js';
     const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
     const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);
 
-    const readable = broadcastAgent.stream(FROM_BEGINNING);
+    const readable = /** @type {Readable} */ (broadcastAgent.stream(FROM_BEGINNING));
     const writable = FileSystem.createWriteStream(`./${MATCH_ID}.bin`);
 
     readable.pipe(writable);

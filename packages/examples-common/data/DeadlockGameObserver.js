@@ -1,3 +1,5 @@
+/** @import { DemoPacket, Parser, Player } from '@deademx/engine' */
+
 import { InterceptorStage, MessagePacketType } from '@deademx/engine';
 
 import DeadlockGameState from './DeadlockGameState.js';
@@ -79,7 +81,6 @@ class DeadlockGameObserver {
     /**
      * @protected
      */
-    /**  */
     _forceUpdate() {
         if (this._last === null) {
             return;
@@ -102,11 +103,11 @@ class DeadlockGameObserver {
 
         const gameRules = demo.getEntity(this._gameRulesEntityIndex);
 
-        const gamePaused = gameRules.getField('m_pGameRules.m_bGamePaused') || false;
-        const gameState = DeadlockGameState.parse(gameRules.getField('m_pGameRules.m_eGameState'));
+        const gamePaused = /** @type {boolean} */ (gameRules.getField('m_pGameRules.m_bGamePaused') || false);
+        const gameState = DeadlockGameState.parse(/** @type {number} */ (gameRules.getField('m_pGameRules.m_eGameState')));
 
-        const clockLastUpdatedAt = gameRules.getField('m_pGameRules.m_flMatchClockAtLastUpdate');
-        const clockLastUpdatedTick = gameRules.getField('m_pGameRules.m_nMatchClockUpdateTick');
+        const clockLastUpdatedAt = /** @type {number} */ (gameRules.getField('m_pGameRules.m_flMatchClockAtLastUpdate'));
+        const clockLastUpdatedTick = /** @type {number} */ (gameRules.getField('m_pGameRules.m_nMatchClockUpdateTick'));
 
         const tickInterval = demo.server.tickInterval;
 

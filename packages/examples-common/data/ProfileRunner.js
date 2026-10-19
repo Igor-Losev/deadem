@@ -1,3 +1,6 @@
+/** @import { Parser, ParserConfiguration as ParserConfigurationType } from '@deademx/engine' */
+/** @import DemoFile from './DemoFile.js' */
+
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import inspector from 'node:inspector';
@@ -35,7 +38,7 @@ const PARSER_CONFIGURATION = ParserConfiguration.DEFAULT;
  *
  * @public
  * @param {object} options
- * @param {Function} options.Parser
+ * @param {ParserClass} options.Parser
  * @param {DemoFile} options.demoFile
  * @returns {Promise<void>}
  */
@@ -52,7 +55,7 @@ async function runProfile({ Parser, demoFile }) {
 }
 
 /**
- * @param {{Parser: Function, demoFile: DemoFile}} options
+ * @param {{Parser: ParserClass, demoFile: DemoFile}} options
  */
 async function runChildGc({ Parser, demoFile }) {
     if (global.gc) {
@@ -98,7 +101,7 @@ async function runChildGc({ Parser, demoFile }) {
 }
 
 /**
- * @param {{Parser: Function, demoFile: DemoFile}} options
+ * @param {{Parser: ParserClass, demoFile: DemoFile}} options
  */
 async function runChildAlloc({ Parser, demoFile }) {
     if (global.gc) {
@@ -327,8 +330,8 @@ function summarizeGcLog(log) {
 
         const type = getGcType(match[1]);
         const pauseMs = readGcNumber(line, 'pause');
-        const allocated = readGcNumber(line, 'allocated');
-        const promoted = readGcNumber(line, 'promoted');
+        const allocated = readGcBytes(line, 'allocated');
+        const promoted = readGcBytes(line, 'promoted');
         const before = readGcNumber(line, 'total_size_before');
         const after = readGcNumber(line, 'total_size_after');
         const stat = stats.get(type) || {
@@ -387,6 +390,17 @@ function readGcNumber(line, key) {
     const match = line.match(new RegExp(`\\b${key}=([0-9.]+)`));
 
     return match ? Number(match[1]) : 0;
+}
+
+/**
+ * @param {string} line
+ * @param {string} key
+ * @returns {number}
+ */
+function readGcBytes(line, key) {
+    const value = readGcNumber(line, key);
+
+    return value > Number.MAX_SAFE_INTEGER ? 0 : value;
 }
 
 /**
@@ -694,6 +708,7 @@ function divide(numerator, denominator) {
  * @typedef {{ fn: string, url: string, line: number, col: number }} frame
  * @typedef {{ bytes: number, frame: frame, owner: frame|null }} allocationRow
  * @typedef {{ bytes: number, nodes: number, row: allocationRow }} allocationEntry
+ * @typedef {new (configuration?: ParserConfigurationType) => Parser} ParserClass
  */
 
 export default runProfile;

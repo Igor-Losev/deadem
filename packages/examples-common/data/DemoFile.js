@@ -87,7 +87,7 @@ class DemoFile {
     /**
      * @public
      * @static
-     * @param {number} id
+     * @param {number|string} id
      * @param {Game} game
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {DemoFile|null}

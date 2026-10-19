@@ -1,14 +1,13 @@
 import { Logger, ParserConfiguration, PlaybackInterruptedError, Player } from 'deadem';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
-
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
+const PLAYBACK_DURATION_MS = 1000;
 const PLAYBACK_SPEED = 16;
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
-
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
     const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 
     const printTick = () => {
@@ -17,7 +16,7 @@ const PLAYBACK_SPEED = 16;
 
     await player.load(reader);
 
-    console.log(`Loaded. Ticks: [ ${player.getFirstTick()} ] — [ ${player.getLastTick()} ]`);
+    console.log(`Loaded. Ticks: [ ${player.getFirstTick()} ] - [ ${player.getLastTick()} ]`);
 
     printTick();
 
@@ -26,11 +25,13 @@ const PLAYBACK_SPEED = 16;
 
     printTick();
 
-    await player.seekToTick(50000);
+    const middleTick = Math.floor((player.getFirstTick() + player.getLastTick()) / 2);
+
+    await player.seekToTick(middleTick);
 
     printTick();
 
-    console.log(`Playing at speed [ ${PLAYBACK_SPEED}x ] ...`);
+    console.log(`Playing at speed [ ${PLAYBACK_SPEED}x ] for [ ${PLAYBACK_DURATION_MS} ] ms ...`);
 
     const playPromise = player.play(PLAYBACK_SPEED)
         .catch((err) => {
@@ -43,7 +44,7 @@ const PLAYBACK_SPEED = 16;
         console.log('Stopping ...');
 
         player.pause();
-    }, 1000);
+    }, PLAYBACK_DURATION_MS);
 
     await playPromise;
 

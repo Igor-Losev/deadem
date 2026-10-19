@@ -8,7 +8,7 @@ const TOP_CLASSES = 10;
 const TOP_FIELDS_PER_CLASS = 5;
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_75438101);
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ]

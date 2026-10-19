@@ -18,8 +18,8 @@ const STREAM_INACTIVITY_TIMEOUT_MILLISECONDS = 30 * 1000;
 class BroadcastAgent {
     /**
      * @param {BroadcastGateway} gateway
-     * @param {number} match
-     * @param {Logger} [logger=Logger.CONSOLE_INFO]
+     * @param {number|string} match
+     * @param {Logger} [logger=Logger.CONSOLE_DEBUG]
      */
     constructor(gateway, match, logger = Logger.CONSOLE_DEBUG) {
         Assert.isTrue(gateway instanceof BroadcastGateway);

@@ -5,7 +5,7 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
+    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20261006_FALCONS_VS_NATUS_VINCERE_M1_INFERNO);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [
@@ -43,7 +43,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
     });
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type === MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST) {
+        if (messagePacket.is(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT_LIST)) {
             for (const descriptor of messagePacket.data.descriptors) {
                 descriptors.set(descriptor.eventid, descriptor);
             }
@@ -51,7 +51,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
             return;
         }
 
-        if (messagePacket.type !== MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT) {
+        if (!messagePacket.is(MessagePacketType.GE_SOURCE1_LEGACY_GAME_EVENT)) {
             return;
         }
 

@@ -5,14 +5,14 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
+    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20261006_FALCONS_VS_NATUS_VINCERE_M1_INFERNO);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.USER_MESSAGE_SAY_TEXT_2 ]
     }));
 
     parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-        if (messagePacket.type !== MessagePacketType.USER_MESSAGE_SAY_TEXT_2) {
+        if (!messagePacket.is(MessagePacketType.USER_MESSAGE_SAY_TEXT_2)) {
             return;
         }
 

@@ -1,3 +1,7 @@
+/** @import { Readable } from 'node:stream' */
+/** @import { Parser } from '@deademx/engine' */
+/** @import { StatsAccumulatorResult } from './StatsAccumulator.js' */
+
 import { InterceptorStage } from '@deademx/engine';
 
 import StatsAccumulator from './StatsAccumulator.js';
@@ -20,7 +24,7 @@ class Benchmark {
 
     /**
      * @public
-     * @returns {{demo: {parses: StatsAccumulatorResult, ticksPerSecond: StatsAccumulatorResult}, packets: {message: StatsAccumulatorResult, demo: StatsAccumulatorResult}}}
+     * @returns {{demo: {parses: StatsAccumulatorResult, memory: StatsAccumulatorResult, tps: StatsAccumulatorResult}, packets: {demo: StatsAccumulatorResult, message: StatsAccumulatorResult}}}
      */
     getResult() {
         return {
@@ -39,7 +43,7 @@ class Benchmark {
     /**
      * @public
      * @param {Parser} parser
-     * @param {Stream.Readable|ReadableStream} readable
+     * @param {Readable|ReadableStream} readable
      * @returns {Promise<void>}
      */
     async parse(parser, readable) {

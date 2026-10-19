@@ -7,7 +7,7 @@ const PLAYBACK_DURATION_MS = 1000;
 const PLAYBACK_SPEED = 16;
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_8777738576);
+    const reader = await DemoProvider.resolve(DemoFile.DOTA2_REPLAY_9036234584);
     const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 
     const printTick = () => {
