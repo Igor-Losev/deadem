@@ -96,7 +96,7 @@ await parser.parse(createReadStream('./match.dem'));
 const demo = parser.getDemo();
 
 for (const controller of demo.getEntitiesByClassName('CCitadelPlayerController')) {
-    console.log(controller.getField('m_iszPlayerName'), controller.getField('m_iPlayerKills'));
+    console.log(controller.getField('m_iszPlayerName'), controller.getField('m_PlayerDataGlobal.m_iPlayerKills'));
 }
 
 await parser.dispose(); // cleanup state and resources
@@ -138,7 +138,7 @@ Each entity is an instance of [`Entity`](https://github.com/Igor-Losev/deadem/bl
 
 | Method | Returns |
 | --- | --- |
-| `entity.getField(name)` | Value by flattened name. Dot notation accesses sub-fields, e.g. `'CBodyComponent.m_cellX'`. `undefined` if not present |
+| `entity.getField(name)` | Value by flattened name. Dot notation accesses sub-fields, e.g. `'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_cellX'`. `undefined` if not present |
 | `entity.hasField(name)` | Whether the named field is currently set |
 | `entity.getFieldCount()` | Number of fields currently set |
 | `entity.fieldEntries()` | Iterator of `[ name, value ]` pairs for present fields |
@@ -148,7 +148,7 @@ Each entity is an instance of [`Entity`](https://github.com/Igor-Losev/deadem/bl
 ```js
 for (const pawn of demo.getEntitiesByClassName('CCitadelPlayerPawn')) {
     const health = pawn.getField('m_iHealth');
-    const cellX = pawn.getField('CBodyComponent.m_cellX');
+    const cellX = pawn.getField('CBodyComponent.m_skeletonInstance.m_vecOrigin.m_cellX');
 
     const controller = demo.getEntityByHandle(pawn.getField('m_hController'));
 
@@ -247,7 +247,7 @@ Subscribe with `demo.stringTableContainer.subscribe(StringTableEvent.TABLE_CHANG
 
 ```js
 demo.stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, (container, table, entries) => {
-    if (table.type !== StringTableType.USER_INFO) return;
+    if (!table.is(StringTableType.USER_INFO)) return;
 
     for (const entry of entries) {
         console.log(entry.id, entry.value === null ? 'N/A' : entry.value.name);
@@ -290,7 +290,7 @@ One call per inner [`MessagePacket`](https://github.com/Igor-Losev/deadem/blob/m
 import { MessagePacketType } from 'deadem';
 
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
-    if (messagePacket.type !== MessagePacketType.NET_TICK) return;
+    if (!messagePacket.is(MessagePacketType.NET_TICK)) return;
 
     console.log(messagePacket.data);
 });
@@ -405,7 +405,7 @@ const controllers = player.getDemo().getEntitiesByClassName('CCitadelPlayerContr
 
 for (const controller of controllers) {
     const name = controller.getField('m_iszPlayerName');
-    const netWorth = controller.getField('m_iGoldNetWorth');
+    const netWorth = controller.getField('m_PlayerDataGlobal.m_iGoldNetWorth');
 
     console.log(`[ ${name} ] | m_iGoldNetWorth [ ${netWorth} ]`);
 }
