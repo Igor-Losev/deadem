@@ -54,6 +54,16 @@ class FileSystem {
     /**
      * @public
      * @static
+     * @param {string} path
+     * @returns {number}
+     */
+    static getSize(path) {
+        return fs.statSync(path).size;
+    }
+
+    /**
+     * @public
+     * @static
      * @param {string} importMetaUrl
      * @param {string} path
      * @returns {string}

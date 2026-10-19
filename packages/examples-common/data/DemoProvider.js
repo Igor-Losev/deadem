@@ -73,6 +73,24 @@ class DemoProvider {
     }
 
     /**
+     * Returns the size of the demo file in bytes: of the local file, otherwise the size known for the CDN file.
+     *
+     * @public
+     * @static
+     * @param {DemoFile} demoFile
+     * @returns {number|null}
+     */
+    static getSize(demoFile) {
+        const path = getLocalPath(demoFile);
+
+        if (FileSystem.isFile(path)) {
+            return FileSystem.getSize(path);
+        }
+
+        return demoFile.meta?.size ?? null;
+    }
+
+    /**
      * Reads the demo from the `--demo=<path>` argument if it is set.
      * Otherwise reads the given demo file from the local file system or the CDN.
      *

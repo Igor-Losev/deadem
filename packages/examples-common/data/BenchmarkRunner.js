@@ -38,13 +38,13 @@ async function runParent({ cases, repeats }) {
 
         rows.push({ id: c.id, label: c.label, ...r });
 
-        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
+        logger.info(`  ticks/sec=${fmt(r.ticksPerSecond)}, MB/sec=${fmt(r.megabytesPerSecond, 1)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
     }
 
     console.log('\nMarkdown rows:');
 
     for (const r of rows) {
-        console.log(`| ${r.id} | ${r.label} | ${fmt(r.tps)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
+        console.log(`| ${r.id} | ${r.label} | ${fmt(r.ticksPerSecond)} | ${fmt(r.megabytesPerSecond, 1)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
     }
 }
 
@@ -89,11 +89,13 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
     const arrayBuffersPeak = new StatsAccumulator();
     const rssPeak = new StatsAccumulator();
 
+    const size = DemoProvider.getSize(demoFile);
+
     for (let i = 0; i < repeats; i++) {
         const readable = await DemoProvider.read(demoFile);
         const parser = new Parser(benchmarkCase.configuration, Logger.CONSOLE_WARN);
 
-        await benchmark.parse(parser, readable);
+        await benchmark.parse(parser, readable, size);
 
         const m = parser.getStats().memory;
 
@@ -110,24 +112,25 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
     [ heapPeak, arrayBuffersPeak, rssPeak ].forEach(s => s.calculate());
 
     const result = benchmark.getResult();
-    const tps = result.demo.tps;
-    const gps = {
-        count: tps.count,
-        max: tps.max === null ? null : tps.max / tickRate,
-        mean: tps.mean / tickRate,
-        min: tps.min === null ? null : tps.min / tickRate,
-        std: tps.std / tickRate
+    const ticksPerSecond = result.demo.ticksPerSecond;
+    const gameSecondsPerSecond = {
+        count: ticksPerSecond.count,
+        max: ticksPerSecond.max === null ? null : ticksPerSecond.max / tickRate,
+        mean: ticksPerSecond.mean / tickRate,
+        min: ticksPerSecond.min === null ? null : ticksPerSecond.min / tickRate,
+        std: ticksPerSecond.std / tickRate
     };
 
     return {
-        gps,
+        gameSecondsPerSecond,
+        megabytesPerSecond: result.demo.megabytesPerSecond,
         memory: result.demo.memory,
         memoryArrayBuffersPeak: arrayBuffersPeak.getResult(),
         memoryHeapPeak: heapPeak.getResult(),
         memoryRssPeak: rssPeak.getResult(),
-        replay30Formatted: `~${(30 * 60 / gps.mean).toFixed(2)}`,
+        replay30Formatted: `~${(30 * 60 / gameSecondsPerSecond.mean).toFixed(2)}`,
         runtime: `Node.js ${process.version}`,
-        tps
+        ticksPerSecond
     };
 }
 

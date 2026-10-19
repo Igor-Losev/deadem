@@ -16,6 +16,7 @@ class Benchmark {
         this._memory = new StatsAccumulator();
 
         this._ticksPerSecond = new StatsAccumulator();
+        this._megabytesPerSecond = new StatsAccumulator();
 
         this._totalParserTiming = new StatsAccumulatorTiming();
         this._totalDPacketTiming = new StatsAccumulatorTiming();
@@ -24,14 +25,15 @@ class Benchmark {
 
     /**
      * @public
-     * @returns {{demo: {parses: StatsAccumulatorResult, memory: StatsAccumulatorResult, tps: StatsAccumulatorResult}, packets: {demo: StatsAccumulatorResult, message: StatsAccumulatorResult}}}
+     * @returns {{demo: {parses: StatsAccumulatorResult, memory: StatsAccumulatorResult, megabytesPerSecond: StatsAccumulatorResult, ticksPerSecond: StatsAccumulatorResult}, packets: {demo: StatsAccumulatorResult, message: StatsAccumulatorResult}}}
      */
     getResult() {
         return {
             demo: {
                 parses: this._totalParserTiming.getResult(),
                 memory: this._memory.getResult(),
-                tps: this._ticksPerSecond.getResult()
+                megabytesPerSecond: this._megabytesPerSecond.getResult(),
+                ticksPerSecond: this._ticksPerSecond.getResult()
             },
             packets: {
                 demo: this._totalDPacketTiming.getResult(),
@@ -44,9 +46,10 @@ class Benchmark {
      * @public
      * @param {Parser} parser
      * @param {Readable|ReadableStream} readable
+     * @param {number|null} size - Demo file size in bytes.
      * @returns {Promise<void>}
      */
-    async parse(parser, readable) {
+    async parse(parser, readable, size) {
         let lastTick = 0;
 
         // Packet timings affect the performance / memory usage.
@@ -92,8 +95,13 @@ class Benchmark {
 
         this._ticksPerSecond.push(lastTick / (difference / 1000));
 
+        if (size !== null) {
+            this._megabytesPerSecond.push(size / (1024 * 1024) / (difference / 1000));
+        }
+
         this._memory.calculate();
         this._ticksPerSecond.calculate();
+        this._megabytesPerSecond.calculate();
         this._totalParserTiming.calculate();
         this._totalMPacketTiming.calculate();
         this._totalDPacketTiming.calculate();
