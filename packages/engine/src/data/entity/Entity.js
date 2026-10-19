@@ -189,13 +189,13 @@ class Entity {
      * @public
      * @template [T=unknown]
      * @param {string} name
-     * @returns {T}
+     * @returns {T|undefined}
      */
     getField(name) {
         const accessor = this._class.getFieldAccessor(name);
 
         if (accessor === null) {
-            return /** @type {T} */ (undefined);
+            return undefined;
         }
 
         return accessor.read(fieldPath => this.getFieldById(fieldPath.id));
@@ -207,13 +207,13 @@ class Entity {
      * @public
      * @template [T=unknown]
      * @param {number} fieldPathId
-     * @returns {T}
+     * @returns {T|undefined}
      */
     getFieldById(fieldPathId) {
         const meta = this._class.layout.peek(fieldPathId);
 
         if (meta === null || !this._getIsPresent(meta)) {
-            return /** @type {T} */ (undefined);
+            return undefined;
         }
 
         return this._read(meta);
