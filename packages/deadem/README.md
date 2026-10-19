@@ -144,12 +144,12 @@ All example scripts live in the [`examples-node-deadem`](https://github.com/Igor
 
 ## Performance
 
-| # | Configuration                                                                            | Ticks/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ---------------------------------------------------------------------------------------- | --------------- | ------------------ | ------------ | -------------------- | ------------ |
-| 1 | Everything — `ParserConfiguration.DEFAULT`                                               | 10 004 +- 3.91% | ~11.52             | 46 +- 1.90%  | 20 +- 12.74%         | 193 +- 2.93% |
-| 2 | Chat — `messagePacketTypes: [ CITADEL_USER_MESSAGE_CHAT_MESSAGE ]`                       | 78 553 +- 1.56% | ~1.47              | 37 +- 8.36%  | 34 +- 5.52%          | 272 +- 7.35% |
-| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCitadelPlayerController  ]` | 57 577 +- 1.13% | ~2.00              | 44 +- 18.86% | 26 +- 10.19%         | 259 +- 7.75% |
-| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                               | 25 224 +- 4.40% | ~4.57              | 37 +- 3.30%  | 22 +- 42.41%         | 191 +- 7.74% |
+| # | Configuration                                                                            | Ticks/sec       | MB/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ---------------------------------------------------------------------------------------- | --------------- | ------------ | ------------------ | ------------ | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                               | 17 408 +- 1.33% | 57 +- 1.33%  | ~6.62              | 68 +- 50.97% | 12 +- 29.08%         | 232 +- 2.12% |
+| 2 | Chat — `messagePacketTypes: [ CITADEL_USER_MESSAGE_CHAT_MESSAGE ]`                       | 87 077 +- 0.35% | 283 +- 0.35% | ~1.32              | 29 +- 3.14%  | 21 +- 4.10%          | 218 +- 3.76% |
+| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCitadelPlayerController  ]` | 63 757 +- 3.52% | 207 +- 3.52% | ~1.81              | 34 +- 15.12% | 15 +- 3.46%          | 199 +- 5.01% |
+| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                               | 47 327 +- 1.62% | 154 +- 1.62% | ~2.43              | 31 +- 0.70%  | 10 +- 4.07%          | 158 +- 7.77% |
 
 Runtime: Node.js v22.14.0.
 

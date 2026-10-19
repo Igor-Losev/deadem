@@ -138,11 +138,11 @@ All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-
 
 ## Performance
 
-| # | Configuration                                                                         | Ticks/sec        | 30-min replay, sec | Max Heap, MB  | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ------------------------------------------------------------------------------------- | ---------------- | ------------------ | ------------- | -------------------- | ------------ |
-| 1 | Everything — `ParserConfiguration.DEFAULT`                                            | 25 464 +- 3.63%  | ~2.12              | 104 +- 18.28% | 48 +- 28.16%         | 330 +- 0.92% |
-| 2 | Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`                                 | 168 743 +- 3.21% | ~0.32              | 39 +- 6.07%   | 22 +- 13.72%         | 232 +- 6.87% |
-| 3 | One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]` | 89 779 +- 0.75%  | ~0.60              | 75 +- 23.59%  | 17 +- 20.27%         | 250 +- 2.96% |
+| # | Configuration                                                                         | Ticks/sec        | MB/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ------------------------------------------------------------------------------------- | ---------------- | ------------ | ------------------ | ------------ | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                            | 43 575 +- 1.18%  | 57 +- 1.18%  | ~1.24              | 201 +- 0.82% | 69 +- 0.73%          | 429 +- 4.33% |
+| 2 | Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`                                 | 182 698 +- 1.99% | 240 +- 1.99% | ~0.30              | 40 +- 2.87%  | 66 +- 4.49%          | 310 +- 7.27% |
+| 3 | One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]` | 102 018 +- 1.04% | 134 +- 1.04% | ~0.53              | 48 +- 6.99%  | 64 +- 6.51%          | 276 +- 7.19% |
 
 Runtime: Node.js v22.14.0.
 

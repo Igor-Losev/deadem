@@ -133,12 +133,12 @@ All example scripts live in the [`examples-node-cs2`](https://github.com/Igor-Lo
 
 ## Performance
 
-| # | Configuration                                                                       | Ticks/sec        | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ----------------------------------------------------------------------------------- | ---------------- | ------------------ | ------------ | -------------------- | ------------ |
-| 1 | Everything — `ParserConfiguration.DEFAULT`                                          | 21 528 +- 3.46%  | ~5.35              | 39 +- 2.96%  | 18 +- 33.39%         | 191 +- 4.85% |
-| 2 | Chat — `messagePacketTypes: [ USER_MESSAGE_SAY_TEXT_2 ]`                            | 100 452 +- 1.22% | ~1.15              | 29 +- 6.61%  | 31 +- 4.26%          | 231 +- 5.01% |
-| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCSPlayerController ]` | 72 352 +- 5.28%  | ~1.59              | 36 +- 6.68%  | 25 +- 11.53%         | 230 +- 6.84% |
-| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                          | 43 500 +- 2.87%  | ~2.65              | 34 +- 5.26%  | 21 +- 36.07%         | 199 +- 4.43% |
+| # | Configuration                                                                       | Ticks/sec        | MB/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
+| - | ----------------------------------------------------------------------------------- | ---------------- | ------------ | ------------------ | ------------ | -------------------- | ------------ |
+| 1 | Everything — `ParserConfiguration.DEFAULT`                                          | 30 600 +- 0.28%  | 58 +- 0.28%  | ~3.76              | 41 +- 9.08%  | 10 +- 17.41%         | 161 +- 3.71% |
+| 2 | Chat — `messagePacketTypes: [ USER_MESSAGE_SAY_TEXT_2 ]`                            | 113 229 +- 1.08% | 216 +- 1.08% | ~1.02              | 27 +- 3.43%  | 19 +- 6.57%          | 196 +- 6.57% |
+| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCSPlayerController ]` | 84 756 +- 2.45%  | 161 +- 2.45% | ~1.36              | 29 +- 7.45%  | 14 +- 5.73%          | 196 +- 7.06% |
+| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                          | 53 963 +- 0.97%  | 103 +- 0.97% | ~2.13              | 30 +- 1.74%  | 8 +- 14.33%          | 145 +- 3.55% |
 
 Runtime: Node.js v22.14.0.
 
