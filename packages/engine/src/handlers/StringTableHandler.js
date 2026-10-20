@@ -2,6 +2,7 @@ import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
 import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
 
+import StringTableOperation from '../data/enums/StringTableOperation.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
 import StringTableEntryExtractor from '../extractors/StringTableEntryExtractor.js';
@@ -12,6 +13,7 @@ import StringTable from '../data/tables/string/StringTable.js';
 import StringTableContainer from '../data/tables/string/StringTableContainer.js';
 import StringTableEntry from '../data/tables/string/StringTableEntry.js';
 import StringTableInstructions from '../data/tables/string/StringTableInstructions.js';
+import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js';
 
 /**
  * Translates raw string-table protobuf payloads into
@@ -43,6 +45,7 @@ class StringTableHandler {
     /**
      * @public
      * @param {*} createData
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleCreate(createData) {
         const stringTableType = this._resolveOrSynthesize(createData.name);
@@ -68,26 +71,26 @@ class StringTableHandler {
         const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions,
             this._registry.getStringTableDecoder(stringTableType));
 
-        const entryExtractor = new StringTableEntryExtractor(payload, stringTable, createData.numEntries);
+        const entries = Array.from(new StringTableEntryExtractor(payload, stringTable, createData.numEntries).retrieve());
 
-        const entries = [ ];
-
-        for (const entry of entryExtractor.retrieve()) {
-            stringTable.registerEntry(entry);
-
-            entries.push(entry);
-        }
+        registerEntries(stringTable, entries);
 
         this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
 
         this._container.register(stringTable, entries);
+
+        return [ new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries) ];
     }
 
     /**
      * @public
      * @param {*} instantiateData
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleInstantiate(instantiateData) {
+        /** @type {Array<StringTableMutationEvent>} */
+        const events = [ ];
+
         instantiateData.tables.forEach((/** @type {*} */ tableData) => {
             const stringTableType = this._resolveOrSynthesize(tableData.tableName);
 
@@ -103,28 +106,29 @@ class StringTableHandler {
                     this._registry.getStringTableDecoder(stringTableType));
             }
 
-            /** @type {Array<StringTableEntry>} */
-            const entries = [ ];
+            const entries = createEntries(stringTable, tableData.items);
 
-            tableData.items.forEach((/** @type {*} */ entryData, /** @type {number} */ index) => {
-                const entry = new StringTableEntry(stringTable, index, entryData.str, normalizeEntryData(entryData.data));
-
-                stringTable.registerEntry(entry);
-
-                entries.push(entry);
-            });
+            registerEntries(stringTable, entries);
 
             this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
 
             this._container.register(stringTable, entries);
+
+            events.push(new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries));
         });
+
+        return events;
     }
 
     /**
      * @public
      * @param {*} snapshotData
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSnapshot(snapshotData) {
+        /** @type {Array<StringTableMutationEvent>} */
+        const events = [ ];
+
         snapshotData.tables.forEach((/** @type {*} */ tableData) => {
             const type = this._registry.resolveStringTableTypeByName(tableData.tableName);
 
@@ -138,24 +142,22 @@ class StringTableHandler {
                 return;
             }
 
-            /** @type {Array<StringTableEntry>} */
-            const entries = [ ];
+            const entries = createEntries(existingTable, tableData.items);
 
-            tableData.items.forEach((/** @type {*} */ entryData, /** @type {number} */ index) => {
-                const entry = new StringTableEntry(existingTable, index, entryData.str, normalizeEntryData(entryData.data));
-
-                existingTable.registerEntry(entry);
-
-                entries.push(entry);
-            });
+            registerEntries(existingTable, entries);
 
             this._container.markChanged(existingTable, entries);
+
+            events.push(new StringTableMutationEvent(StringTableOperation.UPDATE, existingTable, entries));
         });
+
+        return events;
     }
 
     /**
      * @public
      * @param {*} updateData
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleUpdate(updateData) {
         const stringTable = this._container.getById(updateData.tableId);
@@ -166,26 +168,27 @@ class StringTableHandler {
 
         this._logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
 
-        const entryExtractor = new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries);
+        const entries = Array.from(new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries).retrieve());
 
-        const entries = [ ];
-
-        for (const entry of entryExtractor.retrieve()) {
-            stringTable.registerEntry(entry);
-
-            entries.push(entry);
-        }
+        registerEntries(stringTable, entries);
 
         this._container.markUpdated(stringTable, entries);
+
+        return [ new StringTableMutationEvent(StringTableOperation.UPDATE, stringTable, entries) ];
     }
 
     /**
      * @public
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleClear() {
         this._logger.debug('Clearing StringTable registry');
 
+        const events = this._container.getTables().map(stringTable => new StringTableMutationEvent(StringTableOperation.REMOVE, stringTable, [ ]));
+
         this._container.clear();
+
+        return events;
     }
 
     /**
@@ -205,6 +208,25 @@ class StringTableHandler {
         }
 
         return type;
+    }
+}
+
+/**
+ * @param {StringTable} stringTable
+ * @param {Array<*>} items
+ * @returns {Array<StringTableEntry>}
+ */
+function createEntries(stringTable, items) {
+    return items.map((item, index) => new StringTableEntry(stringTable, index, item.str, normalizeEntryData(item.data)));
+}
+
+/**
+ * @param {StringTable} stringTable
+ * @param {Array<StringTableEntry>} entries
+ */
+function registerEntries(stringTable, entries) {
+    for (let i = 0; i < entries.length; i++) {
+        stringTable.registerEntry(entries[i]);
     }
 }
 
