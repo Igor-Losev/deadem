@@ -43,11 +43,47 @@ class StringTableHandler {
     }
 
     /**
+     * Applies events from the extract methods to the tables.
+     *
+     * @public
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    applyEvents(events) {
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i];
+
+            switch (event.operation) {
+                case StringTableOperation.CREATE: {
+                    registerEntries(event.table, event.entries);
+
+                    this._container.register(event.table, event.entries);
+
+                    break;
+                }
+                case StringTableOperation.UPDATE: {
+                    registerEntries(event.table, event.entries);
+
+                    this._container.markUpdated(event.table, event.entries);
+
+                    break;
+                }
+                case StringTableOperation.REMOVE: {
+                    this._container.unregister(event.table);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Reads a table creation. Does not change the tables.
+     *
      * @public
      * @param {*} createData
      * @returns {Array<StringTableMutationEvent>}
      */
-    handleCreate(createData) {
+    extractCreate(createData) {
         const stringTableType = this._resolveOrSynthesize(createData.name);
 
         const existing = this._container.getByName(stringTableType.name);
@@ -73,11 +109,7 @@ class StringTableHandler {
 
         const entries = Array.from(new StringTableEntryExtractor(payload, stringTable, createData.numEntries).retrieve());
 
-        registerEntries(stringTable, entries);
-
         this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
-
-        this._container.register(stringTable, entries);
 
         return [ new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries) ];
     }
@@ -155,11 +187,13 @@ class StringTableHandler {
     }
 
     /**
+     * Reads a table update. Does not change the tables.
+     *
      * @public
      * @param {*} updateData
      * @returns {Array<StringTableMutationEvent>}
      */
-    handleUpdate(updateData) {
+    extractUpdate(updateData) {
         const stringTable = this._container.getById(updateData.tableId);
 
         if (stringTable === null) {
@@ -170,25 +204,19 @@ class StringTableHandler {
 
         const entries = Array.from(new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries).retrieve());
 
-        registerEntries(stringTable, entries);
-
-        this._container.markUpdated(stringTable, entries);
-
         return [ new StringTableMutationEvent(StringTableOperation.UPDATE, stringTable, entries) ];
     }
 
     /**
+     * Reads the removal of all tables. Does not change the tables.
+     *
      * @public
      * @returns {Array<StringTableMutationEvent>}
      */
-    handleClear() {
+    extractClear() {
         this._logger.debug('Clearing StringTable registry');
 
-        const events = this._container.getTables().map(stringTable => new StringTableMutationEvent(StringTableOperation.REMOVE, stringTable, [ ]));
-
-        this._container.clear();
-
-        return events;
+        return this._container.getTables().map(stringTable => new StringTableMutationEvent(StringTableOperation.REMOVE, stringTable, [ ]));
     }
 
     /**

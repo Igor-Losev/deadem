@@ -130,6 +130,22 @@ class StringTableContainer {
     }
 
     /**
+     * Removes a table from the container. Fires TABLE_REMOVED.
+     *
+     * @internal
+     * @public
+     * @param {StringTable} stringTable
+     */
+    unregister(stringTable) {
+        Assert.isTrue(stringTable instanceof StringTable);
+
+        this._eventEmitter.fire(StringTableEvent.TABLE_REMOVED.name, stringTable, null);
+
+        this._tableById.delete(stringTable.id);
+        this._tableByName.delete(stringTable.type.name);
+    }
+
+    /**
      * Removes all tables. Fires TABLE_REMOVED for each one before clearing.
      *
      * @internal

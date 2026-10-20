@@ -4,6 +4,7 @@
 /** @import MessagePacket from './data/MessagePacket.js' */
 /** @import EntityMutationEvent from './data/entity/EntityMutationEvent.js' */
 /** @import UserCommandEvent from './data/UserCommandEvent.js' */
+/** @import StringTableMutationEvent from './data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from './core/Assert.js';
 import Logger from './core/Logger.js';
@@ -53,6 +54,7 @@ import SchemaRegistry from './SchemaRegistry.js';
  *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
  *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
  *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
+ *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<StringTableMutationEvent>) => void,
  *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */

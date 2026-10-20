@@ -1,4 +1,5 @@
 /** @import MessagePacket from '../data/MessagePacket.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
 import BitBuffer from '../core/BitBuffer.js';
@@ -64,9 +65,10 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcCreateStringTable(messagePacket) {
-        this._demo.applyStringTableEvents(this._stringTableHandler.handleCreate(messagePacket.data));
+        return this._stringTableHandler.extractCreate(messagePacket.data);
     }
 
     /**
@@ -74,18 +76,32 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcUpdateStringTable(messagePacket) {
-        this._demo.applyStringTableEvents(this._stringTableHandler.handleUpdate(messagePacket.data));
+        return this._stringTableHandler.extractUpdate(messagePacket.data);
     }
 
     /**
      * Handles a {@link MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES} (ID = 51).
      *
      * @public
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcClearAllStringTables() {
-        this._demo.applyStringTableEvents(this._stringTableHandler.handleClear());
+        return this._stringTableHandler.extractClear();
+    }
+
+    /**
+     * Applies string table events to the tables and to the baselines.
+     *
+     * @public
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    handleStringTableEvents(events) {
+        this._stringTableHandler.applyEvents(events);
+
+        this._demo.applyStringTableEvents(events);
     }
 
     /**

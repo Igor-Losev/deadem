@@ -3,7 +3,7 @@ const registry = {
 };
 
 /**
- * @typedef {'DEMO_PACKET'|'ENTITY_PACKET'|'MESSAGE_PACKET'|'USER_COMMAND'} InterceptorStageCode
+ * @typedef {'DEMO_PACKET'|'ENTITY_PACKET'|'MESSAGE_PACKET'|'STRING_TABLE'|'USER_COMMAND'} InterceptorStageCode
  */
 
 /**
@@ -79,6 +79,15 @@ class InterceptorStage {
     /**
      * @public
      * @static
+     * @returns {InterceptorStage<'STRING_TABLE'>}
+     */
+    static get STRING_TABLE() {
+        return stringTable;
+    }
+
+    /**
+     * @public
+     * @static
      * @returns {InterceptorStage<'USER_COMMAND'>}
      */
     static get USER_COMMAND() {
@@ -90,5 +99,6 @@ const demoPacket = new InterceptorStage('DEMO_PACKET', 0);
 const messagePacket = new InterceptorStage('MESSAGE_PACKET', 1);
 const entityPacket = new InterceptorStage('ENTITY_PACKET', 2);
 const userCommand = new InterceptorStage('USER_COMMAND', 3);
+const stringTable = new InterceptorStage('STRING_TABLE', 4);
 
 export default InterceptorStage;

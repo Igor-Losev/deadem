@@ -1,5 +1,6 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
 /** @import MessagePacket from '../data/MessagePacket.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
 
@@ -116,17 +117,17 @@ class DemoPacketApplier {
                     break;
                 }
                 case MessagePacketType.SVC_CREATE_STRING_TABLE: {
-                    this._demoMessageHandler.handleSvcCreateStringTable(messagePacket);
+                    this._handleStringTableEvents(demoPacket, messagePacket, this._demoMessageHandler.handleSvcCreateStringTable(messagePacket));
 
                     break;
                 }
                 case MessagePacketType.SVC_UPDATE_STRING_TABLE: {
-                    this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket);
+                    this._handleStringTableEvents(demoPacket, messagePacket, this._demoMessageHandler.handleSvcUpdateStringTable(messagePacket));
 
                     break;
                 }
                 case MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES: {
-                    this._demoMessageHandler.handleSvcClearAllStringTables();
+                    this._handleStringTableEvents(demoPacket, messagePacket, this._demoMessageHandler.handleSvcClearAllStringTables());
 
                     break;
                 }
@@ -165,6 +166,20 @@ class DemoPacketApplier {
 
             this._interceptors.firePost(InterceptorStage.MESSAGE_PACKET, demoPacket, messagePacket);
         }
+    }
+
+    /**
+     * @protected
+     * @param {DemoPacket} demoPacket
+     * @param {MessagePacket} messagePacket
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    _handleStringTableEvents(demoPacket, messagePacket, events) {
+        this._interceptors.firePre(InterceptorStage.STRING_TABLE, demoPacket, messagePacket, events);
+
+        this._demoMessageHandler.handleStringTableEvents(events);
+
+        this._interceptors.firePost(InterceptorStage.STRING_TABLE, demoPacket, messagePacket, events);
     }
 }
 
