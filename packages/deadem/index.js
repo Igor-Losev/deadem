@@ -88,6 +88,8 @@ export {
     StringTableContainer,
     StringTableEntry,
     StringTableEvent,
+    StringTableMutationEvent,
+    StringTableOperation,
     UserCommand,
     UserCommandEvent
 } from '@deademx/engine';

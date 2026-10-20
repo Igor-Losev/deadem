@@ -46,6 +46,8 @@ export { default as StringTable } from './src/data/tables/string/StringTable.js'
 export { default as StringTableContainer } from './src/data/tables/string/StringTableContainer.js';
 export { default as StringTableEntry } from './src/data/tables/string/StringTableEntry.js';
 export { default as StringTableEvent } from './src/data/enums/StringTableEvent.js';
+export { default as StringTableMutationEvent } from './src/data/tables/string/StringTableMutationEvent.js';
+export { default as StringTableOperation } from './src/data/enums/StringTableOperation.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
 export { default as UserCommand } from './src/data/UserCommand.js';
 export { default as UserCommandEvent } from './src/data/UserCommandEvent.js';
