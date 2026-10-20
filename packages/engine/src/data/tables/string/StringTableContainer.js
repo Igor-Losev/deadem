@@ -113,23 +113,6 @@ class StringTableContainer {
     }
 
     /**
-     * Signals that a table's state changed without an explicit update (e.g. snapshot).
-     * Fires TABLE_CHANGED.
-     *
-     * @internal
-     * @public
-     * @param {StringTable} stringTable
-     * @param {Array<StringTableEntry>|null} [entries] - resupplied entries, if known
-     */
-    markChanged(stringTable, entries = null) {
-        Assert.isTrue(stringTable instanceof StringTable);
-
-        const affected = entries || stringTable.getEntries();
-
-        this._eventEmitter.fire(StringTableEvent.TABLE_CHANGED.name, stringTable, affected);
-    }
-
-    /**
      * Removes a table from the container. Fires TABLE_REMOVED.
      *
      * @internal

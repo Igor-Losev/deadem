@@ -152,11 +152,13 @@ class StringTableHandler {
     }
 
     /**
+     * Reads the string tables of a `DEM_FULL_PACKET` snapshot. Does not change the tables.
+     *
      * @public
      * @param {*} snapshotData
      * @returns {Array<StringTableMutationEvent>}
      */
-    handleSnapshot(snapshotData) {
+    extractSnapshot(snapshotData) {
         /** @type {Array<StringTableMutationEvent>} */
         const events = [ ];
 
@@ -174,10 +176,6 @@ class StringTableHandler {
             }
 
             const entries = createEntries(existingTable, tableData.items);
-
-            registerEntries(existingTable, entries);
-
-            this._container.markChanged(existingTable, entries);
 
             events.push(new StringTableMutationEvent(StringTableOperation.UPDATE, existingTable, entries));
         });

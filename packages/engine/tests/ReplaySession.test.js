@@ -76,7 +76,7 @@ describe('ReplaySession', () => {
             const { engine, session } = createSession(packets, plan);
 
             const resetSpy = vi.spyOn(engine.demo, 'reset');
-            const snapshotSpy = vi.spyOn(engine.getStringTableHandler(), 'handleSnapshot');
+            const snapshotSpy = vi.spyOn(engine.getStringTableHandler(), 'extractSnapshot');
             const trackerSpy = vi.spyOn(engine.getPacketTracker(), 'handleDemoPacketRaw');
 
             const tick = await session.seek(30);

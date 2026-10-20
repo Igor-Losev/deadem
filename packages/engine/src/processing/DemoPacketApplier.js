@@ -61,11 +61,16 @@ class DemoPacketApplier {
     /**
      * @public
      * @param {DemoPacket} demoPacket
+     * @param {Array<StringTableMutationEvent>|null} [snapshotEvents=null] - String table snapshots of a seek. Applied before the messages.
      */
-    apply(demoPacket) {
+    apply(demoPacket, snapshotEvents = null) {
         this._interceptors.firePre(InterceptorStage.DEMO_PACKET, demoPacket);
 
         this._performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_APPLIER);
+
+        if (snapshotEvents !== null) {
+            this._handleStringTableEvents(demoPacket, null, snapshotEvents);
+        }
 
         switch (demoPacket.type) {
             case DemoPacketType.DEM_SEND_TABLES: {
@@ -171,7 +176,7 @@ class DemoPacketApplier {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {MessagePacket|null} messagePacket - `null` for a `DEM_STRING_TABLES` packet.
+     * @param {MessagePacket|null} messagePacket - `null` for a `DEM_STRING_TABLES` packet and for seek snapshots.
      * @param {Array<StringTableMutationEvent>} events
      */
     _handleStringTableEvents(demoPacket, messagePacket, events) {

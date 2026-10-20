@@ -1,4 +1,5 @@
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
 import EventLoop from '#core/EventLoop.js';
@@ -135,14 +136,15 @@ class ReplaySession {
             this._processPacket(this._index.getOrFail(plan.bootstrap[i]));
         }
 
-        for (let i = 0; i < plan.snapshots.length; i++) {
-            this._demo.applyStringTableEvents(this._stringTableHandler.handleSnapshot(plan.snapshots[i]));
-        }
-
         let processed = 0;
 
+        /** @type {Array<StringTableMutationEvent>|null} */
+        let snapshotEvents = this._extractSnapshots(plan.snapshots);
+
         for (let position = plan.from; position < plan.to; position++) {
-            this._processPacket(this._index.getOrFail(position));
+            this._processPacket(this._index.getOrFail(position), snapshotEvents);
+
+            snapshotEvents = null;
 
             processed += 1;
 
@@ -160,9 +162,26 @@ class ReplaySession {
 
     /**
      * @protected
-     * @param {DemoPacketRaw} demoPacketRaw
+     * @param {Array<*>} snapshots
+     * @returns {Array<StringTableMutationEvent>}
      */
-    _processPacket(demoPacketRaw) {
+    _extractSnapshots(snapshots) {
+        /** @type {Array<StringTableMutationEvent>} */
+        const events = [ ];
+
+        for (let i = 0; i < snapshots.length; i++) {
+            events.push(...this._stringTableHandler.extractSnapshot(snapshots[i]));
+        }
+
+        return events;
+    }
+
+    /**
+     * @protected
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @param {Array<StringTableMutationEvent>|null} [snapshotEvents=null]
+     */
+    _processPacket(demoPacketRaw, snapshotEvents = null) {
         demoPacketRaw.ordinal = this._ordinal;
 
         this._ordinal += 1;
@@ -176,7 +195,7 @@ class ReplaySession {
 
         this._prioritizer.prioritize(demoPacket);
 
-        this._applier.apply(demoPacket);
+        this._applier.apply(demoPacket, snapshotEvents);
     }
 
     /**
