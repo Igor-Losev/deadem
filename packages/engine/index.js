@@ -1,8 +1,3 @@
-/**
- * @template T
- * @typedef {import('./src/core/EventEmitter.js').EventEmitterHandler<T>} EventEmitterHandler
- */
-
 /** @typedef {import('./src/data/DemoPacketRaw.js').default} DemoPacketRaw */
 /** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('./src/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
@@ -45,7 +40,6 @@ export { default as Server } from './src/data/Server.js';
 export { default as StringTable } from './src/data/tables/string/StringTable.js';
 export { default as StringTableContainer } from './src/data/tables/string/StringTableContainer.js';
 export { default as StringTableEntry } from './src/data/tables/string/StringTableEntry.js';
-export { default as StringTableEvent } from './src/data/enums/StringTableEvent.js';
 export { default as StringTableMutationEvent } from './src/data/tables/string/StringTableMutationEvent.js';
 export { default as StringTableOperation } from './src/data/enums/StringTableOperation.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';

@@ -53,14 +53,12 @@ class StringTableHandler {
                 case StringTableOperation.CREATE: {
                     registerEntries(event.table, event.entries);
 
-                    this._container.register(event.table, event.entries);
+                    this._container.register(event.table);
 
                     break;
                 }
                 case StringTableOperation.UPDATE: {
                     registerEntries(event.table, event.entries);
-
-                    this._container.markUpdated(event.table, event.entries);
 
                     break;
                 }

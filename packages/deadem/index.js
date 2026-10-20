@@ -1,8 +1,3 @@
-/**
- * @template T
- * @typedef {import('@deademx/engine').EventEmitterHandler<T>} EventEmitterHandler
- */
-
 /** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
 /** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
@@ -87,7 +82,6 @@ export {
     StringTable,
     StringTableContainer,
     StringTableEntry,
-    StringTableEvent,
     StringTableMutationEvent,
     StringTableOperation,
     UserCommand,
