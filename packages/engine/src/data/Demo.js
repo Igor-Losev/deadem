@@ -1,5 +1,6 @@
 /** @import StringTable from './tables/string/StringTable.js' */
 /** @import StringTableEntry from './tables/string/StringTableEntry.js' */
+/** @import StringTableMutationEvent from './tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
 
@@ -10,7 +11,7 @@ import UserCommand from './UserCommand.js';
 
 import Entity from './entity/Entity.js';
 
-import StringTableEvent from './enums/StringTableEvent.js';
+import StringTableOperation from './enums/StringTableOperation.js';
 import StringTableType from './enums/StringTableType.js';
 
 import Serializer from './fields/Serializer.js';
@@ -52,9 +53,6 @@ class Demo {
         /** @private */
         this._stringTableContainer = new StringTableContainer();
 
-        this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
-        this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
-
         /** @private */
         this._userCommands = new Map();
     }
@@ -73,6 +71,23 @@ class Demo {
      */
     get stringTableContainer() {
         return this._stringTableContainer;
+    }
+
+    /**
+     * @internal
+     * @public
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    applyStringTableEvents(events) {
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i];
+
+            if (event.operation === StringTableOperation.REMOVE) {
+                this._handleTableRemoved(event.table);
+            } else {
+                this._handleTableChanged(event.table, event.entries);
+            }
+        }
     }
 
     /**
@@ -407,11 +422,10 @@ class Demo {
 
     /**
      * @protected
-     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      * @param {Array<StringTableEntry>} entries — the affected entries only
      */
-    _handleTableChanged(stringTableContainer, stringTable, entries) {
+    _handleTableChanged(stringTable, entries) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 entries.forEach((entry) => {
@@ -442,10 +456,9 @@ class Demo {
 
     /**
      * @protected
-     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      */
-    _handleTableRemoved(stringTableContainer, stringTable) {
+    _handleTableRemoved(stringTable) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 this._alternateBaselines.clear();

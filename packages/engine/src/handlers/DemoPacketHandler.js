@@ -171,7 +171,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemStringTables(demoPacket) {
-        this._stringTableHandler.handleInstantiate(demoPacket.data);
+        this._demo.applyStringTableEvents(this._stringTableHandler.handleInstantiate(demoPacket.data));
     }
 }
 

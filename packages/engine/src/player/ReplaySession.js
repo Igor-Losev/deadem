@@ -136,7 +136,7 @@ class ReplaySession {
         }
 
         for (let i = 0; i < plan.snapshots.length; i++) {
-            this._stringTableHandler.handleSnapshot(plan.snapshots[i]);
+            this._demo.applyStringTableEvents(this._stringTableHandler.handleSnapshot(plan.snapshots[i]));
         }
 
         let processed = 0;

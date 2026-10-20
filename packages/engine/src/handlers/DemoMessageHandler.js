@@ -66,7 +66,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcCreateStringTable(messagePacket) {
-        this._stringTableHandler.handleCreate(messagePacket.data);
+        this._demo.applyStringTableEvents(this._stringTableHandler.handleCreate(messagePacket.data));
     }
 
     /**
@@ -76,7 +76,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcUpdateStringTable(messagePacket) {
-        this._stringTableHandler.handleUpdate(messagePacket.data);
+        this._demo.applyStringTableEvents(this._stringTableHandler.handleUpdate(messagePacket.data));
     }
 
     /**
@@ -85,7 +85,7 @@ class DemoMessageHandler {
      * @public
      */
     handleSvcClearAllStringTables() {
-        this._stringTableHandler.handleClear();
+        this._demo.applyStringTableEvents(this._stringTableHandler.handleClear());
     }
 
     /**
