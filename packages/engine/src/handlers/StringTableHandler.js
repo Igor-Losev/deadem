@@ -18,9 +18,6 @@ import StringTableMutationEvent from '../data/tables/string/StringTableMutationE
 /**
  * Translates raw string-table protobuf payloads into
  * {@link StringTable} mutations on a {@link StringTableContainer}.
- *
- * Owns the registry/logger dependencies so the container can remain a
- * pure data structure.
  */
 class StringTableHandler {
     /**
@@ -115,13 +112,17 @@ class StringTableHandler {
     }
 
     /**
+     * Reads the tables of a `DEM_STRING_TABLES` packet. Does not change the tables.
+     *
      * @public
      * @param {*} instantiateData
      * @returns {Array<StringTableMutationEvent>}
      */
-    handleInstantiate(instantiateData) {
+    extractInstantiate(instantiateData) {
         /** @type {Array<StringTableMutationEvent>} */
         const events = [ ];
+
+        let created = 0;
 
         instantiateData.tables.forEach((/** @type {*} */ tableData) => {
             const stringTableType = this._resolveOrSynthesize(tableData.tableName);
@@ -134,17 +135,15 @@ class StringTableHandler {
                 stringTable = new StringTable(existing.id, stringTableType, existing.flags, existing.instructions,
                     this._registry.getStringTableDecoder(stringTableType));
             } else {
-                stringTable = new StringTable(this._container.size, stringTableType, tableData.tableFlags, null,
+                stringTable = new StringTable(this._container.size + created, stringTableType, tableData.tableFlags, null,
                     this._registry.getStringTableDecoder(stringTableType));
+
+                created += 1;
             }
 
             const entries = createEntries(stringTable, tableData.items);
 
-            registerEntries(stringTable, entries);
-
             this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
-
-            this._container.register(stringTable, entries);
 
             events.push(new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries));
         });

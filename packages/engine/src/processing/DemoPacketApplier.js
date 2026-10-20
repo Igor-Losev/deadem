@@ -79,7 +79,7 @@ class DemoPacketApplier {
                 break;
             }
             case DemoPacketType.DEM_STRING_TABLES: {
-                this._demoPacketHandler.handleDemStringTables(demoPacket);
+                this._handleStringTableEvents(demoPacket, null, this._demoPacketHandler.handleDemStringTables(demoPacket));
 
                 break;
             }
@@ -171,7 +171,7 @@ class DemoPacketApplier {
     /**
      * @protected
      * @param {DemoPacket} demoPacket
-     * @param {MessagePacket} messagePacket
+     * @param {MessagePacket|null} messagePacket - `null` for a `DEM_STRING_TABLES` packet.
      * @param {Array<StringTableMutationEvent>} events
      */
     _handleStringTableEvents(demoPacket, messagePacket, events) {

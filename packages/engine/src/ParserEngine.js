@@ -54,7 +54,7 @@ import SchemaRegistry from './SchemaRegistry.js';
  *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
  *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
  *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
- *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<StringTableMutationEvent>) => void,
+ *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>|null, events: Array<StringTableMutationEvent>) => void,
  *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */

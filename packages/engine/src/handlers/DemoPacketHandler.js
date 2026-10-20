@@ -1,4 +1,5 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
 import BitBuffer from '../core/BitBuffer.js';
@@ -169,9 +170,10 @@ class DemoPacketHandler {
      *
      * @public
      * @param {DemoPacket} demoPacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleDemStringTables(demoPacket) {
-        this._demo.applyStringTableEvents(this._stringTableHandler.handleInstantiate(demoPacket.data));
+        return this._stringTableHandler.extractInstantiate(demoPacket.data);
     }
 }
 
