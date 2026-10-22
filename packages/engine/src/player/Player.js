@@ -190,9 +190,9 @@ class Player {
      * Advances the demo state by one tick.
      *
      * @public
-     * @returns {Promise<boolean>} Returns false if there are no more ticks.
+     * @returns {boolean} Returns false if there are no more ticks.
      */
-    async nextTick() {
+    nextTick() {
         this._requireState(PlayerState.LOADED, 'Unable to advance tick');
 
         return this._advanceTick() !== null;

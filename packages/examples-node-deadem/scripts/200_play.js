@@ -20,8 +20,8 @@ const PLAYBACK_SPEED = 16;
 
     printTick();
 
-    await player.nextTick();
-    await player.nextTick();
+    player.nextTick();
+    player.nextTick();
 
     printTick();
 

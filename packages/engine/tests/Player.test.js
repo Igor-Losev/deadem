@@ -62,10 +62,10 @@ describe('Player', () => {
     });
 
     describe('state validation', () => {
-        test('It should throw on nextTick when not LOADED', async () => {
+        test('It should throw on nextTick when not LOADED', () => {
             player._state = PlayerState.IDLE;
 
-            await expect(player.nextTick()).rejects.toThrow('player is IDLE');
+            expect(() => player.nextTick()).toThrow('player is IDLE');
         });
 
         test('It should throw on prevTick when not LOADED', async () => {
@@ -93,38 +93,38 @@ describe('Player', () => {
     });
 
     describe('nextTick', () => {
-        test('It should advance to the next tick', async () => {
-            const result = await player.nextTick();
+        test('It should advance to the next tick', () => {
+            const result = player.nextTick();
 
             expect(result).toBe(true);
             expect(player.getCurrentTick()).toBe(200);
             expect(player._ticks.position).toBe(1);
         });
 
-        test('It should return false at the last position', async () => {
+        test('It should return false at the last position', () => {
             player._ticks.position = 2;
 
-            const result = await player.nextTick();
+            const result = player.nextTick();
 
             expect(result).toBe(false);
         });
 
-        test('It should reject when session.process throws', async () => {
+        test('It should throw when session.process throws', () => {
             const error = new Error('processing failed');
 
             player._session.process.mockImplementation(() => {
                 throw error;
             });
 
-            await expect(player.nextTick()).rejects.toBe(error);
+            expect(() => player.nextTick()).toThrow(error);
         });
 
-        test('It should leave the player in LOADED state after a session failure', async () => {
+        test('It should leave the player in LOADED state after a session failure', () => {
             player._session.process.mockImplementation(() => {
                 throw new Error('processing failed');
             });
 
-            await expect(player.nextTick()).rejects.toThrow();
+            expect(() => player.nextTick()).toThrow();
 
             expect(player.state).toBe(PlayerState.LOADED);
         });

@@ -345,12 +345,12 @@ export default function usePlayer(library, updatesEnabled = true) {
       return;
     }
 
-    setSeeking(true);
-
-    playerRef.current.nextTick()
-      .then(() => syncTicks())
-      .catch((err) => reportPlayerError('Next tick failed', err))
-      .finally(() => setSeeking(false));
+    try {
+      playerRef.current.nextTick();
+      syncTicks();
+    } catch (err) {
+      reportPlayerError('Next tick failed', err);
+    }
   }, [ reportPlayerError, syncTicks ]);
 
   const handlePrevTick = useCallback(() => {
