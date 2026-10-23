@@ -1,5 +1,12 @@
+/** @typedef {import('./src/data/DemoPacket.js').DemoPacketObject} DemoPacketObject */
 /** @typedef {import('./src/data/DemoPacketRaw.js').default} DemoPacketRaw */
+/** @typedef {import('./src/data/entity/EntityMutation.js').default} EntityMutation */
+/**
+ * @template [M=null]
+ * @typedef {import('./src/ParserEngine.js').InterceptorMap<M>} InterceptorMap
+ */
 /** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('./src/data/MessagePacket.js').MessagePacketObject} MessagePacketObject */
 /** @typedef {import('./src/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
 /** @typedef {import('./src/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
 /** @typedef {import('./src/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */

@@ -1,5 +1,9 @@
+/** @typedef {import('@deademx/engine').DemoPacketObject} DemoPacketObject */
 /** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
+/** @typedef {import('@deademx/engine').EntityMutation} EntityMutation */
+/** @typedef {import('@deademx/engine').InterceptorMap<typeof Proto>} InterceptorMap */
 /** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('@deademx/engine').MessagePacketObject} MessagePacketObject */
 /** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
 /** @typedef {import('@deademx/engine').ParserConfigurationOptions} ParserConfigurationOptions */
 /** @typedef {import('@deademx/engine').PerformanceTrackerStats} PerformanceTrackerStats */
