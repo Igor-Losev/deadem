@@ -74,30 +74,6 @@ class Player {
     }
 
     /**
-     * @public
-     * @returns {number}
-     */
-    getCurrentTick() {
-        return this._ticks.current;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    getFirstTick() {
-        return this._ticks.first;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    getLastTick() {
-        return this._ticks.last;
-    }
-
-    /**
      * Disposes the player, releasing the engine and clearing all state.
      * After disposal, the player cannot be used.
      *
@@ -129,6 +105,30 @@ class Player {
         this._ticks.first = -1;
         this._ticks.last = -1;
         this._ticks.position = -1;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getCurrentTick() {
+        return this._ticks.current;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getFirstTick() {
+        return this._ticks.first;
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getLastTick() {
+        return this._ticks.last;
     }
 
     /**
