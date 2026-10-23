@@ -2,7 +2,7 @@ import loadLibraryModule from '#libraryLoader';
 
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 
-const SHARED_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
+const SHARED_DESCRIPTION = 'Live demo of the deadem libraries, which parse and play back Source 2 replays of Deadlock, Dota 2 and Counter-Strike 2 in Node.js and browsers.';
 
 export const LIBRARIES = [
   {

@@ -63,9 +63,12 @@
         "Parse Deadlock replay files (.dem)",
         "Parse Dota 2 replay files (.dem)",
         "Parse Counter-Strike 2 (CS2) replay files (.dem)",
+        "Play and step through replays tick by tick",
+        "Match summary with kills, deaths and assists",
         "Inspect demo packets and message packets",
-        "Browse game entities and classes",
-        "View server info, tick rate, and string tables"
+        "Browse game entities and their fields",
+        "View string tables and user commands",
+        "View server info, tick rate and game build"
       ],
       "offers": {
         "@type": "Offer",
@@ -80,17 +83,19 @@
 
     <noscript>
       <h1>Deadem Explorer — Deadlock, Dota 2 and Counter-Strike 2 (CS2) Demo Parser Libraries</h1>
-      <p>Deadem is a set of open-source JavaScript libraries for parsing Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 (CS2). Deadem Explorer is a live in-browser demo of those libraries — try them out without installing anything or uploading replays to a server.</p>
-      <p>Upload a .dem file or choose one from the library to see the parser in action: inspect packets, browse game entities, and view server info, tick rate, and string tables.</p>
+      <p>Deadem is a set of open-source JavaScript libraries that parse and play back Source 2 .dem replay files of Deadlock, Dota 2 and Counter-Strike 2 (CS2) in Node.js and browsers. Deadem Explorer is a live demo of these libraries. Replays are parsed in the browser and are not uploaded to a server.</p>
       <h2>Features</h2>
       <ul>
-        <li>Parse Deadlock, Dota 2 and Counter-Strike 2 (CS2) replay files (.dem) in the browser</li>
-        <li>Inspect demo packets and message packets in JSON form</li>
-        <li>Browse live game entities and classes as the replay updates</li>
-        <li>View server info, tick rate, entity counts, and string tables</li>
-        <li>Use the same parser libraries in Node.js and modern browsers</li>
+        <li>Parse Deadlock, Dota 2 and Counter-Strike 2 (CS2) replay files (.dem) in the browser.</li>
+        <li>Play, pause, seek and step through a replay tick by tick.</li>
+        <li>Match summary with kills, deaths and assists of every player.</li>
+        <li>Demo packets and message packets as JSON.</li>
+        <li>Game entities grouped by class, with their fields.</li>
+        <li>String tables, user commands and the changes of each tick.</li>
+        <li>Server info: tick rate, map and game build.</li>
+        <li>The same libraries in Node.js and browsers.</li>
       </ul>
-      <p>Built with the <a href="https://www.npmjs.com/package/@deademx/engine">@deademx/engine</a>, <a href="https://www.npmjs.com/package/@deademx/deadlock">@deademx/deadlock</a> (Deadlock), <a href="https://www.npmjs.com/package/@deademx/dota2">@deademx/dota2</a>, and <a href="https://www.npmjs.com/package/@deademx/cs2">@deademx/cs2</a> JavaScript libraries. The app runs locally in the browser for private replay inspection.</p>
+      <p>Built with the <a href="https://www.npmjs.com/package/@deademx/engine">@deademx/engine</a>, <a href="https://www.npmjs.com/package/@deademx/deadlock">@deademx/deadlock</a>, <a href="https://www.npmjs.com/package/@deademx/dota2">@deademx/dota2</a> and <a href="https://www.npmjs.com/package/@deademx/cs2">@deademx/cs2</a> JavaScript libraries.</p>
       <p><a href="https://github.com/Igor-Losev/deadem">View on GitHub</a></p>
     </noscript>
 

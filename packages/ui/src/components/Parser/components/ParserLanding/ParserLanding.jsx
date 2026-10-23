@@ -1,12 +1,16 @@
 import {
-  AccountTree as AccountTreeIcon,
   Article as ArticleIcon,
-  Assessment as AssessmentIcon,
   BugReport as BugReportIcon,
+  Category as CategoryIcon,
+  CompareArrows as CompareArrowsIcon,
+  Email as EmailIcon,
   Groups as GroupsIcon,
-  ManageSearch as ManageSearchIcon,
+  Info as InfoIcon,
+  Keyboard as KeyboardIcon,
   NewReleases as NewReleasesIcon,
-  RocketLaunch as RocketLaunchIcon
+  PlayCircle as PlayCircleIcon,
+  RocketLaunch as RocketLaunchIcon,
+  Storage as StorageIcon
 } from '@mui/icons-material';
 import { Box, Divider, Link, Paper, Typography } from '@mui/material';
 
@@ -15,61 +19,95 @@ import { COLORS } from '../../theme';
 const PROJECT_DOCUMENTATION_URL = 'https://github.com/Igor-Losev/deadem/blob/main/README.md';
 const PROJECT_ISSUES_URL = 'https://github.com/Igor-Losev/deadem/issues';
 const PROJECT_RELEASES_URL = 'https://github.com/Igor-Losev/deadem/releases';
-const PROJECT_DESCRIPTION = 'Live in-browser demo of the deadem parser libraries — parse Source 2 .dem replay files from Deadlock, Dota 2 and Counter-Strike 2 in Node.js or the browser.';
+const PROJECT_DESCRIPTION = 'Live demo of the deadem libraries, which parse and play back Source 2 replays of Deadlock, Dota 2 and Counter-Strike 2 in Node.js and browsers.';
 
 const FEATURES = [
   {
     color: COLORS.accent,
-    description: 'Player stats parsed tick by tick from the demo — kills, deaths, net worth, damage. A working example of what the libraries expose.',
-    icon: <GroupsIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Live Match Summary'
-  },
-  {
-    color: COLORS.jsonBoolean,
-    description: 'See the last 100 demo packets at the current position. Click any packet to inspect its full JSON payload.',
-    icon: <ManageSearchIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Packet Timeline'
+    description: 'Play, pause, seek and step by tick.',
+    icon: <PlayCircleIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Player'
   },
   {
     color: '#00e5ff',
-    description: 'Browse all live game entities grouped by class. Select one to view its properties updated tick by tick.',
-    icon: <AccountTreeIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Entity Inspector'
+    description: 'Kills, deaths, assists and more.',
+    icon: <GroupsIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Summary'
+  },
+  {
+    color: COLORS.jsonBoolean,
+    description: 'The last 100 demo packets as JSON.',
+    icon: <EmailIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Packets'
   },
   {
     color: COLORS.jsonNumber,
-    description: 'Check tick rate, class counts, entity counts, and string table entries.',
-    icon: <AssessmentIcon sx={{ fontSize: '1.15rem' }} />,
-    title: 'Server Info'
+    description: 'Entities by class, with fields.',
+    icon: <CategoryIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Entities'
+  },
+  {
+    color: COLORS.jsonString,
+    description: 'String tables and their entries.',
+    icon: <StorageIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Tables'
+  },
+  {
+    color: COLORS.accent,
+    description: 'User commands per player slot.',
+    icon: <KeyboardIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Input'
+  },
+  {
+    color: '#00e5ff',
+    description: 'What changed at the current tick.',
+    icon: <CompareArrowsIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Diff'
+  },
+  {
+    color: COLORS.jsonBoolean,
+    description: 'Tick rate, map and game build.',
+    icon: <InfoIcon sx={{ fontSize: '1.15rem' }} />,
+    title: 'Info'
   }
 ];
 
 const PACKAGE_LINKS = [
   {
-    description: 'Shared parser engine',
+    description: 'Shared Source 2 engine.',
     href: 'https://www.npmjs.com/package/@deademx/engine',
     label: '@deademx/engine'
   },
   {
-    description: 'Deadlock parser and replay player',
+    description: 'Deadlock parser and replay player.',
     href: 'https://www.npmjs.com/package/@deademx/deadlock',
     label: '@deademx/deadlock'
   },
   {
-    description: 'Counter-Strike 2 parser and replay player',
+    description: 'Counter-Strike 2 parser and replay player.',
     href: 'https://www.npmjs.com/package/@deademx/cs2',
     label: '@deademx/cs2'
   },
   {
-    description: 'Dota 2 parser and replay player',
+    description: 'Dota 2 parser and replay player.',
     href: 'https://www.npmjs.com/package/@deademx/dota2',
     label: '@deademx/dota2'
   }
 ];
 
+const CARD_SX = {
+  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+  border: '1px solid',
+  borderColor: 'divider',
+  borderRadius: 2,
+  height: '100%',
+  px: 1.5,
+  py: 1.25
+};
+
 function Feature({ color, description, icon, title }) {
   return (
-    <Box display='flex' gap={1.5} alignItems='flex-start'>
+    <Box sx={{ ...CARD_SX, alignItems: 'center', display: 'flex', gap: 1.5 }}>
       <Box
         sx={{
           alignItems: 'center',
@@ -80,17 +118,16 @@ function Feature({ color, description, icon, title }) {
           flexShrink: 0,
           height: 32,
           justifyContent: 'center',
-          mt: '1px',
           width: 32
         }}
       >
         {icon}
       </Box>
-      <Box>
-        <Typography variant='body2' color='text.primary' fontWeight={600} lineHeight={1.3}>
+      <Box display='flex' flexDirection='column' gap={0.5}>
+        <Typography variant='body2' color='text.primary' fontFamily='monospace' fontWeight={600}>
           {title}
         </Typography>
-        <Typography variant='body2' color='text.secondary' lineHeight={1.4} mt={0.25}>
+        <Typography variant='caption' color='text.secondary' lineHeight={1.4}>
           {description}
         </Typography>
       </Box>
@@ -125,16 +162,10 @@ function PackageLink({ description, href, label }) {
     >
       <Box
         sx={{
-          backgroundColor: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 2,
+          ...CARD_SX,
           display: 'flex',
           flexDirection: 'column',
           gap: 0.5,
-          height: '100%',
-          px: 1.5,
-          py: 1.25,
           transition: 'background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease',
           '&:hover': {
             backgroundColor: `${COLORS.accent}18`,
@@ -181,14 +212,23 @@ export default function ParserLanding({ library }) {
 
         <Typography variant='body2' color='text.secondary' mt={2} paragraph>
           {library?.description ?? PROJECT_DESCRIPTION}
-          &nbsp;Load any replay, control playback tick by tick, and watch the game state update in real time.
         </Typography>
         <Typography variant='body2' color='text.secondary' paragraph>
-          Upload a <code>.dem</code> demo file above or pick one from the <strong>Library</strong> tab.
-          Use the player bar at the bottom to play, pause, seek, or step through ticks one by one.
+          Open a <code>.dem</code> file above. The file is parsed in the browser and is not uploaded anywhere.
+          Sample replays to download are on the <strong>Library</strong> tab.
         </Typography>
 
-        <Box display='flex' flexDirection='column' gap={1.5}>
+        <SectionHeading label='Features' />
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1,
+            gridTemplateColumns: {
+              sm: 'repeat(2, minmax(0, 1fr))',
+              xs: '1fr'
+            }
+          }}
+        >
           {FEATURES.map((feature) => <Feature key={feature.title} {...feature} />)}
         </Box>
 
