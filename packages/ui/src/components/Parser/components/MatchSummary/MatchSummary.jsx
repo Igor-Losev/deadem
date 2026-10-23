@@ -48,11 +48,11 @@ function getAdapter(library) {
   }
 }
 
-function MatchSummary({ active, demo, library, tickStore, contentVersion }) {
+function MatchSummary({ active, demo, library, seeking, tickStore, contentVersion }) {
   const [orderBy, setOrderBy] = useState('Team');
   const [order, setOrder] = useState('asc');
 
-  const tick = useCurrentTick(tickStore, active);
+  const tick = useCurrentTick(tickStore, active && !seeking);
 
   const adapter = useMemo(() => getAdapter(library), [library]);
   const players = useMemo(() => adapter.getPlayers(demo), [adapter, demo, tick, contentVersion]);

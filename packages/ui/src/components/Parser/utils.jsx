@@ -41,6 +41,10 @@ export function jsonReplacer(key, value) {
     return `${value.toString()}n`;
   }
 
+  if (value instanceof Uint8Array) {
+    return Array.from(value, (byte) => byte.toString(16).padStart(2, '0')).join(' ');
+  }
+
   if (ArrayBuffer.isView(value)) {
     return Array.from(value);
   }

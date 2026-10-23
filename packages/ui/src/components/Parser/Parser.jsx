@@ -184,7 +184,7 @@ export default function Parser({ isVisible = true, library, onLibraryChange }) {
                 if (tab.key === 'summary') {
                   return (
                     <Box key={tab.key} display={active ? 'contents' : 'none'}>
-                      <MatchSummary active={active} demo={demo} library={library} tickStore={tickStore} contentVersion={contentVersion} />
+                      <MatchSummary active={active} demo={demo} library={library} seeking={seeking} tickStore={tickStore} contentVersion={contentVersion} />
                     </Box>
                   );
                 }
