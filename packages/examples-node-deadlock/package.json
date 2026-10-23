@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-deadlock",
-  "version": "4.0.2",
+  "version": "5.0.0-rc.0",
   "description": "Node.js example scripts, benchmarks, and diagnostics for the Deadlock parser (@deademx/deadlock)",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/deadlock": "4.0.2",
-    "@deademx/examples-common": "4.0.2"
+    "@deademx/deadlock": "5.0.0-rc.0",
+    "@deademx/examples-common": "5.0.0-rc.0"
   }
 }
