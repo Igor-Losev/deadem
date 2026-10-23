@@ -12,8 +12,7 @@ const configuration = defineConfig((_) => {
                 fileName: () => 'deadem-dota2.min.js',
                 formats: [ 'umd' ]
             },
-            emptyOutDir: true,
-            sourcemap: true
+            emptyOutDir: true
         }
     };
 });

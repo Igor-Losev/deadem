@@ -34,7 +34,7 @@
     "packages/dota2/src/**/*.js",
     "packages/deadlock/index.js",
     "packages/deadlock/src/**/*.js",
-    "packages/engine/src/**/*.d.ts"
+    "packages/engine/snappyjs.d.ts"
   ],
   "exclude": [
     "**/node_modules",

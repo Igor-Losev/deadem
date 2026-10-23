@@ -10,7 +10,7 @@
   "include": [
     "index.js",
     "src/**/*.js",
-    "src/**/*.d.ts"
+    "snappyjs.d.ts"
   ],
   "exclude": [
     "**/*.browser.js"
