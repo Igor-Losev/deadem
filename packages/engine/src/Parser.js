@@ -170,8 +170,9 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {keyof InterceptorMap} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
@@ -180,8 +181,9 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {InterceptorPreStage} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
