@@ -10,46 +10,46 @@ class Logger {
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     debug(...args) {
-        return this._logger.debug(...args);
+        this._logger.debug(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     error(...args) {
-        return this._logger.error(...args);
+        this._logger.error(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     info(...args) {
-        return this._logger.info(...args);
+        this._logger.info(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     trace(...args) {
-        return this._logger.trace(...args);
+        this._logger.trace(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     warn(...args) {
-        return this._logger.warn(...args);
+        this._logger.warn(...args);
     }
 
     /**
