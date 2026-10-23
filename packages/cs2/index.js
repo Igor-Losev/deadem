@@ -1,7 +1,7 @@
 /** @typedef {import('@deademx/engine').DemoPacketObject} DemoPacketObject */
 /** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
 /** @typedef {import('@deademx/engine').EntityMutation} EntityMutation */
-/** @typedef {import('@deademx/engine').InterceptorMap<typeof Proto>} InterceptorMap */
+/** @typedef {import('@deademx/engine').InterceptorMap<Cs2Proto>} InterceptorMap */
 /** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('@deademx/engine').MessagePacketObject} MessagePacketObject */
 /** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
@@ -14,7 +14,7 @@
 /** @typedef {import('@deademx/engine').SyncObject} SyncObject */
 
 /** @import { Logger, ParserConfiguration } from '@deademx/engine' */
-/** @import * as Proto from '@deademx/cs2/proto' */
+/** @import { Cs2Proto } from '@deademx/cs2/proto' */
 
 import {
     Parser as EngineParser,
@@ -35,7 +35,7 @@ function createRegistry() {
 }
 
 /**
- * @extends {EngineParser<typeof Proto>}
+ * @extends {EngineParser<Cs2Proto>}
  */
 class Parser extends EngineParser {
     /**
@@ -49,7 +49,7 @@ class Parser extends EngineParser {
 }
 
 /**
- * @extends {EnginePlayer<typeof Proto>}
+ * @extends {EnginePlayer<Cs2Proto>}
  */
 class Player extends EnginePlayer {
     /**

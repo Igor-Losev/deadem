@@ -17,3 +17,20 @@ export * from './usermessages_pb.js';
 export * from './valveextensions_pb.js';
 
 export declare const descriptors: Registry;
+
+type Module =
+    & typeof import('./base_modifier_pb.js')
+    & typeof import('./citadel_gameevents_pb.js')
+    & typeof import('./citadel_gcmessages_common_pb.js')
+    & typeof import('./citadel_usercmd_pb.js')
+    & typeof import('./citadel_usermessages_pb.js')
+    & typeof import('./demo_pb.js')
+    & typeof import('./gameevents_pb.js')
+    & typeof import('./netmessages_pb.js')
+    & typeof import('./networkbasetypes_pb.js')
+    & typeof import('./te_pb.js')
+    & typeof import('./usercmd_pb.js')
+    & typeof import('./usermessages_pb.js')
+    & typeof import('./valveextensions_pb.js');
+
+export interface DeadlockProto extends Module {}

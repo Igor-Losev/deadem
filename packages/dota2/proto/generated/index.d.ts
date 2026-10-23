@@ -16,3 +16,19 @@ export * from './usermessages_pb.js';
 export * from './valveextensions_pb.js';
 
 export declare const descriptors: Registry;
+
+type Module =
+    & typeof import('./base_gcmessages_pb.js')
+    & typeof import('./demo_pb.js')
+    & typeof import('./dota_commonmessages_pb.js')
+    & typeof import('./dota_modifiers_pb.js')
+    & typeof import('./dota_shared_enums_pb.js')
+    & typeof import('./dota_usermessages_pb.js')
+    & typeof import('./gameevents_pb.js')
+    & typeof import('./netmessages_pb.js')
+    & typeof import('./networkbasetypes_pb.js')
+    & typeof import('./te_pb.js')
+    & typeof import('./usermessages_pb.js')
+    & typeof import('./valveextensions_pb.js');
+
+export interface Dota2Proto extends Module {}

@@ -30,7 +30,7 @@ class ProtoIndexWriter {
         const entries = ProtoIndexWriter._collectEntries(directory);
 
         fs.writeFileSync(path.join(directory, 'index.js'), ProtoIndexWriter._renderModule(entries));
-        fs.writeFileSync(path.join(directory, 'index.d.ts'), ProtoIndexWriter._renderDeclarations(entries));
+        fs.writeFileSync(path.join(directory, 'index.d.ts'), ProtoIndexWriter._renderDeclarations(entries, ProtoIndexWriter._getModuleName(workspace)));
     }
 
     /**
@@ -71,9 +71,10 @@ ${entries.map(entry => `    ${entry.descriptor}`).join(',\n')}
      * @private
      * @static
      * @param {Array<ProtoIndexEntry>} entries
+     * @param {string} name
      * @returns {string}
      */
-    static _renderDeclarations(entries) {
+    static _renderDeclarations(entries, name) {
         return `${HEADER}
 
 import type { Registry } from '@bufbuild/protobuf';
@@ -81,6 +82,11 @@ import type { Registry } from '@bufbuild/protobuf';
 ${ProtoIndexWriter._renderReexports(entries)}
 
 export declare const descriptors: Registry;
+
+type Module =
+${entries.map(entry => `    & typeof import('./${entry.file}')`).join('\n')};
+
+export interface ${name} extends Module {}
 `;
     }
 
@@ -92,6 +98,18 @@ export declare const descriptors: Registry;
      */
     static _renderReexports(entries) {
         return entries.map(entry => `export * from './${entry.file}';`).join('\n');
+    }
+
+    /**
+     * Names the module type, e.g. `DeadlockProto`.
+     *
+     * @private
+     * @static
+     * @param {Workspace} workspace
+     * @returns {string}
+     */
+    static _getModuleName(workspace) {
+        return `${workspace.code.charAt(0)}${workspace.code.slice(1).toLowerCase()}Proto`;
     }
 
     /**
