@@ -1,0 +1,19 @@
+{
+  "name": "@deademx/examples-node-deadlock",
+  "version": "4.0.2",
+  "description": "Node.js example scripts, benchmarks, and diagnostics for the Deadlock parser (@deademx/deadlock)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "node --expose-gc ./scripts/000_benchmark.js",
+    "profile": "node ./scripts/003_profile.js",
+    "lint": "eslint"
+  },
+  "imports": {
+    "#root/*.js": "./*.js"
+  },
+  "dependencies": {
+    "@deademx/deadlock": "4.0.2",
+    "@deademx/examples-common": "4.0.2"
+  }
+}

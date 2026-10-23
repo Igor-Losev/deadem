@@ -8,7 +8,7 @@
       "path": "./packages/cs2/tsconfig.emit.json"
     },
     {
-      "path": "./packages/deadem/tsconfig.emit.json"
+      "path": "./packages/deadlock/tsconfig.emit.json"
     },
     {
       "path": "./packages/dota2/tsconfig.emit.json"

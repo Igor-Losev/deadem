@@ -20,7 +20,7 @@ require_clean_git_status() {
 }
 
 get_version() {
-    node -p "JSON.parse(require('fs').readFileSync('./packages/deadem/package.json', 'utf8')).version"
+    node -p "JSON.parse(require('fs').readFileSync('./packages/engine/package.json', 'utf8')).version"
 }
 
 has_pre_state() {

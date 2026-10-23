@@ -11,7 +11,7 @@ export default function loadLibraryModule(library) {
     throw new Error('Window is unavailable');
   }
 
-  const existingLibrary = window[library.globalName];
+  const existingLibrary = window.deadem?.[library.key];
 
   if (existingLibrary) {
     return Promise.resolve(existingLibrary);
@@ -42,7 +42,7 @@ function injectScript(library) {
     script.src = getLibraryScriptUrl(library);
 
     script.onload = () => {
-      const runtimeLibrary = window[library.globalName];
+      const runtimeLibrary = window.deadem?.[library.key];
 
       if (runtimeLibrary) {
         resolve(runtimeLibrary);
@@ -50,7 +50,7 @@ function injectScript(library) {
       }
 
       loadedLibraryPromises.delete(library.key);
-      reject(new Error(`Global ${library.globalName} is unavailable after script load`));
+      reject(new Error(`Global deadem.${library.key} is unavailable after script load`));
     };
 
     script.onerror = () => {

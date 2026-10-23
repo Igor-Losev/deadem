@@ -15,7 +15,7 @@
 
 The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Dota 2: where its data lives, examples and performance.
 
-Other games: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) for Deadlock and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) for Counter-Strike 2.
+Other games: [`@deademx/deadlock`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadlock/README.md) for Deadlock and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) for Counter-Strike 2.
 
 ## Contents
 
@@ -55,7 +55,7 @@ The same import works in Node.js, Bun and in a browser app built with a bundler 
 ```
 
 ```js
-const { Parser, Player } = window.deademDota2;
+const { Parser, Player } = window.deadem.dota2;
 ```
 
 ## Quick Start

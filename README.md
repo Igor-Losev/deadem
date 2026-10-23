@@ -9,7 +9,7 @@ deadem
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine?label=%40deademx%2Fengine" /></a>
-<a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem?label=deadem" /></a>
+<a href="https://www.npmjs.com/package/@deademx/deadlock" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdeadlock?label=%40deademx%2Fdeadlock" /></a>
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2?label=%40deademx%2Fcs2" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2?label=%40deademx%2Fdota2" /></a>
 
@@ -27,7 +27,7 @@ The packages depend only on:
 | Package | Description |
 | --- | --- |
 | [`@deademx/engine`](./packages/engine/README.md) | Shared Source 2 engine: parser, replay player, interceptor pipeline, broadcast client, configuration. Its README describes the model and the API. |
-| [`deadem`](./packages/deadem/README.md) | Deadlock implementation built on top of `@deademx/engine`. |
+| [`@deademx/deadlock`](./packages/deadlock/README.md) | Deadlock implementation built on top of `@deademx/engine`. |
 | [`@deademx/cs2`](./packages/cs2/README.md) | Counter-Strike 2 implementation built on top of `@deademx/engine`. |
 | [`@deademx/dota2`](./packages/dota2/README.md) | Dota 2 implementation built on top of `@deademx/engine`. |
 
@@ -36,7 +36,7 @@ The packages depend only on:
 | Package | Description |
 | --- | --- |
 | [`@deademx/examples-common`](./packages/examples-common) | Shared helpers, fixtures and support code used by the example packages. |
-| [`@deademx/examples-node-deadem`](./packages/examples-node-deadem) | Node.js example scripts, benchmarks and diagnostics for `deadem`. |
+| [`@deademx/examples-node-deadlock`](./packages/examples-node-deadlock) | Node.js example scripts, benchmarks and diagnostics for `@deademx/deadlock`. |
 | [`@deademx/examples-node-cs2`](./packages/examples-node-cs2) | Node.js example scripts, benchmarks and diagnostics for `@deademx/cs2`. |
 | [`@deademx/examples-node-dota2`](./packages/examples-node-dota2) | Node.js example scripts, benchmarks and diagnostics for `@deademx/dota2`. |
 | [`@deademx/tools`](./packages/tools) | Repository tooling, such as syncing `.proto` files and building descriptors. |
@@ -53,7 +53,7 @@ npm install
 Scripts live under `packages/examples-node-<game>/scripts`. Missing demos are downloaded from [deadem.com](https://deadem.com). Pass `--demo=<path>` to parse a local `.dem` file:
 
 ```bash
-node ./packages/examples-node-deadem/scripts/100_parse.js --demo=./match.dem
+node ./packages/examples-node-deadlock/scripts/100_parse.js --demo=./match.dem
 node ./packages/examples-node-cs2/scripts/100_parse.js --demo=./match.dem
 node ./packages/examples-node-dota2/scripts/100_parse.js --demo=./match.dem
 ```

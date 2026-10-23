@@ -1,0 +1,18 @@
+/** @import { Readable } from 'node:stream' */
+
+import { BroadcastAgent, BroadcastGateway, Logger } from '@deademx/deadlock';
+
+import FileSystem from '@deademx/examples-common/data/FileSystem.js';
+
+(async () => {
+    const FROM_BEGINNING = true;
+    const MATCH_ID = '75637129_201673668';
+
+    const broadcastGateway = new BroadcastGateway('dist1-ord1.steamcontent.com/tv');
+    const broadcastAgent = new BroadcastAgent(broadcastGateway, MATCH_ID, Logger.CONSOLE_DEBUG);
+
+    const readable = /** @type {Readable} */ (broadcastAgent.stream(FROM_BEGINNING));
+    const writable = FileSystem.createWriteStream(`./${MATCH_ID}.bin`);
+
+    readable.pipe(writable);
+})();

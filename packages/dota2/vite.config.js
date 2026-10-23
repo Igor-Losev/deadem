@@ -8,7 +8,7 @@ const configuration = defineConfig((_) => {
         build: {
             lib: {
                 entry: './index.js',
-                name: 'deademDota2',
+                name: 'deadem.dota2',
                 fileName: () => 'deadem-dota2.min.js',
                 formats: [ 'umd' ]
             },

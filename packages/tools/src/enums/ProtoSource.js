@@ -85,7 +85,7 @@ class ProtoSource {
     }
 
     static get CS2() { return cs2; }
-    static get DEADEM() { return deadem; }
+    static get DEADLOCK() { return deadlock; }
     static get DOTA2() { return dota2; }
 }
 
@@ -109,7 +109,7 @@ const cs2 = new ProtoSource('CS2', Workspace.CS2, 'GameTracking-CS2', [
     'valveextensions.proto'
 ]);
 
-const deadem = new ProtoSource('DEADEM', Workspace.DEADEM, 'GameTracking-Deadlock', [
+const deadlock = new ProtoSource('DEADLOCK', Workspace.DEADLOCK, 'GameTracking-Deadlock', [
     'base_gcmessages.proto',
     'base_modifier.proto',
     'citadel_gameevents.proto',

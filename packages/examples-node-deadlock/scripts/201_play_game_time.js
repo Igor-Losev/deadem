@@ -1,0 +1,20 @@
+import { Player } from '@deademx/deadlock';
+
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
+import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObserver.js';
+
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
+
+(async () => {
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
+
+    const player = new Player();
+    const gameObserver = new DeadlockGameObserver(player);
+
+    await player.load(reader);
+    await player.seekToTick(player.getLastTick());
+
+    await player.dispose();
+
+    console.log(`Game finished in: [ ${gameObserver.getGameClockFormatted()} ]. Demo duration [ ${gameObserver.getTotalClockFormatted()} ]`);
+})();

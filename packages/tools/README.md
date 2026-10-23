@@ -18,6 +18,6 @@ npm run proto:build -- --workspaces=dota2
 npm run proto:sync -- --workspaces=dota2
 
 # deadlock
-npm run proto:build -- --workspaces=deadem 
-npm run proto:sync -- --workspaces=deadem
+npm run proto:build -- --workspaces=deadlock 
+npm run proto:sync -- --workspaces=deadlock
 ```

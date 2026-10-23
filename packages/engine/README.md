@@ -10,12 +10,12 @@
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/engine" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fengine" /></a>
 
-**@deademx/engine** is the shared Source 2 core of [`deadem`](https://www.npmjs.com/package/deadem) (Deadlock), [`@deademx/cs2`](https://www.npmjs.com/package/@deademx/cs2) (Counter-Strike 2) and [`@deademx/dota2`](https://www.npmjs.com/package/@deademx/dota2) (Dota 2).
+**@deademx/engine** is the shared Source 2 core of [`@deademx/deadlock`](https://www.npmjs.com/package/@deademx/deadlock) (Deadlock), [`@deademx/cs2`](https://www.npmjs.com/package/@deademx/cs2) (Counter-Strike 2) and [`@deademx/dota2`](https://www.npmjs.com/package/@deademx/dota2) (Dota 2).
 
 The engine provides common classes for working with Source 2 demos. It does not run on its own and relies on configuration from a game package: the `.proto` files of the game and decoder instructions.
 
 > [!NOTE]
-> All examples use `deadem` (Deadlock). The API is the same for the other games.
+> All examples use `@deademx/deadlock`. The API is the same for the other games.
 
 ## Contents
 
@@ -85,13 +85,13 @@ The engine provides common classes for working with Source 2 demos. It does not 
 ## Quick Start
 
 ```bash
-npm install deadem
+npm install @deademx/deadlock
 ```
 
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser } from 'deadem';
+import { Parser } from '@deademx/deadlock';
 
 (async () => {
     const parser = new Parser();
@@ -157,7 +157,7 @@ When `parse()` returns, `Demo` holds the end of the match. The example below cap
 ```js
 import { createReadStream } from 'node:fs';
 
-import { InterceptorStage, Parser } from 'deadem';
+import { InterceptorStage, Parser } from '@deademx/deadlock';
 
 const TICK = 10 * 60 * 64; // 10 minutes into the demo at 64 ticks per second
 
@@ -263,7 +263,7 @@ Interceptors are synchronous, and the engine does not await a returned promise.
 One call per demo packet.
 
 ```js
-import { InterceptorStage, Parser } from 'deadem';
+import { InterceptorStage, Parser } from '@deademx/deadlock';
 
 const parser = new Parser();
 
@@ -277,7 +277,7 @@ parser.registerPostInterceptor(InterceptorStage.DEMO_PACKET, (demoPacket) => {
 One call per message packet.
 
 ```js
-import { MessagePacketType } from 'deadem';
+import { MessagePacketType } from '@deademx/deadlock';
 
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
     if (!messagePacket.is(MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE)) return;
@@ -291,7 +291,7 @@ parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, mes
 One call per `SVC_PACKET_ENTITIES` message, with an [`EntityMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/entity/EntityMutationEvent.js) for every changed entity.
 
 ```js
-import { EntityOperation } from 'deadem';
+import { EntityOperation } from '@deademx/deadlock';
 
 parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, messagePacket, events) => {
     for (const event of events) {
@@ -319,7 +319,7 @@ parser.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, (demoPacket, mess
 One call per `DEM_STRING_TABLES` (demo packet) and per `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE` or `SVC_CLEAR_ALL_STRING_TABLES` (message packets), with a [`StringTableMutationEvent`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/src/data/tables/string/StringTableMutationEvent.js) for every changed table.
 
 ```js
-import { StringTableOperation, StringTableType } from 'deadem';
+import { StringTableOperation, StringTableType } from '@deademx/deadlock';
 
 parser.registerPreInterceptor(InterceptorStage.STRING_TABLE, (demoPacket, messagePacket, events) => {
     for (const event of events) {
@@ -408,7 +408,7 @@ POST DEMO_PACKET
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Player } from 'deadem';
+import { Player } from '@deademx/deadlock';
 
 const player = new Player();
 
@@ -499,7 +499,7 @@ HTTP broadcast delivers a live match over HTTP in fragments. The engine provides
 The structure of the broadcast differs from that of a `.dem` file, so `Parser` needs the source explicitly: `DemoSource.HTTP_BROADCAST`.
 
 ```js
-import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from 'deadem';
+import { BroadcastAgent, BroadcastGateway, DemoSource, Parser } from '@deademx/deadlock';
 
 const MATCH_ID = 'MATCH_IDENTIFIER_AND_SALT';
 
@@ -530,7 +530,7 @@ Filters are the primary lever for parser performance — reducing decoded data c
 Four message packets always pass the message filter, because the engine needs them internally: `SVC_SERVER_INFO`, `SVC_CREATE_STRING_TABLE`, `SVC_UPDATE_STRING_TABLE` and `SVC_CLEAR_ALL_STRING_TABLES`.
 
 ```js
-import { MessagePacketType, Parser, Player, ParserConfiguration } from 'deadem';
+import { MessagePacketType, Parser, Player, ParserConfiguration } from '@deademx/deadlock';
 
 // Skips all entities: everything else is decoded.
 const configA = new ParserConfiguration({
@@ -566,7 +566,7 @@ Entity decoding (`SVC_PACKET_ENTITIES`) accounts for most of the parser's work. 
 | Player input only: `SVC_USER_COMMANDS` | 2.7× | 1.8× | — |
 | One chat message type, no entities and no user commands | 5.0× | 3.7× | 4.2× |
 
-The absolute numbers and the memory usage are in the performance sections of [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance).
+The absolute numbers and the memory usage are in the performance sections of [`@deademx/deadlock`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadlock/README.md#performance), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md#performance) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md#performance).
 
 ### Tips
 

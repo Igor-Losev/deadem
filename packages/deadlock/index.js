@@ -1,0 +1,94 @@
+/** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
+/** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
+/** @typedef {import('@deademx/engine').ParserConfigurationOptions} ParserConfigurationOptions */
+/** @typedef {import('@deademx/engine').PerformanceTrackerStats} PerformanceTrackerStats */
+/** @typedef {import('@deademx/engine').PlaybackInterruptionReason} PlaybackInterruptionReason */
+/** @typedef {import('@deademx/engine').ProtoState} ProtoState */
+/** @typedef {import('@deademx/engine').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('@deademx/engine').StringTableRawValue} StringTableRawValue */
+/** @typedef {import('@deademx/engine').SyncObject} SyncObject */
+
+/** @import { Logger, ParserConfiguration } from '@deademx/engine' */
+/** @import * as Proto from '@deademx/deadlock/proto' */
+
+import {
+    Parser as EngineParser,
+    Player as EnginePlayer,
+    SchemaRegistry
+} from '@deademx/engine';
+
+import Bootstrap from './src/bootstrap/Bootstrap.js';
+
+import { descriptors } from './proto/generated/index.js';
+
+function createRegistry() {
+    const registry = new SchemaRegistry(descriptors);
+
+    Bootstrap.run(registry);
+
+    return registry;
+}
+
+/**
+ * @extends {EngineParser<typeof Proto>}
+ */
+class Parser extends EngineParser {
+    /**
+     * @constructor
+     * @param {ParserConfiguration=} configuration
+     * @param {Logger=} logger
+     */
+    constructor(configuration, logger) {
+        super(createRegistry(), configuration, logger);
+    }
+}
+
+/**
+ * @extends {EnginePlayer<typeof Proto>}
+ */
+class Player extends EnginePlayer {
+    /**
+     * @constructor
+     * @param {ParserConfiguration=} configuration
+     * @param {Logger=} logger
+     */
+    constructor(configuration, logger) {
+        super(createRegistry(), configuration, logger);
+    }
+}
+
+export {
+    BroadcastAgent,
+    BroadcastFragmentType,
+    BroadcastGateway,
+    Class,
+    Demo,
+    DemoPacket,
+    DemoPacketType,
+    DemoSource,
+    Entity,
+    EntityMutationEvent,
+    EntityOperation,
+    InterceptorStage,
+    Logger,
+    MessagePacket,
+    ParserConfiguration,
+    PlaybackInterruptedError,
+    PlayerState,
+    Printer,
+    Protocol,
+    Server,
+    StringTable,
+    StringTableContainer,
+    StringTableEntry,
+    StringTableMutationEvent,
+    StringTableOperation,
+    UserCommand,
+    UserCommandEvent
+} from '@deademx/engine';
+
+export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
+export { default as StringTableType } from './src/data/enums/StringTableType.js';
+
+export { Parser, Player };

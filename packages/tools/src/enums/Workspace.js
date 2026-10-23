@@ -111,13 +111,13 @@ class Workspace {
 
     static get ENGINE() { return engine; }
     static get CS2() { return cs2; }
-    static get DEADEM() { return deadem; }
+    static get DEADLOCK() { return deadlock; }
     static get DOTA2() { return dota2; }
 }
 
 const engine = new Workspace('ENGINE', 'engine', false);
 const cs2 = new Workspace('CS2', 'cs2', true);
-const deadem = new Workspace('DEADEM', 'deadem', true);
+const deadlock = new Workspace('DEADLOCK', 'deadlock', true);
 const dota2 = new Workspace('DOTA2', 'dota2', true);
 
 export default Workspace;

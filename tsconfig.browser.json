@@ -36,8 +36,8 @@
     "packages/cs2/src/**/*.js",
     "packages/dota2/index.js",
     "packages/dota2/src/**/*.js",
-    "packages/deadem/index.js",
-    "packages/deadem/src/**/*.js",
+    "packages/deadlock/index.js",
+    "packages/deadlock/src/**/*.js",
     "packages/engine/src/**/*.d.ts"
   ],
   "exclude": [

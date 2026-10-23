@@ -52,8 +52,8 @@ const PACKAGE_LINKS = [
   },
   {
     description: 'Deadlock parser and replay player',
-    href: 'https://www.npmjs.com/package/deadem',
-    label: 'deadem'
+    href: 'https://www.npmjs.com/package/@deademx/deadlock',
+    label: '@deademx/deadlock'
   },
   {
     description: 'Counter-Strike 2 parser and replay player',

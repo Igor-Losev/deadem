@@ -70,7 +70,7 @@ jobs:
               75439032-6448
               100576005-6679
             demo_cdn_prefix: https://deadem.com/demos/deadlock
-            parser_script: ./packages/examples-node-deadem/scripts/101_parse_multiple.js
+            parser_script: ./packages/examples-node-deadlock/scripts/101_parse_multiple.js
           - name: cs2
             demo_dir: demos/cs2
             demo_files: |
