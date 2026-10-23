@@ -11,38 +11,32 @@ deadem
 <a href="https://www.npmjs.com/package/deadem" alt=""><img src="https://img.shields.io/npm/v/deadem" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6766-darkGreen" /></a>
 
-**deadem** is the Deadlock (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**deadem** is a Deadlock demo parser and replay player for Node.js, Deno, Bun and browsers.
 
-The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Deadlock-specific details only.
+The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Deadlock: where its data lives, examples and performance.
 
-Sibling packages: [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) (Dota 2).
+Other games: [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) for Counter-Strike 2 and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md) for Dota 2.
 
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install from npm or use the browser bundle.
+  From npm or as a browser bundle.
 - [Quick Start](#quick-start)<br/>
-  Parse a replay, print stats.
-- [What Deadlock Adds](#what-deadlock-adds)<br/>
-  Everything the package registers on top of the engine.
-  - [Message Types](#message-types)<br/>
-    Deadlock-specific message types.
-  - [String Tables](#string-tables)<br/>
-    Deadlock-specific string tables.
-  - [Decoders](#decoders)<br/>
-    Deadlock-specific entity field decoders.
+  The scoreboard of a match.
+- [Where to Find](#where-to-find)<br/>
+  Deadlock data and its source.
 - [Examples](#examples)<br/>
-  Runnable scripts: parsing, player, broadcast.
+  Runnable scripts.
 - [Compatibility](#compatibility)<br/>
   Game builds and runtimes.
 - [Performance](#performance)<br/>
-  Measured throughput and memory usage.
+  Speed and memory.
 - [License](#license)<br/>
   MIT.
 
 ## Installation
 
-### Node.js
+### npm
 
 ```shell
 npm install deadem --save
@@ -52,10 +46,12 @@ npm install deadem --save
 import { Parser, Player } from 'deadem';
 ```
 
-### Browser
+The same import works in Node.js, Deno, Bun and in a browser app built with a bundler such as Vite or webpack.
+
+### CDN
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/deadem@4.X.X/dist/deadem.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/deadem@5.X.X/dist/deadem.min.js"></script>
 ```
 
 ```js
@@ -67,93 +63,112 @@ const { Parser, Player } = window.deadem;
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, Printer } from 'deadem';
+import { Parser } from 'deadem';
 
 const parser = new Parser();
-const readable = createReadStream('./match.dem');
 
-await parser.parse(readable);
+await parser.parse(createReadStream('./match.dem'));
 
-const printer = new Printer(parser);
+for (const controller of parser.getDemo().getEntitiesByClassName('CCitadelPlayerController')) {
+    if (controller.getField('m_iTeamNum') < 2) continue; // spectators and SourceTV
 
-printer.printStats();
+    const name = controller.getField('m_iszPlayerName');
+    const kills = controller.getField('m_PlayerDataGlobal.m_iPlayerKills');
+    const deaths = controller.getField('m_PlayerDataGlobal.m_iDeaths');
+    const assists = controller.getField('m_PlayerDataGlobal.m_iPlayerAssists');
+    const netWorth = controller.getField('m_PlayerDataGlobal.m_iGoldNetWorth');
 
-await parser.dispose(); // cleanup state and resources
+    console.log(`${name}: ${kills}/${deaths}/${assists}, ${netWorth} souls`);
+}
+
+await parser.dispose();
 ```
 
-## What Deadlock Adds
+## Where to Find
 
-[`Bootstrap`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/bootstrap/Bootstrap.js) registers the Deadlock schema onto the engine registry:
+The table lists the most common data. [Deadem Explorer](https://deadem.com) shows every entity with its fields and their types.
 
-### Message Types
-
-Deadlock-specific [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/MessagePacketType.js)s — kills, objectives, chat, etc.
-
-### String Tables
-
-Deadlock-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/src/data/enums/StringTableType.js)s.
-
-| Table | Entries | Content |
+| Data | Kind | Source |
 | --- | --- | --- |
-| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Decoded into [`CModifierTableEntry`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/proto/source/base_modifier.proto) lazily on first `entry.value` read. Updated on roughly two thirds of all ticks. |
+| Player name, team and hero | Entity | `CCitadelPlayerController`: `m_iszPlayerName`, `m_iTeamNum`, `m_PlayerDataGlobal.m_nHeroID` |
+| Kills, deaths, assists and net worth | Entity | `CCitadelPlayerController`, under `m_PlayerDataGlobal`: `m_iPlayerKills`, `m_iDeaths`, `m_iPlayerAssists`, `m_iGoldNetWorth` |
+| Hero health | Entity | `CCitadelPlayerPawn`: `m_iHealth`, `m_iMaxHealth` |
+| Hero position | Entity | `CCitadelPlayerPawn`, under `CBodyComponent.m_skeletonInstance.m_vecOrigin`: a cell and an offset in it per axis, `m_cellX` and `m_vecX` |
+| Hero of a player | Entity | `m_hHeroPawn` on the controller. `m_hController` on the pawn is empty while the hero is dead |
+| Abilities, items and cooldowns | Entity | Handles in `m_CCitadelAbilityComponent.m_vecAbilities` on the pawn, `m_flCooldownStart` and `m_flCooldownEnd` on each ability or item |
+| Game start and pause | Entity | `CCitadelGameRulesProxy`: `m_pGameRules.m_flGameStartTime`, `m_pGameRules.m_bGamePaused` |
+| Damage | Message | `CITADEL_USER_MESSAGE_DAMAGE`: `entindexAttacker`, `entindexVictim`, `damage` |
+| Kill feed | Message | `CITADEL_USER_MESSAGE_HERO_KILLED`: `entindexAttacker`, `entindexVictim` |
+| Chat | Message | `CITADEL_USER_MESSAGE_CHAT_MESSAGE`: `playerSlot`, `text` |
+| Souls | Message | `CITADEL_USER_MESSAGE_CURRENCY_CHANGED`: `userid` (the player slot, or `-1`), `delta`, `newValue` |
+| Buffs and debuffs | String table | `StringTableType.ACTIVE_MODIFIERS` |
+| Player info | String table | `StringTableType.USER_INFO`: `name`, `steamid` |
+| Player input | User command | `command.state`: `base.viewangles`, `inShop`, `enemyHeroAimedAt` |
 
-### Decoders
+Field prefixes:
 
-Deadlock-specific entity field decoders. Entity examples: `CCitadelPlayerController`, `CCitadelPlayerPawn`, `CCitadelGameRulesProxy`. Entities, fields and types can be browsed in [Deadem Explorer](https://deadem.com).
+- `entindex*` holds an entity index for `demo.getEntity()`.
+- `m_h*` holds a handle for `demo.getEntityByHandle()`.
 
 ## Examples
 
-All example scripts live in the [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
+The scripts live in [`examples-node-deadem`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-deadem/scripts). A script runs with `node ./packages/examples-node-deadem/scripts/<file>`. Missing demos are downloaded from [deadem.com](https://deadem.com), and scripts that read a demo accept `--demo=<path>`.
 
-### Parsing
+Parser:
 
-| # | Description | Source | Command |
-| --- | --- | --- | --- |
-| 100 | Parse a single replay file | [100_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/100_parse.js) | `node ./packages/examples-node-deadem/scripts/100_parse.js` |
-| 101 | Parse multiple replay files | [101_parse_multiple.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/101_parse_multiple.js) | `node ./packages/examples-node-deadem/scripts/101_parse_multiple.js --matches="36126255,36127043"` |
-| 102 | Parse with selective packet filtering | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/102_parse_selective.js) | `node ./packages/examples-node-deadem/scripts/102_parse_selective.js` |
-| 103 | Extract chat messages and chat wheel events | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/103_parse_chat.js) | `node ./packages/examples-node-deadem/scripts/103_parse_chat.js` |
-| 104 | Extract kill feed events | [104_parse_kill_feed.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/104_parse_kill_feed.js) | `node ./packages/examples-node-deadem/scripts/104_parse_kill_feed.js` |
-| 105 | Extract ability usage events | [105_parse_ability_feed.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/105_parse_ability_feed.js) | `node ./packages/examples-node-deadem/scripts/105_parse_ability_feed.js` |
-| 106 | Parse mid boss spawn and kill events | [106_parse_mid_boss_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js) | `node ./packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js` |
-| 107 | Parse tower destruction events | [107_parse_tower_deaths.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/107_parse_tower_deaths.js) | `node ./packages/examples-node-deadem/scripts/107_parse_tower_deaths.js` |
-| 108 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [108_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js) | `node ./packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js` |
-| 109 | Rank input fields in `SVC_USER_COMMANDS` by how often they are present and change | [109_parse_input_activity.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/109_parse_input_activity.js) | `node ./packages/examples-node-deadem/scripts/109_parse_input_activity.js` |
+- [`100_parse.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/100_parse.js): parse a single replay.
+- [`101_parse_multiple.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/101_parse_multiple.js): parse several replays, for example `--matches="36126255,36127043"`.
+- [`102_parse_selective.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/102_parse_selective.js): parse with filters.
+- [`103_parse_chat.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/103_parse_chat.js): chat messages and chat wheel events.
+- [`104_parse_kill_feed.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/104_parse_kill_feed.js): the kill feed.
+- [`105_parse_ability_feed.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/105_parse_ability_feed.js): ability usage.
+- [`106_parse_mid_boss_deaths.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/106_parse_mid_boss_deaths.js): mid boss spawns and kills.
+- [`107_parse_tower_deaths.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/107_parse_tower_deaths.js): tower destructions.
+- [`108_parse_entity_field_stats.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/108_parse_entity_field_stats.js): the entity classes and fields that change most often.
+- [`109_parse_input_activity.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/109_parse_input_activity.js): the user command fields that change most often.
 
-### Player
+Player:
 
-| # | Description | Source | Command |
-| --- | --- | --- | --- |
-| 200 | Load and play back a replay file | [200_play.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/200_play.js) | `node ./packages/examples-node-deadem/scripts/200_play.js` |
-| 201 | Get game duration from replay | [201_play_game_time.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/201_play_game_time.js) | `node ./packages/examples-node-deadem/scripts/201_play_game_time.js` |
-| 202 | Identify the top damage dealer | [202_play_top_damage_dealer.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/202_play_top_damage_dealer.js) | `node ./packages/examples-node-deadem/scripts/202_play_top_damage_dealer.js` |
-| 203 | Print the final scoreboard | [203_play_scoreboard.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/203_play_scoreboard.js) | `node ./packages/examples-node-deadem/scripts/203_play_scoreboard.js` |
+- [`200_play.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/200_play.js): load and play a replay.
+- [`201_play_game_time.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/201_play_game_time.js): the game duration.
+- [`202_play_top_damage_dealer.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/202_play_top_damage_dealer.js): the top damage dealer.
+- [`203_play_scoreboard.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/203_play_scoreboard.js): the final scoreboard.
 
-### Broadcast
+HTTP broadcast:
 
-| # | Description | Source | Command |
-| --- | --- | --- | --- |
-| 300 | Save HTTP Broadcast data to a file | [300_broadcast_save.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/300_broadcast_save.js) | `node ./packages/examples-node-deadem/scripts/300_broadcast_save.js` |
-| 301 | Parse HTTP Broadcast live | [301_broadcast_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/301_broadcast_parse.js) | `node ./packages/examples-node-deadem/scripts/301_broadcast_parse.js` |
-| 302 | Parse HTTP Broadcast data from a saved file | [302_broadcast_parse_file.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/302_broadcast_parse_file.js) | `node ./packages/examples-node-deadem/scripts/302_broadcast_parse_file.js` |
+- [`300_broadcast_save.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/300_broadcast_save.js): save a broadcast to a file.
+- [`301_broadcast_parse.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/301_broadcast_parse.js): parse a live broadcast.
+- [`302_broadcast_parse_file.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/302_broadcast_parse_file.js): parse a saved broadcast.
 
 ## Compatibility
 
-- **Game builds:** tested with Deadlock demos from build `6766` and below.
-- **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
+- **Game builds:** Deadlock demos from build `6766` and below.
+- **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance
 
-| # | Configuration                                                                            | Ticks/sec       | MB/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ---------------------------------------------------------------------------------------- | --------------- | ------------ | ------------------ | ------------ | -------------------- | ------------ |
-| 1 | Everything — `ParserConfiguration.DEFAULT`                                               | 17 408 +- 1.33% | 57 +- 1.33%  | ~6.62              | 68 +- 50.97% | 12 +- 29.08%         | 232 +- 2.12% |
-| 2 | Chat — `messagePacketTypes: [ CITADEL_USER_MESSAGE_CHAT_MESSAGE ]`                       | 87 077 +- 0.35% | 283 +- 0.35% | ~1.32              | 29 +- 3.14%  | 21 +- 4.10%          | 218 +- 3.76% |
-| 3 | One entity class: `messagePacketTypes: [ SVC_PACKET_ENTITIES ]` + `entityClasses: [ CCitadelPlayerController  ]` | 63 757 +- 3.52% | 207 +- 3.52% | ~1.81              | 34 +- 15.12% | 15 +- 3.46%          | 199 +- 5.01% |
-| 4 | Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`                               | 47 327 +- 1.62% | 154 +- 1.62% | ~2.43              | 31 +- 0.70%  | 10 +- 4.07%          | 158 +- 7.77% |
+| Configuration | Ticks/sec | MB/sec | 30-min replay, sec | Max RSS, MB |
+| --- | --- | --- | --- | --- |
+| Everything | 17 408 | 57 | ~6.62 | 232 |
+| Chat only | 87 077 | 283 | ~1.32 | 218 |
+| Player controllers only | 63 757 | 207 | ~1.81 | 199 |
+| User commands only | 47 327 | 154 | ~2.43 | 158 |
 
-Runtime: Node.js v22.14.0.
+```js
+// Everything
+ParserConfiguration.DEFAULT
 
-See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for optimization tips.
+// Chat only
+new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE ] })
+
+// Player controllers only
+new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ], entityClasses: [ 'CCitadelPlayerController' ] })
+
+// User commands only
+new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS ] })
+```
+
+Measured with [`000_benchmark.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadem/scripts/000_benchmark.js) on Node.js v22.14.0. Filters and speed tips are in the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
 ## License
 

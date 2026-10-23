@@ -11,38 +11,32 @@
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41f-darkGreen" /></a>
 
-**@deademx/dota2** is the Dota 2 (Source 2) demo parser and replay player for Node.js, Deno, Bun, and browsers, built on top of [`@deademx/engine`](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md).
+**@deademx/dota2** is a Dota 2 demo parser and replay player for Node.js, Deno, Bun and browsers.
 
-The [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md) covers the shared model — how to subscribe to data, use interceptors, configure the parser. This document covers Dota 2-specific details only.
+The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Dota 2: where its data lives, examples and performance.
 
-Sibling packages: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) (Deadlock) and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) (Counter-Strike 2).
+Other games: [`deadem`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadem/README.md) for Deadlock and [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) for Counter-Strike 2.
 
 ## Contents
 
 - [Installation](#installation)<br/>
-  Install from npm or use the browser bundle.
+  From npm or as a browser bundle.
 - [Quick Start](#quick-start)<br/>
-  Parse a replay, print stats.
-- [What Dota 2 Adds](#what-dota-2-adds)<br/>
-  Everything the package registers on top of the engine.
-  - [Message Types](#message-types)<br/>
-    Dota 2-specific message types.
-  - [String Tables](#string-tables)<br/>
-    Dota 2-specific string tables.
-  - [Decoders](#decoders)<br/>
-    Dota 2-specific entity field decoders.
+  The scoreboard of a match.
+- [Where to Find](#where-to-find)<br/>
+  Dota 2 data and its source.
 - [Examples](#examples)<br/>
-  Runnable scripts: parsing, player.
+  Runnable scripts.
 - [Compatibility](#compatibility)<br/>
-  Game patch and runtimes.
+  Game patches and runtimes.
 - [Performance](#performance)<br/>
-  Measured throughput and memory usage.
+  Speed and memory.
 - [License](#license)<br/>
   MIT.
 
 ## Installation
 
-### Node.js
+### npm
 
 ```shell
 npm install @deademx/dota2 --save
@@ -52,10 +46,12 @@ npm install @deademx/dota2 --save
 import { Parser, Player } from '@deademx/dota2';
 ```
 
-### Browser
+The same import works in Node.js, Bun and in a browser app built with a bundler such as Vite or webpack.
+
+### CDN
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/@deademx/dota2@4.X.X/dist/deadem-dota2.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@deademx/dota2@5.X.X/dist/deadem-dota2.min.js"></script>
 ```
 
 ```js
@@ -67,86 +63,101 @@ const { Parser, Player } = window.deademDota2;
 ```js
 import { createReadStream } from 'node:fs';
 
-import { Parser, Printer } from '@deademx/dota2';
+import { Parser } from '@deademx/dota2';
 
 const parser = new Parser();
-const readable = createReadStream('./match.dem');
 
-await parser.parse(readable);
+await parser.parse(createReadStream('./match.dem'));
 
-const printer = new Printer(parser);
+const demo = parser.getDemo();
+const [ resource ] = demo.getEntitiesByClassName('CDOTA_PlayerResource');
 
-printer.printStats();
+for (const controller of demo.getEntitiesByClassName('CDOTAPlayerController')) {
+    if (controller.getField('m_iTeamNum') < 2) continue; // spectators and SourceTV
 
-await parser.dispose(); // cleanup state and resources
+    const id = String(controller.getField('m_nPlayerID')).padStart(4, '0');
+    const name = controller.getField('m_iszPlayerName');
+    const hero = demo.getEntityByHandle(controller.getField('m_hAssignedHero'));
+    const kills = resource.getField(`m_vecPlayerTeamData.${id}.m_iKills`);
+    const deaths = resource.getField(`m_vecPlayerTeamData.${id}.m_iDeaths`);
+    const assists = resource.getField(`m_vecPlayerTeamData.${id}.m_iAssists`);
+
+    console.log(`${name} (${hero.class.name}): ${kills}/${deaths}/${assists}`);
+}
+
+await parser.dispose();
 ```
 
-## What Dota 2 Adds
+## Where to Find
 
-[`Bootstrap`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/bootstrap/Bootstrap.js) registers the Dota 2 schema onto the engine registry:
+The table lists the most common data. [Deadem Explorer](https://deadem.com) shows every entity with its fields and their types.
 
-### Message Types
-
-Dota 2-specific [`MessagePacketType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/MessagePacketType.js)s — chat, objectives, economy.
-
-### String Tables
-
-Dota 2-specific [`StringTableType`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/src/data/enums/StringTableType.js)s.
-
-| Table | Entries | Content |
+| Data | Kind | Source |
 | --- | --- | --- |
-| `StringTableType.ACTIVE_MODIFIERS` | hundreds | Every buff/debuff on every entity. Decoded into `CDOTAModifierBuffTableEntry` lazily on first `entry.value` read. |
-| `StringTableType.COMBAT_LOG_NAMES` | hundreds | Resolves combat log entity/ability/item ids to names. |
-| `StringTableType.COOLDOWN_NAMES` | hundreds | Resolves ability cooldown ids to names. |
-| `StringTableType.DOWNLOADABLES` | hundreds | — |
-| `StringTableType.ECON_ITEMS` | hundreds | Equipped cosmetic items. |
-| `StringTableType.LUA_MODIFIERS` | hundreds | — |
-| `StringTableType.MODIFIER_NAMES` | thousands | Resolves `ActiveModifiers.modifierClass` to readable names. |
-| `StringTableType.PARTICLE_ASSETS` | hundreds | — |
-| `StringTableType.RESPONSE_KEYS` | hundreds | — |
+| Player name, team, Steam ID and player ID | Entity | `CDOTAPlayerController`: `m_iszPlayerName`, `m_iTeamNum`, `m_steamID`, `m_nPlayerID` |
+| Hero of a player | Entity | `m_hAssignedHero` on the controller, a `CDOTA_Unit_Hero_*` entity |
+| Kills, deaths, assists, level and hero ID | Entity | `CDOTA_PlayerResource`, under `m_vecPlayerTeamData.N` with the player ID as N: `m_iKills`, `m_iDeaths`, `m_iAssists`, `m_iLevel`, `m_nSelectedHeroID` |
+| Net worth, gold, last hits and denies | Entity | `CDOTA_DataRadiant` and `CDOTA_DataDire`, under `m_vecDataTeam.N` with the team slot of the player as N: `m_iNetWorth`, `m_iReliableGold`, `m_iUnreliableGold`, `m_iLastHitCount`, `m_iDenyCount`. The team slot is `m_iTeamSlot` under `m_vecPlayerTeamData.N` of `CDOTA_PlayerResource` |
+| Hero health and level | Entity | `CDOTA_Unit_Hero_*`: `m_iHealth`, `m_iMaxHealth`, `m_iCurrentLevel` |
+| Hero position | Entity | `CDOTA_Unit_Hero_*`, under `CBodyComponent.m_skeletonInstance.m_vecOrigin`: a cell and an offset in it per axis, `m_cellX` and `m_vecX` |
+| Game start, state and pause | Entity | `CDOTAGamerulesProxy`, under `m_pGameRules`: `m_flGameStartTime`, `m_nGameState`, `m_bGamePaused` |
+| Combat log | Message | `DOTA_UM_COMBAT_LOG_DATA_HLTV`: `type`, `attackerName`, `targetName`, `value` |
+| Chat | Message | `DOTA_UM_CHAT_MESSAGE`: `sourcePlayerId`, `messageText` |
+| Player orders | Message | `DOTA_UM_SPECTATOR_PLAYER_UNIT_ORDERS`: `entindex` of the controller, `orderType`, `targetIndex`, `abilityId` |
+| Buffs and debuffs | String table | `StringTableType.ACTIVE_MODIFIERS`, with names in `StringTableType.MODIFIER_NAMES` by `modifierClass` |
+| Combat log names | String table | `StringTableType.COMBAT_LOG_NAMES` by `attackerName` and `targetName` |
+| Player info | String table | `StringTableType.USER_INFO`: `name`, `steamid` |
 
-### Decoders
+Field prefixes:
 
-Dota 2-specific entity field decoders. Entity examples: `CDOTAPlayerController`, `CDOTAGameRulesProxy`. Entities, fields and types can be browsed in [Deadem Explorer](https://deadem.com).
+- `entindex` holds an entity index for `demo.getEntity()`.
+- `m_h*` holds a handle for `demo.getEntityByHandle()`.
+
+Dota 2 demos have no user commands, and player orders arrive in `DOTA_UM_SPECTATOR_PLAYER_UNIT_ORDERS` instead.
 
 ## Examples
 
-All example scripts live in the [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2) package. They look for demo files in `/demos`; missing files are downloaded automatically from [deadem.com](https://deadem.com).
+The scripts live in [`examples-node-dota2`](https://github.com/Igor-Losev/deadem/tree/main/packages/examples-node-dota2/scripts). A script runs with `node ./packages/examples-node-dota2/scripts/<file>`. Missing demos are downloaded from [deadem.com](https://deadem.com), and scripts that read a demo accept `--demo=<path>`.
 
-### Parsing
+Parser:
 
-| # | Description | Source | Command |
-| --- | --- | --- | --- |
-| 100 | Parse a single replay file | [100_parse.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js) | `node ./packages/examples-node-dota2/scripts/100_parse.js` |
-| 101 | Parse multiple replay files | [101_parse_multiple.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_multiple.js) | `node ./packages/examples-node-dota2/scripts/101_parse_multiple.js --matches="8773493455,8777738576"` |
-| 102 | Parse selected message types | [102_parse_selective.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js) | `node ./packages/examples-node-dota2/scripts/102_parse_selective.js` |
-| 103 | Print chat messages | [103_parse_chat.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js) | `node ./packages/examples-node-dota2/scripts/103_parse_chat.js` |
-| 104 | Rank high-churn entity classes and fields from `ENTITY_PACKET` deltas | [104_parse_entity_field_stats.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js) | `node ./packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js` |
-| 105 | Print the combat log, names resolved through `CombatLogNames` | [105_parse_combat_log.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/105_parse_combat_log.js) | `node ./packages/examples-node-dota2/scripts/105_parse_combat_log.js` |
-| 106 | Rank unit order fields by how often they are present and change | [106_parse_unit_orders.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/106_parse_unit_orders.js) | `node ./packages/examples-node-dota2/scripts/106_parse_unit_orders.js` |
+- [`100_parse.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/100_parse.js): parse a single replay.
+- [`101_parse_multiple.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/101_parse_multiple.js): parse several replays, for example `--matches="8773493455,8777738576"`.
+- [`102_parse_selective.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/102_parse_selective.js): parse with filters.
+- [`103_parse_chat.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/103_parse_chat.js): chat messages.
+- [`104_parse_entity_field_stats.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/104_parse_entity_field_stats.js): the entity classes and fields that change most often.
+- [`105_parse_combat_log.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/105_parse_combat_log.js): the combat log with names from `CombatLogNames`.
+- [`106_parse_unit_orders.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/106_parse_unit_orders.js): the unit order fields that change most often.
 
-### Player
+Player:
 
-| # | Description | Source | Command |
-| --- | --- | --- | --- |
-| 200 | Load, seek, play, and pause a replay | [200_play.js](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js) | `node ./packages/examples-node-dota2/scripts/200_play.js` |
+- [`200_play.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js): load, seek, play and pause a replay.
 
 ## Compatibility
 
-- **Game patch:** tested with Dota 2 demos from patch `7.41f` and below.
-- **Runtimes:** Node.js v18+, Deno, Bun; browsers: Chrome, Firefox, Safari, Edge.
+- **Game patches:** Dota 2 demos from patch `7.41f` and below.
+- **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance
 
-| # | Configuration                                                                         | Ticks/sec        | MB/sec       | 30-min replay, sec | Max Heap, MB | Max ArrayBuffers, MB | Max RSS, MB  |
-| - | ------------------------------------------------------------------------------------- | ---------------- | ------------ | ------------------ | ------------ | -------------------- | ------------ |
-| 1 | Everything — `ParserConfiguration.DEFAULT`                                            | 43 575 +- 1.18%  | 57 +- 1.18%  | ~1.24              | 201 +- 0.82% | 69 +- 0.73%          | 429 +- 4.33% |
-| 2 | Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`                                 | 182 698 +- 1.99% | 240 +- 1.99% | ~0.30              | 40 +- 2.87%  | 66 +- 4.49%          | 310 +- 7.27% |
-| 3 | One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]` | 102 018 +- 1.04% | 134 +- 1.04% | ~0.53              | 48 +- 6.99%  | 64 +- 6.51%          | 276 +- 7.19% |
+| Configuration | Ticks/sec | MB/sec | 30-min replay, sec | Max RSS, MB |
+| --- | --- | --- | --- | --- |
+| Everything | 43 575 | 57 | ~1.24 | 429 |
+| Chat only | 182 698 | 240 | ~0.30 | 310 |
+| Player controllers only | 102 018 | 134 | ~0.53 | 276 |
 
-Runtime: Node.js v22.14.0.
+```js
+// Everything
+ParserConfiguration.DEFAULT
 
-See [engine performance notes](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance) for optimization tips.
+// Chat only
+new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.DOTA_UM_CHAT_MESSAGE ] })
+
+// Player controllers only
+new ParserConfiguration({ messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ], entityClasses: [ 'CDOTAPlayerController' ] })
+```
+
+Measured with [`000_benchmark.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/000_benchmark.js) on Node.js v22.14.0. Filters and speed tips are in the [engine documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md#performance).
 
 ## License
 
