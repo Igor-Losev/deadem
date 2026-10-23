@@ -1,3 +1,7 @@
+// node --expose-gc ./packages/examples-node-dota2/scripts/000_benchmark.js --bench-case-id=1 --repeats=5
+// node --expose-gc ./packages/examples-node-dota2/scripts/000_benchmark.js --bench-case-id=2 --repeats=5
+// node --expose-gc ./packages/examples-node-dota2/scripts/000_benchmark.js --bench-case-id=3 --repeats=5
+
 import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/dota2';
 
 import BenchmarkRunner from '@deademx/examples-common/data/BenchmarkRunner.js';
@@ -6,19 +10,19 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const CASES = [
     {
         id: 1,
-        label: 'Everything — `ParserConfiguration.DEFAULT`',
+        label: 'Everything',
         configuration: ParserConfiguration.DEFAULT
     },
     {
         id: 2,
-        label: 'Chat — `messagePacketTypes: [ DOTA_UM_CHAT_MESSAGE ]`',
+        label: 'Chat only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.DOTA_UM_CHAT_MESSAGE ]
         })
     },
     {
         id: 3,
-        label: 'One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CDOTAPlayerController ]`',
+        label: 'Player controllers only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
             entityClasses: [ 'CDOTAPlayerController' ]

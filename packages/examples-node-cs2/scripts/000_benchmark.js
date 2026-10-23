@@ -1,3 +1,8 @@
+// node --expose-gc ./packages/examples-node-cs2/scripts/000_benchmark.js --bench-case-id=1 --repeats=5
+// node --expose-gc ./packages/examples-node-cs2/scripts/000_benchmark.js --bench-case-id=2 --repeats=5
+// node --expose-gc ./packages/examples-node-cs2/scripts/000_benchmark.js --bench-case-id=3 --repeats=5
+// node --expose-gc ./packages/examples-node-cs2/scripts/000_benchmark.js --bench-case-id=4 --repeats=5
+
 import { MessagePacketType, Parser, ParserConfiguration } from '@deademx/cs2';
 
 import BenchmarkRunner from '@deademx/examples-common/data/BenchmarkRunner.js';
@@ -6,19 +11,19 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const CASES = [
     {
         id: 1,
-        label: 'Everything — `ParserConfiguration.DEFAULT`',
+        label: 'Everything',
         configuration: ParserConfiguration.DEFAULT
     },
     {
         id: 2,
-        label: 'Chat — `messagePacketTypes: [ USER_MESSAGE_SAY_TEXT_2 ]`',
+        label: 'Chat only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.USER_MESSAGE_SAY_TEXT_2 ]
         })
     },
     {
         id: 3,
-        label: 'One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CCSPlayerController ]`',
+        label: 'Player controllers only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
             entityClasses: [ 'CCSPlayerController' ]
@@ -26,7 +31,7 @@ const CASES = [
     },
     {
         id: 4,
-        label: 'Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`',
+        label: 'User commands only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS ]
         })

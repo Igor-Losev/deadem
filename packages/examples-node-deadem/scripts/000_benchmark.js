@@ -1,3 +1,8 @@
+// node --expose-gc ./packages/examples-node-deadem/scripts/000_benchmark.js --bench-case-id=1 --repeats=5
+// node --expose-gc ./packages/examples-node-deadem/scripts/000_benchmark.js --bench-case-id=2 --repeats=5
+// node --expose-gc ./packages/examples-node-deadem/scripts/000_benchmark.js --bench-case-id=3 --repeats=5
+// node --expose-gc ./packages/examples-node-deadem/scripts/000_benchmark.js --bench-case-id=4 --repeats=5
+
 import { MessagePacketType, Parser, ParserConfiguration } from 'deadem';
 
 import BenchmarkRunner from '@deademx/examples-common/data/BenchmarkRunner.js';
@@ -6,19 +11,19 @@ import DemoFile from '@deademx/examples-common/data/DemoFile.js';
 const CASES = [
     {
         id: 1,
-        label: 'Everything — `ParserConfiguration.DEFAULT`',
+        label: 'Everything',
         configuration: ParserConfiguration.DEFAULT
     },
     {
         id: 2,
-        label: 'Chat — `messagePacketTypes: [ CITADEL_USER_MESSAGE_CHAT_MESSAGE ]`',
+        label: 'Chat only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_CHAT_MESSAGE ]
         })
     },
     {
         id: 3,
-        label: 'One entity class — `SVC_PACKET_ENTITIES` + `entityClasses: [ CCitadelPlayerController ]`',
+        label: 'Player controllers only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_PACKET_ENTITIES ],
             entityClasses: [ 'CCitadelPlayerController' ]
@@ -26,7 +31,7 @@ const CASES = [
     },
     {
         id: 4,
-        label: 'Player input — `messagePacketTypes: [ SVC_USER_COMMANDS ]`',
+        label: 'User commands only',
         configuration: new ParserConfiguration({
             messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS ]
         })
