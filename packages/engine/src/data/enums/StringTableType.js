@@ -10,7 +10,7 @@ const registries = new WeakMap();
 
 /**
  * @template {string} [C=string]
- * @template [D=*]
+ * @template [D=unknown]
  */
 class StringTableType {
     /**

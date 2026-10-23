@@ -14,7 +14,7 @@ import StringTableInstructions from './StringTableInstructions.js';
 
 /**
  * @template {string} [C=string]
- * @template [D=*]
+ * @template [D=unknown]
  */
 class StringTable {
     /**

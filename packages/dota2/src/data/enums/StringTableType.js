@@ -5,7 +5,7 @@ import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
 /**
  * @template {string} [C=string]
- * @template [D=*]
+ * @template [D=unknown]
  * @extends {EngineStringTableType<C, D>}
  */
 class StringTableType extends EngineStringTableType {

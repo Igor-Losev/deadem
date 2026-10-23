@@ -6,7 +6,7 @@ import Assert from '../../../core/Assert.js';
 
 /**
  * @template {string} [C=string]
- * @template [D=*]
+ * @template [D=unknown]
  */
 class StringTableEntry {
     /**
