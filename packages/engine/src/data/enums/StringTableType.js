@@ -154,8 +154,6 @@ class StringTableType {
     static get SCENES() { return scenes; }
     /** @returns {StringTableType<'SERVER_QUERY_INFO', StringTableRawValue>} */
     static get SERVER_QUERY_INFO() { return serverQueryInfo; }
-    /** @returns {StringTableType<'USER_INFO'>} */
-    static get USER_INFO() { return userInfo; }
     /** @returns {StringTableType<'V_GUI_SCREEN', StringTableRawValue>} */
     static get V_GUI_SCREEN() { return vGuiScreen; }
     /** @returns {StringTableType<'ANIM_TASK_TYPES', StringTableRawValue>} */
@@ -174,7 +172,6 @@ const lightStyles = new StringTableType('LIGHT_STYLES', 'lightstyles');
 const responseKeys = new StringTableType('RESPONSE_KEYS', 'ResponseKeys');
 const scenes = new StringTableType('SCENES', 'Scenes');
 const serverQueryInfo = new StringTableType('SERVER_QUERY_INFO', 'server_query_info');
-const userInfo = new StringTableType('USER_INFO', 'userinfo', 'CMsgPlayerInfo');
 const vGuiScreen = new StringTableType('V_GUI_SCREEN', 'VguiScreen');
 const animTaskTypes = new StringTableType('ANIM_TASK_TYPES', 'AnimTaskTypes');
 const animAssetData = new StringTableType('ANIM_ASSET_DATA', 'AnimAssetData');

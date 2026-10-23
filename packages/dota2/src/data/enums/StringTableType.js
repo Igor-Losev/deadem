@@ -1,5 +1,5 @@
 /** @import { StringTableRawValue } from '@deademx/engine' */
-/** @import { CDOTAModifierBuffTableEntry, CSOEconItem } from '@deademx/dota2/proto' */
+/** @import { CDOTAModifierBuffTableEntry, CMsgPlayerInfo, CSOEconItem } from '@deademx/dota2/proto' */
 
 import { StringTableType as EngineStringTableType } from '@deademx/engine';
 
@@ -27,6 +27,8 @@ class StringTableType extends EngineStringTableType {
     static get DOWNLOADABLES() { return downloadables; }
     /** @returns {EngineStringTableType<'UNIT_NAMES', StringTableRawValue>} */
     static get UNIT_NAMES() { return unitNames; }
+    /** @returns {EngineStringTableType<'USER_INFO', CMsgPlayerInfo|null>} */
+    static get USER_INFO() { return userInfo; }
 }
 
 const activeModifiers = new StringTableType('ACTIVE_MODIFIERS', 'ActiveModifiers', 'CDOTAModifierBuffTableEntry', true);
@@ -38,5 +40,6 @@ const luaModifiers = new StringTableType('LUA_MODIFIERS', 'LuaModifiers');
 const particleAssets = new StringTableType('PARTICLE_ASSETS', 'ParticleAssets');
 const downloadables = new StringTableType('DOWNLOADABLES', 'downloadables');
 const unitNames = new StringTableType('UNIT_NAMES', 'UnitNames');
+const userInfo = new StringTableType('USER_INFO', 'userinfo', 'CMsgPlayerInfo');
 
 export default StringTableType;
