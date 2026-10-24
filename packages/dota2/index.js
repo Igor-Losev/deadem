@@ -1,8 +1,16 @@
+/**
+ * @template {string|null} [N=string|null]
+ * @typedef {import('@deademx/engine').DemoPacket<Dota2Proto, N>} DemoPacket
+ */
 /** @typedef {import('@deademx/engine').DemoPacketObject} DemoPacketObject */
 /** @typedef {import('@deademx/engine').DemoPacketRaw} DemoPacketRaw */
 /** @typedef {import('@deademx/engine').EntityMutation} EntityMutation */
 /** @typedef {import('@deademx/engine').InterceptorMap<Dota2Proto>} InterceptorMap */
 /** @typedef {import('@deademx/engine').MemoryTrackerStats} MemoryTrackerStats */
+/**
+ * @template {string|null} [N=string|null]
+ * @typedef {import('@deademx/engine').MessagePacket<Dota2Proto, N>} MessagePacket
+ */
 /** @typedef {import('@deademx/engine').MessagePacketObject} MessagePacketObject */
 /** @typedef {import('@deademx/engine').PacketTrackerStats} PacketTrackerStats */
 /** @typedef {import('@deademx/engine').ParserConfigurationOptions} ParserConfigurationOptions */
@@ -17,6 +25,8 @@
 /** @import { Dota2Proto } from '@deademx/dota2/proto' */
 
 import {
+    DemoPacket as EngineDemoPacket,
+    MessagePacket as EngineMessagePacket,
     Parser as EngineParser,
     Player as EnginePlayer,
     SchemaRegistry
@@ -62,13 +72,15 @@ class Player extends EnginePlayer {
     }
 }
 
+const DemoPacket = EngineDemoPacket;
+const MessagePacket = EngineMessagePacket;
+
 export {
     BroadcastAgent,
     BroadcastFragmentType,
     BroadcastGateway,
     Class,
     Demo,
-    DemoPacket,
     DemoPacketType,
     DemoSource,
     Entity,
@@ -76,7 +88,6 @@ export {
     EntityOperation,
     InterceptorStage,
     Logger,
-    MessagePacket,
     ParserConfiguration,
     PlaybackInterruptedError,
     PlayerState,
@@ -95,4 +106,4 @@ export {
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
 
-export { Parser, Player };
+export { DemoPacket, MessagePacket, Parser, Player };
