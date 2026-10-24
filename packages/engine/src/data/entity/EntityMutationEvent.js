@@ -91,10 +91,22 @@ class EntityMutationEvent {
     }
 
     /**
-     * Returns changed fields as a flattened object. When `names` is
-     * `null` returns all fields. Otherwise returns a same-order
-     * array — `undefined` for fields not in this event.
+     * Returns changed fields as a flattened object.
      *
+     * @public
+     * @overload
+     * @param {null} [names]
+     * @returns {Record<string, unknown>}
+     */
+    /**
+     * Returns a same-order array — `undefined` for fields not in this event.
+     *
+     * @public
+     * @overload
+     * @param {Array<string>} names
+     * @returns {Array<unknown>}
+     */
+    /**
      * @public
      * @param {Array<string>|null} [names=null]
      * @returns {Record<string, unknown>|Array<unknown>}
