@@ -44,7 +44,7 @@ class MessagePacket {
      * @returns {this is MessagePacket<M, T>}
      */
     is(type) {
-        return this._type.id === type.id;
+        return this._type.code === type.code;
     }
 
     /**

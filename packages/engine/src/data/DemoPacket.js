@@ -93,7 +93,7 @@ class DemoPacket {
      * @returns {this is DemoPacket<M, T>}
      */
     is(type) {
-        return this._type.id === type.id;
+        return this._type.code === type.code;
     }
 
     /**
