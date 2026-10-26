@@ -47,6 +47,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemSendTables(demoPacket) {
+        /** @type {*} */
         const message = demoPacket.data;
 
         const bitBuffer = new BitBuffer(message.data);
@@ -149,6 +150,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemClassInfo(demoPacket) {
+        /** @type {*} */
         const classInfo = demoPacket.data;
 
         classInfo.classes.forEach((/** @type {*} */ data) => {

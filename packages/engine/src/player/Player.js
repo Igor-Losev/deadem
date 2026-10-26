@@ -24,7 +24,7 @@ import PlayerPacketIndex from './PlayerPacketIndex.js';
 import ReplaySession from './ReplaySession.js';
 
 /**
- * @template [M=null]
+ * @template [M=unknown]
  */
 class Player {
     /**

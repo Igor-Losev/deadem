@@ -2,7 +2,7 @@
 /** @typedef {import('./src/data/DemoPacketRaw.js').default} DemoPacketRaw */
 /** @typedef {import('./src/data/entity/EntityMutation.js').default} EntityMutation */
 /**
- * @template [M=null]
+ * @template [M=unknown]
  * @typedef {import('./src/ParserEngine.js').InterceptorMap<M>} InterceptorMap
  */
 /** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */

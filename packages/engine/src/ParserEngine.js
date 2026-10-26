@@ -49,7 +49,7 @@ import SchemaRegistry from './SchemaRegistry.js';
 /**
  * Callback shape fired at each {@link InterceptorStage}.
  *
- * @template [M=null]
+ * @template [M=unknown]
  * @typedef {{
  *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
  *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_PacketEntities'>, events: Array<EntityMutationEvent>) => void,

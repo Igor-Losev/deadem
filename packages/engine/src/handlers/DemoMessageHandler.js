@@ -53,6 +53,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcServerInfo(messagePacket) {
+        /** @type {*} */
         const message = messagePacket.data;
 
         const server = new Server(message.maxClasses, message.maxClients, message.tickInterval);
@@ -114,6 +115,7 @@ class DemoMessageHandler {
      * @returns {Array<EntityMutationEvent>|null}
      */
     handleSvcPacketEntities(messagePacket, snapshot = false, direct = false) {
+        /** @type {*} */
         const message = messagePacket.data;
 
         if (snapshot && this._demo.getEntityCount() > 0) {
@@ -291,7 +293,9 @@ class DemoMessageHandler {
      * @returns {Array<UserCommandEvent>}
      */
     handleSvcUserCommands(messagePacket, snapshot = false, collectEvents = true) {
-        const commandsRaw = messagePacket.data?.commands ?? null;
+        /** @type {*} */
+        const message = messagePacket.data;
+        const commandsRaw = message?.commands ?? null;
         const commandDecoder = this._registry.getUserCommandDecoder();
 
         if (commandsRaw === null || commandDecoder === null) {

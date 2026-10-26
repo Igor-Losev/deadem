@@ -5,7 +5,7 @@
 /** @import MessagePacketType from './enums/MessagePacketType.js' */
 
 /**
- * @template [M=null]
+ * @template [M=unknown]
  * @template {string|null} [N=string|null]
  */
 class MessagePacket {
@@ -82,7 +82,7 @@ class MessagePacket {
 
 /**
  * @template M, N
- * @typedef {M extends null ? * : N extends string ? SchemaMessage<M, `${N}Schema`> : unknown} MessagePayload
+ * @typedef {N extends string ? SchemaMessage<M, `${N}Schema`> : unknown} MessagePayload
  */
 
 /**

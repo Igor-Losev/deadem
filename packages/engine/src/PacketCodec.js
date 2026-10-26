@@ -6,7 +6,7 @@
 /**
  * Synthesised payload.
  *
- * @template [M=null]
+ * @template [M=unknown]
  * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: MessagePayload<M, 'CDemoStringTables'>|null }} DemoPacketHeavyData
  */
 

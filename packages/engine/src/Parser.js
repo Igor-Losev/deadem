@@ -18,7 +18,7 @@ import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
 
 /**
- * @template [M=null]
+ * @template [M=unknown]
  */
 class Parser {
     /**

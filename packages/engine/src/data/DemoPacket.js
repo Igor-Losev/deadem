@@ -7,7 +7,7 @@ import Assert from '../core/Assert.js';
 import DemoPacketType from './enums/DemoPacketType.js';
 
 /**
- * @template [M=null]
+ * @template [M=unknown]
  * @template {string|null} [N=string|null]
  */
 class DemoPacket {
@@ -154,7 +154,7 @@ class DemoPacket {
 
 /**
  * @template M, N
- * @typedef {M extends null ? * : N extends 'CDemoPacket'|'CDemoFullPacket' ? DemoPacketHeavyData<M> : MessagePayload<M, N>} DemoPayload
+ * @typedef {N extends 'CDemoPacket'|'CDemoFullPacket' ? DemoPacketHeavyData<M> : MessagePayload<M, N>} DemoPayload
  */
 
 export default DemoPacket;
