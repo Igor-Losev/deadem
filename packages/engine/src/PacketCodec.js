@@ -1,12 +1,13 @@
 
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 /** @import MessagePacketRaw from './data/MessagePacketRaw.js' */
+/** @import { MessagePayload } from './data/MessagePacket.js' */
 
 /**
  * Synthesised payload.
  *
  * @template [M=null]
- * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: * }} DemoPacketHeavyData
+ * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: MessagePayload<M, 'CDemoStringTables'>|null }} DemoPacketHeavyData
  */
 
 import Assert from './core/Assert.js';
