@@ -2,20 +2,10 @@ import Assert from '../../core/Assert.js';
 
 const registries = new WeakMap();
 
-/**
- * Raw, undecoded entry payload.
- *
- * @typedef {Uint8Array|Array<*>|null} StringTableRawValue
- */
-
-/**
- * @template {string} [C=string]
- * @template [D=unknown]
- */
 class StringTableType {
     /**
      * @constructor
-     * @param {C} code
+     * @param {string} code
      * @param {string} name
      * @param {string|null} [protoName=null]
      * @param {boolean} [lazy=false] - decode strategy flag for table entries.
@@ -58,7 +48,7 @@ class StringTableType {
 
     /**
      * @public
-     * @returns {C}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -134,31 +124,19 @@ class StringTableType {
         return new StringTableType(name.toUpperCase(), name, null, false, true);
     }
 
-    /** @returns {StringTableType<'DECAL_PRE_CACHE', StringTableRawValue>} */
     static get DECAL_PRE_CACHE() { return decalPreCache; }
-    /** @returns {StringTableType<'EFFECT_DISPATCH', StringTableRawValue>} */
     static get EFFECT_DISPATCH() { return effectDispatch; }
-    /** @returns {StringTableType<'ENTITY_NAMES', StringTableRawValue>} */
     static get ENTITY_NAMES() { return entityNames; }
-    /** @returns {StringTableType<'GENERIC_PRE_CACHE', StringTableRawValue>} */
     static get GENERIC_PRE_CACHE() { return genericPreCache; }
-    /** @returns {StringTableType<'INFO_PANEL', StringTableRawValue>} */
     static get INFO_PANEL() { return infoPanel; }
-    /** @returns {StringTableType<'INSTANCE_BASE_LINE', StringTableRawValue>} */
     static get INSTANCE_BASE_LINE() { return instanceBaseLine; }
-    /** @returns {StringTableType<'LIGHT_STYLES', StringTableRawValue>} */
     static get LIGHT_STYLES() { return lightStyles; }
-    /** @returns {StringTableType<'RESPONSE_KEYS', StringTableRawValue>} */
     static get RESPONSE_KEYS() { return responseKeys; }
-    /** @returns {StringTableType<'SCENES', StringTableRawValue>} */
     static get SCENES() { return scenes; }
-    /** @returns {StringTableType<'SERVER_QUERY_INFO', StringTableRawValue>} */
     static get SERVER_QUERY_INFO() { return serverQueryInfo; }
-    /** @returns {StringTableType<'V_GUI_SCREEN', StringTableRawValue>} */
+    static get USER_INFO() { return userInfo; }
     static get V_GUI_SCREEN() { return vGuiScreen; }
-    /** @returns {StringTableType<'ANIM_TASK_TYPES', StringTableRawValue>} */
     static get ANIM_TASK_TYPES() { return animTaskTypes; }
-    /** @returns {StringTableType<'ANIM_ASSET_DATA', StringTableRawValue>} */
     static get ANIM_ASSET_DATA() { return animAssetData; }
 }
 
@@ -172,6 +150,7 @@ const lightStyles = new StringTableType('LIGHT_STYLES', 'lightstyles');
 const responseKeys = new StringTableType('RESPONSE_KEYS', 'ResponseKeys');
 const scenes = new StringTableType('SCENES', 'Scenes');
 const serverQueryInfo = new StringTableType('SERVER_QUERY_INFO', 'server_query_info');
+const userInfo = new StringTableType('USER_INFO', 'userinfo', 'CMsgPlayerInfo');
 const vGuiScreen = new StringTableType('V_GUI_SCREEN', 'VguiScreen');
 const animTaskTypes = new StringTableType('ANIM_TASK_TYPES', 'AnimTaskTypes');
 const animAssetData = new StringTableType('ANIM_ASSET_DATA', 'AnimAssetData');

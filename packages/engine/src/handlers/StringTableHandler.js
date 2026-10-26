@@ -254,8 +254,8 @@ function registerEntries(stringTable, entries) {
 }
 
 /**
- * @param {Uint8Array|Array<*>|null|undefined} data
- * @returns {Uint8Array|Array<*>|null}
+ * @param {Uint8Array|null|undefined} data
+ * @returns {Uint8Array|null}
  */
 function normalizeEntryData(data) {
     if (!data) {

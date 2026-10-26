@@ -429,10 +429,14 @@ class Demo {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 entries.forEach((entry) => {
+                    const value = entry.value;
+
+                    Assert.isTrue(value === null || value instanceof Uint8Array);
+
                     const alternate = ALTERNATE_BASELINE_KEY.exec(entry.key);
 
                     if (alternate !== null) {
-                        this._registerAlternateBaseline(Number(alternate[1]), Number(alternate[2]), entry.value);
+                        this._registerAlternateBaseline(Number(alternate[1]), Number(alternate[2]), value);
 
                         return;
                     }
@@ -443,7 +447,7 @@ class Demo {
                         throw new Error(`Unexpected classId [ ${entry.key} ] for table [ ${stringTable.type.code} ]`);
                     }
 
-                    this._registerClassBaseline(classId, entry.value);
+                    this._registerClassBaseline(classId, value);
                 });
 
                 break;

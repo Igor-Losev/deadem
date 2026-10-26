@@ -11,7 +11,7 @@ describe('StringTableType', () => {
         test('It should return the engine tables without the game ones', () => {
             const types = StringTableType.getAll();
 
-            expect(types).toContain(StringTableType.INSTANCE_BASE_LINE);
+            expect(types).toContain(StringTableType.USER_INFO);
             expect(types).not.toContain(gameTable);
         });
 
@@ -19,7 +19,7 @@ describe('StringTableType', () => {
             const types = GameStringTableType.getAll();
 
             expect(types).toContain(gameTable);
-            expect(types).toContain(StringTableType.INSTANCE_BASE_LINE);
+            expect(types).toContain(StringTableType.USER_INFO);
         });
 
         test('It should skip synthesized tables', () => {

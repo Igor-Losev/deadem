@@ -8,10 +8,6 @@ import StringTableType from '../src/data/enums/StringTableType.js';
 
 import createDescriptors from './support/createDescriptors.js';
 
-class GameStringTableType extends StringTableType { }
-
-const userInfo = new GameStringTableType('USER_INFO', 'userinfo', 'CMsgPlayerInfo');
-
 describe('SchemaRegistry', () => {
     describe('registerDemoType', () => {
         test('It should decode a demo packet type with a proto name', () => {
@@ -50,9 +46,9 @@ describe('SchemaRegistry', () => {
         test('It should decode the values of a table with a proto name', () => {
             const registry = new SchemaRegistry(createDescriptors({ CMsgPlayerInfo: [ [ 'name', 1, 'string' ] ] }));
 
-            registry.registerStringTableType(userInfo);
+            registry.registerStringTableType(StringTableType.USER_INFO);
 
-            const decoder = registry.getStringTableDecoder(userInfo);
+            const decoder = registry.getStringTableDecoder(StringTableType.USER_INFO);
 
             expect(decoder?.(new Uint8Array([ 0x0a, 0x03, 0x42, 0x6f, 0x62 ])).name).toBe('Bob');
         });
@@ -69,7 +65,7 @@ describe('SchemaRegistry', () => {
         test('It should throw when there is no message for the table', () => {
             const registry = new SchemaRegistry(createDescriptors({ }));
 
-            expect(() => registry.registerStringTableType(userInfo)).toThrow('Unknown message [ CMsgPlayerInfo ]');
+            expect(() => registry.registerStringTableType(StringTableType.USER_INFO)).toThrow('Unknown message [ CMsgPlayerInfo ]');
         });
     });
 });

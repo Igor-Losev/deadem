@@ -10,7 +10,7 @@ import StringTableInstructions from '../src/data/tables/string/StringTableInstru
 
 describe('StringTableEntryExtractor.retrieve()', () => {
     describe('When an update of an existing entry carries neither a key nor a value', () => {
-        const table = new StringTable(0, StringTableType.INSTANCE_BASE_LINE, 0, new StringTableInstructions(0, false, false));
+        const table = new StringTable(0, StringTableType.USER_INFO, 0, new StringTableInstructions(0, false, false));
 
         table.registerEntry(new StringTableEntry(table, 1, '1', new Uint8Array([ 1, 2, 3 ])));
 

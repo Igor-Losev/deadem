@@ -1,21 +1,19 @@
+/** @import { Message } from '@bufbuild/protobuf' */
+
 /** @import StringTableType from '../../enums/StringTableType.js' */
 
 /** @import StringTable from './StringTable.js' */
 
 import Assert from '../../../core/Assert.js';
 
-/**
- * @template {string} [C=string]
- * @template [D=unknown]
- */
 class StringTableEntry {
     /**
      * @public
      * @constructor
-     * @param {StringTable<C, D>} table
+     * @param {StringTable} table
      * @param {number} id
      * @param {string} key
-     * @param {Uint8Array|Array<*>|null} raw
+     * @param {Uint8Array|null} raw
      */
     constructor(table, id, key, raw) {
         Assert.isTrue(typeof id === 'number' && Number.isInteger(id));
@@ -51,7 +49,7 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {StringTableType<C, D>}
+     * @returns {StringTableType}
      */
     get type() {
         return this._table.type;
@@ -72,32 +70,24 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {D}
+     * @returns {Uint8Array|Message|null}
      */
     get value() {
-        if (this._decoded) {
-            return this._value;
-        }
-
-        if (this._table.decoder) {
+        if (!this._decoded && this._table.decoder !== null) {
             this._value = this._table.decoder(this._raw);
             this._decoded = true;
-
-            return this._value;
         }
 
-        return /** @type {D} */ (this._raw);
+        return this._value;
     }
 
     /**
      * @public
-     * @template {string} T
-     * @template TD
-     * @param {StringTableType<T, TD>} type
-     * @returns {this is StringTableEntry<T, TD>}
+     * @param {StringTableType} type
+     * @returns {boolean}
      */
     is(type) {
-        return /** @type {StringTableType<string, *>} */ (this._table.type).code === type.code;
+        return this._table.type.code === type.code;
     }
 }
 
