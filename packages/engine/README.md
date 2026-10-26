@@ -584,7 +584,7 @@ The absolute numbers and the memory usage are in the performance sections of [`@
 
 ## Types
 
-`@deademx/engine` and the game packages ship TypeScript declarations. Packet `data` is `unknown` until `is()` narrows it to a type from the game's `.proto` files. String tables and entries have `is()` too.
+`@deademx/engine` and the game packages ship TypeScript declarations. Packet `data` is `unknown` until `is()` narrows it to a type from the game's `.proto` files.
 
 ```ts
 parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
