@@ -1,3 +1,6 @@
+/** @import { Demo, Entity } from '@deademx/cs2' */
+/** @import { CSGOUserCmdPB } from '@deademx/cs2/proto' */
+
 import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from '@deademx/cs2';
 
 import DemoFile from '@deademx/examples-common/data/DemoFile.js';
@@ -7,7 +10,7 @@ import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
 const CONTROLLER_FIELDS = [ 'm_hController', 'm_hDefaultController' ];
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260815_SPIRIT_VS_BIG_M3_MIRAGE);
+    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20261006_FALCONS_VS_NATUS_VINCERE_M1_INFERNO);
 
     const parser = new Parser(new ParserConfiguration({
         messagePacketTypes: [ MessagePacketType.SVC_USER_COMMANDS, MessagePacketType.SVC_PACKET_ENTITIES ],
@@ -22,7 +25,7 @@ const CONTROLLER_FIELDS = [ 'm_hController', 'm_hDefaultController' ];
         const demo = parser.getDemo();
 
         for (const event of events) {
-            const base = event.userCommand.state.base;
+            const base = /** @type {CSGOUserCmdPB} */ (event.userCommand.state).base;
 
             if (base?.viewangles === undefined) {
                 continue;
@@ -127,7 +130,7 @@ function resolveName(demo, entity) {
     for (const field of CONTROLLER_FIELDS) {
         const handle = entity.getField(field);
 
-        if (!Number.isInteger(handle)) {
+        if (typeof handle !== 'number') {
             continue;
         }
 

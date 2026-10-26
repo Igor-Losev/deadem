@@ -7,31 +7,12 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   sync:
     if: github.repository == 'Igor-Losev/deadem'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: deadem
-            workspace: deadem
-            repo: GameTracking-Deadlock
-          - target: dota2
-            workspace: '@deademx/dota2'
-            repo: GameTracking-Dota2
-          - target: cs2
-            workspace: '@deademx/cs2'
-            repo: GameTracking-CS2
-
-    concurrency:
-      group: proto-sync-${{ matrix.target }}
-      cancel-in-progress: true
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v5
@@ -47,20 +28,15 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Sync proto sources
-        run: npm run proto:sync -w ${{ matrix.workspace }}
+        run: npm run proto:sync
 
-      - name: Compile proto schema
-        run: npm run proto:js -w ${{ matrix.workspace }}
+      - name: Generate proto descriptors
+        run: npm run proto:build
 
-      - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          branch: auto/proto-sync-${{ matrix.target }}
-          title: 'Proto Synchronization — ${{ matrix.target }} (Auto)'
-          commit-message: 'Proto Synchronization — ${{ matrix.target }} (Auto)'
-          body: |
-            Automated sync of `.proto` files from `SteamTracking/${{ matrix.repo }}`:
-            - `packages/${{ matrix.target }}/proto/source/`
-
-            Includes regenerated `proto/compiled/proto.js`.
-          labels: proto-sync
+      - name: Push to auto/proto-sync
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all packages/*/proto
+          git diff --cached --quiet || git commit -m 'Proto: updated to the latest'
+          git push --force origin HEAD:auto/proto-sync

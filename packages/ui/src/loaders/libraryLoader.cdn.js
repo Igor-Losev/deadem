@@ -3,15 +3,15 @@ import packageJson from './../../package.json';
 const loadedLibraryPromises = new Map();
 
 /**
- * @param {Object} library
- * @returns {Promise<Object>}
+ * @param {object} library
+ * @returns {Promise<object>}
  */
 export default function loadLibraryModule(library) {
   if (typeof window === 'undefined') {
     throw new Error('Window is unavailable');
   }
 
-  const existingLibrary = window[library.globalName];
+  const existingLibrary = window.deadem?.[library.key];
 
   if (existingLibrary) {
     return Promise.resolve(existingLibrary);
@@ -31,8 +31,8 @@ export default function loadLibraryModule(library) {
 }
 
 /**
- * @param {Object} library
- * @returns {Promise<Object>}
+ * @param {object} library
+ * @returns {Promise<object>}
  */
 function injectScript(library) {
   return new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ function injectScript(library) {
     script.src = getLibraryScriptUrl(library);
 
     script.onload = () => {
-      const runtimeLibrary = window[library.globalName];
+      const runtimeLibrary = window.deadem?.[library.key];
 
       if (runtimeLibrary) {
         resolve(runtimeLibrary);
@@ -50,7 +50,7 @@ function injectScript(library) {
       }
 
       loadedLibraryPromises.delete(library.key);
-      reject(new Error(`Global ${library.globalName} is unavailable after script load`));
+      reject(new Error(`Global deadem.${library.key} is unavailable after script load`));
     };
 
     script.onerror = () => {
@@ -63,7 +63,7 @@ function injectScript(library) {
 }
 
 /**
- * @param {Object} library
+ * @param {object} library
  * @returns {string}
  */
 function getLibraryScriptUrl(library) {

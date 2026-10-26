@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
 class HuffmanTreePriority {
     /**
@@ -11,7 +11,9 @@ class HuffmanTreePriority {
         Assert.isTrue(Number.isInteger(weight));
         Assert.isTrue(Number.isInteger(sequence));
 
+        /** @private */
         this._weight = weight;
+        /** @private */
         this._sequence = sequence;
     }
 

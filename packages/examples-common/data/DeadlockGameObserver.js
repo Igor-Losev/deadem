@@ -1,3 +1,5 @@
+/** @import { DemoPacket, Parser, Player } from '@deademx/engine' */
+
 import { InterceptorStage, MessagePacketType } from '@deademx/engine';
 
 import DeadlockGameState from './DeadlockGameState.js';
@@ -33,13 +35,13 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {Game} 
+     * @returns {Game}
      */
     get game() {
         return this._game;
     }
 
-    /** 
+    /**
      * @public
      */
     forceUpdate() {
@@ -48,7 +50,7 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {GameFormatted} 
+     * @returns {GameFormatted}
      */
     getGameFormatted() {
         return {
@@ -62,7 +64,7 @@ class DeadlockGameObserver {
 
     /**
      * @public
-     * @returns {string} 
+     * @returns {string}
      */
     getGameClockFormatted() {
         return formatClock(this._game.clockGame);
@@ -76,10 +78,9 @@ class DeadlockGameObserver {
         return formatClock(this._game.clockTotal);
     }
 
-    /** 
+    /**
      * @protected
      */
-    /**  */
     _forceUpdate() {
         if (this._last === null) {
             return;
@@ -102,11 +103,11 @@ class DeadlockGameObserver {
 
         const gameRules = demo.getEntity(this._gameRulesEntityIndex);
 
-        const gamePaused = gameRules.getField('m_pGameRules.m_bGamePaused') || false;
-        const gameState = DeadlockGameState.parse(gameRules.getField('m_pGameRules.m_eGameState'));
+        const gamePaused = /** @type {boolean} */ (gameRules.getField('m_pGameRules.m_bGamePaused') || false);
+        const gameState = DeadlockGameState.parse(/** @type {number} */ (gameRules.getField('m_pGameRules.m_eGameState')));
 
-        const clockLastUpdatedAt = gameRules.getField('m_pGameRules.m_flMatchClockAtLastUpdate');
-        const clockLastUpdatedTick = gameRules.getField('m_pGameRules.m_nMatchClockUpdateTick');
+        const clockLastUpdatedAt = /** @type {number} */ (gameRules.getField('m_pGameRules.m_flMatchClockAtLastUpdate'));
+        const clockLastUpdatedTick = /** @type {number} */ (gameRules.getField('m_pGameRules.m_nMatchClockUpdateTick'));
 
         const tickInterval = demo.server.tickInterval;
 
@@ -205,7 +206,7 @@ function getGameTick(demoPacket) {
 }
 
 /**
- * @typedef {Object} Game
+ * @typedef {object} Game
  * @property {number} clockGame
  * @property {number} clockTotal
  * @property {boolean} paused
@@ -214,7 +215,7 @@ function getGameTick(demoPacket) {
  */
 
 /**
- * @typedef {Object} GameFormatted
+ * @typedef {object} GameFormatted
  * @property {string} clockGame
  * @property {string} clockTotal
  * @property {string} paused

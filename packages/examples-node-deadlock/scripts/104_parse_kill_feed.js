@@ -1,0 +1,141 @@
+/** @import { Demo, Entity } from '@deademx/deadlock' */
+
+import { InterceptorStage, MessagePacketType, Parser, ParserConfiguration, Printer } from '@deademx/deadlock';
+
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
+import DeadlockGameObserver from '@deademx/examples-common/data/DeadlockGameObserver.js';
+
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
+
+(async () => {
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
+
+    const parser = new Parser(new ParserConfiguration({
+        messagePacketTypes: [ MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED, MessagePacketType.SVC_PACKET_ENTITIES ],
+        entityClasses: [ 'CCitadelGameRulesProxy', 'CCitadelPlayerController', 'CCitadelPlayerPawn' ]
+    }));
+    const printer = new Printer(parser);
+
+    const gameObserver = new DeadlockGameObserver(parser, Infinity);
+
+    parser.registerPostInterceptor(InterceptorStage.MESSAGE_PACKET, (demoPacket, messagePacket) => {
+        if (!messagePacket.is(MessagePacketType.CITADEL_USER_MESSAGE_HERO_KILLED)) {
+            return;
+        }
+
+        gameObserver.forceUpdate();
+
+        const demo = parser.getDemo();
+
+        let entityAttacker;
+
+        if (messagePacket.data.entindexAttacker === -1) {
+            entityAttacker = null;
+        } else {
+            entityAttacker = getEntity(demo, messagePacket.data.entindexAttacker);
+        }
+
+        let entityScorer;
+
+        if (messagePacket.data.entindexScorer === -1) {
+            entityScorer = null;
+        } else {
+            entityScorer = getEntity(demo, messagePacket.data.entindexScorer);
+        }
+
+        let entityVictim;
+
+        if (messagePacket.data.entindexVictim === -1) {
+            entityVictim = null;
+        } else {
+            entityVictim = getEntity(demo, messagePacket.data.entindexVictim);
+        }
+
+        if (entityAttacker === null && entityScorer === null) {
+            console.warn('Unhandled case: entityAttacker is null and entityScorer is null. Skipping');
+
+            return;
+        }
+
+        if (entityVictim === null) {
+            console.warn('Unhandled case: entityVictim is null. Skipping');
+
+            return;
+        }
+
+        const entityKiller = entityScorer || entityAttacker;
+
+        console.log(`${gameObserver.getGameClockFormatted()}: ${getEntityLog(demo, entityKiller)} -> ${getEntityLog(demo, entityVictim)}`);
+
+        messagePacket.data.entindexAssisters.forEach((assistIndex) => {
+            const entity = demo.getEntity(assistIndex);
+
+            console.log(`└──── Assist ${getEntityLog(demo, entity)}`);
+        });
+    });
+
+    await parser.parse(reader);
+    await parser.dispose();
+
+    printer.printStats();
+})();
+
+/**
+ * @param {Demo} demo
+ * @param {number} entityIndex
+ * @returns {Entity|null}
+ */
+function getEntity(demo, entityIndex) {
+    const entity = demo.getEntity(entityIndex);
+
+    if (entity === null) {
+        throw new Error(`Unable to get entity with index [ ${entityIndex} ]`);
+    }
+
+    return entity;
+}
+
+/**
+ * @param {Demo} demo
+ * @param {Entity} entity
+ * @returns {Entity|null}
+ */
+function getEntityOwner(demo, entity) {
+    const ownerEntityHandle = /** @type {number} */ (entity.getField('m_hOwnerEntity'));
+    const ownerEntity = demo.getEntityByHandle(ownerEntityHandle);
+
+    if (ownerEntity === null) {
+        throw new Error(`Unable to get owner entity by handle [ ${ownerEntityHandle} ]`);
+    }
+
+    return ownerEntity;
+}
+
+/**
+ * @param {Demo} demo
+ * @param {Entity} entity
+ * @returns {string}
+ */
+function getEntityLog(demo, entity) {
+    let log;
+
+    switch (entity.class.name) {
+        case 'CCitadelPlayerPawn': {
+            const ownerEntity = getEntityOwner(demo, entity);
+
+            const team = ownerEntity.getField('m_iTeamNum');
+            const name = ownerEntity.getField('m_iszPlayerName');
+
+            log = `[ Team ${team} ] ${name}`;
+
+            break;
+        }
+        default: {
+            log = `[ Team ${entity.getField('m_iTeamNum')} ] [ ${entity.class.name} ]`;
+
+            break;
+        }
+    }
+
+    return log;
+}

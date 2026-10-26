@@ -1,3 +1,6 @@
+/** @import { Logger as LoggerType, Parser, ParserConfiguration } from '@deademx/engine' */
+/** @import DemoFile from './DemoFile.js' */
+
 import { fork } from 'node:child_process';
 
 import { Logger } from '@deademx/engine';
@@ -11,7 +14,7 @@ const CASE_ID = '--bench-case-id=';
 /**
  * @public
  * @param {object} options
- * @param {Function} options.Parser
+ * @param {ParserClass} options.Parser
  * @param {DemoFile} options.demoFile
  * @param {number} options.tickRate
  * @param {Array<{id: number, label: string, configuration: ParserConfiguration}>} options.cases
@@ -35,13 +38,13 @@ async function runParent({ cases, repeats }) {
 
         rows.push({ id: c.id, label: c.label, ...r });
 
-        logger.info(`  ticks/sec=${fmt(r.tps)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
+        logger.info(`  ticks/sec=${fmt(r.ticksPerSecond)}, MB/sec=${fmt(r.megabytesPerSecond)}, 30-min=${r.replay30Formatted}s, heap=${fmt(r.memoryHeapPeak)} MB, arrayBuffers=${fmt(r.memoryArrayBuffersPeak)} MB, rss=${fmt(r.memoryRssPeak)} MB`);
     }
 
     console.log('\nMarkdown rows:');
 
     for (const r of rows) {
-        console.log(`| ${r.id} | ${r.label} | ${fmt(r.tps)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
+        console.log(`| ${r.id} | ${r.label} | ${fmt(r.ticksPerSecond)} | ${fmt(r.megabytesPerSecond)} | ${r.replay30Formatted} | ${fmt(r.memoryHeapPeak)} | ${fmt(r.memoryArrayBuffersPeak)} | ${fmt(r.memoryRssPeak)} |`);
     }
 }
 
@@ -68,7 +71,7 @@ function runIsolatedCase(scriptPath, caseId) {
 
         let payload = null;
 
-        child.on('message', m => { if (m?.type === 'result') payload = m.payload; });
+        child.on('message', (/** @type {{ type: string, payload: object }} */ m) => { if (m?.type === 'result') payload = m.payload; });
         child.on('error', reject);
         child.on('exit', (code, signal) => {
             if (signal !== null) reject(new Error(`Case [ ${caseId} ] killed by ${signal}`));
@@ -86,11 +89,13 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
     const arrayBuffersPeak = new StatsAccumulator();
     const rssPeak = new StatsAccumulator();
 
+    const size = DemoProvider.getSize(demoFile);
+
     for (let i = 0; i < repeats; i++) {
         const readable = await DemoProvider.read(demoFile);
         const parser = new Parser(benchmarkCase.configuration, Logger.CONSOLE_WARN);
 
-        await benchmark.parse(parser, readable);
+        await benchmark.parse(parser, readable, size);
 
         const m = parser.getStats().memory;
 
@@ -99,7 +104,7 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
         push(rssPeak, m.maxResidentSetSize);
 
         await parser.dispose();
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => { setTimeout(r, 50); });
 
         global.gc();
     }
@@ -107,24 +112,25 @@ async function runBenchmarkCase(Parser, demoFile, tickRate, benchmarkCase, repea
     [ heapPeak, arrayBuffersPeak, rssPeak ].forEach(s => s.calculate());
 
     const result = benchmark.getResult();
-    const tps = result.demo.tps;
-    const gps = {
-        count: tps.count,
-        max: tps.max === null ? null : tps.max / tickRate,
-        mean: tps.mean / tickRate,
-        min: tps.min === null ? null : tps.min / tickRate,
-        std: tps.std / tickRate
+    const ticksPerSecond = result.demo.ticksPerSecond;
+    const gameSecondsPerSecond = {
+        count: ticksPerSecond.count,
+        max: ticksPerSecond.max === null ? null : ticksPerSecond.max / tickRate,
+        mean: ticksPerSecond.mean / tickRate,
+        min: ticksPerSecond.min === null ? null : ticksPerSecond.min / tickRate,
+        std: ticksPerSecond.std / tickRate
     };
 
     return {
-        gps,
+        gameSecondsPerSecond,
+        megabytesPerSecond: result.demo.megabytesPerSecond,
         memory: result.demo.memory,
         memoryArrayBuffersPeak: arrayBuffersPeak.getResult(),
         memoryHeapPeak: heapPeak.getResult(),
         memoryRssPeak: rssPeak.getResult(),
-        replay30Formatted: `~${(30 * 60 / gps.mean).toFixed(2)}`,
+        replay30Formatted: `~${(30 * 60 / gameSecondsPerSecond.mean).toFixed(2)}`,
         runtime: `Node.js ${process.version}`,
-        tps
+        ticksPerSecond
     };
 }
 
@@ -138,5 +144,9 @@ function fmt(stats, decimals = 0) {
 
     return `${v} +- ${std.toFixed(2)}%`;
 }
+
+/**
+ * @typedef {new (configuration?: ParserConfiguration, logger?: LoggerType) => Parser} ParserClass
+ */
 
 export default runBenchmarks;

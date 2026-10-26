@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '#core/BitBuffer.js';
-import FieldDecoderFactory from '#data/fields/decoding/FieldDecoderFactory.js';
+import BitBuffer from '../src/core/BitBuffer.js';
+import FieldDecoderFactory from '../src/data/fields/decoding/FieldDecoderFactory.js';
 
 describe('FieldDecoderFactory.FIXED_8', () => {
     test('reads exactly one byte and never continues into a following varint byte', () => {

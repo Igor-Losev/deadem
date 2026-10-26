@@ -1,0 +1,49 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "paths": {
+      "#broadcast/BroadcastReadStream.js": [
+        "./packages/engine/src/broadcast/BroadcastReadStream.browser.js"
+      ],
+      "#core/EventLoop.js": [
+        "./packages/engine/src/core/EventLoop.browser.js"
+      ],
+      "#core/stream/Pipeline.js": [
+        "./packages/engine/src/core/stream/Pipeline.browser.js"
+      ],
+      "#core/stream/Transform.js": [
+        "./packages/engine/src/core/stream/Transform.browser.js"
+      ],
+      "#core/stream/WritableSink.js": [
+        "./packages/engine/src/core/stream/WritableSink.browser.js"
+      ],
+      "#trackers/MemoryTracker.js": [
+        "./packages/engine/src/trackers/MemoryTracker.browser.js"
+      ],
+      "@deademx/engine": [
+        "./packages/engine/index.js"
+      ]
+    }
+  },
+  "include": [
+    "packages/engine/index.js",
+    "packages/engine/src/**/*.js",
+    "packages/cs2/index.js",
+    "packages/cs2/src/**/*.js",
+    "packages/dota2/index.js",
+    "packages/dota2/src/**/*.js",
+    "packages/deadlock/index.js",
+    "packages/deadlock/src/**/*.js",
+    "packages/engine/snappyjs.d.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/dist",
+    "**/tests",
+    "**/*.node.js"
+  ]
+}

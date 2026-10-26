@@ -1,30 +1,36 @@
-/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+/** @import FieldExtractor from '../FieldExtractor.js' */
+/** @import FieldDefinition from '../FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '../decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from '../path/FieldPath.js' */
+/** @import { FieldDecoderFn } from '../decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../../enums/FieldModel.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import Serializer from '#data/fields/Serializer.js';
+import Field from '../Field.js';
+import FieldDecoder from '../decoding/FieldDecoder.js';
+import Serializer from '../Serializer.js';
 
 class FieldArrayVariable extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoderBase
      * @param {FieldDecoder} fieldDecoderChild
      */
-    constructor(name, sendNode, definition, fieldDecoderBase, fieldDecoderChild) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoderBase, fieldDecoderChild) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
         Assert.isTrue(fieldDecoderChild instanceof FieldDecoder);
 
+        /** @private */
         this._fieldDecoderBase = fieldDecoderBase;
+        /** @private */
         this._fieldDecoderChild = fieldDecoderChild;
     }
 
@@ -40,7 +46,7 @@ class FieldArrayVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, index) {
         return (fieldPath.length - 1 === index ? this._fieldDecoderChild : this._fieldDecoderBase).fn;
@@ -60,7 +66,7 @@ class FieldArrayVariable extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 === index) {

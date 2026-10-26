@@ -1,0 +1,16 @@
+{
+  "name": "@deademx/tools",
+  "version": "5.0.0-rc.1",
+  "description": "Internal tooling",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint",
+    "proto:build": "node scripts/proto/build.js",
+    "proto:sync": "node scripts/proto/sync.js"
+  },
+  "dependencies": {
+    "@bufbuild/buf": "1.73.0",
+    "@bufbuild/protoc-gen-es": "2.16.0"
+  }
+}

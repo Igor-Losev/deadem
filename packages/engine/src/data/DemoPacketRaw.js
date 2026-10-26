@@ -1,3 +1,7 @@
+/** @import VarInt32 from './VarInt32.js' */
+
+/** @import DemoSource from './enums/DemoSource.js' */
+
 class DemoPacketRaw {
     /**
      * @public
@@ -8,15 +12,22 @@ class DemoPacketRaw {
      * @param {DemoSource} source
      * @param {VarInt32} tick
      * @param {VarInt32} frame
-     * @param {Buffer|Uint8Array} payload
+     * @param {Uint8Array} payload
      */
     constructor(sequence, type, source, tick, frame, payload) {
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._ordinal = sequence;
+        /** @private */
         this._type = type;
+        /** @private */
         this._source = source;
+        /** @private */
         this._tick = tick;
+        /** @private */
         this._frame = frame;
+        /** @private */
         this._payload = payload;
     }
 
@@ -78,7 +89,7 @@ class DemoPacketRaw {
 
     /**
      * @public
-     * @returns {Buffer|Uint8Array}
+     * @returns {Uint8Array}
      */
     get payload() {
         return this._payload;

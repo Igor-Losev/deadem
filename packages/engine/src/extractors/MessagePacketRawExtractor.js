@@ -1,6 +1,6 @@
-import BitBuffer from '#core/BitBuffer.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import MessagePacketRaw from '#data/MessagePacketRaw.js';
+import MessagePacketRaw from '../data/MessagePacketRaw.js';
 
 class MessagePacketRawExtractor {
     /**
@@ -9,6 +9,7 @@ class MessagePacketRawExtractor {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._bitBuffer = new BitBuffer(buffer);
     }
 

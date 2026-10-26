@@ -1,25 +1,27 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
+import DemoSource from '../data/enums/DemoSource.js';
 
-import DemoPacketRaw from '#data/DemoPacketRaw.js';
-import VarInt32 from '#data/VarInt32.js';
+import DemoPacketRaw from '../data/DemoPacketRaw.js';
+import VarInt32 from '../data/VarInt32.js';
 
 class DemoPacketRawReplayExtractor {
     /**
      * @public
      * @constructor
-     * @param {Buffer} buffer
+     * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._buffer = buffer;
 
+        /** @private */
         this._tail = buffer;
     }
 
     /**
      * @public
-     * @returns {Buffer}
+     * @returns {Uint8Array}
      */
     get tail() {
         return this._tail;

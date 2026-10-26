@@ -158,7 +158,7 @@ export default function usePlayer(library, updatesEnabled = true) {
         return;
       }
 
-      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError, StringTableEvent } = runtimeLibrary;
+      const { DemoPacketType, EntityOperation, InterceptorStage, ParserConfiguration, Player, PlaybackInterruptedError, StringTableOperation } = runtimeLibrary;
       const parserConfiguration = new ParserConfiguration({
         breakInterval: 100
       });
@@ -198,15 +198,15 @@ export default function usePlayer(library, updatesEnabled = true) {
         }
 
         for (let i = 0; i < events.length; i++) {
-          const event = events[i];
-          const entity = event.entity;
-          const operation = event.operation;
+          const mutationEvent = events[i];
+          const entity = mutationEvent.entity;
+          const operation = mutationEvent.operation;
 
           const fields = [];
 
           if (operation === EntityOperation.UPDATE || operation === EntityOperation.CREATE) {
             const isCreate = operation === EntityOperation.CREATE;
-            const batch = event.batch;
+            const batch = mutationEvent.batch;
             const serializer = entity.class.serializer;
 
             for (let j = 0; j < batch.length; j++) {
@@ -247,52 +247,23 @@ export default function usePlayer(library, updatesEnabled = true) {
         }
       });
 
-      const stringTableContainer = newPlayer.getDemo().stringTableContainer;
-      const shadowByTable = new Map();
-
-      stringTableContainer.subscribe(StringTableEvent.TABLE_CREATED, (sender, table, entries) => {
-        shadowByTable.set(table.id, new Map(entries.map((entry) => [ entry.id, entry ])));
-
-        const buffer = stringTableDiffRef.current;
-
-        if (!buffer.fullSnapshot) {
-          buffer.events.push({ entries: [], entryCount: entries.length, operation: 'CREATE', tableCode: table.type.code });
-        }
-      });
-
-      stringTableContainer.subscribe(StringTableEvent.TABLE_UPDATED, (sender, table, entries) => {
+      newPlayer.registerPreInterceptor(InterceptorStage.STRING_TABLE, (demoPacket, messagePacket, events) => {
         const buffer = stringTableDiffRef.current;
 
         if (buffer.fullSnapshot) {
           return;
         }
 
-        const shadow = shadowByTable.get(table.id);
-        const changes = [];
+        for (const mutationEvent of events) {
+          const table = mutationEvent.table;
 
-        for (const entry of entries) {
-          const previous = shadow?.get(entry.id) ?? null;
+          if (mutationEvent.operation === StringTableOperation.CREATE) {
+            buffer.events.push({ entries: [], entryCount: mutationEvent.entries.length, operation: 'CREATE', tableCode: table.type.code });
+          } else if (mutationEvent.operation === StringTableOperation.UPDATE && mutationEvent.entries.length > 0) {
+            const changes = mutationEvent.entries.map((entry) => ({ id: entry.id, key: entry.key, next: entry, previous: table.getEntryById(entry.id) }));
 
-          if (previous !== entry) {
-            changes.push({ id: entry.id, key: entry.key, next: entry, previous });
+            buffer.events.push({ entries: changes, entryCount: changes.length, operation: 'UPDATE', tableCode: table.type.code });
           }
-        }
-
-        if (changes.length > 0) {
-          buffer.events.push({ entries: changes, entryCount: changes.length, operation: 'UPDATE', tableCode: table.type.code });
-        }
-      });
-
-      stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, (sender, table, entries) => {
-        let shadow = shadowByTable.get(table.id);
-
-        if (shadow === undefined) {
-          shadow = new Map();
-          shadowByTable.set(table.id, shadow);
-        }
-
-        for (const entry of entries) {
-          shadow.set(entry.id, entry);
         }
       });
 
@@ -374,12 +345,12 @@ export default function usePlayer(library, updatesEnabled = true) {
       return;
     }
 
-    setSeeking(true);
-
-    playerRef.current.nextTick()
-      .then(() => syncTicks())
-      .catch((err) => reportPlayerError('Next tick failed', err))
-      .finally(() => setSeeking(false));
+    try {
+      playerRef.current.nextTick();
+      syncTicks();
+    } catch (err) {
+      reportPlayerError('Next tick failed', err);
+    }
   }, [ reportPlayerError, syncTicks ]);
 
   const handlePrevTick = useCallback(() => {

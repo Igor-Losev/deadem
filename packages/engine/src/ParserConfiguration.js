@@ -1,15 +1,15 @@
-import Assert from '#core/Assert.js';
+import Assert from './core/Assert.js';
 
-import MessagePacketType from '#data/enums/MessagePacketType.js';
+import MessagePacketType from './data/enums/MessagePacketType.js';
 
-const OPTIONS = {
+const OPTIONS = /** @type {const} */ ({
     BREAK_INTERVAL: 'breakInterval',
     ENTITY_CLASSES: 'entityClasses',
     MESSAGE_PACKET_TYPES: 'messagePacketTypes',
     MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude',
     SPLITTER_CHUNK_SIZE: 'splitterChunkSize',
     STREAM_HIGH_WATER_MARK: 'streamHighWaterMark'
-};
+});
 
 const CRITICAL_MESSAGE_PACKET_TYPES = new Set([
     MessagePacketType.SVC_SERVER_INFO,
@@ -27,12 +27,20 @@ const DEFAULTS = {
     [OPTIONS.STREAM_HIGH_WATER_MARK]: 6
 };
 
+/**
+ * @typedef {{ breakInterval?: number, entityClasses?: Array<string>|null, messagePacketTypes?: Array<MessagePacketType>|null, messagePacketTypesExclude?: Array<MessagePacketType>|null, splitterChunkSize?: number, streamHighWaterMark?: number }} ParserConfigurationOptions
+ */
+
 class ParserConfiguration {
     /**
      * @constructor
-     * @param {{ breakInterval?: number, entityClasses?: Array<string>, messagePacketTypes?: Array<MessagePacketType>, messagePacketTypesExclude?: Array<MessagePacketType>, splitterChunkSize?: number, streamHighWaterMark?: number }} options
+     * @param {ParserConfigurationOptions} [options]
      */
     constructor(options) {
+        /**
+         * @param {keyof ParserConfigurationOptions} key
+         * @returns {*}
+         */
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
 
         const breakInterval = getOption(OPTIONS.BREAK_INTERVAL);
@@ -50,11 +58,16 @@ class ParserConfiguration {
         Assert.isTrue(Number.isInteger(splitterChunkSize) && splitterChunkSize > 0, 'options.splitterChunkSize must be a positive integer');
         Assert.isTrue(Number.isInteger(streamHighWaterMark) && streamHighWaterMark > 0, 'options.streamHighWaterMark must be a positive integer');
 
+        /** @private */
         this._breakInterval = breakInterval;
+        /** @private */
         this._splitterChunkSize = splitterChunkSize;
+        /** @private */
         this._streamHighWaterMark = streamHighWaterMark;
 
+        /** @private */
         this._entityClassFilter = buildEntityClassFilter(entityClasses);
+        /** @private */
         this._messagePacketFilter = buildMessagePacketFilter(messagePacketTypes, messagePacketTypesExclude);
 
         if (entityClasses !== null && this._messagePacketFilter !== null) {
@@ -95,6 +108,28 @@ class ParserConfiguration {
     }
 
     /**
+     * The configured entity class filter, or `null` when every class is allowed.
+     *
+     * @internal
+     * @public
+     * @returns {((className: string) => boolean)|null}
+     */
+    get entityClassFilter() {
+        return this._entityClassFilter;
+    }
+
+    /**
+     * The configured message packet filter, or `null` when every type is allowed.
+     *
+     * @internal
+     * @public
+     * @returns {((messagePacketTypeId: number) => boolean)|null}
+     */
+    get messagePacketFilter() {
+        return this._messagePacketFilter;
+    }
+
+    /**
      * Returns whether mutations of a given entity class should be processed.
      * Returns `true` when no `entityClasses` filter was configured.
      *
@@ -122,7 +157,7 @@ class ParserConfiguration {
 
 /**
  * @param {Array<string>|null} include
- * @returns {(function(string): boolean)|null}
+ * @returns {((className: string) => boolean)|null}
  */
 function buildEntityClassFilter(include) {
     if (include === null) {
@@ -137,7 +172,7 @@ function buildEntityClassFilter(include) {
 /**
  * @param {Array<MessagePacketType>|null} include
  * @param {Array<MessagePacketType>|null} exclude
- * @returns {(function(number): boolean)|null}
+ * @returns {((id: number) => boolean)|null}
  */
 function buildMessagePacketFilter(include, exclude) {
     if (include !== null) {

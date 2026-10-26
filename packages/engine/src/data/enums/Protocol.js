@@ -1,32 +1,34 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const registry = new Map();
 
 class Protocol {
     /**
     * @constructor
-    * @param {String} code
-    * @param {String} scheme
+    * @param {string} code
+    * @param {string} scheme
     */
     constructor(code, scheme) {
         Assert.isTrue(typeof code === 'string');
         Assert.isTrue(typeof scheme === 'string');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._scheme = scheme;
 
         registry.set(code, this);
     }
 
     /**
-     * @returns {String} 
+     * @returns {string}
      */
     get code() {
         return this._code;
     }
 
     /**
-     * @returns {String} 
+     * @returns {string}
      */
     get scheme() {
         return this._scheme;
@@ -35,14 +37,14 @@ class Protocol {
     /**
      * @static
      * @public
-     * @returns {Protocol} 
+     * @returns {Protocol}
      */
     static get HTTP() { return http; }
 
     /**
      * @static
      * @public
-     * @returns {Protocol} 
+     * @returns {Protocol}
      */
     static get HTTPS() { return https; }
 }
@@ -51,4 +53,3 @@ const http = new Protocol('HTTP', 'http');
 const https = new Protocol('HTTPS', 'https');
 
 export default Protocol;
-

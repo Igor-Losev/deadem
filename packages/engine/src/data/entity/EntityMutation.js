@@ -1,11 +1,15 @@
+/** @import FieldPath from '../fields/path/FieldPath.js' */
+
 class EntityMutation {
     /**
      * @constructor
      * @param {FieldPath} fieldPath
-     * @param {*} value
+     * @param {unknown} value
      */
     constructor(fieldPath, value) {
+        /** @private */
         this._fieldPath = fieldPath;
+        /** @private */
         this._value = value;
     }
 
@@ -19,7 +23,7 @@ class EntityMutation {
 
     /**
      * @public
-     * @returns {*}
+     * @returns {unknown}
      */
     get value() {
         return this._value;

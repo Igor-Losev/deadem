@@ -1,4 +1,6 @@
-import Assert from '#core/Assert.js';
+/** @import FieldAccessor from './fields/FieldAccessor.js' */
+
+import Assert from '../core/Assert.js';
 
 import Serializer from './fields/Serializer.js';
 
@@ -8,7 +10,7 @@ class Class {
     /**
      * @constructor
      * @param {number} id
-     * @param {String} name
+     * @param {string} name
      * @param {Serializer} serializer
      */
     constructor(id, name, serializer) {
@@ -16,11 +18,16 @@ class Class {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
         Assert.isTrue(serializer instanceof Serializer);
 
+        /** @private */
         this._id = id;
+        /** @private */
         this._name = name;
+        /** @private */
         this._serializer = serializer;
 
+        /** @private */
         this._accessors = new Map();
+        /** @private */
         this._layout = new EntityStateLayout(serializer);
     }
 
@@ -34,7 +41,7 @@ class Class {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;
@@ -51,6 +58,7 @@ class Class {
     /**
      * Per-class typed-array storage plan for entity state.
      *
+     * @internal
      * @public
      * @returns {EntityStateLayout}
      */
@@ -62,6 +70,7 @@ class Class {
      * Returns the compiled read accessor for a flattened field name, or `null`
      * when the name does not resolve. Compiled once per name and cached.
      *
+     * @internal
      * @public
      * @param {string} name
      * @returns {FieldAccessor|null}

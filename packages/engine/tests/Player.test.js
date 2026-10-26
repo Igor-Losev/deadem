@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import Player from '#src/Player.js';
-import ProtoProvider from '#providers/ProtoProvider.js';
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import Player from '../src/player/Player.js';
+import SchemaRegistry from '../src/SchemaRegistry.js';
 
-import PlaybackInterruptedError from '#errors/PlaybackInterruptedError.js';
-import PlayerState from '#data/enums/PlayerState.js';
+import PlaybackInterruptedError from '../src/errors/PlaybackInterruptedError.js';
+import PlayerState from '../src/data/enums/PlayerState.js';
 
-const registry = new SchemaRegistry(new ProtoProvider({}));
+import createDescriptors from './support/createDescriptors.js';
+
+const registry = new SchemaRegistry(createDescriptors({ }));
 
 /**
  * Creates a loaded Player with mocked internals.
@@ -19,8 +20,7 @@ function createLoadedPlayer() {
     player._engine = {
         demo: { server: { tickInterval: 0.015625 } },
         dispose: vi.fn(async () => {}),
-        registerPostInterceptor: vi.fn(),
-        unregisterPostInterceptor: vi.fn()
+        getMemoryTracker: vi.fn(() => ({ off: vi.fn(), on: vi.fn() }))
     };
 
     player._index = {
@@ -43,44 +43,13 @@ function createLoadedPlayer() {
     };
 
     player._session = {
-        close: vi.fn(async () => {}),
-        process: vi.fn(async () => player._ticks.current),
-        seekToTick: vi.fn(async (tick) => tick)
+        abort: vi.fn(),
+        process: vi.fn(() => [ 100, 200, 300 ][player._ticks.position]),
+        seek: vi.fn(async (tick) => tick)
     };
 
     player._state = PlayerState.LOADED;
-    player._source = {};
     player._ticks = { current: 100, first: 100, last: 300, position: 0 };
-
-    // Override seekToTick to avoid real ParserSession construction
-    player.seekToTick = async (tick) => {
-        if (player._state === PlayerState.PLAYING) {
-            player._stopPlayback(PlaybackInterruptedError.PAUSED);
-        }
-
-        player._state = PlayerState.SEEKING;
-
-        try {
-            if (player._session !== null) {
-                await player._session.close();
-            }
-
-            player._session = {
-                close: vi.fn(async () => {}),
-                process: vi.fn(async (_) => {
-                    const next = player._index.advance(player._ticks.position);
-
-                    return next ? next.tick : player._ticks.current;
-                }),
-                seekToTick: vi.fn(async (t) => t)
-            };
-
-            player._ticks.current = await player._session.seekToTick(tick);
-            player._ticks.position = player._index.getTickPosition(player._ticks.current);
-        } finally {
-            player._state = PlayerState.LOADED;
-        }
-    };
 
     return player;
 }
@@ -93,10 +62,10 @@ describe('Player', () => {
     });
 
     describe('state validation', () => {
-        test('It should throw on nextTick when not LOADED', async () => {
+        test('It should throw on nextTick when not LOADED', () => {
             player._state = PlayerState.IDLE;
 
-            await expect(player.nextTick()).rejects.toThrow('player is IDLE');
+            expect(() => player.nextTick()).toThrow('player is IDLE');
         });
 
         test('It should throw on prevTick when not LOADED', async () => {
@@ -116,39 +85,46 @@ describe('Player', () => {
 
             expect(() => player.play()).toThrow();
         });
+
+        test('It should throw on play when rate is not positive', () => {
+            expect(() => player.play(0)).toThrow();
+            expect(() => player.play(-1)).toThrow();
+        });
     });
 
     describe('nextTick', () => {
-        test('It should advance to the next tick', async () => {
-            player._session.process.mockResolvedValue(200);
-
-            const result = await player.nextTick();
+        test('It should advance to the next tick', () => {
+            const result = player.nextTick();
 
             expect(result).toBe(true);
             expect(player.getCurrentTick()).toBe(200);
             expect(player._ticks.position).toBe(1);
         });
 
-        test('It should return false at the last position', async () => {
+        test('It should return false at the last position', () => {
             player._ticks.position = 2;
 
-            const result = await player.nextTick();
+            const result = player.nextTick();
 
             expect(result).toBe(false);
         });
 
-        test('It should reject when session.process rejects', async () => {
-            const error = new Error('parse failed');
+        test('It should throw when session.process throws', () => {
+            const error = new Error('processing failed');
 
-            player._session.process.mockRejectedValue(error);
+            player._session.process.mockImplementation(() => {
+                throw error;
+            });
 
-            await expect(player.nextTick()).rejects.toBe(error);
+            expect(() => player.nextTick()).toThrow(error);
         });
 
-        test('It should leave the player in LOADED state after a session failure', async () => {
-            player._session.process.mockRejectedValue(new Error('parse failed'));
+        test('It should leave the player in LOADED state after a session failure', () => {
+            player._session.process.mockImplementation(() => {
+                throw new Error('processing failed');
+            });
 
-            await expect(player.nextTick()).rejects.toThrow();
+            expect(() => player.nextTick()).toThrow();
 
             expect(player.state).toBe(PlayerState.LOADED);
         });
@@ -173,19 +149,13 @@ describe('Player', () => {
             expect(result).toBe(false);
         });
 
-        test('It should reject when underlying seek (session) fails', async () => {
+        test('It should reject when the underlying seek fails', async () => {
             player._ticks.current = 200;
             player._ticks.position = 1;
 
-            const error = new Error('parse failed');
+            const error = new Error('seek failed');
 
-            player.seekToTick = vi.fn(async () => {
-                try {
-                    throw error;
-                } finally {
-                    player._state = PlayerState.LOADED;
-                }
-            });
+            player._session.seek.mockRejectedValue(error);
 
             await expect(player.prevTick()).rejects.toBe(error);
             expect(player.state).toBe(PlayerState.LOADED);
@@ -206,8 +176,8 @@ describe('Player', () => {
             expect(player.state).toBe(PlayerState.LOADED);
         });
 
-        test('It should return to LOADED state on close error', async () => {
-            player._session.close.mockRejectedValue(new Error('fail'));
+        test('It should return to LOADED state on seek error', async () => {
+            player._session.seek.mockRejectedValue(new Error('fail'));
 
             await expect(player.seekToTick(200)).rejects.toThrow('fail');
 
@@ -215,9 +185,7 @@ describe('Player', () => {
         });
 
         test('It should interrupt play with PAUSED reason when seeking while playing', async () => {
-            player._session.process.mockReturnValue(new Promise(() => {}));
-
-            const promise = player.play();
+            const promise = player.play(0.001);
 
             await player.seekToTick(200);
 
@@ -230,27 +198,15 @@ describe('Player', () => {
 
     describe('play', () => {
         test('It should resolve when reaching the end', async () => {
-            let call = 0;
-
-            player._session.process.mockImplementation(async () => {
-                call++;
-
-                if (call === 1) return 200;
-
-                return 300;
-            });
-
             await player.play(100000);
 
             expect(player.getCurrentTick()).toBe(300);
             expect(player.state).toBe(PlayerState.LOADED);
-            expect(player._playback.deferred).not.toBe(null);
+            expect(player._playback.loop).toBe(null);
         });
 
         test('It should transition to PLAYING state', async () => {
-            player._session.process.mockReturnValue(new Promise(() => {}));
-
-            const promise = player.play();
+            const promise = player.play(0.001);
 
             expect(player.state).toBe(PlayerState.PLAYING);
 
@@ -262,11 +218,11 @@ describe('Player', () => {
             expect(err.reason).toBe(PlaybackInterruptedError.PAUSED);
         });
 
-        test('It should reject the play promise when session.process rejects mid-loop', async () => {
-            const error = new Error('parse failed');
+        test('It should reject the play promise when session.process throws mid-loop', async () => {
+            const error = new Error('processing failed');
             let call = 0;
 
-            player._session.process.mockImplementation(async () => {
+            player._session.process.mockImplementation(() => {
                 call++;
 
                 if (call === 1) return 200;
@@ -278,29 +234,31 @@ describe('Player', () => {
             expect(player.state).toBe(PlayerState.LOADED);
         });
 
-        test('It should reject the play promise when session.process rejects on first advance', async () => {
-            const error = new Error('parse failed');
+        test('It should reject the play promise when session.process throws on first advance', async () => {
+            const error = new Error('processing failed');
 
-            player._session.process.mockRejectedValue(error);
+            player._session.process.mockImplementation(() => {
+                throw error;
+            });
 
             await expect(player.play(100000)).rejects.toBe(error);
             expect(player.state).toBe(PlayerState.LOADED);
         });
 
-        test('It should clear the playback deferred after a pipeline error', async () => {
-            player._session.process.mockRejectedValue(new Error('parse failed'));
+        test('It should clear the playback loop after a processing error', async () => {
+            player._session.process.mockImplementation(() => {
+                throw new Error('processing failed');
+            });
 
             await player.play(100000).catch(() => {});
 
-            expect(player._playback.deferred).toBe(null);
+            expect(player._playback.loop).toBe(null);
         });
     });
 
     describe('pause', () => {
         test('It should reject the play promise', async () => {
-            player._session.process.mockResolvedValue(200);
-
-            const promise = player.play(1000);
+            const promise = player.play(0.001);
 
             player.pause();
 
@@ -320,9 +278,7 @@ describe('Player', () => {
 
     describe('stop', () => {
         test('It should reject the play promise and seek to the first tick', async () => {
-            player._session.process.mockReturnValue(new Promise(() => {}));
-
-            const promise = player.play();
+            const promise = player.play(0.001);
 
             await player.stop();
 
@@ -347,13 +303,13 @@ describe('Player', () => {
             expect(player.state).toBe(PlayerState.DISPOSED);
         });
 
-        test('It should close the session and dispose the engine', async () => {
+        test('It should abort the session and dispose the engine', async () => {
             const session = player._session;
             const engine = player._engine;
 
             await player.dispose();
 
-            expect(session.close).toHaveBeenCalled();
+            expect(session.abort).toHaveBeenCalled();
             expect(engine.dispose).toHaveBeenCalled();
         });
 
@@ -361,16 +317,13 @@ describe('Player', () => {
             await player.dispose();
 
             expect(player._index).toBe(null);
-            expect(player._source).toBe(null);
             expect(player._session).toBe(null);
             expect(player._ticks.current).toBe(-1);
             expect(player._ticks.position).toBe(-1);
         });
 
         test('It should stop playback on dispose', async () => {
-            player._session.process.mockResolvedValue(200);
-
-            const promise = player.play(1000);
+            const promise = player.play(0.001);
 
             await player.dispose();
 

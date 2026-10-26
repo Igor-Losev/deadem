@@ -1,4 +1,8 @@
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+/** @import EntityOperation from '../enums/EntityOperation.js' */
+
+/** @import Entity from './Entity.js' */
+
+import FieldPathBuilder from '../fields/path/FieldPathBuilder.js';
 
 import EntityMutation from './EntityMutation.js';
 import EntityMutationBatch from './EntityMutationBatch.js';
@@ -12,11 +16,16 @@ class EntityMutationEvent {
      * @param {EntityMutationBatch} batch
      */
     constructor(operation, entity, batch) {
+        /** @private */
         this._operation = operation;
+        /** @private */
         this._entity = entity;
+        /** @private */
         this._batch = batch;
 
+        /** @private */
         this._mutations = null;
+        /** @private */
         this._changes = null;
     }
 
@@ -70,6 +79,7 @@ class EntityMutationEvent {
     /**
      * Creates a mutation-less event.
      *
+     * @internal
      * @public
      * @static
      * @param {EntityOperation} operation
@@ -81,13 +91,25 @@ class EntityMutationEvent {
     }
 
     /**
-     * Returns changed fields as a flattened object. When `names` is
-     * `null` returns all fields. Otherwise returns a same-order
-     * array — `undefined` for fields not in this event.
+     * Returns changed fields as a flattened object.
      *
      * @public
+     * @overload
+     * @param {null} [names]
+     * @returns {Record<string, unknown>}
+     */
+    /**
+     * Returns a same-order array — `undefined` for fields not in this event.
+     *
+     * @public
+     * @overload
+     * @param {Array<string>} names
+     * @returns {Array<unknown>}
+     */
+    /**
+     * @public
      * @param {Array<string>|null} [names=null]
-     * @returns {Record<string, *>|Array<*>}
+     * @returns {Record<string, unknown>|Array<unknown>}
      */
     getChanges(names = null) {
         const batch = this._batch;
@@ -97,6 +119,7 @@ class EntityMutationEvent {
                 return this._changes;
             }
 
+            /** @type {Record<string, unknown>} */
             const changes = {};
             const serializer = this._entity.class.serializer;
 

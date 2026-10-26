@@ -1,0 +1,19 @@
+{
+  "extends": "./../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declarationDir": "./types",
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "rootDir": "."
+  },
+  "include": [
+    "index.js",
+    "src/**/*.js"
+  ],
+  "references": [
+    {
+      "path": "./../engine/tsconfig.emit.json"
+    }
+  ]
+}

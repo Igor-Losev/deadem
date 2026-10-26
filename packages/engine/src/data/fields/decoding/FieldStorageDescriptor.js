@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+import FieldStorageType from '../../enums/FieldStorageType.js';
 
 /**
  * Describes how a decoded value is stored on an {@link Entity}: which typed-array
@@ -22,9 +22,13 @@ class FieldStorageDescriptor {
         Assert.isTrue(typeof signed === 'boolean');
         Assert.isTrue(typeof bool === 'boolean');
 
+        /** @private */
         this._type = type;
+        /** @private */
         this._dim = dim;
+        /** @private */
         this._signed = signed;
+        /** @private */
         this._bool = bool;
     }
 
@@ -133,7 +137,9 @@ const vectors = [
     null,
     new FieldStorageDescriptor(FieldStorageType.VECTOR, 2, false, false),
     new FieldStorageDescriptor(FieldStorageType.VECTOR, 3, false, false),
-    new FieldStorageDescriptor(FieldStorageType.VECTOR, 4, false, false)
+    new FieldStorageDescriptor(FieldStorageType.VECTOR, 4, false, false),
+    null,
+    new FieldStorageDescriptor(FieldStorageType.VECTOR, 6, false, false)
 ];
 
 export default FieldStorageDescriptor;

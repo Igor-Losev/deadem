@@ -1,28 +1,50 @@
+/** @import { GenMessage } from '@bufbuild/protobuf/codegenv2' */
+
+/** @import SchemaRegistry from '../SchemaRegistry.js' */
+
+/** @import MessagePacketType from './enums/MessagePacketType.js' */
+
+/**
+ * @template [M=unknown]
+ * @template {string|null} [N=string|null]
+ */
 class MessagePacket {
     /**
      * @public
      * @constructor
      *
-     * @param {MessagePacketType} type
+     * @param {MessagePacketType<N>} type
      * @param {*} data
      */
     constructor(type, data) {
+        /** @private */
         this._type = type;
+        /** @private */
         this._data = data;
     }
 
     /**
-     * @returns {MessagePacketType}
+     * @returns {MessagePacketType<N>}
      */
     get type() {
         return this._type;
     }
 
     /**
-     * @returns {*}
+     * @returns {MessagePayload<M, N>}
      */
     get data() {
         return this._data;
+    }
+
+    /**
+     * @public
+     * @template {string|null} T
+     * @param {MessagePacketType<T>} type
+     * @returns {this is MessagePacket<M, T>}
+     */
+    is(type) {
+        return this._type.code === type.code;
     }
 
     /**
@@ -55,7 +77,17 @@ class MessagePacket {
 }
 
 /**
- * @typedef {{type: String, data: *}} MessagePacketObject
+ * @typedef {{type: string, data: *}} MessagePacketObject
+ */
+
+/**
+ * @template M, N
+ * @typedef {N extends string ? SchemaMessage<M, `${N}Schema`> : unknown} MessagePayload
+ */
+
+/**
+ * @template M, K
+ * @typedef {K extends keyof M ? M[K] extends GenMessage<infer T> ? T : unknown : unknown} SchemaMessage
  */
 
 export default MessagePacket;

@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
 class Server {
     /**
@@ -13,11 +13,16 @@ class Server {
         Assert.isTrue(Number.isInteger(maxClients));
         Assert.isTrue(typeof tickInterval === 'number');
 
+        /** @private */
         this._maxClasses = maxClasses;
+        /** @private */
         this._maxClients = maxClients;
+        /** @private */
         this._tickInterval = tickInterval;
 
+        /** @private */
         this._classIdSizeBits = Math.floor(Math.log2(maxClasses)) + 1;
+        /** @private */
         this._tickRate = 1 / tickInterval;
     }
 

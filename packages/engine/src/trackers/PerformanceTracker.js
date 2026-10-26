@@ -1,5 +1,7 @@
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
-import PerformanceTrackerRecord from '#data/trackers/PerformanceTrackerRecord.js';
+/** @import { PerformanceTrackerRecordStats } from '../data/trackers/PerformanceTrackerRecord.js' */
+
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerRecord from '../data/trackers/PerformanceTrackerRecord.js';
 
 import Tracker from './Tracker.js';
 
@@ -7,6 +9,7 @@ class PerformanceTracker extends Tracker {
     constructor() {
         super();
 
+        /** @private */
         this._registry = new Map();
     }
 
@@ -29,7 +32,34 @@ class PerformanceTracker extends Tracker {
      * @returns {PerformanceTrackerStats}
      */
     getStats() {
-        return getStatsRecursively.call(this);
+        return this._getStatsRecursively();
+    }
+
+    /**
+     * @private
+     * @param {PerformanceTrackerNode=} reference
+     * @returns {PerformanceTrackerNode}
+     */
+    _getStatsRecursively(reference = getNode()) {
+        const record = this._registry.get(reference.category) || null;
+
+        if (record === null) {
+            return reference;
+        }
+
+        reference.stats = record.getSnapshot();
+
+        reference.category.categories.forEach((category) => {
+            if (this._registry.has(category)) {
+                const child = getNode(category);
+
+                reference.children.push(child);
+
+                this._getStatsRecursively(child);
+            }
+        });
+
+        return reference;
     }
 
     /**
@@ -46,32 +76,6 @@ class PerformanceTracker extends Tracker {
 }
 
 /**
- * @param {PerformanceTrackerNode=} reference
- * @returns {PerformanceTrackerNode}
- */
-function getStatsRecursively(reference = getNode()) {
-    const record = this._registry.get(reference.category) || null;
-
-    if (record === null) {
-        return reference;
-    }
-
-    reference.stats = record.getSnapshot();
-
-    reference.category.categories.forEach((category) => {
-        if (this._registry.has(category)) {
-            const child = getNode(category);
-
-            reference.children.push(child);
-
-            getStatsRecursively.call(this, child);
-        }
-    });
-
-    return reference;
-}
-
-/**
  * @param {PerformanceTrackerCategory} category
  * @returns {PerformanceTrackerNode}
  */
@@ -84,7 +88,7 @@ function getNode(category = PerformanceTrackerCategory.PARSER) {
 }
 
 /**
- * @typedef {Object} PerformanceTrackerNode
+ * @typedef {object} PerformanceTrackerNode
  * @property {Array<PerformanceTrackerNode>} children
  * @property {PerformanceTrackerRecordStats|null} stats
  * @property {PerformanceTrackerCategory} category

@@ -1,9 +1,11 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
+/** @import StringTableInstructions from '../data/tables/string/StringTableInstructions.js' */
 
-import StringTable from '#data/tables/string/StringTable.js';
-import StringTableEntry from '#data/tables/string/StringTableEntry.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
+import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
+
+import StringTable from '../data/tables/string/StringTable.js';
+import StringTableEntry from '../data/tables/string/StringTableEntry.js';
 
 const MAX_HISTORY_ENTRIES = 32;
 
@@ -20,18 +22,24 @@ class StringTableEntryExtractor {
         Assert.isTrue(table instanceof StringTable);
         Assert.isTrue(Number.isInteger(entriesCount));
 
+        /** @private */
         this._bitBuffer = new BitBuffer(buffer);
+        /** @private */
         this._table = table;
+        /** @private */
         this._entriesCount = entriesCount;
     }
 
     *retrieve() {
         this._bitBuffer.reset();
 
-        const history = [ ];
+        const instructions = /** @type {StringTableInstructions} */ (this._table.instructions);
+
+        /** @type {Array<string>} */
+        const history = new Array(MAX_HISTORY_ENTRIES);
 
         let index = -1;
-        let cursor = 0;
+        let count = 0;
 
         for (let i = 0; i < this._entriesCount; i++) {
             let key = '';
@@ -51,26 +59,30 @@ class StringTableEntryExtractor {
                 const useHistory = this._bitBuffer.readBit();
 
                 if (useHistory) {
-                    const base = cursor > MAX_HISTORY_ENTRIES ? cursor & (MAX_HISTORY_ENTRIES - 1) : 0;
-
-                    const offset = this._bitBuffer.readBitsAsUInt(5);
+                    const position = this._bitBuffer.readBitsAsUInt(5);
                     const size = this._bitBuffer.readBitsAsUInt(5);
-
-                    const slot = (base + offset) & (MAX_HISTORY_ENTRIES - 1);
                     const portion = this._bitBuffer.readString();
 
-                    if (cursor < slot || !history[slot] || history[slot].length < size) {
-                        key = portion;
+                    if (position < Math.min(count, MAX_HISTORY_ENTRIES)) {
+                        const oldest = Math.max(0, count - MAX_HISTORY_ENTRIES);
+
+                        key = history[(oldest + position) & (MAX_HISTORY_ENTRIES - 1)].slice(0, size) + portion;
                     } else {
-                        key = history[slot].slice(0, size) + portion;
+                        key = portion;
                     }
                 } else {
                     key = this._bitBuffer.readString();
                 }
+            } else {
+                const existing = this._table.getEntryById(index);
 
-                history[cursor & (MAX_HISTORY_ENTRIES - 1)] = key;
-                cursor += 1;
+                if (existing !== null) {
+                    key = existing.key;
+                }
             }
+
+            history[count & (MAX_HISTORY_ENTRIES - 1)] = key;
+            count += 1;
 
             const hasValue = this._bitBuffer.readBit();
 
@@ -78,14 +90,14 @@ class StringTableEntryExtractor {
                 let bitSize = 0;
                 let isCompressed = false;
 
-                if (this._table.instructions.userDataFixedSize) {
-                    bitSize = this._table.instructions.userDataSizeBits;
+                if (instructions.userDataFixedSize) {
+                    bitSize = instructions.userDataSizeBits;
                 } else {
                     if (this._table.getIsValueCompressionSupported()) {
                         isCompressed = this._bitBuffer.readBit();
                     }
 
-                    if (this._table.instructions.usingVarintBitcounts) {
+                    if (instructions.usingVarintBitcounts) {
                         bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
                     } else {
                         bitSize = this._bitBuffer.readBitsAsUInt(17) * BitBuffer.BITS_PER_BYTE;

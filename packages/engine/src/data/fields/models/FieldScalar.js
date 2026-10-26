@@ -1,26 +1,30 @@
-/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+/** @import FieldExtractor from '../FieldExtractor.js' */
+/** @import FieldDefinition from '../FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '../decoding/FieldStorageDescriptor.js' */
+/** @import { FieldDecoderFn } from '../decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../../enums/FieldModel.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
+import Field from '../Field.js';
+import FieldDecoder from '../decoding/FieldDecoder.js';
 
 class FieldScalar extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, definition, fieldDecoder) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoder) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 
+        /** @private */
         this._fieldDecoder = fieldDecoder;
     }
 
@@ -34,7 +38,7 @@ class FieldScalar extends Field {
 
     /**
      * @public
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath() {
         return this._fieldDecoder.fn;
@@ -50,7 +54,7 @@ class FieldScalar extends Field {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath() {
         return this._name;

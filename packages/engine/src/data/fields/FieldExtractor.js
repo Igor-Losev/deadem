@@ -1,8 +1,8 @@
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import FieldPath from './path/FieldPath.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import FieldPathBuilder from './path/FieldPathBuilder.js';
 
 /**
  * Stateful cursor that combines a path builder with a raw value reader.
@@ -13,14 +13,16 @@ class FieldExtractor {
     /**
      * @public
      * @constructor
-     * @param {function(FieldPath): *} readField
+     * @param {(fieldPath: FieldPath) => *} readField
      * @param {Array<number>} basePath
      */
     constructor(readField, basePath) {
         Assert.isTrue(typeof readField === 'function');
         Assert.isTrue(Array.isArray(basePath) && basePath.length > 0);
 
+        /** @private */
         this._readField = readField;
+        /** @private */
         this._builder = new FieldPathBuilder();
 
         this._builder.set(basePath[0], 0);

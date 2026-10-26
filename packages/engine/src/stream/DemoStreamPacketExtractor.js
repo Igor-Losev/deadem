@@ -1,12 +1,14 @@
-import Assert from '#core/Assert.js';
+/** @import ParserEngine from '../ParserEngine.js' */
+
+import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import DemoSource from '../data/enums/DemoSource.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
-import DemoPacketRawBroadcastExtractor from '#extractors/DemoPacketRawBroadcastExtractor.js';
-import DemoPacketRawReplayExtractor from '#extractors/DemoPacketRawReplayExtractor.js';
+import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
+import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
 
 const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 
@@ -29,15 +31,19 @@ class DemoStreamPacketExtractor extends Transform {
 
         Assert.isTrue(source instanceof DemoSource);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._source = source;
 
+        /** @private */
         this._counts = {
             bytes: 0,
             chunks: 0,
             packets: 0
         };
 
+        /** @private @type {Uint8Array} */
         this._tail = new Uint8Array(0);
     }
 

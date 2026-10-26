@@ -1,3 +1,20 @@
+/** @typedef {import('./src/data/DemoPacket.js').DemoPacketObject} DemoPacketObject */
+/** @typedef {import('./src/data/DemoPacketRaw.js').default} DemoPacketRaw */
+/** @typedef {import('./src/data/entity/EntityMutation.js').default} EntityMutation */
+/**
+ * @template [M=unknown]
+ * @typedef {import('./src/ParserEngine.js').InterceptorMap<M>} InterceptorMap
+ */
+/** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('./src/data/MessagePacket.js').MessagePacketObject} MessagePacketObject */
+/** @typedef {import('./src/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
+/** @typedef {import('./src/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
+/** @typedef {import('./src/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */
+/** @typedef {import('./src/errors/PlaybackInterruptedError.js').PlaybackInterruptionReason} PlaybackInterruptionReason */
+/** @typedef {import('./src/extractors/DeltaExtractor.js').ProtoState} ProtoState */
+/** @typedef {import('./src/data/tables/string/StringTable.js').StringTableDecoderFn} StringTableDecoderFn */
+/** @typedef {import('./src/broadcast/BroadcastGateway.js').SyncObject} SyncObject */
+
 export { default as Bootstrap } from './src/bootstrap/Bootstrap.js';
 export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastFragmentType } from './src/data/enums/BroadcastFragmentType.js';
@@ -7,6 +24,7 @@ export { default as Demo } from './src/data/Demo.js';
 export { default as DemoPacket } from './src/data/DemoPacket.js';
 export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
 export { default as DemoSource } from './src/data/enums/DemoSource.js';
+export { default as EmbeddedMessageType } from './src/data/enums/EmbeddedMessageType.js';
 export { default as Entity } from './src/data/entity/Entity.js';
 export { default as EntityMutationEvent } from './src/data/entity/EntityMutationEvent.js';
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
@@ -19,17 +37,17 @@ export { default as MessagePacketType } from './src/data/enums/MessagePacketType
 export { default as Parser } from './src/Parser.js';
 export { default as ParserConfiguration } from './src/ParserConfiguration.js';
 export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterruptedError.js';
-export { default as Player } from './src/Player.js';
+export { default as Player } from './src/player/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/Printer.js';
-export { default as ProtoProvider } from './src/providers/ProtoProvider.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
 export { default as SchemaRegistry } from './src/SchemaRegistry.js';
 export { default as Server } from './src/data/Server.js';
 export { default as StringTable } from './src/data/tables/string/StringTable.js';
 export { default as StringTableContainer } from './src/data/tables/string/StringTableContainer.js';
 export { default as StringTableEntry } from './src/data/tables/string/StringTableEntry.js';
-export { default as StringTableEvent } from './src/data/enums/StringTableEvent.js';
+export { default as StringTableMutationEvent } from './src/data/tables/string/StringTableMutationEvent.js';
+export { default as StringTableOperation } from './src/data/enums/StringTableOperation.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
 export { default as UserCommand } from './src/data/UserCommand.js';
 export { default as UserCommandEvent } from './src/data/UserCommandEvent.js';

@@ -10,46 +10,46 @@ class Logger {
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     debug(...args) {
-        return this._logger.debug(...args);
+        this._logger.debug(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     error(...args) {
-        return this._logger.error(...args);
+        this._logger.error(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     info(...args) {
-        return this._logger.info(...args);
+        this._logger.info(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     trace(...args) {
-        return this._logger.trace(...args);
+        this._logger.trace(...args);
     }
 
     /**
      * @public
      * @param {...any} args
-     * @returns {*}
+     * @returns {void}
      */
     warn(...args) {
-        return this._logger.warn(...args);
+        this._logger.warn(...args);
     }
 
     /**
@@ -133,24 +133,44 @@ const noopLogger = new Logger({
     warn: noopFn
 });
 
+/**
+ * @param {number} colorIndex
+ * @param {string} level
+ * @returns {string}
+ */
 const getPrefix = (colorIndex, level) => `\x1b[${colorIndex}m[${new Date().toISOString()}] [${level}]\x1b[0m -`;
 
+/**
+ * @param {...any} args
+ */
 function consoleDebugFn(...args) {
     console.debug(getPrefix(34, 'DEBUG'), ...args);
 }
 
+/**
+ * @param {...any} args
+ */
 function consoleErrorFn(...args) {
     console.error(getPrefix(31, 'ERROR'), ...args);
 }
 
+/**
+ * @param {...any} args
+ */
 function consoleInfoFn(...args) {
     console.info(getPrefix(32, 'INFO'), ...args);
 }
 
+/**
+ * @param {...any} args
+ */
 function consoleTraceFn(...args) {
     console.trace(getPrefix(37, 'TRACE'), ...args);
 }
 
+/**
+ * @param {...any} args
+ */
 function consoleWarnFn(...args) {
     console.warn(getPrefix(33, 'WARN'), ...args);
 }

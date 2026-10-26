@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '#core/BitBuffer.js';
+import BitBuffer from '../src/core/BitBuffer.js';
 
-import FieldDecoderInstructions from '#data/fields/decoding/FieldDecoderInstructions.js';
-import FieldDecoderQuantizedFloat from '#data/fields/decoding/FieldDecoderQuantizedFloat.js';
+import FieldDecoderInstructions from '../src/data/fields/decoding/FieldDecoderInstructions.js';
+import FieldDecoderQuantizedFloat from '../src/data/fields/decoding/FieldDecoderQuantizedFloat.js';
 
 describe('FieldDecoderQuantizedFloat.quantize()', () => {
     describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, 0 ]', () => {
@@ -45,6 +45,33 @@ describe('FieldDecoderQuantizedFloat.decode()', () => {
             const decoder = new FieldDecoderQuantizedFloat(instructions);
 
             expect(decoder.decode(new BitBuffer(bytes))).toBe(850.125);
+        });
+    });
+
+    describe('When [ bitCount, low, high, flags ] set to [ 10, 0, 102.3, 2 ]', () => {
+        test('It should not read a round-up bit, since the high value quantizes exactly', () => {
+            const instructions = new FieldDecoderInstructions(null, 2, 10, 0, Math.fround(102.3));
+            const decoder = new FieldDecoderQuantizedFloat(instructions);
+
+            expect(decoder.decode(new BitBuffer(new Uint8Array([ 1, 0 ])))).toBeCloseTo(0.1998, 4);
+        });
+    });
+
+    describe('When [ bitCount, low, high, flags ] set to [ 2, 0, 100, 8 ]', () => {
+        test('It should widen the bit count to encode integers exactly', () => {
+            const instructions = new FieldDecoderInstructions(null, 8, 2, 0, 100);
+            const decoder = new FieldDecoderQuantizedFloat(instructions);
+
+            expect(decoder.decode(new BitBuffer(new Uint8Array([ 200 ])))).toBe(100);
+        });
+    });
+
+    describe('When [ bitCount, low, high, flags ] set to [ 8, 0, 1, -8 ]', () => {
+        test('It should decode the high integer exactly', () => {
+            const instructions = new FieldDecoderInstructions(null, -8, 8, 0, 1);
+            const decoder = new FieldDecoderQuantizedFloat(instructions);
+
+            expect(decoder.decode(new BitBuffer(new Uint8Array([ 128 ])))).toBe(1);
         });
     });
 });

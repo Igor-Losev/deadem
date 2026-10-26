@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import BinaryHeap from '#core/BinaryHeap.js';
+import BinaryHeap from '../src/core/BinaryHeap.js';
 
 describe('BinaryHeap', () => {
     const getSourceData = () => [ 5, 6, 1, 0, 4 ];

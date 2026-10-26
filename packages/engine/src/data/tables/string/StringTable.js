@@ -1,8 +1,16 @@
-import Assert from '#core/Assert.js';
+/** @import StringTableEntry from './StringTableEntry.js' */
 
-import StringTableType from '#data/enums/StringTableType.js';
+import Assert from '../../../core/Assert.js';
+
+import StringTableType from '../../enums/StringTableType.js';
 
 import StringTableInstructions from './StringTableInstructions.js';
+
+/**
+ * Decodes a raw string-table entry payload into a structured value.
+ *
+ * @typedef {(buffer: Uint8Array) => *} StringTableDecoderFn
+ */
 
 class StringTable {
     /**
@@ -11,7 +19,7 @@ class StringTable {
      * @param {StringTableType} type
      * @param {number} flags
      * @param {StringTableInstructions|null=} instructions
-     * @param {Function|null} [decoder=null]
+     * @param {StringTableDecoderFn|null} [decoder]
      */
     constructor(id, type, flags, instructions, decoder = null) {
         Assert.isTrue(Number.isInteger(id) && id >= 0);
@@ -19,13 +27,19 @@ class StringTable {
         Assert.isTrue(Number.isInteger(flags));
         Assert.isTrue(!instructions || instructions instanceof StringTableInstructions);
 
+        /** @private */
         this._id = id;
+        /** @private */
         this._type = type;
+        /** @private */
         this._flags = flags;
+        /** @private */
         this._instructions = instructions || null;
 
+        /** @private */
         this._decoder = decoder || null;
 
+        /** @private */
         this._registry = {
             entryById: new Map()
         };
@@ -100,6 +114,16 @@ class StringTable {
     }
 
     /**
+     * @public
+     * @param {StringTableType} type
+     * @returns {boolean}
+     */
+    is(type) {
+        return this._type.code === type.code;
+    }
+
+    /**
+     * @internal
      * @public
      * @param {StringTableEntry} entry
      * @returns {void}

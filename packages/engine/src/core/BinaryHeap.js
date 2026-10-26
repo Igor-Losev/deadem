@@ -1,26 +1,33 @@
 import Assert from './Assert.js';
 
+/**
+ * @template T element type
+ * @template [P=number] priority type produced by the extractor
+ */
 class BinaryHeap {
     /**
      * @public
      * @constructor
-     * @param {Function=} extractor
-     * @param {Function=} comparator
+     * @param {((element: T) => P)=} extractor
+     * @param {((a: P, b: P) => boolean)=} comparator
      */
     constructor(extractor, comparator) {
         Assert.isTrue(!extractor || typeof extractor === 'function');
         Assert.isTrue(!comparator || typeof comparator === 'function');
 
-        this._extractor = extractor || (i => i);
-        this._comparator = comparator || BinaryHeap.MIN_HEAP_COMPARATOR;
+        /** @private */
+        this._extractor = extractor || (element => /** @type {P} */ (/** @type {*} */ (element)));
+        /** @private */
+        this._comparator = comparator || /** @type {(a: P, b: P) => boolean} */ (BinaryHeap.MIN_HEAP_COMPARATOR);
 
+        /** @private @type {Array<T>} */
         this._heap = [ ];
     }
 
     /**
      * @public
      * @static
-     * @returns {function(number, number): boolean}
+     * @returns {(a: number, b: number) => boolean}
      */
     static get MAX_HEAP_COMPARATOR() {
         return (a, b) => a < b;
@@ -29,7 +36,7 @@ class BinaryHeap {
     /**
      * @public
      * @static
-     * @returns {function(number, number): boolean}
+     * @returns {(a: number, b: number) => boolean}
      */
     static get MIN_HEAP_COMPARATOR() {
         return (a, b) => a > b;
@@ -45,7 +52,7 @@ class BinaryHeap {
 
     /**
      * @public
-     * @returns {*}
+     * @returns {T|undefined}
      */
     get root() {
         return this._heap[0];
@@ -53,7 +60,7 @@ class BinaryHeap {
 
     /**
      * @public
-     * @returns {*}
+     * @returns {T|undefined}
      */
     extract() {
         if (this._heap.length === 0) {
@@ -65,7 +72,7 @@ class BinaryHeap {
         const last = this._heap.pop();
 
         if (this._heap.length !== 0) {
-            this._heap[0] = last;
+            this._heap[0] = /** @type {T} */ (last);
 
             this._siftDown(0);
         }
@@ -75,7 +82,7 @@ class BinaryHeap {
 
     /**
      * @public
-     * @param {*} element
+     * @param {T} element
      */
     insert(element) {
         const length = this._heap.push(element);
@@ -113,7 +120,7 @@ class BinaryHeap {
     /**
      * @protected
      * @param {number} i
-     * @returns {*}
+     * @returns {P}
      */
     _getValue(i) {
         Assert.isTrue(Number.isInteger(i) && i >= 0 && i < this._heap.length);

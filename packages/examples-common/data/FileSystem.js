@@ -1,3 +1,5 @@
+/** @import { Readable, Writable } from 'node:stream' */
+
 import fs from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,9 +13,10 @@ class FileSystem {
      * @public
      * @static
      * @param {...*} args
-     * @returns {Stream.Readable}
+     * @returns {Readable}
      */
     static createReadStream(...args) {
+        // @ts-ignore — forwarding to fs
         return fs.createReadStream(...args);
     }
 
@@ -21,16 +24,17 @@ class FileSystem {
      * @public
      * @static
      * @param {...*} args
-     * @returns {Stream.Writable}
+     * @returns {Writable}
      */
     static createWriteStream(...args) {
+        // @ts-ignore — forwarding to fs
         return fs.createWriteStream(...args);
     }
 
     /**
      * @public
      * @static
-     * @param {String} path
+     * @param {string} path
      * @returns {boolean}
      */
     static isFile(path) {
@@ -50,9 +54,19 @@ class FileSystem {
     /**
      * @public
      * @static
-     * @param {String} importMetaUrl
-     * @param {String} path
-     * @returns {String}
+     * @param {string} path
+     * @returns {number}
+     */
+    static getSize(path) {
+        return fs.statSync(path).size;
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {string} importMetaUrl
+     * @param {string} path
+     * @returns {string}
      */
     static getAbsolutePath(importMetaUrl, path) {
         const __filename = fileURLToPath(importMetaUrl);

@@ -1,6 +1,6 @@
 {
   "name": "@deademx/engine",
-  "version": "4.0.2",
+  "version": "5.0.0-rc.1",
   "description": "Shared Source 2 demo parsing and replay playback engine for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -37,34 +37,27 @@
   "main": "index.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./index.js",
       "default": "./index.js"
     },
     "./package.json": "./package.json"
   },
+  "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "lint": "eslint",
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && rm -rf types && tsc -b ./tsconfig.emit.json",
     "test": "vitest run"
   },
   "files": [
     "index.js",
-    "src/**"
+    "src/**",
+    "types/**"
   ],
   "imports": {
-    "#root/*.js": "./*.js",
-    "#src/*.js": "./src/*.js",
-    "#broadcast/*.js": "./src/broadcast/*.js",
-    "#core/*.js": "./src/core/*.js",
-    "#data/*.js": "./src/data/*.js",
-    "#errors/*.js": "./src/errors/*.js",
-    "#extractors/*.js": "./src/extractors/*.js",
-    "#handlers/*.js": "./src/handlers/*.js",
-    "#player/*.js": "./src/player/*.js",
-    "#providers/*.js": "./src/providers/*.js",
-    "#stream/*.js": "./src/stream/*.js",
-    "#trackers/*.js": "./src/trackers/*.js",
     "#broadcast/BroadcastReadStream.js": {
+      "types": "./types/src/broadcast/BroadcastReadStream.node.d.ts",
       "electron": {
         "browser": "./src/broadcast/BroadcastReadStream.browser.js",
         "default": "./src/broadcast/BroadcastReadStream.node.js"
@@ -73,7 +66,18 @@
       "browser": "./src/broadcast/BroadcastReadStream.browser.js",
       "default": "./src/broadcast/BroadcastReadStream.browser.js"
     },
+    "#core/EventLoop.js": {
+      "types": "./types/src/core/EventLoop.node.d.ts",
+      "electron": {
+        "browser": "./src/core/EventLoop.browser.js",
+        "default": "./src/core/EventLoop.node.js"
+      },
+      "node": "./src/core/EventLoop.node.js",
+      "browser": "./src/core/EventLoop.browser.js",
+      "default": "./src/core/EventLoop.browser.js"
+    },
     "#core/stream/Pipeline.js": {
+      "types": "./types/src/core/stream/Pipeline.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/Pipeline.browser.js",
         "default": "./src/core/stream/Pipeline.node.js"
@@ -82,16 +86,8 @@
       "browser": "./src/core/stream/Pipeline.browser.js",
       "default": "./src/core/stream/Pipeline.browser.js"
     },
-    "#core/stream/ReadableArray.js": {
-      "electron": {
-        "browser": "./src/core/stream/ReadableArray.browser.js",
-        "default": "./src/core/stream/ReadableArray.node.js"
-      },
-      "node": "./src/core/stream/ReadableArray.node.js",
-      "browser": "./src/core/stream/ReadableArray.browser.js",
-      "default": "./src/core/stream/ReadableArray.browser.js"
-    },
     "#core/stream/Transform.js": {
+      "types": "./types/src/core/stream/Transform.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/Transform.browser.js",
         "default": "./src/core/stream/Transform.node.js"
@@ -101,6 +97,7 @@
       "default": "./src/core/stream/Transform.browser.js"
     },
     "#core/stream/WritableSink.js": {
+      "types": "./types/src/core/stream/WritableSink.node.d.ts",
       "electron": {
         "browser": "./src/core/stream/WritableSink.browser.js",
         "default": "./src/core/stream/WritableSink.node.js"
@@ -110,6 +107,7 @@
       "default": "./src/core/stream/WritableSink.browser.js"
     },
     "#trackers/MemoryTracker.js": {
+      "types": "./types/src/trackers/MemoryTracker.node.d.ts",
       "electron": {
         "browser": "./src/trackers/MemoryTracker.browser.js",
         "default": "./src/trackers/MemoryTracker.node.js"
@@ -120,7 +118,7 @@
     }
   },
   "dependencies": {
-    "protobufjs": "^8.4.2",
+    "@bufbuild/protobuf": "2.16.0",
     "snappyjs": "^0.7.0"
   }
 }

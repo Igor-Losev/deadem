@@ -1,16 +1,17 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const registry = new Map();
 
 class FieldDecoderType {
     /**
      * @constructor
-     * @param {String} code
+     * @param {string} code
      */
     constructor(code) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(!registry.has(code), `Duplicated field decoder type [ ${code} ]`);
 
+        /** @private */
         this._code = code;
 
         registry.set(code, this);
@@ -18,7 +19,7 @@ class FieldDecoderType {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -40,6 +41,7 @@ class FieldDecoderType {
     static get VAR_INT_32() { return varInt32; }
     static get VAR_INT_64() { return varInt64; }
     static get VAR_UINT_32() { return varUint32; }
+    static get VAR_UINT_32_MINUS_ONE() { return varUint32MinusOne; }
     static get VAR_UINT_64() { return varUint64; }
     static get VECTOR() { return vector; }
 }
@@ -60,6 +62,7 @@ const string = new FieldDecoderType('STRING');
 const varInt32 = new FieldDecoderType('VAR_INT_32');
 const varInt64 = new FieldDecoderType('VAR_INT_64');
 const varUint32 = new FieldDecoderType('VAR_UINT_32');
+const varUint32MinusOne = new FieldDecoderType('VAR_UINT_32_MINUS_ONE');
 const varUint64 = new FieldDecoderType('VAR_UINT_64');
 const vector = new FieldDecoderType('VECTOR');
 

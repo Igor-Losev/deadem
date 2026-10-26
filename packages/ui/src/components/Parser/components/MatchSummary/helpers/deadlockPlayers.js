@@ -1,14 +1,14 @@
-const PLAYER_FIELDS = [
-  'm_iDeaths',
-  'm_iGoldNetWorth',
-  'm_iHeroDamage',
-  'm_iHeroHealing',
-  'm_iObjectiveDamage',
-  'm_iPlayerAssists',
-  'm_iPlayerKills',
-  'm_iTeamNum',
-  'm_iszPlayerName'
-];
+const PLAYER_FIELDS = {
+  m_iDeaths: 'm_PlayerDataGlobal.m_iDeaths',
+  m_iGoldNetWorth: 'm_PlayerDataGlobal.m_iGoldNetWorth',
+  m_iHeroDamage: 'm_PlayerDataGlobal.m_iHeroDamage',
+  m_iHeroHealing: 'm_PlayerDataGlobal.m_iHeroHealing',
+  m_iObjectiveDamage: 'm_PlayerDataGlobal.m_iObjectiveDamage',
+  m_iPlayerAssists: 'm_PlayerDataGlobal.m_iPlayerAssists',
+  m_iPlayerKills: 'm_PlayerDataGlobal.m_iPlayerKills',
+  m_iTeamNum: 'm_iTeamNum',
+  m_iszPlayerName: 'm_iszPlayerName'
+};
 
 export const DEADLOCK_COLUMNS = [
   { header: 'Player', value: (player) => player.m_iszPlayerName ?? '', selector: (player) => player.m_iszPlayerName },
@@ -25,8 +25,8 @@ export const DEADLOCK_COLUMNS = [
 function readPlayer(entity) {
   const player = { };
 
-  for (const field of PLAYER_FIELDS) {
-    player[field] = entity.getField(field);
+  for (const [ key, name ] of Object.entries(PLAYER_FIELDS)) {
+    player[key] = entity.getField(name);
   }
 
   return player;

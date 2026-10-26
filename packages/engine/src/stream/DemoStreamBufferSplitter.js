@@ -1,7 +1,9 @@
-import Assert from '#core/Assert.js';
+/** @import ParserEngine from '../ParserEngine.js' */
+
+import Assert from '../core/Assert.js';
 import Transform from '#core/stream/Transform.js';
 
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).
@@ -19,7 +21,9 @@ class DemoStreamBufferSplitter extends Transform {
 
         Assert.isTrue(Number.isInteger(maxChunkSize));
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._maxChunkSize = maxChunkSize;
     }
 

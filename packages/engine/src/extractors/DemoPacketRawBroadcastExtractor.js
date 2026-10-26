@@ -1,10 +1,10 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import DemoPacketRaw from '#data/DemoPacketRaw.js';
-import VarInt32 from '#data/VarInt32.js';
+import DemoPacketRaw from '../data/DemoPacketRaw.js';
+import VarInt32 from '../data/VarInt32.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
+import DemoSource from '../data/enums/DemoSource.js';
 
 class DemoPacketRawBroadcastExtractor {
     /**
@@ -13,8 +13,10 @@ class DemoPacketRawBroadcastExtractor {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._buffer = buffer;
 
+        /** @private */
         this._tail = buffer;
     }
 

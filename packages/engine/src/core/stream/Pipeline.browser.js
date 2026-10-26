@@ -18,6 +18,7 @@ class PipelineBrowser {
             .pipeTo(destination, { signal: abortController.signal });
 
         this._abortController = abortController;
+        /** @type {ReadableStream & { destroy?: () => void }} */
         this._readable = readable;
     }
 

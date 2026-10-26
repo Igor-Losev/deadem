@@ -1,5 +1,5 @@
-import Assert from '#core/Assert.js';
-import VarInt32 from '#data/VarInt32.js';
+import Assert from './Assert.js';
+import VarInt32 from '../data/VarInt32.js';
 
 /**
  * A class for reading data at the bit level from {@link Uint8Array}.
@@ -10,10 +10,14 @@ class BitBuffer {
      * @param {Uint8Array} buffer
      */
     constructor(buffer) {
+        /** @private */
         this._buffer = buffer;
 
+        /** @private */
         this._pByte = 0;
+        /** @private */
         this._pBit = 0;
+        /** @private */
         this._totalBits = buffer.length * BITS_PER_BYTE;
     }
 
@@ -383,10 +387,12 @@ class BitBuffer {
      * @returns {string} The decoded string.
      */
     readString(length) {
+        const limit = typeof length === 'number' ? length : Infinity;
+
         const bytes = [ ];
 
         while (true) {
-            if (Number.isInteger(length) && bytes.length >= length) {
+            if (bytes.length >= limit) {
                 break;
             }
 
@@ -445,7 +451,7 @@ class BitBuffer {
      * Reads exactly 64 bits as an unsigned BigInt (little-endian).
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readUInt64() {
         const lo = this.readUInt32();
@@ -500,14 +506,14 @@ class BitBuffer {
     readVarInt32() {
         const unsigned = this.readUVarInt32();
 
-        return (unsigned >> 1) ^ -(unsigned & 1);
+        return (unsigned >>> 1) ^ -(unsigned & 1);
     }
 
     /**
      * Reads a signed variable-length 64-bit integer from the buffer.
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readVarInt64() {
         const unsigned = this.readUVarInt64();
@@ -539,6 +545,8 @@ class BitBuffer {
 
             offset += 1;
         }
+
+        throw new Error('UVarInt32 exceeds the maximum size');
     }
 
     /**
@@ -553,7 +561,7 @@ class BitBuffer {
      *         to represent the maximum possible 64-bit integer.
      *
      * @public
-     * @returns {BigInt}
+     * @returns {bigint}
      */
     readUVarInt64() {
         let continuation = true;
@@ -716,6 +724,7 @@ const REUSABLE_BUFFER_SIZE = 8;
 
 const reusable = new Uint8Array(REUSABLE_BUFFER_SIZE);
 
+/** @type {Array<Uint8Array>} */
 const pool = [ ];
 
 for (let i = 0; i < REUSABLE_BUFFER_SIZE; i++) {

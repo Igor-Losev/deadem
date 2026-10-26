@@ -1,9 +1,16 @@
 import { describe, expect, test } from 'vitest';
 
-import Class from '#data/Class.js';
-import Demo from '#data/Demo.js';
-import Entity from '#data/entity/Entity.js';
-import Serializer from '#data/fields/Serializer.js';
+import Class from '../src/data/Class.js';
+import ClassBaseline from '../src/data/ClassBaseline.js';
+import Demo from '../src/data/Demo.js';
+import Entity from '../src/data/entity/Entity.js';
+import StringTableOperation from '../src/data/enums/StringTableOperation.js';
+import StringTableType from '../src/data/enums/StringTableType.js';
+import Serializer from '../src/data/fields/Serializer.js';
+import StringTable from '../src/data/tables/string/StringTable.js';
+import StringTableEntry from '../src/data/tables/string/StringTableEntry.js';
+import StringTableInstructions from '../src/data/tables/string/StringTableInstructions.js';
+import StringTableMutationEvent from '../src/data/tables/string/StringTableMutationEvent.js';
 
 function createClass(id, name) {
     return new Class(id, name, new Serializer(name, 1, []));
@@ -87,5 +94,39 @@ describe('Demo', () => {
 
         expect(demo.getEntity(10)).toBeNull();
         expect(demo.getEntityByHandle(entity.handle)).toBeNull();
+    });
+
+    test('It should keep the class baseline when alternate baselines of the class arrive', () => {
+        const demo = new Demo();
+        const table = new StringTable(0, StringTableType.INSTANCE_BASE_LINE, 0, new StringTableInstructions(0, false, false));
+
+        const baseline = new StringTableEntry(table, 0, '37', new Uint8Array([ 1, 2, 3 ]));
+        const alternate = new StringTableEntry(table, 1, '37:0', new Uint8Array([ 9, 9, 9, 9 ]));
+
+        table.registerEntry(baseline);
+        table.registerEntry(alternate);
+
+        demo.applyStringTableEvents([ new StringTableMutationEvent(StringTableOperation.CREATE, table, table.getEntries()) ]);
+
+        expect(demo.getClassBaseline(37).compare(new ClassBaseline(37, new Uint8Array([ 1, 2, 3 ])))).toBe(true);
+    });
+
+    test('It should register alternate baselines by class and index', () => {
+        const demo = new Demo();
+        const table = new StringTable(0, StringTableType.INSTANCE_BASE_LINE, 0, new StringTableInstructions(0, false, false));
+
+        table.registerEntry(new StringTableEntry(table, 0, '37:0', new Uint8Array([ 9, 9, 9, 9 ])));
+        table.registerEntry(new StringTableEntry(table, 1, '37:12', new Uint8Array([ 7 ])));
+
+        demo.applyStringTableEvents([ new StringTableMutationEvent(StringTableOperation.CREATE, table, table.getEntries()) ]);
+
+        expect(demo.getAlternateBaseline(37, 0).compare(new ClassBaseline(37, new Uint8Array([ 9, 9, 9, 9 ])))).toBe(true);
+        expect(demo.getAlternateBaseline(37, 12).compare(new ClassBaseline(37, new Uint8Array([ 7 ])))).toBe(true);
+        expect(demo.getAlternateBaseline(37, 1)).toBeNull();
+        expect(demo.getClassBaseline(37)).toBeNull();
+
+        demo.reset();
+
+        expect(demo.getAlternateBaseline(37, 0)).toBeNull();
     });
 });

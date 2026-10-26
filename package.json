@@ -11,18 +11,23 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present --",
     "preview": "npm run preview --workspace=@deademx/ui",
-    "proto:js": "npm run proto:js --workspaces --if-present",
-    "proto:sync": "npm run proto:sync --workspaces --if-present",
+    "proto:build": "npm run proto:build --workspace=@deademx/tools",
+    "proto:sync": "npm run proto:sync --workspace=@deademx/tools",
     "start": "npm run start --workspace=@deademx/ui",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "types:build": "tsc -b tsconfig.emit.json --clean && rm -rf packages/*/types && tsc -b tsconfig.emit.json && tsc -p tsconfig.generated.json",
+    "types:check": "tsc && tsc -p tsconfig.browser.json",
+    "types:pack": "npm run types:build && publint packages/engine && publint packages/cs2 && publint packages/deadlock && publint packages/dota2"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
     "@eslint/js": "^9.27.0",
     "@stylistic/eslint-plugin": "^4.2.0",
+    "@types/node": "^25.6.0",
     "eslint": "^9.27.0",
     "globals": "^16.2.0",
-    "protobufjs-cli": "^2.5.2",
+    "publint": "^0.3.24",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
   }

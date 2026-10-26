@@ -1,0 +1,20 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "@deademx/cs2": "4.0.2",
+    "@deademx/deadlock": "4.0.2",
+    "@deademx/dota2": "4.0.2",
+    "@deademx/engine": "4.0.2",
+    "@deademx/examples-common": "4.0.2",
+    "@deademx/examples-node-cs2": "4.0.2",
+    "@deademx/examples-node-deadlock": "4.0.2",
+    "@deademx/examples-node-dota2": "4.0.2",
+    "@deademx/tools": "4.0.1",
+    "@deademx/ui": "4.0.2"
+  },
+  "changesets": [
+    "release-5-0-0-rc-1",
+    "release-5-0-0"
+  ]
+}

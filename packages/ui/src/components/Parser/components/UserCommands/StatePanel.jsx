@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 
 import { COLORS, FONT_MONO, FONT_SIZE } from './../../theme';
+import { toPlainObject } from './../../utils';
 
 const KEY_WIDTH = 200;
 const KEY_WIDTH_MIN = 90;
@@ -34,6 +35,10 @@ function formatScalar(value) {
     return { color: COLORS.jsonNumber, text: Number.isInteger(value) ? value.toLocaleString('en-US') : value.toFixed(4) };
   }
 
+  if (typeof value === 'bigint') {
+    return { color: COLORS.jsonNumber, text: value.toLocaleString('en-US') };
+  }
+
   if (value instanceof Uint8Array) {
     return {
       color: DIM,
@@ -49,7 +54,7 @@ function formatScalar(value) {
 }
 
 function formatBits(value) {
-  if (typeof value !== 'string' || !/^\d+$/.test(value)) {
+  if (typeof value !== 'bigint' && !(typeof value === 'string' && /^\d+$/.test(value))) {
     return null;
   }
 
@@ -118,7 +123,7 @@ function Node({ depth, name, value }) {
 export default function StatePanel({ state }) {
   return (
     <Box sx={{ flex: 1, fontFamily: FONT_MONO, fontSize: FONT_SIZE.sm, lineHeight: 1.6, overflow: 'auto', padding: '4px 14px 14px' }}>
-      {Object.entries(state).map(([ key, value ]) => (
+      {Object.entries(toPlainObject(state)).map(([ key, value ]) => (
         <Node key={key} depth={0} name={key} value={value} />
       ))}
     </Box>

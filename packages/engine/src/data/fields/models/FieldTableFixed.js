@@ -1,30 +1,36 @@
-/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+/** @import FieldExtractor from '../FieldExtractor.js' */
+/** @import FieldDefinition from '../FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '../decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from '../path/FieldPath.js' */
+/** @import { FieldDecoderFn } from '../decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../../enums/FieldModel.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import Serializer from '#data/fields/Serializer.js';
+import Field from '../Field.js';
+import FieldDecoder from '../decoding/FieldDecoder.js';
+import Serializer from '../Serializer.js';
 
 class FieldTableFixed extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {Serializer} serializer
      * @param {FieldDecoder} fieldDecoderBase
      */
-    constructor(name, sendNode, definition, serializer, fieldDecoderBase) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, serializer, fieldDecoderBase) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(serializer instanceof Serializer);
         Assert.isTrue(fieldDecoderBase instanceof FieldDecoder);
 
+        /** @private */
         this._serializer = serializer;
+        /** @private */
         this._fieldDecoderBase = fieldDecoderBase;
     }
 
@@ -48,7 +54,7 @@ class FieldTableFixed extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} index
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, index) {
         if (fieldPath.length === index) {
@@ -90,11 +96,11 @@ class FieldTableFixed extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 >= index) {
-            return `${this._name}.${this._serializer.getNameForFieldPath(fieldPath, index)}`;
+            return Field.joinName([ this._name, this._serializer.getNameForFieldPath(fieldPath, index) ]);
         }
 
         return this._name;

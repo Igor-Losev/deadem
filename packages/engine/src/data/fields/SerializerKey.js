@@ -1,11 +1,18 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 class SerializerKey {
+    /**
+     * @constructor
+     * @param {string} name
+     * @param {number} version
+     */
     constructor(name, version) {
         Assert.isTrue(typeof name === 'string');
         Assert.isTrue(Number.isInteger(version));
 
+        /** @private */
         this._name = name;
+        /** @private */
         this._version = version;
     }
 
@@ -19,7 +26,7 @@ class SerializerKey {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     toString() {
         return `${this._name}|${this._version}`;

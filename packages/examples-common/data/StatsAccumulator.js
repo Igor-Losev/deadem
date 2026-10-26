@@ -154,7 +154,7 @@ class StatsAccumulator {
 }
 
 /**
- * @typedef {{std: number, mean: number, count: number}} StatsAccumulatorResult
+ * @typedef {{ count: number, max: number|null, mean: number, min: number|null, std: number }} StatsAccumulatorResult
  */
 
 export default StatsAccumulator;

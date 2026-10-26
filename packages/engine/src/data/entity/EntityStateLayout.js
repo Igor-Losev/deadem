@@ -1,8 +1,8 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+import FieldStorageType from '../enums/FieldStorageType.js';
 
-import Serializer from '#data/fields/Serializer.js';
+import Serializer from '../fields/Serializer.js';
 
 /**
  * Storage plan for entity state.
@@ -16,16 +16,19 @@ class EntityStateLayout {
     constructor(serializer) {
         Assert.isTrue(serializer instanceof Serializer);
 
+        /** @private */
         this._serializer = serializer;
 
+        /** @private */
         this._lengths = {
             float: 0,
             int: 0,
             presence: 0
         };
 
+        /** @private @type {{ byId: Array<EntityFieldMeta|null>, order: Array<EntityFieldMeta> }} */
         this._metas = {
-            byId: new Map(),
+            byId: [ ],
             order: [ ]
         };
     }
@@ -54,7 +57,7 @@ class EntityStateLayout {
      * All assigned field metas in assignment order.
      *
      * @public
-     * @returns {Array<Object>}
+     * @returns {Array<EntityFieldMeta>}
      */
     getMetas() {
         return this._metas.order;
@@ -75,10 +78,10 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {Object|null}
+     * @returns {EntityFieldMeta|null}
      */
     peek(fieldPathId) {
-        return this._metas.byId.get(fieldPathId) || null;
+        return this._metas.byId[fieldPathId] || null;
     }
 
     /**
@@ -87,7 +90,7 @@ class EntityStateLayout {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {Object}
+     * @returns {EntityFieldMeta}
      */
     peekOrAssign(fieldPathId) {
         const existing = this.peek(fieldPathId);
@@ -98,8 +101,31 @@ class EntityStateLayout {
 
         const meta = this._classify(fieldPathId);
 
-        this._metas.byId.set(fieldPathId, meta);
+        const byId = this._metas.byId;
+
+        for (let i = byId.length; i <= fieldPathId; i++) {
+            byId.push(null);
+        }
+
+        byId[fieldPathId] = meta;
+
         this._metas.order.push(meta);
+
+        // Link the field to the length field of the collection it belongs to,
+        // so that a shrinking length knows which fields to drop.
+        const element = this._serializer.getCollectionElementForFieldPathId(fieldPathId);
+
+        if (element !== null) {
+            const collection = this.peekOrAssign(element.collection);
+
+            if (collection.elements === null) {
+                collection.elements = [ ];
+            }
+
+            meta.element = element.index;
+
+            collection.elements.push(meta);
+        }
 
         return meta;
     }
@@ -107,7 +133,7 @@ class EntityStateLayout {
     /**
      * @protected
      * @param {number} fieldPathId
-     * @returns {Object}
+     * @returns {EntityFieldMeta}
      */
     _classify(fieldPathId) {
         const container = this._serializer.getIsContainerForFieldPathId(fieldPathId);
@@ -136,6 +162,15 @@ class EntityStateLayout {
 }
 
 /**
+ * Storage classification for a single field path.
+ *
+ * `element` is the index of the collection element the field belongs to, or -1.
+ * `elements` lists the fields of all elements when the field is the length of a collection, or is null.
+ *
+ * @typedef {{ id: number, storage: FieldStorageType, offset: number, dim: number, present: number, container: boolean, signed: boolean, bool: boolean, element: number, elements: Array<EntityFieldMeta>|null }} EntityFieldMeta
+ */
+
+/**
  * @param {number} id
  * @param {FieldStorageType} storage
  * @param {number} offset
@@ -144,10 +179,10 @@ class EntityStateLayout {
  * @param {boolean} container
  * @param {boolean} signed
  * @param {boolean} bool
- * @returns {Object}
+ * @returns {EntityFieldMeta}
  */
 function createMeta(id, storage, offset, dim, present, container, signed, bool) {
-    return { id, storage, offset, dim, present, container, signed, bool };
+    return { id, storage, offset, dim, present, container, signed, bool, element: -1, elements: null };
 }
 
 export default EntityStateLayout;

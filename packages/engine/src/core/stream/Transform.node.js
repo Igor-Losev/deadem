@@ -1,6 +1,12 @@
+/** @import { TransformCallback } from 'node:stream' */
+
 import Stream from 'node:stream';
 
 class TransformNode extends Stream.Transform {
+    /**
+     * @constructor
+     * @param {number} highWaterMark
+     */
     constructor(highWaterMark) {
         super({ objectMode: true, highWaterMark });
     }
@@ -13,7 +19,6 @@ class TransformNode extends Stream.Transform {
     }
 
     /**
-     * @protected
      * @param {TransformCallback} callback
      * @returns {Promise<void>}
      */
@@ -23,16 +28,17 @@ class TransformNode extends Stream.Transform {
 
             callback();
         } catch (error) {
-            callback(error);
+            callback(/** @type {Error} */ (error));
         }
     }
 
     /**
      * @protected
      * @abstract
-     * @returns {void}
+     * @param {*} _chunk
+     * @returns {Promise<void>}
      */
-    async _handle() {
+    async _handle(_chunk) {
         throw new Error('TransformNode.handle() is not implemented');
     }
 
@@ -45,7 +51,6 @@ class TransformNode extends Stream.Transform {
     }
 
     /**
-     * @protected
      * @param {Buffer} chunk
      * @param {BufferEncoding} encoding
      * @param {TransformCallback} callback
@@ -56,7 +61,7 @@ class TransformNode extends Stream.Transform {
 
             callback();
         } catch (error) {
-            callback(error);
+            callback(/** @type {Error} */ (error));
         }
     }
 }

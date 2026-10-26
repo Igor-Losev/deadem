@@ -1,4 +1,10 @@
-import Assert from '#core/Assert.js';
+/** @import { Message } from '@bufbuild/protobuf' */
+
+/** @import StringTableType from '../../enums/StringTableType.js' */
+
+/** @import StringTable from './StringTable.js' */
+
+import Assert from '../../../core/Assert.js';
 
 class StringTableEntry {
     /**
@@ -6,20 +12,26 @@ class StringTableEntry {
      * @constructor
      * @param {StringTable} table
      * @param {number} id
-     * @param {String} key
+     * @param {string} key
      * @param {Uint8Array|null} raw
      */
     constructor(table, id, key, raw) {
         Assert.isTrue(typeof id === 'number' && Number.isInteger(id));
         Assert.isTrue(typeof key === 'string');
 
+        /** @private */
         this._table = table;
+        /** @private */
         this._id = id;
+        /** @private */
         this._key = key;
 
         if (raw === null) {
+            /** @private */
             this._decoded = true;
+            /** @private */
             this._raw = null;
+            /** @private */
             this._value = null;
 
             return;
@@ -51,28 +63,31 @@ class StringTableEntry {
     }
 
     /**
-     * @returns {String}
+     * @returns {string}
      */
     get key() {
         return this._key;
     }
 
     /**
-     * @returns {Uint8Array|null|*}
+     * @returns {Uint8Array|Message|null}
      */
     get value() {
-        if (this._decoded) {
-            return this._value;
-        }
-
-        if (this._table.decoder) {
+        if (!this._decoded && this._table.decoder !== null) {
             this._value = this._table.decoder(this._raw);
             this._decoded = true;
-
-            return this._value;
         }
 
-        return this._raw;
+        return this._value;
+    }
+
+    /**
+     * @public
+     * @param {StringTableType} type
+     * @returns {boolean}
+     */
+    is(type) {
+        return this._table.type.code === type.code;
     }
 }
 

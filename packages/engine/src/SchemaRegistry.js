@@ -1,16 +1,21 @@
-/** @import DemoPacketType from '#data/enums/DemoPacketType.js' */
-/** @import MessagePacketType from '#data/enums/MessagePacketType.js' */
-/** @import StringTableType from '#data/enums/StringTableType.js' */
+/** @import { Registry } from '@bufbuild/protobuf' */
 
-import Assert from '#core/Assert.js';
+/** @import FieldDecoderDescriptor from './data/fields/decoding/FieldDecoderDescriptor.js' */
+/** @import { StringTableDecoderFn } from './data/tables/string/StringTable.js' */
 
-import FieldRuleRegistry from '#data/fields/FieldRuleRegistry.js';
+/** @import DemoPacketType from './data/enums/DemoPacketType.js' */
+/** @import MessagePacketType from './data/enums/MessagePacketType.js' */
+/** @import StringTableType from './data/enums/StringTableType.js' */
 
-import ProtoProvider from '#providers/ProtoProvider.js';
+import Assert from './core/Assert.js';
+
+import ProtoDecoder from './core/proto/ProtoDecoder.js';
+
+import FieldRuleRegistry from './data/fields/FieldRuleRegistry.js';
 
 /**
  * Instance-based registry that owns the mapping from engine-level type identities
- * (DemoPacketType, MessagePacketType, StringTableType) to their protobuf types,
+ * (DemoPacketType, MessagePacketType, StringTableType) to their decoders,
  * together with id/code lookups.
  *
  * Populated at startup by bootstrap functions. Each parser owns its own
@@ -21,18 +26,24 @@ class SchemaRegistry {
     /**
      * @public
      * @constructor
-     * @param {ProtoProvider} protoProvider
+     * @param {Registry} descriptors
      */
-    constructor(protoProvider) {
-        Assert.isTrue(protoProvider instanceof ProtoProvider, 'Invalid protoProvider: expected an instance of ProtoProvider');
+    constructor(descriptors) {
+        Assert.isTrue(typeof descriptors?.getMessage === 'function', 'Invalid descriptors: expected a @bufbuild/protobuf registry');
 
-        this._protos = {
-            provider: protoProvider,
+        /** @private */
+        this._descriptors = descriptors;
+
+        /** @private @type {SchemaRegistryDecoders} */
+        this._decoders = {
             demo: new Map(),
             message: new Map(),
-            stringTableDecoders: new Map()
+            stringTables: new Map(),
+            sendTables: null,
+            userCommand: null
         };
 
+        /** @private @type {SchemaRegistryTypes} */
         this._types = {
             demoById: new Map(),
             demoByCode: new Map(),
@@ -41,21 +52,30 @@ class SchemaRegistry {
             stringTableByName: new Map()
         };
 
-        this._decoders = {
-            sendTables: null,
-            userCommand: null
-        };
-
+        /** @private */
         this._fieldRules = new FieldRuleRegistry();
     }
 
     /**
      * @public
-     * @param {DemoPacketType} type
-     * @returns {protobuf.Type|null}
+     * @param {string} protoName
+     * @returns {ProtoDecoder}
      */
-    getDemoProto(type) {
-        return this._protos.demo.get(type.id) || null;
+    getDecoder(protoName) {
+        const descriptor = this._descriptors.getMessage(protoName);
+
+        Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
+
+        return ProtoDecoder.fromDescriptor(descriptor);
+    }
+
+    /**
+     * @public
+     * @param {DemoPacketType} type
+     * @returns {ProtoDecoder|null}
+     */
+    getDemoDecoder(type) {
+        return this._decoders.demo.get(type.id) || null;
     }
 
     /**
@@ -69,23 +89,15 @@ class SchemaRegistry {
     /**
      * @public
      * @param {MessagePacketType} type
-     * @returns {protobuf.Type|null}
+     * @returns {ProtoDecoder|null}
      */
-    getMessageProto(type) {
-        return this._protos.message.get(type.id) || null;
+    getMessageDecoder(type) {
+        return this._decoders.message.get(type.id) || null;
     }
 
     /**
      * @public
-     * @returns {ProtoProvider}
-     */
-    getProtoProvider() {
-        return this._protos.provider;
-    }
-
-    /**
-     * @public
-     * @returns {protobuf.Type|null}
+     * @returns {ProtoDecoder|null}
      */
     getSendTablesSerializerDecoder() {
         return this._decoders.sendTables;
@@ -94,15 +106,15 @@ class SchemaRegistry {
     /**
      * @public
      * @param {StringTableType} type
-     * @returns {protobuf.Type|null}
+     * @returns {StringTableDecoderFn|null}
      */
     getStringTableDecoder(type) {
-        return this._protos.stringTableDecoders.get(type.name) || null;
+        return this._decoders.stringTables.get(type.name) || null;
     }
 
     /**
      * @public
-     * @returns {protobuf.Type|null}
+     * @returns {ProtoDecoder|null}
      */
     getUserCommandDecoder() {
         return this._decoders.userCommand;
@@ -111,17 +123,19 @@ class SchemaRegistry {
     /**
      * @public
      * @param {DemoPacketType} type
-     * @param {protobuf.Type} proto
      */
-    registerDemoType(type, proto) {
-        this._protos.demo.set(type.id, proto);
+    registerDemoType(type) {
         this._types.demoById.set(type.id, type);
         this._types.demoByCode.set(type.code, type);
+
+        if (type.protoName !== null) {
+            this._decoders.demo.set(type.id, this.getDecoder(type.protoName));
+        }
     }
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldDecoderOverride(name, descriptor) {
@@ -130,8 +144,8 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @param {String} encoder
+     * @param {string} name
+     * @param {string} encoder
      */
     registerFieldEncoderOverride(name, encoder) {
         this._fieldRules.registerFieldEncoderOverride(name, encoder);
@@ -139,7 +153,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldTypeDecoder(baseType, descriptor) {
@@ -148,7 +162,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerFixedTableType(baseType) {
         this._fieldRules.registerFixedTableType(baseType);
@@ -157,30 +171,33 @@ class SchemaRegistry {
     /**
      * @public
      * @param {MessagePacketType} type
-     * @param {protobuf.Type} proto
      */
-    registerMessageType(type, proto) {
-        this._protos.message.set(type.id, proto);
+    registerMessageType(type) {
         this._types.messageById.set(type.id, type);
         this._types.messageByCode.set(type.code, type);
-    }
 
-    /**
-     * @public
-     * @param {StringTableType} type
-     * @param {((buffer: Uint8Array) => *)|null} [decoder=null]
-     */
-    registerStringTableType(type, decoder = null) {
-        this._types.stringTableByName.set(type.name, type);
-
-        if (decoder !== null) {
-            this._protos.stringTableDecoders.set(type.name, decoder);
+        if (type.protoName !== null) {
+            this._decoders.message.set(type.id, this.getDecoder(type.protoName));
         }
     }
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {StringTableType} type
+     */
+    registerStringTableType(type) {
+        this._types.stringTableByName.set(type.name, type);
+
+        if (type.protoName !== null) {
+            const decoder = this.getDecoder(type.protoName);
+
+            this._decoders.stringTables.set(type.name, buffer => decoder.decode(buffer));
+        }
+    }
+
+    /**
+     * @public
+     * @param {string} baseType
      */
     registerVariableArrayType(baseType) {
         this._fieldRules.registerVariableArrayType(baseType);
@@ -188,18 +205,18 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {protobuf.Type} proto
+     * @param {ProtoDecoder} decoder
      */
-    setSendTablesSerializerDecoder(proto) {
-        this._decoders.sendTables = proto;
+    setSendTablesSerializerDecoder(decoder) {
+        this._decoders.sendTables = decoder;
     }
 
     /**
      * @public
-     * @param {protobuf.Type} proto
+     * @param {ProtoDecoder} decoder
      */
-    setUserCommandDecoder(proto) {
-        this._decoders.userCommand = proto;
+    setUserCommandDecoder(decoder) {
+        this._decoders.userCommand = decoder;
     }
 
     /**
@@ -213,7 +230,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} code
+     * @param {string} code
      * @returns {DemoPacketType|null}
      */
     resolveDemoTypeByCode(code) {
@@ -231,7 +248,7 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} code
+     * @param {string} code
      * @returns {MessagePacketType|null}
      */
     resolveMessageTypeByCode(code) {
@@ -240,12 +257,18 @@ class SchemaRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {StringTableType|null}
      */
     resolveStringTableTypeByName(name) {
         return this._types.stringTableByName.get(name) || null;
     }
 }
+
+/**
+ * @typedef {{ demoById: Map<number, DemoPacketType>, demoByCode: Map<string, DemoPacketType>, messageById: Map<number, MessagePacketType>, messageByCode: Map<string, MessagePacketType>, stringTableByName: Map<string, StringTableType> }} SchemaRegistryTypes
+ *
+ * @typedef {{ demo: Map<number, ProtoDecoder>, message: Map<number, ProtoDecoder>, stringTables: Map<string, StringTableDecoderFn>, sendTables: ProtoDecoder|null, userCommand: ProtoDecoder|null }} SchemaRegistryDecoders
+ */
 
 export default SchemaRegistry;

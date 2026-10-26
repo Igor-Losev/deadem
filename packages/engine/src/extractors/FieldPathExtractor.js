@@ -1,7 +1,9 @@
-import FieldPathOperation from '#data/enums/FieldPathOperation.js';
+/** @import BitBuffer from '../core/BitBuffer.js' */
 
-import HuffmanTree from '#data/fields/path/HuffmanTree.js';
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
+import FieldPathOperation from '../data/enums/FieldPathOperation.js';
+
+import HuffmanTree from '../data/fields/path/HuffmanTree.js';
+import FieldPathBuilder from '../data/fields/path/FieldPathBuilder.js';
 
 const HUFFMAN_TREE_DEPTH = HuffmanTree.DEPTH;
 const OPERATIONS = HuffmanTree.OPERATIONS;
@@ -15,9 +17,12 @@ class FieldPathExtractor {
      * @param {BitBuffer} bitBuffer
      */
     constructor(bitBuffer) {
+        /** @private */
         this._bitBuffer = bitBuffer;
 
+        /** @private */
         this._fieldPathBuilder = new FieldPathBuilder();
+        /** @private @type {Array<number>} */
         this._ids = [ ];
     }
 
@@ -54,7 +59,7 @@ class FieldPathExtractor {
                 break;
             }
 
-            operation._executor(bitBuffer, builder);
+            /** @type {Function} */ (operation.executor)(bitBuffer, builder);
 
             ids[count++] = builder.build().id;
         }

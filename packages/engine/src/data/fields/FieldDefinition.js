@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const REGEX = /(?<base>[^*< >\n[\]]+)(< (?<generic>.*) >)?(\[(?<count>\d+)?])?(?<pointer>\*)?/;
 
@@ -6,7 +6,7 @@ class FieldDefinition {
     /**
      * @public
      * @constructor
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDefinition|null} generic
      * @param {number|null} count
      * @param {boolean} pointer
@@ -17,9 +17,13 @@ class FieldDefinition {
         Assert.isTrue(count === null || Number.isInteger(count));
         Assert.isTrue(typeof pointer === 'boolean');
 
+        /** @private */
         this._baseType = baseType;
+        /** @private */
         this._generic = generic;
+        /** @private */
         this._count = count;
+        /** @private */
         this._pointer = pointer;
     }
 
@@ -42,13 +46,18 @@ class FieldDefinition {
     /**
      * @public
      * @static
-     * @param {String} varType
+     * @param {string} varType
      * @returns {FieldDefinition}
      */
     static parse(varType) {
         Assert.isTrue(typeof varType === 'string');
 
-        const groups = REGEX.exec(varType).groups;
+        const match = REGEX.exec(varType);
+
+        Assert.exists(match, `Unable to parse field definition [ ${varType} ]`);
+        Assert.exists(match.groups, 'Field definition regex must produce named groups');
+
+        const groups = match.groups;
 
         const baseType = groups.base;
         const generic = groups.generic ? FieldDefinition.parse(groups.generic) : null;

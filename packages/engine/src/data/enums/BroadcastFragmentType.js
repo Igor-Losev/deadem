@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const registry = new Map();
 
@@ -12,21 +12,23 @@ class BroadcastFragmentType {
         Assert.isTrue(typeof code === 'string');
         Assert.isTrue(typeof endpoint === 'string');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._endpoint = endpoint;
 
         registry.set(code, this);
     }
 
     /**
-     * @returns {string} 
+     * @returns {string}
      */
     get code() {
         return this._code;
     }
 
     /**
-     * @returns {string} 
+     * @returns {string}
      */
     get endpoint() {
         return this._endpoint;
@@ -35,21 +37,21 @@ class BroadcastFragmentType {
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get DELTA() { return delta; }
-    
+
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get FULL() { return full; }
-    
+
     /**
      * @static
      * @public
-     * @returns {BroadcastFragmentType} 
+     * @returns {BroadcastFragmentType}
      */
     static get START() { return start; }
 }

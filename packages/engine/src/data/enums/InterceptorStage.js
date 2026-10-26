@@ -2,14 +2,23 @@ const registry = {
     byId: new Map()
 };
 
+/**
+ * @typedef {'DEMO_PACKET'|'ENTITY_PACKET'|'MESSAGE_PACKET'|'STRING_TABLE'|'USER_COMMAND'} InterceptorStageCode
+ */
+
+/**
+ * @template {string} [C=string]
+ */
 class InterceptorStage {
     /**
      * @constructor
-     * @param {String} code
+     * @param {C} code
      * @param {number} id
      */
     constructor(code, id) {
+        /** @private */
         this._code = code;
+        /** @private */
         this._id = id;
 
         registry.byId.set(id, this);
@@ -17,7 +26,7 @@ class InterceptorStage {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {C}
      */
     get code() {
         return this._code;
@@ -34,7 +43,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {Array<InterceptorStage>}
+     * @returns {Array<InterceptorStage<InterceptorStageCode>>}
      */
     static getAll() {
         return Array.from(registry.byId.values());
@@ -43,7 +52,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'DEMO_PACKET'>}
      */
     static get DEMO_PACKET() {
         return demoPacket;
@@ -52,7 +61,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'ENTITY_PACKET'>}
      */
     static get ENTITY_PACKET() {
         return entityPacket;
@@ -61,7 +70,7 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'MESSAGE_PACKET'>}
      */
     static get MESSAGE_PACKET() {
         return messagePacket;
@@ -70,7 +79,16 @@ class InterceptorStage {
     /**
      * @public
      * @static
-     * @returns {InterceptorStage}
+     * @returns {InterceptorStage<'STRING_TABLE'>}
+     */
+    static get STRING_TABLE() {
+        return stringTable;
+    }
+
+    /**
+     * @public
+     * @static
+     * @returns {InterceptorStage<'USER_COMMAND'>}
      */
     static get USER_COMMAND() {
         return userCommand;
@@ -81,5 +99,6 @@ const demoPacket = new InterceptorStage('DEMO_PACKET', 0);
 const messagePacket = new InterceptorStage('MESSAGE_PACKET', 1);
 const entityPacket = new InterceptorStage('ENTITY_PACKET', 2);
 const userCommand = new InterceptorStage('USER_COMMAND', 3);
+const stringTable = new InterceptorStage('STRING_TABLE', 4);
 
 export default InterceptorStage;

@@ -1,0 +1,76 @@
+{
+  "name": "@deademx/deadlock",
+  "version": "5.0.0-rc.1",
+  "description": "Deadlock (Source 2) demo and replay parser with playback support for Node.js and browsers",
+  "author": "Igor Losev",
+  "license": "MIT",
+  "bugs": "https://github.com/Igor-Losev/deadem/issues",
+  "homepage": "https://deadem.com",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Igor-Losev/deadem.git",
+    "directory": "packages/deadlock"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "deadem",
+    "deadlock",
+    "citadel",
+    "deadlock-parser",
+    "deadlock-demo-parser",
+    "deadlock-replay-parser",
+    "valve",
+    "source-2",
+    "dem",
+    "demo",
+    "replay",
+    "parser",
+    "player",
+    "demo-parser",
+    "replay-parser",
+    "nodejs",
+    "browser",
+    "deno",
+    "bun"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./proto": {
+      "types": "./proto/generated/index.d.ts",
+      "import": "./proto/generated/index.js",
+      "default": "./proto/generated/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./types/index.d.ts",
+  "unpkg": "dist/deadem-deadlock.min.js",
+  "jsdelivr": "dist/deadem-deadlock.min.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "vite build",
+    "lint": "eslint",
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && rm -rf types && tsc -b ./tsconfig.emit.json"
+  },
+  "files": [
+    "dist/**",
+    "index.js",
+    "proto/generated/**",
+    "src/**",
+    "types/**"
+  ],
+  "dependencies": {
+    "@bufbuild/protobuf": "2.16.0",
+    "@deademx/engine": "^5.0.0-rc.1"
+  }
+}

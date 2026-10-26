@@ -1,7 +1,7 @@
-/** @import Field from '#data/fields/Field.js' */
-/** @import FieldPath from '#data/fields/path/FieldPath.js' */
+/** @import Field from './Field.js' */
+/** @import FieldPath from './path/FieldPath.js' */
 
-import FieldExtractor from '#data/fields/FieldExtractor.js';
+import FieldExtractor from './FieldExtractor.js';
 
 /**
  * Compiled, entity-independent plan for reading one field in its natural shape
@@ -16,8 +16,11 @@ class FieldAccessor {
      * @param {number|null} [elementIndex=null]
      */
     constructor(field, fieldPath, elementIndex = null) {
+        /** @private */
         this._field = field;
+        /** @private */
         this._fieldPath = fieldPath;
+        /** @private */
         this._elementIndex = elementIndex;
     }
 
@@ -43,13 +46,13 @@ class FieldAccessor {
 
     /**
      * @public
-     * @param {function(FieldPath): *} readField
+     * @param {(fieldPath: FieldPath) => *} readField
      * @returns {*}
      */
     read(readField) {
         const extractor = new FieldExtractor(readField, this._fieldPath.path);
 
-        if (Number.isInteger(this._elementIndex)) {
+        if (this._elementIndex !== null) {
             return this._field.unpackElement(extractor, this._elementIndex);
         }
 

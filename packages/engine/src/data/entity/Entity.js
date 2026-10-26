@@ -1,8 +1,15 @@
-import Assert from '#core/Assert.js';
+/** @import FieldPath from '../fields/path/FieldPath.js' */
 
-import Class from '#data/Class.js';
+/** @import EntityMutationExtractor from '../../extractors/EntityMutationExtractor.js' */
 
-import FieldStorageType from '#data/enums/FieldStorageType.js';
+/** @import EntityMutationBatch from './EntityMutationBatch.js' */
+/** @import { EntityFieldMeta } from './EntityStateLayout.js' */
+
+import Assert from '../../core/Assert.js';
+
+import Class from '../Class.js';
+
+import FieldStorageType from '../enums/FieldStorageType.js';
 
 const STORAGE_FLOAT = FieldStorageType.FLOAT;
 const STORAGE_INT = FieldStorageType.INT;
@@ -27,14 +34,20 @@ class Entity {
         Assert.isTrue(Number.isInteger(serial));
         Assert.isTrue(clazz instanceof Class);
 
+        /** @private */
         this._index = index;
+        /** @private */
         this._serial = serial;
+        /** @private */
         this._class = clazz;
 
+        /** @private */
         this._handle = ((serial << ENTITY_INDEX_BITS) | index) >>> 0;
 
+        /** @private */
         this._active = true;
 
+        /** @private @type {{ float32: Float32Array, int32: Int32Array, misc: Map<number, unknown>|null, presence: Uint8Array }} */
         this._state = {
             float32: new Float32Array(clazz.layout.getFloatLength()),
             int32: new Int32Array(clazz.layout.getIntLength()),
@@ -42,7 +55,9 @@ class Entity {
             presence: new Uint8Array(clazz.layout.getPresenceLength())
         };
 
+        /** @private @type {Set<number>|null} */
         this._changed = null;
+        /** @private @type {Record<string, unknown>|null} */
         this._snapshot = null;
     }
 
@@ -102,6 +117,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      */
     activate() {
@@ -109,6 +125,7 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {EntityMutationBatch} batch
      */
@@ -119,14 +136,16 @@ class Entity {
     }
 
     /**
+     * @internal
      * @public
      * @param {EntityMutationExtractor} extractor
      */
     applyFromExtractor(extractor) {
-        extractor.forEach((id, value) => this.updateByFieldPathId(id, value));
+        extractor.applyTo(this);
     }
 
     /**
+     * @internal
      * @public
      */
     deactivate() {
@@ -140,10 +159,10 @@ class Entity {
      * `undefined` when the name does not resolve.
      *
      *     'm_flHealth'
-     *     'm_vecAbilities'           // full array
-     *     'm_vecAbilities.0000'      // single element
-     *     'CBodyComponent.m_vecX'    // drill into fixed table
-     *     'm_vecState.0000.m_bits'   // drill into struct element
+     *     'm_vecAbilities'                                        // full array
+     *     'm_vecAbilities.0000'                                   // single element
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX'  // drill into fixed table
+     *     'm_vecState.0000.m_bits'                                // drill into struct element
      *
      * Arrays are not guaranteed to be contiguous — indices with no data
      * appear as `undefined` in the reconstructed array. For example,
@@ -154,13 +173,13 @@ class Entity {
      * remaining cost depends on how many elements are read. Rough numbers
      * from a 556 MB Deadlock replay:
      *
-     *     'm_iHealth'                 | scalar .......... ~0.08 µs
-     *     'm_iszPlayerName'           | string .......... ~0.07 µs
-     *     'CBodyComponent.m_vecX'     | nested .......... ~0.09 µs
-     *     'm_vecAbilities.0000'       | indexed ......... ~0.11 µs
-     *     'm_vecAbilities'            | 16 × scalar ..... ~0.96 µs
-     *     'm_vecFOWEntities.0000'     | 8  × scalar ..... ~0.71 µs
-     *     'm_vecFOWEntities'          | 121 × 8 fields .. ~88   µs
+     *     'm_iHealth'                                            | scalar .......... ~0.08 µs
+     *     'm_iszPlayerName'                                      | string .......... ~0.07 µs
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX' | nested .......... ~0.09 µs
+     *     'm_vecAbilities.0000'                                  | indexed ......... ~0.11 µs
+     *     'm_vecAbilities'                                       | 16 × scalar ..... ~0.96 µs
+     *     'm_vecFOWEntities.0000'                                | 8  × scalar ..... ~0.71 µs
+     *     'm_vecFOWEntities'                                     | 121 × 8 fields .. ~88   µs
      *
      * A full array read unpacks every element — N leaf reads. For a large
      * nested structure like `'m_vecFOWEntities'` (121 elements × 8 fields),
@@ -168,8 +187,9 @@ class Entity {
      * Throttle such calls.
      *
      * @public
+     * @template [T=unknown]
      * @param {string} name
-     * @returns {*}
+     * @returns {T|undefined}
      */
     getField(name) {
         const accessor = this._class.getFieldAccessor(name);
@@ -178,17 +198,16 @@ class Entity {
             return undefined;
         }
 
-        const readField = fieldPath => this.getFieldById(fieldPath.id);
-
-        return accessor.read(readField);
+        return accessor.read(fieldPath => this.getFieldById(fieldPath.id));
     }
 
     /**
      * Reads a single field by its field path id.
      *
      * @public
+     * @template [T=unknown]
      * @param {number} fieldPathId
-     * @returns {*}
+     * @returns {T|undefined}
      */
     getFieldById(fieldPathId) {
         const meta = this._class.layout.peek(fieldPathId);
@@ -230,7 +249,7 @@ class Entity {
      * Iterates `[ name, value ]` pairs for all fields currently present.
      *
      * @public
-     * @returns {IterableIterator<[ string, * ]>}
+     * @returns {IterableIterator<[ string, unknown ]>}
      */
     * fieldEntries() {
         const metas = this._class.layout.getMetas();
@@ -265,8 +284,7 @@ class Entity {
     }
 
     /**
-     * Returns whether [name] resolves to a value currently present on this
-     * entity.
+     * Returns whether the field has a value on this entity.
      *
      * Must be revisited. Reconstructs the value just to test presence.
      *
@@ -286,7 +304,8 @@ class Entity {
      * Use {@link #getField} unless you are debugging.
      *
      * @public
-     * @returns {*}
+     * @template [T=Record<string, unknown>]
+     * @returns {T}
      */
     unpackFlattened() {
         const layout = this._class.layout;
@@ -294,7 +313,11 @@ class Entity {
 
         const metas = this._class.layout.getMetas();
 
-        if (this._snapshot === null) {
+        const snapshot = this._snapshot;
+        const changed = this._changed;
+
+        if (snapshot === null || changed === null) {
+            /** @type {Record<string, unknown>} */
             const unpacked = { };
 
             for (let i = 0; i < metas.length; i++) {
@@ -308,22 +331,26 @@ class Entity {
             this._snapshot = unpacked;
             this._changed = new Set();
 
-            return unpacked;
+            return /** @type {T} */ (unpacked);
         }
 
-        const unpacked = this._snapshot;
-
-        this._changed.forEach((id) => {
+        changed.forEach((id) => {
             const meta = layout.peekOrAssign(id);
 
             if (!this._getIsContainer(meta)) {
-                unpacked[serializer.getNameForFieldPathId(id)] = this._read(meta);
+                const name = serializer.getNameForFieldPathId(id);
+
+                if (this._getIsPresent(meta)) {
+                    snapshot[name] = this._read(meta);
+                } else {
+                    delete snapshot[name];
+                }
             }
         });
 
-        this._changed.clear();
+        changed.clear();
 
-        return unpacked;
+        return /** @type {T} */ (snapshot);
     }
 
     /**
@@ -344,6 +371,12 @@ class Entity {
      */
     updateByFieldPathId(fieldPathId, value) {
         const meta = this._class.layout.peekOrAssign(fieldPathId);
+
+        // The server sends only the new length of a shrinking collection,
+        // the fields of the removed elements have to be dropped here.
+        if (meta.elements !== null && this._getIsPresent(meta) && value < this._read(meta)) {
+            this._truncate(meta, value);
+        }
 
         if (meta.storage === STORAGE_FLOAT) {
             const offset = meta.offset;
@@ -393,7 +426,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {boolean}
      */
     _getIsContainer(meta) {
@@ -402,7 +435,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {boolean}
      */
     _getIsPresent(meta) {
@@ -427,7 +460,7 @@ class Entity {
 
     /**
      * @protected
-     * @param {Object} meta
+     * @param {EntityFieldMeta} meta
      * @returns {*}
      */
     _read(meta) {
@@ -455,15 +488,54 @@ class Entity {
             return vector;
         }
 
-        return this._state.misc.get(meta.id);
+        return /** @type {Map<number, *>} */ (this._state.misc).get(meta.id);
+    }
+
+    /**
+     * Drops the fields of the collection elements at the given length and beyond.
+     *
+     * @protected
+     * @param {EntityFieldMeta} collection - The length field of the collection.
+     * @param {number} length
+     */
+    _truncate(collection, length) {
+        const elements = /** @type {Array<EntityFieldMeta>} */ (collection.elements);
+
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+
+            if (element.element < length) {
+                continue;
+            }
+
+            // A removed element takes its nested collections with it.
+            if (element.elements !== null) {
+                this._truncate(element, 0);
+            }
+
+            if (!this._getIsPresent(element)) {
+                continue;
+            }
+
+            if (element.storage === STORAGE_MISC) {
+                /** @type {Map<number, *>} */ (this._state.misc).delete(element.id);
+            } else {
+                this._state.presence[element.present] = 0;
+            }
+
+            if (this._changed !== null) {
+                this._changed.add(element.id);
+            }
+        }
     }
 }
 
 /**
- * @param {Float32Array|Int32Array|Uint8Array} current
- * @param {Function} Ctor
+ * @template {Float32Array|Int32Array|Uint8Array} T
+ * @param {T} current
+ * @param {new (length: number) => T} Ctor
  * @param {number} min
- * @returns {Float32Array|Int32Array|Uint8Array}
+ * @returns {T}
  */
 function grow(current, Ctor, min) {
     let length = current.length === 0 ? INITIAL_TYPED_ARRAY_SIZE : current.length;

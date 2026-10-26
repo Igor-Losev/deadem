@@ -1,3 +1,6 @@
+/** @import { Readable } from 'node:stream' */
+/** @import DemoFile from './DemoFile.js' */
+
 import https from 'node:https';
 import nodePath from 'node:path';
 
@@ -11,13 +14,14 @@ const DEFAULT_HIGH_WATER_MARK = 256 * 1024;
 const DEMO_ARGUMENT_PREFIX = '--demo=';
 const DEMO_FOLDER = FileSystem.getAbsolutePath(import.meta.url, './../../../demos');
 const CDN_BASE_URL = 'https://deadem.com';
+const USER_AGENT = 'deadem-examples';
 
 class DemoProvider {
     /**
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async read(demoFile) {
         const path = getLocalPath(demoFile);
@@ -39,7 +43,7 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async readFile(demoFile) {
         const path = getLocalPath(demoFile);
@@ -51,13 +55,13 @@ class DemoProvider {
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {Promise<Readable>}
      */
     static async readCdn(demoFile) {
         const url = `${CDN_BASE_URL}/demos/${demoFile.game.code}/${demoFile.getFileName()}`;
 
         return new Promise((resolve, reject) => {
-            https.get(url, (response) => {
+            https.get(url, { headers: { 'User-Agent': USER_AGENT } }, (response) => {
                 if (response.statusCode !== 200) {
                     response.resume();
 
@@ -70,13 +74,31 @@ class DemoProvider {
     }
 
     /**
-     * Reads the demo passed via the `--demo=<path>` CLI argument, if present;
-     * otherwise falls back to the bundled [demoFile] (local file system or CDN).
+     * Returns the size of the demo file in bytes: of the local file, otherwise the size known for the CDN file.
      *
      * @public
      * @static
      * @param {DemoFile} demoFile
-     * @returns {Promise<ReadableStream>}
+     * @returns {number|null}
+     */
+    static getSize(demoFile) {
+        const path = getLocalPath(demoFile);
+
+        if (FileSystem.isFile(path)) {
+            return FileSystem.getSize(path);
+        }
+
+        return demoFile.meta?.size ?? null;
+    }
+
+    /**
+     * Reads the demo from the `--demo=<path>` argument if it is set.
+     * Otherwise reads the given demo file from the local file system or the CDN.
+     *
+     * @public
+     * @static
+     * @param {DemoFile} demoFile
+     * @returns {Promise<Readable>}
      */
     static async resolve(demoFile) {
         const argument = process.argv.find(arg => arg.startsWith(DEMO_ARGUMENT_PREFIX));

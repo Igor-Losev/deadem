@@ -1,3 +1,5 @@
+/** @import { MemoryTrackerStats } from './MemoryTracker.base.js' */
+
 import MemoryTracker from './MemoryTracker.base.js';
 
 class MemoryTrackerBrowser extends MemoryTracker {

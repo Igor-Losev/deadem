@@ -1,6 +1,6 @@
 {
   "name": "@deademx/cs2",
-  "version": "4.0.2",
+  "version": "5.0.0-rc.1",
   "description": "Counter-Strike 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -43,33 +43,35 @@
   "main": "index.js",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./index.js",
       "default": "./index.js"
     },
+    "./proto": {
+      "types": "./proto/generated/index.d.ts",
+      "import": "./proto/generated/index.js",
+      "default": "./proto/generated/index.js"
+    },
     "./package.json": "./package.json"
   },
+  "types": "./types/index.d.ts",
   "unpkg": "dist/deadem-cs2.min.js",
   "jsdelivr": "dist/deadem-cs2.min.js",
   "sideEffects": false,
   "scripts": {
     "build": "vite build",
     "lint": "eslint",
-    "proto:js": "node ./../../scripts/proto-schema-build.js --package=cs2",
-    "proto:sync": "node ./../../.github/scripts/proto-sync.mjs cs2"
+    "prepack": "tsc -b ./tsconfig.emit.json --clean && rm -rf types && tsc -b ./tsconfig.emit.json"
   },
   "files": [
     "dist/**",
     "index.js",
-    "proto/compiled/**",
-    "src/**"
+    "proto/generated/**",
+    "src/**",
+    "types/**"
   ],
-  "imports": {
-    "#src/*.js": "./src/*.js",
-    "#bootstrap/*.js": "./src/bootstrap/*.js",
-    "#data/*.js": "./src/data/*.js",
-    "#providers/ProtoProvider.instance.js": "./src/providers/ProtoProvider.instance.js"
-  },
   "dependencies": {
-    "@deademx/engine": "4.0.2"
+    "@bufbuild/protobuf": "2.16.0",
+    "@deademx/engine": "^5.0.0-rc.1"
   }
 }

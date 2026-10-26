@@ -1,18 +1,20 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldDecoderType from '#data/enums/FieldDecoderType.js';
+import FieldDecoderType from '../../enums/FieldDecoderType.js';
 
 class FieldDecoderDescriptor {
     /**
      * @constructor
      * @param {FieldDecoderType} type
-     * @param {Object} [options={}]
+     * @param {{ dimension?: number }} [options={}]
      */
     constructor(type, options = {}) {
         Assert.isTrue(type instanceof FieldDecoderType);
         Assert.isTrue(options !== null && typeof options === 'object' && !Array.isArray(options));
 
+        /** @private */
         this._type = type;
+        /** @private */
         this._options = options;
     }
 
@@ -26,7 +28,7 @@ class FieldDecoderDescriptor {
 
     /**
      * @public
-     * @returns {Object}
+     * @returns {{ dimension?: number }}
      */
     get options() {
         return this._options;
@@ -39,7 +41,7 @@ class FieldDecoderDescriptor {
      * @returns {FieldDecoderDescriptor}
      */
     static createVector(dimension) {
-        Assert.isTrue(Number.isInteger(dimension) && dimension >= 2 && dimension <= 4);
+        Assert.isTrue([ 2, 3, 4, 6 ].includes(dimension));
 
         return new FieldDecoderDescriptor(FieldDecoderType.VECTOR, { dimension });
     }
@@ -60,6 +62,7 @@ class FieldDecoderDescriptor {
     static get VAR_INT_32() { return varInt32; }
     static get VAR_INT_64() { return varInt64; }
     static get VAR_UINT_32() { return varUint32; }
+    static get VAR_UINT_32_MINUS_ONE() { return varUint32MinusOne; }
     static get VAR_UINT_64() { return varUint64; }
 }
 
@@ -79,6 +82,7 @@ const string = new FieldDecoderDescriptor(FieldDecoderType.STRING);
 const varInt32 = new FieldDecoderDescriptor(FieldDecoderType.VAR_INT_32);
 const varInt64 = new FieldDecoderDescriptor(FieldDecoderType.VAR_INT_64);
 const varUint32 = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_32);
+const varUint32MinusOne = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_32_MINUS_ONE);
 const varUint64 = new FieldDecoderDescriptor(FieldDecoderType.VAR_UINT_64);
 
 export default FieldDecoderDescriptor;

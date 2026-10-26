@@ -2,17 +2,19 @@ class FieldPath {
     /**
      * @public
      * @constructor
-     * @param {Array<Number>} path
+     * @param {Array<number>} path
      * @param {number} id
      */
     constructor(path, id) {
+        /** @private */
         this._path = path;
+        /** @private */
         this._id = id;
     }
 
     /**
      * @public
-     * @returns {Array<Number>}
+     * @returns {Array<number>}
      */
     get path() {
         return this._path;

@@ -1,25 +1,35 @@
-import Assert from '#core/Assert.js';
+/** @import BitBuffer from '../../../core/BitBuffer.js' */
+
+import Assert from '../../../core/Assert.js';
 
 import FieldStorageDescriptor from './FieldStorageDescriptor.js';
+
+/**
+ * Decode function reading one field value from the bit stream.
+ *
+ * @typedef {(bitBuffer: BitBuffer) => *} FieldDecoderFn
+ */
 
 class FieldDecoder {
     /**
      * @public
      * @constructor
-     * @param {(bitBuffer: BitBuffer) => *} fn
+     * @param {FieldDecoderFn} fn
      * @param {FieldStorageDescriptor} storage
      */
     constructor(fn, storage) {
         Assert.isTrue(typeof fn === 'function');
         Assert.isTrue(storage instanceof FieldStorageDescriptor);
 
+        /** @private */
         this._fn = fn;
+        /** @private */
         this._storage = storage;
     }
 
     /**
      * @public
-     * @returns {(bitBuffer: BitBuffer) => *}
+     * @returns {FieldDecoderFn}
      */
     get fn() {
         return this._fn;

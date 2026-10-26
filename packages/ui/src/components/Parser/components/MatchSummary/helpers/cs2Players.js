@@ -6,18 +6,18 @@ const TEAM_LABELS = {
   [TEAM_CT]: 'CT'
 };
 
-const STAT = (key) => (player) => player[`m_pActionTrackingServices.${key}`] ?? 0;
+const STAT = (key) => (player) => player[`m_pActionTrackingServices.m_matchStats.${key}`] ?? 0;
 
 const PLAYER_FIELDS = [
   'm_iMVPs',
   'm_iTeamNum',
   'm_iszPlayerName',
-  'm_pActionTrackingServices.m_iAssists',
-  'm_pActionTrackingServices.m_iDamage',
-  'm_pActionTrackingServices.m_iDeaths',
-  'm_pActionTrackingServices.m_iHeadShotKills',
-  'm_pActionTrackingServices.m_iKills',
-  'm_pActionTrackingServices.m_iUtilityDamage'
+  'm_pActionTrackingServices.m_matchStats.m_iAssists',
+  'm_pActionTrackingServices.m_matchStats.m_iDamage',
+  'm_pActionTrackingServices.m_matchStats.m_iDeaths',
+  'm_pActionTrackingServices.m_matchStats.m_iHeadShotKills',
+  'm_pActionTrackingServices.m_matchStats.m_iKills',
+  'm_pActionTrackingServices.m_matchStats.m_iUtilityDamage'
 ];
 
 export const CS2_COLUMNS = [

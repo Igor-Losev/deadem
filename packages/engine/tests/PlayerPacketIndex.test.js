@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
+import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
-import PacketCodec from '#src/PacketCodec.js';
-import PlayerPacketIndex from '#src/PlayerPacketIndex.js';
+import PacketCodec from '../src/PacketCodec.js';
+import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';
 
 /**
  * Creates a mock packet with the minimal interface required by PlayerPacketIndex.
@@ -155,8 +155,8 @@ describe('PlayerPacketIndex', () => {
         });
     });
 
-    describe('getPacketsForTick', () => {
-        test('It should return packets for a given tick', () => {
+    describe('getSeekPlan', () => {
+        test('It should return the [from, to) range covering the tick', () => {
             const packets = [
                 createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
                 createPacket(200),
@@ -170,10 +170,72 @@ describe('PlayerPacketIndex', () => {
 
             const index = new PlayerPacketIndex(stub, packets);
 
-            const result = index.getPacketsForTick(200);
+            const plan = index.getSeekPlan(200);
 
-            expect(result.packets.length).toBeGreaterThan(0);
-            expect(result.remaining.length).toBeGreaterThan(0);
+            expect(plan.from).toBe(0);
+            expect(plan.to).toBe(3);
+            expect(plan.bootstrap).toEqual([]);
+            expect(plan.snapshots).toEqual([ 'snapshot0' ]);
+        });
+
+        test('It should include the final packet when seeking to the last tick', () => {
+            const packets = [
+                createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
+                createPacket(200),
+                createPacket(300)
+            ];
+
+            const stub = createCodec(new Map([
+                [ packets[0], { decoded: { stringTable: 'snapshot0' } } ]
+            ]));
+
+            const index = new PlayerPacketIndex(stub, packets);
+
+            const plan = index.getSeekPlan(300);
+
+            expect(plan.from).toBe(0);
+            expect(plan.to).toBe(3);
+        });
+
+        test('It should return snapshots of the keyframes up to and including the starting one', () => {
+            const packets = [
+                createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
+                createPacket(150),
+                createPacket(200, DemoPacketType.DEM_FULL_PACKET.id),
+                createPacket(250)
+            ];
+
+            const stub = createCodec(new Map([
+                [ packets[0], { decoded: { stringTable: 'snapshotA' } } ],
+                [ packets[2], { decoded: { stringTable: 'snapshotB' } } ]
+            ]));
+
+            const index = new PlayerPacketIndex(stub, packets);
+
+            const plan = index.getSeekPlan(250);
+
+            expect(plan.from).toBe(2);
+            expect(plan.snapshots).toEqual([ 'snapshotA', 'snapshotB' ]);
+        });
+
+        test('It should return bootstrap packet positions', () => {
+            const packets = [
+                createPacket(-1),
+                createPacket(100, DemoPacketType.DEM_FULL_PACKET.id),
+                createPacket(200)
+            ];
+
+            const stub = createCodec(new Map([
+                [ packets[0], { isBootstrap: true } ],
+                [ packets[1], { decoded: { stringTable: 'snapshot0' } } ]
+            ]));
+
+            const index = new PlayerPacketIndex(stub, packets);
+
+            const plan = index.getSeekPlan(200);
+
+            expect(plan.bootstrap).toEqual([ 0 ]);
+            expect(plan.from).toBe(1);
         });
     });
 });

@@ -1,4 +1,12 @@
-import Assert from '#core/Assert.js';
+/** @import BitBuffer from '../../core/BitBuffer.js' */
+
+/** @import FieldPathBuilder from '../fields/path/FieldPathBuilder.js' */
+
+import Assert from '../../core/Assert.js';
+
+/**
+ * @typedef {(bitBuffer: BitBuffer, fieldPathBuilder: FieldPathBuilder) => void} FieldPathExecutor
+ */
 
 const registry = {
     byCode: new Map()
@@ -8,11 +16,11 @@ class FieldPathOperation {
     /**
      * @public
      * @constructor
-     * @param {String} code
-     * @param {String} name
+     * @param {string} code
+     * @param {string} name
      * @param {number} weight
      * @param {number} sequence
-     * @param {Function|null} executor
+     * @param {FieldPathExecutor|null} executor
      */
     constructor(code, name, weight, sequence, executor) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
@@ -21,10 +29,15 @@ class FieldPathOperation {
         Assert.isTrue(Number.isInteger(sequence));
         Assert.isTrue(executor === null || typeof executor === 'function');
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._name = name;
+        /** @private */
         this._weight = weight;
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._executor = executor;
 
         registry.byCode.set(code, this);
@@ -45,7 +58,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -53,7 +66,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {String}
+     * @returns {string}
      */
     get name() {
         return this._name;
@@ -77,7 +90,7 @@ class FieldPathOperation {
 
     /**
      * @public
-     * @returns {Function|null}
+     * @returns {FieldPathExecutor|null}
      */
     get executor() {
         return this._executor;
@@ -93,7 +106,8 @@ class FieldPathOperation {
     }
 }
 
-const executor = (callback) => callback;
+/** @type {(callback: FieldPathExecutor) => FieldPathExecutor} */
+const executor = callback => callback;
 
 /* eslint-disable no-unused-vars */
 

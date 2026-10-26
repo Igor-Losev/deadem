@@ -1,13 +1,25 @@
-import Assert from '#core/Assert.js';
-import SnappyDecompressor from '#core/SnappyDecompressor.instance.js';
 
-import DemoPacket from '#data/DemoPacket.js';
-import MessagePacket from '#data/MessagePacket.js';
+/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from './data/MessagePacketRaw.js' */
+/** @import { MessagePayload } from './data/MessagePacket.js' */
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
-import DemoSource from '#data/enums/DemoSource.js';
+/**
+ * Synthesised payload.
+ *
+ * @template [M=unknown]
+ * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: MessagePayload<M, 'CDemoStringTables'>|null }} DemoPacketHeavyData
+ */
 
-import MessagePacketRawExtractor from '#extractors/MessagePacketRawExtractor.js';
+import Assert from './core/Assert.js';
+import SnappyDecompressor from './core/SnappyDecompressor.instance.js';
+
+import DemoPacket from './data/DemoPacket.js';
+import MessagePacket from './data/MessagePacket.js';
+
+import DemoPacketType from './data/enums/DemoPacketType.js';
+import DemoSource from './data/enums/DemoSource.js';
+
+import MessagePacketRawExtractor from './extractors/MessagePacketRawExtractor.js';
 
 import SchemaRegistry from './SchemaRegistry.js';
 
@@ -25,6 +37,7 @@ class PacketCodec {
     constructor(registry) {
         Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
 
+        /** @private */
         this._registry = registry;
     }
 
@@ -58,13 +71,13 @@ class PacketCodec {
             return { data: decompressed };
         }
 
-        const proto = this._registry.getDemoProto(demoPacketType);
+        const decoder = this._registry.getDemoDecoder(demoPacketType);
 
-        if (proto === null) {
+        if (decoder === null) {
             return null;
         }
 
-        return proto.decode(decompressed);
+        return decoder.decode(decompressed);
     }
 
     /**
@@ -92,7 +105,7 @@ class PacketCodec {
     /**
      * @public
      * @param {DemoPacketRaw} raw
-     * @param {function(number): boolean} [messagePacketFilter]
+     * @param {((id: number) => boolean)|null} [messagePacketFilter]
      * @returns {DemoPacket|null}
      */
     parseDemoPacket(raw, messagePacketFilter) {
@@ -150,16 +163,16 @@ class PacketCodec {
             return null;
         }
 
-        const proto = this._registry.getMessageProto(messagePacketType);
+        const decoder = this._registry.getMessageDecoder(messagePacketType);
 
-        if (proto === null) {
+        if (decoder === null) {
             return null;
         }
 
         let data;
 
         try {
-            data = proto.decode(raw.payload);
+            data = decoder.decode(raw.payload);
         } catch {
             return null;
         }
@@ -170,7 +183,8 @@ class PacketCodec {
 
 /**
  * @param {Array<MessagePacket|MessagePacketRaw>} messagePackets
- * @param {CDemoStringTables|null} stringTables
+ * @param {*} stringTables
+ * @returns {DemoPacketHeavyData}
  */
 function createDemoPacketData(messagePackets, stringTables = null) {
     return {

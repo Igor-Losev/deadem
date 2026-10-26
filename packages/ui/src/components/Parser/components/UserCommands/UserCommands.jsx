@@ -3,7 +3,7 @@ import { Box, Divider, IconButton, Tooltip, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 
 import { FONT_SIZE } from './../../theme';
-import { jsonReplacer } from './../../utils';
+import { jsonReplacer, toPlainObject } from './../../utils';
 
 import EmptyState from './../EmptyState';
 
@@ -41,7 +41,7 @@ export default function UserCommands({ contentVersion, demo }) {
       return;
     }
 
-    navigator.clipboard.writeText(JSON.stringify(selected.command.state, jsonReplacer, 2)).then(() => {
+    navigator.clipboard.writeText(JSON.stringify(toPlainObject(selected.command.state), jsonReplacer, 2)).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });

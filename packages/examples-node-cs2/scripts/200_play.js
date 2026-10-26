@@ -7,7 +7,7 @@ const PLAYBACK_DURATION_MS = 1000;
 const PLAYBACK_SPEED = 16;
 
 (async () => {
-    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20260511_FURIA_VS_SPIRIT_M1_DUST2);
+    const reader = await DemoProvider.resolve(DemoFile.CS2_REPLAY_20261006_FALCONS_VS_NATUS_VINCERE_M1_INFERNO);
     const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
 
     const printTick = () => {
@@ -20,8 +20,8 @@ const PLAYBACK_SPEED = 16;
 
     printTick();
 
-    await player.nextTick();
-    await player.nextTick();
+    player.nextTick();
+    player.nextTick();
 
     printTick();
 

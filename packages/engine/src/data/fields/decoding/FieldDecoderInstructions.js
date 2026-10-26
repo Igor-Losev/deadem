@@ -1,10 +1,10 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
 class FieldDecoderInstructions {
     /**
      * @public
      * @constructor
-     * @param {String|null} encoder
+     * @param {string|null} encoder
      * @param {number|null} encoderFlags
      * @param {number|null} bitCount
      * @param {number|null} valueLow
@@ -17,15 +17,20 @@ class FieldDecoderInstructions {
         Assert.isTrue(valueLow === null || typeof valueLow === 'number');
         Assert.isTrue(valueHigh === null || typeof valueHigh === 'number');
 
+        /** @private */
         this._encoder = encoder;
+        /** @private */
         this._encoderFlags = encoderFlags;
+        /** @private */
         this._bitCount = bitCount;
+        /** @private */
         this._valueLow = valueLow;
+        /** @private */
         this._valueHigh = valueHigh;
     }
 
     /**
-     * @returns {String|null}
+     * @returns {string|null}
      */
     get encoder() {
         return this._encoder;

@@ -1,3 +1,6 @@
+/** @import { Parser, ParserConfiguration as ParserConfigurationType } from '@deademx/engine' */
+/** @import DemoFile from './DemoFile.js' */
+
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import inspector from 'node:inspector';
@@ -35,7 +38,7 @@ const PARSER_CONFIGURATION = ParserConfiguration.DEFAULT;
  *
  * @public
  * @param {object} options
- * @param {Function} options.Parser
+ * @param {ParserClass} options.Parser
  * @param {DemoFile} options.demoFile
  * @returns {Promise<void>}
  */
@@ -52,7 +55,7 @@ async function runProfile({ Parser, demoFile }) {
 }
 
 /**
- * @param {{Parser: Function, demoFile: DemoFile}} options
+ * @param {{Parser: ParserClass, demoFile: DemoFile}} options
  */
 async function runChildGc({ Parser, demoFile }) {
     if (global.gc) {
@@ -98,7 +101,7 @@ async function runChildGc({ Parser, demoFile }) {
 }
 
 /**
- * @param {{Parser: Function, demoFile: DemoFile}} options
+ * @param {{Parser: ParserClass, demoFile: DemoFile}} options
  */
 async function runChildAlloc({ Parser, demoFile }) {
     if (global.gc) {
@@ -171,7 +174,7 @@ function runParent(scriptPath) {
  * @param {string} scriptPath
  * @param {string} passType
  * @param {Array<string>} args
- * @returns {{summary: parseSummary|null, allocProfile: Object|null, log: string}}
+ * @returns {{summary: parseSummary|null, allocProfile: object|null, log: string}}
  */
 function spawnPass(scriptPath, passType, args) {
     const result = spawnSync(process.execPath, args, {
@@ -204,7 +207,7 @@ function spawnPass(scriptPath, passType, args) {
 
 /**
  * @param {string} output
- * @returns {{summary: parseSummary|null, allocProfile: Object|null}}
+ * @returns {{summary: parseSummary|null, allocProfile: object|null}}
  */
 function extractChildProfile(output) {
     const lines = output.split('\n');
@@ -227,7 +230,7 @@ function extractChildProfile(output) {
 
 /**
  * @param {string} prefix
- * @param {Object} payload
+ * @param {object} payload
  */
 function writeProfileMessage(prefix, payload) {
     const buffer = Buffer.from(`${prefix}${JSON.stringify(payload)}\n`);
@@ -291,8 +294,8 @@ function createMemorySampler() {
 /**
  * @param {inspector.Session} session
  * @param {string} method
- * @param {Object} [params]
- * @returns {Promise<Object>}
+ * @param {object} [params]
+ * @returns {Promise<object>}
  */
 function post(session, method, params = {}) {
     return new Promise((resolve, reject) => {
@@ -327,8 +330,8 @@ function summarizeGcLog(log) {
 
         const type = getGcType(match[1]);
         const pauseMs = readGcNumber(line, 'pause');
-        const allocated = readGcNumber(line, 'allocated');
-        const promoted = readGcNumber(line, 'promoted');
+        const allocated = readGcBytes(line, 'allocated');
+        const promoted = readGcBytes(line, 'promoted');
         const before = readGcNumber(line, 'total_size_before');
         const after = readGcNumber(line, 'total_size_after');
         const stat = stats.get(type) || {
@@ -390,7 +393,18 @@ function readGcNumber(line, key) {
 }
 
 /**
- * @param {Object} profile
+ * @param {string} line
+ * @param {string} key
+ * @returns {number}
+ */
+function readGcBytes(line, key) {
+    const value = readGcNumber(line, key);
+
+    return value > Number.MAX_SAFE_INTEGER ? 0 : value;
+}
+
+/**
+ * @param {object} profile
  */
 function printAllocationSummary(profile) {
     const rows = [];
@@ -420,7 +434,7 @@ function printAllocationSummary(profile) {
 }
 
 /**
- * @param {Object} node
+ * @param {object} node
  * @param {Array<allocationRow>} rows
  * @param {Array<frame>} [stack]
  */
@@ -694,6 +708,7 @@ function divide(numerator, denominator) {
  * @typedef {{ fn: string, url: string, line: number, col: number }} frame
  * @typedef {{ bytes: number, frame: frame, owner: frame|null }} allocationRow
  * @typedef {{ bytes: number, nodes: number, row: allocationRow }} allocationEntry
+ * @typedef {new (configuration?: ParserConfigurationType) => Parser} ParserClass
  */
 
 export default runProfile;

@@ -1,3 +1,5 @@
+/** @import { MemoryTrackerStats } from './MemoryTracker.base.js' */
+
 import MemoryTracker from './MemoryTracker.base.js';
 
 class MemoryTrackerNode extends MemoryTracker {
@@ -8,9 +10,12 @@ class MemoryTrackerNode extends MemoryTracker {
     constructor(intervalMilliseconds = 10) {
         super();
 
+        /** @private */
         this._intervalMilliseconds = intervalMilliseconds;
+        /** @private */
         this._intervalId = null;
 
+        /** @private */
         this._stats = {
             maxArrayBufferUsage: null,
             maxExternalUsage: null,
@@ -58,6 +63,8 @@ class MemoryTrackerNode extends MemoryTracker {
         this._intervalId = setInterval(() => {
             this._sample();
         }, this._intervalMilliseconds);
+
+        this._intervalId.unref();
     }
 
     /**

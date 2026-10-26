@@ -1,15 +1,16 @@
 import { describe, expect, test } from 'vitest';
 
-import InterceptorStage from '#data/enums/InterceptorStage.js';
+import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
-import ParserEngine from '#src/ParserEngine.js';
-import ParserConfiguration from '#src/ParserConfiguration.js';
-import ProtoProvider from '#providers/ProtoProvider.js';
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import ParserEngine from '../src/ParserEngine.js';
+import ParserConfiguration from '../src/ParserConfiguration.js';
+import SchemaRegistry from '../src/SchemaRegistry.js';
 
-import Logger from '#core/Logger.js';
+import Logger from '../src/core/Logger.js';
 
-const registry = new SchemaRegistry(new ProtoProvider({}));
+import createDescriptors from './support/createDescriptors.js';
+
+const registry = new SchemaRegistry(createDescriptors({ }));
 
 function createEngine() {
     return new ParserEngine(registry, ParserConfiguration.DEFAULT, Logger.NOOP);
@@ -137,6 +138,21 @@ describe('ParserEngine', () => {
             expect(engine.paused).toBe(false);
             expect(engine.pausePromise).toBeNull();
         });
+
+        test('It should stop parsing a web ReadableStream', async () => {
+            const engine = createEngine();
+            const stream = new ReadableStream({ pull: () => new Promise(() => { }) });
+
+            const parse = engine.parse(stream);
+
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+
+            expect(() => engine.abort()).not.toThrow();
+
+            await expect(parse).resolves.toBeUndefined();
+        });
     });
 
     describe('dispose while paused', () => {
@@ -183,36 +199,35 @@ describe('ParserEngine', () => {
         });
     });
 
-    describe('registerPostInterceptor', () => {
+    describe('interceptors.registerPost', () => {
         test('It should reject USER_COMMAND when the game registers no decoder', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
+            expect(() => engine.interceptors.registerPost(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
         });
 
         test('It should accept USER_COMMAND once a decoder is registered', () => {
-            const provider = new ProtoProvider({ nested: { TestUserCmd: { fields: { tick: { type: 'int32', id: 1 } } } } });
-            const supported = new SchemaRegistry(provider);
+            const supported = new SchemaRegistry(createDescriptors({ TestUserCmd: [ [ 'tick', 1, 'int32' ] ] }));
 
-            supported.setUserCommandDecoder(provider.root.lookupType('TestUserCmd'));
+            supported.setUserCommandDecoder(supported.getDecoder('TestUserCmd'));
 
             const engine = new ParserEngine(supported, ParserConfiguration.DEFAULT, Logger.NOOP);
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).not.toThrow();
+            expect(() => engine.interceptors.registerPost(InterceptorStage.USER_COMMAND, () => { })).not.toThrow();
         });
 
         test('It should accept the other stages regardless of the decoder', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPostInterceptor(InterceptorStage.ENTITY_PACKET, () => { })).not.toThrow();
+            expect(() => engine.interceptors.registerPost(InterceptorStage.ENTITY_PACKET, () => { })).not.toThrow();
         });
     });
 
-    describe('registerPreInterceptor', () => {
+    describe('interceptors.registerPre', () => {
         test('It should reject USER_COMMAND, which has no pre phase', () => {
             const engine = createEngine();
 
-            expect(() => engine.registerPreInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('no pre phase');
+            expect(() => engine.interceptors.registerPre(InterceptorStage.USER_COMMAND, () => { })).toThrow('no pre phase');
         });
     });
 });

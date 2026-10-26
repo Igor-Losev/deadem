@@ -1,11 +1,11 @@
 /**
- * @param {Object} library
- * @returns {Promise<Object>}
+ * @param {object} library
+ * @returns {Promise<object>}
  */
 export default function loadLibraryModule(library) {
   switch (library.key) {
     case 'deadlock':
-      return import('deadem');
+      return import('@deademx/deadlock');
     case 'dota2':
       return import('@deademx/dota2');
     case 'cs2':

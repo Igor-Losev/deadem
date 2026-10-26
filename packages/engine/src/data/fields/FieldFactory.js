@@ -1,7 +1,12 @@
-import Assert from '#core/Assert.js';
+/** @import Serializer from './Serializer.js' */
 
-import FieldModel from '#data/enums/FieldModel.js';
+/** @import FieldDecoderInstructions from './decoding/FieldDecoderInstructions.js' */
 
+import Assert from '../../core/Assert.js';
+
+import FieldModel from '../enums/FieldModel.js';
+
+import Field from './Field.js';
 import FieldDefinition from './FieldDefinition.js';
 
 import FieldDecoder from './decoding/FieldDecoder.js';
@@ -26,24 +31,29 @@ class FieldFactory {
     constructor(fieldRuleRegistry) {
         Assert.isTrue(fieldRuleRegistry instanceof FieldRuleRegistry);
 
+        /** @private */
         this._fieldRuleRegistry = fieldRuleRegistry;
 
+        /** @private */
         this._decoderCatalog = new FieldDecoderCatalog();
+        /** @private */
         this._instructionsFactory = new FieldDecoderInstructionsFactory();
     }
 
     /**
      * @public
-     * @param {String} name
+     * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
-     * @param {Array<String>} sendNode
-     * @param {{encoder: String|null, encoderFlags: number|null, bitCount: number|null, valueLow: number|null, valueHigh: number|null}} instructionsRaw
+     * @param {{encoder: string|null, encoderFlags: number|null, bitCount: number|null, valueLow: number|null, valueHigh: number|null}} instructionsRaw
      * @param {Serializer|null} serializer
      * @returns {Field}
      */
-    create(name, definition, sendNode, instructionsRaw, serializer) {
+    create(sendNode, varName, definition, instructionsRaw, serializer) {
         Assert.isTrue(definition instanceof FieldDefinition);
         Assert.isTrue(instructionsRaw !== null && typeof instructionsRaw === 'object' && !Array.isArray(instructionsRaw));
+
+        const name = Field.joinName([ ...sendNode, varName ]);
 
         const encoderOverride = this._fieldRuleRegistry.getFieldEncoderOverride(name);
         const encoder = encoderOverride !== null ? encoderOverride : instructionsRaw.encoder;
@@ -60,17 +70,17 @@ class FieldFactory {
 
         switch (model) {
             case FieldModel.SCALAR:
-                return new FieldScalar(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
+                return new FieldScalar(sendNode, varName, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_FIXED:
-                return new FieldArrayFixed(name, sendNode, definition, this._resolveDecoder(name, definition, decoderInstructions));
+                return new FieldArrayFixed(sendNode, varName, definition, this._resolveDecoder(name, definition, decoderInstructions));
             case FieldModel.ARRAY_VARIABLE:
                 Assert.isTrue(definition.generic !== null, 'ARRAY_VARIABLE field requires a generic definition');
 
-                return new FieldArrayVariable(name, sendNode, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
+                return new FieldArrayVariable(sendNode, varName, definition, VAR_UINT_32_DECODER, this._resolveDecoder(name, definition.generic, decoderInstructions));
             case FieldModel.TABLE_FIXED:
-                return new FieldTableFixed(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
+                return new FieldTableFixed(sendNode, varName, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || BOOLEAN_DECODER);
             case FieldModel.TABLE_VARIABLE:
-                return new FieldTableVariable(name, sendNode, definition, serializer, this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
+                return new FieldTableVariable(sendNode, varName, definition, /** @type {Serializer} */ (serializer), this._resolveDecoderOverride(name, decoderInstructions) || VAR_UINT_32_DECODER);
             default:
                 throw new Error(`Unhandled field model [ ${model.code} ]`);
         }
@@ -91,7 +101,7 @@ class FieldFactory {
             return FieldModel.TABLE_VARIABLE;
         }
 
-        if (definition.count > 0 && definition.baseType !== 'char') {
+        if (definition.count !== null && definition.count > 0 && definition.baseType !== 'char') {
             return FieldModel.ARRAY_FIXED;
         }
 
@@ -104,7 +114,7 @@ class FieldFactory {
 
     /**
      * @protected
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDefinition} definition
      * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {FieldDecoder}
@@ -135,7 +145,7 @@ class FieldFactory {
 
     /**
      * @protected
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderInstructions} decoderInstructions
      * @returns {FieldDecoder|null}
      */
@@ -156,6 +166,10 @@ const BOOLEAN_DECODER = new FieldDecoder(FieldDecoderFactory.BOOLEAN, FieldStora
 const FIXED_8_DECODER = new FieldDecoder(FieldDecoderFactory.FIXED_8, FieldStorageDescriptor.INT_UNSIGNED);
 const FIXED_8_SIGNED_DECODER = new FieldDecoder(FieldDecoderFactory.FIXED_8_SIGNED, FieldStorageDescriptor.INT_SIGNED);
 
+/**
+ * @param {string} baseType
+ * @returns {boolean}
+ */
 function isSignedIntegerType(baseType) {
     return baseType === 'int8' || baseType === 'int16' || baseType === 'int32' || baseType === 'int64';
 }

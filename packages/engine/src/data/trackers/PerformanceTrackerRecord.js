@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import PerformanceTrackerCategory from '../enums/PerformanceTrackerCategory.js';
 
 class PerformanceTrackerRecord {
     /**
@@ -11,11 +11,15 @@ class PerformanceTrackerRecord {
     constructor(category) {
         Assert.isTrue(category instanceof PerformanceTrackerCategory);
 
+        /** @private */
         this._category = category;
 
+        /** @private */
         this._started = false;
+        /** @private */
         this._startedAt = null;
 
+        /** @private */
         this._stats = {
             avg: 0,
             count: 0,
@@ -49,11 +53,13 @@ class PerformanceTrackerRecord {
      * @public
      */
     end() {
-        if (!this._started) {
+        const startedAt = this._startedAt;
+
+        if (startedAt === null) {
             return;
         }
 
-        const difference = Date.now() - this._startedAt;
+        const difference = Date.now() - startedAt;
 
         this._stats.avg = (this._stats.avg * this._stats.count + difference) / (this._stats.count + 1);
         this._stats.count += 1;

@@ -1,3 +1,7 @@
+/** @import { ProtoState } from '../extractors/DeltaExtractor.js' */
+
+/** @import UserCommand from './UserCommand.js' */
+
 class UserCommandEvent {
     /**
      * @public
@@ -7,10 +11,14 @@ class UserCommandEvent {
      * @param {Uint8Array|null} [delta=null] - `null` for a keyframe.
      */
     constructor(userCommand, gap, delta = null) {
+        /** @private */
         this._userCommand = userCommand;
+        /** @private */
         this._gap = gap;
+        /** @private */
         this._delta = delta;
 
+        /** @private @type {ProtoState|null} */
         this._changes = null;
     }
 
@@ -38,7 +46,7 @@ class UserCommandEvent {
      * Changes per {@link UserCommand}. (Lazy).
      *
      * @public
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     getChanges() {
         if (this._changes === null) {

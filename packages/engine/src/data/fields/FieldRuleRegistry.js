@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 import FieldDecoderDescriptor from './decoding/FieldDecoderDescriptor.js';
 
@@ -7,16 +7,21 @@ class FieldRuleRegistry {
      * @constructor
      */
     constructor() {
+        /** @private @type {FieldDecoderDescriptorMap} */
         this._typeDecoders = new Map();
+        /** @private @type {StringSet} */
         this._fixedTableTypes = new Set();
+        /** @private @type {StringSet} */
         this._variableArrayTypes = new Set();
+        /** @private @type {FieldDecoderDescriptorMap} */
         this._fieldDecoderOverrides = new Map();
+        /** @private @type {StringMap} */
         this._fieldEncoderOverrides = new Map();
     }
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {FieldDecoderDescriptor|null}
      */
     getFieldDecoderOverride(name) {
@@ -27,8 +32,8 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @returns {String|null}
+     * @param {string} name
+     * @returns {string|null}
      */
     getFieldEncoderOverride(name) {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
@@ -38,7 +43,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {FieldDecoderDescriptor|null}
      */
     getFieldTypeDecoder(baseType) {
@@ -49,7 +54,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {boolean}
      */
     getIsFixedTableType(baseType) {
@@ -60,7 +65,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @returns {boolean}
      */
     getIsVariableArrayType(baseType) {
@@ -71,7 +76,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldDecoderOverride(name, descriptor) {
@@ -83,8 +88,8 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} name
-     * @param {String} encoder
+     * @param {string} name
+     * @param {string} encoder
      */
     registerFieldEncoderOverride(name, encoder) {
         Assert.isTrue(typeof name === 'string' && name.length > 0);
@@ -95,7 +100,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      * @param {FieldDecoderDescriptor} descriptor
      */
     registerFieldTypeDecoder(baseType, descriptor) {
@@ -107,7 +112,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerFixedTableType(baseType) {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
@@ -117,7 +122,7 @@ class FieldRuleRegistry {
 
     /**
      * @public
-     * @param {String} baseType
+     * @param {string} baseType
      */
     registerVariableArrayType(baseType) {
         Assert.isTrue(typeof baseType === 'string' && baseType.length > 0);
@@ -125,5 +130,11 @@ class FieldRuleRegistry {
         this._variableArrayTypes.add(baseType);
     }
 }
+
+/**
+ * @typedef {Map<string, FieldDecoderDescriptor>} FieldDecoderDescriptorMap
+ * @typedef {Map<string, string>} StringMap
+ * @typedef {Set<string>} StringSet
+ */
 
 export default FieldRuleRegistry;

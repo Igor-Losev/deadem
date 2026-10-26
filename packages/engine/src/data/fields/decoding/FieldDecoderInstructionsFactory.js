@@ -11,12 +11,13 @@ class FieldDecoderInstructionsFactory {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._registry = new Map();
     }
 
     /**
      * @public
-     * @param {String|null} encoder
+     * @param {string|null} encoder
      * @param {number|null} encoderFlags
      * @param {number|null} bitCount
      * @param {number|null} valueLow
@@ -39,6 +40,14 @@ class FieldDecoderInstructionsFactory {
     }
 }
 
+/**
+ * @param {string|null} encoder
+ * @param {number|null} encoderFlags
+ * @param {number|null} bitCount
+ * @param {number|null} valueLow
+ * @param {number|null} valueHigh
+ * @returns {string}
+ */
 function getKey(encoder, encoderFlags, bitCount, valueLow, valueHigh) {
     return `${encoder}|${encoderFlags}|${bitCount}|${valueLow}|${valueHigh}`;
 }

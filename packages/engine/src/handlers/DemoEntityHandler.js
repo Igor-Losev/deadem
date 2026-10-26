@@ -1,13 +1,20 @@
-import Assert from '#core/Assert.js';
+/** @import EntityMutationEvent from '../data/entity/EntityMutationEvent.js' */
 
-import Demo from '#data/Demo.js';
+import Assert from '../core/Assert.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import Demo from '../data/Demo.js';
+
+import EntityOperation from '../data/enums/EntityOperation.js';
 
 class DemoEntityHandler {
+    /**
+     * @constructor
+     * @param {Demo} demo
+     */
     constructor(demo) {
         Assert.isTrue(demo instanceof Demo);
 
+        /** @private */
         this._demo = demo;
     }
 

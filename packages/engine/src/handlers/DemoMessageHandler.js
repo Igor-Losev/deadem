@@ -1,23 +1,26 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+/** @import MessagePacket from '../data/MessagePacket.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
-import Demo from '#data/Demo.js';
-import Server from '#data/Server.js';
-import UserCommand from '#data/UserCommand.js';
-import UserCommandEvent from '#data/UserCommandEvent.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import Entity from '#data/entity/Entity.js';
-import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
-import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
+import Demo from '../data/Demo.js';
+import Server from '../data/Server.js';
+import UserCommand from '../data/UserCommand.js';
+import UserCommandEvent from '../data/UserCommandEvent.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import Entity from '../data/entity/Entity.js';
+import EntityMutationBatch from '../data/entity/EntityMutationBatch.js';
+import EntityMutationEvent from '../data/entity/EntityMutationEvent.js';
 
-import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
-import EntityPayloadSizeExtractor from '#extractors/EntityPayloadSizeExtractor.js';
+import EntityOperation from '../data/enums/EntityOperation.js';
 
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import EntityMutationExtractor from '../extractors/EntityMutationExtractor.js';
+import EntityPayloadSizeExtractor from '../extractors/EntityPayloadSizeExtractor.js';
 
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import StringTableHandler from './StringTableHandler.js';
+
+import SchemaRegistry from '../SchemaRegistry.js';
 
 class DemoMessageHandler {
     /**
@@ -25,7 +28,7 @@ class DemoMessageHandler {
      * @param {SchemaRegistry} registry
      * @param {Demo} demo
      * @param {StringTableHandler} stringTableHandler
-     * @param {(function(string): boolean)|null} [entityClassFilter=null]
+     * @param {((className: string) => boolean)|null} [entityClassFilter=null]
      */
     constructor(registry, demo, stringTableHandler, entityClassFilter = null) {
         Assert.isTrue(registry instanceof SchemaRegistry);
@@ -33,9 +36,13 @@ class DemoMessageHandler {
         Assert.isTrue(stringTableHandler instanceof StringTableHandler);
         Assert.isTrue(entityClassFilter === null || typeof entityClassFilter === 'function');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._demo = demo;
+        /** @private */
         this._stringTableHandler = stringTableHandler;
+        /** @private */
         this._entityClassFilter = entityClassFilter;
     }
 
@@ -46,6 +53,7 @@ class DemoMessageHandler {
      * @param {MessagePacket} messagePacket
      */
     handleSvcServerInfo(messagePacket) {
+        /** @type {*} */
         const message = messagePacket.data;
 
         const server = new Server(message.maxClasses, message.maxClients, message.tickInterval);
@@ -58,9 +66,10 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcCreateStringTable(messagePacket) {
-        this._stringTableHandler.handleCreate(messagePacket.data);
+        return this._stringTableHandler.extractCreate(messagePacket.data);
     }
 
     /**
@@ -68,19 +77,32 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcUpdateStringTable(messagePacket) {
-        this._stringTableHandler.handleUpdate(messagePacket.data);
+        return this._stringTableHandler.extractUpdate(messagePacket.data);
     }
 
     /**
      * Handles a {@link MessagePacketType.SVC_CLEAR_ALL_STRING_TABLES} (ID = 51).
      *
      * @public
-     * @param {MessagePacket} messagePacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleSvcClearAllStringTables() {
-        this._stringTableHandler.handleClear();
+        return this._stringTableHandler.extractClear();
+    }
+
+    /**
+     * Applies string table events to the tables and to the baselines.
+     *
+     * @public
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    handleStringTableEvents(events) {
+        this._stringTableHandler.applyEvents(events);
+
+        this._demo.applyStringTableEvents(events);
     }
 
     /**
@@ -88,14 +110,17 @@ class DemoMessageHandler {
      *
      * @public
      * @param {MessagePacket} messagePacket
-     * @param {number} [startPointer=0]
-     * @param {number} [startLoop=0]
-     * @param {number} [startIndex=-1]
+     * @param {boolean} [snapshot=false] - `true` when the packet belongs to the snapshot.
      * @param {boolean} [direct=false]
      * @returns {Array<EntityMutationEvent>|null}
      */
-    handleSvcPacketEntities(messagePacket, startPointer = 0, startLoop = 0, startIndex = -1, direct = false) {
+    handleSvcPacketEntities(messagePacket, snapshot = false, direct = false) {
+        /** @type {*} */
         const message = messagePacket.data;
+
+        if (snapshot && this._demo.getEntityCount() > 0) {
+            return null;
+        }
 
         if (message.updateBaseline) {
             throw new Error('Unhandled CSVCMsg_PacketEntities.updateBaseline === true');
@@ -107,22 +132,27 @@ class DemoMessageHandler {
 
         const bitBuffer = new BitBuffer(message.entityData);
 
-        bitBuffer.move(startPointer);
-
-        const hasFilter = this._entityClassFilter !== null;
-        const payloadSizes = hasFilter ? createPayloadIterator(message, startLoop) : null;
-        const events = direct ? null : [];
+        const entityClassFilter = this._entityClassFilter;
+        const payloadSizes = entityClassFilter !== null ? createPayloadIterator(message) : null;
+        /** @type {Array<EntityMutationEvent>|null} */
+        const events = direct ? null : [ ];
         const extractor = new EntityMutationExtractor(bitBuffer);
+        const alternateBaselines = createAlternateBaselineIndex(message);
 
-        let index = startIndex;
+        let index = -1;
 
-        for (let i = startLoop; i < message.updatedEntries; i++) {
+        for (let i = 0; i < message.updatedEntries; i++) {
             index += bitBuffer.readUVarInt() + 1;
 
             const command = bitBuffer.readBitsAsUInt(2);
 
             switch (command) {
                 case EntityOperation.UPDATE.id: {
+                    // For older game builds. 2 PVS bits per update; low bit = no field data.
+                    if (message.hasPvsVisBitsDeprecated > 0 && (bitBuffer.readBitsAsUInt(2) & 1) !== 0) {
+                        break;
+                    }
+
                     const entity = this._demo.getEntity(index);
 
                     if (entity === null) {
@@ -131,8 +161,8 @@ class DemoMessageHandler {
 
                     extractor.serializer = entity.class.serializer;
 
-                    const allowed = !hasFilter || this._entityClassFilter(entity.class.name);
-                    const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
+                    const allowed = entityClassFilter === null || entityClassFilter(entity.class.name);
+                    const payloadBits = payloadSizes !== null ? /** @type {number} */ (payloadSizes.next().value) : null;
 
                     if (allowed) {
                         if (events === null) {
@@ -163,7 +193,7 @@ class DemoMessageHandler {
                         throw new Error(`Unable to leave entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
+                    if (events === null || (entityClassFilter !== null && !entityClassFilter(entity.class.name))) {
                         entity.deactivate();
                     } else {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.LEAVE, entity));
@@ -187,16 +217,17 @@ class DemoMessageHandler {
 
                     const entity = new Entity(index, serial, clazz);
 
-                    const allowed = !hasFilter || this._entityClassFilter(clazz.name);
-                    const payloadBits = payloadSizes !== null ? payloadSizes.next().value : null;
+                    const allowed = entityClassFilter === null || entityClassFilter(clazz.name);
+                    const payloadBits = payloadSizes !== null ? /** @type {number} */ (payloadSizes.next().value) : null;
 
                     extractor.serializer = entity.class.serializer;
 
                     if (allowed) {
-                        const baseline = this._demo.getClassBaseline(classId);
+                        const baselineIndex = alternateBaselines !== null ? alternateBaselines.get(index) : undefined;
+                        const baseline = baselineIndex === undefined ? this._demo.getClassBaseline(classId) : this._demo.getAlternateBaseline(classId, baselineIndex);
 
                         if (baseline === null) {
-                            throw new Error(`Baseline not found [ ${classId} ]`);
+                            throw new Error(`Baseline not found [ ${baselineIndex === undefined ? classId : `${classId}:${baselineIndex}`} ]`);
                         }
 
                         const baselineBatch = baseline.getBatch(entity.class.serializer);
@@ -238,7 +269,7 @@ class DemoMessageHandler {
                         throw new Error(`Unable to delete entity with index [ ${index} ] - inactive`);
                     }
 
-                    if (events === null || (hasFilter && !this._entityClassFilter(entity.class.name))) {
+                    if (events === null || (entityClassFilter !== null && !entityClassFilter(entity.class.name))) {
                         this._demo.deleteEntity(index);
                     } else {
                         events.push(EntityMutationEvent.createEmpty(EntityOperation.DELETE, entity));
@@ -262,10 +293,12 @@ class DemoMessageHandler {
      * @returns {Array<UserCommandEvent>}
      */
     handleSvcUserCommands(messagePacket, snapshot = false, collectEvents = true) {
-        const commandsRaw = messagePacket.data?.commands ?? null;
-        const commandProto = this._registry.getUserCommandDecoder();
+        /** @type {*} */
+        const message = messagePacket.data;
+        const commandsRaw = message?.commands ?? null;
+        const commandDecoder = this._registry.getUserCommandDecoder();
 
-        if (commandsRaw === null || commandProto === null) {
+        if (commandsRaw === null || commandDecoder === null) {
             return [ ];
         }
 
@@ -288,7 +321,7 @@ class DemoMessageHandler {
             let gap = 0;
 
             if (isKeyframe) {
-                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandProto);
+                command = UserCommand.fromData(slot, commandRaw.cmdNumber, commandRaw.data, commandDecoder);
 
                 this._demo.registerUserCommand(command);
             } else if (isDelta && existing !== null) {
@@ -313,24 +346,33 @@ class DemoMessageHandler {
 /**
  * Builds a payload-size iterator over the packet's `serializedEntities` index.
  *
- * @param {object} message
- * @param {number} [startLoop=0]
+ * @param {{ serializedEntities?: Uint8Array }} message
  * @returns {Generator<number, void, *>|null}
  */
-function createPayloadIterator(message, startLoop = 0) {
+function createPayloadIterator(message) {
     const buffer = message.serializedEntities;
 
     if (!buffer || buffer.length === 0) {
         return null;
     }
 
-    const iterator = new EntityPayloadSizeExtractor(buffer).retrieve();
+    return new EntityPayloadSizeExtractor(buffer).retrieve();
+}
 
-    for (let i = 0; i < startLoop; i++) {
-        iterator.next();
+/**
+ * Maps entity indices of the packet to the alternate baselines they are created from.
+ *
+ * @param {{ alternateBaselines?: Array<{ entityIndex: number, baselineIndex: number }> }} message
+ * @returns {Map<number, number>|null}
+ */
+function createAlternateBaselineIndex(message) {
+    const references = message.alternateBaselines ?? [ ];
+
+    if (references.length === 0) {
+        return null;
     }
 
-    return iterator;
+    return new Map(references.map(reference => [ reference.entityIndex, reference.baselineIndex ]));
 }
 
 export default DemoMessageHandler;

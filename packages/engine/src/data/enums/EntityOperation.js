@@ -1,4 +1,4 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 const registry = {
     byCode: new Map(),
@@ -6,11 +6,18 @@ const registry = {
 };
 
 class EntityOperation {
+    /**
+     * @constructor
+     * @param {string} code
+     * @param {number} id
+     */
     constructor(code, id) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
         Assert.isTrue(Number.isInteger(id));
 
+        /** @private */
         this._code = code;
+        /** @private */
         this._id = id;
 
         registry.byCode.set(code, this);
@@ -18,7 +25,7 @@ class EntityOperation {
     }
 
     /**
-     * @returns {String}
+     * @returns {string}
      */
     get code() {
         return this._code;
@@ -34,8 +41,8 @@ class EntityOperation {
     /**
      * @public
      * @static
-     * @param {string} code 
-     * @returns {EntityOperation|null} 
+     * @param {string} code
+     * @returns {EntityOperation|null}
      */
     static parse(code) {
         return registry.byCode.get(code) || null;
@@ -44,8 +51,8 @@ class EntityOperation {
     /**
      * @public
      * @static
-     * @param {number} id 
-     * @returns {EntityOperation|null} 
+     * @param {number} id
+     * @returns {EntityOperation|null}
      */
     static parseById(id) {
         return registry.byId.get(id) || null;

@@ -1,19 +1,21 @@
-import Assert from '#core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import BroadcastFragmentType from '#data/enums/BroadcastFragmentType.js';
-import Protocol from '#data/enums/Protocol.js';
+import BroadcastFragmentType from '../data/enums/BroadcastFragmentType.js';
+import Protocol from '../data/enums/Protocol.js';
 
 class BroadcastGateway {
     /**
     * @constructor
-    * @param {String} baseUrl
+    * @param {string} baseUrl
     * @param {Protocol} [protocol=Protocol.HTTPS]
     */
     constructor(baseUrl, protocol = Protocol.HTTPS) {
         Assert.isTrue(typeof baseUrl === 'string');
         Assert.isTrue(protocol instanceof Protocol);
 
+        /** @private */
         this._baseUrl = baseUrl;
+        /** @private */
         this._protocol = protocol;
     }
 
@@ -52,16 +54,17 @@ class BroadcastGateway {
             throw this._createHttpError(response);
         }
 
-        return response.json();
+        return /** @type {Promise<SyncObject>} */ (response.json());
     }
 
     /**
+     * @internal
      * @protected
-     * @param {Response} response 
+     * @param {Response} response
      * @returns {Error}
      */
     _createHttpError(response) {
-        const error = new Error(`HTTP code [ ${response.status} ]`);
+        const error = /** @type {Error & { details?: { status: number, statusText: string, url: string } }} */ (new Error(`HTTP code [ ${response.status} ]`));
 
         error.details = {
             status: response.status,
@@ -74,7 +77,7 @@ class BroadcastGateway {
 }
 
 /**
- * @typedef {Object} SyncObject
+ * @typedef {object} SyncObject
  * @property {number} tick
  * @property {number} endtick
  * @property {number} maxtick

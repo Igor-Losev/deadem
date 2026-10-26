@@ -1,6 +1,10 @@
-import Assert from '#core/Assert.js';
+/** @import { ProtoState } from '../extractors/DeltaExtractor.js' */
 
-import DeltaExtractor from '#extractors/DeltaExtractor.js';
+import Assert from '../core/Assert.js';
+
+import ProtoDecoder from '../core/proto/ProtoDecoder.js';
+
+import DeltaExtractor from '../extractors/DeltaExtractor.js';
 
 /**
  * A user input state.
@@ -11,19 +15,23 @@ class UserCommand {
      * @constructor
      * @param {number} slot
      * @param {number} number
-     * @param {Object} state
-     * @param {protobuf.Type} type
+     * @param {ProtoState} state
+     * @param {ProtoDecoder} decoder
      */
-    constructor(slot, number, state, type) {
+    constructor(slot, number, state, decoder) {
         Assert.isTrue(Number.isInteger(slot) && slot >= 0);
         Assert.isTrue(Number.isInteger(number));
         Assert.isTrue(state !== null && typeof state === 'object' && !Array.isArray(state));
-        Assert.isTrue(typeof type?.decode === 'function');
+        Assert.isTrue(decoder instanceof ProtoDecoder);
 
+        /** @private */
         this._slot = slot;
+        /** @private */
         this._number = number;
+        /** @private */
         this._state = state;
-        this._type = type;
+        /** @private */
+        this._decoder = decoder;
     }
 
     /**
@@ -46,26 +54,28 @@ class UserCommand {
 
     /**
      * @public
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     get state() {
         return this._state;
     }
 
     /**
+     * @internal
      * @public
      * @static
      * @param {number} slot
      * @param {number} number
      * @param {Uint8Array} data
-     * @param {protobuf.Type} type
+     * @param {ProtoDecoder} decoder
      * @returns {UserCommand}
      */
-    static fromData(slot, number, data, type) {
-        return new UserCommand(slot, number, extractState(type.decode(data), type), type);
+    static fromData(slot, number, data, decoder) {
+        return new UserCommand(slot, number, decoder.decode(data), decoder);
     }
 
     /**
+     * @internal
      * @public
      * @param {number} number
      * @param {Uint8Array} deltaData
@@ -73,71 +83,20 @@ class UserCommand {
     applyDelta(number, deltaData) {
         this._number = number;
 
-        new DeltaExtractor(deltaData, this._type).merge(this._state);
+        new DeltaExtractor(deltaData, this._decoder).merge(this._state);
     }
 
     /**
      * Extracts delta, without applying it.
      *
+     * @internal
      * @public
      * @param {Uint8Array} deltaData
-     * @returns {Object}
+     * @returns {ProtoState}
      */
     extractChanges(deltaData) {
-        return new DeltaExtractor(deltaData, this._type).merge({ });
+        return new DeltaExtractor(deltaData, this._decoder).extract();
     }
-}
-
-/**
- * @param {*} value
- * @param {protobuf.Field} field
- * @returns {*}
- */
-function convertValue(value, field) {
-    if (field.resolvedType?.fieldsArray !== undefined) {
-        return extractState(value, field.resolvedType);
-    }
-
-    if (field.long) {
-        return String(value);
-    }
-
-    if (field.bytes) {
-        return new Uint8Array(value);
-    }
-
-    return value;
-}
-
-/**
- * @param {protobuf.Message} message
- * @param {protobuf.Type} type
- * @returns {Object}
- */
-function extractState(message, type) {
-    const state = { };
-
-    for (const field of type.fieldsArray) {
-        const value = message[field.name];
-
-        if (value === undefined || value === null) {
-            continue;
-        }
-
-        if (field.repeated) {
-            const items = new Array(value.length);
-
-            for (let i = 0; i < value.length; i++) {
-                items[i] = convertValue(value[i], field);
-            }
-
-            state[field.name] = items;
-        } else {
-            state[field.name] = convertValue(value, field);
-        }
-    }
-
-    return state;
 }
 
 export default UserCommand;

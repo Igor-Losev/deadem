@@ -1,7 +1,9 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+/** @import Serializer from './fields/Serializer.js' */
 
-import EntityMutationExtractor from '#extractors/EntityMutationExtractor.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
+
+import EntityMutationExtractor from '../extractors/EntityMutationExtractor.js';
 
 import EntityMutationBatch from './entity/EntityMutationBatch.js';
 
@@ -15,8 +17,11 @@ class ClassBaseline {
         Assert.isTrue(Number.isInteger(classId));
         Assert.isTrue(raw === null || ArrayBuffer.isView(raw));
 
+        /** @private */
         this._classId = classId;
+        /** @private */
         this._raw = raw;
+        /** @private */
         this._batch = null;
     }
 

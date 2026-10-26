@@ -1,4 +1,6 @@
-import Assert from '#core/Assert.js';
+/** @import BitBuffer from '../../../core/BitBuffer.js' */
+
+import Assert from '../../../core/Assert.js';
 
 import FieldDecoderInstructions from './FieldDecoderInstructions.js';
 
@@ -11,6 +13,8 @@ const FLAG_ROUND_DOWN = 1 << 0;
 const FLAG_ROUND_UP = 1 << 1;
 const FLAG_ENCODE_ZERO = 1 << 2;
 const FLAG_ENCODE_INTEGERS = 1 << 3;
+
+const MULTIPLIER_ADJUSTMENTS = [ 0.9999, 0.99, 0.9, 0.8, 0.7 ];
 
 class FieldDecoderQuantizedFloat {
     /**
@@ -31,6 +35,7 @@ class FieldDecoderQuantizedFloat {
 
         if (bitCount === 0 || bitCount >= 32) {
             this._bitCount = 32;
+            /** @private */
             this._flags = flags;
 
             return;
@@ -39,31 +44,24 @@ class FieldDecoderQuantizedFloat {
         this._bitCount = bitCount;
         this._flags = getFlags.call(this, flags);
 
-        let steps = (1 << bitCount) >>> 0;
-        let range = this._high - this._low;
-        let offset = range / steps;
+        let steps = 2 ** bitCount;
 
         if ((this._flags & FLAG_ROUND_DOWN) !== 0) {
-            this._high -= offset;
+            this._high = Math.fround(this._high - Math.fround(this._high - this._low) / steps);
         } else if ((this._flags & FLAG_ROUND_UP) !== 0) {
-            this._low += offset;
+            this._low = Math.fround(this._low + Math.fround(this._high - this._low) / steps);
         }
 
         if ((this._flags & FLAG_ENCODE_INTEGERS) !== 0) {
-            const delta = Math.max(this._high - this._low, 1);
+            const range = 2 ** getBitLength(Math.max(Math.trunc(this._high) - Math.trunc(this._low), 1));
 
-            // Calculate the next power of two that is >= delta
-            const deltaLog2 = Math.ceil(Math.log2(delta));
+            while (2 ** this._bitCount <= range) {
+                this._bitCount += 1;
+            }
 
-            range = (1 << deltaLog2) >>> 0;
+            steps = 2 ** this._bitCount;
 
-            this._bitCount = Math.max(bitCount, deltaLog2);
-
-            steps = (1 << bitCount) >>> 0;
-            offset = range / steps;
-
-            // Adjust the high value to prevent overflow during decoding
-            this._high = this._low + range - offset;
+            this._high = Math.fround(Math.fround(this._low + range) - range / steps);
         }
 
         assignMultipliers.call(this, steps);
@@ -136,51 +134,51 @@ class FieldDecoderQuantizedFloat {
             return this._high;
         }
 
-        const integer = Math.floor((number - this._low) * this._quantizationMultiplier);
+        if (this._quantizationMultiplier === 0) {
+            throw new Error('quantize() error: multiplier is zero');
+        }
 
-        return this._low + (this._high - this._low) * integer * this._dequantizationStep;
+        const scaled = Math.fround(Math.fround(number - this._low) * this._quantizationMultiplier);
+        const integer = Math.trunc(Math.fround(scaled + 0.5));
+        const fraction = Math.fround(Math.fround(integer) * Math.fround(this._dequantizationStep));
+
+        return Math.fround(this._low + Math.fround(Math.fround(this._high - this._low) * fraction));
     }
 }
 
 /**
+ * @this {FieldDecoderQuantizedFloat}
  * @param {number} steps
- * @returns {number}
  */
 function assignMultipliers(steps) {
     Assert.isTrue(Number.isInteger(steps));
 
-    const range = this._high - this._low;
+    const range = Math.fround(this._high - this._low);
 
     let high;
 
     if (this._bitCount === 32) {
         high = 0xFFFFFFFE;
     } else {
-        high = ((1 << this._bitCount) >>> 0) - 1;
+        high = 2 ** this._bitCount - 1;
     }
 
     let multiplier;
 
     if (Math.abs(range) <= 0) {
-        multiplier = high;
+        multiplier = Math.fround(high);
     } else {
-        multiplier = high / range;
+        multiplier = Math.fround(Math.fround(high) / range);
     }
 
-    if (multiplier * range > high) {
-        const multipliers = [ 0.9999, 0.99, 0.8, 0.7 ];
+    if (Math.fround(multiplier * range) > high) {
+        for (const adjustment of MULTIPLIER_ADJUSTMENTS) {
+            multiplier = Math.fround(Math.fround(Math.fround(high) / range) * Math.fround(adjustment));
 
-        for (const m of multipliers) {
-            multiplier = high / (range * m);
-
-            if (multiplier * range <= high) {
+            if (Math.fround(multiplier * range) <= high) {
                 break;
             }
         }
-    }
-
-    if (multiplier === 0) {
-        throw new Error('Multiplier is zero. This should never happen');
     }
 
     this._quantizationMultiplier = multiplier;
@@ -188,8 +186,17 @@ function assignMultipliers(steps) {
 }
 
 /**
+ * @param {number} value
+ * @returns {number}
+ */
+function getBitLength(value) {
+    return 32 - Math.clz32(value);
+}
+
+/**
  * Validates and recalculates decoder flags for quantized float decoding.
  *
+ * @this {FieldDecoderQuantizedFloat}
  * @param {number} candidate
  * @returns {number}
  */

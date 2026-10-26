@@ -1,27 +1,32 @@
-/** @import FieldDefinition from '#data/fields/FieldDefinition.js' */
+/** @import FieldExtractor from '../FieldExtractor.js' */
+/** @import FieldDefinition from '../FieldDefinition.js' */
+/** @import FieldStorageDescriptor from '../decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from '../path/FieldPath.js' */
+/** @import { FieldDecoderFn } from '../decoding/FieldDecoder.js' */
 
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldModel from '#data/enums/FieldModel.js';
+import FieldModel from '../../enums/FieldModel.js';
 
-import Field from '#data/fields/Field.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import Serializer from '#data/fields/Serializer.js';
+import Field from '../Field.js';
+import FieldDecoder from '../decoding/FieldDecoder.js';
+import Serializer from '../Serializer.js';
 
 class FieldArrayFixed extends Field {
     /**
      * @public
      * @constructor
-     * @param {String} name
-     * @param {Array<String>} sendNode
+     * @param {Array<string>} sendNode
+     * @param {string} varName
      * @param {FieldDefinition} definition
      * @param {FieldDecoder} fieldDecoder
      */
-    constructor(name, sendNode, definition, fieldDecoder) {
-        super(name, sendNode, definition);
+    constructor(sendNode, varName, definition, fieldDecoder) {
+        super(sendNode, varName, definition);
 
         Assert.isTrue(fieldDecoder instanceof FieldDecoder);
 
+        /** @private */
         this._fieldDecoder = fieldDecoder;
     }
 
@@ -35,7 +40,7 @@ class FieldArrayFixed extends Field {
 
     /**
      * @public
-     * @returns {Function}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath() {
         return this._fieldDecoder.fn;
@@ -55,7 +60,7 @@ class FieldArrayFixed extends Field {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number} [index=0]
-     * @returns {String}
+     * @returns {string}
      */
     getNameForFieldPath(fieldPath, index = 0) {
         if (fieldPath.length - 1 === index) {
@@ -79,7 +84,7 @@ class FieldArrayFixed extends Field {
      * @returns {Array<*>|undefined}
      */
     unpack(extractor) {
-        const count = this._definition.count;
+        const count = /** @type {number} */ (this._definition.count);
         const out = new Array(count);
 
         let present = 0;

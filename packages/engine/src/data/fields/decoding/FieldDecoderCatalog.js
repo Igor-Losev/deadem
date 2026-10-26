@@ -1,6 +1,6 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../../core/Assert.js';
 
-import FieldDecoderType from '#data/enums/FieldDecoderType.js';
+import FieldDecoderType from '../../enums/FieldDecoderType.js';
 
 import FieldDecoder from './FieldDecoder.js';
 import FieldDecoderDescriptor from './FieldDecoderDescriptor.js';
@@ -14,6 +14,7 @@ class FieldDecoderCatalog {
      * @constructor
      */
     constructor() {
+        /** @private */
         this._factory = new FieldDecoderFactory();
     }
 
@@ -45,7 +46,7 @@ class FieldDecoderCatalog {
             case FieldDecoderType.QUANTIZED_FLOAT:
                 return this._factory.createQuantizedFloat(decoderInstructions);
             case FieldDecoderType.VECTOR:
-                return this._factory.createVector(decoderInstructions, descriptor.options.dimension);
+                return this._factory.createVector(decoderInstructions, /** @type {number} */ (descriptor.options.dimension));
             default:
                 throw new Error(`Unhandled field decoder type [ ${descriptor.type.code} ]`);
         }
@@ -69,6 +70,7 @@ registry.set(FieldDecoderType.STRING, new FieldDecoder(FieldDecoderFactory.STRIN
 registry.set(FieldDecoderType.VAR_INT_32, new FieldDecoder(FieldDecoderFactory.VAR_INT_32, FieldStorageDescriptor.INT_SIGNED));
 registry.set(FieldDecoderType.VAR_INT_64, new FieldDecoder(FieldDecoderFactory.VAR_INT_64, FieldStorageDescriptor.MISC));
 registry.set(FieldDecoderType.VAR_UINT_32, new FieldDecoder(FieldDecoderFactory.VAR_UINT_32, FieldStorageDescriptor.INT_UNSIGNED));
+registry.set(FieldDecoderType.VAR_UINT_32_MINUS_ONE, new FieldDecoder(FieldDecoderFactory.VAR_UINT_32_MINUS_ONE, FieldStorageDescriptor.INT_SIGNED));
 registry.set(FieldDecoderType.VAR_UINT_64, new FieldDecoder(FieldDecoderFactory.VAR_UINT_64, FieldStorageDescriptor.MISC));
 
 export default FieldDecoderCatalog;

@@ -1,14 +1,15 @@
-import Assert from '#core/Assert.js';
+import Assert from '../../core/Assert.js';
 
 class FieldStorageType {
     /**
      * @public
      * @constructor
-     * @param {String} code
+     * @param {string} code
      */
     constructor(code) {
         Assert.isTrue(typeof code === 'string');
 
+        /** @private */
         this._code = code;
     }
 

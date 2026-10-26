@@ -1,29 +1,29 @@
 import { describe, expect, test } from 'vitest';
 
-import Class from '#data/Class.js';
-import Entity from '#data/entity/Entity.js';
-import EntityMutationBatch from '#data/entity/EntityMutationBatch.js';
-import EntityMutationEvent from '#data/entity/EntityMutationEvent.js';
-import Serializer from '#data/fields/Serializer.js';
-import FieldDefinition from '#data/fields/FieldDefinition.js';
-import FieldPathBuilder from '#data/fields/path/FieldPathBuilder.js';
-import FieldDecoder from '#data/fields/decoding/FieldDecoder.js';
-import FieldStorageDescriptor from '#data/fields/decoding/FieldStorageDescriptor.js';
+import Class from '../src/data/Class.js';
+import Entity from '../src/data/entity/Entity.js';
+import EntityMutationBatch from '../src/data/entity/EntityMutationBatch.js';
+import EntityMutationEvent from '../src/data/entity/EntityMutationEvent.js';
+import Serializer from '../src/data/fields/Serializer.js';
+import FieldDefinition from '../src/data/fields/FieldDefinition.js';
+import FieldPathBuilder from '../src/data/fields/path/FieldPathBuilder.js';
+import FieldDecoder from '../src/data/fields/decoding/FieldDecoder.js';
+import FieldStorageDescriptor from '../src/data/fields/decoding/FieldStorageDescriptor.js';
 
-import FieldArrayFixed from '#data/fields/models/FieldArrayFixed.js';
-import FieldArrayVariable from '#data/fields/models/FieldArrayVariable.js';
-import FieldScalar from '#data/fields/models/FieldScalar.js';
-import FieldTableFixed from '#data/fields/models/FieldTableFixed.js';
-import FieldTableVariable from '#data/fields/models/FieldTableVariable.js';
+import FieldArrayFixed from '../src/data/fields/models/FieldArrayFixed.js';
+import FieldArrayVariable from '../src/data/fields/models/FieldArrayVariable.js';
+import FieldScalar from '../src/data/fields/models/FieldScalar.js';
+import FieldTableFixed from '../src/data/fields/models/FieldTableFixed.js';
+import FieldTableVariable from '../src/data/fields/models/FieldTableVariable.js';
 
-import EntityOperation from '#data/enums/EntityOperation.js';
+import EntityOperation from '../src/data/enums/EntityOperation.js';
 
 const FIELD_NAMES = [ 'm_flHealth', 'm_iScore', 'm_nCount', 'm_bFlag', 'CBodyComponent.m_vecOrigin', 'm_szName' ];
 
 function createClass() {
     const decoder = (storage) => new FieldDecoder(() => {}, storage);
     const definition = FieldDefinition.parse('uint32');
-    const scalar = (name, storage) => new FieldScalar(name, [ '0' ], definition, decoder(storage));
+    const scalar = (name, storage) => new FieldScalar([ ], name, definition, decoder(storage));
 
     const body = new Serializer('CBody', 1, [ scalar('m_vecOrigin', FieldStorageDescriptor.createVector(3)) ]);
 
@@ -32,7 +32,7 @@ function createClass() {
         scalar('m_iScore', FieldStorageDescriptor.INT_SIGNED),
         scalar('m_nCount', FieldStorageDescriptor.INT_UNSIGNED),
         scalar('m_bFlag', FieldStorageDescriptor.INT_BOOL),
-        new FieldTableFixed('CBodyComponent', [ '0' ], definition, body, decoder(FieldStorageDescriptor.INT_BOOL)),
+        new FieldTableFixed([ ], 'CBodyComponent', definition, body, decoder(FieldStorageDescriptor.INT_BOOL)),
         scalar('m_szName', FieldStorageDescriptor.MISC)
     ]);
 
@@ -164,11 +164,11 @@ describe('Entity.getField', () => {
     const decoder = () => new FieldDecoder(() => {}, FieldStorageDescriptor.INT_UNSIGNED);
 
     const sub = (fields) => new Serializer('Sub', 1, fields);
-    const scalar = (name) => new FieldScalar(name, [ '0' ], definition, decoder());
-    const array = (name) => new FieldArrayVariable(name, [ '0' ], definition, decoder(), decoder());
-    const fixed = (name, size) => new FieldArrayFixed(name, [ '0' ], new FieldDefinition('uint32', null, size, false), decoder());
-    const table = (name, serializer) => new FieldTableVariable(name, [ '0' ], definition, serializer, decoder());
-    const tableFixed = (name, serializer) => new FieldTableFixed(name, [ '0' ], definition, serializer, decoder());
+    const scalar = (name) => new FieldScalar([ ], name, definition, decoder());
+    const array = (name) => new FieldArrayVariable([ ], name, definition, decoder(), decoder());
+    const fixed = (name, size) => new FieldArrayFixed([ ], name, new FieldDefinition('uint32', null, size, false), decoder());
+    const table = (name, serializer) => new FieldTableVariable([ ], name, definition, serializer, decoder());
+    const tableFixed = (name, serializer) => new FieldTableFixed([ ], name, definition, serializer, decoder());
 
     function buildClass() {
         const stateSerializer = sub([ scalar('m_id'), scalar('m_bits') ]);

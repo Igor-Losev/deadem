@@ -1,0 +1,58 @@
+import { Logger, ParserConfiguration, PlaybackInterruptedError, Player } from '@deademx/deadlock';
+
+import DemoFile from '@deademx/examples-common/data/DemoFile.js';
+import DemoProvider from '@deademx/examples-common/data/DemoProvider.js';
+
+const PLAYBACK_DURATION_MS = 1000;
+const PLAYBACK_SPEED = 16;
+
+(async () => {
+    const reader = await DemoProvider.resolve(DemoFile.DEADLOCK_REPLAY_112633589);
+    const player = new Player(ParserConfiguration.DEFAULT, Logger.CONSOLE_WARN);
+
+    const printTick = () => {
+        console.log(`Current tick: [ ${player.getCurrentTick()} ]`);
+    };
+
+    await player.load(reader);
+
+    console.log(`Loaded. Ticks: [ ${player.getFirstTick()} ] - [ ${player.getLastTick()} ]`);
+
+    printTick();
+
+    player.nextTick();
+    player.nextTick();
+
+    printTick();
+
+    const middleTick = Math.floor((player.getFirstTick() + player.getLastTick()) / 2);
+
+    await player.seekToTick(middleTick);
+
+    printTick();
+
+    console.log(`Playing at speed [ ${PLAYBACK_SPEED}x ] for [ ${PLAYBACK_DURATION_MS} ] ms ...`);
+
+    const playPromise = player.play(PLAYBACK_SPEED)
+        .catch((err) => {
+            if (!(err instanceof PlaybackInterruptedError)) {
+                throw err;
+            }
+        });
+
+    setTimeout(() => {
+        console.log('Stopping ...');
+
+        player.pause();
+    }, PLAYBACK_DURATION_MS);
+
+    await playPromise;
+
+    printTick();
+
+    await player.seekToTick(player.getLastTick());
+
+    printTick();
+
+    await player.dispose();
+})();

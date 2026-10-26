@@ -1,17 +1,21 @@
-import Assert from '#core/Assert.js';
-import BitBuffer from '#core/BitBuffer.js';
+/** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
-import Class from '#data/Class.js';
-import Demo from '#data/Demo.js';
+import Assert from '../core/Assert.js';
+import BitBuffer from '../core/BitBuffer.js';
 
-import FieldDefinition from '#data/fields/FieldDefinition.js';
-import FieldFactory from '#data/fields/FieldFactory.js';
-import Serializer from '#data/fields/Serializer.js';
-import SerializerKey from '#data/fields/SerializerKey.js';
+import Class from '../data/Class.js';
+import Demo from '../data/Demo.js';
 
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import Field from '../data/fields/Field.js';
+import FieldDefinition from '../data/fields/FieldDefinition.js';
+import FieldFactory from '../data/fields/FieldFactory.js';
+import Serializer from '../data/fields/Serializer.js';
+import SerializerKey from '../data/fields/SerializerKey.js';
 
-import SchemaRegistry from '#src/SchemaRegistry.js';
+import StringTableHandler from './StringTableHandler.js';
+
+import SchemaRegistry from '../SchemaRegistry.js';
 
 class DemoPacketHandler {
     /**
@@ -25,10 +29,14 @@ class DemoPacketHandler {
         Assert.isTrue(demo instanceof Demo);
         Assert.isTrue(stringTableHandler instanceof StringTableHandler);
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._demo = demo;
+        /** @private */
         this._stringTableHandler = stringTableHandler;
 
+        /** @private */
         this._fieldFactory = new FieldFactory(registry.getFieldRuleRegistry());
     }
 
@@ -39,6 +47,7 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemSendTables(demoPacket) {
+        /** @type {*} */
         const message = demoPacket.data;
 
         const bitBuffer = new BitBuffer(message.data);
@@ -46,13 +55,17 @@ class DemoPacketHandler {
         const size = bitBuffer.readUVarInt32();
         const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
 
-        const decoded = this._registry.getSendTablesSerializerDecoder().decode(payload);
+        const sendTablesDecoder = this._registry.getSendTablesSerializerDecoder();
+
+        Assert.exists(sendTablesDecoder, 'SendTables serializer decoder is not registered');
+
+        const decoded = sendTablesDecoder.decode(payload);
 
         const fields = new Map();
         const symbols = decoded.symbols;
 
         // Step 1: initialize serializers
-        decoded.serializers.forEach((serializerRaw) => {
+        decoded.serializers.forEach((/** @type {*} */ serializerRaw) => {
             const name = decoded.symbols[serializerRaw.serializerNameSym];
             const version = serializerRaw.serializerVersion;
 
@@ -62,7 +75,7 @@ class DemoPacketHandler {
         });
 
         // Step 2: adding fields
-        decoded.serializers.forEach((serializerRaw) => {
+        decoded.serializers.forEach((/** @type {*} */ serializerRaw) => {
             const name = decoded.symbols[serializerRaw.serializerNameSym];
             const version = serializerRaw.serializerVersion;
 
@@ -70,7 +83,9 @@ class DemoPacketHandler {
 
             const serializer = this._demo.getSerializerByKey(serializerKey);
 
-            serializerRaw.fieldsIndex.forEach((fieldIndex) => {
+            Assert.exists(serializer, `Serializer [ ${serializerKey.toString()} ] is not registered`);
+
+            serializerRaw.fieldsIndex.forEach((/** @type {number} */ fieldIndex) => {
                 let field = fields.get(fieldIndex) || null;
 
                 if (field === null) {
@@ -88,38 +103,37 @@ class DemoPacketHandler {
                         const serializerName = symbols[fieldSerializerNameSym];
                         const serializerVersion = fieldRaw.fieldSerializerVersion;
 
-                        const serializerKey = new SerializerKey(serializerName, serializerVersion);
+                        const fieldSerializerKey = new SerializerKey(serializerName, serializerVersion);
 
-                        const existing = this._demo.getSerializerByKey(serializerKey);
+                        const existing = this._demo.getSerializerByKey(fieldSerializerKey);
 
                         if (existing === null) {
-                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${serializerKey.toString()} ] is not registered`);
+                            throw new Error(`Field [ ${symbols[fieldRaw.varNameSym]} ] has a serializer, but serializer [ ${fieldSerializerKey.toString()} ] is not registered`);
                         }
 
                         fieldSerializer = existing;
                     }
 
-                    const varEncoderSym = fieldRaw.varEncoderSym;
                     const varNameSym = fieldRaw.varNameSym;
                     const varTypeSym = fieldRaw.varTypeSym;
                     const sendNodeSym = fieldRaw.sendNodeSym;
 
-                    const name = symbols[varNameSym];
+                    const varName = symbols[varNameSym];
                     const definition = FieldDefinition.parse(symbols[varTypeSym]);
 
                     const instructionsRaw = {
-                        encoder: typeof symbols[varEncoderSym] === 'string' ? symbols[varEncoderSym] : null,
-                        encoderFlags: Number.isInteger(fieldRaw.encodeFlags) ? fieldRaw.encodeFlags : null,
-                        bitCount: Number.isInteger(fieldRaw.bitCount) ? fieldRaw.bitCount : null,
-                        valueLow: typeof fieldRaw.lowValue === 'number' ? fieldRaw.lowValue : null,
-                        valueHigh: typeof fieldRaw.highValue === 'number' ? fieldRaw.highValue : null
+                        encoder: Object.hasOwn(fieldRaw, 'varEncoderSym') ? symbols[fieldRaw.varEncoderSym] : null,
+                        encoderFlags: Object.hasOwn(fieldRaw, 'encodeFlags') ? fieldRaw.encodeFlags : null,
+                        bitCount: Object.hasOwn(fieldRaw, 'bitCount') ? fieldRaw.bitCount : null,
+                        valueLow: Object.hasOwn(fieldRaw, 'lowValue') ? fieldRaw.lowValue : null,
+                        valueHigh: Object.hasOwn(fieldRaw, 'highValue') ? fieldRaw.highValue : null
                     };
 
-                    const sendNode = symbols[sendNodeSym].split('.').filter(s => s.length > 0);
+                    const sendNode = parseSendNode(symbols[sendNodeSym]);
 
                     // TODO: polymorphic types
 
-                    field = this._fieldFactory.create(name, definition, sendNode, instructionsRaw, fieldSerializer);
+                    field = this._fieldFactory.create(sendNode, varName, definition, instructionsRaw, fieldSerializer);
                 }
 
                 serializer.push(field);
@@ -136,9 +150,10 @@ class DemoPacketHandler {
      * @param {DemoPacket} demoPacket
      */
     handleDemClassInfo(demoPacket) {
+        /** @type {*} */
         const classInfo = demoPacket.data;
 
-        classInfo.classes.forEach((data) => {
+        classInfo.classes.forEach((/** @type {*} */ data) => {
             const key = new SerializerKey(data.networkName, 0);
             const serializer = this._demo.getSerializerByKey(key);
 
@@ -157,20 +172,21 @@ class DemoPacketHandler {
      *
      * @public
      * @param {DemoPacket} demoPacket
+     * @returns {Array<StringTableMutationEvent>}
      */
     handleDemStringTables(demoPacket) {
-        this._stringTableHandler.handleInstantiate(demoPacket.data);
+        return this._stringTableHandler.extractInstantiate(demoPacket.data);
     }
+}
 
-    /**
-     * Handles tables data from the {@link DemoPacketType.DEM_FULL_PACKET} (ID = 13).
-     *
-     * @public
-     * @param {DemoPacket} demoPacket
-     */
-    handleDemFullPacketTables(demoPacket) {
-        this._stringTableHandler.handleSnapshot(demoPacket.data.stringTables);
-    }
+const IGNORED_SEND_NODE_SEGMENTS = new Set([ '(root)' ]); // '(root)' comes from older dota2 demos.
+
+/**
+ * @param {string} symbol
+ * @returns {Array<string>}
+ */
+function parseSendNode(symbol) {
+    return Field.splitName(symbol).filter(segment => segment.length > 0 && !IGNORED_SEND_NODE_SEGMENTS.has(segment));
 }
 
 export default DemoPacketHandler;

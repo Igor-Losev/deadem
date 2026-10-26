@@ -1,4 +1,8 @@
-import Assert from '#core/Assert.js';
+/** @import StringTable from './tables/string/StringTable.js' */
+/** @import StringTableEntry from './tables/string/StringTableEntry.js' */
+/** @import StringTableMutationEvent from './tables/string/StringTableMutationEvent.js' */
+
+import Assert from '../core/Assert.js';
 
 import Class from './Class.js';
 import ClassBaseline from './ClassBaseline.js';
@@ -7,7 +11,7 @@ import UserCommand from './UserCommand.js';
 
 import Entity from './entity/Entity.js';
 
-import StringTableEvent from './enums/StringTableEvent.js';
+import StringTableOperation from './enums/StringTableOperation.js';
 import StringTableType from './enums/StringTableType.js';
 
 import Serializer from './fields/Serializer.js';
@@ -21,27 +25,35 @@ class Demo {
      * @constructor
      */
     constructor() {
+        /** @private @type {Map<number, Map<number, ClassBaseline>>} */
+        this._alternateBaselines = new Map();
+
+        /** @private @type {Map<number, ClassBaseline>} */
         this._classBaselines = new Map();
 
+        /** @private @type {{ byId: Map<number, Class>, byName: Map<string, Class> }} */
         this._classes = {
             byId: new Map(),
             byName: new Map()
         };
-        
+
+        /** @private @type {{ byIndex: Array<Entity|undefined>, byClassName: Map<string, Set<Entity>>, count: number }} */
         this._entities = {
             byIndex: [ ],
             byClassName: new Map(),
             count: 0
         };
 
+        /** @private @type {Map<string, Serializer>} */
         this._serializers = new Map();
+
+        /** @private @type {Server|null} */
         this._server = null;
 
+        /** @private */
         this._stringTableContainer = new StringTableContainer();
 
-        this._stringTableContainer.subscribe(StringTableEvent.TABLE_CHANGED, this._handleTableChanged.bind(this));
-        this._stringTableContainer.subscribe(StringTableEvent.TABLE_REMOVED, this._handleTableRemoved.bind(this));
-
+        /** @private */
         this._userCommands = new Map();
     }
 
@@ -62,6 +74,24 @@ class Demo {
     }
 
     /**
+     * @internal
+     * @public
+     * @param {Array<StringTableMutationEvent>} events
+     */
+    applyStringTableEvents(events) {
+        for (let i = 0; i < events.length; i++) {
+            const event = events[i];
+
+            if (event.operation === StringTableOperation.REMOVE) {
+                this._handleTableRemoved(event.table);
+            } else {
+                this._handleTableChanged(event.table, event.entries);
+            }
+        }
+    }
+
+    /**
+     * @internal
      * @public
      * @param {number} index
      * @returns {Entity|null}
@@ -84,6 +114,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} slot
      * @returns {UserCommand|null}
@@ -96,6 +127,19 @@ class Demo {
         this._userCommands.delete(slot);
 
         return command;
+    }
+
+    /**
+     * @public
+     * @param {number} classId
+     * @param {number} index
+     * @returns {ClassBaseline|null}
+     */
+    getAlternateBaseline(classId, index) {
+        Assert.isTrue(Number.isInteger(classId));
+        Assert.isTrue(Number.isInteger(index));
+
+        return this._alternateBaselines.get(classId)?.get(index) || null;
     }
 
     /**
@@ -122,7 +166,7 @@ class Demo {
 
     /**
      * @public
-     * @param {String} name
+     * @param {string} name
      * @returns {Class|null}
      */
     getClassByName(name) {
@@ -153,6 +197,14 @@ class Demo {
      */
     getEntities() {
         return Array.from(this.getEntityIterator());
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getEntityCount() {
+        return this._entities.count;
     }
 
     /**
@@ -224,6 +276,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {SerializerKey} key
      * @returns {Serializer|null}
@@ -236,7 +289,7 @@ class Demo {
 
     /**
      * @public
-     * @returns {{ classBaselines: number, classes: number, entities: number, serializers: number }} 
+     * @returns {{ classBaselines: number, classes: number, entities: number, serializers: number }}
      */
     getStats() {
         return {
@@ -267,6 +320,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Class} clazz
      */
@@ -278,6 +332,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Entity} entity
      */
@@ -297,6 +352,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Serializer} serializer
      */
@@ -307,6 +363,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {Server} server
      */
@@ -317,6 +374,7 @@ class Demo {
     }
 
     /**
+     * @internal
      * @public
      * @param {UserCommand} command
      */
@@ -329,9 +387,11 @@ class Demo {
     /**
      * Resets all state to its initial values.
      *
+     * @internal
      * @public
      */
     reset() {
+        this._alternateBaselines.clear();
         this._classBaselines.clear();
         this._classes.byId.clear();
         this._classes.byName.clear();
@@ -362,21 +422,32 @@ class Demo {
 
     /**
      * @protected
-     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      * @param {Array<StringTableEntry>} entries — the affected entries only
      */
-    _handleTableChanged(stringTableContainer, stringTable, entries) {
+    _handleTableChanged(stringTable, entries) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
                 entries.forEach((entry) => {
+                    const value = entry.value;
+
+                    Assert.isTrue(value === null || value instanceof Uint8Array);
+
+                    const alternate = ALTERNATE_BASELINE_KEY.exec(entry.key);
+
+                    if (alternate !== null) {
+                        this._registerAlternateBaseline(Number(alternate[1]), Number(alternate[2]), value);
+
+                        return;
+                    }
+
                     const classId = parseInt(entry.key);
 
                     if (Number.isNaN(classId)) {
                         throw new Error(`Unexpected classId [ ${entry.key} ] for table [ ${stringTable.type.code} ]`);
                     }
 
-                    this._registerClassBaseline(classId, entry.value);
+                    this._registerClassBaseline(classId, value);
                 });
 
                 break;
@@ -389,12 +460,12 @@ class Demo {
 
     /**
      * @protected
-     * @param {StringTableContainer} stringTableContainer
      * @param {StringTable} stringTable
      */
-    _handleTableRemoved(stringTableContainer, stringTable) {
+    _handleTableRemoved(stringTable) {
         switch (stringTable.type) {
             case StringTableType.INSTANCE_BASE_LINE: {
+                this._alternateBaselines.clear();
                 this._classBaselines.clear();
 
                 break;
@@ -403,6 +474,31 @@ class Demo {
                 break;
             }
         }
+    }
+
+    /**
+     * @protected
+     * @param {number} classId
+     * @param {number} index
+     * @param {Uint8Array|null} raw
+     */
+    _registerAlternateBaseline(classId, index, raw) {
+        let baselines = this._alternateBaselines.get(classId) || null;
+
+        if (baselines === null) {
+            baselines = new Map();
+
+            this._alternateBaselines.set(classId, baselines);
+        }
+
+        const incoming = new ClassBaseline(classId, raw);
+        const existing = baselines.get(index) || null;
+
+        if (existing !== null && existing.compare(incoming)) {
+            return;
+        }
+
+        baselines.set(index, incoming);
     }
 
     /**
@@ -441,5 +537,7 @@ class Demo {
 }
 
 const EMPTY_ENTITY_SET = new Set();
+
+const ALTERNATE_BASELINE_KEY = /^(\d+):(\d+)$/;
 
 export default Demo;

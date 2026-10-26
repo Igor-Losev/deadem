@@ -1,10 +1,25 @@
-import Logger from '#core/Logger.js';
+/** @import SchemaRegistry from './SchemaRegistry.js' */
+/** @import { InterceptorMap, InterceptorPreStage, NodeReadable } from './ParserEngine.js' */
 
-import DemoSource from '#data/enums/DemoSource.js';
+/** @import Demo from './data/Demo.js' */
+/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
+
+/** @import InterceptorStage from './data/enums/InterceptorStage.js' */
+
+/** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from './trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from './trackers/PerformanceTracker.js' */
+
+import Logger from './core/Logger.js';
+
+import DemoSource from './data/enums/DemoSource.js';
 
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserEngine from './ParserEngine.js';
 
+/**
+ * @template [M=unknown]
+ */
 class Parser {
     /**
      * @constructor
@@ -13,6 +28,7 @@ class Parser {
      * @param {Logger=} logger
      */
     constructor(registry, configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
+        /** @private */
         this._engine = new ParserEngine(registry, configuration, logger);
     }
 
@@ -42,7 +58,7 @@ class Parser {
      * This is a lightweight pass that only extracts {@link DemoPacketRaw} objects.
      *
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
@@ -60,7 +76,7 @@ class Parser {
 
     /**
      * @public
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     getIsDisposed() {
         return this._engine.disposed;
@@ -104,7 +120,7 @@ class Parser {
 
     /**
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @param {boolean} [objectMode=false]
      * @returns {Promise<void>}
@@ -125,20 +141,22 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {keyof InterceptorMap} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        return this._engine.registerPostInterceptor(stage, interceptor);
+        return this._engine.interceptors.registerPost(stage, interceptor);
     }
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {InterceptorPreStage} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        return this._engine.registerPreInterceptor(stage, interceptor);
+        return this._engine.interceptors.registerPre(stage, interceptor);
     }
 
     /**
@@ -152,22 +170,24 @@ class Parser {
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {keyof InterceptorMap} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        return this._engine.unregisterPostInterceptor(stage, interceptor);
+        return this._engine.interceptors.unregisterPost(stage, interceptor);
     }
 
     /**
      * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
+     * @template {InterceptorPreStage} C
+     * @param {InterceptorStage<C>} stage
+     * @param {InterceptorMap<M>[C]} interceptor
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        return this._engine.unregisterPreInterceptor(stage, interceptor);
+        return this._engine.interceptors.unregisterPre(stage, interceptor);
     }
 }
 

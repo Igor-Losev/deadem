@@ -1,35 +1,71 @@
-import Assert from '#core/Assert.js';
-import Logger from '#core/Logger.js';
+/** @import DeferredPromise from './core/DeferredPromise.js' */
+/** @import DemoPacket from './data/DemoPacket.js' */
+/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
+/** @import MessagePacket from './data/MessagePacket.js' */
+/** @import EntityMutationEvent from './data/entity/EntityMutationEvent.js' */
+/** @import UserCommandEvent from './data/UserCommandEvent.js' */
+/** @import StringTableMutationEvent from './data/tables/string/StringTableMutationEvent.js' */
+
+import Assert from './core/Assert.js';
+import Logger from './core/Logger.js';
+import PauseControl from './core/PauseControl.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
-import DeferredPromise from '#data/DeferredPromise.js';
-import Demo from '#data/Demo.js';
+import Demo from './data/Demo.js';
 
-import DemoSource from '#data/enums/DemoSource.js';
-import InterceptorStage from '#data/enums/InterceptorStage.js';
-import PerformanceTrackerCategory from '#data/enums/PerformanceTrackerCategory.js';
+import DemoSource from './data/enums/DemoSource.js';
+import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
-import DemoEntityHandler from '#handlers/DemoEntityHandler.js';
-import DemoMessageHandler from '#handlers/DemoMessageHandler.js';
-import DemoPacketHandler from '#handlers/DemoPacketHandler.js';
-import StringTableHandler from '#handlers/StringTableHandler.js';
+import DemoEntityHandler from './handlers/DemoEntityHandler.js';
+import DemoMessageHandler from './handlers/DemoMessageHandler.js';
+import DemoPacketHandler from './handlers/DemoPacketHandler.js';
+import StringTableHandler from './handlers/StringTableHandler.js';
 
-import DemoStreamBufferSplitter from '#stream/DemoStreamBufferSplitter.js';
-import DemoStreamEventLoopBreaker from '#stream/DemoStreamEventLoopBreaker.js';
-import DemoStreamPacketAnalyzer from '#stream/DemoStreamPacketAnalyzer.js';
-import DemoStreamPacketExtractor from '#stream/DemoStreamPacketExtractor.js';
-import DemoStreamPacketParser from '#stream/DemoStreamPacketParser.js';
-import DemoStreamPacketPrioritizer from '#stream/DemoStreamPacketPrioritizer.js';
-import DemoStreamPacketResequencer from '#stream/DemoStreamPacketResequencer.js';
+import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
+import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
+import DemoStreamPacketApplier from './stream/DemoStreamPacketApplier.js';
+import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
+import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
+import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
+import DemoStreamPacketResequencer from './stream/DemoStreamPacketResequencer.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
-import PacketTracker from '#trackers/PacketTracker.js';
-import PerformanceTracker from '#trackers/PerformanceTracker.js';
+import PacketTracker from './trackers/PacketTracker.js';
+import PerformanceTracker from './trackers/PerformanceTracker.js';
 
+import InterceptorRegistry from './InterceptorRegistry.js';
 import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
 import SchemaRegistry from './SchemaRegistry.js';
+
+/**
+ * Interceptor callback. Receives stage-specific arguments — see
+ * {@link InterceptorStage} for the shapes passed at each stage.
+ *
+ * @typedef {(...args: Array<*>) => void} InterceptorFn
+ */
+
+/**
+ * Callback shape fired at each {@link InterceptorStage}.
+ *
+ * @template [M=unknown]
+ * @typedef {{
+ *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
+ *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_PacketEntities'>, events: Array<EntityMutationEvent>) => void,
+ *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
+ *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_CreateStringTable'|'CSVCMsg_UpdateStringTable'|'CSVCMsg_ClearAllStringTables'>|null, events: Array<StringTableMutationEvent>) => void,
+ *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_UserCommands'>, events: Array<UserCommandEvent>) => void
+ * }} InterceptorMap
+ */
+
+/**
+ * Stages that have a pre phase. `USER_COMMAND` is post-only.
+ *
+ * @typedef {Exclude<keyof InterceptorMap, 'USER_COMMAND'>} InterceptorPreStage
+ */
+
+/** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
 
 class ParserEngine {
     /**
@@ -43,42 +79,53 @@ class ParserEngine {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        /** @private */
         this._registry = registry;
+        /** @private */
         this._configuration = configuration;
         this._logger = logger;
 
+        /** @private */
         this._codec = new PacketCodec(registry);
+        /** @private */
         this._demo = new Demo();
 
         const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
 
+        /** @private */
         this._filters = {
-            entity: configuration.getIsEntityClassAllowed.bind(configuration),
-            message: configuration.getIsMessagePacketTypeAllowed.bind(configuration)
+            entity: configuration.entityClassFilter,
+            message: configuration.messagePacketFilter
         };
 
+        /** @private */
         this._handlers = {
             demoEntity: new DemoEntityHandler(this._demo),
             demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
             demoPacket: new DemoPacketHandler(registry, this._demo, stringTableHandler),
-            stringTable: new StringTableHandler(registry, this._demo.stringTableContainer, logger)
+            stringTable: stringTableHandler
         };
 
-        this._interceptors = this._createInterceptors();
+        /** @private */
+        this._interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
+        /** @private */
+        this._pause = new PauseControl();
 
+        /** @private */
         this._trackers = {
             memory: new MemoryTracker(),
             packet: new PacketTracker(registry),
             performance: new PerformanceTracker()
         };
 
+        /** @private */
         this._disposed = false;
+        /** @private */
         this._finished = false;
+        /** @private */
         this._pipeline = null;
+        /** @private */
         this._started = false;
-
-        this._paused = false;
-        this._pausePromise = null;
     }
 
     /**
@@ -115,7 +162,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {{pre: *[], post: *[]}}
+     * @returns {InterceptorRegistry}
      */
     get interceptors() {
         return this._interceptors;
@@ -134,15 +181,15 @@ class ParserEngine {
      * @returns {boolean}
      */
     get paused() {
-        return this._paused;
+        return this._pause.paused;
     }
 
     /**
      * @public
-     * @returns {DeferredPromise|null}
+     * @returns {DeferredPromise<void>|null}
      */
     get pausePromise() {
-        return this._pausePromise;
+        return this._pause.deferred;
     }
 
     /**
@@ -169,7 +216,7 @@ class ParserEngine {
     abort() {
         this._validateAvailability();
 
-        this._unpause();
+        this._pause.release();
 
         if (this._pipeline !== null) {
             this._pipeline.abort();
@@ -193,7 +240,7 @@ class ParserEngine {
         this._disposed = true;
 
         this._demo.reset();
-        this._interceptors = this._createInterceptors();
+        this._interceptors.reset();
     }
 
     /**
@@ -218,16 +265,6 @@ class ParserEngine {
      */
     getDemoPacketHandler() {
         return this._handlers.demoPacket;
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @returns {boolean}
-     */
-    getIsInterceptorRegistered(stage) {
-        return this._interceptors.pre[stage.id].length > 0 ||
-            this._interceptors.post[stage.id].length > 0;
     }
 
     /**
@@ -263,43 +300,18 @@ class ParserEngine {
     }
 
     /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    interceptPost(stage, ...args) {
-        const interceptors = this._interceptors.post[stage.id];
-
-        for (let i = 0; i < interceptors.length; i++) {
-            interceptors[i](...args);
-        }
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {...*} args
-     */
-    interceptPre(stage, ...args) {
-        const interceptors = this._interceptors.pre[stage.id];
-
-        for (let i = 0; i < interceptors.length; i++) {
-            interceptors[i](...args);
-        }
-    }
-
-    /**
      * Extracts raw packets from a demo stream without parsing them.
      * This is a lightweight first pass that only extracts {@link DemoPacketRaw} instances.
      *
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} source
      * @returns {Promise<Array<DemoPacketRaw>>}
      */
     async extract(reader, source) {
         await this._prepareRun();
 
+        /** @type {Array<*>} */
         const packets = [];
 
         const chain = [
@@ -316,7 +328,7 @@ class ParserEngine {
 
             const collector = new WritableSink((packet) => packets.push(packet));
 
-            this._pipeline = new Pipeline(reader, chain, collector);
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, collector);
 
             await this._pipeline.ready();
 
@@ -341,7 +353,7 @@ class ParserEngine {
 
     /**
      * @public
-     * @param {Stream.Readable|ReadableStream} reader
+     * @param {NodeReadable|ReadableStream} reader
      * @param {DemoSource} [source=DemoSource.REPLAY]
      * @param {boolean} [objectMode=false]
      * @returns {Promise<void>}
@@ -367,7 +379,7 @@ class ParserEngine {
         chain.push(
             new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
             new DemoStreamPacketPrioritizer(this, highWaterMark),
-            new DemoStreamPacketAnalyzer(this, highWaterMark)
+            new DemoStreamPacketApplier(this, highWaterMark)
         );
 
         this._started = true;
@@ -378,7 +390,7 @@ class ParserEngine {
             this._trackers.memory.on();
             this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
 
-            this._pipeline = new Pipeline(reader, chain);
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain);
 
             await this._pipeline.ready();
         } catch (error) {
@@ -410,44 +422,7 @@ class ParserEngine {
             throw new Error('Unable to pause: engine is not running');
         }
 
-        if (this._paused) {
-            throw new Error('Unable to pause: engine is already paused');
-        }
-
-        this._paused = true;
-        this._pausePromise = new DeferredPromise();
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     */
-    registerPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        if (stage === InterceptorStage.USER_COMMAND && this._registry.getUserCommandDecoder() === null) {
-            throw new Error('InterceptorStage.USER_COMMAND is unsupported: this game registers no user command decoder');
-        }
-
-        this._interceptors.post[stage.id] = [ ...this._interceptors.post[stage.id], interceptor ];
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     */
-    registerPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        if (stage === InterceptorStage.USER_COMMAND) {
-            throw new Error('InterceptorStage.USER_COMMAND has no pre phase: use registerPostInterceptor');
-        }
-
-        this._interceptors.pre[stage.id] = [ ...this._interceptors.pre[stage.id], interceptor ];
+        this._pause.pause();
     }
 
     /**
@@ -458,58 +433,10 @@ class ParserEngine {
     resume() {
         this._validateAvailability();
 
-        if (!this._paused) {
-            throw new Error('Unable to resume: engine is not paused');
-        }
-
-        this._unpause();
+        this._pause.resume();
     }
 
     /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     * @returns {boolean}
-     */
-    unregisterPostInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const interceptors = this._interceptors.post[stage.id];
-        const filtered = interceptors.filter(i => i !== interceptor);
-
-        if (filtered.length === interceptors.length) {
-            return false;
-        }
-
-        this._interceptors.post[stage.id] = filtered;
-
-        return true;
-    }
-
-    /**
-     * @public
-     * @param {InterceptorStage} stage
-     * @param {Function} interceptor
-     * @returns {boolean}
-     */
-    unregisterPreInterceptor(stage, interceptor) {
-        Assert.isTrue(stage instanceof InterceptorStage);
-        Assert.isTrue(typeof interceptor === 'function');
-
-        const interceptors = this._interceptors.pre[stage.id];
-        const filtered = interceptors.filter(i => i !== interceptor);
-
-        if (filtered.length === interceptors.length) {
-            return false;
-        }
-
-        this._interceptors.pre[stage.id] = filtered;
-
-        return true;
-    }
-
-    /** 
      * @protected
      */
     async _prepareRun() {
@@ -519,27 +446,12 @@ class ParserEngine {
             throw new Error('Unable to run parser: engine is already running');
         }
 
-        this._unpause();
+        this._pause.release();
 
         this._demo.reset();
 
         this._started = false;
         this._finished = false;
-    }
-
-    /**
-     * Resolves the pause promise and clears pause state.
-     *
-     * @protected
-     */
-    _unpause() {
-        if (!this._paused) {
-            return;
-        }
-
-        this._paused = false;
-        this._pausePromise.resolve();
-        this._pausePromise = null;
     }
 
     /**
@@ -555,20 +467,7 @@ class ParserEngine {
 
     /**
      * @private
-     * @returns {{pre: Array[], post: Array[]}}
-     */
-    _createInterceptors() {
-        const size = InterceptorStage.getAll().length;
-
-        return {
-            pre: Array.from({ length: size }, () => []),
-            post: Array.from({ length: size }, () => [])
-        };
-    }
-
-    /**
-     * @private
-     * @param {Error} error
+     * @param {*} error
      * @returns {boolean}
      */
     _getIsAbortError(error) {

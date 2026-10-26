@@ -1,5 +1,10 @@
-import Assert from '#core/Assert.js';
+/** @import ParserEngine from '../ParserEngine.js' */
 
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+
+import Assert from '../core/Assert.js';
+
+import EventLoop from '#core/EventLoop.js';
 import Transform from '#core/stream/Transform.js';
 
 /**
@@ -20,33 +25,28 @@ class DemoStreamEventLoopBreaker extends Transform {
 
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._breakInterval = breakInterval;
 
+        /** @private */
         this._counter = 0;
     }
 
     /**
-     * @public
+     * @protected
      * @param {DemoPacketRaw} demoPacketRaw
      */
     async _handle(demoPacketRaw) {
         this._counter += 1;
 
         if (this._counter % this._breakInterval === 0) {
-            await pauseTimeout(0);
+            await EventLoop.yield();
         }
 
         this._push(demoPacketRaw);
     }
-}
-
-function pauseTimeout(ms) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve();
-        }, ms);
-    });
 }
 
 export default DemoStreamEventLoopBreaker;

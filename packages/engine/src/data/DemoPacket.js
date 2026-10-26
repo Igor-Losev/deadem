@@ -1,14 +1,22 @@
-import Assert from '#core/Assert.js';
+/** @import SchemaRegistry from '../SchemaRegistry.js' */
+/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
+/** @import { MessagePayload } from './MessagePacket.js' */
 
-import DemoPacketType from '#data/enums/DemoPacketType.js';
+import Assert from '../core/Assert.js';
 
+import DemoPacketType from './enums/DemoPacketType.js';
+
+/**
+ * @template [M=unknown]
+ * @template {string|null} [N=string|null]
+ */
 class DemoPacket {
     /**
      * @public
      * @constructor
      *
      * @param {number} sequence
-     * @param {DemoPacketType} type
+     * @param {DemoPacketType<N>} type
      * @param {number} tick
      * @param {*} data
      */
@@ -17,10 +25,15 @@ class DemoPacket {
         Assert.isTrue(type instanceof DemoPacketType);
         Assert.isTrue(Number.isInteger(tick));
 
+        /** @private */
         this._sequence = sequence;
+        /** @private */
         this._ordinal = sequence;
+        /** @private */
         this._type = type;
+        /** @private */
         this._tick = tick;
+        /** @private */
         this._data = data;
     }
 
@@ -41,6 +54,7 @@ class DemoPacket {
     }
 
     /**
+     * @internal
      * @public
      * @param {number} value
      */
@@ -50,7 +64,7 @@ class DemoPacket {
 
     /**
      * @public
-     * @returns {DemoPacketType}
+     * @returns {DemoPacketType<N>}
      */
     get type() {
         return this._type;
@@ -66,10 +80,20 @@ class DemoPacket {
 
     /**
      * @public
-     * @returns {*}
+     * @returns {DemoPayload<M, N>}
      */
     get data() {
         return this._data;
+    }
+
+    /**
+     * @public
+     * @template {string|null} T
+     * @param {DemoPacketType<T>} type
+     * @returns {this is DemoPacket<M, T>}
+     */
+    is(type) {
+        return this._type.code === type.code;
     }
 
     /**
@@ -125,7 +149,12 @@ class DemoPacket {
 }
 
 /**
- * @typedef {{sequence: number, type: String, tick: number, data: *}} DemoPacketObject
+ * @typedef {{sequence: number, type: string, tick: number, data: *}} DemoPacketObject
+ */
+
+/**
+ * @template M, N
+ * @typedef {N extends 'CDemoPacket'|'CDemoFullPacket' ? DemoPacketHeavyData<M> : MessagePayload<M, N>} DemoPayload
  */
 
 export default DemoPacket;

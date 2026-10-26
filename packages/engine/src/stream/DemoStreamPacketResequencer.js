@@ -1,3 +1,7 @@
+/** @import ParserEngine from '../ParserEngine.js' */
+
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+
 import Transform from '#core/stream/Transform.js';
 
 /**
@@ -16,7 +20,9 @@ class DemoStreamPacketResequencer extends Transform {
     constructor(engine, highWaterMark) {
         super(highWaterMark);
 
+        /** @private */
         this._engine = engine;
+        /** @private */
         this._ordinal = 0;
     }
 

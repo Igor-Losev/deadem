@@ -1,6 +1,15 @@
-import Assert from '#core/Assert.js';
+/** @import FieldTableFixed from './models/FieldTableFixed.js' */
+/** @import FieldTableVariable from './models/FieldTableVariable.js' */
+/** @import { FieldDecoderFn } from './decoding/FieldDecoder.js' */
+/** @import FieldStorageDescriptor from './decoding/FieldStorageDescriptor.js' */
+/** @import FieldPath from './path/FieldPath.js' */
 
-import FieldModel from '#data/enums/FieldModel.js';
+/** @import FieldDefinition from './FieldDefinition.js' */
+/** @import FieldExtractor from './FieldExtractor.js' */
+
+import Assert from '../../core/Assert.js';
+
+import FieldModel from '../enums/FieldModel.js';
 
 import Field from './Field.js';
 import FieldAccessor from './FieldAccessor.js';
@@ -13,7 +22,7 @@ class Serializer {
     /**
      * @public
      * @constructor
-     * @param {String} name
+     * @param {string} name
      * @param {number} version
      * @param {Array<Field>} fields
      */
@@ -22,12 +31,18 @@ class Serializer {
         Assert.isTrue(Number.isInteger(version));
         Assert.isTrue(Array.isArray(fields) && fields.every(f => f instanceof Field));
 
+        /** @private */
         this._key = new SerializerKey(name, version);
+        /** @private */
         this._fields = fields;
 
+        /** @private @type {Array<FieldDecoderFn|null>} */
         this._decoderCache = [];
+        /** @private @type {Array<*>} */
         this._definitionCache = [];
+        /** @private @type {Array<*>} */
         this._nameCache = [];
+        /** @private @type {Array<*>} */
         this._storageCache = [];
     }
 
@@ -48,7 +63,7 @@ class Serializer {
     }
 
     /**
-     * Returns `true` when [segment] is an element index (e.g. `'0000'`).
+     * Returns `true` when the segment is an element index (e.g. `'0000'`).
      *
      * @public
      * @static
@@ -71,7 +86,7 @@ class Serializer {
      * @returns {string}
      */
     static formatElementIndex(fieldName, index) {
-        return `${fieldName}.${String(index).padStart(ELEMENT_INDEX_LENGTH, '0')}`;
+        return Field.joinName([ fieldName, String(index).padStart(ELEMENT_INDEX_LENGTH, '0') ]);
     }
 
     /**
@@ -80,13 +95,13 @@ class Serializer {
      * @public
      * @param {FieldPath} fieldPath
      * @param {number=} fieldPathIndex
-     * @returns {FieldDecoder}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPath(fieldPath, fieldPathIndex = 0) {
         if (fieldPathIndex === 0) {
-            const cached = this._decoderCache[fieldPath.id] ?? null;
+            const cached = this._decoderCache[fieldPath.id];
 
-            if (cached !== null) {
+            if (cached !== undefined && cached !== null) {
                 return cached;
             }
         }
@@ -95,7 +110,13 @@ class Serializer {
         const decoder = field.getDecoderForFieldPath(fieldPath, fieldPathIndex + 1);
 
         if (fieldPathIndex === 0) {
-            this._decoderCache[fieldPath.id] = decoder;
+            const cache = this._decoderCache;
+
+            for (let i = cache.length; i <= fieldPath.id; i++) {
+                cache.push(null);
+            }
+
+            cache[fieldPath.id] = decoder;
         }
 
         return decoder;
@@ -106,12 +127,12 @@ class Serializer {
      *
      * @public
      * @param {number} fieldPathId
-     * @returns {FieldDecoder}
+     * @returns {FieldDecoderFn}
      */
     getDecoderForFieldPathId(fieldPathId) {
-        const cached = this._decoderCache[fieldPathId] ?? null;
+        const cached = this._decoderCache[fieldPathId];
 
-        if (cached !== null) {
+        if (cached !== undefined && cached !== null) {
             return cached;
         }
 
@@ -164,80 +185,72 @@ class Serializer {
 
     /**
      * Resolves a flattened name to a {@link FieldAccessor}. Walks the schema
-     * segment by segment, independently of entity state. Returns `null` when
-     * the name does not resolve.
+     * segment by segment. Returns `null` when the name does not resolve.
      *
-     *     'm_flHealth'                 // scalar
-     *     'm_vecAbilities'             // full array
-     *     'm_vecAbilities.0000'        // array element
-     *     'CBodyComponent.m_vecX'      // drill into fixed table
-     *     'm_vecState.0000.m_bits'     // drill into struct element
+     *     'm_flHealth'                                            // scalar
+     *     'm_vecAbilities'                                        // full array
+     *     'm_vecAbilities.0000'                                   // array element
+     *     'CBodyComponent.m_skeletonInstance.m_vecOrigin.m_vecX'  // drill into fixed table
+     *     'm_vecState.0000.m_bits'                                // drill into struct element
      *
      * @public
      * @param {string} name
      * @returns {FieldAccessor|null}
      */
     getFieldAccessorForName(name) {
-        const segments = name.split('.');
-
         const path = [ ];
 
+        /** @type {Serializer} */
         let serializer = this;
-        let field = null;
-        let i = 0;
+        let segments = Field.splitName(name);
 
-        while (i < segments.length) {
-            const index = serializer.getFieldIndexForName(segments[i]);
+        while (segments.length > 0) {
+            const index = serializer.getFieldIndexForSegments(segments);
 
             if (index === null) {
                 return null;
             }
 
-            field = serializer.fields[index];
+            const field = serializer.fields[index];
 
             path.push(index);
-            i++;
 
-            if (i === segments.length) {
+            segments = segments.slice(field.segments.length);
+
+            if (segments.length === 0) {
                 return new FieldAccessor(field, FieldPathBuilder.build(path));
             }
 
             switch (field.model) {
                 case FieldModel.ARRAY_VARIABLE:
                 case FieldModel.ARRAY_FIXED: {
-                    if (!Serializer.getIsElementIndex(segments[i])) {
+                    if (segments.length !== 1 || !Serializer.getIsElementIndex(segments[0])) {
                         return null;
                     }
 
-                    const elementIndex = parseInt(segments[i], 10);
-                    i++;
-
-                    if (segments.length !== i) {
-                        return null;
-                    }
-
-                    return new FieldAccessor(field, FieldPathBuilder.build(path), elementIndex);
+                    return new FieldAccessor(field, FieldPathBuilder.build(path), parseInt(segments[0], 10));
                 }
                 case FieldModel.TABLE_VARIABLE: {
-                    if (!Serializer.getIsElementIndex(segments[i])) {
+                    if (!Serializer.getIsElementIndex(segments[0])) {
                         return null;
                     }
 
-                    const elementIndex = parseInt(segments[i], 10);
-                    i++;
+                    const elementIndex = parseInt(segments[0], 10);
 
-                    if (i === segments.length) {
+                    segments = segments.slice(1);
+
+                    if (segments.length === 0) {
                         return new FieldAccessor(field, FieldPathBuilder.build(path), elementIndex);
                     }
 
                     path.push(elementIndex);
 
-                    serializer = field.serializer;
+                    serializer = /** @type {FieldTableVariable} */ (field).serializer;
 
                     break;
                 }
                 case FieldModel.TABLE_FIXED: {
-                    serializer = field.serializer;
+                    serializer = /** @type {FieldTableFixed} */ (field).serializer;
 
                     break;
                 }
@@ -250,25 +263,64 @@ class Serializer {
     }
 
     /**
-     * Resolves a field's index in this serializer by its name.
+     * Returns the index of the field that `segments` start with.
+     * Returns `null` otherwise.
      *
      * @public
-     * @param {string} name
+     * @param {Array<string>} segments
      * @returns {number|null}
      */
-    getFieldIndexForName(name) {
-        const i = this._fields.findIndex(f => f.name === name);
-
-        // IL 2026-06-25: a leaf name can repeat in one serializer when the same
-        // field is reached through different send nodes. To avoid silently
-        // returning data from the wrong duplicate, ambiguous names resolve to
-        // null. This is a safety measure — a proper disambiguation (e.g.
-        // sendNode-prefixed names) should be revisited in the future.
-        if (i === -1 || this._fields.findIndex((f, j) => j > i && f.name === name) !== -1) {
-            return null;
+    getFieldIndexForSegments(segments) {
+        for (let i = 0; i < this._fields.length; i++) {
+            if (this._fields[i].getIsPrefixOf(segments)) {
+                return i;
+            }
         }
 
-        return i;
+        return null;
+    }
+
+    /**
+     * Finds the closest variable array or table that the field path is an element of.
+     *
+     * @public
+     * @param {number} fieldPathId
+     * @returns {{ collection: number, index: number }|null} The length field path id of the collection and the element index, or null.
+     */
+    getCollectionElementForFieldPathId(fieldPathId) {
+        const path = FieldPathBuilder.getById(fieldPathId).path;
+
+        /** @type {Serializer} */
+        let serializer = this;
+        /** @type {{ collection: number, index: number }|null} */
+        let element = null;
+
+        for (let i = 0; i < path.length - 1; i++) {
+            const field = serializer._fields[path[i]];
+
+            switch (field.model) {
+                case FieldModel.ARRAY_VARIABLE:
+                    return { collection: FieldPathBuilder.build(path.slice(0, i + 1)).id, index: path[i + 1] };
+                case FieldModel.TABLE_VARIABLE: {
+                    element = { collection: FieldPathBuilder.build(path.slice(0, i + 1)).id, index: path[i + 1] };
+
+                    serializer = /** @type {FieldTableVariable} */ (field).serializer;
+
+                    i++;
+
+                    break;
+                }
+                case FieldModel.TABLE_FIXED: {
+                    serializer = /** @type {FieldTableFixed} */ (field).serializer;
+
+                    break;
+                }
+                default:
+                    return element;
+            }
+        }
+
+        return element;
     }
 
     /**
@@ -380,15 +432,15 @@ class Serializer {
     }
 
     /**
-     * Unpacks a struct (an object keyed by field name) for the element the
-     * [extractor] currently points to. Returns `undefined` when no field is
-     * present.
+     * Unpacks a struct (an object keyed by field name) at the current position
+     * of the extractor. Returns `undefined` when no field is present.
      *
      * @public
      * @param {FieldExtractor} extractor
      * @returns {Object|undefined}
      */
     unpack(extractor) {
+        /** @type {Record<string, *>|null} */
         let out = null;
 
         for (let i = 0; i < this._fields.length; i++) {
@@ -403,7 +455,15 @@ class Serializer {
                     out = { };
                 }
 
-                out[this._fields[i].name] = value;
+                const field = this._fields[i];
+
+                let target = out;
+
+                for (let j = 0; j < field.sendNode.length; j++) {
+                    target = target[field.sendNode[j]] ??= { };
+                }
+
+                target[field.varName] = value;
             }
         }
 
