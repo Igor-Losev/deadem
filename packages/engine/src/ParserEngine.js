@@ -52,10 +52,10 @@ import SchemaRegistry from './SchemaRegistry.js';
  * @template [M=null]
  * @typedef {{
  *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
- *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<EntityMutationEvent>) => void,
+ *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_PacketEntities'>, events: Array<EntityMutationEvent>) => void,
  *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
- *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>|null, events: Array<StringTableMutationEvent>) => void,
- *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>, events: Array<UserCommandEvent>) => void
+ *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_CreateStringTable'|'CSVCMsg_UpdateStringTable'|'CSVCMsg_ClearAllStringTables'>|null, events: Array<StringTableMutationEvent>) => void,
+ *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_UserCommands'>, events: Array<UserCommandEvent>) => void
  * }} InterceptorMap
  */
 
