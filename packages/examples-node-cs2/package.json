@@ -1,6 +1,6 @@
 {
   "name": "@deademx/examples-node-cs2",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0",
   "description": "Node.js example scripts, benchmarks, and diagnostics for @deademx/cs2",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "#root/*.js": "./*.js"
   },
   "dependencies": {
-    "@deademx/examples-common": "5.0.0-rc.1",
-    "@deademx/cs2": "5.0.0-rc.1"
+    "@deademx/examples-common": "5.0.0",
+    "@deademx/cs2": "5.0.0"
   }
 }
