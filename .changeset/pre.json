@@ -14,6 +14,7 @@
     "@deademx/ui": "4.0.2"
   },
   "changesets": [
+    "release-5-0-0-rc-1",
     "release-5-0-0"
   ]
 }

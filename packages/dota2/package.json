@@ -1,6 +1,6 @@
 {
   "name": "@deademx/dota2",
-  "version": "5.0.0-rc.0",
+  "version": "5.0.0-rc.1",
   "description": "Dota 2 (Source 2) demo and replay parser with playback support for Node.js and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -71,6 +71,6 @@
   ],
   "dependencies": {
     "@bufbuild/protobuf": "2.16.0",
-    "@deademx/engine": "^5.0.0-rc.0"
+    "@deademx/engine": "^5.0.0-rc.1"
   }
 }
