@@ -2,7 +2,7 @@
 /** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 
 import Demo from '../data/Demo.js';
 import Server from '../data/Server.js';
@@ -130,26 +130,26 @@ class DemoMessageHandler {
             throw new Error('CSVCMsg_PacketEntities found, but server data is missing');
         }
 
-        const bitBuffer = new BitBuffer(message.entityData);
+        const bitReader = new BitReader(message.entityData);
 
         const entityClassFilter = this._entityClassFilter;
         const payloadSizes = entityClassFilter !== null ? createPayloadIterator(message) : null;
         /** @type {Array<EntityMutationEvent>|null} */
         const events = direct ? null : [ ];
-        const extractor = new EntityMutationExtractor(bitBuffer);
+        const extractor = new EntityMutationExtractor(bitReader);
         const alternateBaselines = createAlternateBaselineIndex(message);
 
         let index = -1;
 
         for (let i = 0; i < message.updatedEntries; i++) {
-            index += bitBuffer.readUVarInt() + 1;
+            index += bitReader.readUVarInt() + 1;
 
-            const command = bitBuffer.readBitsAsUInt(2);
+            const command = bitReader.readBitsAsUInt(2);
 
             switch (command) {
                 case EntityOperation.UPDATE.id: {
                     // For older game builds. 2 PVS bits per update; low bit = no field data.
-                    if (message.hasPvsVisBitsDeprecated > 0 && (bitBuffer.readBitsAsUInt(2) & 1) !== 0) {
+                    if (message.hasPvsVisBitsDeprecated > 0 && (bitReader.readBitsAsUInt(2) & 1) !== 0) {
                         break;
                     }
 
@@ -175,7 +175,7 @@ class DemoMessageHandler {
                             events.push(new EntityMutationEvent(EntityOperation.UPDATE, entity, extractor.all()));
                         }
                     } else if (payloadBits !== null) {
-                        bitBuffer.move(payloadBits);
+                        bitReader.move(payloadBits);
                     } else {
                         extractor.skip();
                     }
@@ -204,10 +204,10 @@ class DemoMessageHandler {
                 case EntityOperation.CREATE.id: {
                     const classIdSizeBits = this._demo.server.classIdSizeBits;
 
-                    const classId = bitBuffer.readBitsAsUInt(classIdSizeBits);
-                    const serial = bitBuffer.readBitsAsUInt(17);
+                    const classId = bitReader.readBitsAsUInt(classIdSizeBits);
+                    const serial = bitReader.readBitsAsUInt(17);
 
-                    bitBuffer.readUVarInt32();
+                    bitReader.readUVarInt32();
 
                     const clazz = this._demo.getClassById(classId);
 
@@ -250,7 +250,7 @@ class DemoMessageHandler {
                         this._demo.registerEntity(entity);
 
                         if (payloadBits !== null) {
-                            bitBuffer.move(payloadBits);
+                            bitReader.move(payloadBits);
                         } else {
                             extractor.skip();
                         }

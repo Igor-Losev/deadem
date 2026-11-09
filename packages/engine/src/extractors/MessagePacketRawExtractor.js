@@ -1,4 +1,4 @@
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 
 import MessagePacketRaw from '../data/MessagePacketRaw.js';
 
@@ -10,7 +10,7 @@ class MessagePacketRawExtractor {
      */
     constructor(buffer) {
         /** @private */
-        this._bitBuffer = new BitBuffer(buffer);
+        this._bitReader = new BitReader(buffer);
     }
 
     /**
@@ -22,16 +22,16 @@ class MessagePacketRawExtractor {
     all() {
         const extracted = [ ];
 
-        const bytes = Math.ceil(this._bitBuffer.getUnreadCount() / BitBuffer.BITS_PER_BYTE);
+        const bytes = Math.ceil(this._bitReader.getUnreadCount() / BitReader.BITS_PER_BYTE);
         const buffer = new Uint8Array(bytes);
 
         let bytesRead = 0;
 
-        while (this._bitBuffer.getUnreadCount() >= BitBuffer.BITS_PER_BYTE) {
-            const type = this._bitBuffer.readUVarInt();
-            const size = this._bitBuffer.readUVarInt32();
+        while (this._bitReader.getUnreadCount() >= BitReader.BITS_PER_BYTE) {
+            const type = this._bitReader.readUVarInt();
+            const size = this._bitReader.readUVarInt32();
 
-            const payload = this._bitBuffer.readInBuffer(size * BitBuffer.BITS_PER_BYTE, buffer.subarray(bytesRead, bytesRead + size));
+            const payload = this._bitReader.readInBuffer(size * BitReader.BITS_PER_BYTE, buffer.subarray(bytesRead, bytesRead + size));
 
             bytesRead += size;
 
@@ -45,7 +45,7 @@ class MessagePacketRawExtractor {
      * @public
      */
     reset() {
-        this._bitBuffer.reset();
+        this._bitReader.reset();
     }
 }
 

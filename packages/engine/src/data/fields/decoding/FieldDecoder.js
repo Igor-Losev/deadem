@@ -1,4 +1,4 @@
-/** @import BitBuffer from '../../../core/BitBuffer.js' */
+/** @import BitReader from '../../../core/BitReader.js' */
 
 import Assert from '../../../core/Assert.js';
 
@@ -7,7 +7,7 @@ import FieldStorageDescriptor from './FieldStorageDescriptor.js';
 /**
  * Decode function reading one field value from the bit stream.
  *
- * @typedef {(bitBuffer: BitBuffer) => *} FieldDecoderFn
+ * @typedef {(bitReader: BitReader) => *} FieldDecoderFn
  */
 
 class FieldDecoder {

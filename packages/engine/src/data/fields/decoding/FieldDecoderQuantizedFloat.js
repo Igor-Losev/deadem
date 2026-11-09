@@ -1,4 +1,4 @@
-/** @import BitBuffer from '../../../core/BitBuffer.js' */
+/** @import BitReader from '../../../core/BitReader.js' */
 
 import Assert from '../../../core/Assert.js';
 
@@ -87,27 +87,27 @@ class FieldDecoderQuantizedFloat {
 
     /**
      * @public
-     * @param {BitBuffer} bitBuffer
+     * @param {BitReader} bitReader
      * @returns {number}
      */
-    decode(bitBuffer) {
+    decode(bitReader) {
         if (this._bitCount === 32) {
-            return bitBuffer.readFloat32();
+            return bitReader.readFloat32();
         }
 
-        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitBuffer.readBit()) {
+        if ((this._flags & FLAG_ROUND_DOWN) !== 0 && bitReader.readBit()) {
             return this._low;
         }
 
-        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitBuffer.readBit()) {
+        if ((this._flags & FLAG_ROUND_UP) !== 0 && bitReader.readBit()) {
             return this._high;
         }
 
-        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitBuffer.readBit()) {
+        if ((this._flags & FLAG_ENCODE_ZERO) !== 0 && bitReader.readBit()) {
             return 0;
         }
 
-        const value = bitBuffer.readBitsAsUInt(this._bitCount);
+        const value = bitReader.readBitsAsUInt(this._bitCount);
 
         return this._low + (this._high - this._low) * value * this._dequantizationStep;
     }

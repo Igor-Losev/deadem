@@ -4,7 +4,7 @@ import VarInt32 from '../data/VarInt32.js';
 /**
  * A class for reading data at the bit level from {@link Uint8Array}.
  */
-class BitBuffer {
+class BitReader {
     /**
      * @constructor
      * @param {Uint8Array} buffer
@@ -736,4 +736,4 @@ const dataView = new DataView(dataViewBuffer);
 
 const textDecoder = new TextDecoder();
 
-export default BitBuffer;
+export default BitReader;

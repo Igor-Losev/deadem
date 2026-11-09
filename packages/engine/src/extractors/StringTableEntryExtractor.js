@@ -1,7 +1,7 @@
 /** @import StringTableInstructions from '../data/tables/string/StringTableInstructions.js' */
 
 import Assert from '../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 import Snappy from '../core/Snappy.instance.js';
 
 import StringTable from '../data/tables/string/StringTable.js';
@@ -23,7 +23,7 @@ class StringTableEntryExtractor {
         Assert.isTrue(Number.isInteger(entriesCount));
 
         /** @private */
-        this._bitBuffer = new BitBuffer(buffer);
+        this._bitReader = new BitReader(buffer);
         /** @private */
         this._table = table;
         /** @private */
@@ -31,7 +31,7 @@ class StringTableEntryExtractor {
     }
 
     *retrieve() {
-        this._bitBuffer.reset();
+        this._bitReader.reset();
 
         const instructions = /** @type {StringTableInstructions} */ (this._table.instructions);
 
@@ -45,23 +45,23 @@ class StringTableEntryExtractor {
             let key = '';
             let value = null;
 
-            const increment = this._bitBuffer.readBit();
+            const increment = this._bitReader.readBit();
 
             if (increment) {
                 index += 1;
             } else {
-                index += this._bitBuffer.readUVarInt32() + 2;
+                index += this._bitReader.readUVarInt32() + 2;
             }
 
-            const hasKey = this._bitBuffer.readBit();
+            const hasKey = this._bitReader.readBit();
 
             if (hasKey) {
-                const useHistory = this._bitBuffer.readBit();
+                const useHistory = this._bitReader.readBit();
 
                 if (useHistory) {
-                    const position = this._bitBuffer.readBitsAsUInt(5);
-                    const size = this._bitBuffer.readBitsAsUInt(5);
-                    const portion = this._bitBuffer.readString();
+                    const position = this._bitReader.readBitsAsUInt(5);
+                    const size = this._bitReader.readBitsAsUInt(5);
+                    const portion = this._bitReader.readString();
 
                     if (position < Math.min(count, MAX_HISTORY_ENTRIES)) {
                         const oldest = Math.max(0, count - MAX_HISTORY_ENTRIES);
@@ -71,7 +71,7 @@ class StringTableEntryExtractor {
                         key = portion;
                     }
                 } else {
-                    key = this._bitBuffer.readString();
+                    key = this._bitReader.readString();
                 }
             } else {
                 const existing = this._table.getEntryById(index);
@@ -84,7 +84,7 @@ class StringTableEntryExtractor {
             history[count & (MAX_HISTORY_ENTRIES - 1)] = key;
             count += 1;
 
-            const hasValue = this._bitBuffer.readBit();
+            const hasValue = this._bitReader.readBit();
 
             if (hasValue) {
                 let bitSize = 0;
@@ -94,17 +94,17 @@ class StringTableEntryExtractor {
                     bitSize = instructions.userDataSizeBits;
                 } else {
                     if (this._table.getIsValueCompressionSupported()) {
-                        isCompressed = this._bitBuffer.readBit();
+                        isCompressed = this._bitReader.readBit();
                     }
 
                     if (instructions.usingVarintBitcounts) {
-                        bitSize = this._bitBuffer.readUVarInt() * BitBuffer.BITS_PER_BYTE;
+                        bitSize = this._bitReader.readUVarInt() * BitReader.BITS_PER_BYTE;
                     } else {
-                        bitSize = this._bitBuffer.readBitsAsUInt(17) * BitBuffer.BITS_PER_BYTE;
+                        bitSize = this._bitReader.readBitsAsUInt(17) * BitReader.BITS_PER_BYTE;
                     }
                 }
 
-                value = this._bitBuffer.read(bitSize, true);
+                value = this._bitReader.read(bitSize, true);
 
                 if (isCompressed) {
                     value = Snappy.decompress(value);

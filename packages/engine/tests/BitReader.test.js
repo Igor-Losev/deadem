@@ -1,13 +1,13 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '../src/core/BitBuffer.js';
+import BitReader from '../src/core/BitReader.js';
 
-describe('BitBuffer.read()', () => {
+describe('BitReader.read()', () => {
     describe('When reading chunks [ 6, 4, 3, 1, 2 ] from [ 0x51, 0x85 ]', () => {
         test('It should return [ 17, 5, 1, 0, 2 ]', () => {
             const buffer = new Uint8Array([ 0x51, 0x85 ]);
 
-            const reader = new BitBuffer(buffer);
+            const reader = new BitReader(buffer);
 
             expect(reader.read(6)[0]).toBe(17);
             expect(reader.read(4)[0]).toBe(5);
@@ -21,7 +21,7 @@ describe('BitBuffer.read()', () => {
         test('It should return [ 337, 33 ]', () => {
             const buffer = new Uint8Array([ 0x51, 0x85 ]);
 
-            const reader = new BitBuffer(buffer);
+            const reader = new BitReader(buffer);
 
             const first = reader.read(10);
 
@@ -35,7 +35,7 @@ describe('BitBuffer.read()', () => {
         test('It should return [ 4, 442, 2 ]', () => {
             const buffer = new Uint8Array([ 0xd4, 0x8d ]);
 
-            const reader = new BitBuffer(buffer);
+            const reader = new BitReader(buffer);
 
             expect(reader.read(3)[0]).toBe(4);
 
@@ -48,12 +48,12 @@ describe('BitBuffer.read()', () => {
     });
 });
 
-describe('BitBuffer.readBit()', () => {
+describe('BitReader.readBit()', () => {
     describe('When reading bits from [ 0x8b ]', () => {
         test('It should return [ 1, 1, 0, 1, 0, 0, 0, 1 ]', () => {
             const buffer = new Uint8Array([ 0x8b ]);
 
-            const reader = new BitBuffer(buffer);
+            const reader = new BitReader(buffer);
 
             const expected = [ true, true, false, true, false, false, false, true ];
 
@@ -66,7 +66,7 @@ describe('BitBuffer.readBit()', () => {
     });
 });
 
-describe('BitBuffer.readFloat32()', () => {
+describe('BitReader.readFloat32()', () => {
     const isNegativeZero = x => x === 0 && (1 / x) === -Infinity;
     const isPositiveZero = x => x === 0 && (1 / x) === +Infinity;
 
@@ -78,7 +78,7 @@ describe('BitBuffer.readFloat32()', () => {
         0xff, 0xff, 0x7f, 0x7f  // 3.4028234663852886e+38
     ]);
 
-    const reader = new BitBuffer(buffer);
+    const reader = new BitReader(buffer);
 
     describe('When reading float from [ 0x00, 0x00, 0x00, 0x00 ]', () => {
         test('It should return a positive zero 0.0', () => {
@@ -123,7 +123,7 @@ describe('BitBuffer.readFloat32()', () => {
     });
 });
 
-describe('BitBuffer.readVarInt32()', () => {
+describe('BitReader.readVarInt32()', () => {
     const buffer = new Uint8Array([
         0x7f,
         0x81, 0x7f,
@@ -131,7 +131,7 @@ describe('BitBuffer.readVarInt32()', () => {
         0xa0, 0xa1, 0xc7, 0xdf, 0x08
     ]);
 
-    const reader = new BitBuffer(buffer);
+    const reader = new BitReader(buffer);
 
     describe('When reading Int32 from [ 0x7f ]', () => {
         test('It should return -64', () => {
@@ -166,13 +166,13 @@ describe('BitBuffer.readVarInt32()', () => {
     });
 });
 
-describe('BitBuffer.readVarInt64()', () => {
+describe('BitReader.readVarInt64()', () => {
     const buffer = new Uint8Array([
         0x7f,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01
     ]);
 
-    const reader = new BitBuffer(buffer);
+    const reader = new BitReader(buffer);
 
     describe('When reading Int64 from [ 0x7f ]', () => {
         test('It should return -64n', () => {
@@ -191,14 +191,14 @@ describe('BitBuffer.readVarInt64()', () => {
     });
 });
 
-describe('BitBuffer.readUVarInt32()', () => {
+describe('BitReader.readUVarInt32()', () => {
     const buffer = new Uint8Array([
         0x7f,
         0x81, 0x7f,
         0xff, 0xff, 0xff, 0xff, 0x7f
     ]);
 
-    const reader = new BitBuffer(buffer);
+    const reader = new BitReader(buffer);
 
     describe('When reading UInt32 from [ 0x7f ]', () => {
         test('It should return 127', () => {
@@ -225,13 +225,13 @@ describe('BitBuffer.readUVarInt32()', () => {
     });
 });
 
-describe('BitBuffer.readUVarInt64()', () => {
+describe('BitReader.readUVarInt64()', () => {
     const buffer = new Uint8Array([
         0x7f,
         0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01
     ]);
 
-    const reader = new BitBuffer(buffer);
+    const reader = new BitReader(buffer);
 
     describe('When reading UInt64 from [ 0x7f ]', () => {
         test('It should return 127n', () => {

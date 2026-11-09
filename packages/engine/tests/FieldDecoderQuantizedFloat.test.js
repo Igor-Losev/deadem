@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '../src/core/BitBuffer.js';
+import BitReader from '../src/core/BitReader.js';
 
 import FieldDecoderInstructions from '../src/data/fields/decoding/FieldDecoderInstructions.js';
 import FieldDecoderQuantizedFloat from '../src/data/fields/decoding/FieldDecoderQuantizedFloat.js';
@@ -44,7 +44,7 @@ describe('FieldDecoderQuantizedFloat.decode()', () => {
             const instructions = new FieldDecoderInstructions(null, 0, 32, 0, 0);
             const decoder = new FieldDecoderQuantizedFloat(instructions);
 
-            expect(decoder.decode(new BitBuffer(bytes))).toBe(850.125);
+            expect(decoder.decode(new BitReader(bytes))).toBe(850.125);
         });
     });
 
@@ -53,7 +53,7 @@ describe('FieldDecoderQuantizedFloat.decode()', () => {
             const instructions = new FieldDecoderInstructions(null, 2, 10, 0, Math.fround(102.3));
             const decoder = new FieldDecoderQuantizedFloat(instructions);
 
-            expect(decoder.decode(new BitBuffer(new Uint8Array([ 1, 0 ])))).toBeCloseTo(0.1998, 4);
+            expect(decoder.decode(new BitReader(new Uint8Array([ 1, 0 ])))).toBeCloseTo(0.1998, 4);
         });
     });
 
@@ -62,7 +62,7 @@ describe('FieldDecoderQuantizedFloat.decode()', () => {
             const instructions = new FieldDecoderInstructions(null, 8, 2, 0, 100);
             const decoder = new FieldDecoderQuantizedFloat(instructions);
 
-            expect(decoder.decode(new BitBuffer(new Uint8Array([ 200 ])))).toBe(100);
+            expect(decoder.decode(new BitReader(new Uint8Array([ 200 ])))).toBe(100);
         });
     });
 
@@ -71,7 +71,7 @@ describe('FieldDecoderQuantizedFloat.decode()', () => {
             const instructions = new FieldDecoderInstructions(null, -8, 8, 0, 1);
             const decoder = new FieldDecoderQuantizedFloat(instructions);
 
-            expect(decoder.decode(new BitBuffer(new Uint8Array([ 128 ])))).toBe(1);
+            expect(decoder.decode(new BitReader(new Uint8Array([ 128 ])))).toBe(1);
         });
     });
 });

@@ -1,11 +1,11 @@
-/** @import BitBuffer from '../../core/BitBuffer.js' */
+/** @import BitReader from '../../core/BitReader.js' */
 
 /** @import FieldPathBuilder from '../fields/path/FieldPathBuilder.js' */
 
 import Assert from '../../core/Assert.js';
 
 /**
- * @typedef {(bitBuffer: BitBuffer, fieldPathBuilder: FieldPathBuilder) => void} FieldPathExecutor
+ * @typedef {(bitReader: BitReader, fieldPathBuilder: FieldPathBuilder) => void} FieldPathExecutor
  */
 
 const registry = {
@@ -111,197 +111,197 @@ const executor = callback => callback;
 
 /* eslint-disable no-unused-vars */
 
-const plusOne = new FieldPathOperation('PLUS_1', 'PlusOne', 36271, 0, executor((bitBuffer, fieldPathBuilder) => {
+const plusOne = new FieldPathOperation('PLUS_1', 'PlusOne', 36271, 0, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
 }));
-const plusTwo = new FieldPathOperation('PLUS_2', 'PlusTwo', 10334, 1, executor((bitBuffer, fieldPathBuilder) => {
+const plusTwo = new FieldPathOperation('PLUS_2', 'PlusTwo', 10334, 1, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(2);
 }));
-const plusThree = new FieldPathOperation('PLUS_3', 'PlusThree', 1375, 2, executor((bitBuffer, fieldPathBuilder) => {
+const plusThree = new FieldPathOperation('PLUS_3', 'PlusThree', 1375, 2, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(3);
 }));
-const plusFour = new FieldPathOperation('PLUS_4', 'PlusFour', 646, 3, executor((bitBuffer, fieldPathBuilder) => {
+const plusFour = new FieldPathOperation('PLUS_4', 'PlusFour', 646, 3, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(4);
 }));
-const plusN = new FieldPathOperation('PLUS_N', 'PlusN', 4128, 4, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarIntFieldPath() + 5);
+const plusN = new FieldPathOperation('PLUS_N', 'PlusN', 4128, 4, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarIntFieldPath() + 5);
 }));
 
-const pushOneLeftDeltaZeroRightZero = new FieldPathOperation('PUSH_1L_D0_R0', 'PushOneLeftDeltaZeroRightZero', 35, 5, executor((bitBuffer, fieldPathBuilder) => {
+const pushOneLeftDeltaZeroRightZero = new FieldPathOperation('PUSH_1L_D0_R0', 'PushOneLeftDeltaZeroRightZero', 35, 5, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.push(0);
 }));
-const pushOneLeftDeltaZeroRightNonZero = new FieldPathOperation('PUSH_1L_D0_R!0', 'PushOneLeftDeltaZeroRightNonZero', 3, 6, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+const pushOneLeftDeltaZeroRightNonZero = new FieldPathOperation('PUSH_1L_D0_R!0', 'PushOneLeftDeltaZeroRightNonZero', 3, 6, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
 }));
-const pushOneLeftDeltaOneRightZero = new FieldPathOperation('PUSH_1L_D1_R0', 'PushOneLeftDeltaOneRightZero', 521, 7, executor((bitBuffer, fieldPathBuilder) => {
+const pushOneLeftDeltaOneRightZero = new FieldPathOperation('PUSH_1L_D1_R0', 'PushOneLeftDeltaOneRightZero', 521, 7, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
     fieldPathBuilder.push(0);
 }));
-const pushOneLeftDeltaOneRightNonZero = new FieldPathOperation('PUSH_1L_D1_R!0', 'PushOneLeftDeltaOneRightNonZero', 2942, 8, executor((bitBuffer, fieldPathBuilder) => {
+const pushOneLeftDeltaOneRightNonZero = new FieldPathOperation('PUSH_1L_D1_R!0', 'PushOneLeftDeltaOneRightNonZero', 2942, 8, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
 }));
-const pushOneLeftDeltaNRightZero = new FieldPathOperation('PUSH_1L_DN_R0', 'PushOneLeftDeltaNRightZero', 560, 9, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarIntFieldPath());
+const pushOneLeftDeltaNRightZero = new FieldPathOperation('PUSH_1L_DN_R0', 'PushOneLeftDeltaNRightZero', 560, 9, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarIntFieldPath());
     fieldPathBuilder.push(0);
 }));
-const pushOneLeftDeltaNRightNonZero = new FieldPathOperation('PUSH_1L_DN_R!0', 'PushOneLeftDeltaNRightNonZero', 471, 10, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarIntFieldPath() + 2);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath() + 1);
+const pushOneLeftDeltaNRightNonZero = new FieldPathOperation('PUSH_1L_DN_R!0', 'PushOneLeftDeltaNRightNonZero', 471, 10, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarIntFieldPath() + 2);
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath() + 1);
 }));
-const pushOneLeftDeltaNRightNonZeroPack6Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P6B', 'PushOneLeftDeltaNRightNonZeroPack6Bits', 10530, 11, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readBitsAsUInt(3) + 2);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(3) + 1);
+const pushOneLeftDeltaNRightNonZeroPack6Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P6B', 'PushOneLeftDeltaNRightNonZeroPack6Bits', 10530, 11, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readBitsAsUInt(3) + 2);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(3) + 1);
 }));
-const pushOneLeftDeltaNRightNonZeroPack8Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P8B', 'PushOneLeftDeltaNRightNonZeroPack8Bits', 251, 12, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readBitsAsUInt(4) + 2);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(4) + 1);
-}));
-
-const pushTwoLeftDeltaZero = new FieldPathOperation('PUSH_2L_D0', 'PushTwoLeftDeltaZero', 0, 13, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushTwoPack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_2P5BL_D0', 'PushTwoPack5BitsLeftDeltaZero', 0, 14, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-}));
-const pushThreeLeftDeltaZero = new FieldPathOperation('PUSH_3L_D0', 'PushThreeLeftDeltaZero', 0, 15, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushThreePack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_3P5BL_D0', 'PushThreePack5BitsLeftDeltaZero', 0, 16, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-}));
-const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDeltaOne', 0, 17, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D1', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-}));
-const pushThreeLeftDeltaOne = new FieldPathOperation('PUSH_3L_D1', 'PushThreeLeftDeltaOne', 0, 19, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushThreePack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_3P5BL_D1', 'PushThreePack5BitsLeftDeltaOne', 0, 20, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(1);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-}));
-const pushTwoLeftDeltaN = new FieldPathOperation('PUSH_2L_DN', 'PushTwoLeftDeltaN', 0, 21, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushTwoPack5BitsLeftDeltaN = new FieldPathOperation('PUSH_2P5BL_DN', 'PushTwoPack5BitsLeftDeltaN', 0, 22, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-}));
-const pushThreeLeftDeltaN = new FieldPathOperation('PUSH_3L_DN', 'PushThreeLeftDeltaN', 0, 23, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
-}));
-const pushThreePack5BitsLeftDeltaN = new FieldPathOperation('PUSH_3P5BL_DN', 'PushThreePack5BitsLeftDeltaN', 0, 24, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.add(bitBuffer.readUVarInt() + 2);
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
-    fieldPathBuilder.push(bitBuffer.readBitsAsUInt(5));
+const pushOneLeftDeltaNRightNonZeroPack8Bits = new FieldPathOperation('PUSH_1L_DN_R!0_P8B', 'PushOneLeftDeltaNRightNonZeroPack8Bits', 251, 12, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readBitsAsUInt(4) + 2);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(4) + 1);
 }));
 
-const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitBuffer, fieldPathBuilder) => {
-    const count = bitBuffer.readUVarInt();
+const pushTwoLeftDeltaZero = new FieldPathOperation('PUSH_2L_D0', 'PushTwoLeftDeltaZero', 0, 13, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushTwoPack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_2P5BL_D0', 'PushTwoPack5BitsLeftDeltaZero', 0, 14, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
+const pushThreeLeftDeltaZero = new FieldPathOperation('PUSH_3L_D0', 'PushThreeLeftDeltaZero', 0, 15, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushThreePack5BitsLeftDeltaZero = new FieldPathOperation('PUSH_3P5BL_D0', 'PushThreePack5BitsLeftDeltaZero', 0, 16, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
+const pushTwoLeftDeltaOne = new FieldPathOperation('PUSH_2L_D1', 'PushTwoLeftDeltaOne', 0, 17, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(1);
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushTwoPack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_2P5BL_D1', 'PushTwoPack5BitsLeftDeltaOne', 0, 18, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(1);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
+const pushThreeLeftDeltaOne = new FieldPathOperation('PUSH_3L_D1', 'PushThreeLeftDeltaOne', 0, 19, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(1);
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushThreePack5BitsLeftDeltaOne = new FieldPathOperation('PUSH_3P5BL_D1', 'PushThreePack5BitsLeftDeltaOne', 0, 20, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(1);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
+const pushTwoLeftDeltaN = new FieldPathOperation('PUSH_2L_DN', 'PushTwoLeftDeltaN', 0, 21, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarInt() + 2);
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushTwoPack5BitsLeftDeltaN = new FieldPathOperation('PUSH_2P5BL_DN', 'PushTwoPack5BitsLeftDeltaN', 0, 22, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarInt() + 2);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
+const pushThreeLeftDeltaN = new FieldPathOperation('PUSH_3L_DN', 'PushThreeLeftDeltaN', 0, 23, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarInt() + 2);
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
+}));
+const pushThreePack5BitsLeftDeltaN = new FieldPathOperation('PUSH_3P5BL_DN', 'PushThreePack5BitsLeftDeltaN', 0, 24, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.add(bitReader.readUVarInt() + 2);
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+    fieldPathBuilder.push(bitReader.readBitsAsUInt(5));
+}));
 
-    fieldPathBuilder.add(bitBuffer.readUVarInt());
+const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitReader, fieldPathBuilder) => {
+    const count = bitReader.readUVarInt();
+
+    fieldPathBuilder.add(bitReader.readUVarInt());
 
     for (let i = 0; i < count; i++) {
-        fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+        fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
     }
 }));
-const pushNAndNonTopological = new FieldPathOperation('PUSH_N_!N', 'PushNAndNonTopological', 310, 26, executor((bitBuffer, fieldPathBuilder) => {
+const pushNAndNonTopological = new FieldPathOperation('PUSH_N_!N', 'PushNAndNonTopological', 310, 26, executor((bitReader, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
-        if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readVarInt32() + 1, i);
+        if (bitReader.readBit()) {
+            fieldPathBuilder.add(bitReader.readVarInt32() + 1, i);
         }
     }
 
-    const count = bitBuffer.readUVarInt();
+    const count = bitReader.readUVarInt();
 
     for (let i = 0; i < count; i++) {
-        fieldPathBuilder.push(bitBuffer.readUVarIntFieldPath());
+        fieldPathBuilder.push(bitReader.readUVarIntFieldPath());
     }
 }));
 
-const popOnePlusOne = new FieldPathOperation('POP_1_PLUS_1', 'PopOnePlusOne', 2, 27, executor((bitBuffer, fieldPathBuilder) => {
+const popOnePlusOne = new FieldPathOperation('POP_1_PLUS_1', 'PopOnePlusOne', 2, 27, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(1);
     fieldPathBuilder.add(1);
 }));
-const popOnePlusN = new FieldPathOperation('POP_1_PLUS_N', 'PopOnePlusN', 0, 28, executor((bitBuffer, fieldPathBuilder) => {
+const popOnePlusN = new FieldPathOperation('POP_1_PLUS_N', 'PopOnePlusN', 0, 28, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(1);
-    fieldPathBuilder.add(bitBuffer.readUVarIntFieldPath() + 1);
+    fieldPathBuilder.add(bitReader.readUVarIntFieldPath() + 1);
 }));
 
-const popAllButOnePlusOne = new FieldPathOperation('POP_ALL-1_PLUS_1', 'PopAllButOnePlusOne', 1837, 29, executor((bitBuffer, fieldPathBuilder) => {
+const popAllButOnePlusOne = new FieldPathOperation('POP_ALL-1_PLUS_1', 'PopAllButOnePlusOne', 1837, 29, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
     fieldPathBuilder.add(1);
 }));
-const popAllButOnePlusN = new FieldPathOperation('POP_ALL-1_PLUS_N', 'PopAllButOnePlusN', 149, 30, executor((bitBuffer, fieldPathBuilder) => {
+const popAllButOnePlusN = new FieldPathOperation('POP_ALL-1_PLUS_N', 'PopAllButOnePlusN', 149, 30, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
-    fieldPathBuilder.add(bitBuffer.readUVarIntFieldPath() + 1);
+    fieldPathBuilder.add(bitReader.readUVarIntFieldPath() + 1);
 }));
-const popAllButOnePlusNPack3Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P3B', 'PopAllButOnePlusNPack3Bits', 300, 31, executor((bitBuffer, fieldPathBuilder) => {
+const popAllButOnePlusNPack3Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P3B', 'PopAllButOnePlusNPack3Bits', 300, 31, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
-    fieldPathBuilder.add(bitBuffer.readBitsAsUInt(3) + 1);
+    fieldPathBuilder.add(bitReader.readBitsAsUInt(3) + 1);
 }));
-const popAllButOnePlusNPack6Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P6B', 'PopAllButOnePlusNPack6Bits', 634, 32, executor((bitBuffer, fieldPathBuilder) => {
+const popAllButOnePlusNPack6Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P6B', 'PopAllButOnePlusNPack6Bits', 634, 32, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(fieldPathBuilder.length - 1);
-    fieldPathBuilder.add(bitBuffer.readBitsAsUInt(6) + 1);
+    fieldPathBuilder.add(bitReader.readBitsAsUInt(6) + 1);
 }));
 
-const popNPlusOne = new FieldPathOperation('POP_N_PLUS_1', 'PopNPlusOne', 0, 33, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.drop(bitBuffer.readUVarIntFieldPath());
+const popNPlusOne = new FieldPathOperation('POP_N_PLUS_1', 'PopNPlusOne', 0, 33, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.drop(bitReader.readUVarIntFieldPath());
     fieldPathBuilder.add(1);
 }));
-const popNPlusN = new FieldPathOperation('POP_N_PLUS_N', 'PopNPlusN', 0, 34, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.drop(bitBuffer.readUVarIntFieldPath());
-    fieldPathBuilder.add(bitBuffer.readVarInt32());
+const popNPlusN = new FieldPathOperation('POP_N_PLUS_N', 'PopNPlusN', 0, 34, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.drop(bitReader.readUVarIntFieldPath());
+    fieldPathBuilder.add(bitReader.readVarInt32());
 }));
-const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTopographical', 1, 35, executor((bitBuffer, fieldPathBuilder) => {
-    fieldPathBuilder.drop(bitBuffer.readUVarIntFieldPath());
+const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTopographical', 1, 35, executor((bitReader, fieldPathBuilder) => {
+    fieldPathBuilder.drop(bitReader.readUVarIntFieldPath());
 
     for (let i = 0; i < fieldPathBuilder.length; i++) {
-        if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readVarInt32(), i);
+        if (bitReader.readBit()) {
+            fieldPathBuilder.add(bitReader.readVarInt32(), i);
         }
     }
 }));
 
-const nonTopoComplex = new FieldPathOperation('NON_TOPO_COMPLEX', 'NonTopoComplex', 76, 36, executor((bitBuffer, fieldPathBuilder) => {
+const nonTopoComplex = new FieldPathOperation('NON_TOPO_COMPLEX', 'NonTopoComplex', 76, 36, executor((bitReader, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
-        if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readVarInt32(), i);
+        if (bitReader.readBit()) {
+            fieldPathBuilder.add(bitReader.readVarInt32(), i);
         }
     }
 }));
-const nonTopoPenultimatePlusOne = new FieldPathOperation('NON_TOPO_PEN_PLUS_1', 'NonTopoPenultimatePlusOne', 271, 37, executor((bitBuffer, fieldPathBuilder) => {
+const nonTopoPenultimatePlusOne = new FieldPathOperation('NON_TOPO_PEN_PLUS_1', 'NonTopoPenultimatePlusOne', 271, 37, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.add(1, fieldPathBuilder.length - 2);
 }));
-const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', 'NonTopoComplexPack4Bits', 99, 38, executor((bitBuffer, fieldPathBuilder) => {
+const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', 'NonTopoComplexPack4Bits', 99, 38, executor((bitReader, fieldPathBuilder) => {
     for (let i = 0; i < fieldPathBuilder.length; i++) {
-        if (bitBuffer.readBit()) {
-            fieldPathBuilder.add(bitBuffer.readBitsAsUInt(4) - 7, i);
+        if (bitReader.readBit()) {
+            fieldPathBuilder.add(bitReader.readBitsAsUInt(4) - 7, i);
         }
     }
 }));

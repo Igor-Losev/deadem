@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '../src/core/BitBuffer.js';
+import BitReader from '../src/core/BitReader.js';
 import FieldDecoderFactory from '../src/data/fields/decoding/FieldDecoderFactory.js';
 
 describe('FieldDecoderFactory.FIXED_8', () => {
     test('reads exactly one byte and never continues into a following varint byte', () => {
-        const reader = new BitBuffer(new Uint8Array([ 0x80, 0x01 ]));
+        const reader = new BitReader(new Uint8Array([ 0x80, 0x01 ]));
 
         expect(FieldDecoderFactory.FIXED_8(reader)).toBe(128);
 
@@ -14,15 +14,15 @@ describe('FieldDecoderFactory.FIXED_8', () => {
     });
 
     test('reads the full unsigned byte range', () => {
-        expect(FieldDecoderFactory.FIXED_8(new BitBuffer(new Uint8Array([ 0x00 ])))).toBe(0);
-        expect(FieldDecoderFactory.FIXED_8(new BitBuffer(new Uint8Array([ 0xff ])))).toBe(255);
+        expect(FieldDecoderFactory.FIXED_8(new BitReader(new Uint8Array([ 0x00 ])))).toBe(0);
+        expect(FieldDecoderFactory.FIXED_8(new BitReader(new Uint8Array([ 0xff ])))).toBe(255);
     });
 });
 
 describe('FieldDecoderFactory.FIXED_8_SIGNED', () => {
     test('sign-extends the byte', () => {
-        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitBuffer(new Uint8Array([ 0x7f ])))).toBe(127);
-        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitBuffer(new Uint8Array([ 0x80 ])))).toBe(-128);
-        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitBuffer(new Uint8Array([ 0xff ])))).toBe(-1);
+        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitReader(new Uint8Array([ 0x7f ])))).toBe(127);
+        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitReader(new Uint8Array([ 0x80 ])))).toBe(-128);
+        expect(FieldDecoderFactory.FIXED_8_SIGNED(new BitReader(new Uint8Array([ 0xff ])))).toBe(-1);
     });
 });

@@ -1,7 +1,7 @@
 /** @import Serializer from './fields/Serializer.js' */
 
 import Assert from '../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 
 import EntityMutationExtractor from '../extractors/EntityMutationExtractor.js';
 
@@ -54,7 +54,7 @@ class ClassBaseline {
         if (this._raw === null) {
             this._batch = EntityMutationBatch.EMPTY;
         } else {
-            this._batch = new EntityMutationExtractor(new BitBuffer(this._raw), serializer).all();
+            this._batch = new EntityMutationExtractor(new BitReader(this._raw), serializer).all();
         }
 
         return this._batch;

@@ -1,5 +1,5 @@
 import Assert from '../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 
 import DemoPacketRaw from '../data/DemoPacketRaw.js';
 import VarInt32 from '../data/VarInt32.js';
@@ -54,7 +54,7 @@ class DemoPacketRawBroadcastExtractor {
             let tick;
 
             try {
-                tick = new VarInt32(BitBuffer.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
+                tick = new VarInt32(BitReader.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
             } catch {
                 yield null;
 
@@ -69,7 +69,7 @@ class DemoPacketRawBroadcastExtractor {
             let frame;
 
             try {
-                frame = new VarInt32(BitBuffer.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
+                frame = new VarInt32(BitReader.readUInt32LE(this._tail.subarray(offset, offset + 4)), 4);
             } catch {
                 yield null;
 

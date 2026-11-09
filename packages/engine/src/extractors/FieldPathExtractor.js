@@ -1,4 +1,4 @@
-/** @import BitBuffer from '../core/BitBuffer.js' */
+/** @import BitReader from '../core/BitReader.js' */
 
 import FieldPathOperation from '../data/enums/FieldPathOperation.js';
 
@@ -14,11 +14,11 @@ class FieldPathExtractor {
     /**
      * @public
      * @constructor
-     * @param {BitBuffer} bitBuffer
+     * @param {BitReader} bitReader
      */
-    constructor(bitBuffer) {
+    constructor(bitReader) {
         /** @private */
-        this._bitBuffer = bitBuffer;
+        this._bitReader = bitReader;
 
         /** @private */
         this._fieldPathBuilder = new FieldPathBuilder();
@@ -31,7 +31,7 @@ class FieldPathExtractor {
      * @returns {Array<number>}
      */
     allIds() {
-        const bitBuffer = this._bitBuffer;
+        const bitReader = this._bitReader;
         const builder = this._fieldPathBuilder;
         const ids = this._ids;
 
@@ -40,7 +40,7 @@ class FieldPathExtractor {
         let count = 0;
 
         for (;;) {
-            const unread = bitBuffer.getUnreadCount();
+            const unread = bitReader.getUnreadCount();
 
             if (unread <= 0) {
                 break;
@@ -48,18 +48,18 @@ class FieldPathExtractor {
 
             const bits = unread < HUFFMAN_TREE_DEPTH ? unread : HUFFMAN_TREE_DEPTH;
 
-            const code = bitBuffer.readBitsAsUInt(bits);
+            const code = bitReader.readBitsAsUInt(bits);
 
             const bitsUsed = BITS_TABLE[code];
             const operation = OPERATIONS[OPS_TABLE[code]];
 
-            bitBuffer.moveBack(bits - bitsUsed);
+            bitReader.moveBack(bits - bitsUsed);
 
             if (operation === FieldPathOperation.FINISH) {
                 break;
             }
 
-            /** @type {Function} */ (operation.executor)(bitBuffer, builder);
+            /** @type {Function} */ (operation.executor)(bitReader, builder);
 
             ids[count++] = builder.build().id;
         }

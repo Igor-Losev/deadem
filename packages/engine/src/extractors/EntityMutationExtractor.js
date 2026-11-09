@@ -1,4 +1,4 @@
-/** @import BitBuffer from '../core/BitBuffer.js' */
+/** @import BitReader from '../core/BitReader.js' */
 
 /** @import Entity from '../data/entity/Entity.js' */
 
@@ -13,18 +13,18 @@ class EntityMutationExtractor {
     /**
      * @public
      * @constructor
-     * @param {BitBuffer} bitBuffer
+     * @param {BitReader} bitReader
      * @param {Serializer|null} [serializer=null]
      */
-    constructor(bitBuffer, serializer = null) {
+    constructor(bitReader, serializer = null) {
         /** @private */
-        this._bitBuffer = bitBuffer;
+        this._bitReader = bitReader;
 
         /** @private @type {Serializer|null} */
         this._serializer = serializer;
 
         /** @private */
-        this._fieldPathExtractor = new FieldPathExtractor(bitBuffer);
+        this._fieldPathExtractor = new FieldPathExtractor(bitReader);
     }
 
     /**
@@ -53,7 +53,7 @@ class EntityMutationExtractor {
             const id = fieldPathIds[i];
 
             ids[i] = id;
-            values[i] = serializer.getDecoderForFieldPathId(id)(this._bitBuffer);
+            values[i] = serializer.getDecoderForFieldPathId(id)(this._bitReader);
         }
 
         return new EntityMutationBatch(ids, values);
@@ -71,7 +71,7 @@ class EntityMutationExtractor {
         const ids = this._fieldPathExtractor.allIds();
 
         for (let i = 0; i < ids.length; i++) {
-            entity.updateByFieldPathId(ids[i], serializer.getDecoderForFieldPathId(ids[i])(this._bitBuffer));
+            entity.updateByFieldPathId(ids[i], serializer.getDecoderForFieldPathId(ids[i])(this._bitReader));
         }
     }
 
@@ -90,7 +90,7 @@ class EntityMutationExtractor {
         for (let i = 0; i < ids.length; i++) {
             const decoder = serializer.getDecoderForFieldPathId(ids[i]);
 
-            decoder(this._bitBuffer);
+            decoder(this._bitReader);
         }
     }
 }

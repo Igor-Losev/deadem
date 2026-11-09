@@ -2,7 +2,7 @@
 /** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
-import BitBuffer from '../core/BitBuffer.js';
+import BitReader from '../core/BitReader.js';
 
 import Class from '../data/Class.js';
 import Demo from '../data/Demo.js';
@@ -50,10 +50,10 @@ class DemoPacketHandler {
         /** @type {*} */
         const message = demoPacket.data;
 
-        const bitBuffer = new BitBuffer(message.data);
+        const bitReader = new BitReader(message.data);
 
-        const size = bitBuffer.readUVarInt32();
-        const payload = bitBuffer.read(size * BitBuffer.BITS_PER_BYTE);
+        const size = bitReader.readUVarInt32();
+        const payload = bitReader.read(size * BitReader.BITS_PER_BYTE);
 
         const sendTablesDecoder = this._registry.getSendTablesSerializerDecoder();
 
