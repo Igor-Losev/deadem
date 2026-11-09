@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import BitBuffer from '../src/core/BitBuffer.js';
+import BitReader from '../src/core/BitReader.js';
 import BitWriter from '../src/core/BitWriter.js';
 
 const UNALIGNED_OFFSETS = [ 0, 1, 2, 3, 4, 5, 6, 7 ];
@@ -14,7 +14,7 @@ function createWriterAtOffset(offset, capacity = 64) {
 }
 
 function createReaderAtOffset(writer, offset) {
-    const reader = new BitBuffer(writer.getBytes());
+    const reader = new BitReader(writer.getBytes());
 
     reader.move(offset);
 

@@ -6,7 +6,7 @@ const MAXIMUM_UINT32 = 0xFFFFFFFF;
 
 /**
  * A class for writing data at the bit level into {@link Uint8Array}.
- * The counterpart of {@link BitBuffer}.
+ * The counterpart of {@link BitReader}.
  */
 class BitWriter {
     /** @private @type {Uint8Array} */
