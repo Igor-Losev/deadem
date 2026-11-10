@@ -1,4 +1,4 @@
-/** @import { Registry } from '@bufbuild/protobuf' */
+/** @import { DescMessage, Registry } from '@bufbuild/protobuf' */
 
 /** @import FieldDecoderDescriptor from '../data/fields/decoding/FieldDecoderDescriptor.js' */
 /** @import { StringTableDecoderFn } from '../data/tables/string/StringTable.js' */
@@ -62,11 +62,7 @@ class SchemaRegistry {
      * @returns {ProtoDecoder}
      */
     getDecoder(protoName) {
-        const descriptor = this._descriptors.getMessage(protoName);
-
-        Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
-
-        return ProtoDecoder.fromDescriptor(descriptor);
+        return ProtoDecoder.fromDescriptor(this.getDescriptor(protoName));
     }
 
     /**
@@ -76,6 +72,19 @@ class SchemaRegistry {
      */
     getDemoDecoder(type) {
         return this._decoders.demo.get(type.id) || null;
+    }
+
+    /**
+     * @public
+     * @param {string} protoName
+     * @returns {DescMessage}
+     */
+    getDescriptor(protoName) {
+        const descriptor = this._descriptors.getMessage(protoName);
+
+        Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
+
+        return descriptor;
     }
 
     /**
