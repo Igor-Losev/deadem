@@ -1,6 +1,7 @@
-/** @import VarInt32 from './VarInt32.js' */
-
 /** @import DemoSource from './enums/DemoSource.js' */
+
+import DemoFormat from './DemoFormat.js';
+import VarInt32 from './VarInt32.js';
 
 class DemoPacketRaw {
     /**
@@ -100,7 +101,7 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsCompressed() {
-        return (this._type.value & 64) === 64;
+        return (this._type.value & DemoFormat.COMPRESSED_FLAG) === DemoFormat.COMPRESSED_FLAG;
     }
 
     /**
@@ -110,15 +111,17 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsInitial() {
-        return this._tick.value === -1;
+        return this._tick.value === DemoFormat.INITIAL_TICK;
     }
 
     /**
+     * Size in a replay file.
+     *
      * @public
      * @returns {number}
      */
     getSize() {
-        return this._type.size + this._tick.size + this._frame.size + this._payload.length;
+        return VarInt32.getSize(this._type.value) + VarInt32.getSize(this._tick.value) + VarInt32.getSize(this._payload.length) + this._payload.length;
     }
 
     /**
@@ -126,7 +129,7 @@ class DemoPacketRaw {
      * @returns {number}
      */
     getTypeId() {
-        return this._type.value & ~64;
+        return this._type.value & ~DemoFormat.COMPRESSED_FLAG;
     }
 }
 

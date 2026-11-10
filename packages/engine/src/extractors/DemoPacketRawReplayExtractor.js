@@ -1,3 +1,5 @@
+/** @import DemoPacketRawReplayWriter from '../writers/DemoPacketRawReplayWriter.js' */
+
 import Assert from '../core/Assert.js';
 
 import DemoSource from '../data/enums/DemoSource.js';
@@ -5,6 +7,11 @@ import DemoSource from '../data/enums/DemoSource.js';
 import DemoPacketRaw from '../data/DemoPacketRaw.js';
 import VarInt32 from '../data/VarInt32.js';
 
+/**
+ * Extracts {@link DemoPacketRaw} from bytes.
+ *
+ * The counterpart of {@link DemoPacketRawReplayWriter}.
+ */
 class DemoPacketRawReplayExtractor {
     /**
      * @public

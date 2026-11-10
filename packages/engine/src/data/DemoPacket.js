@@ -5,6 +5,8 @@
 
 import Assert from '../core/Assert.js';
 
+import DemoFormat from './DemoFormat.js';
+
 import DemoPacketType from './enums/DemoPacketType.js';
 
 /**
@@ -107,7 +109,7 @@ class DemoPacket {
      * @returns {boolean} `true` if this is the initial demo packet (tick === -1).
      */
     getIsInitial() {
-        return this._tick === -1;
+        return this._tick === DemoFormat.INITIAL_TICK;
     }
 
     /**

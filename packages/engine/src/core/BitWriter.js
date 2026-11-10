@@ -1,19 +1,22 @@
 import Assert from './Assert.js';
+import BitReader from './BitReader.js';
 
-const BITS_PER_BYTE = 8;
 const MAXIMUM_BITS = 32;
-const MAXIMUM_UINT32 = 0xFFFFFFFF;
 
 /**
  * A class for writing data at the bit level into {@link Uint8Array}.
+ *
  * The counterpart of {@link BitReader}.
  */
 class BitWriter {
     /** @private @type {Uint8Array} */
     _buffer;
 
-    /** @private @type {{ bit: number, byte: number }} */
-    _position = { bit: 0, byte: 0 };
+    /** @private @type {number} */
+    _pBit = 0;
+
+    /** @private @type {number} */
+    _pByte = 0;
 
     /**
      * @public
@@ -32,8 +35,8 @@ class BitWriter {
      * @public
      * @returns {Uint8Array}
      */
-    getBytes() {
-        return this._buffer.subarray(0, this._position.bit === 0 ? this._position.byte : this._position.byte + 1);
+    getBuffer() {
+        return this._buffer.subarray(0, this._pBit === 0 ? this._pByte : this._pByte + 1);
     }
 
     /**
@@ -43,22 +46,24 @@ class BitWriter {
      */
     writeBitsAsUInt(value, count) {
         Assert.isTrue(Number.isInteger(count) && count >= 0 && count <= MAXIMUM_BITS, `Invalid count [ ${count} ]: expected an integer from 0 to ${MAXIMUM_BITS}`);
-        Assert.isTrue(Number.isInteger(value) && value >= 0 && value < 2 ** count, `Invalid value [ ${value} ]: does not fit into [ ${count} ] bits`);
 
+        this._assertFits(value, count);
         this._assertCapacity(count);
 
         let remaining = value;
         let written = 0;
 
         while (written < count) {
-            const portion = Math.min(BITS_PER_BYTE - this._position.bit, count - written);
+            const portion = Math.min(BitReader.BITS_PER_BYTE - this._pBit, count - written);
+            const totalBits = this._pBit + portion;
 
-            this._buffer[this._position.byte] |= (remaining & ((1 << portion) - 1)) << this._position.bit;
+            this._buffer[this._pByte] |= (remaining & ((1 << portion) - 1)) << this._pBit;
 
-            remaining = Math.floor(remaining / (1 << portion));
+            this._pByte += totalBits >>> 3;
+            this._pBit = totalBits & 7;
+
+            remaining >>>= portion;
             written += portion;
-
-            this._advance(portion);
         }
     }
 
@@ -67,21 +72,21 @@ class BitWriter {
      * @param {Uint8Array} bytes
      */
     writeBytes(bytes) {
-        this._assertCapacity(bytes.length * BITS_PER_BYTE);
+        this._assertCapacity(bytes.length * BitReader.BITS_PER_BYTE);
 
-        if (this._position.bit === 0) {
-            this._buffer.set(bytes, this._position.byte);
-            this._position.byte += bytes.length;
+        if (this._pBit === 0) {
+            this._buffer.set(bytes, this._pByte);
+            this._pByte += bytes.length;
 
             return;
         }
 
-        const shift = this._position.bit;
+        const shift = this._pBit;
 
         for (let i = 0; i < bytes.length; i++) {
-            this._buffer[this._position.byte] |= bytes[i] << shift;
-            this._position.byte += 1;
-            this._buffer[this._position.byte] = bytes[i] >>> (BITS_PER_BYTE - shift);
+            this._buffer[this._pByte] |= bytes[i] << shift;
+            this._pByte += 1;
+            this._buffer[this._pByte] = bytes[i] >>> (BitReader.BITS_PER_BYTE - shift);
         }
     }
 
@@ -89,8 +94,47 @@ class BitWriter {
      * @public
      * @param {number} value
      */
+    writeUInt8(value) {
+        this._assertFits(value, BitReader.BITS_PER_BYTE);
+        this._assertCapacity(BitReader.BITS_PER_BYTE);
+
+        if (this._pBit === 0) {
+            this._buffer[this._pByte] = value;
+            this._pByte += 1;
+
+            return;
+        }
+
+        this.writeBitsAsUInt(value, BitReader.BITS_PER_BYTE);
+    }
+
+    /**
+     * @public
+     * @param {number} value
+     */
+    writeUInt32(value) {
+        this._assertFits(value, MAXIMUM_BITS);
+        this._assertCapacity(MAXIMUM_BITS);
+
+        if (this._pBit === 0) {
+            this._buffer[this._pByte] = value;
+            this._buffer[this._pByte + 1] = value >>> 8;
+            this._buffer[this._pByte + 2] = value >>> 16;
+            this._buffer[this._pByte + 3] = value >>> 24;
+            this._pByte += 4;
+
+            return;
+        }
+
+        this.writeBitsAsUInt(value, MAXIMUM_BITS);
+    }
+
+    /**
+     * @public
+     * @param {number} value
+     */
     writeUVarInt(value) {
-        this._assertUInt32(value);
+        this._assertFits(value, MAXIMUM_BITS);
 
         if (value < 16) {
             this.writeBitsAsUInt(value, 6);
@@ -111,28 +155,17 @@ class BitWriter {
      * @param {number} value
      */
     writeUVarInt32(value) {
-        this._assertUInt32(value);
+        this._assertFits(value, MAXIMUM_BITS);
 
         let remaining = value;
 
         while (remaining >= 0x80) {
-            this.writeBitsAsUInt((remaining & 0x7F) | 0x80, BITS_PER_BYTE);
+            this.writeUInt8((remaining & 0x7F) | 0x80);
 
-            remaining = Math.floor(remaining / 0x80);
+            remaining >>>= 7;
         }
 
-        this.writeBitsAsUInt(remaining, BITS_PER_BYTE);
-    }
-
-    /**
-     * @private
-     * @param {number} bits
-     */
-    _advance(bits) {
-        const total = this._position.bit + bits;
-
-        this._position.byte += total >>> 3;
-        this._position.bit = total & 7;
+        this.writeUInt8(remaining);
     }
 
     /**
@@ -140,17 +173,18 @@ class BitWriter {
      * @param {number} bits
      */
     _assertCapacity(bits) {
-        const required = this._position.byte * BITS_PER_BYTE + this._position.bit + bits;
+        const required = this._pByte * BitReader.BITS_PER_BYTE + this._pBit + bits;
 
-        Assert.isTrue(required <= this._buffer.length * BITS_PER_BYTE, `Unable to write: [ ${required} ] bits exceed the capacity of [ ${this._buffer.length} ] bytes`);
+        Assert.isTrue(required <= this._buffer.length * BitReader.BITS_PER_BYTE, `Unable to write: [ ${required} ] bits exceed the capacity of [ ${this._buffer.length} ] bytes`);
     }
 
     /**
      * @private
      * @param {number} value
+     * @param {number} bits
      */
-    _assertUInt32(value) {
-        Assert.isTrue(Number.isInteger(value) && value >= 0 && value <= MAXIMUM_UINT32, `Invalid value [ ${value} ]: expected an unsigned 32-bit integer`);
+    _assertFits(value, bits) {
+        Assert.isTrue(Number.isInteger(value) && value >= 0 && value < 2 ** bits, `Invalid value [ ${value} ]: expected an unsigned integer of [ ${bits} ] bits`);
     }
 }
 

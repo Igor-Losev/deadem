@@ -1,7 +1,14 @@
+/** @import MessagePacketRawWriter from '../writers/MessagePacketRawWriter.js' */
+
 import BitReader from '../core/BitReader.js';
 
 import MessagePacketRaw from '../data/MessagePacketRaw.js';
 
+/**
+ * Extracts {@link MessagePacketRaw} from the data of a demo packet.
+ *
+ * The counterpart of {@link MessagePacketRawWriter}.
+ */
 class MessagePacketRawExtractor {
     /**
      * @constructor

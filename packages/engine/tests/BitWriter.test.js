@@ -14,7 +14,7 @@ function createWriterAtOffset(offset, capacity = 64) {
 }
 
 function createReaderAtOffset(writer, offset) {
-    const reader = new BitReader(writer.getBytes());
+    const reader = new BitReader(writer.getBuffer());
 
     reader.move(offset);
 
@@ -32,7 +32,7 @@ describe('BitWriter.writeBitsAsUInt()', () => {
             writer.writeBitsAsUInt(0, 1);
             writer.writeBitsAsUInt(2, 2);
 
-            expect(writer.getBytes()).toEqual(new Uint8Array([ 0x51, 0x85 ]));
+            expect(writer.getBuffer()).toEqual(new Uint8Array([ 0x51, 0x85 ]));
         });
     });
 
@@ -52,7 +52,7 @@ describe('BitWriter.writeBitsAsUInt()', () => {
 
             writer.writeBitsAsUInt(0, 0);
 
-            expect(writer.getBytes().length).toBe(0);
+            expect(writer.getBuffer().length).toBe(0);
         });
     });
 
@@ -104,6 +104,30 @@ describe('BitWriter.writeUVarInt32()', () => {
     });
 });
 
+describe('BitWriter.writeUInt8()', () => {
+    describe.each(UNALIGNED_OFFSETS)('When writing at bit offset [ %i ]', (offset) => {
+        test.each([ 0, 1, 0x80, 0xFF ])('It should read back [ %i ]', (value) => {
+            const writer = createWriterAtOffset(offset);
+
+            writer.writeUInt8(value);
+
+            expect(createReaderAtOffset(writer, offset).readUInt8()).toBe(value);
+        });
+    });
+});
+
+describe('BitWriter.writeUInt32()', () => {
+    describe.each(UNALIGNED_OFFSETS)('When writing at bit offset [ %i ]', (offset) => {
+        test.each([ 0, 1, 0x12345678, 0xFFFFFFFF ])('It should read back [ %i ]', (value) => {
+            const writer = createWriterAtOffset(offset);
+
+            writer.writeUInt32(value);
+
+            expect(createReaderAtOffset(writer, offset).readUInt32()).toBe(value);
+        });
+    });
+});
+
 describe('BitWriter.writeBytes()', () => {
     describe.each(UNALIGNED_OFFSETS)('When writing at bit offset [ %i ]', (offset) => {
         test('It should read the bytes back', () => {
@@ -126,10 +150,10 @@ describe('BitWriter.writeBytes()', () => {
     });
 });
 
-describe('BitWriter.getBytes()', () => {
+describe('BitWriter.getBuffer()', () => {
     describe('When nothing has been written', () => {
         test('It should return no bytes', () => {
-            expect(new BitWriter(4).getBytes().length).toBe(0);
+            expect(new BitWriter(4).getBuffer().length).toBe(0);
         });
     });
 
@@ -139,7 +163,7 @@ describe('BitWriter.getBytes()', () => {
 
             writer.writeBitsAsUInt(0b111, 3);
 
-            expect(writer.getBytes()).toEqual(new Uint8Array([ 0b00000111 ]));
+            expect(writer.getBuffer()).toEqual(new Uint8Array([ 0b00000111 ]));
         });
     });
 });
@@ -153,7 +177,7 @@ describe('BitWriter capacity', () => {
             writer.writeBytes(new Uint8Array([ 0xFF ]));
             writer.writeBitsAsUInt(1, 5);
 
-            expect(writer.getBytes().length).toBe(2);
+            expect(writer.getBuffer().length).toBe(2);
         });
     });
 
@@ -172,6 +196,10 @@ describe('BitWriter capacity', () => {
 
         test('It should throw on variable-length values', () => {
             expect(() => new BitWriter(1).writeUVarInt32(128)).toThrow();
+        });
+
+        test.each([ 'writeUInt8', 'writeUInt32' ])('It should throw on [ %s ] at an aligned offset', (method) => {
+            expect(() => new BitWriter(0)[method](0)).toThrow();
         });
     });
 });

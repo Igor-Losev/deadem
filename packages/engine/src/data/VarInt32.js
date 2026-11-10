@@ -1,4 +1,8 @@
+import Assert from '../core/Assert.js';
+
 const MAXIMUM_SIZE_BYTES = 5;
+const MAXIMUM_VALUE = 0xFFFFFFFF;
+const MINIMUM_VALUE = -(2 ** 31);
 
 /**
  * Represents a variable-length 32-bit integer
@@ -41,6 +45,26 @@ class VarInt32 {
      */
     static get MAXIMUM_SIZE_BYTES() {
         return MAXIMUM_SIZE_BYTES;
+    }
+
+    /**
+     * Returns the encoded size. Negative values take five bytes.
+     *
+     * @public
+     * @static
+     * @param {number} value
+     * @returns {number}
+     */
+    static getSize(value) {
+        Assert.isTrue(Number.isInteger(value) && value >= MINIMUM_VALUE && value <= MAXIMUM_VALUE, `Invalid value [ ${value} ]: expected a 32-bit integer`);
+
+        let size = 1;
+
+        for (let remaining = value >>> 0; remaining >= 0x80; remaining >>>= 7) {
+            size += 1;
+        }
+
+        return size;
     }
 
     /**

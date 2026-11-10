@@ -1,4 +1,5 @@
 /** @import MessagePacketRaw from '../data/MessagePacketRaw.js' */
+/** @import MessagePacketRawExtractor from '../extractors/MessagePacketRawExtractor.js' */
 
 import Assert from '../core/Assert.js';
 import BitWriter from '../core/BitWriter.js';
@@ -6,22 +7,23 @@ import BitWriter from '../core/BitWriter.js';
 const MAXIMUM_HEADER_SIZE_BYTES = 10;
 
 /**
- * Packs messages into the data of a demo packet.
+ * Packs {@link MessagePacketRaw} into the data of a demo packet.
+ *
  * The counterpart of {@link MessagePacketRawExtractor}.
  */
 class MessagePacketRawWriter {
     /** @private @type {Array<MessagePacketRaw>} */
-    _messages;
+    _messagePacketsRaw;
 
     /**
      * @public
      * @constructor
-     * @param {Array<MessagePacketRaw>} messages
+     * @param {Array<MessagePacketRaw>} messagePacketsRaw
      */
-    constructor(messages) {
-        Assert.isTrue(Array.isArray(messages), 'Invalid messages: expected an array');
+    constructor(messagePacketsRaw) {
+        Assert.isTrue(Array.isArray(messagePacketsRaw), 'Invalid messagePacketsRaw: expected an array');
 
-        this._messages = messages;
+        this._messagePacketsRaw = messagePacketsRaw;
     }
 
     /**
@@ -31,15 +33,16 @@ class MessagePacketRawWriter {
     all() {
         const writer = new BitWriter(this._getCapacity());
 
-        for (let i = 0; i < this._messages.length; i++) {
-            const message = this._messages[i];
+        for (let i = 0; i < this._messagePacketsRaw.length; i++) {
+            const messagePacketRaw = this._messagePacketsRaw[i];
 
-            writer.writeUVarInt(message.type);
-            writer.writeUVarInt32(message.payload.length);
-            writer.writeBytes(message.payload);
+            writer.writeUVarInt(messagePacketRaw.type);
+            writer.writeUVarInt32(messagePacketRaw.payload.length);
+
+            writer.writeBytes(messagePacketRaw.payload);
         }
 
-        return writer.getBytes();
+        return writer.getBuffer();
     }
 
     /**
@@ -47,10 +50,10 @@ class MessagePacketRawWriter {
      * @returns {number}
      */
     _getCapacity() {
-        let capacity = this._messages.length * MAXIMUM_HEADER_SIZE_BYTES;
+        let capacity = this._messagePacketsRaw.length * MAXIMUM_HEADER_SIZE_BYTES;
 
-        for (let i = 0; i < this._messages.length; i++) {
-            capacity += this._messages[i].payload.length;
+        for (let i = 0; i < this._messagePacketsRaw.length; i++) {
+            capacity += this._messagePacketsRaw[i].payload.length;
         }
 
         return capacity;
