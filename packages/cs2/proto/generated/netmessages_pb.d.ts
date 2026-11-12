@@ -450,11 +450,6 @@ export declare type CSVCMsg_CreateStringTable = Message<"CSVCMsg_CreateStringTab
   stringData: Uint8Array;
 
   /**
-   * @generated from field: optional int32 uncompressed_size = 8;
-   */
-  uncompressedSize: number;
-
-  /**
    * @generated from field: optional bool data_compressed = 9;
    */
   dataCompressed: boolean;
