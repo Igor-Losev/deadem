@@ -38,5 +38,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add --all packages/*/proto
-          git diff --cached --quiet || git commit -m 'Proto: updated to the latest'
+          git diff --cached --quiet && exit 0
+          git commit -m 'Proto: updated to the latest'
+          git fetch --depth=1 origin auto/proto-sync && git diff --quiet FETCH_HEAD HEAD && exit 0
           git push --force origin HEAD:auto/proto-sync
