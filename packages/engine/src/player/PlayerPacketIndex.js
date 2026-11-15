@@ -7,6 +7,27 @@ import DemoPacketType from '../data/enums/DemoPacketType.js';
 import PacketCodec from '../PacketCodec.js';
 
 class PlayerPacketIndex {
+    /** @private @type {Array<number>} */
+    _bootstrap = [ ];
+
+    /** @private @type {PacketCodec} */
+    _codec;
+
+    /** @private @type {Array<number>} */
+    _keyframes = [ ];
+
+    /** @private @type {Array<DemoPacketRaw>} */
+    _packets;
+
+    /** @private @type {Map<number, *>} */
+    _stringTableSnapshots = new Map();
+
+    /** @private */
+    _tickOffsets = new Int32Array(0);
+
+    /** @private */
+    _uniqueTicks = new Int32Array(0);
+
     /**
      * @public
      * @constructor
@@ -17,22 +38,8 @@ class PlayerPacketIndex {
         Assert.isTrue(codec instanceof PacketCodec, 'Invalid codec: expected an instance of PacketCodec');
         Assert.isTrue(Array.isArray(packets), 'packets must be an array');
 
-        /** @private */
         this._codec = codec;
-        /** @private */
         this._packets = packets;
-
-        /** @private @type {Array<number>} */
-        this._bootstrap = [];
-        /** @private @type {Array<number>} */
-        this._keyframes = [];
-        /** @private @type {Map<number, *>} */
-        this._stringTableSnapshots = new Map();
-
-        /** @private */
-        this._uniqueTicks = new Int32Array(0);
-        /** @private */
-        this._tickOffsets = new Int32Array(0);
 
         this._build();
     }

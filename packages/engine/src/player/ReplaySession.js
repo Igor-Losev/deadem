@@ -1,4 +1,6 @@
+/** @import Demo from '../data/Demo.js' */
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+/** @import StringTableHandler from '../handlers/StringTableHandler.js' */
 /** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from '../core/Assert.js';
@@ -16,6 +18,39 @@ import PlayerPacketIndex from './PlayerPacketIndex.js';
  * Synchronously replays indexed packets.
  */
 class ReplaySession {
+    /** @private */
+    _aborted = false;
+
+    /** @private @type {DemoPacketApplier} */
+    _applier;
+
+    /** @private @type {number} */
+    _breakInterval;
+
+    /** @private */
+    _cursor = -1;
+
+    /** @private @type {Demo} */
+    _demo;
+
+    /** @private @type {PlayerPacketIndex} */
+    _index;
+
+    /** @private */
+    _lastTick = -1;
+
+    /** @private */
+    _ordinal = 0;
+
+    /** @private @type {DemoPacketParser} */
+    _parser;
+
+    /** @private @type {DemoPacketPrioritizer} */
+    _prioritizer;
+
+    /** @private @type {StringTableHandler} */
+    _stringTableHandler;
+
     /**
      * @public
      * @constructor
@@ -29,18 +64,12 @@ class ReplaySession {
         Assert.isTrue(index instanceof PlayerPacketIndex, 'Invalid index: expected an instance of PlayerPacketIndex');
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0, 'Invalid breakInterval: expected a positive integer');
 
-        /** @private */
         this._demo = engine.demo;
-        /** @private */
         this._index = index;
-        /** @private */
         this._stringTableHandler = engine.getStringTableHandler();
 
-        /** @private */
         this._parser = new DemoPacketParser(engine.codec, messagePacketFilter, engine.getPacketTracker(), engine.getPerformanceTracker());
-        /** @private */
         this._prioritizer = new DemoPacketPrioritizer(engine.getPerformanceTracker());
-        /** @private */
         this._applier = new DemoPacketApplier(
             engine.getDemoPacketHandler(),
             engine.getDemoMessageHandler(),
@@ -50,17 +79,7 @@ class ReplaySession {
             engine.getPerformanceTracker()
         );
 
-        /** @private */
         this._breakInterval = breakInterval;
-
-        /** @private */
-        this._aborted = false;
-        /** @private */
-        this._cursor = -1;
-        /** @private */
-        this._lastTick = -1;
-        /** @private */
-        this._ordinal = 0;
     }
 
     /**

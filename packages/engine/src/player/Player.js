@@ -27,6 +27,35 @@ import ReplaySession from './ReplaySession.js';
  * @template [M=unknown]
  */
 class Player {
+    /** @private @type {ParserConfiguration} */
+    _configuration;
+
+    /** @private @type {ParserEngine} */
+    _engine;
+
+    /** @private @type {PlayerPacketIndex|null} */
+    _index = null;
+
+    /** @private */
+    _playback = {
+        /** @type {PlaybackLoop|null} */
+        loop: null
+    };
+
+    /** @private @type {ReplaySession|null} */
+    _session = null;
+
+    /** @private */
+    _state = PlayerState.IDLE;
+
+    /** @private */
+    _ticks = {
+        current: -1,
+        first: -1,
+        last: -1,
+        position: -1
+    };
+
     /**
      * @public
      * @constructor
@@ -38,31 +67,8 @@ class Player {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
-        /** @private */
         this._configuration = configuration;
-        /** @private */
         this._engine = new ParserEngine(registry, configuration, logger);
-        /** @private */
-        this._state = PlayerState.IDLE;
-
-        /** @private */
-        this._playback = {
-            /** @type {PlaybackLoop|null} */
-            loop: null
-        };
-
-        /** @private */
-        this._ticks = {
-            current: -1,
-            first: -1,
-            last: -1,
-            position: -1
-        };
-
-        /** @private @type {PlayerPacketIndex|null} */
-        this._index = null;
-        /** @private @type {ReplaySession|null} */
-        this._session = null;
     }
 
     /**
@@ -117,6 +123,14 @@ class Player {
 
     /**
      * @public
+     * @returns {Demo}
+     */
+    getDemo() {
+        return this._engine.demo;
+    }
+
+    /**
+     * @public
      * @returns {number}
      */
     getFirstTick() {
@@ -129,14 +143,6 @@ class Player {
      */
     getLastTick() {
         return this._ticks.last;
-    }
-
-    /**
-     * @public
-     * @returns {Demo}
-     */
-    getDemo() {
-        return this._engine.demo;
     }
 
     /**
@@ -266,11 +272,9 @@ class Player {
     async prevTick() {
         this._requireState(PlayerState.LOADED, 'Unable to go to previous tick');
 
-        const index = this._index;
+        Assert.exists(this._index, 'Player index is not initialized');
 
-        Assert.exists(index, 'Player index is not initialized');
-
-        const prev = index.retreat(this._ticks.position);
+        const prev = this._index.retreat(this._ticks.position);
 
         if (prev === null) {
             return false;
@@ -317,14 +321,11 @@ class Player {
         this._transition(PlayerState.SEEKING);
 
         try {
-            const index = this._index;
-            const session = this._session;
+            Assert.exists(this._index, 'Player index is not initialized');
+            Assert.exists(this._session, 'Player session is not initialized');
 
-            Assert.exists(index, 'Player index is not initialized');
-            Assert.exists(session, 'Player session is not initialized');
-
-            this._ticks.current = await session.seek(tick);
-            this._ticks.position = index.getTickPosition(this._ticks.current);
+            this._ticks.current = await this._session.seek(tick);
+            this._ticks.position = this._index.getTickPosition(this._ticks.current);
         } finally {
             if (this._state === PlayerState.SEEKING) {
                 this._transition(PlayerState.LOADED);
@@ -378,20 +379,17 @@ class Player {
      * @returns {number|null} The new tick, or null if there are no more ticks.
      */
     _advanceTick() {
-        const index = this._index;
-        const session = this._session;
+        Assert.exists(this._index, 'Player index is not initialized');
+        Assert.exists(this._session, 'Player session is not initialized');
 
-        Assert.exists(index, 'Player index is not initialized');
-        Assert.exists(session, 'Player session is not initialized');
-
-        const next = index.advance(this._ticks.position);
+        const next = this._index.advance(this._ticks.position);
 
         if (next === null) {
             return null;
         }
 
         this._ticks.position = next.position;
-        this._ticks.current = session.process(next.count);
+        this._ticks.current = this._session.process(next.count);
 
         return this._ticks.current;
     }
@@ -414,12 +412,9 @@ class Player {
     _stopPlayback(reason) {
         this._transition(PlayerState.LOADED);
 
-        const loop = this._playback.loop;
+        Assert.exists(this._playback.loop, 'Playback loop is not initialized');
 
-        Assert.exists(loop, 'Playback loop is not initialized');
-
-        loop.interrupt(reason);
-
+        this._playback.loop.interrupt(reason);
         this._playback.loop = null;
     }
 

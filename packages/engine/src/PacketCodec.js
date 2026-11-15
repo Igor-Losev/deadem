@@ -1,4 +1,3 @@
-
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 /** @import MessagePacketRaw from './data/MessagePacketRaw.js' */
 /** @import { MessagePayload } from './data/MessagePacket.js' */

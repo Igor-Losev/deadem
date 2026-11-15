@@ -11,6 +11,30 @@ const FRAME_BUDGET_MILLISECONDS = 10;
  * Paces tick advances by wall clock, with a time budget per frame.
  */
 class PlaybackLoop {
+    /** @private @type {() => number|null} */
+    _advance;
+
+    /** @private */
+    _interrupted = false;
+
+    /** @private @type {number} */
+    _millisecondsPerTick;
+
+    /** @private @type {PlaybackInterruptionReason|null} */
+    _reason = null;
+
+    /** @private */
+    _started = false;
+
+    /** @private @type {number} */
+    _startTick;
+
+    /** @private @type {ReturnType<typeof setTimeout>|null} */
+    _timer = null;
+
+    /** @private @type {DeferredPromise<void>|null} */
+    _wake = null;
+
     /**
      * @public
      * @constructor
@@ -23,23 +47,9 @@ class PlaybackLoop {
         Assert.isTrue(Number.isInteger(startTick), 'Invalid startTick: expected an integer');
         Assert.isTrue(Number.isFinite(millisecondsPerTick) && millisecondsPerTick > 0, 'Invalid millisecondsPerTick: expected a positive number');
 
-        /** @private */
         this._advance = advance;
-        /** @private */
         this._startTick = startTick;
-        /** @private */
         this._millisecondsPerTick = millisecondsPerTick;
-
-        /** @private */
-        this._interrupted = false;
-        /** @private @type {PlaybackInterruptionReason|null} */
-        this._reason = null;
-        /** @private */
-        this._started = false;
-        /** @private @type {ReturnType<typeof setTimeout>|null} */
-        this._timer = null;
-        /** @private @type {DeferredPromise<void>|null} */
-        this._wake = null;
     }
 
     /**
