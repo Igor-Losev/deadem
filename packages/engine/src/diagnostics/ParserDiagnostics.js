@@ -1,3 +1,7 @@
+/** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from './trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from './trackers/PerformanceTracker.js' */
+
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
 
@@ -70,6 +74,18 @@ class ParserDiagnostics {
      */
     get performance() {
         return this._performance;
+    }
+
+    /**
+     * @public
+     * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
+     */
+    getStats() {
+        return {
+            memory: this._memory.getStats(),
+            packet: this._packet.getStats(),
+            performance: this._performance.getStats()
+        };
     }
 }
 

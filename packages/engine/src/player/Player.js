@@ -101,7 +101,7 @@ class Player {
         }
 
         if (this._index !== null) {
-            this._engine.getMemoryTracker().off();
+            this._engine.diagnostics.memory.off();
 
             this._index = null;
         }
@@ -151,11 +151,7 @@ class Player {
      * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
      */
     getStats() {
-        return {
-            memory: this._engine.getMemoryTracker().getStats(),
-            packet: this._engine.getPacketTracker().getStats(),
-            performance: this._engine.getPerformanceTracker().getStats()
-        };
+        return this._engine.diagnostics.getStats();
     }
 
     /**
@@ -186,7 +182,7 @@ class Player {
         this._ticks.first = first.tick.value;
         this._ticks.last = last.tick.value;
 
-        this._engine.getMemoryTracker().on();
+        this._engine.diagnostics.memory.on();
 
         this._transition(PlayerState.LOADED);
 

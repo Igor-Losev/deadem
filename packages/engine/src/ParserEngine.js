@@ -126,6 +126,14 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {ParserDiagnostics}
+     */
+    get diagnostics() {
+        return this._diagnostics;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     get disposed() {
@@ -205,30 +213,6 @@ class ParserEngine {
 
         this._demo.reset();
         this._interceptors.reset();
-    }
-
-    /**
-     * @public
-     * @returns {MemoryTracker}
-     */
-    getMemoryTracker() {
-        return this._diagnostics.memory;
-    }
-
-    /**
-     * @public
-     * @returns {PacketTracker}
-     */
-    getPacketTracker() {
-        return this._diagnostics.packet;
-    }
-
-    /**
-     * @public
-     * @returns {PerformanceTracker}
-     */
-    getPerformanceTracker() {
-        return this._diagnostics.performance;
     }
 
     /**

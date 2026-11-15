@@ -20,7 +20,7 @@ function createLoadedPlayer() {
     player._engine = {
         demo: { server: { tickInterval: 0.015625 } },
         dispose: vi.fn(async () => {}),
-        getMemoryTracker: vi.fn(() => ({ off: vi.fn(), on: vi.fn() }))
+        diagnostics: { memory: { off: vi.fn(), on: vi.fn() } }
     };
 
     player._index = {

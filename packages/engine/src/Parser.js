@@ -112,11 +112,7 @@ class Parser {
      * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
      */
     getStats() {
-        return {
-            memory: this._engine.getMemoryTracker().getStats(),
-            packet: this._engine.getPacketTracker().getStats(),
-            performance: this._engine.getPerformanceTracker().getStats()
-        };
+        return this._engine.diagnostics.getStats();
     }
 
     /**
