@@ -1,5 +1,5 @@
 /** @import { SyncObject } from './BroadcastGateway.js' */
-/** @import { NodeReadable } from '../ParserEngine.js' */
+/** @import { NodeReadable } from '#core/stream/Pipeline.js' */
 
 import BroadcastReadStream from '#broadcast/BroadcastReadStream.js';
 

@@ -1,6 +1,7 @@
 /** @import SchemaRegistry from '../SchemaRegistry.js' */
-/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
+/** @import MessagePacket from './MessagePacket.js' */
 /** @import { MessagePayload } from './MessagePacket.js' */
+/** @import MessagePacketRaw from './MessagePacketRaw.js' */
 
 import Assert from '../core/Assert.js';
 
@@ -150,6 +151,13 @@ class DemoPacket {
 
 /**
  * @typedef {{sequence: number, type: string, tick: number, data: *}} DemoPacketObject
+ */
+
+/**
+ * Synthesised payload.
+ *
+ * @template [M=unknown]
+ * @typedef {{ messagePackets: Array<MessagePacket<M>|MessagePacketRaw>, stringTables: MessagePayload<M, 'CDemoStringTables'>|null }} DemoPacketHeavyData
  */
 
 /**

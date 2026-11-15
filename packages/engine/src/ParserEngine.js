@@ -1,9 +1,6 @@
-/** @import DemoPacket from './data/DemoPacket.js' */
+/** @import { NodeReadable } from '#core/stream/Pipeline.js' */
+
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
-/** @import MessagePacket from './data/MessagePacket.js' */
-/** @import EntityMutationEvent from './data/entity/EntityMutationEvent.js' */
-/** @import UserCommandEvent from './data/UserCommandEvent.js' */
-/** @import StringTableMutationEvent from './data/tables/string/StringTableMutationEvent.js' */
 
 import Assert from './core/Assert.js';
 import Logger from './core/Logger.js';
@@ -40,34 +37,6 @@ import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
 import ParserDiagnostics from './ParserDiagnostics.js';
 import SchemaRegistry from './SchemaRegistry.js';
-
-/**
- * Interceptor callback. Receives stage-specific arguments — see
- * {@link InterceptorStage} for the shapes passed at each stage.
- *
- * @typedef {(...args: Array<*>) => void} InterceptorFn
- */
-
-/**
- * Callback shape fired at each {@link InterceptorStage}.
- *
- * @template [M=unknown]
- * @typedef {{
- *     DEMO_PACKET: (demoPacket: DemoPacket<M>) => void,
- *     ENTITY_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_PacketEntities'>, events: Array<EntityMutationEvent>) => void,
- *     MESSAGE_PACKET: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M>) => void,
- *     STRING_TABLE: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_CreateStringTable'|'CSVCMsg_UpdateStringTable'|'CSVCMsg_ClearAllStringTables'>|null, events: Array<StringTableMutationEvent>) => void,
- *     USER_COMMAND: (demoPacket: DemoPacket<M>, messagePacket: MessagePacket<M, 'CSVCMsg_UserCommands'>, events: Array<UserCommandEvent>) => void
- * }} InterceptorMap
- */
-
-/**
- * Stages that have a pre phase. `USER_COMMAND` is post-only.
- *
- * @typedef {Exclude<keyof InterceptorMap, 'USER_COMMAND'>} InterceptorPreStage
- */
-
-/** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
 
 class ParserEngine {
     /** @private @type {PacketCodec} */

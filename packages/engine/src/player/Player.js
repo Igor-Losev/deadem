@@ -2,7 +2,8 @@
 
 /** @import Demo from '../data/Demo.js' */
 /** @import { PlaybackInterruptionReason } from '../errors/PlaybackInterruptedError.js' */
-/** @import { InterceptorMap, InterceptorPreStage, NodeReadable } from '../ParserEngine.js' */
+/** @import { NodeReadable } from '#core/stream/Pipeline.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from '../InterceptorRegistry.js' */
 /** @import InterceptorStage from '../data/enums/InterceptorStage.js' */
 
 /** @import { MemoryTrackerStats } from '../trackers/MemoryTracker.base.js' */

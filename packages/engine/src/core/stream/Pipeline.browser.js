@@ -1,5 +1,7 @@
 import WritableSink from '#core/stream/WritableSink.js';
 
+/** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
+
 class PipelineBrowser {
     /**
      * @public

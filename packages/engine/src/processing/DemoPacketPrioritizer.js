@@ -1,8 +1,7 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import { DemoPacketHeavyData } from '../data/DemoPacket.js' */
 
 /** @import PerformanceTracker from '../trackers/PerformanceTracker.js' */
-
-/** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
 
 import Assert from '../core/Assert.js';
 

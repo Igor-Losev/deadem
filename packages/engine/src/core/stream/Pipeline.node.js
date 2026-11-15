@@ -3,6 +3,8 @@ import Stream from 'node:stream';
 import DeferredPromise from '../DeferredPromise.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
+/** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
+
 class PipelineNode {
     /**
      * @public

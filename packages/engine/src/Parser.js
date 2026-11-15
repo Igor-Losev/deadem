@@ -1,5 +1,6 @@
 /** @import SchemaRegistry from './SchemaRegistry.js' */
-/** @import { InterceptorMap, InterceptorPreStage, NodeReadable } from './ParserEngine.js' */
+/** @import { NodeReadable } from '#core/stream/Pipeline.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from './InterceptorRegistry.js' */
 
 /** @import Demo from './data/Demo.js' */
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
