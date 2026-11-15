@@ -3,13 +3,13 @@
 /** @typedef {import('./src/data/entity/EntityMutation.js').default} EntityMutation */
 /**
  * @template [M=unknown]
- * @typedef {import('./src/InterceptorRegistry.js').InterceptorMap<M>} InterceptorMap
+ * @typedef {import('./src/processing/InterceptorRegistry.js').InterceptorMap<M>} InterceptorMap
  */
-/** @typedef {import('./src/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
+/** @typedef {import('./src/diagnostics/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('./src/data/MessagePacket.js').MessagePacketObject} MessagePacketObject */
-/** @typedef {import('./src/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
+/** @typedef {import('./src/diagnostics/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
 /** @typedef {import('./src/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
-/** @typedef {import('./src/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */
+/** @typedef {import('./src/diagnostics/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */
 /** @typedef {import('./src/errors/PlaybackInterruptedError.js').PlaybackInterruptionReason} PlaybackInterruptionReason */
 /** @typedef {import('./src/extractors/DeltaExtractor.js').ProtoState} ProtoState */
 /** @typedef {import('./src/data/tables/string/StringTable.js').StringTableDecoderFn} StringTableDecoderFn */
@@ -39,9 +39,9 @@ export { default as ParserConfiguration } from './src/ParserConfiguration.js';
 export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterruptedError.js';
 export { default as Player } from './src/player/Player.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
-export { default as Printer } from './src/Printer.js';
+export { default as Printer } from './src/diagnostics/Printer.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';
-export { default as SchemaRegistry } from './src/SchemaRegistry.js';
+export { default as SchemaRegistry } from './src/schema/SchemaRegistry.js';
 export { default as Server } from './src/data/Server.js';
 export { default as StringTable } from './src/data/tables/string/StringTable.js';
 export { default as StringTableContainer } from './src/data/tables/string/StringTableContainer.js';

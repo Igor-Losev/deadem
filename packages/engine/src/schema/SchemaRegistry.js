@@ -1,17 +1,17 @@
 /** @import { Registry } from '@bufbuild/protobuf' */
 
-/** @import FieldDecoderDescriptor from './data/fields/decoding/FieldDecoderDescriptor.js' */
-/** @import { StringTableDecoderFn } from './data/tables/string/StringTable.js' */
+/** @import FieldDecoderDescriptor from '../data/fields/decoding/FieldDecoderDescriptor.js' */
+/** @import { StringTableDecoderFn } from '../data/tables/string/StringTable.js' */
 
-/** @import DemoPacketType from './data/enums/DemoPacketType.js' */
-/** @import MessagePacketType from './data/enums/MessagePacketType.js' */
-/** @import StringTableType from './data/enums/StringTableType.js' */
+/** @import DemoPacketType from '../data/enums/DemoPacketType.js' */
+/** @import MessagePacketType from '../data/enums/MessagePacketType.js' */
+/** @import StringTableType from '../data/enums/StringTableType.js' */
 
-import Assert from './core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import ProtoDecoder from './core/proto/ProtoDecoder.js';
+import ProtoDecoder from '../core/proto/ProtoDecoder.js';
 
-import FieldRuleRegistry from './data/fields/FieldRuleRegistry.js';
+import FieldRuleRegistry from '../data/fields/FieldRuleRegistry.js';
 
 /**
  * Instance-based registry that owns the mapping from engine-level type identities

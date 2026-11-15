@@ -1,7 +1,7 @@
-import Assert from './core/Assert.js';
-import Logger from './core/Logger.js';
+import Assert from '../core/Assert.js';
+import Logger from '../core/Logger.js';
 
-import MemoryTracker from '#trackers/MemoryTracker.js';
+import MemoryTracker from '#diagnostics/trackers/MemoryTracker.js';
 import PacketTracker from './trackers/PacketTracker.js';
 import PerformanceTracker from './trackers/PerformanceTracker.js';
 

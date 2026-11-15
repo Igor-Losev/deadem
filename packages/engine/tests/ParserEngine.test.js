@@ -4,7 +4,7 @@ import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
 import ParserEngine from '../src/ParserEngine.js';
 import ParserConfiguration from '../src/ParserConfiguration.js';
-import SchemaRegistry from '../src/SchemaRegistry.js';
+import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 
 import Logger from '../src/core/Logger.js';
 

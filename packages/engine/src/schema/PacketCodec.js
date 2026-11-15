@@ -1,17 +1,17 @@
-/** @import { DemoPacketHeavyData } from './data/DemoPacket.js' */
-/** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
-/** @import MessagePacketRaw from './data/MessagePacketRaw.js' */
+/** @import { DemoPacketHeavyData } from '../data/DemoPacket.js' */
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+/** @import MessagePacketRaw from '../data/MessagePacketRaw.js' */
 
-import Assert from './core/Assert.js';
-import SnappyDecompressor from './core/SnappyDecompressor.instance.js';
+import Assert from '../core/Assert.js';
+import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
 
-import DemoPacket from './data/DemoPacket.js';
-import MessagePacket from './data/MessagePacket.js';
+import DemoPacket from '../data/DemoPacket.js';
+import MessagePacket from '../data/MessagePacket.js';
 
-import DemoPacketType from './data/enums/DemoPacketType.js';
-import DemoSource from './data/enums/DemoSource.js';
+import DemoPacketType from '../data/enums/DemoPacketType.js';
+import DemoSource from '../data/enums/DemoSource.js';
 
-import MessagePacketRawExtractor from './extractors/MessagePacketRawExtractor.js';
+import MessagePacketRawExtractor from '../extractors/MessagePacketRawExtractor.js';
 
 import SchemaRegistry from './SchemaRegistry.js';
 

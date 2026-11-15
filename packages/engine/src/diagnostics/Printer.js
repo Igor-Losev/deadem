@@ -1,6 +1,6 @@
-import Logger from './core/Logger.js';
+import Logger from '../core/Logger.js';
 
-/** @import Parser from './Parser.js' */
+/** @import Parser from '../Parser.js' */
 
 /** @import { PacketTrackerPrintableItem } from './trackers/PacketTracker.js' */
 /** @import { MemoryTrackerStats } from './trackers/MemoryTracker.base.js' */

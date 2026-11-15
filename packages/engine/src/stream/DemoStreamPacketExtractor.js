@@ -5,11 +5,12 @@ import Transform from '#core/stream/Transform.js';
 import DemoSource from '../data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
+import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
+
 import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
 import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
 
 import ParserConfiguration from '../ParserConfiguration.js';
-import ParserDiagnostics from '../ParserDiagnostics.js';
 
 const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 

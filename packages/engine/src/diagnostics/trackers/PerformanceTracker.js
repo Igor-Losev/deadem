@@ -1,8 +1,8 @@
-/** @import { PerformanceTrackerRecordStats } from '../data/trackers/PerformanceTrackerRecord.js' */
+/** @import { PerformanceTrackerRecordStats } from './PerformanceTrackerRecord.js' */
 
-import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
-import PerformanceTrackerRecord from '../data/trackers/PerformanceTrackerRecord.js';
+import PerformanceTrackerCategory from '../../data/enums/PerformanceTrackerCategory.js';
 
+import PerformanceTrackerRecord from './PerformanceTrackerRecord.js';
 import Tracker from './Tracker.js';
 
 class PerformanceTracker extends Tracker {

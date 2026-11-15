@@ -4,7 +4,7 @@ import Assert from '../core/Assert.js';
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 
-import PacketCodec from '../PacketCodec.js';
+import PacketCodec from '../schema/PacketCodec.js';
 
 class PlayerPacketIndex {
     /** @private @type {Array<number>} */

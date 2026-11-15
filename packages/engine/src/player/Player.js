@@ -1,14 +1,14 @@
-/** @import SchemaRegistry from '../SchemaRegistry.js' */
+/** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
 /** @import Demo from '../data/Demo.js' */
 /** @import { PlaybackInterruptionReason } from '../errors/PlaybackInterruptedError.js' */
 /** @import { NodeReadable } from '#core/stream/Pipeline.js' */
-/** @import { InterceptorMap, InterceptorPreStage } from '../InterceptorRegistry.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from '../processing/InterceptorRegistry.js' */
 /** @import InterceptorStage from '../data/enums/InterceptorStage.js' */
 
-/** @import { MemoryTrackerStats } from '../trackers/MemoryTracker.base.js' */
-/** @import { PacketTrackerStats } from '../trackers/PacketTracker.js' */
-/** @import { PerformanceTrackerStats } from '../trackers/PerformanceTracker.js' */
+/** @import { MemoryTrackerStats } from '../diagnostics/trackers/MemoryTracker.base.js' */
+/** @import { PacketTrackerStats } from '../diagnostics/trackers/PacketTracker.js' */
+/** @import { PerformanceTrackerStats } from '../diagnostics/trackers/PerformanceTracker.js' */
 
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';

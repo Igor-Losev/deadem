@@ -1,12 +1,12 @@
-/** @import DemoPacket from './data/DemoPacket.js' */
-/** @import MessagePacket from './data/MessagePacket.js' */
-/** @import EntityMutationEvent from './data/entity/EntityMutationEvent.js' */
-/** @import UserCommandEvent from './data/UserCommandEvent.js' */
-/** @import StringTableMutationEvent from './data/tables/string/StringTableMutationEvent.js' */
+/** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import MessagePacket from '../data/MessagePacket.js' */
+/** @import EntityMutationEvent from '../data/entity/EntityMutationEvent.js' */
+/** @import UserCommandEvent from '../data/UserCommandEvent.js' */
+/** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
-import Assert from './core/Assert.js';
+import Assert from '../core/Assert.js';
 
-import InterceptorStage from './data/enums/InterceptorStage.js';
+import InterceptorStage from '../data/enums/InterceptorStage.js';
 
 /**
  * Interceptor callback. Receives stage-specific arguments — see

@@ -4,7 +4,7 @@ import Logger from '../src/core/Logger.js';
 
 import ParserConfiguration from '../src/ParserConfiguration.js';
 import ParserEngine from '../src/ParserEngine.js';
-import SchemaRegistry from '../src/SchemaRegistry.js';
+import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 
 import PlaybackLoop from '../src/player/PlaybackLoop.js';
 import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';

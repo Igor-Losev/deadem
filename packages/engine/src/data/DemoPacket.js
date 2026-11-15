@@ -1,4 +1,4 @@
-/** @import SchemaRegistry from '../SchemaRegistry.js' */
+/** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 /** @import MessagePacket from './MessagePacket.js' */
 /** @import { MessagePayload } from './MessagePacket.js' */
 /** @import MessagePacketRaw from './MessagePacketRaw.js' */

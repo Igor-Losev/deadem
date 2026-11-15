@@ -21,8 +21,8 @@
       "#core/stream/WritableSink.js": [
         "./packages/engine/src/core/stream/WritableSink.browser.js"
       ],
-      "#trackers/MemoryTracker.js": [
-        "./packages/engine/src/trackers/MemoryTracker.browser.js"
+      "#diagnostics/trackers/MemoryTracker.js": [
+        "./packages/engine/src/diagnostics/trackers/MemoryTracker.browser.js"
       ],
       "@deademx/engine": [
         "./packages/engine/index.js"

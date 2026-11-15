@@ -15,7 +15,7 @@ import SerializerKey from '../data/fields/SerializerKey.js';
 
 import StringTableHandler from './StringTableHandler.js';
 
-import SchemaRegistry from '../SchemaRegistry.js';
+import SchemaRegistry from '../schema/SchemaRegistry.js';
 
 class DemoPacketHandler {
     /**

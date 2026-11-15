@@ -1,14 +1,14 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
 /** @import { DemoPacketHeavyData } from '../data/DemoPacket.js' */
 
-/** @import PerformanceTracker from '../trackers/PerformanceTracker.js' */
+/** @import PerformanceTracker from '../diagnostics/trackers/PerformanceTracker.js' */
 
 import Assert from '../core/Assert.js';
 
 import MessagePacketType from '../data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
-import ParserDiagnostics from '../ParserDiagnostics.js';
+import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 
 /**
  * Handles prioritization of internal messages for

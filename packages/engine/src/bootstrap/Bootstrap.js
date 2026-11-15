@@ -1,4 +1,4 @@
-/** @import SchemaRegistry from '../SchemaRegistry.js' */
+/** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 import EmbeddedMessageType from '../data/enums/EmbeddedMessageType.js';

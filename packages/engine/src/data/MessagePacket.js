@@ -1,6 +1,6 @@
 /** @import { GenMessage } from '@bufbuild/protobuf/codegenv2' */
 
-/** @import SchemaRegistry from '../SchemaRegistry.js' */
+/** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
 /** @import MessagePacketType from './enums/MessagePacketType.js' */
 

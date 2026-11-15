@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import SchemaRegistry from '../src/SchemaRegistry.js';
+import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 import MessagePacketType from '../src/data/enums/MessagePacketType.js';

@@ -3,8 +3,9 @@ import Transform from '#core/stream/Transform.js';
 
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
+import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
+
 import ParserConfiguration from '../ParserConfiguration.js';
-import ParserDiagnostics from '../ParserDiagnostics.js';
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).

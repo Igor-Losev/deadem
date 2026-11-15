@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
-import PacketCodec from '../src/PacketCodec.js';
+import PacketCodec from '../src/schema/PacketCodec.js';
 import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';
 
 /**

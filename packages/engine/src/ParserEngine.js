@@ -13,6 +13,11 @@ import Demo from './data/Demo.js';
 import DemoSource from './data/enums/DemoSource.js';
 import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
 
+import MemoryTracker from '#diagnostics/trackers/MemoryTracker.js';
+import PacketTracker from './diagnostics/trackers/PacketTracker.js';
+import ParserDiagnostics from './diagnostics/ParserDiagnostics.js';
+import PerformanceTracker from './diagnostics/trackers/PerformanceTracker.js';
+
 import DemoEntityHandler from './handlers/DemoEntityHandler.js';
 import DemoMessageHandler from './handlers/DemoMessageHandler.js';
 import DemoPacketHandler from './handlers/DemoPacketHandler.js';
@@ -22,21 +27,17 @@ import DemoPacketApplier from './processing/DemoPacketApplier.js';
 import DemoPacketParser from './processing/DemoPacketParser.js';
 import DemoPacketPrioritizer from './processing/DemoPacketPrioritizer.js';
 import DemoPacketProcessor from './processing/DemoPacketProcessor.js';
+import InterceptorRegistry from './processing/InterceptorRegistry.js';
+
+import PacketCodec from './schema/PacketCodec.js';
+import SchemaRegistry from './schema/SchemaRegistry.js';
 
 import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
 import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketProcessor from './stream/DemoStreamPacketProcessor.js';
 
-import MemoryTracker from '#trackers/MemoryTracker.js';
-import PacketTracker from './trackers/PacketTracker.js';
-import PerformanceTracker from './trackers/PerformanceTracker.js';
-
-import InterceptorRegistry from './InterceptorRegistry.js';
-import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
-import ParserDiagnostics from './ParserDiagnostics.js';
-import SchemaRegistry from './SchemaRegistry.js';
 
 class ParserEngine {
     /** @private @type {PacketCodec} */

@@ -7,7 +7,7 @@ import StringTableType from '../data/enums/StringTableType.js';
 
 import StringTableEntryExtractor from '../extractors/StringTableEntryExtractor.js';
 
-import SchemaRegistry from '../SchemaRegistry.js';
+import SchemaRegistry from '../schema/SchemaRegistry.js';
 
 import StringTable from '../data/tables/string/StringTable.js';
 import StringTableContainer from '../data/tables/string/StringTableContainer.js';

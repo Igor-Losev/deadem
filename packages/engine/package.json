@@ -106,15 +106,15 @@
       "browser": "./src/core/stream/WritableSink.browser.js",
       "default": "./src/core/stream/WritableSink.browser.js"
     },
-    "#trackers/MemoryTracker.js": {
-      "types": "./types/src/trackers/MemoryTracker.node.d.ts",
+    "#diagnostics/trackers/MemoryTracker.js": {
+      "types": "./types/src/diagnostics/trackers/MemoryTracker.node.d.ts",
       "electron": {
-        "browser": "./src/trackers/MemoryTracker.browser.js",
-        "default": "./src/trackers/MemoryTracker.node.js"
+        "browser": "./src/diagnostics/trackers/MemoryTracker.browser.js",
+        "default": "./src/diagnostics/trackers/MemoryTracker.node.js"
       },
-      "node": "./src/trackers/MemoryTracker.node.js",
-      "browser": "./src/trackers/MemoryTracker.browser.js",
-      "default": "./src/trackers/MemoryTracker.browser.js"
+      "node": "./src/diagnostics/trackers/MemoryTracker.node.js",
+      "browser": "./src/diagnostics/trackers/MemoryTracker.browser.js",
+      "default": "./src/diagnostics/trackers/MemoryTracker.browser.js"
     }
   },
   "dependencies": {
