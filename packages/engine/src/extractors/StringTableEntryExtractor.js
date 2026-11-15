@@ -2,7 +2,7 @@
 
 import Assert from '../core/Assert.js';
 import BitBuffer from '../core/BitBuffer.js';
-import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
+import Snappy from '../core/Snappy.instance.js';
 
 import StringTable from '../data/tables/string/StringTable.js';
 import StringTableEntry from '../data/tables/string/StringTableEntry.js';
@@ -107,7 +107,7 @@ class StringTableEntryExtractor {
                 value = this._bitBuffer.read(bitSize, true);
 
                 if (isCompressed) {
-                    value = SnappyDecompressor.decompress(value);
+                    value = Snappy.decompress(value);
                 }
             }
 

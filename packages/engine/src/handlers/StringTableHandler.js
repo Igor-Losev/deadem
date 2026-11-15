@@ -1,6 +1,6 @@
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
-import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
+import Snappy from '../core/Snappy.instance.js';
 
 import StringTableOperation from '../data/enums/StringTableOperation.js';
 import StringTableType from '../data/enums/StringTableType.js';
@@ -94,7 +94,7 @@ class StringTableHandler {
         );
 
         const payload = createData.dataCompressed
-            ? SnappyDecompressor.decompress(createData.stringData)
+            ? Snappy.decompress(createData.stringData)
             : createData.stringData;
 
         const tableId = existing !== null ? existing.id : this._container.size;

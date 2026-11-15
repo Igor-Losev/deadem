@@ -3,7 +3,7 @@
 /** @import MessagePacketRaw from '../data/MessagePacketRaw.js' */
 
 import Assert from '../core/Assert.js';
-import SnappyDecompressor from '../core/SnappyDecompressor.instance.js';
+import Snappy from '../core/Snappy.instance.js';
 
 import DemoPacket from '../data/DemoPacket.js';
 import MessagePacket from '../data/MessagePacket.js';
@@ -50,7 +50,7 @@ class PacketCodec {
         let decompressed;
 
         if (raw.getIsCompressed()) {
-            decompressed = SnappyDecompressor.decompress(raw.payload);
+            decompressed = Snappy.decompress(raw.payload);
         } else {
             decompressed = raw.payload;
         }
