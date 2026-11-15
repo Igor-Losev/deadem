@@ -1,5 +1,3 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
@@ -10,6 +8,9 @@ import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory
 import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
 import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
 
+import ParserConfiguration from '../ParserConfiguration.js';
+import ParserDiagnostics from '../ParserDiagnostics.js';
+
 const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 
 /**
@@ -19,32 +20,38 @@ const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
  * the extraction of the {@link DemoPacketRaw}.
  */
 class DemoStreamPacketExtractor extends Transform {
+    /** @private */
+    _counts = {
+        bytes: 0,
+        chunks: 0,
+        packets: 0
+    };
+
+    /** @private @type {ParserDiagnostics} */
+    _diagnostics;
+
+    /** @private @type {DemoSource} */
+    _source;
+
+    /** @private @type {Uint8Array} */
+    _tail = new Uint8Array(0);
+
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
+     * @param {ParserConfiguration} configuration
+     * @param {ParserDiagnostics} diagnostics
      * @param {DemoSource} source
      */
-    constructor(engine, highWaterMark, source) {
-        super(highWaterMark);
+    constructor(configuration, diagnostics, source) {
+        super(configuration.streamHighWaterMark);
 
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
         Assert.isTrue(source instanceof DemoSource);
 
-        /** @private */
-        this._engine = engine;
-        /** @private */
+        this._diagnostics = diagnostics;
         this._source = source;
-
-        /** @private */
-        this._counts = {
-            bytes: 0,
-            chunks: 0,
-            packets: 0
-        };
-
-        /** @private @type {Uint8Array} */
-        this._tail = new Uint8Array(0);
     }
 
     /**
@@ -61,7 +68,7 @@ class DemoStreamPacketExtractor extends Transform {
      */
     async _finalize() {
         if (this._tail.length !== 0) {
-            this._engine.logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
+            this._diagnostics.logger.warn(`DemoStreamPacketExtractor._flush() is called. However, there are [ ${this._tail.length} ] unhandled bytes. This should never happen`);
         }
     }
 
@@ -98,11 +105,11 @@ class DemoStreamPacketExtractor extends Transform {
         const generator = extractor.retrieve(this._counts.packets);
 
         while (true) {
-            this._engine.getPerformanceTracker().start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+            this._diagnostics.performance.start(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
 
             const next = generator.next();
 
-            this._engine.getPerformanceTracker().end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
+            this._diagnostics.performance.end(PerformanceTrackerCategory.DEMO_PACKET_EXTRACTOR);
 
             if (next.done) {
                 break;

@@ -1,4 +1,3 @@
-/** @import DeferredPromise from './core/DeferredPromise.js' */
 /** @import DemoPacket from './data/DemoPacket.js' */
 /** @import DemoPacketRaw from './data/DemoPacketRaw.js' */
 /** @import MessagePacket from './data/MessagePacket.js' */
@@ -22,6 +21,10 @@ import DemoMessageHandler from './handlers/DemoMessageHandler.js';
 import DemoPacketHandler from './handlers/DemoPacketHandler.js';
 import StringTableHandler from './handlers/StringTableHandler.js';
 
+import DemoPacketApplier from './processing/DemoPacketApplier.js';
+import DemoPacketParser from './processing/DemoPacketParser.js';
+import DemoPacketPrioritizer from './processing/DemoPacketPrioritizer.js';
+
 import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
 import DemoStreamPacketApplier from './stream/DemoStreamPacketApplier.js';
@@ -37,6 +40,7 @@ import PerformanceTracker from './trackers/PerformanceTracker.js';
 import InterceptorRegistry from './InterceptorRegistry.js';
 import PacketCodec from './PacketCodec.js';
 import ParserConfiguration from './ParserConfiguration.js';
+import ParserDiagnostics from './ParserDiagnostics.js';
 import SchemaRegistry from './SchemaRegistry.js';
 
 /**
@@ -77,8 +81,8 @@ class ParserEngine {
     /** @private @type {Demo} */
     _demo;
 
-    /** @private @type {{ entity: ((className: string) => boolean)|null, message: ((messagePacketTypeId: number) => boolean)|null }} */
-    _filters;
+    /** @private @type {ParserDiagnostics} */
+    _diagnostics;
 
     /** @private @type {{ demoEntity: DemoEntityHandler, demoMessage: DemoMessageHandler, demoPacket: DemoPacketHandler, stringTable: StringTableHandler }} */
     _handlers;
@@ -86,14 +90,8 @@ class ParserEngine {
     /** @private @type {InterceptorRegistry} */
     _interceptors;
 
-    /** @private @type {Logger} */
-    _logger;
-
     /** @private @type {Pipeline|null} */
     _pipeline = null;
-
-    /** @private @type {SchemaRegistry} */
-    _registry;
 
     /** @private */
     _state = {
@@ -102,9 +100,6 @@ class ParserEngine {
         pause: new PauseControl(),
         started: false
     };
-
-    /** @private @type {{ memory: MemoryTracker, packet: PacketTracker, performance: PerformanceTracker }} */
-    _trackers;
 
     /**
      * @public
@@ -117,34 +112,23 @@ class ParserEngine {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
-        this._registry = registry;
         this._configuration = configuration;
-        this._logger = logger;
 
         this._codec = new PacketCodec(registry);
         this._demo = new Demo();
 
-        const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
+        this._diagnostics = new ParserDiagnostics(logger, new MemoryTracker(), new PacketTracker(registry), new PerformanceTracker());
 
-        this._filters = {
-            entity: configuration.entityClassFilter,
-            message: configuration.messagePacketFilter
-        };
+        const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
 
         this._handlers = {
             demoEntity: new DemoEntityHandler(this._demo),
-            demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
+            demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, configuration.entityClassFilter),
             demoPacket: new DemoPacketHandler(registry, this._demo, stringTableHandler),
             stringTable: stringTableHandler
         };
 
         this._interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
-
-        this._trackers = {
-            memory: new MemoryTracker(),
-            packet: new PacketTracker(registry),
-            performance: new PerformanceTracker()
-        };
     }
 
     /**
@@ -189,34 +173,10 @@ class ParserEngine {
 
     /**
      * @public
-     * @returns {Logger}
-     */
-    get logger() {
-        return this._logger;
-    }
-
-    /**
-     * @public
      * @returns {boolean}
      */
     get paused() {
         return this._state.pause.paused;
-    }
-
-    /**
-     * @public
-     * @returns {DeferredPromise<void>|null}
-     */
-    get pausePromise() {
-        return this._state.pause.deferred;
-    }
-
-    /**
-     * @public
-     * @returns {SchemaRegistry}
-     */
-    get registry() {
-        return this._registry;
     }
 
     /**
@@ -291,7 +251,7 @@ class ParserEngine {
      * @returns {MemoryTracker}
      */
     getMemoryTracker() {
-        return this._trackers.memory;
+        return this._diagnostics.memory;
     }
 
     /**
@@ -299,7 +259,7 @@ class ParserEngine {
      * @returns {PacketTracker}
      */
     getPacketTracker() {
-        return this._trackers.packet;
+        return this._diagnostics.packet;
     }
 
     /**
@@ -307,7 +267,7 @@ class ParserEngine {
      * @returns {PerformanceTracker}
      */
     getPerformanceTracker() {
-        return this._trackers.performance;
+        return this._diagnostics.performance;
     }
 
     /**
@@ -334,16 +294,16 @@ class ParserEngine {
         const packets = [];
 
         const chain = [
-            new DemoStreamBufferSplitter(this, this._configuration.streamHighWaterMark, this._configuration.splitterChunkSize),
-            new DemoStreamPacketExtractor(this, this._configuration.streamHighWaterMark, source)
+            new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
+            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, source)
         ];
 
         this._state.started = true;
 
         try {
-            this._logger.info('Extract started');
+            this._diagnostics.logger.info('Extract started');
 
-            this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
+            this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
             const collector = new WritableSink((packet) => packets.push(packet));
 
@@ -351,7 +311,7 @@ class ParserEngine {
 
             await this._pipeline.ready();
 
-            this._logger.info(`Extracted [ ${packets.length} ] packets`);
+            this._diagnostics.logger.info(`Extracted [ ${packets.length} ] packets`);
 
             return packets;
         } catch (error) {
@@ -359,11 +319,11 @@ class ParserEngine {
                 return packets;
             }
 
-            this._logger.error('Extract failed', error);
+            this._diagnostics.logger.error('Extract failed', error);
 
             throw error;
         } finally {
-            this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
+            this._diagnostics.performance.end(PerformanceTrackerCategory.PARSER);
 
             this._state.finished = true;
             this._pipeline = null;
@@ -380,34 +340,44 @@ class ParserEngine {
     async parse(reader, source = DemoSource.REPLAY, objectMode = false) {
         await this._prepareRun();
 
-        const highWaterMark = this._configuration.streamHighWaterMark;
-
         const chain = [];
 
         if (objectMode) {
-            chain.push(new DemoStreamPacketResequencer(this, highWaterMark));
+            chain.push(new DemoStreamPacketResequencer(this._configuration));
         } else {
             chain.push(
-                new DemoStreamBufferSplitter(this, highWaterMark, this._configuration.splitterChunkSize),
-                new DemoStreamPacketExtractor(this, highWaterMark, source)
+                new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
+                new DemoStreamPacketExtractor(this._configuration, this._diagnostics, source)
             );
         }
 
-        chain.push(new DemoStreamEventLoopBreaker(this, highWaterMark, this._configuration.breakInterval));
+        chain.push(new DemoStreamEventLoopBreaker(this._configuration));
+
+        const parser = new DemoPacketParser(this._codec, this._configuration.messagePacketFilter, this._diagnostics.packet, this._diagnostics.performance);
+        const prioritizer = new DemoPacketPrioritizer(this._diagnostics.performance);
+
+        const applier = new DemoPacketApplier(
+            this._handlers.demoPacket,
+            this._handlers.demoMessage,
+            this._handlers.demoEntity,
+            this._interceptors,
+            this._diagnostics.packet,
+            this._diagnostics.performance
+        );
 
         chain.push(
-            new DemoStreamPacketParser(this, highWaterMark, this._filters.message),
-            new DemoStreamPacketPrioritizer(this, highWaterMark),
-            new DemoStreamPacketApplier(this, highWaterMark)
+            new DemoStreamPacketParser(this._configuration, parser),
+            new DemoStreamPacketPrioritizer(this._configuration, prioritizer),
+            new DemoStreamPacketApplier(this._configuration, applier, this._state.pause)
         );
 
         this._state.started = true;
 
         try {
-            this._logger.info('Parse started');
+            this._diagnostics.logger.info('Parse started');
 
-            this._trackers.memory.on();
-            this._trackers.performance.start(PerformanceTrackerCategory.PARSER);
+            this._diagnostics.memory.on();
+            this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
             this._pipeline = new Pipeline(/** @type {*} */ (reader), chain);
 
@@ -417,12 +387,12 @@ class ParserEngine {
                 return;
             }
 
-            this._logger.error('Parse failed', error);
+            this._diagnostics.logger.error('Parse failed', error);
 
             throw error;
         } finally {
-            this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
-            this._trackers.memory.off();
+            this._diagnostics.performance.end(PerformanceTrackerCategory.PARSER);
+            this._diagnostics.memory.off();
 
             this._state.finished = true;
             this._pipeline = null;

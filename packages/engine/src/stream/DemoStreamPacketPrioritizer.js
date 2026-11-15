@@ -1,10 +1,12 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 /** @import DemoPacket from '../data/DemoPacket.js' */
+
+import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
 import DemoPacketPrioritizer from '../processing/DemoPacketPrioritizer.js';
+
+import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Handles prioritization of internal messages for
@@ -19,17 +21,22 @@ import DemoPacketPrioritizer from '../processing/DemoPacketPrioritizer.js';
  * Stream wrapper around {@link DemoPacketPrioritizer}.
  */
 class DemoStreamPacketPrioritizer extends Transform {
+    /** @private @type {DemoPacketPrioritizer} */
+    _prioritizer;
+
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
+     * @param {ParserConfiguration} configuration
+     * @param {DemoPacketPrioritizer} prioritizer
      */
-    constructor(engine, highWaterMark) {
-        super(highWaterMark);
+    constructor(configuration, prioritizer) {
+        super(configuration.streamHighWaterMark);
 
-        /** @private */
-        this._prioritizer = new DemoPacketPrioritizer(engine.getPerformanceTracker());
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(prioritizer instanceof DemoPacketPrioritizer, 'Invalid prioritizer: expected an instance of DemoPacketPrioritizer');
+
+        this._prioritizer = prioritizer;
     }
 
     /**

@@ -1,10 +1,13 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 /** @import DemoPacket from '../data/DemoPacket.js' */
+
+import Assert from '../core/Assert.js';
+import PauseControl from '../core/PauseControl.js';
 
 import Transform from '#core/stream/Transform.js';
 
 import DemoPacketApplier from '../processing/DemoPacketApplier.js';
+
+import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Given a stream of {@link DemoPacket}, applies them sequentially
@@ -13,27 +16,28 @@ import DemoPacketApplier from '../processing/DemoPacketApplier.js';
  * Stream wrapper around {@link DemoPacketApplier}.
  */
 class DemoStreamPacketApplier extends Transform {
+    /** @private @type {DemoPacketApplier} */
+    _applier;
+
+    /** @private @type {PauseControl} */
+    _pause;
+
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
+     * @param {ParserConfiguration} configuration
+     * @param {DemoPacketApplier} applier
+     * @param {PauseControl} pause
      */
-    constructor(engine, highWaterMark) {
-        super(highWaterMark);
+    constructor(configuration, applier, pause) {
+        super(configuration.streamHighWaterMark);
 
-        /** @private */
-        this._engine = engine;
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(applier instanceof DemoPacketApplier, 'Invalid applier: expected an instance of DemoPacketApplier');
+        Assert.isTrue(pause instanceof PauseControl, 'Invalid pause: expected an instance of PauseControl');
 
-        /** @private */
-        this._applier = new DemoPacketApplier(
-            engine.getDemoPacketHandler(),
-            engine.getDemoMessageHandler(),
-            engine.getDemoEntityHandler(),
-            engine.interceptors,
-            engine.getPacketTracker(),
-            engine.getPerformanceTracker()
-        );
+        this._applier = applier;
+        this._pause = pause;
     }
 
     /**
@@ -42,7 +46,7 @@ class DemoStreamPacketApplier extends Transform {
      * @param {DemoPacket} demoPacket
      */
     async _handle(demoPacket) {
-        const pausePromise = this._engine.pausePromise;
+        const pausePromise = this._pause.deferred;
 
         if (pausePromise !== null) {
             await pausePromise.promise;

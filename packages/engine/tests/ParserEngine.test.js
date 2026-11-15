@@ -58,13 +58,13 @@ describe('ParserEngine', () => {
             expect(() => engine.pause()).toThrow('already paused');
         });
 
-        test('It should set paused state and create pausePromise', () => {
+        test('It should set paused state and create the pause promise', () => {
             const engine = createRunningEngine();
 
             engine.pause();
 
             expect(engine.paused).toBe(true);
-            expect(engine.pausePromise).not.toBeNull();
+            expect(engine._state.pause.deferred).not.toBeNull();
         });
     });
 
@@ -83,12 +83,12 @@ describe('ParserEngine', () => {
             expect(() => engine.resume()).toThrow('disposed');
         });
 
-        test('It should clear paused state and resolve pausePromise', async () => {
+        test('It should clear paused state and resolve the pause promise', async () => {
             const engine = createRunningEngine();
 
             engine.pause();
 
-            const promise = engine.pausePromise.promise;
+            const promise = engine._state.pause.deferred.promise;
 
             let resolved = false;
 
@@ -99,7 +99,7 @@ describe('ParserEngine', () => {
             await promise;
 
             expect(engine.paused).toBe(false);
-            expect(engine.pausePromise).toBeNull();
+            expect(engine._state.pause.deferred).toBeNull();
             expect(resolved).toBe(true);
         });
     });
@@ -119,12 +119,12 @@ describe('ParserEngine', () => {
             expect(() => engine.abort()).not.toThrow();
         });
 
-        test('It should resolve pausePromise on abort', async () => {
+        test('It should resolve the pause promise on abort', async () => {
             const engine = createRunningEngine();
 
             engine.pause();
 
-            const promise = engine.pausePromise.promise;
+            const promise = engine._state.pause.deferred.promise;
 
             let resolved = false;
 
@@ -136,7 +136,7 @@ describe('ParserEngine', () => {
 
             expect(resolved).toBe(true);
             expect(engine.paused).toBe(false);
-            expect(engine.pausePromise).toBeNull();
+            expect(engine._state.pause.deferred).toBeNull();
         });
 
         test('It should stop parsing a web ReadableStream', async () => {
@@ -156,12 +156,12 @@ describe('ParserEngine', () => {
     });
 
     describe('dispose while paused', () => {
-        test('It should resolve pausePromise on dispose', async () => {
+        test('It should resolve the pause promise on dispose', async () => {
             const engine = createRunningEngine();
 
             engine.pause();
 
-            const promise = engine.pausePromise.promise;
+            const promise = engine._state.pause.deferred.promise;
 
             let resolved = false;
 
@@ -185,7 +185,7 @@ describe('ParserEngine', () => {
             engine.pause();
 
             expect(engine.paused).toBe(true);
-            expect(engine.pausePromise).not.toBeNull();
+            expect(engine._state.pause.deferred).not.toBeNull();
         });
     });
 

@@ -1,8 +1,10 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
+import Assert from '../core/Assert.js';
+
 import Transform from '#core/stream/Transform.js';
+
+import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Assigns sequential {@link DemoPacketRaw#ordinal} values (0, 1, 2, ...)
@@ -11,19 +13,18 @@ import Transform from '#core/stream/Transform.js';
  * {@link DemoPacketRaw#sequence}.
  */
 class DemoStreamPacketResequencer extends Transform {
+    /** @private */
+    _ordinal = 0;
+
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
+     * @param {ParserConfiguration} configuration
      */
-    constructor(engine, highWaterMark) {
-        super(highWaterMark);
+    constructor(configuration) {
+        super(configuration.streamHighWaterMark);
 
-        /** @private */
-        this._engine = engine;
-        /** @private */
-        this._ordinal = 0;
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
     }
 
     /**

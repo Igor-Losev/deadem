@@ -1,5 +1,3 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
 import Assert from '../core/Assert.js';
@@ -7,31 +5,31 @@ import Assert from '../core/Assert.js';
 import EventLoop from '#core/EventLoop.js';
 import Transform from '#core/stream/Transform.js';
 
+import ParserConfiguration from '../ParserConfiguration.js';
+
 /**
  * Balances stream processing load by periodically yielding control back to
  * the event loop, preventing long blocking operations and allowing
  * garbage collection to proceed smoothly.
  */
 class DemoStreamEventLoopBreaker extends Transform {
+    /** @private @type {number} */
+    _breakInterval;
+
+    /** @private */
+    _counter = 0;
+
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
-     * @param {number} breakInterval
+     * @param {ParserConfiguration} configuration
      */
-    constructor(engine, highWaterMark, breakInterval) {
-        super(highWaterMark);
+    constructor(configuration) {
+        super(configuration.streamHighWaterMark);
 
-        Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0);
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
 
-        /** @private */
-        this._engine = engine;
-        /** @private */
-        this._breakInterval = breakInterval;
-
-        /** @private */
-        this._counter = 0;
+        this._breakInterval = configuration.breakInterval;
     }
 
     /**

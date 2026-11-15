@@ -1,10 +1,12 @@
-/** @import ParserEngine from '../ParserEngine.js' */
-
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
+
+import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
 import DemoPacketParser from '../processing/DemoPacketParser.js';
+
+import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Given a stream of {@link DemoPacketRaw}, parses its payload.
@@ -13,18 +15,22 @@ import DemoPacketParser from '../processing/DemoPacketParser.js';
  * Stream wrapper around {@link DemoPacketParser}.
  */
 class DemoStreamPacketParser extends Transform {
+    /** @private @type {DemoPacketParser} */
+    _parser;
+
     /**
      * @constructor
      * @public
-     * @param {ParserEngine} engine
-     * @param {number} highWaterMark
-     * @param {((id: number) => boolean)|null} messagePacketFilter
+     * @param {ParserConfiguration} configuration
+     * @param {DemoPacketParser} parser
      */
-    constructor(engine, highWaterMark, messagePacketFilter) {
-        super(highWaterMark);
+    constructor(configuration, parser) {
+        super(configuration.streamHighWaterMark);
 
-        /** @private */
-        this._parser = new DemoPacketParser(engine.codec, messagePacketFilter, engine.getPacketTracker(), engine.getPerformanceTracker());
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(parser instanceof DemoPacketParser, 'Invalid parser: expected an instance of DemoPacketParser');
+
+        this._parser = parser;
     }
 
     /**
