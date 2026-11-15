@@ -1,5 +1,7 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
 
+/** @import PerformanceTracker from '../trackers/PerformanceTracker.js' */
+
 /** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
 
 import Assert from '../core/Assert.js';
@@ -7,7 +9,7 @@ import Assert from '../core/Assert.js';
 import MessagePacketType from '../data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
-import PerformanceTracker from '../trackers/PerformanceTracker.js';
+import ParserDiagnostics from '../ParserDiagnostics.js';
 
 /**
  * Handles prioritization of internal messages for
@@ -20,16 +22,18 @@ import PerformanceTracker from '../trackers/PerformanceTracker.js';
  * All other packet types are left unchanged.
  */
 class DemoPacketPrioritizer {
+    /** @private @type {PerformanceTracker} */
+    _performanceTracker;
+
     /**
      * @public
      * @constructor
-     * @param {PerformanceTracker} performanceTracker
+     * @param {ParserDiagnostics} diagnostics
      */
-    constructor(performanceTracker) {
-        Assert.isTrue(performanceTracker instanceof PerformanceTracker, 'Invalid performanceTracker: expected an instance of PerformanceTracker');
+    constructor(diagnostics) {
+        Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
 
-        /** @private */
-        this._performanceTracker = performanceTracker;
+        this._performanceTracker = diagnostics.performance;
     }
 
     /**

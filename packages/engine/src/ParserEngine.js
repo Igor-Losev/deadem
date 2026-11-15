@@ -24,14 +24,12 @@ import StringTableHandler from './handlers/StringTableHandler.js';
 import DemoPacketApplier from './processing/DemoPacketApplier.js';
 import DemoPacketParser from './processing/DemoPacketParser.js';
 import DemoPacketPrioritizer from './processing/DemoPacketPrioritizer.js';
+import DemoPacketProcessor from './processing/DemoPacketProcessor.js';
 
 import DemoStreamBufferSplitter from './stream/DemoStreamBufferSplitter.js';
 import DemoStreamEventLoopBreaker from './stream/DemoStreamEventLoopBreaker.js';
-import DemoStreamPacketApplier from './stream/DemoStreamPacketApplier.js';
 import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
-import DemoStreamPacketParser from './stream/DemoStreamPacketParser.js';
-import DemoStreamPacketPrioritizer from './stream/DemoStreamPacketPrioritizer.js';
-import DemoStreamPacketResequencer from './stream/DemoStreamPacketResequencer.js';
+import DemoStreamPacketProcessor from './stream/DemoStreamPacketProcessor.js';
 
 import MemoryTracker from '#trackers/MemoryTracker.js';
 import PacketTracker from './trackers/PacketTracker.js';
@@ -93,6 +91,9 @@ class ParserEngine {
     /** @private @type {Pipeline|null} */
     _pipeline = null;
 
+    /** @private @type {DemoPacketProcessor} */
+    _processor;
+
     /** @private */
     _state = {
         disposed: false,
@@ -129,6 +130,12 @@ class ParserEngine {
         };
 
         this._interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
+
+        this._processor = new DemoPacketProcessor(
+            new DemoPacketParser(configuration, this._diagnostics, this._codec),
+            new DemoPacketPrioritizer(this._diagnostics),
+            new DemoPacketApplier(this._diagnostics, this._handlers.demoPacket, this._handlers.demoMessage, this._handlers.demoEntity, this._interceptors)
+        );
     }
 
     /**
@@ -181,6 +188,14 @@ class ParserEngine {
 
     /**
      * @public
+     * @returns {DemoPacketProcessor}
+     */
+    get processor() {
+        return this._processor;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     get started() {
@@ -220,30 +235,6 @@ class ParserEngine {
 
         this._demo.reset();
         this._interceptors.reset();
-    }
-
-    /**
-     * @public
-     * @returns {DemoEntityHandler}
-     */
-    getDemoEntityHandler() {
-        return this._handlers.demoEntity;
-    }
-
-    /**
-     * @public
-     * @returns {DemoMessageHandler}
-     */
-    getDemoMessageHandler() {
-        return this._handlers.demoMessage;
-    }
-
-    /**
-     * @public
-     * @returns {DemoPacketHandler}
-     */
-    getDemoPacketHandler() {
-        return this._handlers.demoPacket;
     }
 
     /**
@@ -340,35 +331,18 @@ class ParserEngine {
     async parse(reader, source = DemoSource.REPLAY, objectMode = false) {
         await this._prepareRun();
 
-        const chain = [];
+        const chain = [ ];
 
-        if (objectMode) {
-            chain.push(new DemoStreamPacketResequencer(this._configuration));
-        } else {
+        if (!objectMode) {
             chain.push(
                 new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
                 new DemoStreamPacketExtractor(this._configuration, this._diagnostics, source)
             );
         }
 
-        chain.push(new DemoStreamEventLoopBreaker(this._configuration));
-
-        const parser = new DemoPacketParser(this._codec, this._configuration.messagePacketFilter, this._diagnostics.packet, this._diagnostics.performance);
-        const prioritizer = new DemoPacketPrioritizer(this._diagnostics.performance);
-
-        const applier = new DemoPacketApplier(
-            this._handlers.demoPacket,
-            this._handlers.demoMessage,
-            this._handlers.demoEntity,
-            this._interceptors,
-            this._diagnostics.packet,
-            this._diagnostics.performance
-        );
-
         chain.push(
-            new DemoStreamPacketParser(this._configuration, parser),
-            new DemoStreamPacketPrioritizer(this._configuration, prioritizer),
-            new DemoStreamPacketApplier(this._configuration, applier, this._state.pause)
+            new DemoStreamEventLoopBreaker(this._configuration),
+            new DemoStreamPacketProcessor(this._configuration, this._processor, this._state.pause)
         );
 
         this._state.started = true;
@@ -438,6 +412,7 @@ class ParserEngine {
         this._state.pause.release();
 
         this._demo.reset();
+        this._processor.reset();
 
         this._state.started = false;
         this._state.finished = false;

@@ -51,7 +51,7 @@ function createIndexStub(packets, plan) {
 function createSession(packets, plan, breakInterval = 1000) {
     const engine = createEngine();
     const index = createIndexStub(packets, plan);
-    const session = new ReplaySession(engine, index, () => true, breakInterval);
+    const session = new ReplaySession(engine, index, breakInterval);
 
     return { engine, index, session };
 }
@@ -62,9 +62,9 @@ describe('ReplaySession', () => {
             const engine = createEngine();
             const index = createIndexStub([], { bootstrap: [], snapshots: [], from: 0, to: 0 });
 
-            expect(() => new ReplaySession({}, index, () => true, 1000)).toThrow('engine');
-            expect(() => new ReplaySession(engine, {}, () => true, 1000)).toThrow('index');
-            expect(() => new ReplaySession(engine, index, () => true, 0)).toThrow('breakInterval');
+            expect(() => new ReplaySession({}, index, 1000)).toThrow('engine');
+            expect(() => new ReplaySession(engine, {}, 1000)).toThrow('index');
+            expect(() => new ReplaySession(engine, index, 0)).toThrow('breakInterval');
         });
     });
 

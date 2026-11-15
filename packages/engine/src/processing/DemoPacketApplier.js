@@ -2,6 +2,9 @@
 /** @import MessagePacket from '../data/MessagePacket.js' */
 /** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
 
+/** @import PacketTracker from '../trackers/PacketTracker.js' */
+/** @import PerformanceTracker from '../trackers/PerformanceTracker.js' */
+
 import Assert from '../core/Assert.js';
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
@@ -13,10 +16,8 @@ import DemoEntityHandler from '../handlers/DemoEntityHandler.js';
 import DemoMessageHandler from '../handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '../handlers/DemoPacketHandler.js';
 
-import PacketTracker from '../trackers/PacketTracker.js';
-import PerformanceTracker from '../trackers/PerformanceTracker.js';
-
 import InterceptorRegistry from '../InterceptorRegistry.js';
+import ParserDiagnostics from '../ParserDiagnostics.js';
 
 /**
  * Applies a {@link DemoPacket} to the {@link Demo} state: routes the packet
@@ -24,38 +25,46 @@ import InterceptorRegistry from '../InterceptorRegistry.js';
  * around every step and updating trackers.
  */
 class DemoPacketApplier {
+    /** @private @type {DemoEntityHandler} */
+    _demoEntityHandler;
+
+    /** @private @type {DemoMessageHandler} */
+    _demoMessageHandler;
+
+    /** @private @type {DemoPacketHandler} */
+    _demoPacketHandler;
+
+    /** @private @type {InterceptorRegistry} */
+    _interceptors;
+
+    /** @private @type {PacketTracker} */
+    _packetTracker;
+
+    /** @private @type {PerformanceTracker} */
+    _performanceTracker;
+
     /**
      * @public
      * @constructor
+     * @param {ParserDiagnostics} diagnostics
      * @param {DemoPacketHandler} demoPacketHandler
      * @param {DemoMessageHandler} demoMessageHandler
      * @param {DemoEntityHandler} demoEntityHandler
      * @param {InterceptorRegistry} interceptors
-     * @param {PacketTracker} packetTracker
-     * @param {PerformanceTracker} performanceTracker
      */
-    constructor(demoPacketHandler, demoMessageHandler, demoEntityHandler, interceptors, packetTracker, performanceTracker) {
+    constructor(diagnostics, demoPacketHandler, demoMessageHandler, demoEntityHandler, interceptors) {
+        Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
         Assert.isTrue(demoPacketHandler instanceof DemoPacketHandler, 'Invalid demoPacketHandler: expected an instance of DemoPacketHandler');
         Assert.isTrue(demoMessageHandler instanceof DemoMessageHandler, 'Invalid demoMessageHandler: expected an instance of DemoMessageHandler');
         Assert.isTrue(demoEntityHandler instanceof DemoEntityHandler, 'Invalid demoEntityHandler: expected an instance of DemoEntityHandler');
         Assert.isTrue(interceptors instanceof InterceptorRegistry, 'Invalid interceptors: expected an instance of InterceptorRegistry');
-        Assert.isTrue(packetTracker instanceof PacketTracker, 'Invalid packetTracker: expected an instance of PacketTracker');
-        Assert.isTrue(performanceTracker instanceof PerformanceTracker, 'Invalid performanceTracker: expected an instance of PerformanceTracker');
 
-        /** @private */
-        this._demoPacketHandler = demoPacketHandler;
-        /** @private */
-        this._demoMessageHandler = demoMessageHandler;
-        /** @private */
         this._demoEntityHandler = demoEntityHandler;
-
-        /** @private */
+        this._demoMessageHandler = demoMessageHandler;
+        this._demoPacketHandler = demoPacketHandler;
         this._interceptors = interceptors;
-
-        /** @private */
-        this._packetTracker = packetTracker;
-        /** @private */
-        this._performanceTracker = performanceTracker;
+        this._packetTracker = diagnostics.packet;
+        this._performanceTracker = diagnostics.performance;
     }
 
     /**

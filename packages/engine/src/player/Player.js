@@ -177,7 +177,7 @@ class Player {
         const packets = await this._engine.extract(reader, demoSource);
 
         this._index = new PlayerPacketIndex(this._engine.codec, packets);
-        this._session = new ReplaySession(this._engine, this._index, this._configuration.messagePacketFilter, this._configuration.breakInterval);
+        this._session = new ReplaySession(this._engine, this._index, this._configuration.breakInterval);
 
         const first = this._index.getOrFail(0);
         const last = this._index.getOrFail(this._index.length - 1);

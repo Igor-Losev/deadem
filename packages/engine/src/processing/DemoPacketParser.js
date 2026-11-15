@@ -1,6 +1,9 @@
 /** @import DemoPacket from '../data/DemoPacket.js' */
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
+/** @import PacketTracker from '../trackers/PacketTracker.js' */
+/** @import PerformanceTracker from '../trackers/PerformanceTracker.js' */
+
 /** @import { DemoPacketHeavyData } from '../PacketCodec.js' */
 
 import Assert from '../core/Assert.js';
@@ -9,38 +12,43 @@ import MessagePacket from '../data/MessagePacket.js';
 
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
-import PacketTracker from '../trackers/PacketTracker.js';
-import PerformanceTracker from '../trackers/PerformanceTracker.js';
-
 import PacketCodec from '../PacketCodec.js';
+import ParserConfiguration from '../ParserConfiguration.js';
+import ParserDiagnostics from '../ParserDiagnostics.js';
 
 /**
  * Parses a {@link DemoPacketRaw} payload into a {@link DemoPacket}.
  * Tracks unparsed demo and message packets.
  */
 class DemoPacketParser {
+    /** @private @type {PacketCodec} */
+    _codec;
+
+    /** @private @type {((messagePacketTypeId: number) => boolean)|null} */
+    _messagePacketFilter;
+
+    /** @private @type {PacketTracker} */
+    _packetTracker;
+
+    /** @private @type {PerformanceTracker} */
+    _performanceTracker;
+
     /**
      * @public
      * @constructor
+     * @param {ParserConfiguration} configuration
+     * @param {ParserDiagnostics} diagnostics
      * @param {PacketCodec} codec
-     * @param {((id: number) => boolean)|null} messagePacketFilter
-     * @param {PacketTracker} packetTracker
-     * @param {PerformanceTracker} performanceTracker
      */
-    constructor(codec, messagePacketFilter, packetTracker, performanceTracker) {
+    constructor(configuration, diagnostics, codec) {
+        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
         Assert.isTrue(codec instanceof PacketCodec, 'Invalid codec: expected an instance of PacketCodec');
-        Assert.isTrue(messagePacketFilter === null || typeof messagePacketFilter === 'function', 'Invalid messagePacketFilter: expected a function or null');
-        Assert.isTrue(packetTracker instanceof PacketTracker, 'Invalid packetTracker: expected an instance of PacketTracker');
-        Assert.isTrue(performanceTracker instanceof PerformanceTracker, 'Invalid performanceTracker: expected an instance of PerformanceTracker');
 
-        /** @private */
         this._codec = codec;
-        /** @private */
-        this._messagePacketFilter = messagePacketFilter;
-        /** @private */
-        this._packetTracker = packetTracker;
-        /** @private */
-        this._performanceTracker = performanceTracker;
+        this._messagePacketFilter = configuration.messagePacketFilter;
+        this._packetTracker = diagnostics.packet;
+        this._performanceTracker = diagnostics.performance;
     }
 
     /**

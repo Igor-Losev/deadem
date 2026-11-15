@@ -1,59 +1,59 @@
-/** @import DemoPacket from '../data/DemoPacket.js' */
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 
 import Assert from '../core/Assert.js';
 import PauseControl from '../core/PauseControl.js';
 
 import Transform from '#core/stream/Transform.js';
 
-import DemoPacketApplier from '../processing/DemoPacketApplier.js';
+import DemoPacketProcessor from '../processing/DemoPacketProcessor.js';
 
 import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
- * Given a stream of {@link DemoPacket}, applies them sequentially
- * to the {@link Demo} state. Parks between packets while paused.
+ * Given a stream of {@link DemoPacketRaw}, processes them sequentially.
+ * Parks between packets while paused.
  *
- * Stream wrapper around {@link DemoPacketApplier}.
+ * Stream wrapper around {@link DemoPacketProcessor}.
  */
-class DemoStreamPacketApplier extends Transform {
-    /** @private @type {DemoPacketApplier} */
-    _applier;
-
+class DemoStreamPacketProcessor extends Transform {
     /** @private @type {PauseControl} */
     _pause;
+
+    /** @private @type {DemoPacketProcessor} */
+    _processor;
 
     /**
      * @public
      * @constructor
      * @param {ParserConfiguration} configuration
-     * @param {DemoPacketApplier} applier
+     * @param {DemoPacketProcessor} processor
      * @param {PauseControl} pause
      */
-    constructor(configuration, applier, pause) {
+    constructor(configuration, processor, pause) {
         super(configuration.streamHighWaterMark);
 
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
-        Assert.isTrue(applier instanceof DemoPacketApplier, 'Invalid applier: expected an instance of DemoPacketApplier');
+        Assert.isTrue(processor instanceof DemoPacketProcessor, 'Invalid processor: expected an instance of DemoPacketProcessor');
         Assert.isTrue(pause instanceof PauseControl, 'Invalid pause: expected an instance of PauseControl');
 
-        this._applier = applier;
         this._pause = pause;
+        this._processor = processor;
     }
 
     /**
      * @async
      * @protected
-     * @param {DemoPacket} demoPacket
+     * @param {DemoPacketRaw} demoPacketRaw
      */
-    async _handle(demoPacket) {
+    async _handle(demoPacketRaw) {
         const pausePromise = this._pause.deferred;
 
         if (pausePromise !== null) {
             await pausePromise.promise;
         }
 
-        this._applier.apply(demoPacket);
+        this._processor.process(demoPacketRaw);
     }
 }
 
-export default DemoStreamPacketApplier;
+export default DemoStreamPacketProcessor;
