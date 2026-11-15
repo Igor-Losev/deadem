@@ -19,8 +19,8 @@ function createEngine() {
 function createRunningEngine() {
     const engine = createEngine();
 
-    engine._started = true;
-    engine._finished = false;
+    engine._state.started = true;
+    engine._state.finished = false;
 
     return engine;
 }
@@ -36,8 +36,8 @@ describe('ParserEngine', () => {
         test('It should throw when finished', () => {
             const engine = createEngine();
 
-            engine._started = true;
-            engine._finished = true;
+            engine._state.started = true;
+            engine._state.finished = true;
 
             expect(() => engine.pause()).toThrow('not running');
         });

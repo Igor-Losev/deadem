@@ -68,6 +68,44 @@ import SchemaRegistry from './SchemaRegistry.js';
 /** @typedef {{ pipe: Function, destroy: Function }} NodeReadable */
 
 class ParserEngine {
+    /** @private @type {PacketCodec} */
+    _codec;
+
+    /** @private @type {ParserConfiguration} */
+    _configuration;
+
+    /** @private @type {Demo} */
+    _demo;
+
+    /** @private @type {{ entity: ((className: string) => boolean)|null, message: ((messagePacketTypeId: number) => boolean)|null }} */
+    _filters;
+
+    /** @private @type {{ demoEntity: DemoEntityHandler, demoMessage: DemoMessageHandler, demoPacket: DemoPacketHandler, stringTable: StringTableHandler }} */
+    _handlers;
+
+    /** @private @type {InterceptorRegistry} */
+    _interceptors;
+
+    /** @private @type {Logger} */
+    _logger;
+
+    /** @private @type {Pipeline|null} */
+    _pipeline = null;
+
+    /** @private @type {SchemaRegistry} */
+    _registry;
+
+    /** @private */
+    _state = {
+        disposed: false,
+        finished: false,
+        pause: new PauseControl(),
+        started: false
+    };
+
+    /** @private @type {{ memory: MemoryTracker, packet: PacketTracker, performance: PerformanceTracker }} */
+    _trackers;
+
     /**
      * @public
      * @param {SchemaRegistry} registry
@@ -79,26 +117,20 @@ class ParserEngine {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
-        /** @private */
         this._registry = registry;
-        /** @private */
         this._configuration = configuration;
         this._logger = logger;
 
-        /** @private */
         this._codec = new PacketCodec(registry);
-        /** @private */
         this._demo = new Demo();
 
         const stringTableHandler = new StringTableHandler(registry, this._demo.stringTableContainer, logger);
 
-        /** @private */
         this._filters = {
             entity: configuration.entityClassFilter,
             message: configuration.messagePacketFilter
         };
 
-        /** @private */
         this._handlers = {
             demoEntity: new DemoEntityHandler(this._demo),
             demoMessage: new DemoMessageHandler(registry, this._demo, stringTableHandler, this._filters.entity),
@@ -106,26 +138,13 @@ class ParserEngine {
             stringTable: stringTableHandler
         };
 
-        /** @private */
         this._interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
-        /** @private */
-        this._pause = new PauseControl();
 
-        /** @private */
         this._trackers = {
             memory: new MemoryTracker(),
             packet: new PacketTracker(registry),
             performance: new PerformanceTracker()
         };
-
-        /** @private */
-        this._disposed = false;
-        /** @private */
-        this._finished = false;
-        /** @private */
-        this._pipeline = null;
-        /** @private */
-        this._started = false;
     }
 
     /**
@@ -149,7 +168,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     get disposed() {
-        return this._disposed;
+        return this._state.disposed;
     }
 
     /**
@@ -157,7 +176,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     get finished() {
-        return this._finished;
+        return this._state.finished;
     }
 
     /**
@@ -181,7 +200,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     get paused() {
-        return this._pause.paused;
+        return this._state.pause.paused;
     }
 
     /**
@@ -189,7 +208,7 @@ class ParserEngine {
      * @returns {DeferredPromise<void>|null}
      */
     get pausePromise() {
-        return this._pause.deferred;
+        return this._state.pause.deferred;
     }
 
     /**
@@ -205,7 +224,7 @@ class ParserEngine {
      * @returns {boolean}
      */
     get started() {
-        return this._started;
+        return this._state.started;
     }
 
     /**
@@ -216,7 +235,7 @@ class ParserEngine {
     abort() {
         this._validateAvailability();
 
-        this._pause.release();
+        this._state.pause.release();
 
         if (this._pipeline !== null) {
             this._pipeline.abort();
@@ -237,7 +256,7 @@ class ParserEngine {
 
         this.abort();
 
-        this._disposed = true;
+        this._state.disposed = true;
 
         this._demo.reset();
         this._interceptors.reset();
@@ -319,7 +338,7 @@ class ParserEngine {
             new DemoStreamPacketExtractor(this, this._configuration.streamHighWaterMark, source)
         ];
 
-        this._started = true;
+        this._state.started = true;
 
         try {
             this._logger.info('Extract started');
@@ -346,7 +365,7 @@ class ParserEngine {
         } finally {
             this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
 
-            this._finished = true;
+            this._state.finished = true;
             this._pipeline = null;
         }
     }
@@ -382,7 +401,7 @@ class ParserEngine {
             new DemoStreamPacketApplier(this, highWaterMark)
         );
 
-        this._started = true;
+        this._state.started = true;
 
         try {
             this._logger.info('Parse started');
@@ -405,7 +424,7 @@ class ParserEngine {
             this._trackers.performance.end(PerformanceTrackerCategory.PARSER);
             this._trackers.memory.off();
 
-            this._finished = true;
+            this._state.finished = true;
             this._pipeline = null;
         }
     }
@@ -418,11 +437,11 @@ class ParserEngine {
     pause() {
         this._validateAvailability();
 
-        if (!this._started || this._finished) {
+        if (!this._state.started || this._state.finished) {
             throw new Error('Unable to pause: engine is not running');
         }
 
-        this._pause.pause();
+        this._state.pause.pause();
     }
 
     /**
@@ -433,7 +452,7 @@ class ParserEngine {
     resume() {
         this._validateAvailability();
 
-        this._pause.resume();
+        this._state.pause.resume();
     }
 
     /**
@@ -442,16 +461,16 @@ class ParserEngine {
     async _prepareRun() {
         this._validateAvailability();
 
-        if (this._started && !this._finished) {
+        if (this._state.started && !this._state.finished) {
             throw new Error('Unable to run parser: engine is already running');
         }
 
-        this._pause.release();
+        this._state.pause.release();
 
         this._demo.reset();
 
-        this._started = false;
-        this._finished = false;
+        this._state.started = false;
+        this._state.finished = false;
     }
 
     /**
@@ -460,7 +479,7 @@ class ParserEngine {
      * @protected
      */
     _validateAvailability() {
-        if (this._disposed) {
+        if (this._state.disposed) {
             throw new Error('Parser is not available: engine has been disposed');
         }
     }
