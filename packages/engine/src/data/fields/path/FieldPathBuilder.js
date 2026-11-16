@@ -24,14 +24,6 @@ class FieldPathBuilder {
     }
 
     /**
-     * @public
-     * @returns {number}
-     */
-    get length() {
-        return this._node.depth;
-    }
-
-    /**
      * Returns the cached {@link FieldPath} for the given path, creating it on miss.
      *
      * @public
@@ -110,6 +102,14 @@ class FieldPathBuilder {
         for (let i = 0; i < count; i++) {
             this._node = this._node.parent;
         }
+    }
+
+    /**
+     * @public
+     * @returns {number}
+     */
+    getLength() {
+        return this._node.depth;
     }
 
     /**

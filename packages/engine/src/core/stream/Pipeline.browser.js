@@ -38,14 +38,6 @@ class PipelineBrowser {
 
     /**
      * @public
-     * @returns {boolean}
-     */
-    get aborted() {
-        return this._abortController.signal.aborted;
-    }
-
-    /**
-     * @public
      */
     abort() {
         this._abortController.abort();

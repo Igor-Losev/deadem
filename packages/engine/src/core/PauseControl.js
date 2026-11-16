@@ -25,7 +25,7 @@ class PauseControl {
      * @public
      * @returns {boolean}
      */
-    get paused() {
+    getIsPaused() {
         return this._deferred !== null;
     }
 

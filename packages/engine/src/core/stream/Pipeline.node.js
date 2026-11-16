@@ -33,8 +33,6 @@ class PipelineNode {
         );
 
         /** @private */
-        this._aborted = false;
-        /** @private */
         this._deferred = deferred;
         /** @private */
         this._readable = source;
@@ -54,18 +52,8 @@ class PipelineNode {
 
     /**
      * @public
-     * @returns {boolean}
-     */
-    get aborted() {
-        return this._aborted;
-    }
-
-    /**
-     * @public
      */
     abort() {
-        this._aborted = true;
-
         this._readable.destroy();
     }
 

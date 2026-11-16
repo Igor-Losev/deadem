@@ -231,7 +231,7 @@ const pushN = new FieldPathOperation('PUSH_N', 'PushN', 0, 25, executor((bitRead
     }
 }));
 const pushNAndNonTopological = new FieldPathOperation('PUSH_N_!N', 'PushNAndNonTopological', 310, 26, executor((bitReader, fieldPathBuilder) => {
-    for (let i = 0; i < fieldPathBuilder.length; i++) {
+    for (let i = 0; i < fieldPathBuilder.getLength(); i++) {
         if (bitReader.readBit()) {
             fieldPathBuilder.add(bitReader.readVarInt32() + 1, i);
         }
@@ -254,19 +254,19 @@ const popOnePlusN = new FieldPathOperation('POP_1_PLUS_N', 'PopOnePlusN', 0, 28,
 }));
 
 const popAllButOnePlusOne = new FieldPathOperation('POP_ALL-1_PLUS_1', 'PopAllButOnePlusOne', 1837, 29, executor((bitReader, fieldPathBuilder) => {
-    fieldPathBuilder.drop(fieldPathBuilder.length - 1);
+    fieldPathBuilder.drop(fieldPathBuilder.getLength() - 1);
     fieldPathBuilder.add(1);
 }));
 const popAllButOnePlusN = new FieldPathOperation('POP_ALL-1_PLUS_N', 'PopAllButOnePlusN', 149, 30, executor((bitReader, fieldPathBuilder) => {
-    fieldPathBuilder.drop(fieldPathBuilder.length - 1);
+    fieldPathBuilder.drop(fieldPathBuilder.getLength() - 1);
     fieldPathBuilder.add(bitReader.readUVarIntFieldPath() + 1);
 }));
 const popAllButOnePlusNPack3Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P3B', 'PopAllButOnePlusNPack3Bits', 300, 31, executor((bitReader, fieldPathBuilder) => {
-    fieldPathBuilder.drop(fieldPathBuilder.length - 1);
+    fieldPathBuilder.drop(fieldPathBuilder.getLength() - 1);
     fieldPathBuilder.add(bitReader.readBitsAsUInt(3) + 1);
 }));
 const popAllButOnePlusNPack6Bits = new FieldPathOperation('POP_ALL-1_PLUS_N_P6B', 'PopAllButOnePlusNPack6Bits', 634, 32, executor((bitReader, fieldPathBuilder) => {
-    fieldPathBuilder.drop(fieldPathBuilder.length - 1);
+    fieldPathBuilder.drop(fieldPathBuilder.getLength() - 1);
     fieldPathBuilder.add(bitReader.readBitsAsUInt(6) + 1);
 }));
 
@@ -281,7 +281,7 @@ const popNPlusN = new FieldPathOperation('POP_N_PLUS_N', 'PopNPlusN', 0, 34, exe
 const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTopographical', 1, 35, executor((bitReader, fieldPathBuilder) => {
     fieldPathBuilder.drop(bitReader.readUVarIntFieldPath());
 
-    for (let i = 0; i < fieldPathBuilder.length; i++) {
+    for (let i = 0; i < fieldPathBuilder.getLength(); i++) {
         if (bitReader.readBit()) {
             fieldPathBuilder.add(bitReader.readVarInt32(), i);
         }
@@ -289,17 +289,17 @@ const popNAndNonTopographical = new FieldPathOperation('POP_N_!N', 'PopNAndNonTo
 }));
 
 const nonTopoComplex = new FieldPathOperation('NON_TOPO_COMPLEX', 'NonTopoComplex', 76, 36, executor((bitReader, fieldPathBuilder) => {
-    for (let i = 0; i < fieldPathBuilder.length; i++) {
+    for (let i = 0; i < fieldPathBuilder.getLength(); i++) {
         if (bitReader.readBit()) {
             fieldPathBuilder.add(bitReader.readVarInt32(), i);
         }
     }
 }));
 const nonTopoPenultimatePlusOne = new FieldPathOperation('NON_TOPO_PEN_PLUS_1', 'NonTopoPenultimatePlusOne', 271, 37, executor((bitReader, fieldPathBuilder) => {
-    fieldPathBuilder.add(1, fieldPathBuilder.length - 2);
+    fieldPathBuilder.add(1, fieldPathBuilder.getLength() - 2);
 }));
 const nonTopoComplexPack4Bits = new FieldPathOperation('NON_TOPO_COMPLEX_P4B', 'NonTopoComplexPack4Bits', 99, 38, executor((bitReader, fieldPathBuilder) => {
-    for (let i = 0; i < fieldPathBuilder.length; i++) {
+    for (let i = 0; i < fieldPathBuilder.getLength(); i++) {
         if (bitReader.readBit()) {
             fieldPathBuilder.add(bitReader.readBitsAsUInt(4) - 7, i);
         }

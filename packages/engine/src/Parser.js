@@ -203,7 +203,7 @@ class Parser {
      * @returns {boolean}
      */
     getIsPaused() {
-        return this._state.pause.paused;
+        return this._state.pause.getIsPaused();
     }
 
     /**
