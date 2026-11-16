@@ -82,10 +82,41 @@ describe('Cutter', () => {
             expect(await cut(demo, 1, 4)).toEqual(demo);
         });
 
-        test('It should write the start, the packets of the window and the tail', async () => {
-            const [ fileHeader, first, , compressed, third, , stop, spawnGroups, fileInfo ] = PACKETS;
+        test('It should move the window right after the first packet and the tail onto its last tick', async () => {
+            const [ fileHeader, first ] = PACKETS;
 
-            expect(await cut(createDemo(PACKETS), 2, 3)).toEqual(createDemo([ fileHeader, first, compressed, third, stop, spawnGroups, fileInfo ]));
+            expect(await cut(createDemo(PACKETS), 3, 4)).toEqual(createDemo([
+                fileHeader,
+                first,
+                [ DemoPacketType.DEM_PACKET.id, 2, 1, 6 ],
+                [ DemoPacketType.DEM_PACKET.id, 3, 1, 7 ],
+                [ DemoPacketType.DEM_STOP.id, 3, 0 ],
+                [ SPAWN_GROUPS, 3, 0 ],
+                [ FILE_INFO, 3, 1, 6 ]
+            ]));
+        });
+
+        test('It should keep the step of the demo between the first packet and the window', async () => {
+            const packets = [
+                [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
+                [ DemoPacketType.DEM_PACKET.id, 2, 0 ],
+                [ DemoPacketType.DEM_PACKET.id, 4, 0 ],
+                [ DemoPacketType.DEM_PACKET.id, 6, 0 ],
+                [ DemoPacketType.DEM_STOP.id, 6, 0 ],
+                [ SPAWN_GROUPS, 6, 0 ],
+                [ FILE_INFO, 6, 0 ]
+            ];
+
+            const [ fileHeader, first ] = packets;
+
+            expect(await cut(createDemo(packets), 6, 6)).toEqual(createDemo([
+                fileHeader,
+                first,
+                [ DemoPacketType.DEM_PACKET.id, 4, 0 ],
+                [ DemoPacketType.DEM_STOP.id, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                [ FILE_INFO, 4, 0 ]
+            ]));
         });
     });
 });

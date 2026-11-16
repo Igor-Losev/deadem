@@ -131,6 +131,17 @@ class DemoPacketRaw {
     getTypeId() {
         return this._type.value & ~DemoFormat.COMPRESSED_FLAG;
     }
+
+    /**
+     * Returns a packet copy on another tick.
+     *
+     * @public
+     * @param {number} tick
+     * @returns {DemoPacketRaw}
+     */
+    withTick(tick) {
+        return new DemoPacketRaw(this._sequence, this._type, this._source, new VarInt32(tick, VarInt32.getSize(tick)), this._frame, this._payload);
+    }
 }
 
 export default DemoPacketRaw;

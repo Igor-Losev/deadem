@@ -6,14 +6,19 @@ import Transform from '#core/stream/Transform.js';
 
 import StreamConfiguration from '../configurations/StreamConfiguration.js';
 
+import DemoFormat from '../data/DemoFormat.js';
+
 import DemoCutAction from '../data/enums/DemoCutAction.js';
 
 /**
- * Passes on the packets the plan of a cut keeps.
+ * Cuts packets according to the plan.
  */
 class DemoStreamPacketCutter extends Transform {
     /** @private @type {Uint8Array} */
     _actions;
+
+    /** @private @type {{ scanned: number, written: number }} */
+    _ticks = { scanned: DemoFormat.INITIAL_TICK, written: DemoFormat.INITIAL_TICK };
 
     /**
      * @public
@@ -38,9 +43,17 @@ class DemoStreamPacketCutter extends Transform {
     async _handle(demoPacketRaw) {
         Assert.isTrue(demoPacketRaw.sequence < this._actions.length, `Unable to cut: packet [ ${demoPacketRaw.sequence} ] is beyond the loaded demo`);
 
-        if (this._actions[demoPacketRaw.sequence] === DemoCutAction.KEEP.id) {
-            this._push(demoPacketRaw);
+        const tick = this._ticks.written + demoPacketRaw.tick.value - this._ticks.scanned;
+
+        this._ticks.scanned = demoPacketRaw.tick.value;
+
+        if (this._actions[demoPacketRaw.sequence] === DemoCutAction.DROP.id) {
+            return;
         }
+
+        this._ticks.written = tick;
+
+        this._push(demoPacketRaw.withTick(tick));
     }
 }
 

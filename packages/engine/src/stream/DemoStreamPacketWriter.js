@@ -15,7 +15,7 @@ import DemoPacketType from '../data/enums/DemoPacketType.js';
 import DemoPacketRawReplayWriter from '../writers/DemoPacketRawReplayWriter.js';
 
 /**
- * Writes a stream of {@link DemoPacketRaw} into a demo file.
+ * Writes a stream of {@link DemoPacketRaw} into a buffer.
  *
  * The counterpart of {@link DemoStreamPacketExtractor}.
  */
