@@ -4,7 +4,7 @@
 import Assert from '../core/Assert.js';
 import BitWriter from '../core/BitWriter.js';
 
-import Transform from '#core/stream/Transform.js';
+import Writable from '#core/stream/Writable.js';
 
 import StreamConfiguration from '../configurations/StreamConfiguration.js';
 
@@ -15,11 +15,17 @@ import DemoPacketType from '../data/enums/DemoPacketType.js';
 import DemoPacketRawReplayWriter from '../writers/DemoPacketRawReplayWriter.js';
 
 /**
- * Writes a stream of {@link DemoPacketRaw} as a demo file.
+ * Writes a stream of {@link DemoPacketRaw} into a demo file.
  *
  * The counterpart of {@link DemoStreamPacketExtractor}.
  */
-class DemoStreamPacketWriter extends Transform {
+class DemoStreamPacketWriter extends Writable {
+    /** @private @type {Uint8Array|null} */
+    _buffer = null;
+
+    /** @private @type {Array<Uint8Array>} */
+    _chunks = [ ];
+
     /** @private @type {{ fileInfo: number, spawnGroups: number }} */
     _offsets = { fileInfo: 0, spawnGroups: 0 };
 
@@ -38,18 +44,15 @@ class DemoStreamPacketWriter extends Transform {
     }
 
     /**
+     * Returns the demo file once the stream has finished.
+     *
      * @public
      * @returns {Uint8Array}
      */
-    getHeader() {
-        const writer = new BitWriter(DemoFormat.REPLAY_HEADER_SIZE_BYTES);
+    getBuffer() {
+        Assert.isTrue(this._buffer !== null, 'Unable to get the buffer: the stream has not finished');
 
-        writer.writeBytes(DemoFormat.STAMP);
-
-        writer.writeUInt32(this._offsets.fileInfo);
-        writer.writeUInt32(this._offsets.spawnGroups);
-
-        return writer.getBuffer();
+        return this._buffer;
     }
 
     /**
@@ -59,6 +62,20 @@ class DemoStreamPacketWriter extends Transform {
     async _finalize() {
         Assert.isTrue(this._offsets.fileInfo !== 0, 'Unable to finish the file: DEM_FileInfo is missing');
         Assert.isTrue(this._offsets.spawnGroups !== 0, 'Unable to finish the file: DEM_SpawnGroups is missing');
+
+        const writer = new BitWriter(this._positionBytes);
+
+        writer.writeBytes(DemoFormat.STAMP);
+
+        writer.writeUInt32(this._offsets.fileInfo);
+        writer.writeUInt32(this._offsets.spawnGroups);
+
+        for (let i = 0; i < this._chunks.length; i++) {
+            writer.writeBytes(this._chunks[i]);
+        }
+
+        this._buffer = writer.getBuffer();
+        this._chunks = [ ];
     }
 
     /**
@@ -67,7 +84,6 @@ class DemoStreamPacketWriter extends Transform {
      * @returns {Promise<void>}
      */
     async _handle(demoPacketRaw) {
-        const sizeBytes = demoPacketRaw.getSize();
         const typeId = demoPacketRaw.getTypeId();
 
         if (typeId === DemoPacketType.DEM_FILE_INFO.id) {
@@ -76,13 +92,11 @@ class DemoStreamPacketWriter extends Transform {
             this._offsets.spawnGroups = this._positionBytes;
         }
 
-        if (this._positionBytes === DemoFormat.REPLAY_HEADER_SIZE_BYTES) {
-            this._push(this.getHeader());
-        }
+        const chunk = DemoPacketRawReplayWriter.write(demoPacketRaw);
 
-        this._positionBytes += sizeBytes;
+        this._chunks.push(chunk);
 
-        this._push(DemoPacketRawReplayWriter.write(demoPacketRaw));
+        this._positionBytes += chunk.length;
     }
 }
 

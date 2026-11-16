@@ -96,6 +96,16 @@
       "browser": "./src/core/stream/Transform.browser.js",
       "default": "./src/core/stream/Transform.browser.js"
     },
+    "#core/stream/Writable.js": {
+      "types": "./types/src/core/stream/Writable.node.d.ts",
+      "electron": {
+        "browser": "./src/core/stream/Writable.browser.js",
+        "default": "./src/core/stream/Writable.node.js"
+      },
+      "node": "./src/core/stream/Writable.node.js",
+      "browser": "./src/core/stream/Writable.browser.js",
+      "default": "./src/core/stream/Writable.browser.js"
+    },
     "#core/stream/WritableSink.js": {
       "types": "./types/src/core/stream/WritableSink.node.d.ts",
       "electron": {
