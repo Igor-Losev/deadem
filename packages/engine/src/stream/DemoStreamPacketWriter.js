@@ -6,6 +6,8 @@ import BitWriter from '../core/BitWriter.js';
 
 import Transform from '#core/stream/Transform.js';
 
+import StreamConfiguration from '../configurations/StreamConfiguration.js';
+
 import DemoFormat from '../data/DemoFormat.js';
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
@@ -23,6 +25,17 @@ class DemoStreamPacketWriter extends Transform {
 
     /** @private @type {number} */
     _positionBytes = DemoFormat.REPLAY_HEADER_SIZE_BYTES;
+
+    /**
+     * @public
+     * @constructor
+     * @param {StreamConfiguration} configuration
+     */
+    constructor(configuration) {
+        super(configuration.streamHighWaterMark);
+
+        Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
+    }
 
     /**
      * @public

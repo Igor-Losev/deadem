@@ -5,6 +5,8 @@ import { describe, expect, test } from 'vitest';
 import Pipeline from '../src/core/stream/Pipeline.node.js';
 import WritableSink from '../src/core/stream/WritableSink.node.js';
 
+import StreamConfiguration from '../src/configurations/StreamConfiguration.js';
+
 import DemoPacketRaw from '../src/data/DemoPacketRaw.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 import DemoSource from '../src/data/enums/DemoSource.js';
@@ -71,7 +73,7 @@ function readOffsets(bytes) {
 }
 
 async function run(frames, onWrite) {
-    const writer = new DemoStreamPacketWriter(HIGH_WATER_MARK);
+    const writer = new DemoStreamPacketWriter(new StreamConfiguration({ streamHighWaterMark: HIGH_WATER_MARK }));
 
     await new Pipeline(Stream.Readable.from(frames, { objectMode: true }), [ writer ], new WritableSink(onWrite)).ready();
 
