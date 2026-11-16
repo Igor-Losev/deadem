@@ -26,9 +26,11 @@ const PACKETS = [
     [ DemoPacketType.DEM_PACKET.id, 1, 3, 1, 2, 3 ],
     [ DemoPacketType.DEM_FULL_PACKET.id, 1, 1, 9 ],
     [ DemoPacketType.DEM_PACKET.id | DemoFormat.COMPRESSED_FLAG, 2, 2, 4, 5 ],
-    [ DemoPacketType.DEM_STOP.id, 2, 0 ],
-    [ SPAWN_GROUPS, 2, 0 ],
-    [ FILE_INFO, 2, 1, 6 ]
+    [ DemoPacketType.DEM_PACKET.id, 3, 1, 6 ],
+    [ DemoPacketType.DEM_PACKET.id, 4, 1, 7 ],
+    [ DemoPacketType.DEM_STOP.id, 4, 0 ],
+    [ SPAWN_GROUPS, 4, 0 ],
+    [ FILE_INFO, 4, 1, 6 ]
 ];
 
 const registry = new SchemaRegistry(createDescriptors({ }));
@@ -58,13 +60,32 @@ function createDemo(packets) {
     return Uint8Array.from([ ...header, ...packets.flat() ]);
 }
 
+/**
+ * @param {Uint8Array} demo
+ * @param {number} from
+ * @param {number} to
+ * @returns {Promise<Uint8Array>}
+ */
+async function cut(demo, from, to) {
+    const cutter = new Cutter(registry, CutterConfiguration.DEFAULT, Logger.NOOP);
+
+    await cutter.load(Readable.from([ demo ]));
+
+    return cutter.cut(Readable.from([ demo ]), from, to);
+}
+
 describe('Cutter', () => {
     describe('cut', () => {
-        test('It should write every packet of the demo as is', async () => {
+        test('It should write every packet as is when the window covers the demo', async () => {
             const demo = createDemo(PACKETS);
-            const cutter = new Cutter(registry, CutterConfiguration.DEFAULT, Logger.NOOP);
 
-            expect(await cutter.cut(Readable.from([ demo ]))).toEqual(demo);
+            expect(await cut(demo, 1, 4)).toEqual(demo);
+        });
+
+        test('It should write the start, the packets of the window and the tail', async () => {
+            const [ fileHeader, first, , compressed, third, , stop, spawnGroups, fileInfo ] = PACKETS;
+
+            expect(await cut(createDemo(PACKETS), 2, 3)).toEqual(createDemo([ fileHeader, first, compressed, third, stop, spawnGroups, fileInfo ]));
         });
     });
 });
