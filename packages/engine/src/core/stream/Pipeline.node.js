@@ -41,6 +41,18 @@ class PipelineNode {
     }
 
     /**
+     * Returns whether the pipeline was rejected because it was aborted.
+     *
+     * @public
+     * @static
+     * @param {*} error
+     * @returns {boolean}
+     */
+    static getIsAbortError(error) {
+        return error?.code === 'ERR_STREAM_PREMATURE_CLOSE' || error?.name === 'AbortError';
+    }
+
+    /**
      * @public
      * @returns {boolean}
      */

@@ -2,9 +2,14 @@ import { describe, expect, test, vi } from 'vitest';
 
 import Logger from '../src/core/Logger.js';
 
-import ParserConfiguration from '../src/ParserConfiguration.js';
-import ParserEngine from '../src/ParserEngine.js';
+import InterceptorRegistry from '../src/data/InterceptorRegistry.js';
+
+import ParserDiagnostics from '../src/diagnostics/ParserDiagnostics.js';
+
 import SchemaRegistry from '../src/schema/SchemaRegistry.js';
+
+import DemoSession from '../src/DemoSession.js';
+import ParserConfiguration from '../src/ParserConfiguration.js';
 
 import PlaybackLoop from '../src/player/PlaybackLoop.js';
 import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';
@@ -16,8 +21,8 @@ const registry = new SchemaRegistry(createDescriptors({ }));
 
 const UNKNOWN_TYPE_ID = 200;
 
-function createEngine() {
-    return new ParserEngine(registry, ParserConfiguration.DEFAULT, Logger.NOOP);
+function createDemoSession(diagnostics = new ParserDiagnostics(registry, Logger.NOOP)) {
+    return new DemoSession(registry, ParserConfiguration.DEFAULT, diagnostics, new InterceptorRegistry(false));
 }
 
 function createRawPacket(tick) {
@@ -49,22 +54,23 @@ function createIndexStub(packets, plan) {
 }
 
 function createSession(packets, plan, breakInterval = 1000) {
-    const engine = createEngine();
+    const diagnostics = new ParserDiagnostics(registry, Logger.NOOP);
+    const demoSession = createDemoSession(diagnostics);
     const index = createIndexStub(packets, plan);
-    const session = new ReplaySession(engine, index, breakInterval);
+    const session = new ReplaySession(demoSession, index, breakInterval);
 
-    return { engine, index, session };
+    return { demoSession, diagnostics, index, session };
 }
 
 describe('ReplaySession', () => {
     describe('constructor', () => {
         test('It should validate dependencies', () => {
-            const engine = createEngine();
+            const demoSession = createDemoSession();
             const index = createIndexStub([], { bootstrap: [], snapshots: [], from: 0, to: 0 });
 
-            expect(() => new ReplaySession({}, index, 1000)).toThrow('engine');
-            expect(() => new ReplaySession(engine, {}, 1000)).toThrow('index');
-            expect(() => new ReplaySession(engine, index, 0)).toThrow('breakInterval');
+            expect(() => new ReplaySession({}, index, 1000)).toThrow('session');
+            expect(() => new ReplaySession(demoSession, {}, 1000)).toThrow('index');
+            expect(() => new ReplaySession(demoSession, index, 0)).toThrow('breakInterval');
         });
     });
 
@@ -73,11 +79,11 @@ describe('ReplaySession', () => {
             const packets = [ createRawPacket(-1), createRawPacket(10), createRawPacket(20), createRawPacket(30) ];
             const plan = { bootstrap: [ 0 ], snapshots: [ { tables: [] } ], from: 1, to: 4 };
 
-            const { engine, session } = createSession(packets, plan);
+            const { demoSession, diagnostics, session } = createSession(packets, plan);
 
-            const resetSpy = vi.spyOn(engine.demo, 'reset');
-            const snapshotSpy = vi.spyOn(engine.getStringTableHandler(), 'extractSnapshot');
-            const trackerSpy = vi.spyOn(engine.diagnostics.packet, 'handleDemoPacketRaw');
+            const resetSpy = vi.spyOn(demoSession.demo, 'reset');
+            const snapshotSpy = vi.spyOn(demoSession, 'extractStringTableSnapshot');
+            const trackerSpy = vi.spyOn(diagnostics.packet, 'handleDemoPacketRaw');
 
             const tick = await session.seek(30);
 

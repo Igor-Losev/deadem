@@ -1,13 +1,10 @@
-/** @import Demo from '../data/Demo.js' */
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
-/** @import StringTableHandler from '../handlers/StringTableHandler.js' */
 /** @import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js' */
-/** @import DemoPacketProcessor from '../processing/DemoPacketProcessor.js' */
 
 import Assert from '../core/Assert.js';
 import EventLoop from '#core/EventLoop.js';
 
-import ParserEngine from '../ParserEngine.js';
+import DemoSession from '../DemoSession.js';
 
 import PlayerPacketIndex from './PlayerPacketIndex.js';
 
@@ -24,38 +21,30 @@ class ReplaySession {
     /** @private */
     _cursor = -1;
 
-    /** @private @type {Demo} */
-    _demo;
-
     /** @private @type {PlayerPacketIndex} */
     _index;
 
     /** @private */
     _lastTick = -1;
 
-    /** @private @type {DemoPacketProcessor} */
-    _processor;
-
-    /** @private @type {StringTableHandler} */
-    _stringTableHandler;
+    /** @private @type {DemoSession} */
+    _session;
 
     /**
      * @public
      * @constructor
-     * @param {ParserEngine} engine
+     * @param {DemoSession} session
      * @param {PlayerPacketIndex} index
      * @param {number} breakInterval - Packets between event loop yields during a seek.
      */
-    constructor(engine, index, breakInterval) {
-        Assert.isTrue(engine instanceof ParserEngine, 'Invalid engine: expected an instance of ParserEngine');
+    constructor(session, index, breakInterval) {
+        Assert.isTrue(session instanceof DemoSession, 'Invalid session: expected an instance of DemoSession');
         Assert.isTrue(index instanceof PlayerPacketIndex, 'Invalid index: expected an instance of PlayerPacketIndex');
         Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0, 'Invalid breakInterval: expected a positive integer');
 
-        this._breakInterval = breakInterval;
-        this._demo = engine.demo;
+        this._session = session;
         this._index = index;
-        this._processor = engine.processor;
-        this._stringTableHandler = engine.getStringTableHandler();
+        this._breakInterval = breakInterval;
     }
 
     /**
@@ -120,12 +109,11 @@ class ReplaySession {
     async seek(tick) {
         this._requireActive();
 
-        this._demo.reset();
+        this._session.reset();
 
         const plan = this._index.getSeekPlan(tick);
 
         this._lastTick = -1;
-        this._processor.reset();
 
         for (let i = 0; i < plan.bootstrap.length; i++) {
             this._processPacket(this._index.getOrFail(plan.bootstrap[i]));
@@ -165,7 +153,7 @@ class ReplaySession {
         const events = [ ];
 
         for (let i = 0; i < snapshots.length; i++) {
-            events.push(...this._stringTableHandler.extractSnapshot(snapshots[i]));
+            events.push(...this._session.extractStringTableSnapshot(snapshots[i]));
         }
 
         return events;
@@ -179,7 +167,7 @@ class ReplaySession {
     _processPacket(demoPacketRaw, snapshotEvents = null) {
         this._lastTick = demoPacketRaw.tick.value;
 
-        this._processor.process(demoPacketRaw, snapshotEvents);
+        this._session.process(demoPacketRaw, snapshotEvents);
     }
 
     /**

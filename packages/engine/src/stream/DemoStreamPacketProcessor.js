@@ -5,39 +5,38 @@ import PauseControl from '../core/PauseControl.js';
 
 import Transform from '#core/stream/Transform.js';
 
-import DemoPacketProcessor from '../processing/DemoPacketProcessor.js';
-
+import DemoSession from '../DemoSession.js';
 import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Given a stream of {@link DemoPacketRaw}, processes them sequentially.
  * Parks between packets while paused.
  *
- * Stream wrapper around {@link DemoPacketProcessor}.
+ * Stream wrapper around {@link DemoSession}.
  */
 class DemoStreamPacketProcessor extends Transform {
     /** @private @type {PauseControl} */
     _pause;
 
-    /** @private @type {DemoPacketProcessor} */
-    _processor;
+    /** @private @type {DemoSession} */
+    _session;
 
     /**
      * @public
      * @constructor
      * @param {ParserConfiguration} configuration
-     * @param {DemoPacketProcessor} processor
+     * @param {DemoSession} session
      * @param {PauseControl} pause
      */
-    constructor(configuration, processor, pause) {
+    constructor(configuration, session, pause) {
         super(configuration.streamHighWaterMark);
 
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
-        Assert.isTrue(processor instanceof DemoPacketProcessor, 'Invalid processor: expected an instance of DemoPacketProcessor');
+        Assert.isTrue(session instanceof DemoSession, 'Invalid session: expected an instance of DemoSession');
         Assert.isTrue(pause instanceof PauseControl, 'Invalid pause: expected an instance of PauseControl');
 
         this._pause = pause;
-        this._processor = processor;
+        this._session = session;
     }
 
     /**
@@ -52,7 +51,7 @@ class DemoStreamPacketProcessor extends Transform {
             await pausePromise.promise;
         }
 
-        this._processor.process(demoPacketRaw);
+        this._session.process(demoPacketRaw);
     }
 }
 

@@ -3,7 +3,7 @@
 /** @typedef {import('./src/data/entity/EntityMutation.js').default} EntityMutation */
 /**
  * @template [M=unknown]
- * @typedef {import('./src/processing/InterceptorRegistry.js').InterceptorMap<M>} InterceptorMap
+ * @typedef {import('./src/data/InterceptorRegistry.js').InterceptorMap<M>} InterceptorMap
  */
 /** @typedef {import('./src/diagnostics/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('./src/data/MessagePacket.js').MessagePacketObject} MessagePacketObject */

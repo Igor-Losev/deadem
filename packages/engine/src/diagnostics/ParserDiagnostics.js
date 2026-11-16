@@ -5,43 +5,39 @@
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
 
+import SchemaRegistry from '../schema/SchemaRegistry.js';
+
 import MemoryTracker from '#diagnostics/trackers/MemoryTracker.js';
+
 import PacketTracker from './trackers/PacketTracker.js';
 import PerformanceTracker from './trackers/PerformanceTracker.js';
 
 /**
- * Logger and trackers that the engine and its streams report to.
+ * Container for diagnostic classes.
  */
 class ParserDiagnostics {
     /** @private @type {Logger} */
     _logger;
 
-    /** @private @type {MemoryTracker} */
-    _memory;
-
-    /** @private @type {PacketTracker} */
-    _packet;
-
-    /** @private @type {PerformanceTracker} */
-    _performance;
+    /** @private @type {{memory: MemoryTracker, packet: PacketTracker, performance: PerformanceTracker}} */
+    _trackers;
 
     /**
      * @public
+     * @param {SchemaRegistry} registry
      * @param {Logger} logger
-     * @param {MemoryTracker} memoryTracker
-     * @param {PacketTracker} packetTracker
-     * @param {PerformanceTracker} performanceTracker
      */
-    constructor(logger, memoryTracker, packetTracker, performanceTracker) {
+    constructor(registry, logger) {
+        Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
-        Assert.isTrue(memoryTracker instanceof MemoryTracker, 'Invalid memoryTracker: expected an instance of MemoryTracker');
-        Assert.isTrue(packetTracker instanceof PacketTracker, 'Invalid packetTracker: expected an instance of PacketTracker');
-        Assert.isTrue(performanceTracker instanceof PerformanceTracker, 'Invalid performanceTracker: expected an instance of PerformanceTracker');
 
         this._logger = logger;
-        this._memory = memoryTracker;
-        this._packet = packetTracker;
-        this._performance = performanceTracker;
+
+        this._trackers = {
+            memory: new MemoryTracker(),
+            packet: new PacketTracker(registry),
+            performance: new PerformanceTracker()
+        };
     }
 
     /**
@@ -57,7 +53,7 @@ class ParserDiagnostics {
      * @returns {MemoryTracker}
      */
     get memory() {
-        return this._memory;
+        return this._trackers.memory;
     }
 
     /**
@@ -65,7 +61,7 @@ class ParserDiagnostics {
      * @returns {PacketTracker}
      */
     get packet() {
-        return this._packet;
+        return this._trackers.packet;
     }
 
     /**
@@ -73,7 +69,7 @@ class ParserDiagnostics {
      * @returns {PerformanceTracker}
      */
     get performance() {
-        return this._performance;
+        return this._trackers.performance;
     }
 
     /**
@@ -82,9 +78,9 @@ class ParserDiagnostics {
      */
     getStats() {
         return {
-            memory: this._memory.getStats(),
-            packet: this._packet.getStats(),
-            performance: this._performance.getStats()
+            memory: this._trackers.memory.getStats(),
+            packet: this._trackers.packet.getStats(),
+            performance: this._trackers.performance.getStats()
         };
     }
 }

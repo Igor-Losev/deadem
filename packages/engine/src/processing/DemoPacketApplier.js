@@ -8,6 +8,7 @@
 import Assert from '../core/Assert.js';
 
 import DemoPacketType from '../data/enums/DemoPacketType.js';
+import InterceptorRegistry from '../data/InterceptorRegistry.js';
 import InterceptorStage from '../data/enums/InterceptorStage.js';
 import MessagePacketType from '../data/enums/MessagePacketType.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
@@ -17,8 +18,6 @@ import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 import DemoEntityHandler from '../handlers/DemoEntityHandler.js';
 import DemoMessageHandler from '../handlers/DemoMessageHandler.js';
 import DemoPacketHandler from '../handlers/DemoPacketHandler.js';
-
-import InterceptorRegistry from './InterceptorRegistry.js';
 
 /**
  * Applies a {@link DemoPacket} to the {@link Demo} state: routes the packet

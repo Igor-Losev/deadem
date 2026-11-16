@@ -17,10 +17,11 @@ const registry = new SchemaRegistry(createDescriptors({ }));
 function createLoadedPlayer() {
     const player = new Player(registry);
 
-    player._engine = {
+    player._diagnostics = { memory: { off: vi.fn(), on: vi.fn() } };
+
+    player._session = {
         demo: { server: { tickInterval: 0.015625 } },
-        dispose: vi.fn(async () => {}),
-        diagnostics: { memory: { off: vi.fn(), on: vi.fn() } }
+        reset: vi.fn()
     };
 
     player._index = {
@@ -42,7 +43,7 @@ function createLoadedPlayer() {
         })
     };
 
-    player._session = {
+    player._replay = {
         abort: vi.fn(),
         process: vi.fn(() => [ 100, 200, 300 ][player._ticks.position]),
         seek: vi.fn(async (tick) => tick)
@@ -112,7 +113,7 @@ describe('Player', () => {
         test('It should throw when session.process throws', () => {
             const error = new Error('processing failed');
 
-            player._session.process.mockImplementation(() => {
+            player._replay.process.mockImplementation(() => {
                 throw error;
             });
 
@@ -120,7 +121,7 @@ describe('Player', () => {
         });
 
         test('It should leave the player in LOADED state after a session failure', () => {
-            player._session.process.mockImplementation(() => {
+            player._replay.process.mockImplementation(() => {
                 throw new Error('processing failed');
             });
 
@@ -155,7 +156,7 @@ describe('Player', () => {
 
             const error = new Error('seek failed');
 
-            player._session.seek.mockRejectedValue(error);
+            player._replay.seek.mockRejectedValue(error);
 
             await expect(player.prevTick()).rejects.toBe(error);
             expect(player.state).toBe(PlayerState.LOADED);
@@ -177,7 +178,7 @@ describe('Player', () => {
         });
 
         test('It should return to LOADED state on seek error', async () => {
-            player._session.seek.mockRejectedValue(new Error('fail'));
+            player._replay.seek.mockRejectedValue(new Error('fail'));
 
             await expect(player.seekToTick(200)).rejects.toThrow('fail');
 
@@ -222,7 +223,7 @@ describe('Player', () => {
             const error = new Error('processing failed');
             let call = 0;
 
-            player._session.process.mockImplementation(() => {
+            player._replay.process.mockImplementation(() => {
                 call++;
 
                 if (call === 1) return 200;
@@ -237,7 +238,7 @@ describe('Player', () => {
         test('It should reject the play promise when session.process throws on first advance', async () => {
             const error = new Error('processing failed');
 
-            player._session.process.mockImplementation(() => {
+            player._replay.process.mockImplementation(() => {
                 throw error;
             });
 
@@ -246,7 +247,7 @@ describe('Player', () => {
         });
 
         test('It should clear the playback loop after a processing error', async () => {
-            player._session.process.mockImplementation(() => {
+            player._replay.process.mockImplementation(() => {
                 throw new Error('processing failed');
             });
 
@@ -303,21 +304,23 @@ describe('Player', () => {
             expect(player.state).toBe(PlayerState.DISPOSED);
         });
 
-        test('It should abort the session and dispose the engine', async () => {
+        test('It should abort the replay, reset the session and clear the interceptors', async () => {
+            const replay = player._replay;
             const session = player._session;
-            const engine = player._engine;
+            const interceptorsReset = vi.spyOn(player._interceptors, 'reset');
 
             await player.dispose();
 
-            expect(session.abort).toHaveBeenCalled();
-            expect(engine.dispose).toHaveBeenCalled();
+            expect(replay.abort).toHaveBeenCalled();
+            expect(session.reset).toHaveBeenCalled();
+            expect(interceptorsReset).toHaveBeenCalled();
         });
 
         test('It should clear all state', async () => {
             await player.dispose();
 
             expect(player._index).toBe(null);
-            expect(player._session).toBe(null);
+            expect(player._replay).toBe(null);
             expect(player._ticks.current).toBe(-1);
             expect(player._ticks.position).toBe(-1);
         });

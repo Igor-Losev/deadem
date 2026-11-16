@@ -1,9 +1,10 @@
 /** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
 /** @import Demo from '../data/Demo.js' */
+/** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 /** @import { PlaybackInterruptionReason } from '../errors/PlaybackInterruptedError.js' */
 /** @import { NodeReadable } from '#core/stream/Pipeline.js' */
-/** @import { InterceptorMap, InterceptorPreStage } from '../processing/InterceptorRegistry.js' */
+/** @import { InterceptorMap, InterceptorPreStage } from '../data/InterceptorRegistry.js' */
 /** @import InterceptorStage from '../data/enums/InterceptorStage.js' */
 
 /** @import { MemoryTrackerStats } from '../diagnostics/trackers/MemoryTracker.base.js' */
@@ -12,13 +13,24 @@
 
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
+import Pipeline from '#core/stream/Pipeline.js';
+import WritableSink from '#core/stream/WritableSink.js';
 
 import DemoSource from '../data/enums/DemoSource.js';
+import InterceptorRegistry from '../data/InterceptorRegistry.js';
+import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 import PlaybackInterruptedError from '../errors/PlaybackInterruptedError.js';
 import PlayerState from '../data/enums/PlayerState.js';
 
+import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
+
+import PacketCodec from '../schema/PacketCodec.js';
+
+import DemoStreamBufferSplitter from '../stream/DemoStreamBufferSplitter.js';
+import DemoStreamPacketExtractor from '../stream/DemoStreamPacketExtractor.js';
+
+import DemoSession from '../DemoSession.js';
 import ParserConfiguration from '../ParserConfiguration.js';
-import ParserEngine from '../ParserEngine.js';
 
 import PlaybackLoop from './PlaybackLoop.js';
 import PlayerPacketIndex from './PlayerPacketIndex.js';
@@ -28,14 +40,23 @@ import ReplaySession from './ReplaySession.js';
  * @template [M=unknown]
  */
 class Player {
+    /** @private @type {PacketCodec} */
+    _codec;
+
     /** @private @type {ParserConfiguration} */
     _configuration;
 
-    /** @private @type {ParserEngine} */
-    _engine;
+    /** @private @type {ParserDiagnostics} */
+    _diagnostics;
 
     /** @private @type {PlayerPacketIndex|null} */
     _index = null;
+
+    /** @private @type {InterceptorRegistry} */
+    _interceptors;
+
+    /** @private @type {Pipeline|null} */
+    _pipeline = null;
 
     /** @private */
     _playback = {
@@ -44,7 +65,10 @@ class Player {
     };
 
     /** @private @type {ReplaySession|null} */
-    _session = null;
+    _replay = null;
+
+    /** @private @type {DemoSession} */
+    _session;
 
     /** @private */
     _state = PlayerState.IDLE;
@@ -69,7 +93,14 @@ class Player {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         this._configuration = configuration;
-        this._engine = new ParserEngine(registry, configuration, logger);
+        this._codec = new PacketCodec(registry);
+
+        const diagnostics = new ParserDiagnostics(registry, logger);
+        const interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
+
+        this._diagnostics = diagnostics;
+        this._interceptors = interceptors;
+        this._session = new DemoSession(registry, configuration, diagnostics, interceptors);
     }
 
     /**
@@ -81,7 +112,7 @@ class Player {
     }
 
     /**
-     * Disposes the player, releasing the engine and clearing all state.
+     * Disposes the player, clearing all state.
      * After disposal, the player cannot be used.
      *
      * @public
@@ -94,19 +125,26 @@ class Player {
 
         this._transition(PlayerState.DISPOSED);
 
-        if (this._session !== null) {
-            this._session.abort();
+        if (this._replay !== null) {
+            this._replay.abort();
 
-            this._session = null;
+            this._replay = null;
         }
 
         if (this._index !== null) {
-            this._engine.diagnostics.memory.off();
+            this._diagnostics.memory.off();
 
             this._index = null;
         }
 
-        await this._engine.dispose();
+        if (this._pipeline !== null) {
+            this._pipeline.abort();
+
+            this._pipeline = null;
+        }
+
+        this._session.reset();
+        this._interceptors.reset();
 
         this._ticks.current = -1;
         this._ticks.first = -1;
@@ -127,7 +165,7 @@ class Player {
      * @returns {Demo}
      */
     getDemo() {
-        return this._engine.demo;
+        return this._session.demo;
     }
 
     /**
@@ -151,7 +189,7 @@ class Player {
      * @returns {{memory: MemoryTrackerStats, performance: PerformanceTrackerStats, packet: PacketTrackerStats}}
      */
     getStats() {
-        return this._engine.diagnostics.getStats();
+        return this._diagnostics.getStats();
     }
 
     /**
@@ -171,10 +209,10 @@ class Player {
             throw new Error('Unable to load: unsupported demo source, only REPLAY is supported');
         }
 
-        const packets = await this._engine.extract(reader, demoSource);
+        const packets = await this._extract(reader, demoSource);
 
-        this._index = new PlayerPacketIndex(this._engine.codec, packets);
-        this._session = new ReplaySession(this._engine, this._index, this._configuration.breakInterval);
+        this._index = new PlayerPacketIndex(this._codec, packets);
+        this._replay = new ReplaySession(this._session, this._index, this._configuration.breakInterval);
 
         const first = this._index.getOrFail(0);
         const last = this._index.getOrFail(this._index.length - 1);
@@ -182,7 +220,7 @@ class Player {
         this._ticks.first = first.tick.value;
         this._ticks.last = last.tick.value;
 
-        this._engine.diagnostics.memory.on();
+        this._diagnostics.memory.on();
 
         this._transition(PlayerState.LOADED);
 
@@ -230,7 +268,7 @@ class Player {
 
         this._transition(PlayerState.PLAYING);
 
-        const server = this._engine.demo.server;
+        const server = this._session.demo.server;
 
         Assert.exists(server, 'Server info is not available');
 
@@ -289,7 +327,7 @@ class Player {
      * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPostInterceptor(stage, interceptor) {
-        return this._engine.interceptors.registerPost(stage, interceptor);
+        return this._interceptors.registerPost(stage, interceptor);
     }
 
     /**
@@ -299,7 +337,7 @@ class Player {
      * @param {InterceptorMap<M>[C]} interceptor
      */
     registerPreInterceptor(stage, interceptor) {
-        return this._engine.interceptors.registerPre(stage, interceptor);
+        return this._interceptors.registerPre(stage, interceptor);
     }
 
     /**
@@ -319,9 +357,9 @@ class Player {
 
         try {
             Assert.exists(this._index, 'Player index is not initialized');
-            Assert.exists(this._session, 'Player session is not initialized');
+            Assert.exists(this._replay, 'Player session is not initialized');
 
-            this._ticks.current = await this._session.seek(tick);
+            this._ticks.current = await this._replay.seek(tick);
             this._ticks.position = this._index.getTickPosition(this._ticks.current);
         } finally {
             if (this._state === PlayerState.SEEKING) {
@@ -355,7 +393,7 @@ class Player {
      * @returns {boolean}
      */
     unregisterPostInterceptor(stage, interceptor) {
-        return this._engine.interceptors.unregisterPost(stage, interceptor);
+        return this._interceptors.unregisterPost(stage, interceptor);
     }
 
     /**
@@ -366,7 +404,7 @@ class Player {
      * @returns {boolean}
      */
     unregisterPreInterceptor(stage, interceptor) {
-        return this._engine.interceptors.unregisterPre(stage, interceptor);
+        return this._interceptors.unregisterPre(stage, interceptor);
     }
 
     /**
@@ -377,7 +415,7 @@ class Player {
      */
     _advanceTick() {
         Assert.exists(this._index, 'Player index is not initialized');
-        Assert.exists(this._session, 'Player session is not initialized');
+        Assert.exists(this._replay, 'Player session is not initialized');
 
         const next = this._index.advance(this._ticks.position);
 
@@ -386,9 +424,53 @@ class Player {
         }
 
         this._ticks.position = next.position;
-        this._ticks.current = this._session.process(next.count);
+        this._ticks.current = this._replay.process(next.count);
 
         return this._ticks.current;
+    }
+
+    /**
+     * Extracts raw packets.
+     *
+     * @protected
+     * @param {NodeReadable|ReadableStream} reader
+     * @param {DemoSource} source
+     * @returns {Promise<Array<DemoPacketRaw>>}
+     */
+    async _extract(reader, source) {
+        /** @type {Array<DemoPacketRaw>} */
+        const packets = [ ];
+
+        const chain = [
+            new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
+            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, source)
+        ];
+
+        try {
+            this._diagnostics.logger.info('Extract started');
+
+            this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
+
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, new WritableSink((packet) => packets.push(packet)));
+
+            await this._pipeline.ready();
+
+            this._diagnostics.logger.info(`Extracted [ ${packets.length} ] packets`);
+
+            return packets;
+        } catch (error) {
+            if (Pipeline.getIsAbortError(error)) {
+                return packets;
+            }
+
+            this._diagnostics.logger.error('Extract failed', error);
+
+            throw error;
+        } finally {
+            this._diagnostics.performance.end(PerformanceTrackerCategory.PARSER);
+
+            this._pipeline = null;
+        }
     }
 
     /**
