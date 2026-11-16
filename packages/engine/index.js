@@ -8,7 +8,7 @@
 /** @typedef {import('./src/diagnostics/trackers/MemoryTracker.base.js').MemoryTrackerStats} MemoryTrackerStats */
 /** @typedef {import('./src/data/MessagePacket.js').MessagePacketObject} MessagePacketObject */
 /** @typedef {import('./src/diagnostics/trackers/PacketTracker.js').PacketTrackerStats} PacketTrackerStats */
-/** @typedef {import('./src/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
+/** @typedef {import('./src/configurations/ParserConfiguration.js').ParserConfigurationOptions} ParserConfigurationOptions */
 /** @typedef {import('./src/diagnostics/trackers/PerformanceTracker.js').PerformanceTrackerStats} PerformanceTrackerStats */
 /** @typedef {import('./src/errors/PlaybackInterruptedError.js').PlaybackInterruptionReason} PlaybackInterruptionReason */
 /** @typedef {import('./src/extractors/DeltaExtractor.js').ProtoState} ProtoState */
@@ -35,9 +35,10 @@ export { default as Logger } from './src/core/Logger.js';
 export { default as MessagePacket } from './src/data/MessagePacket.js';
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
 export { default as Parser } from './src/Parser.js';
-export { default as ParserConfiguration } from './src/ParserConfiguration.js';
+export { default as ParserConfiguration } from './src/configurations/ParserConfiguration.js';
 export { default as PlaybackInterruptedError } from './src/errors/PlaybackInterruptedError.js';
 export { default as Player } from './src/player/Player.js';
+export { default as PlayerConfiguration } from './src/configurations/PlayerConfiguration.js';
 export { default as PlayerState } from './src/data/enums/PlayerState.js';
 export { default as Printer } from './src/diagnostics/Printer.js';
 export { default as Protocol } from './src/data/enums/Protocol.js';

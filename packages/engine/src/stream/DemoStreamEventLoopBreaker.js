@@ -5,7 +5,7 @@ import Assert from '../core/Assert.js';
 import EventLoop from '#core/EventLoop.js';
 import Transform from '#core/stream/Transform.js';
 
-import ParserConfiguration from '../ParserConfiguration.js';
+import StreamConfiguration from '../configurations/StreamConfiguration.js';
 
 /**
  * Balances stream processing load by periodically yielding control back to
@@ -22,12 +22,12 @@ class DemoStreamEventLoopBreaker extends Transform {
     /**
      * @public
      * @constructor
-     * @param {ParserConfiguration} configuration
+     * @param {StreamConfiguration} configuration
      */
     constructor(configuration) {
         super(configuration.streamHighWaterMark);
 
-        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
 
         this._breakInterval = configuration.breakInterval;
     }

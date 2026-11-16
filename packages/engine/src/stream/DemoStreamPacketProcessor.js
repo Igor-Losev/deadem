@@ -5,8 +5,9 @@ import PauseControl from '../core/PauseControl.js';
 
 import Transform from '#core/stream/Transform.js';
 
+import StreamConfiguration from '../configurations/StreamConfiguration.js';
+
 import DemoSession from '../DemoSession.js';
-import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Given a stream of {@link DemoPacketRaw}, processes them sequentially.
@@ -24,14 +25,14 @@ class DemoStreamPacketProcessor extends Transform {
     /**
      * @public
      * @constructor
-     * @param {ParserConfiguration} configuration
+     * @param {StreamConfiguration} configuration
      * @param {DemoSession} session
      * @param {PauseControl} pause
      */
     constructor(configuration, session, pause) {
         super(configuration.streamHighWaterMark);
 
-        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
         Assert.isTrue(session instanceof DemoSession, 'Invalid session: expected an instance of DemoSession');
         Assert.isTrue(pause instanceof PauseControl, 'Invalid pause: expected an instance of PauseControl');
 

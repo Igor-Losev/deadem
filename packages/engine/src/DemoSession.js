@@ -3,6 +3,8 @@
 
 import Assert from './core/Assert.js';
 
+import ParserConfiguration from './configurations/ParserConfiguration.js';
+
 import Demo from './data/Demo.js';
 import InterceptorRegistry from './data/InterceptorRegistry.js';
 
@@ -20,8 +22,6 @@ import DemoPacketProcessor from './processing/DemoPacketProcessor.js';
 
 import PacketCodec from './schema/PacketCodec.js';
 import SchemaRegistry from './schema/SchemaRegistry.js';
-
-import ParserConfiguration from './ParserConfiguration.js';
 
 class DemoSession {
     /** @private @type {Demo} */

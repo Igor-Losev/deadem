@@ -2,6 +2,8 @@ import { describe, expect, test, vi } from 'vitest';
 
 import Logger from '../src/core/Logger.js';
 
+import ParserConfiguration from '../src/configurations/ParserConfiguration.js';
+
 import InterceptorRegistry from '../src/data/InterceptorRegistry.js';
 
 import ParserDiagnostics from '../src/diagnostics/ParserDiagnostics.js';
@@ -9,7 +11,6 @@ import ParserDiagnostics from '../src/diagnostics/ParserDiagnostics.js';
 import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 
 import DemoSession from '../src/DemoSession.js';
-import ParserConfiguration from '../src/ParserConfiguration.js';
 
 import PlaybackLoop from '../src/player/PlaybackLoop.js';
 import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';

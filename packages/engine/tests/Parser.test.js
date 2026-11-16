@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
 import Parser from '../src/Parser.js';
-import ParserConfiguration from '../src/ParserConfiguration.js';
+import ParserConfiguration from '../src/configurations/ParserConfiguration.js';
 import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 
 import Logger from '../src/core/Logger.js';

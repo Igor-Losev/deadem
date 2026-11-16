@@ -16,6 +16,9 @@ import Logger from '../core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
+import ParserConfiguration from '../configurations/ParserConfiguration.js';
+import PlayerConfiguration from '../configurations/PlayerConfiguration.js';
+
 import DemoSource from '../data/enums/DemoSource.js';
 import InterceptorRegistry from '../data/InterceptorRegistry.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
@@ -30,7 +33,6 @@ import DemoStreamBufferSplitter from '../stream/DemoStreamBufferSplitter.js';
 import DemoStreamPacketExtractor from '../stream/DemoStreamPacketExtractor.js';
 
 import DemoSession from '../DemoSession.js';
-import ParserConfiguration from '../ParserConfiguration.js';
 
 import PlaybackLoop from './PlaybackLoop.js';
 import PlayerPacketIndex from './PlayerPacketIndex.js';
@@ -85,10 +87,10 @@ class Player {
      * @public
      * @constructor
      * @param {SchemaRegistry} registry
-     * @param {ParserConfiguration} [configuration=ParserConfiguration.DEFAULT]
+     * @param {PlayerConfiguration|ParserConfiguration} [configuration=PlayerConfiguration.DEFAULT] - ParserConfiguration is deprectated and will be removed in the next major release.
      * @param {Logger} [logger=Logger.CONSOLE_INFO]
      */
-    constructor(registry, configuration = ParserConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
+    constructor(registry, configuration = PlayerConfiguration.DEFAULT, logger = Logger.CONSOLE_INFO) {
         Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 

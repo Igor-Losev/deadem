@@ -1,14 +1,15 @@
-import Assert from './core/Assert.js';
+/** @import { StreamConfigurationOptions } from './StreamConfiguration.js' */
 
-import MessagePacketType from './data/enums/MessagePacketType.js';
+import Assert from '../core/Assert.js';
+
+import MessagePacketType from '../data/enums/MessagePacketType.js';
+
+import StreamConfiguration from './StreamConfiguration.js';
 
 const OPTIONS = /** @type {const} */ ({
-    BREAK_INTERVAL: 'breakInterval',
     ENTITY_CLASSES: 'entityClasses',
     MESSAGE_PACKET_TYPES: 'messagePacketTypes',
-    MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude',
-    SPLITTER_CHUNK_SIZE: 'splitterChunkSize',
-    STREAM_HIGH_WATER_MARK: 'streamHighWaterMark'
+    MESSAGE_PACKET_TYPES_EXCLUDE: 'messagePacketTypesExclude'
 });
 
 const CRITICAL_MESSAGE_PACKET_TYPES = new Set([
@@ -19,55 +20,45 @@ const CRITICAL_MESSAGE_PACKET_TYPES = new Set([
 ]);
 
 const DEFAULTS = {
-    [OPTIONS.BREAK_INTERVAL]: 1000,
     [OPTIONS.ENTITY_CLASSES]: null,
     [OPTIONS.MESSAGE_PACKET_TYPES]: null,
-    [OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE]: null,
-    [OPTIONS.SPLITTER_CHUNK_SIZE]: 200 * 1024,
-    [OPTIONS.STREAM_HIGH_WATER_MARK]: 6
+    [OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE]: null
 };
 
 /**
- * @typedef {{ breakInterval?: number, entityClasses?: Array<string>|null, messagePacketTypes?: Array<MessagePacketType>|null, messagePacketTypesExclude?: Array<MessagePacketType>|null, splitterChunkSize?: number, streamHighWaterMark?: number }} ParserConfigurationOptions
+ * @typedef {StreamConfigurationOptions & { entityClasses?: Array<string>|null, messagePacketTypes?: Array<MessagePacketType>|null, messagePacketTypesExclude?: Array<MessagePacketType>|null }} ParserConfigurationOptions
  */
 
-class ParserConfiguration {
+class ParserConfiguration extends StreamConfiguration {
+    /** @private @type {((className: string) => boolean)|null} */
+    _entityClassFilter;
+
+    /** @private @type {((messagePacketTypeId: number) => boolean)|null} */
+    _messagePacketFilter;
+
     /**
      * @constructor
      * @param {ParserConfigurationOptions} [options]
      */
     constructor(options) {
+        super(options);
+
         /**
-         * @param {keyof ParserConfigurationOptions} key
+         * @param {keyof typeof DEFAULTS} key
          * @returns {*}
          */
         const getOption = key => (options && options[key]) ? options[key] : DEFAULTS[key];
 
-        const breakInterval = getOption(OPTIONS.BREAK_INTERVAL);
         const entityClasses = getOption(OPTIONS.ENTITY_CLASSES);
         const messagePacketTypes = getOption(OPTIONS.MESSAGE_PACKET_TYPES);
         const messagePacketTypesExclude = getOption(OPTIONS.MESSAGE_PACKET_TYPES_EXCLUDE);
-        const splitterChunkSize = getOption(OPTIONS.SPLITTER_CHUNK_SIZE);
-        const streamHighWaterMark = getOption(OPTIONS.STREAM_HIGH_WATER_MARK);
 
-        Assert.isTrue(Number.isInteger(breakInterval) && breakInterval > 0, 'options.breakInterval must be a positive integer');
         Assert.isTrue(entityClasses === null || (Array.isArray(entityClasses) && entityClasses.every(c => typeof c === 'string' && c.length > 0)), 'options.entityClasses must be an array of non-empty strings or null');
         Assert.isTrue(messagePacketTypes === null || Array.isArray(messagePacketTypes), 'options.messagePacketTypes must be an array or null');
         Assert.isTrue(messagePacketTypesExclude === null || Array.isArray(messagePacketTypesExclude), 'options.messagePacketTypesExclude must be an array or null');
         Assert.isTrue(messagePacketTypes === null || messagePacketTypesExclude === null, 'options.messagePacketTypes and options.messagePacketTypesExclude are mutually exclusive');
-        Assert.isTrue(Number.isInteger(splitterChunkSize) && splitterChunkSize > 0, 'options.splitterChunkSize must be a positive integer');
-        Assert.isTrue(Number.isInteger(streamHighWaterMark) && streamHighWaterMark > 0, 'options.streamHighWaterMark must be a positive integer');
 
-        /** @private */
-        this._breakInterval = breakInterval;
-        /** @private */
-        this._splitterChunkSize = splitterChunkSize;
-        /** @private */
-        this._streamHighWaterMark = streamHighWaterMark;
-
-        /** @private */
         this._entityClassFilter = buildEntityClassFilter(entityClasses);
-        /** @private */
         this._messagePacketFilter = buildMessagePacketFilter(messagePacketTypes, messagePacketTypesExclude);
 
         if (entityClasses !== null && this._messagePacketFilter !== null) {
@@ -81,30 +72,6 @@ class ParserConfiguration {
      */
     static get DEFAULT() {
         return defaultConfiguration;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    get breakInterval() {
-        return this._breakInterval;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    get splitterChunkSize() {
-        return this._splitterChunkSize;
-    }
-
-    /**
-     * @public
-     * @returns {number}
-     */
-    get streamHighWaterMark() {
-        return this._streamHighWaterMark;
     }
 
     /**
@@ -198,6 +165,6 @@ function buildMessagePacketFilter(include, exclude) {
     return null;
 }
 
-const defaultConfiguration = new ParserConfiguration({ ...DEFAULTS });
+const defaultConfiguration = new ParserConfiguration();
 
 export default ParserConfiguration;

@@ -17,6 +17,8 @@ import PauseControl from './core/PauseControl.js';
 import Pipeline from '#core/stream/Pipeline.js';
 import WritableSink from '#core/stream/WritableSink.js';
 
+import ParserConfiguration from './configurations/ParserConfiguration.js';
+
 import DemoSource from './data/enums/DemoSource.js';
 import InterceptorRegistry from './data/InterceptorRegistry.js';
 import PerformanceTrackerCategory from './data/enums/PerformanceTrackerCategory.js';
@@ -29,7 +31,6 @@ import DemoStreamPacketExtractor from './stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketProcessor from './stream/DemoStreamPacketProcessor.js';
 
 import DemoSession from './DemoSession.js';
-import ParserConfiguration from './ParserConfiguration.js';
 
 /**
  * @template [M=unknown]

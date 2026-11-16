@@ -20,7 +20,7 @@
 /** @typedef {import('@deademx/engine').StringTableDecoderFn} StringTableDecoderFn */
 /** @typedef {import('@deademx/engine').SyncObject} SyncObject */
 
-/** @import { Logger, ParserConfiguration } from '@deademx/engine' */
+/** @import { Logger, ParserConfiguration, PlayerConfiguration } from '@deademx/engine' */
 /** @import { Dota2Proto } from '@deademx/dota2/proto' */
 
 import {
@@ -63,7 +63,7 @@ class Parser extends EngineParser {
 class Player extends EnginePlayer {
     /**
      * @constructor
-     * @param {ParserConfiguration=} configuration
+     * @param {(PlayerConfiguration|ParserConfiguration)=} configuration
      * @param {Logger=} logger
      */
     constructor(configuration, logger) {
@@ -89,6 +89,7 @@ export {
     Logger,
     ParserConfiguration,
     PlaybackInterruptedError,
+    PlayerConfiguration,
     PlayerState,
     Printer,
     Protocol,

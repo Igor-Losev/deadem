@@ -2,6 +2,8 @@ import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
+import StreamConfiguration from '../configurations/StreamConfiguration.js';
+
 import DemoSource from '../data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
@@ -9,8 +11,6 @@ import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 
 import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
 import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
-
-import ParserConfiguration from '../ParserConfiguration.js';
 
 const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
 
@@ -40,14 +40,14 @@ class DemoStreamPacketExtractor extends Transform {
     /**
      * @public
      * @constructor
-     * @param {ParserConfiguration} configuration
+     * @param {StreamConfiguration} configuration
      * @param {ParserDiagnostics} diagnostics
      * @param {DemoSource} source
      */
     constructor(configuration, diagnostics, source) {
         super(configuration.streamHighWaterMark);
 
-        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
         Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
         Assert.isTrue(source instanceof DemoSource);
 

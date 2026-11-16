@@ -7,6 +7,8 @@
 
 import Assert from '../core/Assert.js';
 
+import ParserConfiguration from '../configurations/ParserConfiguration.js';
+
 import MessagePacket from '../data/MessagePacket.js';
 
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
@@ -14,8 +16,6 @@ import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory
 import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 
 import PacketCodec from '../schema/PacketCodec.js';
-
-import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Parses a {@link DemoPacketRaw} payload into a {@link DemoPacket}.

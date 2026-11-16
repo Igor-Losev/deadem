@@ -1,11 +1,11 @@
 import Assert from '../core/Assert.js';
 import Transform from '#core/stream/Transform.js';
 
+import StreamConfiguration from '../configurations/StreamConfiguration.js';
+
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
 import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
-
-import ParserConfiguration from '../ParserConfiguration.js';
 
 /**
  * Splits buffer into chunks with a maximum size of maxChunkSize (in bytes).
@@ -20,13 +20,13 @@ class DemoStreamBufferSplitter extends Transform {
     /**
      * @public
      * @constructor
-     * @param {ParserConfiguration} configuration
+     * @param {StreamConfiguration} configuration
      * @param {ParserDiagnostics} diagnostics
      */
     constructor(configuration, diagnostics) {
         super(configuration.streamHighWaterMark);
 
-        Assert.isTrue(configuration instanceof ParserConfiguration, 'Invalid configuration: expected an instance of ParserConfiguration');
+        Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
         Assert.isTrue(diagnostics instanceof ParserDiagnostics, 'Invalid diagnostics: expected an instance of ParserDiagnostics');
 
         this._diagnostics = diagnostics;
