@@ -11,8 +11,8 @@ const INFO = DemoPacketType.DEM_FILE_INFO.id;
 const PACKET = DemoPacketType.DEM_PACKET.id;
 const STOP = DemoPacketType.DEM_STOP.id;
 
-const DROP = DemoCutAction.DROP.id;
-const KEEP = DemoCutAction.KEEP.id;
+const DROP = DemoCutAction.DROP;
+const KEEP = DemoCutAction.KEEP;
 
 /**
  * Sequences 0…8: the bootstrap, the first DEM_Packet, the body on ticks 1…4 with full packets on ticks 1 and 3, the tail.
@@ -21,7 +21,9 @@ const TYPES = [ HEADER, PACKET, FULL, PACKET, PACKET, FULL, PACKET, STOP, INFO ]
 const TICKS = [ -1, 1, 1, 2, 3, 3, 4, 4, 4 ];
 
 function plan(from, to, types = TYPES, ticks = TICKS) {
-    return Array.from(new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks)).getPlan(from, to));
+    const demoCutPlan = new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks)).getPlan(from, to);
+
+    return types.map((_type, sequence) => demoCutPlan.getAction(sequence));
 }
 
 describe('DemoCutIndex', () => {

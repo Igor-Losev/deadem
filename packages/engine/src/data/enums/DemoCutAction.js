@@ -1,5 +1,8 @@
 import Assert from '../../core/Assert.js';
 
+/** @type {Map<number, DemoCutAction>} */
+const registry = new Map();
+
 class DemoCutAction {
     /** @private @type {string} */
     _code;
@@ -14,10 +17,22 @@ class DemoCutAction {
      */
     constructor(code, id) {
         Assert.isTrue(typeof code === 'string' && code.length > 0);
-        Assert.isTrue(Number.isInteger(id));
+        Assert.isTrue(Number.isInteger(id) && !registry.has(id));
 
         this._code = code;
         this._id = id;
+
+        registry.set(id, this);
+    }
+
+    /**
+     * @public
+     * @static
+     * @param {number} id
+     * @returns {DemoCutAction|null}
+     */
+    static getById(id) {
+        return registry.get(id) || null;
     }
 
     /**

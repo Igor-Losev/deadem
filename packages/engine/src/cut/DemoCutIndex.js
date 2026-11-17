@@ -3,6 +3,8 @@ import Assert from '../core/Assert.js';
 import DemoCutAction from '../data/enums/DemoCutAction.js';
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 
+import DemoCutPlan from './DemoCutPlan.js';
+
 class DemoCutIndex {
     /** @private @type {{ first: number, stop: number }} */
     _bounds;
@@ -39,7 +41,7 @@ class DemoCutIndex {
      * @public
      * @param {number} from - The first tick of the window.
      * @param {number} to - The last tick of the window.
-     * @returns {Uint8Array} - The id of a {@link DemoCutAction} for every packet, by sequence.
+     * @returns {DemoCutPlan}
      */
     getPlan(from, to) {
         const firstTick = this._ticks[this._bounds.first];
@@ -60,7 +62,7 @@ class DemoCutIndex {
             }
         }
 
-        return actions;
+        return new DemoCutPlan(actions);
     }
 }
 

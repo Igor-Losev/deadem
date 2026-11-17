@@ -13,14 +13,20 @@ import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory
 
 import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 
+import PacketCodec from '../schema/PacketCodec.js';
+
 import DemoStreamBufferSplitter from '../stream/DemoStreamBufferSplitter.js';
 import DemoStreamPacketCutter from '../stream/DemoStreamPacketCutter.js';
+import DemoStreamPacketEditor from '../stream/DemoStreamPacketEditor.js';
 import DemoStreamPacketExtractor from '../stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketWriter from '../stream/DemoStreamPacketWriter.js';
 
 import DemoCutIndex from './DemoCutIndex.js';
 
 class Cutter {
+    /** @private @type {PacketCodec} */
+    _codec;
+
     /** @private @type {CutterConfiguration} */
     _configuration;
 
@@ -45,6 +51,8 @@ class Cutter {
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
         this._configuration = configuration;
+
+        this._codec = new PacketCodec(registry);
         this._diagnostics = new ParserDiagnostics(registry, logger);
     }
 
@@ -65,7 +73,8 @@ class Cutter {
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
             new DemoStreamPacketExtractor(this._configuration, this._diagnostics, DemoSource.REPLAY),
-            new DemoStreamPacketCutter(this._configuration, this._index.getPlan(from, to))
+            new DemoStreamPacketCutter(this._configuration, this._index.getPlan(from, to)),
+            new DemoStreamPacketEditor(this._configuration, this._codec)
         ];
 
         const writer = new DemoStreamPacketWriter(this._configuration);

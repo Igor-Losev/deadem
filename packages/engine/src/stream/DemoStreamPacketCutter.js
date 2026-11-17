@@ -6,6 +6,8 @@ import Transform from '#core/stream/Transform.js';
 
 import StreamConfiguration from '../configurations/StreamConfiguration.js';
 
+import DemoCutPlan from '../cut/DemoCutPlan.js';
+
 import DemoFormat from '../data/DemoFormat.js';
 
 import DemoCutAction from '../data/enums/DemoCutAction.js';
@@ -14,8 +16,8 @@ import DemoCutAction from '../data/enums/DemoCutAction.js';
  * Cuts packets according to the plan.
  */
 class DemoStreamPacketCutter extends Transform {
-    /** @private @type {Uint8Array} */
-    _actions;
+    /** @private @type {DemoCutPlan} */
+    _plan;
 
     /** @private @type {{ scanned: number, written: number }} */
     _ticks = { scanned: DemoFormat.INITIAL_TICK, written: DemoFormat.INITIAL_TICK };
@@ -24,15 +26,15 @@ class DemoStreamPacketCutter extends Transform {
      * @public
      * @constructor
      * @param {StreamConfiguration} configuration
-     * @param {Uint8Array} actions - The id of a {@link DemoCutAction} for every packet, by sequence.
+     * @param {DemoCutPlan} plan
      */
-    constructor(configuration, actions) {
+    constructor(configuration, plan) {
         super(configuration.streamHighWaterMark);
 
         Assert.isTrue(configuration instanceof StreamConfiguration, 'Invalid configuration: expected an instance of StreamConfiguration');
-        Assert.isTrue(actions instanceof Uint8Array, 'Invalid actions: expected a Uint8Array');
+        Assert.isTrue(plan instanceof DemoCutPlan, 'Invalid plan: expected an instance of DemoCutPlan');
 
-        this._actions = actions;
+        this._plan = plan;
     }
 
     /**
@@ -41,13 +43,11 @@ class DemoStreamPacketCutter extends Transform {
      * @returns {Promise<void>}
      */
     async _handle(demoPacketRaw) {
-        Assert.isTrue(demoPacketRaw.sequence < this._actions.length, `Unable to cut: packet [ ${demoPacketRaw.sequence} ] is beyond the loaded demo`);
-
         const tick = this._ticks.written + demoPacketRaw.tick.value - this._ticks.scanned;
 
         this._ticks.scanned = demoPacketRaw.tick.value;
 
-        if (this._actions[demoPacketRaw.sequence] === DemoCutAction.DROP.id) {
+        if (this._plan.getAction(demoPacketRaw.sequence) === DemoCutAction.DROP) {
             return;
         }
 

@@ -1,8 +1,10 @@
 import { Readable } from 'node:stream';
 
+import { create, toBinary } from '@bufbuild/protobuf';
 import { describe, expect, test } from 'vitest';
 
 import Logger from '../src/core/Logger.js';
+import Snappy from '../src/core/Snappy.instance.js';
 
 import CutterConfiguration from '../src/configurations/CutterConfiguration.js';
 
@@ -18,6 +20,16 @@ import createDescriptors from './support/createDescriptors.js';
 const FILE_INFO = DemoPacketType.DEM_FILE_INFO.id;
 const SPAWN_GROUPS = DemoPacketType.DEM_SPAWN_GROUPS.id;
 
+const registry = new SchemaRegistry(createDescriptors({
+    CDemoFileInfo: [
+        [ 'playback_time', 1, 'float' ],
+        [ 'playback_ticks', 2, 'int32' ],
+        [ 'playback_frames', 3, 'int32' ]
+    ]
+}));
+
+registry.registerDemoType(DemoPacketType.DEM_FILE_INFO);
+
 /**
  * Every packet: type, tick, size, payload. Tick -1 takes five bytes.
  */
@@ -30,10 +42,8 @@ const PACKETS = [
     [ DemoPacketType.DEM_PACKET.id, 4, 1, 7 ],
     [ DemoPacketType.DEM_STOP.id, 4, 0 ],
     [ SPAWN_GROUPS, 4, 0 ],
-    [ FILE_INFO, 4, 1, 6 ]
+    createFileInfo(4, 4, 4, 4 / 64)
 ];
-
-const registry = new SchemaRegistry(createDescriptors({ }));
 
 /**
  * @param {Array<Array<number>>} packets
@@ -46,9 +56,11 @@ function createDemo(packets) {
     let position = header.length;
 
     for (const packet of packets) {
-        if (packet[0] === FILE_INFO) {
+        const typeId = packet[0] & ~DemoFormat.COMPRESSED_FLAG;
+
+        if (typeId === FILE_INFO) {
             view.setUint32(8, position, true);
-        } else if (packet[0] === SPAWN_GROUPS) {
+        } else if (typeId === SPAWN_GROUPS) {
             view.setUint32(12, position, true);
         }
 
@@ -58,6 +70,29 @@ function createDemo(packets) {
     header.set(DemoFormat.STAMP, 0);
 
     return Uint8Array.from([ ...header, ...packets.flat() ]);
+}
+
+/**
+ * DEM_FileInfo with the length of a demo: its last tick, its DEM_Packet count and its seconds.
+ *
+ * @param {number} tick
+ * @param {number} ticks
+ * @param {number} frames
+ * @param {number} seconds
+ * @param {boolean} [compressed=false]
+ * @returns {Array<number>}
+ */
+function createFileInfo(tick, ticks, frames, seconds, compressed = false) {
+    const descriptor = registry.getDescriptor('CDemoFileInfo');
+    const payload = toBinary(descriptor, create(descriptor, { playbackFrames: frames, playbackTicks: ticks, playbackTime: seconds }));
+
+    if (compressed) {
+        const compressedPayload = Snappy.compress(payload);
+
+        return [ FILE_INFO | DemoFormat.COMPRESSED_FLAG, tick, compressedPayload.length, ...compressedPayload ];
+    }
+
+    return [ FILE_INFO, tick, payload.length, ...payload ];
 }
 
 /**
@@ -92,7 +127,7 @@ describe('Cutter', () => {
                 [ DemoPacketType.DEM_PACKET.id, 3, 1, 7 ],
                 [ DemoPacketType.DEM_STOP.id, 3, 0 ],
                 [ SPAWN_GROUPS, 3, 0 ],
-                [ FILE_INFO, 3, 1, 6 ]
+                createFileInfo(3, 3, 3, 3 / 64)
             ]));
         });
 
@@ -104,7 +139,7 @@ describe('Cutter', () => {
                 [ DemoPacketType.DEM_PACKET.id, 6, 0 ],
                 [ DemoPacketType.DEM_STOP.id, 6, 0 ],
                 [ SPAWN_GROUPS, 6, 0 ],
-                [ FILE_INFO, 6, 0 ]
+                createFileInfo(6, 6, 3, 6 / 32)
             ];
 
             const [ fileHeader, first ] = packets;
@@ -115,7 +150,21 @@ describe('Cutter', () => {
                 [ DemoPacketType.DEM_PACKET.id, 4, 0 ],
                 [ DemoPacketType.DEM_STOP.id, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
-                [ FILE_INFO, 4, 0 ]
+                createFileInfo(4, 4, 2, 4 / 32)
+            ]));
+        });
+
+        test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {
+            const [ fileHeader, first ] = PACKETS;
+
+            expect(await cut(createDemo([ ...PACKETS.slice(0, -1), createFileInfo(4, 4, 4, 4 / 64, true) ]), 3, 4)).toEqual(createDemo([
+                fileHeader,
+                first,
+                [ DemoPacketType.DEM_PACKET.id, 2, 1, 6 ],
+                [ DemoPacketType.DEM_PACKET.id, 3, 1, 7 ],
+                [ DemoPacketType.DEM_STOP.id, 3, 0 ],
+                [ SPAWN_GROUPS, 3, 0 ],
+                createFileInfo(3, 3, 3, 3 / 64)
             ]));
         });
     });

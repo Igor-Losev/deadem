@@ -2,6 +2,8 @@
 /** @import DemoPacketRaw from '../data/DemoPacketRaw.js' */
 /** @import MessagePacketRaw from '../data/MessagePacketRaw.js' */
 
+import { fromBinary, toBinary } from '@bufbuild/protobuf';
+
 import Assert from '../core/Assert.js';
 import Snappy from '../core/Snappy.instance.js';
 
@@ -70,6 +72,27 @@ class PacketCodec {
         }
 
         return decoder.decode(decompressed);
+    }
+
+    /**
+     * Decompresses and protobuf-decodes the raw payload, edits it and returns an uncompressed copy.
+     *
+     * @public
+     * @param {DemoPacketRaw} raw
+     * @param {(message: *) => void} edit
+     * @returns {DemoPacketRaw}
+     */
+    editRaw(raw, edit) {
+        const demoPacketType = this.getDemoType(raw);
+
+        Assert.isTrue(demoPacketType !== null && demoPacketType.protoName !== null, `Unable to edit packet [ ${raw.getTypeId()} ]: unknown type`);
+
+        const descriptor = this._registry.getDescriptor(demoPacketType.protoName);
+        const message = fromBinary(descriptor, raw.getIsCompressed() ? Snappy.decompress(raw.payload) : raw.payload);
+
+        edit(message);
+
+        return raw.withPayload(toBinary(descriptor, message));
     }
 
     /**

@@ -133,6 +133,19 @@ class DemoPacketRaw {
     }
 
     /**
+     * Returns a packet copy with another uncompressed payload.
+     *
+     * @public
+     * @param {Uint8Array} payload
+     * @returns {DemoPacketRaw}
+     */
+    withPayload(payload) {
+        const typeId = this.getTypeId();
+
+        return new DemoPacketRaw(this._sequence, new VarInt32(typeId, VarInt32.getSize(typeId)), this._source, this._tick, new VarInt32(payload.length, VarInt32.getSize(payload.length)), payload);
+    }
+
+    /**
      * Returns a packet copy on another tick.
      *
      * @public
