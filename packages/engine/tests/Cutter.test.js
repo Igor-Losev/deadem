@@ -9,6 +9,7 @@ import Snappy from '../src/core/Snappy.instance.js';
 import CutterConfiguration from '../src/configurations/CutterConfiguration.js';
 
 import DemoFormat from '../src/data/DemoFormat.js';
+import DemoPacketRaw from '../src/data/DemoPacketRaw.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
 import SchemaRegistry from '../src/schema/SchemaRegistry.js';
@@ -37,7 +38,7 @@ const PACKETS = [
     [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 2, 10, 11 ],
     [ DemoPacketType.DEM_PACKET.id, 1, 3, 1, 2, 3 ],
     [ DemoPacketType.DEM_FULL_PACKET.id, 1, 1, 9 ],
-    [ DemoPacketType.DEM_PACKET.id | DemoFormat.COMPRESSED_FLAG, 2, 2, 4, 5 ],
+    [ DemoPacketType.DEM_PACKET.id | DemoPacketRaw.COMPRESSED_FLAG, 2, 2, 4, 5 ],
     [ DemoPacketType.DEM_PACKET.id, 3, 1, 6 ],
     [ DemoPacketType.DEM_PACKET.id, 4, 1, 7 ],
     [ DemoPacketType.DEM_STOP.id, 4, 0 ],
@@ -56,7 +57,7 @@ function createDemo(packets) {
     let position = header.length;
 
     for (const packet of packets) {
-        const typeId = packet[0] & ~DemoFormat.COMPRESSED_FLAG;
+        const typeId = packet[0] & ~DemoPacketRaw.COMPRESSED_FLAG;
 
         if (typeId === FILE_INFO) {
             view.setUint32(8, position, true);
@@ -89,7 +90,7 @@ function createFileInfo(tick, ticks, frames, seconds, compressed = false) {
     if (compressed) {
         const compressedPayload = Snappy.compress(payload);
 
-        return [ FILE_INFO | DemoFormat.COMPRESSED_FLAG, tick, compressedPayload.length, ...compressedPayload ];
+        return [ FILE_INFO | DemoPacketRaw.COMPRESSED_FLAG, tick, compressedPayload.length, ...compressedPayload ];
     }
 
     return [ FILE_INFO, tick, payload.length, ...payload ];

@@ -34,6 +34,13 @@ class DemoPacketRaw {
 
     /**
      * @public
+     * @static
+     * @returns {number}
+     */
+    static get COMPRESSED_FLAG() { return 64; }
+
+    /**
+     * @public
      * @returns {number}
      */
     get sequence() {
@@ -101,7 +108,7 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsCompressed() {
-        return (this._type.value & DemoFormat.COMPRESSED_FLAG) === DemoFormat.COMPRESSED_FLAG;
+        return (this._type.value & DemoPacketRaw.COMPRESSED_FLAG) === DemoPacketRaw.COMPRESSED_FLAG;
     }
 
     /**
@@ -129,7 +136,7 @@ class DemoPacketRaw {
      * @returns {number}
      */
     getTypeId() {
-        return this._type.value & ~DemoFormat.COMPRESSED_FLAG;
+        return this._type.value & ~DemoPacketRaw.COMPRESSED_FLAG;
     }
 
     /**
@@ -154,6 +161,17 @@ class DemoPacketRaw {
      */
     withTick(tick) {
         return new DemoPacketRaw(this._sequence, this._type, this._source, new VarInt32(tick, VarInt32.getSize(tick)), this._frame, this._payload);
+    }
+
+    /**
+     * Returns a packet copy of another type.
+     *
+     * @public
+     * @param {number} typeId
+     * @returns {DemoPacketRaw}
+     */
+    withType(typeId) {
+        return new DemoPacketRaw(this._sequence, new VarInt32(typeId, VarInt32.getSize(typeId)), this._source, this._tick, this._frame, this._payload);
     }
 }
 

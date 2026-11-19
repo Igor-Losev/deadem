@@ -15,7 +15,6 @@ import DemoPacketRawReplayExtractor from '../src/extractors/DemoPacketRawReplayE
 
 import DemoStreamPacketWriter from '../src/stream/DemoStreamPacketWriter.js';
 
-const COMPRESSED_FLAG = 64;
 const EMPTY = new Uint8Array(0);
 const FILE_INFO = DemoPacketType.DEM_FILE_INFO.id;
 const HEADER_SIZE_BYTES = 16;
@@ -66,7 +65,7 @@ async function write(frames) {
 describe('DemoStreamPacketWriter', () => {
     describe('When frames pass through', () => {
         test('It should produce a file that reads back', async () => {
-            const file = await write([ createFrame(PACKET, new Uint8Array([ 1, 2, 3 ])), createFrame(PACKET | COMPRESSED_FLAG, new Uint8Array([ 4 ])), ...createTail() ]);
+            const file = await write([ createFrame(PACKET, new Uint8Array([ 1, 2, 3 ])), createFrame(PACKET | DemoPacketRaw.COMPRESSED_FLAG, new Uint8Array([ 4 ])), ...createTail() ]);
 
             expect(new TextDecoder().decode(file.subarray(0, 8))).toBe('PBDEMS2\0');
             expect(readFrames(file).map(frame => [ frame.getTypeId(), frame.getIsCompressed(), Array.from(frame.payload) ])).toEqual([
@@ -91,7 +90,7 @@ describe('DemoStreamPacketWriter', () => {
 
     describe('When the tail frames are compressed', () => {
         test('It should still point the offsets to them', async () => {
-            const file = await write([ createFrame(SPAWN_GROUPS | COMPRESSED_FLAG, new Uint8Array([ 1 ])), createFrame(FILE_INFO | COMPRESSED_FLAG, new Uint8Array([ 2 ])) ]);
+            const file = await write([ createFrame(SPAWN_GROUPS | DemoPacketRaw.COMPRESSED_FLAG, new Uint8Array([ 1 ])), createFrame(FILE_INFO | DemoPacketRaw.COMPRESSED_FLAG, new Uint8Array([ 2 ])) ]);
             const offsets = readOffsets(file);
 
             expect(readFrameAt(file, offsets.spawnGroups).getTypeId()).toBe(SPAWN_GROUPS);

@@ -3,7 +3,6 @@ import { describe, expect, test } from 'vitest';
 
 import Snappy from '../src/core/Snappy.instance.js';
 
-import DemoFormat from '../src/data/DemoFormat.js';
 import DemoPacketRaw from '../src/data/DemoPacketRaw.js';
 import VarInt32 from '../src/data/VarInt32.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
@@ -40,7 +39,7 @@ const descriptor = registry.getDescriptor('CDemoFileInfo');
  * @returns {DemoPacketRaw}
  */
 function createFileInfo(payload, compressed = false) {
-    const type = compressed ? FILE_INFO | DemoFormat.COMPRESSED_FLAG : FILE_INFO;
+    const type = compressed ? FILE_INFO | DemoPacketRaw.COMPRESSED_FLAG : FILE_INFO;
     const body = compressed ? Snappy.compress(payload) : payload;
 
     return new DemoPacketRaw(0, new VarInt32(type, 1), DemoSource.REPLAY, new VarInt32(4, 1), new VarInt32(body.length, 1), body);
