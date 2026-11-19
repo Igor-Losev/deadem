@@ -1,4 +1,5 @@
 /** @import { DescMessage } from '@bufbuild/protobuf' */
+/** @import ProtoEncoder from './ProtoEncoder.js' */
 
 import { ScalarType } from '@bufbuild/protobuf';
 import { WireType } from '@bufbuild/protobuf/wire';
@@ -13,6 +14,8 @@ const decoders = new WeakMap();
 
 /**
  * Decodes protobuf messages by walking their descriptors.
+ *
+ * The counterpart of {@link ProtoEncoder}.
  */
 class ProtoDecoder {
     /**
