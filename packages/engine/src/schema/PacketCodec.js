@@ -43,9 +43,10 @@ class PacketCodec {
     /**
      * @public
      * @param {DemoPacketRaw} demoPacketRaw
+     * @param {((typeId: number) => boolean)|null} [messagePacketFilter=null]
      * @returns {DemoPacket|null}
      */
-    decodeDemoPacketRaw(demoPacketRaw) {
+    decodeDemoPacketRaw(demoPacketRaw, messagePacketFilter = null) {
         const demoPacketType = this._resolveDemoType(demoPacketRaw.getTypeId());
 
         if (demoPacketType === null) {
@@ -75,7 +76,7 @@ class PacketCodec {
                 stringTables = null;
             }
 
-            const messagePacketsRaw = new MessagePacketRawExtractor(messageBytes).all();
+            const messagePacketsRaw = new MessagePacketRawExtractor(messageBytes).all(messagePacketFilter);
             const messagePackets = this._decodeMessagePacketsRaw(messagePacketsRaw);
 
             data = { messagePackets, stringTables };
@@ -112,6 +113,19 @@ class PacketCodec {
         raw.ordinal = demoPacket.ordinal;
 
         return raw;
+    }
+
+    /**
+     * Whether the packet is an initial bootstrap packet.
+     *
+     * @public
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @returns {boolean}
+     */
+    getIsBootstrap(demoPacketRaw) {
+        const demoPacketType = this._resolveDemoType(demoPacketRaw.getTypeId());
+
+        return demoPacketRaw.getIsInitial() && demoPacketType !== null && demoPacketType.bootstrap;
     }
 
     /**
@@ -175,10 +189,10 @@ class PacketCodec {
     /**
      * @private
      * @param {Array<MessagePacketRaw>} messagePacketsRaw
-     * @returns {Array<MessagePacket|null>}
+     * @returns {Array<MessagePacket|MessagePacketRaw>}
      */
     _decodeMessagePacketsRaw(messagePacketsRaw) {
-        return messagePacketsRaw.map(p => this._decodeMessagePacketRaw(p));
+        return messagePacketsRaw.map(p => this._decodeMessagePacketRaw(p) ?? p);
     }
 
     /**
@@ -197,9 +211,8 @@ class PacketCodec {
 
         if (demoPacket.type.heavy) {
             const data = /** @type {DemoPacketHeavyData} */ (demoPacket.data);
-            const messagePackets = /** @type {Array<MessagePacket>} */ (data.messagePackets);
 
-            const messagePacketsRaw = this._encodeMessagePackets(messagePackets);
+            const messagePacketsRaw = this._encodeMessagePackets(data.messagePackets);
             const bytes = new MessagePacketRawWriter(messagePacketsRaw).all();
 
             if (demoPacket.is(DemoPacketType.DEM_FULL_PACKET)) {
@@ -231,11 +244,11 @@ class PacketCodec {
 
     /**
      * @private
-     * @param {Array<MessagePacket>} messagePackets
+     * @param {Array<MessagePacket|MessagePacketRaw>} messagePackets
      * @returns {Array<MessagePacketRaw>}
      */
     _encodeMessagePackets(messagePackets) {
-        return messagePackets.map(mp => this._encodeMessagePacket(mp));
+        return messagePackets.map(mp => mp instanceof MessagePacketRaw ? mp : this._encodeMessagePacket(mp));
     }
 
     /**
