@@ -10,6 +10,7 @@
 import Assert from '../core/Assert.js';
 
 import ProtoDecoder from '../core/proto/ProtoDecoder.js';
+import ProtoEncoder from '../core/proto/ProtoEncoder.js';
 
 import FieldRuleRegistry from '../data/fields/FieldRuleRegistry.js';
 
@@ -85,6 +86,15 @@ class SchemaRegistry {
         Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
 
         return descriptor;
+    }
+
+    /**
+     * @public
+     * @param {string} protoName
+     * @returns {ProtoEncoder}
+     */
+    getEncoder(protoName) {
+        return ProtoEncoder.fromDescriptor(this.getDescriptor(protoName));
     }
 
     /**
