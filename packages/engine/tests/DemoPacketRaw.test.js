@@ -11,17 +11,7 @@ const EMPTY = new Uint8Array(0);
 const PACKET = DemoPacketType.DEM_PACKET.id;
 
 function createFrame(type, tick, payload) {
-    return new DemoPacketRaw(0, createVarInt(type), DemoSource.REPLAY, createVarInt(tick), createVarInt(payload.length), payload);
-}
-
-function createVarInt(value) {
-    let size = 1;
-
-    for (let remaining = value >>> 0; remaining >= 0x80; remaining = Math.floor(remaining / 0x80)) {
-        size += 1;
-    }
-
-    return new VarInt32(value, size);
+    return new DemoPacketRaw(0, new VarInt32(type), DemoSource.REPLAY, new VarInt32(tick), new VarInt32(payload.length), payload);
 }
 
 describe('DemoPacketRaw.getSize()', () => {
@@ -37,7 +27,7 @@ describe('DemoPacketRaw.getSize()', () => {
 
     describe('When a header field was read with a non-canonical size', () => {
         test('It should count the canonical size', () => {
-            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, createVarInt(0), createVarInt(0), EMPTY);
+            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, new VarInt32(0), new VarInt32(0), EMPTY);
 
             expect(frame.getSize()).toBe(3);
         });

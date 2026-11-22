@@ -12,10 +12,10 @@ class VarInt32 {
     /**
      * @public
      * @constructor
-     * @param {number} value - The decoded unsigned integer value.
-     * @param {number} size - The number of bytes consumed during decoding.
+     * @param {number} value - The decoded signed integer value.
+     * @param {number} [size=VarInt32.getSize(value)] - The number of bytes consumed during decoding.
      */
-    constructor(value, size) {
+    constructor(value, size = VarInt32.getSize(value)) {
         /** @private */
         this._value = value;
         /** @private */
@@ -73,7 +73,7 @@ class VarInt32 {
      * @public
      * @static
      * @param {Uint8Array} buffer - The buffer from which to parse the value.
-     * @returns {VarInt32|null} - The parsed {@link VarInt32} or null if parsing failed.
+     * @returns {VarInt32|null} - The parsed {@link VarInt32} or null when the buffer ends inside it.
      */
     static parse(buffer) {
         let continuation = true;
@@ -81,7 +81,7 @@ class VarInt32 {
         let value = 0;
 
         while (continuation && offset < MAXIMUM_SIZE_BYTES) {
-            if (continuation && offset >= buffer.length) {
+            if (offset >= buffer.length) {
                 return null;
             }
 

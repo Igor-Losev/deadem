@@ -70,7 +70,7 @@ function createRaw(typeId, payload, compressed = false, source = DemoSource.REPL
     const type = compressed ? typeId | DemoPacketRaw.COMPRESSED_FLAG : typeId;
     const body = compressed ? Snappy.compress(payload) : payload;
 
-    return new DemoPacketRaw(5, new VarInt32(type, 1), source, new VarInt32(4, 1), new VarInt32(body.length, 1), body);
+    return new DemoPacketRaw(5, new VarInt32(type), source, new VarInt32(4), new VarInt32(body.length), body);
 }
 
 /**

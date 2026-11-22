@@ -23,21 +23,11 @@ const PACKET = DemoPacketType.DEM_PACKET.id;
 const SPAWN_GROUPS = DemoPacketType.DEM_SPAWN_GROUPS.id;
 
 function createFrame(type, payload) {
-    return new DemoPacketRaw(0, createVarInt(type), DemoSource.REPLAY, createVarInt(0), createVarInt(payload.length), payload);
+    return new DemoPacketRaw(0, new VarInt32(type), DemoSource.REPLAY, new VarInt32(0), new VarInt32(payload.length), payload);
 }
 
 function createTail() {
     return [ createFrame(SPAWN_GROUPS, EMPTY), createFrame(FILE_INFO, EMPTY) ];
-}
-
-function createVarInt(value) {
-    let size = 1;
-
-    for (let remaining = value >>> 0; remaining >= 0x80; remaining = Math.floor(remaining / 0x80)) {
-        size += 1;
-    }
-
-    return new VarInt32(value, size);
 }
 
 function readFrameAt(bytes, offset) {
@@ -100,7 +90,7 @@ describe('DemoStreamPacketWriter', () => {
 
     describe('When a frame was read with a non-canonical header', () => {
         test('It should still point the offsets to the tail frames', async () => {
-            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, createVarInt(0), createVarInt(3), new Uint8Array([ 1, 2, 3 ]));
+            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, new VarInt32(0), new VarInt32(3), new Uint8Array([ 1, 2, 3 ]));
             const file = await write([ frame, ...createTail() ]);
             const offsets = readOffsets(file);
 

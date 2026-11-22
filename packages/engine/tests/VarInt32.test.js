@@ -39,3 +39,29 @@ describe('VarInt32.getSize()', () => {
         });
     });
 });
+
+describe('VarInt32.parse()', () => {
+    describe('When the buffer holds the whole value', () => {
+        test.each([
+            [ 'a one-byte value', [ 0x07 ], 7, 1 ],
+            [ 'only the first value', [ 0x07, 0xFF ], 7, 1 ],
+            [ 'a value padded to two bytes', [ 0x87, 0x00 ], 7, 2 ],
+            [ 'the tick -1', [ 0xFF, 0xFF, 0xFF, 0xFF, 0x0F ], -1, 5 ],
+            [ 'no more than five bytes', [ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01 ], -1, 5 ]
+        ])('It should read %s', (_, bytes, value, size) => {
+            const varInt = VarInt32.parse(Uint8Array.from(bytes));
+
+            expect([ varInt?.value, varInt?.size ]).toEqual([ value, size ]);
+        });
+    });
+
+    describe('When the buffer ends inside the value', () => {
+        test.each([
+            [ 'an empty buffer', [ ] ],
+            [ 'a buffer cut after one byte', [ 0x80 ] ],
+            [ 'a buffer cut after four bytes', [ 0xFF, 0xFF, 0xFF, 0xFF ] ]
+        ])('It should return null for %s', (_, bytes) => {
+            expect(VarInt32.parse(Uint8Array.from(bytes))).toBeNull();
+        });
+    });
+});

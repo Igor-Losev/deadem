@@ -88,6 +88,7 @@ class DemoPacketRaw {
     }
 
     /**
+     * @deprecated Use payload.length.
      * @public
      * @returns {VarInt32}
      */
@@ -147,9 +148,7 @@ class DemoPacketRaw {
      * @returns {DemoPacketRaw}
      */
     withPayload(payload) {
-        const typeId = this.getTypeId();
-
-        return new DemoPacketRaw(this._sequence, new VarInt32(typeId, VarInt32.getSize(typeId)), this._source, this._tick, new VarInt32(payload.length, VarInt32.getSize(payload.length)), payload);
+        return new DemoPacketRaw(this._sequence, new VarInt32(this.getTypeId()), this._source, this._tick, new VarInt32(payload.length), payload);
     }
 
     /**
@@ -160,7 +159,7 @@ class DemoPacketRaw {
      * @returns {DemoPacketRaw}
      */
     withTick(tick) {
-        return new DemoPacketRaw(this._sequence, this._type, this._source, new VarInt32(tick, VarInt32.getSize(tick)), this._frame, this._payload);
+        return new DemoPacketRaw(this._sequence, this._type, this._source, new VarInt32(tick), this._frame, this._payload);
     }
 
     /**
@@ -171,7 +170,7 @@ class DemoPacketRaw {
      * @returns {DemoPacketRaw}
      */
     withType(typeId) {
-        return new DemoPacketRaw(this._sequence, new VarInt32(typeId, VarInt32.getSize(typeId)), this._source, this._tick, this._frame, this._payload);
+        return new DemoPacketRaw(this._sequence, new VarInt32(typeId), this._source, this._tick, this._frame, this._payload);
     }
 }
 

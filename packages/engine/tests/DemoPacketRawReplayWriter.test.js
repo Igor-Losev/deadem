@@ -14,17 +14,7 @@ const MAXIMUM_INT32 = 0x7FFFFFFF;
 const PACKET = DemoPacketType.DEM_PACKET.id;
 
 function createFrame(type, tick, payload) {
-    return new DemoPacketRaw(0, createVarInt(type), DemoSource.REPLAY, createVarInt(tick), createVarInt(payload.length), payload);
-}
-
-function createVarInt(value) {
-    let size = 1;
-
-    for (let remaining = value >>> 0; remaining >= 0x80; remaining = Math.floor(remaining / 0x80)) {
-        size += 1;
-    }
-
-    return new VarInt32(value, size);
+    return new DemoPacketRaw(0, new VarInt32(type), DemoSource.REPLAY, new VarInt32(tick), new VarInt32(payload.length), payload);
 }
 
 function readFrames(bytes) {
@@ -66,7 +56,7 @@ describe('DemoPacketRawReplayWriter.all()', () => {
 
     describe('When a frame was read with a non-canonical header', () => {
         test('It should write the header canonically', () => {
-            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, createVarInt(0), createVarInt(0), EMPTY);
+            const frame = new DemoPacketRaw(0, new VarInt32(PACKET, 2), DemoSource.REPLAY, new VarInt32(0), new VarInt32(0), EMPTY);
 
             expect(Array.from(write([ frame ]))).toEqual([ PACKET, 0, 0 ]);
         });
