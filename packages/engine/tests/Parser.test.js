@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
+import EmbeddedMessageType from '../src/data/enums/EmbeddedMessageType.js';
 import InterceptorStage from '../src/data/enums/InterceptorStage.js';
 
 import Parser from '../src/Parser.js';
@@ -9,6 +10,10 @@ import SchemaRegistry from '../src/schema/SchemaRegistry.js';
 import Logger from '../src/core/Logger.js';
 
 import createDescriptors from './support/createDescriptors.js';
+
+class GameEmbeddedMessageType extends EmbeddedMessageType { }
+
+const userCommand = new GameEmbeddedMessageType('USER_COMMAND', 'TestUserCmd');
 
 const registry = new SchemaRegistry(createDescriptors({ }));
 
@@ -206,10 +211,10 @@ describe('Parser', () => {
             expect(() => parser.registerPostInterceptor(InterceptorStage.USER_COMMAND, () => { })).toThrow('unsupported');
         });
 
-        test('It should accept USER_COMMAND once a decoder is registered', () => {
+        test('It should accept USER_COMMAND once a user command type is registered', () => {
             const supported = new SchemaRegistry(createDescriptors({ TestUserCmd: [ [ 'tick', 1, 'int32' ] ] }));
 
-            supported.setUserCommandDecoder(supported.getDecoder('TestUserCmd'));
+            supported.registerUserCommandType(userCommand);
 
             const parser = new Parser(supported, ParserConfiguration.DEFAULT, Logger.NOOP);
 

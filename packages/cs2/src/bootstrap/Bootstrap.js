@@ -30,13 +30,15 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2FieldRules(registry) {
-        registry.registerFieldTypeDecoder('CUtlBinaryBlock', FieldDecoderDescriptor.BINARY_BLOCK);
+        const fieldRules = registry.getFieldRuleRegistry();
 
-        registry.registerFixedTableType('CLightComponent');
+        fieldRules.registerFieldTypeDecoder('CUtlBinaryBlock', FieldDecoderDescriptor.BINARY_BLOCK);
 
-        registry.registerFieldDecoderOverride('m_iClip1', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
-        registry.registerFieldDecoderOverride('m_iClip2', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
-        registry.registerFieldDecoderOverride('m_pGameModeRules', FieldDecoderDescriptor.GAME_MODE_RULES);
+        fieldRules.registerFixedTableType('CLightComponent');
+
+        fieldRules.registerFieldDecoderOverride('m_iClip1', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        fieldRules.registerFieldDecoderOverride('m_iClip2', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        fieldRules.registerFieldDecoderOverride('m_pGameModeRules', FieldDecoderDescriptor.GAME_MODE_RULES);
     }
 
     /**
@@ -67,7 +69,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCs2UserCommands(registry) {
-        registry.setUserCommandDecoder(registry.getDecoder(EmbeddedMessageType.USER_COMMAND.protoName));
+        registry.registerUserCommandType(EmbeddedMessageType.USER_COMMAND);
     }
 }
 

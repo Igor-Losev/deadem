@@ -30,13 +30,15 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelFieldRules(registry) {
-        registry.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_UINT_32);
-        registry.registerFieldTypeDecoder('CUtlBinaryBlock', FieldDecoderDescriptor.BINARY_BLOCK);
-        registry.registerFieldTypeDecoder('NPC_STATE', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('MatchID_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        const fieldRules = registry.getFieldRuleRegistry();
 
-        registry.registerFieldDecoderOverride('m_iBonusClip', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
-        registry.registerFieldDecoderOverride('m_iClip', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        fieldRules.registerFieldTypeDecoder('HeroID_t', FieldDecoderDescriptor.VAR_UINT_32);
+        fieldRules.registerFieldTypeDecoder('CUtlBinaryBlock', FieldDecoderDescriptor.BINARY_BLOCK);
+        fieldRules.registerFieldTypeDecoder('NPC_STATE', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('MatchID_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+
+        fieldRules.registerFieldDecoderOverride('m_iBonusClip', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        fieldRules.registerFieldDecoderOverride('m_iClip', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
     }
 
     /**
@@ -67,7 +69,7 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerCitadelUserCommands(registry) {
-        registry.setUserCommandDecoder(registry.getDecoder(EmbeddedMessageType.USER_COMMAND.protoName));
+        registry.registerUserCommandType(EmbeddedMessageType.USER_COMMAND);
     }
 }
 

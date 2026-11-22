@@ -32,6 +32,7 @@ export { default as EntityMutationEvent } from './src/data/entity/EntityMutation
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
 export { default as FieldDecoderDescriptor } from './src/data/fields/decoding/FieldDecoderDescriptor.js';
 export { default as FieldDecoderType } from './src/data/enums/FieldDecoderType.js';
+export { default as FieldRuleRegistry } from './src/data/fields/FieldRuleRegistry.js';
 export { default as InterceptorStage } from './src/data/enums/InterceptorStage.js';
 export { default as Logger } from './src/core/Logger.js';
 export { default as MessagePacket } from './src/data/MessagePacket.js';
