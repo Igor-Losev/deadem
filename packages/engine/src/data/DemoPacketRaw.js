@@ -1,3 +1,4 @@
+/** @import DemoPacketType from './enums/DemoPacketType.js' */
 /** @import DemoSource from './enums/DemoSource.js' */
 
 import DemoFormat from './DemoFormat.js';
@@ -141,14 +142,12 @@ class DemoPacketRaw {
     }
 
     /**
-     * Returns a packet copy with another uncompressed payload.
-     *
      * @public
-     * @param {Uint8Array} payload
-     * @returns {DemoPacketRaw}
+     * @param {DemoPacketType} type
+     * @returns {boolean}
      */
-    withPayload(payload) {
-        return new DemoPacketRaw(this._sequence, new VarInt32(this.getTypeId()), this._source, this._tick, new VarInt32(payload.length), payload);
+    is(type) {
+        return this.getTypeId() === type.id;
     }
 
     /**
@@ -166,11 +165,11 @@ class DemoPacketRaw {
      * Returns a packet copy of another type.
      *
      * @public
-     * @param {number} typeId
+     * @param {DemoPacketType} type
      * @returns {DemoPacketRaw}
      */
-    withType(typeId) {
-        return new DemoPacketRaw(this._sequence, new VarInt32(typeId), this._source, this._tick, this._frame, this._payload);
+    withType(type) {
+        return new DemoPacketRaw(this._sequence, new VarInt32(type.id), this._source, this._tick, this._frame, this._payload);
     }
 }
 

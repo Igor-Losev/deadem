@@ -54,7 +54,7 @@ class DemoStreamCutEditor extends Transform {
      * @param {DemoPacketRaw} demoPacketRaw
      */
     _forward(demoPacketRaw) {
-        if (demoPacketRaw.getTypeId() === DemoPacketType.DEM_PACKET.id) {
+        if (demoPacketRaw.is(DemoPacketType.DEM_PACKET)) {
             this._counts.demPackets += 1;
         }
 
@@ -71,7 +71,7 @@ class DemoStreamCutEditor extends Transform {
             this._forward(this._repackSnapshot(demoPacketRaw));
         }
 
-        if (demoPacketRaw.getTypeId() === DemoPacketType.DEM_FILE_INFO.id) {
+        if (demoPacketRaw.is(DemoPacketType.DEM_FILE_INFO)) {
             this._forward(this._repackFileInfo(demoPacketRaw));
         } else {
             this._forward(demoPacketRaw);
@@ -113,7 +113,7 @@ class DemoStreamCutEditor extends Transform {
 
         fullPacket.packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
 
-        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET.id), fullPacket.packet);
+        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), fullPacket.packet);
     }
 }
 

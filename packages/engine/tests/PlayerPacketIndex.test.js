@@ -15,7 +15,7 @@ import PlayerPacketIndex from '../src/player/PlayerPacketIndex.js';
 function createPacket(tick, typeId = DemoPacketType.DEM_PACKET.id) {
     return {
         tick: { value: tick },
-        getTypeId: () => typeId
+        is: type => type.id === typeId
     };
 }
 

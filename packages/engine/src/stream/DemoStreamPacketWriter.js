@@ -84,11 +84,9 @@ class DemoStreamPacketWriter extends Writable {
      * @returns {Promise<void>}
      */
     async _handle(demoPacketRaw) {
-        const typeId = demoPacketRaw.getTypeId();
-
-        if (typeId === DemoPacketType.DEM_FILE_INFO.id) {
+        if (demoPacketRaw.is(DemoPacketType.DEM_FILE_INFO)) {
             this._offsets.fileInfo = this._positionBytes;
-        } else if (typeId === DemoPacketType.DEM_SPAWN_GROUPS.id) {
+        } else if (demoPacketRaw.is(DemoPacketType.DEM_SPAWN_GROUPS)) {
             this._offsets.spawnGroups = this._positionBytes;
         }
 
