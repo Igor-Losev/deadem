@@ -1,4 +1,7 @@
+/** @import { Message } from '@bufbuild/protobuf' */
 /** @import { DemoPacketHeavyData } from '../data/DemoPacket.js' */
+
+import { fromBinary, toBinary } from '@bufbuild/protobuf';
 
 import Assert from '../core/Assert.js';
 import Snappy from '../core/Snappy.instance.js';
@@ -17,6 +20,8 @@ import MessagePacketRawExtractor from '../extractors/MessagePacketRawExtractor.j
 import MessagePacketRawWriter from '../writers/MessagePacketRawWriter.js';
 
 import SchemaRegistry from './SchemaRegistry.js';
+
+const SNAPPY_COMPRESSION_THRESHOLD_BYTES = 512;
 
 /**
  * Encodes / decodes:
@@ -98,17 +103,7 @@ class PacketCodec {
     encodeDemoPacket(demoPacket) {
         Assert.isTrue(demoPacket instanceof DemoPacket, 'Invalid packet: expected an instance of DemoPacket');
 
-        const payload = Snappy.compress(this._encodeDemoPacketPayload(demoPacket));
-        const typeId = demoPacket.type.id | DemoPacketRaw.COMPRESSED_FLAG;
-
-        const raw = new DemoPacketRaw(
-            demoPacket.sequence,
-            new VarInt32(typeId, VarInt32.getSize(typeId)),
-            DemoSource.REPLAY,
-            new VarInt32(demoPacket.tick, VarInt32.getSize(demoPacket.tick)),
-            new VarInt32(payload.length, VarInt32.getSize(payload.length)),
-            payload
-        );
+        const raw = this._createDemoPacketRaw(demoPacket.sequence, demoPacket.type.id, DemoSource.REPLAY, demoPacket.tick, this._encodeDemoPacketData(demoPacket));
 
         raw.ordinal = demoPacket.ordinal;
 
@@ -126,6 +121,78 @@ class PacketCodec {
         const demoPacketType = this._resolveDemoType(demoPacketRaw.getTypeId());
 
         return demoPacketRaw.getIsInitial() && demoPacketType !== null && demoPacketType.bootstrap;
+    }
+
+    /**
+     * Returns a copy of the packet with the message as its payload.
+     *
+     * @public
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @param {Message} message - Of the type of the packet.
+     * @returns {DemoPacketRaw}
+     */
+    repackDemoPacketRaw(demoPacketRaw, message) {
+        Assert.isTrue(demoPacketRaw.source !== DemoSource.HTTP_BROADCAST, `Unable to repack packet [ ${demoPacketRaw.getTypeId()} ]: broadcast is not supported`);
+
+        const demoPacketType = this._resolveDemoType(demoPacketRaw.getTypeId());
+
+        Assert.isTrue(demoPacketType !== null && demoPacketType.protoName === message.$typeName, `Unable to repack [ ${message.$typeName} ] into packet [ ${demoPacketRaw.getTypeId()} ]: another type`);
+
+        const raw = this._createDemoPacketRaw(demoPacketRaw.sequence, demoPacketType.id, demoPacketRaw.source, demoPacketRaw.tick.value, toBinary(this._registry.getDescriptor(message.$typeName), message));
+
+        raw.ordinal = demoPacketRaw.ordinal;
+
+        return raw;
+    }
+
+    /**
+     * Returns the protobuf message of the payload. Keeps the fields the schema does not know.
+     *
+     * @public
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @returns {*}
+     */
+    unpackDemoPacketRaw(demoPacketRaw) {
+        Assert.isTrue(demoPacketRaw.source !== DemoSource.HTTP_BROADCAST, `Unable to unpack packet [ ${demoPacketRaw.getTypeId()} ]: broadcast is not supported`);
+
+        const demoPacketType = this._resolveDemoType(demoPacketRaw.getTypeId());
+
+        Assert.isTrue(demoPacketType !== null && demoPacketType.protoName !== null, `Unable to unpack packet [ ${demoPacketRaw.getTypeId()} ]: unknown type`);
+
+        let payload;
+
+        if (demoPacketRaw.getIsCompressed()) {
+            payload = Snappy.decompress(demoPacketRaw.payload);
+        } else {
+            payload = demoPacketRaw.payload;
+        }
+
+        return fromBinary(this._registry.getDescriptor(demoPacketType.protoName), payload);
+    }
+
+    /**
+     * @private
+     * @param {number} sequence
+     * @param {number} typeId
+     * @param {DemoSource} source
+     * @param {number} tick
+     * @param {Uint8Array} payload - Uncompressed.
+     * @returns {DemoPacketRaw}
+     */
+    _createDemoPacketRaw(sequence, typeId, source, tick, payload) {
+        let type = typeId;
+        let body = payload;
+
+        if (payload.length > SNAPPY_COMPRESSION_THRESHOLD_BYTES) {
+            const compressed = Snappy.compress(payload);
+
+            if (compressed.length < payload.length) {
+                type = typeId | DemoPacketRaw.COMPRESSED_FLAG;
+                body = compressed;
+            }
+        }
+
+        return new DemoPacketRaw(sequence, new VarInt32(type), source, new VarInt32(tick), new VarInt32(body.length), body);
     }
 
     /**
@@ -200,10 +267,10 @@ class PacketCodec {
      * @param {DemoPacket} demoPacket
      * @returns {Uint8Array}
      */
-    _encodeDemoPacketPayload(demoPacket) {
+    _encodeDemoPacketData(demoPacket) {
         const protoName = demoPacket.type.protoName;
 
-        Assert.isTrue(protoName !== null, `Unable to compress packet [ ${demoPacket.type.id} ]: unknown type`);
+        Assert.isTrue(protoName !== null, `Unable to encode packet [ ${demoPacket.type.id} ]: unknown type`);
 
         const encoder = this._registry.getEncoder(protoName);
 
@@ -235,7 +302,7 @@ class PacketCodec {
     _encodeMessagePacket(messagePacket) {
         const protoName = messagePacket.type.protoName;
 
-        Assert.isTrue(protoName !== null, `Unable to compress message [ ${messagePacket.type.id} ]: unknown type`);
+        Assert.isTrue(protoName !== null, `Unable to encode message [ ${messagePacket.type.id} ]: unknown type`);
 
         const payload = this._registry.getEncoder(protoName).encode(/** @type {*} */ (messagePacket.data));
 

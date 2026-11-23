@@ -12,7 +12,7 @@ import ProtoField from './ProtoField.js';
 const encoders = new WeakMap();
 
 /**
- * Encodes protobuf messages by walking their descriptors. Writes only the own properties of a message, not the defaults on its prototype.
+ * Encodes protobuf messages by walking their descriptors.
  *
  * The counterpart of {@link ProtoDecoder}.
  */

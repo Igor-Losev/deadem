@@ -82,106 +82,14 @@ function encodeFileInfo(ticks) {
 }
 
 /**
- * @param {Array<number>} types
+ * @param {DemoPacketRaw} raw
  * @returns {Uint8Array}
  */
-function encodeMessages(types) {
-    return new MessagePacketRawWriter(types.map(type => new MessagePacketRaw(type, 1, Uint8Array.from([ type ])))).all();
-}
-
-/**
- * @param {*} fileInfo
- */
-function setFiveTicks(fileInfo) {
-    fileInfo.playbackTicks = 5;
-}
-
-/**
- * @param {Array<number>} types
- * @returns {DemoPacketRaw}
- */
-function createFullPacket(types) {
-    const fullPacketDescriptor = registry.getDescriptor('CDemoFullPacket');
-
-    return createRaw(FULL_PACKET, toBinary(fullPacketDescriptor, create(fullPacketDescriptor, { packet: { data: encodeMessages(types) } })), true);
+function readPayload(raw) {
+    return raw.getIsCompressed() ? Snappy.decompress(raw.payload) : raw.payload;
 }
 
 describe('PacketCodec', () => {
-    describe('compressDemoPacket()', () => {
-        test('It should compress the known fields and drop the ones the schema does not know', () => {
-            const parsed = codec.parseDemoPacketRaw(createRaw(FILE_INFO, Uint8Array.from([ ...encodeFileInfo(4), ...UNKNOWN_FIELD ])));
-
-            expect(parsed).not.toBeNull();
-
-            parsed.ordinal = 9;
-
-            const compressed = codec.compressDemoPacket(/** @type {DemoPacket} */ (parsed));
-            const payload = Snappy.decompress(compressed.payload);
-
-            expect(compressed.getIsCompressed()).toBe(true);
-            expect(compressed.getTypeId()).toBe(FILE_INFO);
-            expect(compressed.source).toBe(DemoSource.REPLAY);
-            expect([ compressed.sequence, compressed.tick.value, compressed.ordinal ]).toEqual([ 5, 4, 9 ]);
-            expect(Array.from(payload)).toEqual(Array.from(encodeFileInfo(4)));
-        });
-
-        test('It should re-encode a parsed message and copy a raw one', () => {
-            const tickDescriptor = registry.getDescriptor('CNETMsg_Tick');
-            const tickPayload = toBinary(tickDescriptor, create(tickDescriptor, { tick: 4 }));
-            const packetDescriptor = registry.getDescriptor('CDemoPacket');
-            const messageBytes = new MessagePacketRawWriter([
-                new MessagePacketRaw(MessagePacketType.NET_TICK.id, tickPayload.length, tickPayload),
-                new MessagePacketRaw(99, 1, Uint8Array.from([ 7 ]))
-            ]).all();
-            const parsed = codec.parseDemoPacketRaw(createRaw(PACKET, toBinary(packetDescriptor, create(packetDescriptor, { data: messageBytes }))));
-
-            expect(parsed).not.toBeNull();
-            expect(/** @type {DemoPacket} */ (parsed).data.messagePackets[0]).toBeInstanceOf(MessagePacket);
-
-            const compressed = codec.compressDemoPacket(/** @type {DemoPacket} */ (parsed));
-            const body = fromBinary(packetDescriptor, Snappy.decompress(compressed.payload));
-            const messages = new MessagePacketRawExtractor(/** @type {*} */ (body).data).all();
-
-            expect(compressed.getIsCompressed()).toBe(true);
-            expect(compressed.getTypeId()).toBe(PACKET);
-            expect(messages.map(message => message.type)).toEqual([ MessagePacketType.NET_TICK.id, 99 ]);
-            expect(fromBinary(tickDescriptor, messages[0].payload)).toMatchObject({ tick: 4 });
-            expect(Array.from(messages[1].payload)).toEqual([ 7 ]);
-        });
-
-        test('It should wrap a full packet in packet.data', () => {
-            const demoPacket = new DemoPacket(5, DemoPacketType.DEM_FULL_PACKET, 4, {
-                messagePackets: [ new MessagePacketRaw(MessagePacketType.NET_TICK.id, 1, Uint8Array.from([ 9 ])) ],
-                stringTables: null
-            });
-            const raw = codec.compressDemoPacket(demoPacket);
-            const full = fromBinary(registry.getDescriptor('CDemoFullPacket'), Snappy.decompress(raw.payload));
-            const messages = new MessagePacketRawExtractor(/** @type {*} */ (full).packet.data).all();
-
-            expect(raw.getTypeId()).toBe(FULL_PACKET);
-            expect(messages.map(message => [ message.type, Array.from(message.payload) ])).toEqual([ [ MessagePacketType.NET_TICK.id, [ 9 ] ] ]);
-        });
-    });
-
-    describe('copyDemoPacketRaw()', () => {
-        test('It should take the packet of a full packet as an uncompressed DEM_Packet with the messages the filter keeps', () => {
-            const types = [ MessagePacketType.SVC_PACKET_ENTITIES.id, MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, MessagePacketType.NET_TICK.id ];
-            const packet = codec.copyDemoPacketRaw(createFullPacket(types), type => type !== MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id);
-            const messagePacketsRaw = new MessagePacketRawExtractor(/** @type {*} */ (fromBinary(registry.getDescriptor('CDemoPacket'), packet.payload)).data).all();
-
-            expect([ packet.getTypeId(), packet.getIsCompressed(), packet.tick.value, packet.sequence ]).toEqual([ PACKET, false, 4, 5 ]);
-            expect(messagePacketsRaw.map(messagePacketRaw => messagePacketRaw.type)).toEqual([ MessagePacketType.SVC_PACKET_ENTITIES.id, MessagePacketType.NET_TICK.id ]);
-        });
-
-        test('It should keep every message without a filter', () => {
-            const types = [ MessagePacketType.SVC_PACKET_ENTITIES.id, MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, MessagePacketType.NET_TICK.id ];
-            const packet = codec.copyDemoPacketRaw(createFullPacket(types));
-            const messagePacketsRaw = new MessagePacketRawExtractor(/** @type {*} */ (fromBinary(registry.getDescriptor('CDemoPacket'), packet.payload)).data).all();
-
-            expect(messagePacketsRaw.map(messagePacketRaw => messagePacketRaw.type)).toEqual(types);
-        });
-    });
-
     describe('decodeDemoPacketRaw()', () => {
         test('It should read the messages of a broadcast DEM_Packet without CDemoPacket around them', () => {
             const tickDescriptor = registry.getDescriptor('CNETMsg_Tick');
@@ -202,26 +110,98 @@ describe('PacketCodec', () => {
         });
     });
 
-    describe('editDemoPacketRaw()', () => {
-        test('It should keep the fields the schema does not know', () => {
-            const edited = codec.editDemoPacketRaw(createRaw(FILE_INFO, Uint8Array.from([ ...encodeFileInfo(4), ...UNKNOWN_FIELD ])), setFiveTicks);
+    describe('encodeDemoPacket()', () => {
+        test('It should encode the known fields and drop the ones the schema does not know', () => {
+            const parsed = codec.decodeDemoPacketRaw(createRaw(FILE_INFO, Uint8Array.from([ ...encodeFileInfo(4), ...UNKNOWN_FIELD ])));
 
-            expect(Array.from(edited.payload.subarray(-UNKNOWN_FIELD.length))).toEqual(UNKNOWN_FIELD);
-            expect(fromBinary(descriptor, edited.payload)).toMatchObject({ playbackFrames: 4, playbackTicks: 5 });
+            expect(parsed).not.toBeNull();
+
+            parsed.ordinal = 9;
+
+            const encoded = codec.encodeDemoPacket(/** @type {DemoPacket} */ (parsed));
+
+            expect(encoded.getTypeId()).toBe(FILE_INFO);
+            expect(encoded.source).toBe(DemoSource.REPLAY);
+            expect([ encoded.sequence, encoded.tick.value, encoded.ordinal ]).toEqual([ 5, 4, 9 ]);
+            expect(Array.from(readPayload(encoded))).toEqual(Array.from(encodeFileInfo(4)));
         });
 
-        test('It should write the edited payload uncompressed', () => {
-            const edited = codec.editDemoPacketRaw(createRaw(FILE_INFO, encodeFileInfo(4), true), setFiveTicks);
+        test('It should re-encode a parsed message and copy a raw one', () => {
+            const tickDescriptor = registry.getDescriptor('CNETMsg_Tick');
+            const tickPayload = toBinary(tickDescriptor, create(tickDescriptor, { tick: 4 }));
+            const packetDescriptor = registry.getDescriptor('CDemoPacket');
+            const messageBytes = new MessagePacketRawWriter([
+                new MessagePacketRaw(MessagePacketType.NET_TICK.id, tickPayload.length, tickPayload),
+                new MessagePacketRaw(99, 1, Uint8Array.from([ 7 ]))
+            ]).all();
+            const parsed = codec.decodeDemoPacketRaw(createRaw(PACKET, toBinary(packetDescriptor, create(packetDescriptor, { data: messageBytes }))));
 
-            expect(edited.getIsCompressed()).toBe(false);
-            expect(edited.getTypeId()).toBe(FILE_INFO);
-            expect(fromBinary(descriptor, edited.payload)).toMatchObject({ playbackFrames: 4, playbackTicks: 5 });
+            expect(parsed).not.toBeNull();
+            expect(/** @type {DemoPacket} */ (parsed).data.messagePackets[0]).toBeInstanceOf(MessagePacket);
+
+            const encoded = codec.encodeDemoPacket(/** @type {DemoPacket} */ (parsed));
+            const body = fromBinary(packetDescriptor, readPayload(encoded));
+            const messages = new MessagePacketRawExtractor(/** @type {*} */ (body).data).all();
+
+            expect(encoded.getTypeId()).toBe(PACKET);
+            expect(messages.map(message => message.type)).toEqual([ MessagePacketType.NET_TICK.id, 99 ]);
+            expect(fromBinary(tickDescriptor, messages[0].payload)).toMatchObject({ tick: 4 });
+            expect(Array.from(messages[1].payload)).toEqual([ 7 ]);
+        });
+
+        test('It should wrap a full packet in packet.data', () => {
+            const demoPacket = new DemoPacket(5, DemoPacketType.DEM_FULL_PACKET, 4, {
+                messagePackets: [ new MessagePacketRaw(MessagePacketType.NET_TICK.id, 1, Uint8Array.from([ 9 ])) ],
+                stringTables: null
+            });
+            const raw = codec.encodeDemoPacket(demoPacket);
+            const full = fromBinary(registry.getDescriptor('CDemoFullPacket'), readPayload(raw));
+            const messages = new MessagePacketRawExtractor(/** @type {*} */ (full).packet.data).all();
+
+            expect(raw.getTypeId()).toBe(FULL_PACKET);
+            expect(messages.map(message => [ message.type, Array.from(message.payload) ])).toEqual([ [ MessagePacketType.NET_TICK.id, [ 9 ] ] ]);
         });
     });
 
-    describe('parseStringTables()', () => {
-        test('It should return null when the packet is not a full packet', () => {
-            expect(codec.parseStringTables(createRaw(FILE_INFO, encodeFileInfo(4)))).toBeNull();
+    describe('repackDemoPacketRaw()', () => {
+        test('It should write back the fields the schema does not know', () => {
+            const raw = createRaw(FILE_INFO, Uint8Array.from([ ...encodeFileInfo(4), ...UNKNOWN_FIELD ]));
+            const fileInfo = codec.unpackDemoPacketRaw(raw);
+
+            fileInfo.playbackTicks = 5;
+
+            const payload = readPayload(codec.repackDemoPacketRaw(raw, fileInfo));
+
+            expect(Array.from(payload.subarray(-UNKNOWN_FIELD.length))).toEqual(UNKNOWN_FIELD);
+            expect(fromBinary(descriptor, payload)).toMatchObject({ playbackFrames: 4, playbackTicks: 5 });
+        });
+
+        test('It should keep the type, sequence and tick of the packet', () => {
+            const raw = createRaw(FILE_INFO, encodeFileInfo(4), true);
+            const repacked = codec.repackDemoPacketRaw(raw, codec.unpackDemoPacketRaw(raw));
+
+            expect([ repacked.getTypeId(), repacked.sequence, repacked.tick.value ]).toEqual([ FILE_INFO, 5, 4 ]);
+            expect(Array.from(readPayload(repacked))).toEqual(Array.from(encodeFileInfo(4)));
+        });
+
+        test('It should refuse a message of another type than the packet', () => {
+            const raw = createRaw(FILE_INFO, encodeFileInfo(4));
+
+            expect(() => codec.repackDemoPacketRaw(raw, create(registry.getDescriptor('CDemoPacket'), { }))).toThrow('another type');
+        });
+
+        test('It should refuse a broadcast packet', () => {
+            const raw = createRaw(FILE_INFO, encodeFileInfo(4), false, DemoSource.HTTP_BROADCAST);
+
+            expect(() => codec.repackDemoPacketRaw(raw, create(descriptor, { }))).toThrow('broadcast is not supported');
+        });
+    });
+
+    describe('unpackDemoPacketRaw()', () => {
+        test('It should refuse a broadcast packet', () => {
+            const raw = createRaw(FILE_INFO, encodeFileInfo(4), false, DemoSource.HTTP_BROADCAST);
+
+            expect(() => codec.unpackDemoPacketRaw(raw)).toThrow('broadcast is not supported');
         });
     });
 });
