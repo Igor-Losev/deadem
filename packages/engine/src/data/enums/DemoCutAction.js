@@ -52,7 +52,18 @@ class DemoCutAction {
     }
 
     /**
-     * The packet stays out of the cut.
+     * String tables and state before the snapshot.
+     *
+     * @public
+     * @static
+     * @returns {DemoCutAction}
+     */
+    static get CATCH_UP() {
+        return catchUp;
+    }
+
+    /**
+     * Not in the cut.
      *
      * @public
      * @static
@@ -63,7 +74,18 @@ class DemoCutAction {
     }
 
     /**
-     * The packet goes into the cut as is.
+     * DEM_FileInfo with the length of the cut.
+     *
+     * @public
+     * @static
+     * @returns {DemoCutAction}
+     */
+    static get FILE_INFO() {
+        return fileInfo;
+    }
+
+    /**
+     * In the cut as is.
      *
      * @public
      * @static
@@ -74,7 +96,7 @@ class DemoCutAction {
     }
 
     /**
-     * The snapshot - DEM_FULL_PACKET.
+     * The full packet that starts the window.
      *
      * @public
      * @static
@@ -88,5 +110,7 @@ class DemoCutAction {
 const drop = new DemoCutAction('DROP', 0);
 const keep = new DemoCutAction('KEEP', 1);
 const snapshot = new DemoCutAction('SNAPSHOT', 2);
+const catchUp = new DemoCutAction('CATCH_UP', 3);
+const fileInfo = new DemoCutAction('FILE_INFO', 4);
 
 export default DemoCutAction;

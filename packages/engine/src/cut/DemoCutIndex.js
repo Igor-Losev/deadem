@@ -67,11 +67,25 @@ class DemoCutIndex {
         actions.fill(DemoCutAction.KEEP.id, 0, this._bounds.first + 1);
         actions.fill(DemoCutAction.KEEP.id, this._bounds.stop);
 
+        // Find FILE_INFO
+        for (let sequence = this._bounds.stop; sequence < actions.length; sequence++) {
+            if (this._typeIds[sequence] === DemoPacketType.DEM_FILE_INFO.id) {
+                actions[sequence] = DemoCutAction.FILE_INFO.id;
+            }
+        }
+
         const keyframe = this._getKeyframeBefore(from);
 
         // First snapshot before the window
         if (keyframe !== null) {
             actions[keyframe] = DemoCutAction.SNAPSHOT.id;
+
+            // Catch up the tables and the state between the first packet and the snapshot
+            for (let sequence = this._bounds.first + 1; sequence < keyframe; sequence++) {
+                if (this._typeIds[sequence] === DemoPacketType.DEM_PACKET.id || this._typeIds[sequence] === DemoPacketType.DEM_RECOVERY.id) {
+                    actions[sequence] = DemoCutAction.CATCH_UP.id;
+                }
+            }
         }
 
         const start = keyframe === null ? firstTick : this._ticks[keyframe] + 1;

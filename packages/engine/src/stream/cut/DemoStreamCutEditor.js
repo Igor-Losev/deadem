@@ -18,6 +18,15 @@ import PacketCodec from '../../schema/PacketCodec.js';
 
 import MessagePacketRawWriter from '../../writers/MessagePacketRawWriter.js';
 
+const CATCH_UP_MESSAGE_PACKET_TYPE_IDS = new Set([
+    MessagePacketType.NET_SET_CON_VAR.id,
+    MessagePacketType.NET_SPAWN_GROUP_LOAD.id,
+    MessagePacketType.NET_SPAWN_GROUP_MANIFEST_UPDATE.id,
+    MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK.id,
+    MessagePacketType.NET_TICK.id,
+    MessagePacketType.SVC_UPDATE_STRING_TABLE.id
+]);
+
 /**
  * Edits the contents of the packets of a cut.
  */
@@ -71,11 +80,39 @@ class DemoStreamCutEditor extends Transform {
             this._forward(this._repackSnapshot(demoPacketRaw));
         }
 
-        if (demoPacketRaw.is(DemoPacketType.DEM_FILE_INFO)) {
+        if (this._plan.is(demoPacketRaw.sequence, DemoCutAction.FILE_INFO)) {
             this._forward(this._repackFileInfo(demoPacketRaw));
-        } else {
-            this._forward(demoPacketRaw);
+
+            return;
         }
+
+        if (this._plan.is(demoPacketRaw.sequence, DemoCutAction.CATCH_UP)) {
+            this._forward(this._repackCatchUp(demoPacketRaw));
+
+            return;
+        }
+
+        this._forward(demoPacketRaw);
+    }
+
+    /**
+     * Returns the packet with the string tables and the partial state only.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_Packet.
+     * @returns {DemoPacketRaw}
+     */
+    _repackCatchUp(demoPacketRaw) {
+        Assert.isTrue(demoPacketRaw.is(DemoPacketType.DEM_PACKET), `Unable to repack packet [ ${demoPacketRaw.getTypeId()} ] into the catch-up: expected DEM_Packet`);
+
+        const packet = this._codec.unpackDemoPacketRaw(demoPacketRaw);
+
+        const messagePacketsRaw = new MessagePacketRawExtractor(packet.data)
+            .all(type => CATCH_UP_MESSAGE_PACKET_TYPE_IDS.has(type));
+
+        packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
+
+        return this._codec.repackDemoPacketRaw(demoPacketRaw, packet);
     }
 
     /**

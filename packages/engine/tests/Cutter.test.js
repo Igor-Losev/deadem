@@ -31,9 +31,11 @@ const STOP = DemoPacketType.DEM_STOP.id;
 /**
  * Messages: a type and a payload.
  */
+const CONVAR = [ MessagePacketType.NET_SET_CON_VAR.id, [ 6 ] ];
 const ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 1, 2 ] ];
 const FIRST_ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 9 ] ];
 const NET_TICK = [ MessagePacketType.NET_TICK.id, [ 8 ] ];
+const TABLES = [ MessagePacketType.SVC_UPDATE_STRING_TABLE.id, [ 5 ] ];
 const USER_COMMANDS = [ MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, [ 3 ] ];
 
 const registry = new SchemaRegistry(createDescriptors({
@@ -61,8 +63,8 @@ const PACKETS = [
     [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 2, 10, 11 ],
     [ PACKET, 1, 3, 1, 2, 3 ],
     createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ]),
-    [ PACKET | DemoPacketRaw.COMPRESSED_FLAG, 2, 2, 4, 5 ],
-    [ PACKET, 3, 1, 6 ],
+    createPacket(2, [ NET_TICK, CONVAR, ENTITIES, TABLES ], true),
+    createPacket(3, [ NET_TICK, ENTITIES ]),
     createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
     [ PACKET, 4, 1, 7 ],
     [ STOP, 4, 0 ],
@@ -109,15 +111,21 @@ function createDemo(packets) {
  */
 function createFileInfo(tick, ticks, frames, seconds, compressed = false) {
     const descriptor = registry.getDescriptor('CDemoFileInfo');
-    const payload = toBinary(descriptor, create(descriptor, { playbackFrames: frames, playbackTicks: ticks, playbackTime: seconds }));
 
-    if (compressed) {
-        const compressedPayload = Snappy.compress(payload);
+    return createFrame(FILE_INFO, tick, toBinary(descriptor, create(descriptor, { playbackFrames: frames, playbackTicks: ticks, playbackTime: seconds })), compressed);
+}
 
-        return [ FILE_INFO | DemoPacketRaw.COMPRESSED_FLAG, tick, compressedPayload.length, ...compressedPayload ];
-    }
+/**
+ * @param {number} typeId
+ * @param {number} tick
+ * @param {Uint8Array} payload
+ * @param {boolean} compressed
+ * @returns {Array<number>}
+ */
+function createFrame(typeId, tick, payload, compressed) {
+    const body = compressed ? Snappy.compress(payload) : payload;
 
-    return [ FILE_INFO, tick, payload.length, ...payload ];
+    return [ compressed ? typeId | DemoPacketRaw.COMPRESSED_FLAG : typeId, tick, body.length, ...body ];
 }
 
 /**
@@ -127,21 +135,20 @@ function createFileInfo(tick, ticks, frames, seconds, compressed = false) {
  */
 function createFullPacket(tick, messages) {
     const descriptor = registry.getDescriptor('CDemoFullPacket');
-    const payload = toBinary(descriptor, create(descriptor, { packet: { data: encodeMessages(messages) } }));
 
-    return [ FULL_PACKET, tick, payload.length, ...payload ];
+    return createFrame(FULL_PACKET, tick, toBinary(descriptor, create(descriptor, { packet: { data: encodeMessages(messages) } })), false);
 }
 
 /**
  * @param {number} tick
  * @param {Array<Array<*>>} messages
+ * @param {boolean} [compressed=false]
  * @returns {Array<number>}
  */
-function createPacket(tick, messages) {
+function createPacket(tick, messages, compressed = false) {
     const descriptor = registry.getDescriptor('CDemoPacket');
-    const payload = toBinary(descriptor, create(descriptor, { data: encodeMessages(messages) }));
 
-    return [ PACKET, tick, payload.length, ...payload ];
+    return createFrame(PACKET, tick, toBinary(descriptor, create(descriptor, { data: encodeMessages(messages) })), compressed);
 }
 
 /**
@@ -186,18 +193,20 @@ describe('Cutter', () => {
             ]));
         });
 
-        test('It should play the window from the last full packet before it, with its packet first', async () => {
+        test('It should play the window from the last full packet before it, after a catch-up on one tick', async () => {
             const [ fileHeader, first ] = PACKETS;
 
             expect(await cut(createDemo(PACKETS), 4, 4)).toEqual(createDemo([
                 fileHeader,
                 first,
-                createPacket(2, [ ENTITIES, NET_TICK ]),
-                createFullPacket(2, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
-                [ PACKET, 3, 1, 7 ],
-                [ STOP, 3, 0 ],
-                [ SPAWN_GROUPS, 3, 0 ],
-                createFileInfo(3, 3, 3, 3 / 64)
+                createPacket(2, [ NET_TICK, CONVAR, TABLES ]),
+                createPacket(2, [ NET_TICK ]),
+                createPacket(3, [ ENTITIES, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
+                [ PACKET, 4, 1, 7 ],
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 5, 4 / 64)
             ]));
         });
 
@@ -220,13 +229,15 @@ describe('Cutter', () => {
             expect(await cut(createDemo(packets), 8, 10)).toEqual(createDemo([
                 fileHeader,
                 first,
-                createPacket(3, [ ENTITIES ]),
-                createFullPacket(3, [ ENTITIES ]),
-                [ PACKET, 5, 0 ],
-                [ PACKET, 7, 0 ],
-                [ STOP, 7, 0 ],
-                [ SPAWN_GROUPS, 7, 0 ],
-                createFileInfo(7, 7, 4, 7 / 32)
+                createPacket(3, [ ]),
+                createPacket(3, [ ]),
+                createPacket(4, [ ENTITIES ]),
+                createFullPacket(4, [ ENTITIES ]),
+                [ PACKET, 6, 0 ],
+                [ PACKET, 8, 0 ],
+                [ STOP, 8, 0 ],
+                [ SPAWN_GROUPS, 8, 0 ],
+                createFileInfo(8, 8, 6, 8 / 32)
             ]));
         });
 
@@ -236,12 +247,14 @@ describe('Cutter', () => {
             expect(await cut(createDemo([ ...PACKETS.slice(0, -1), createFileInfo(4, 4, 4, 4 / 64, true) ]), 4, 4)).toEqual(createDemo([
                 fileHeader,
                 first,
-                createPacket(2, [ ENTITIES, NET_TICK ]),
-                createFullPacket(2, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
-                [ PACKET, 3, 1, 7 ],
-                [ STOP, 3, 0 ],
-                [ SPAWN_GROUPS, 3, 0 ],
-                createFileInfo(3, 3, 3, 3 / 64)
+                createPacket(2, [ NET_TICK, CONVAR, TABLES ]),
+                createPacket(2, [ NET_TICK ]),
+                createPacket(3, [ ENTITIES, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
+                [ PACKET, 4, 1, 7 ],
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 5, 4 / 64)
             ]));
         });
     });
