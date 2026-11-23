@@ -219,13 +219,11 @@ class PlayerPacketIndex {
             if (typeId === DemoPacketType.DEM_FULL_PACKET.id) {
                 this._keyframes.push(i);
 
-                const decoded = this._codec.decodeRaw(packet);
+                const fullPacket = this._codec.decodeDemoPacketRaw(packet);
 
-                if (decoded === null) {
-                    continue;
+                if (fullPacket !== null && fullPacket.is(DemoPacketType.DEM_FULL_PACKET)) {
+                    this._stringTableSnapshots.set(i, fullPacket.data.stringTables);
                 }
-
-                this._stringTableSnapshots.set(i, decoded.stringTable);
             }
 
             if (tick !== lastTick) {

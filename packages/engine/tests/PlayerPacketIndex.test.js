@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
+import DemoPacket from '../src/data/DemoPacket.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
 import PacketCodec from '../src/schema/PacketCodec.js';
@@ -21,13 +22,17 @@ function createPacket(tick, typeId = DemoPacketType.DEM_PACKET.id) {
 /**
  * Creates a codec stub that returns predetermined answers for each packet.
  *
- * @param {Map<object, {isBootstrap?: boolean, decoded?: *}>} answers
+ * @param {Map<object, {isBootstrap?: boolean, stringTables?: *}>} answers
  */
 function createCodec(answers = new Map()) {
     const stub = Object.create(PacketCodec.prototype);
 
     stub.getIsBootstrap = packet => answers.get(packet)?.isBootstrap === true;
-    stub.decodeRaw = packet => answers.get(packet)?.decoded ?? null;
+    stub.decodeDemoPacketRaw = (packet) => {
+        const stringTables = answers.get(packet)?.stringTables;
+
+        return stringTables === undefined ? null : new DemoPacket(0, DemoPacketType.DEM_FULL_PACKET, 0, { messagePackets: [ ], stringTables });
+    };
 
     return stub;
 }
@@ -165,7 +170,7 @@ describe('PlayerPacketIndex', () => {
             ];
 
             const stub = createCodec(new Map([
-                [ packets[0], { decoded: { stringTable: 'snapshot0' } } ]
+                [ packets[0], { stringTables: 'snapshot0' } ]
             ]));
 
             const index = new PlayerPacketIndex(stub, packets);
@@ -186,7 +191,7 @@ describe('PlayerPacketIndex', () => {
             ];
 
             const stub = createCodec(new Map([
-                [ packets[0], { decoded: { stringTable: 'snapshot0' } } ]
+                [ packets[0], { stringTables: 'snapshot0' } ]
             ]));
 
             const index = new PlayerPacketIndex(stub, packets);
@@ -206,8 +211,8 @@ describe('PlayerPacketIndex', () => {
             ];
 
             const stub = createCodec(new Map([
-                [ packets[0], { decoded: { stringTable: 'snapshotA' } } ],
-                [ packets[2], { decoded: { stringTable: 'snapshotB' } } ]
+                [ packets[0], { stringTables: 'snapshotA' } ],
+                [ packets[2], { stringTables: 'snapshotB' } ]
             ]));
 
             const index = new PlayerPacketIndex(stub, packets);
@@ -227,7 +232,7 @@ describe('PlayerPacketIndex', () => {
 
             const stub = createCodec(new Map([
                 [ packets[0], { isBootstrap: true } ],
-                [ packets[1], { decoded: { stringTable: 'snapshot0' } } ]
+                [ packets[1], { stringTables: 'snapshot0' } ]
             ]));
 
             const index = new PlayerPacketIndex(stub, packets);
