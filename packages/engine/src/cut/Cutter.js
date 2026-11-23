@@ -16,10 +16,11 @@ import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 import PacketCodec from '../schema/PacketCodec.js';
 
 import DemoStreamBufferSplitter from '../stream/DemoStreamBufferSplitter.js';
-import DemoStreamPacketCutter from '../stream/DemoStreamPacketCutter.js';
-import DemoStreamPacketEditor from '../stream/DemoStreamPacketEditor.js';
 import DemoStreamPacketExtractor from '../stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketWriter from '../stream/DemoStreamPacketWriter.js';
+
+import DemoStreamCutEditor from '../stream/cut/DemoStreamCutEditor.js';
+import DemoStreamPacketCutter from '../stream/cut/DemoStreamPacketCutter.js';
 
 import DemoCutIndex from './DemoCutIndex.js';
 
@@ -70,11 +71,13 @@ class Cutter {
             throw new Error('Unable to cut: cutter is not loaded');
         }
 
+        const plan = this._index.getPlan(from, to);
+
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
             new DemoStreamPacketExtractor(this._configuration, this._diagnostics, DemoSource.REPLAY),
-            new DemoStreamPacketCutter(this._configuration, this._index.getPlan(from, to)),
-            new DemoStreamPacketEditor(this._configuration, this._codec)
+            new DemoStreamPacketCutter(this._configuration, plan),
+            new DemoStreamCutEditor(this._configuration, plan, this._codec)
         ];
 
         const writer = new DemoStreamPacketWriter(this._configuration);

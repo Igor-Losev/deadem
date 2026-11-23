@@ -13,6 +13,7 @@ const STOP = DemoPacketType.DEM_STOP.id;
 
 const DROP = DemoCutAction.DROP;
 const KEEP = DemoCutAction.KEEP;
+const SNAPSHOT = DemoCutAction.SNAPSHOT;
 
 /**
  * Sequences 0…8: the bootstrap, the first DEM_Packet, the body on ticks 1…4 with full packets on ticks 1 and 3, the tail.
@@ -28,21 +29,23 @@ function plan(from, to, types = TYPES, ticks = TICKS) {
 
 describe('DemoCutIndex', () => {
     describe('getPlan()', () => {
-        test('It should keep the start, the packets of the window and the tail', () => {
-            expect(plan(3, 3)).toEqual([ KEEP, KEEP, DROP, DROP, KEEP, KEEP, DROP, KEEP, KEEP ]);
+        test('It should play the window from the last full packet at or before its start', () => {
+            expect(plan(1, 1)).toEqual([ KEEP, KEEP, SNAPSHOT, DROP, DROP, DROP, DROP, KEEP, KEEP ]);
+            expect(plan(2, 2)).toEqual([ KEEP, KEEP, SNAPSHOT, KEEP, DROP, DROP, DROP, KEEP, KEEP ]);
+            expect(plan(3, 3)).toEqual([ KEEP, KEEP, DROP, DROP, DROP, SNAPSHOT, DROP, KEEP, KEEP ]);
+            expect(plan(4, 4)).toEqual([ KEEP, KEEP, DROP, DROP, DROP, SNAPSHOT, KEEP, KEEP, KEEP ]);
         });
 
-        test('It should keep every packet when the window covers the demo', () => {
-            expect(plan(1, 4)).toEqual([ KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP ]);
+        test('It should play the window from the first DEM_Packet when no full packet comes before it', () => {
+            expect(plan(-100, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, KEEP ]);
         });
 
-        test('It should keep the full packet of the first tick when the window starts there', () => {
-            expect(plan(1, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, KEEP ]);
+        test('It should keep the whole body after the first full packet when the window covers the demo', () => {
+            expect(plan(1, 4)).toEqual([ KEEP, KEEP, SNAPSHOT, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP ]);
         });
 
         test('It should accept a window that reaches past the demo', () => {
-            expect(plan(4, 100)).toEqual([ KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, KEEP, KEEP ]);
-            expect(plan(-100, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, KEEP ]);
+            expect(plan(4, 100)).toEqual([ KEEP, KEEP, DROP, DROP, DROP, SNAPSHOT, KEEP, KEEP, KEEP ]);
         });
 
         test('It should reject an invalid window', () => {

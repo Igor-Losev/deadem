@@ -9,6 +9,9 @@ class DemoCutIndex {
     /** @private @type {{ first: number, stop: number }} */
     _bounds;
 
+    /** @private @type {Array<number>} - The full packets, by sequence. */
+    _keyframes = [ ];
+
     /** @private @type {Int32Array} */
     _ticks;
 
@@ -35,6 +38,12 @@ class DemoCutIndex {
 
         this._ticks = ticks;
         this._typeIds = typeIds;
+
+        for (let sequence = first + 1; sequence < stop; sequence++) {
+            if (typeIds[sequence] === DemoPacketType.DEM_FULL_PACKET.id) {
+                this._keyframes.push(sequence);
+            }
+        }
     }
 
     /**
@@ -51,18 +60,47 @@ class DemoCutIndex {
         Assert.isTrue(from <= to, `Invalid window [ ${from}, ${to} ]: from must not exceed to`);
         Assert.isTrue(from <= lastTick && to >= firstTick, `Invalid window [ ${from}, ${to} ]: outside of the demo [ ${firstTick}, ${lastTick} ]`);
 
+        // Initial state - drop all
         const actions = new Uint8Array(this._typeIds.length).fill(DemoCutAction.DROP.id);
 
+        // Keep head and tail
         actions.fill(DemoCutAction.KEEP.id, 0, this._bounds.first + 1);
         actions.fill(DemoCutAction.KEEP.id, this._bounds.stop);
 
+        const keyframe = this._getKeyframeBefore(from);
+
+        // First snapshot before the window
+        if (keyframe !== null) {
+            actions[keyframe] = DemoCutAction.SNAPSHOT.id;
+        }
+
+        const start = keyframe === null ? firstTick : this._ticks[keyframe] + 1;
+
+        // Keep all between earlier snapshot and upper window bound
         for (let sequence = this._bounds.first + 1; sequence < this._bounds.stop; sequence++) {
-            if (this._ticks[sequence] >= from && this._ticks[sequence] <= to) {
+            if (this._ticks[sequence] >= start && this._ticks[sequence] <= to) {
                 actions[sequence] = DemoCutAction.KEEP.id;
             }
         }
 
         return new DemoCutPlan(actions);
+    }
+
+    /**
+     * The sequence of the full packet before the given tick, inclusive.
+     *
+     * @private
+     * @param {number} tick
+     * @returns {number|null}
+     */
+    _getKeyframeBefore(tick) {
+        let keyframe = null;
+
+        for (let i = 0; i < this._keyframes.length && this._ticks[this._keyframes[i]] <= tick; i++) {
+            keyframe = this._keyframes[i];
+        }
+
+        return keyframe;
     }
 }
 

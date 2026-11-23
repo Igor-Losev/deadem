@@ -72,9 +72,21 @@ class DemoCutAction {
     static get KEEP() {
         return keep;
     }
+
+    /**
+     * The snapshot - DEM_FULL_PACKET.
+     *
+     * @public
+     * @static
+     * @returns {DemoCutAction}
+     */
+    static get SNAPSHOT() {
+        return snapshot;
+    }
 }
 
 const drop = new DemoCutAction('DROP', 0);
 const keep = new DemoCutAction('KEEP', 1);
+const snapshot = new DemoCutAction('SNAPSHOT', 2);
 
 export default DemoCutAction;

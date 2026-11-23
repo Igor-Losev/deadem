@@ -27,6 +27,16 @@ class DemoCutPlan {
 
         return /** @type {DemoCutAction} */ (DemoCutAction.getById(this._actions[sequence]));
     }
+
+    /**
+     * @public
+     * @param {number} sequence
+     * @param {DemoCutAction} action
+     * @returns {boolean}
+     */
+    is(sequence, action) {
+        return this.getAction(sequence) === action;
+    }
 }
 
 export default DemoCutPlan;
