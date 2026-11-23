@@ -96,14 +96,16 @@ class DemoStreamCutEditor extends Transform {
     }
 
     /**
-     * Returns the packet with the string tables and the partial state only.
+     * Returns DEM_Packet with the string tables and the partial state only, DEM_Recovery as is.
      *
      * @private
-     * @param {DemoPacketRaw} demoPacketRaw - DEM_Packet.
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_Packet or DEM_Recovery.
      * @returns {DemoPacketRaw}
      */
     _repackCatchUp(demoPacketRaw) {
-        Assert.isTrue(demoPacketRaw.is(DemoPacketType.DEM_PACKET), `Unable to repack packet [ ${demoPacketRaw.getTypeId()} ] into the catch-up: expected DEM_Packet`);
+        if (demoPacketRaw.is(DemoPacketType.DEM_RECOVERY)) {
+            return demoPacketRaw;
+        }
 
         const packet = this._codec.unpackDemoPacketRaw(demoPacketRaw);
 

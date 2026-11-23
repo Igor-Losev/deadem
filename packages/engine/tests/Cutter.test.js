@@ -25,6 +25,7 @@ import createDescriptors from './support/createDescriptors.js';
 const FILE_INFO = DemoPacketType.DEM_FILE_INFO.id;
 const FULL_PACKET = DemoPacketType.DEM_FULL_PACKET.id;
 const PACKET = DemoPacketType.DEM_PACKET.id;
+const RECOVERY = DemoPacketType.DEM_RECOVERY.id;
 const SPAWN_GROUPS = DemoPacketType.DEM_SPAWN_GROUPS.id;
 const STOP = DemoPacketType.DEM_STOP.id;
 
@@ -204,6 +205,37 @@ describe('Cutter', () => {
                 createPacket(3, [ ENTITIES, NET_TICK ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
                 [ PACKET, 4, 1, 7 ],
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 5, 4 / 64)
+            ]));
+        });
+
+        test('It should keep DEM_Recovery whole in the catch-up', async () => {
+            const packets = [
+                [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
+                [ PACKET, 1, 0 ],
+                createPacket(2, [ NET_TICK, ENTITIES ]),
+                [ RECOVERY, 3, 2, 8, 1 ],
+                createPacket(3, [ NET_TICK, TABLES, ENTITIES ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
+                [ PACKET, 4, 0 ],
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 4, 4 / 64)
+            ];
+
+            const [ fileHeader, first ] = packets;
+
+            expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
+                fileHeader,
+                first,
+                createPacket(2, [ NET_TICK ]),
+                [ RECOVERY, 2, 2, 8, 1 ],
+                createPacket(2, [ NET_TICK, TABLES ]),
+                createPacket(3, [ ENTITIES ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
+                [ PACKET, 4, 0 ],
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
                 createFileInfo(4, 4, 5, 4 / 64)
