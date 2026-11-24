@@ -1,10 +1,10 @@
 /** @import { NodeReadable } from '#core/stream/Pipeline.js' */
+/** @import DemoCutIndex from './DemoCutIndex.js' */
 /** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
 import Pipeline from '#core/stream/Pipeline.js';
-import WritableSink from '#core/stream/WritableSink.js';
 
 import CutterConfiguration from '../configurations/CutterConfiguration.js';
 
@@ -20,9 +20,8 @@ import DemoStreamPacketExtractor from '../stream/DemoStreamPacketExtractor.js';
 import DemoStreamPacketWriter from '../stream/DemoStreamPacketWriter.js';
 
 import DemoStreamCutEditor from '../stream/cut/DemoStreamCutEditor.js';
+import DemoStreamCutIndexer from '../stream/cut/DemoStreamCutIndexer.js';
 import DemoStreamPacketCutter from '../stream/cut/DemoStreamPacketCutter.js';
-
-import DemoCutIndex from './DemoCutIndex.js';
 
 class Cutter {
     /** @private @type {PacketCodec} */
@@ -118,49 +117,26 @@ class Cutter {
             throw new Error('Unable to load: unsupported demo source, only REPLAY is supported');
         }
 
-        const collected = await this._extract(reader, demoSource);
-
-        this._index = new DemoCutIndex(Uint8Array.from(collected.typeIds), Int32Array.from(collected.ticks));
-    }
-
-    /**
-     * @private
-     * @param {NodeReadable|ReadableStream} reader
-     * @param {DemoSource} source
-     * @returns {Promise<{ typeIds: Array<number>, ticks: Array<number> }>}
-     */
-    async _extract(reader, source) {
-        /** @type {Array<number>} */
-        const typeIds = [ ];
-
-        /** @type {Array<number>} */
-        const ticks = [ ];
-
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
-            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, source)
+            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, demoSource)
         ];
+
+        const indexer = new DemoStreamCutIndexer(this._configuration);
 
         try {
             this._diagnostics.logger.info('Extract started');
 
             this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
-            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, new WritableSink((packet) => {
-                typeIds.push(packet.getTypeId());
-                ticks.push(packet.tick.value);
-            }));
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, indexer);
 
             await this._pipeline.ready();
 
-            this._diagnostics.logger.info(`Extracted [ ${typeIds.length} ] packets`);
+            this._index = indexer.getIndex();
 
-            return { typeIds, ticks };
+            this._diagnostics.logger.info(`Extracted [ ${this._index.length} ] packets`);
         } catch (error) {
-            if (Pipeline.getIsAbortError(error)) {
-                return { typeIds, ticks };
-            }
-
             this._diagnostics.logger.error('Extract failed', error);
 
             throw error;

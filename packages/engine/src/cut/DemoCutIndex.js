@@ -48,6 +48,14 @@ class DemoCutIndex {
 
     /**
      * @public
+     * @returns {number}
+     */
+    get length() {
+        return this._typeIds.length;
+    }
+
+    /**
+     * @public
      * @param {number} from - The first tick of the window.
      * @param {number} to - The last tick of the window.
      * @returns {DemoCutPlan}
