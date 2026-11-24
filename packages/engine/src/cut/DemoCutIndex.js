@@ -88,11 +88,11 @@ class DemoCutIndex {
             }
         }
 
-        const start = keyframe === null ? firstTick : this._ticks[keyframe] + 1;
+        const startSequence = keyframe === null ? this._bounds.first + 1 : keyframe + 1;
 
         // Keep all between earlier snapshot and upper window bound
-        for (let sequence = this._bounds.first + 1; sequence < this._bounds.stop; sequence++) {
-            if (this._ticks[sequence] >= start && this._ticks[sequence] <= to) {
+        for (let sequence = startSequence; sequence < this._bounds.stop; sequence++) {
+            if (this._ticks[sequence] <= to) {
                 actions[sequence] = DemoCutAction.KEEP.id;
             }
         }

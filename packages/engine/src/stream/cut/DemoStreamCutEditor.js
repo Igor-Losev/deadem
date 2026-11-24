@@ -76,23 +76,27 @@ class DemoStreamCutEditor extends Transform {
      * @returns {Promise<void>}
      */
     async _handle(demoPacketRaw) {
-        if (this._plan.is(demoPacketRaw.sequence, DemoCutAction.SNAPSHOT)) {
-            this._forward(this._repackSnapshot(demoPacketRaw));
+        switch (this._plan.getAction(demoPacketRaw.sequence)) {
+            case DemoCutAction.CATCH_UP: {
+                this._forward(this._repackCatchUp(demoPacketRaw));
+
+                return;
+            }
+            case DemoCutAction.SNAPSHOT: {
+                this._forward(this._repackSnapshot(demoPacketRaw));
+                this._forward(demoPacketRaw);
+
+                return;
+            }
+            case DemoCutAction.FILE_INFO: {
+                this._forward(this._repackFileInfo(demoPacketRaw));
+
+                return;
+            }
+            default: {
+                this._forward(demoPacketRaw);
+            }
         }
-
-        if (this._plan.is(demoPacketRaw.sequence, DemoCutAction.FILE_INFO)) {
-            this._forward(this._repackFileInfo(demoPacketRaw));
-
-            return;
-        }
-
-        if (this._plan.is(demoPacketRaw.sequence, DemoCutAction.CATCH_UP)) {
-            this._forward(this._repackCatchUp(demoPacketRaw));
-
-            return;
-        }
-
-        this._forward(demoPacketRaw);
     }
 
     /**
