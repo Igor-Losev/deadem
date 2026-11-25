@@ -125,6 +125,18 @@ class StringTable {
     /**
      * @internal
      * @public
+     * @param {Array<StringTableEntry>} entries
+     * @returns {void}
+     */
+    registerEntries(entries) {
+        for (let i = 0; i < entries.length; i++) {
+            this.registerEntry(entries[i]);
+        }
+    }
+
+    /**
+     * @internal
+     * @public
      * @param {StringTableEntry} entry
      * @returns {void}
      */
