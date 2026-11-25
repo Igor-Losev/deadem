@@ -16,16 +16,16 @@ import SchemaRegistry from './SchemaRegistry.js';
  * {@link StringTable} and {@link StringTableEntry} instances.
  */
 class StringTableCodec {
-    /** @private @type {SchemaRegistry} */
+    /** @private @type {SchemaRegistry|null} */
     _registry;
 
     /**
      * @public
      * @constructor
-     * @param {SchemaRegistry} registry
+     * @param {SchemaRegistry|null} [registry=null] - When omitted, entry values stay raw bytes.
      */
-    constructor(registry) {
-        Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
+    constructor(registry = null) {
+        Assert.isTrue(registry === null || registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry or null');
 
         this._registry = registry;
     }
@@ -39,7 +39,9 @@ class StringTableCodec {
      * @returns {StringTable}
      */
     createTable(id, type, flags, instructions = null) {
-        return new StringTable(id, type, flags, instructions, this._registry.getStringTableDecoder(type));
+        const decoder = this._registry !== null ? this._registry.getStringTableDecoder(type) : null;
+
+        return new StringTable(id, type, flags, instructions, decoder);
     }
 
     /**

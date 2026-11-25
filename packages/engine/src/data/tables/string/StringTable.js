@@ -82,6 +82,18 @@ class StringTable {
 
     /**
      * @public
+     * @returns {StringTable}
+     */
+    clone() {
+        const table = new StringTable(this._id, this._type, this._flags, this._instructions, this._decoder);
+
+        table._registry.entryById = new Map(this._registry.entryById);
+
+        return table;
+    }
+
+    /**
+     * @public
      * @returns {Array<StringTableEntry>}
      */
     getEntries() {

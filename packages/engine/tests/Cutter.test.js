@@ -36,7 +36,6 @@ const CONVAR = [ MessagePacketType.NET_SET_CON_VAR.id, [ 6 ] ];
 const ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 1, 2 ] ];
 const FIRST_ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 9 ] ];
 const NET_TICK = [ MessagePacketType.NET_TICK.id, [ 8 ] ];
-const TABLES = [ MessagePacketType.SVC_UPDATE_STRING_TABLE.id, [ 5 ] ];
 const USER_COMMANDS = [ MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, [ 3 ] ];
 
 const registry = new SchemaRegistry(createDescriptors({
@@ -50,24 +49,30 @@ const registry = new SchemaRegistry(createDescriptors({
     ],
     CDemoPacket: [
         [ 'data', 3, 'bytes' ]
+    ],
+    CSVCMsg_UpdateStringTable: [
+        [ 'table_id', 1, 'int32' ],
+        [ 'num_changed_entries', 2, 'int32' ],
+        [ 'string_data', 3, 'bytes' ]
     ]
 }));
 
 registry.registerDemoType(DemoPacketType.DEM_FILE_INFO);
 registry.registerDemoType(DemoPacketType.DEM_FULL_PACKET);
 registry.registerDemoType(DemoPacketType.DEM_PACKET);
+registry.registerMessageType(MessagePacketType.SVC_UPDATE_STRING_TABLE);
 
 /**
  * Every packet: type, tick, size, payload. Tick -1 takes five bytes.
  */
 const PACKETS = [
     [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 2, 10, 11 ],
-    [ PACKET, 1, 3, 1, 2, 3 ],
+    createPacket(1, [ ]),
     createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ]),
-    createPacket(2, [ NET_TICK, CONVAR, ENTITIES, TABLES ], true),
+    createPacket(2, [ NET_TICK, CONVAR, ENTITIES ], true),
     createPacket(3, [ NET_TICK, ENTITIES ]),
     createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
-    [ PACKET, 4, 1, 7 ],
+    createPacket(4, [ ]),
     [ STOP, 4, 0 ],
     [ SPAWN_GROUPS, 4, 0 ],
     createFileInfo(4, 4, 4, 4 / 64)
@@ -200,11 +205,11 @@ describe('Cutter', () => {
             expect(await cut(createDemo(PACKETS), 4, 4)).toEqual(createDemo([
                 fileHeader,
                 first,
-                createPacket(2, [ NET_TICK, CONVAR, TABLES ]),
+                createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(2, [ NET_TICK ]),
                 createPacket(3, [ ENTITIES, NET_TICK ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
-                [ PACKET, 4, 1, 7 ],
+                createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
                 createFileInfo(4, 4, 5, 4 / 64)
@@ -217,7 +222,7 @@ describe('Cutter', () => {
                 [ PACKET, 1, 0 ],
                 createPacket(2, [ NET_TICK, ENTITIES ]),
                 [ RECOVERY, 3, 2, 8, 1 ],
-                createPacket(3, [ NET_TICK, TABLES, ENTITIES ]),
+                createPacket(3, [ NET_TICK, CONVAR, ENTITIES ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
                 [ PACKET, 4, 0 ],
                 [ STOP, 4, 0 ],
@@ -232,7 +237,7 @@ describe('Cutter', () => {
                 first,
                 createPacket(2, [ NET_TICK ]),
                 [ RECOVERY, 2, 2, 8, 1 ],
-                createPacket(2, [ NET_TICK, TABLES ]),
+                createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(3, [ ENTITIES ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
                 [ PACKET, 4, 0 ],
@@ -273,17 +278,29 @@ describe('Cutter', () => {
             ]));
         });
 
+        test('It should fail on load when a string table message cannot be decoded', async () => {
+            const packets = [
+                [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
+                createPacket(1, [ [ MessagePacketType.SVC_UPDATE_STRING_TABLE.id, [ 5 ] ] ]),
+                [ STOP, 1, 0 ],
+                [ SPAWN_GROUPS, 1, 0 ],
+                createFileInfo(1, 1, 1, 1 / 64)
+            ];
+
+            await expect(cut(createDemo(packets), 1, 1)).rejects.toThrow(`Unable to read string table message [ ${MessagePacketType.SVC_UPDATE_STRING_TABLE.id} ] of packet [ 1 ]`);
+        });
+
         test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {
             const [ fileHeader, first ] = PACKETS;
 
             expect(await cut(createDemo([ ...PACKETS.slice(0, -1), createFileInfo(4, 4, 4, 4 / 64, true) ]), 4, 4)).toEqual(createDemo([
                 fileHeader,
                 first,
-                createPacket(2, [ NET_TICK, CONVAR, TABLES ]),
+                createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(2, [ NET_TICK ]),
                 createPacket(3, [ ENTITIES, NET_TICK ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
-                [ PACKET, 4, 1, 7 ],
+                createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
                 createFileInfo(4, 4, 5, 4 / 64)

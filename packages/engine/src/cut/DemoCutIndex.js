@@ -1,3 +1,5 @@
+/** @import StringTable from '../data/tables/string/StringTable.js' */
+
 import Assert from '../core/Assert.js';
 
 import DemoCutAction from '../data/enums/DemoCutAction.js';
@@ -12,6 +14,9 @@ class DemoCutIndex {
     /** @private @type {Array<number>} - The full packets, by sequence. */
     _keyframes = [ ];
 
+    /** @private @type {Map<number, Array<StringTable>>} - The string tables before every full packet, by its sequence. */
+    _stringTables;
+
     /** @private @type {Int32Array} */
     _ticks;
 
@@ -23,10 +28,12 @@ class DemoCutIndex {
      * @constructor
      * @param {Uint8Array} typeIds - The type of every packet, by sequence.
      * @param {Int32Array} ticks - The tick of every packet, by sequence.
+     * @param {Map<number, Array<StringTable>>} [stringTables=new Map()] - The string tables before every full packet, by its sequence.
      */
-    constructor(typeIds, ticks) {
+    constructor(typeIds, ticks, stringTables = new Map()) {
         Assert.isTrue(typeIds instanceof Uint8Array && ticks instanceof Int32Array, 'Invalid arguments: expected typed arrays');
         Assert.isTrue(typeIds.length === ticks.length, 'Invalid arguments: expected arrays of one length');
+        Assert.isTrue(stringTables instanceof Map, 'Invalid stringTables: expected a Map');
 
         const first = typeIds.indexOf(DemoPacketType.DEM_PACKET.id);
         const stop = typeIds.indexOf(DemoPacketType.DEM_STOP.id);
@@ -36,6 +43,7 @@ class DemoCutIndex {
 
         this._bounds = { first, stop };
 
+        this._stringTables = stringTables;
         this._ticks = ticks;
         this._typeIds = typeIds;
 

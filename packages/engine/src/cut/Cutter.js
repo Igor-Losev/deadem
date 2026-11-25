@@ -101,7 +101,7 @@ class Cutter {
     }
 
     /**
-     * Reads packet types and ticks. Payloads are not kept.
+     * Reads packet types and ticks, and the string tables before every full packet. Payloads are not kept.
      *
      * @public
      * @param {NodeReadable|ReadableStream} reader
@@ -117,19 +117,20 @@ class Cutter {
             throw new Error('Unable to load: unsupported demo source, only REPLAY is supported');
         }
 
+        const indexer = new DemoStreamCutIndexer(this._configuration, this._codec);
+
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
-            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, demoSource)
+            new DemoStreamPacketExtractor(this._configuration, this._diagnostics, demoSource),
+            indexer
         ];
-
-        const indexer = new DemoStreamCutIndexer(this._configuration);
 
         try {
             this._diagnostics.logger.info('Extract started');
 
             this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
-            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, indexer);
+            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain);
 
             await this._pipeline.ready();
 
