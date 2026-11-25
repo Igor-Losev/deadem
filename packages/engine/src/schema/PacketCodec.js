@@ -1,7 +1,7 @@
 /** @import { Message } from '@bufbuild/protobuf' */
 /** @import { DemoPacketHeavyData } from '../data/DemoPacket.js' */
 
-import { fromBinary, toBinary } from '@bufbuild/protobuf';
+import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 
 import Assert from '../core/Assert.js';
 import Snappy from '../core/Snappy.instance.js';
@@ -43,6 +43,21 @@ class PacketCodec {
         Assert.isTrue(registry instanceof SchemaRegistry, 'Invalid registry: expected an instance of SchemaRegistry');
 
         this._registry = registry;
+    }
+
+    /**
+     * Creates a protobuf message for a demo packet type.
+     *
+     * @public
+     * @param {DemoPacketType} demoPacketType
+     * @param {Record<string, *>} [fields]
+     * @returns {Message}
+     */
+    createDemoPacketMessage(demoPacketType, fields) {
+        Assert.isTrue(demoPacketType instanceof DemoPacketType, 'Invalid demoPacketType: expected an instance of DemoPacketType');
+        Assert.isTrue(demoPacketType.protoName !== null, `Unable to create message for packet [ ${demoPacketType.id} ]: unknown type`);
+
+        return create(this._registry.getDescriptor(demoPacketType.protoName), fields);
     }
 
     /**

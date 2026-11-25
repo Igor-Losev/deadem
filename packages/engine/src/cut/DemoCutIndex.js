@@ -83,17 +83,31 @@ class DemoCutIndex {
         actions.fill(DemoCutAction.KEEP.id, 0, this._bounds.first + 1);
         actions.fill(DemoCutAction.KEEP.id, this._bounds.stop);
 
-        // Find FILE_INFO
+        // Find the FILE_INFO
         for (let sequence = this._bounds.stop; sequence < actions.length; sequence++) {
             if (this._typeIds[sequence] === DemoPacketType.DEM_FILE_INFO.id) {
                 actions[sequence] = DemoCutAction.FILE_INFO.id;
             }
         }
 
+        // First snapshot before the window
         const keyframe = this._getKeyframeBefore(from);
 
-        // First snapshot before the window
+        /** @type {Array<StringTable>|null} */
+        let snapshotTables = null;
+
         if (keyframe !== null) {
+            snapshotTables = this._stringTables.get(keyframe) ?? null;
+
+            // Find the DEM_STRING_TABLES
+            for (let sequence = 0; sequence < this._bounds.first; sequence++) {
+                if (this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
+                    Assert.exists(snapshotTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
+
+                    actions[sequence] = DemoCutAction.START_TABLES.id;
+                }
+            }
+
             actions[keyframe] = DemoCutAction.SNAPSHOT.id;
 
             // Catch up the tables and the state between the first packet and the snapshot
@@ -113,7 +127,7 @@ class DemoCutIndex {
             }
         }
 
-        return new DemoCutPlan(actions);
+        return new DemoCutPlan(actions, snapshotTables);
     }
 
     /**

@@ -3,6 +3,7 @@ import { Readable } from 'node:stream';
 import { create, toBinary } from '@bufbuild/protobuf';
 import { describe, expect, test } from 'vitest';
 
+import BitWriter from '../src/core/BitWriter.js';
 import Logger from '../src/core/Logger.js';
 import Snappy from '../src/core/Snappy.instance.js';
 
@@ -26,8 +27,10 @@ const FILE_INFO = DemoPacketType.DEM_FILE_INFO.id;
 const FULL_PACKET = DemoPacketType.DEM_FULL_PACKET.id;
 const PACKET = DemoPacketType.DEM_PACKET.id;
 const RECOVERY = DemoPacketType.DEM_RECOVERY.id;
+const SIGNON_PACKET = DemoPacketType.DEM_SIGNON_PACKET.id;
 const SPAWN_GROUPS = DemoPacketType.DEM_SPAWN_GROUPS.id;
 const STOP = DemoPacketType.DEM_STOP.id;
+const STRING_TABLES = DemoPacketType.DEM_STRING_TABLES.id;
 
 /**
  * Messages: a type and a payload.
@@ -45,10 +48,33 @@ const registry = new SchemaRegistry(createDescriptors({
         [ 'playback_frames', 3, 'int32' ]
     ],
     CDemoFullPacket: [
+        [ 'string_table', 1, 'CDemoStringTables' ],
         [ 'packet', 2, 'CDemoPacket' ]
     ],
     CDemoPacket: [
         [ 'data', 3, 'bytes' ]
+    ],
+    CDemoStringTables: [
+        [ 'tables', 1, 'CDemoStringTablesTable', true ]
+    ],
+    CDemoStringTablesItem: [
+        [ 'str', 1, 'string' ],
+        [ 'data', 2, 'bytes' ]
+    ],
+    CDemoStringTablesTable: [
+        [ 'table_name', 1, 'string' ],
+        [ 'items', 2, 'CDemoStringTablesItem', true ],
+        [ 'table_flags', 4, 'int32' ]
+    ],
+    CSVCMsg_CreateStringTable: [
+        [ 'name', 1, 'string' ],
+        [ 'num_entries', 2, 'int32' ],
+        [ 'user_data_fixed_size', 3, 'bool' ],
+        [ 'user_data_size_bits', 5, 'int32' ],
+        [ 'flags', 6, 'int32' ],
+        [ 'string_data', 7, 'bytes' ],
+        [ 'data_compressed', 9, 'bool' ],
+        [ 'using_varint_bitcounts', 10, 'bool' ]
     ],
     CSVCMsg_UpdateStringTable: [
         [ 'table_id', 1, 'int32' ],
@@ -60,6 +86,9 @@ const registry = new SchemaRegistry(createDescriptors({
 registry.registerDemoType(DemoPacketType.DEM_FILE_INFO);
 registry.registerDemoType(DemoPacketType.DEM_FULL_PACKET);
 registry.registerDemoType(DemoPacketType.DEM_PACKET);
+registry.registerDemoType(DemoPacketType.DEM_SIGNON_PACKET);
+registry.registerDemoType(DemoPacketType.DEM_STRING_TABLES);
+registry.registerMessageType(MessagePacketType.SVC_CREATE_STRING_TABLE);
 registry.registerMessageType(MessagePacketType.SVC_UPDATE_STRING_TABLE);
 
 /**
@@ -77,6 +106,15 @@ const PACKETS = [
     [ SPAWN_GROUPS, 4, 0 ],
     createFileInfo(4, 4, 4, 4 / 64)
 ];
+
+/**
+ * @param {number} typeId
+ * @param {Uint8Array} payload
+ * @returns {Array<number>}
+ */
+function createBootstrapFrame(typeId, payload) {
+    return [ typeId, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, payload.length, ...payload ];
+}
 
 /**
  * @param {Array<Array<number>>} packets
@@ -137,12 +175,16 @@ function createFrame(typeId, tick, payload, compressed) {
 /**
  * @param {number} tick
  * @param {Array<Array<*>>} messages
+ * @param {Array<[ string, Array<[ string, Array<number>|null ]>, number? ]>|null} [tables=null]
  * @returns {Array<number>}
  */
-function createFullPacket(tick, messages) {
+function createFullPacket(tick, messages, tables = null) {
     const descriptor = registry.getDescriptor('CDemoFullPacket');
+    const fields = tables === null
+        ? { packet: { data: encodeMessages(messages) } }
+        : { packet: { data: encodeMessages(messages) }, stringTable: createStringTables(tables) };
 
-    return createFrame(FULL_PACKET, tick, toBinary(descriptor, create(descriptor, { packet: { data: encodeMessages(messages) } })), false);
+    return createFrame(FULL_PACKET, tick, toBinary(descriptor, create(descriptor, fields)), false);
 }
 
 /**
@@ -158,6 +200,83 @@ function createPacket(tick, messages, compressed = false) {
 }
 
 /**
+ * @param {Array<Array<*>>} messages
+ * @returns {Array<number>}
+ */
+function createSignonPacket(messages) {
+    const descriptor = registry.getDescriptor('CDemoPacket');
+
+    return createBootstrapFrame(SIGNON_PACKET, toBinary(descriptor, create(descriptor, { data: encodeMessages(messages) })));
+}
+
+/**
+ * @param {Array<[ string, Array<[ string, Array<number>|null ]>, number? ]>} tables
+ * @returns {Array<number>}
+ */
+function createStartTables(tables) {
+    const descriptor = registry.getDescriptor('CDemoStringTables');
+
+    return createBootstrapFrame(STRING_TABLES, toBinary(descriptor, createStringTables(tables)));
+}
+
+/**
+ * @param {Array<[ string, Array<[ string, Array<number>|null ]>, number? ]>} tables
+ * @returns {*}
+ */
+function createStringTables(tables) {
+    const descriptor = registry.getDescriptor('CDemoStringTables');
+
+    return create(descriptor, {
+        tables: tables.map(([ tableName, items, tableFlags = 0 ]) => ({
+            tableName,
+            tableFlags,
+            items: items.map(([ str, data ]) => data === null ? { str } : { str, data: Uint8Array.from(data) })
+        }))
+    });
+}
+
+/**
+ * @param {string} name
+ * @param {Array<[ number, string|null, Array<number>|null ]>} entries
+ * @returns {Array<*>}
+ */
+function createTableCreation(name, entries) {
+    const descriptor = registry.getDescriptor('CSVCMsg_CreateStringTable');
+
+    return [
+        MessagePacketType.SVC_CREATE_STRING_TABLE.id,
+        toBinary(descriptor, create(descriptor, {
+            name,
+            numEntries: entries.length,
+            userDataFixedSize: false,
+            userDataSizeBits: 0,
+            flags: 0,
+            stringData: encodeEntries(entries),
+            dataCompressed: false,
+            usingVarintBitcounts: true
+        }))
+    ];
+}
+
+/**
+ * @param {number} tableId
+ * @param {Array<[ number, string|null, Array<number>|null ]>} entries
+ * @returns {Array<*>}
+ */
+function createTableUpdate(tableId, entries) {
+    const descriptor = registry.getDescriptor('CSVCMsg_UpdateStringTable');
+
+    return [
+        MessagePacketType.SVC_UPDATE_STRING_TABLE.id,
+        toBinary(descriptor, create(descriptor, {
+            tableId,
+            numChangedEntries: entries.length,
+            stringData: encodeEntries(entries)
+        }))
+    ];
+}
+
+/**
  * @param {Uint8Array} demo
  * @param {number} from
  * @param {number} to
@@ -169,6 +288,46 @@ async function cut(demo, from, to) {
     await cutter.load(Readable.from([ demo ]));
 
     return cutter.cut(Readable.from([ demo ]), from, to);
+}
+
+/**
+ * @param {Array<[ number, string|null, Array<number>|null ]>} entries
+ * @returns {Uint8Array}
+ */
+function encodeEntries(entries) {
+    const writer = new BitWriter(256);
+
+    let previous = -1;
+
+    for (const [ index, key, value ] of entries) {
+        if (index === previous + 1) {
+            writer.writeBitsAsUInt(1, 1);
+        } else {
+            writer.writeBitsAsUInt(0, 1);
+            writer.writeUVarInt32(index - previous - 2);
+        }
+
+        previous = index;
+
+        if (key !== null) {
+            writer.writeBitsAsUInt(1, 1);
+            writer.writeBitsAsUInt(0, 1);
+            writer.writeBytes(new TextEncoder().encode(key));
+            writer.writeUInt8(0);
+        } else {
+            writer.writeBitsAsUInt(0, 1);
+        }
+
+        if (value !== null) {
+            writer.writeBitsAsUInt(1, 1);
+            writer.writeUVarInt(value.length);
+            writer.writeBytes(Uint8Array.from(value));
+        } else {
+            writer.writeBitsAsUInt(0, 1);
+        }
+    }
+
+    return writer.getBuffer();
 }
 
 /**
@@ -288,6 +447,63 @@ describe('Cutter', () => {
             ];
 
             await expect(cut(createDemo(packets), 1, 1)).rejects.toThrow(`Unable to read string table message [ ${MessagePacketType.SVC_UPDATE_STRING_TABLE.id} ] of packet [ 1 ]`);
+        });
+
+        test('It should start with the string tables of the packets before the snapshot, not with the tables of the full packet', async () => {
+            const signon = createSignonPacket([
+                createTableCreation('instancebaseline', [ [ 0, 'a', [ 1 ] ], [ 1, 'b', null ] ])
+            ]);
+            const initialTables = createStartTables([
+                [ 'instancebaseline', [ [ 'a', [ 1 ] ], [ 'b', null ] ] ]
+            ]);
+            const firstUpdate = createTableUpdate(0, [ [ 0, null, [ 2, 3 ] ] ]);
+            const catchUpUpdate = createTableUpdate(0, [ [ 2, 'c', [ 4 ] ] ]);
+            const windowUpdate = createTableUpdate(0, [ [ 3, 'window', [ 5 ] ] ]);
+
+            const fullPacket = createFullPacket(3, [ ENTITIES, USER_COMMANDS ], [
+                [ 'instancebaseline', [ [ 'future', [ 99 ] ] ] ]
+            ]);
+
+            const packets = [
+                [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
+                signon,
+                initialTables,
+                createPacket(1, [ firstUpdate ]),
+                createPacket(2, [ NET_TICK, catchUpUpdate, ENTITIES ]),
+                fullPacket,
+                createPacket(4, [ windowUpdate ]),
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 3, 4 / 64)
+            ];
+
+            const [ fileHeader, , , first ] = packets;
+
+            expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
+                fileHeader,
+                signon,
+                createStartTables([
+                    [ 'instancebaseline', [ [ 'a', [ 2, 3 ] ], [ 'b', null ], [ 'c', [ 4 ] ] ] ]
+                ]),
+                first,
+                createPacket(2, [ NET_TICK, catchUpUpdate ]),
+                createPacket(3, [ ENTITIES ]),
+                fullPacket,
+                createPacket(4, [ windowUpdate ]),
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 4, 4 / 64)
+            ]));
+
+            expect(await cut(createDemo(packets), 1, 1)).toEqual(createDemo([
+                fileHeader,
+                signon,
+                initialTables,
+                first,
+                [ STOP, 1, 0 ],
+                [ SPAWN_GROUPS, 1, 0 ],
+                createFileInfo(1, 1, 1, 1 / 64)
+            ]));
         });
 
         test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {

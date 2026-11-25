@@ -31,6 +31,46 @@ class StringTableCodec {
     }
 
     /**
+     * Converts raw string tables into `CDemoStringTables` message fields.
+     *
+     * @public
+     * @static
+     * @param {Array<StringTable>} tables
+     * @returns {{ tables: Array<{ tableName: string, tableFlags: number, items: Array<{ str: string, data?: Uint8Array }> }> }}
+     */
+    static toDemoStringTables(tables) {
+        const result = new Array(tables.length);
+
+        for (let i = 0; i < tables.length; i++) {
+            const table = tables[i];
+            const entries = table.getEntries();
+            const items = new Array(entries.length);
+
+            for (let j = 0; j < entries.length; j++) {
+                const entry = entries[j];
+
+                Assert.isTrue(entry.id === j, `Unable to convert StringTable [ ${table.type.name} ]: entry [ ${j} ] is missing`);
+
+                const value = entry.value;
+
+                Assert.isTrue(value === null || value instanceof Uint8Array, `Unable to convert StringTable [ ${table.type.name} ]: entry [ ${j} ] is not raw bytes`);
+
+                items[j] = value === null
+                    ? { str: entry.key }
+                    : { str: entry.key, data: value };
+            }
+
+            result[i] = {
+                tableName: table.type.name,
+                tableFlags: table.flags,
+                items
+            };
+        }
+
+        return { tables: result };
+    }
+
+    /**
      * @public
      * @param {number} id
      * @param {StringTableType} type

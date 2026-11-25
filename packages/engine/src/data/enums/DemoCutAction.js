@@ -105,6 +105,17 @@ class DemoCutAction {
     static get SNAPSHOT() {
         return snapshot;
     }
+
+    /**
+     * Bootstrap DEM_StringTables rewritten to the state before the snapshot.
+     *
+     * @public
+     * @static
+     * @returns {DemoCutAction}
+     */
+    static get START_TABLES() {
+        return startTables;
+    }
 }
 
 const drop = new DemoCutAction('DROP', 0);
@@ -112,5 +123,6 @@ const keep = new DemoCutAction('KEEP', 1);
 const snapshot = new DemoCutAction('SNAPSHOT', 2);
 const catchUp = new DemoCutAction('CATCH_UP', 3);
 const fileInfo = new DemoCutAction('FILE_INFO', 4);
+const startTables = new DemoCutAction('START_TABLES', 5);
 
 export default DemoCutAction;

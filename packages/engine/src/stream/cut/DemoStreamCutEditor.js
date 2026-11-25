@@ -15,6 +15,7 @@ import MessagePacketType from '../../data/enums/MessagePacketType.js';
 import MessagePacketRawExtractor from '../../extractors/MessagePacketRawExtractor.js';
 
 import PacketCodec from '../../schema/PacketCodec.js';
+import StringTableCodec from '../../schema/StringTableCodec.js';
 
 import MessagePacketRawWriter from '../../writers/MessagePacketRawWriter.js';
 
@@ -77,6 +78,11 @@ class DemoStreamCutEditor extends Transform {
      */
     async _handle(demoPacketRaw) {
         switch (this._plan.getAction(demoPacketRaw.sequence)) {
+            case DemoCutAction.START_TABLES: {
+                this._forward(this._repackStartTables(demoPacketRaw));
+
+                return;
+            }
             case DemoCutAction.CATCH_UP: {
                 this._forward(this._repackCatchUp(demoPacketRaw));
 
@@ -157,6 +163,26 @@ class DemoStreamCutEditor extends Transform {
         fullPacket.packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
 
         return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), fullPacket.packet);
+    }
+
+    /**
+     * Writes the string tables of the plan into the bootstrap DEM_StringTables.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_StringTables.
+     * @returns {DemoPacketRaw}
+     */
+    _repackStartTables(demoPacketRaw) {
+        const tables = this._plan.snapshotTables;
+
+        Assert.exists(tables, 'Unable to repack DEM_StringTables: snapshot tables are missing');
+
+        const message = this._codec.createDemoPacketMessage(
+            DemoPacketType.DEM_STRING_TABLES,
+            StringTableCodec.toDemoStringTables(tables)
+        );
+
+        return this._codec.repackDemoPacketRaw(demoPacketRaw, message);
     }
 }
 
