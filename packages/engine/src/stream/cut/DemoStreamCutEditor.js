@@ -1,4 +1,6 @@
+/** @import { Message } from '@bufbuild/protobuf' */
 /** @import DemoPacketRaw from '../../data/DemoPacketRaw.js' */
+/** @import StringTable from '../../data/tables/string/StringTable.js' */
 
 import Assert from '../../core/Assert.js';
 
@@ -61,6 +63,36 @@ class DemoStreamCutEditor extends Transform {
 
     /**
      * @private
+     * @param {Array<StringTable>} tables
+     * @returns {Message}
+     */
+    _createStringTablesMessage(tables) {
+        return this._codec.createDemoPacketMessage(
+            DemoPacketType.DEM_STRING_TABLES,
+            StringTableCodec.toDemoStringTables(tables)
+        );
+    }
+
+    /**
+     * Receives DEM_FullPacket, extracts the DEM_Packet, without the keyframe of the user commands.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
+     * @returns {DemoPacketRaw}
+     */
+    _extractSnapshotPacket(demoPacketRaw) {
+        const fullPacket = this._codec.unpackDemoPacketRaw(demoPacketRaw);
+
+        const messagePacketsRaw = new MessagePacketRawExtractor(fullPacket.packet.data)
+            .all(type => type !== MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id);
+
+        fullPacket.packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
+
+        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), fullPacket.packet);
+    }
+
+    /**
+     * @private
      * @param {DemoPacketRaw} demoPacketRaw
      */
     _forward(demoPacketRaw) {
@@ -89,8 +121,8 @@ class DemoStreamCutEditor extends Transform {
                 return;
             }
             case DemoCutAction.SNAPSHOT: {
+                this._forward(this._extractSnapshotPacket(demoPacketRaw));
                 this._forward(this._repackSnapshot(demoPacketRaw));
-                this._forward(demoPacketRaw);
 
                 return;
             }
@@ -148,21 +180,22 @@ class DemoStreamCutEditor extends Transform {
     }
 
     /**
-     * Returns the DEM_Packet inside the snapshot, without the keyframe of the user commands.
+     * Writes the string tables of the plan into the anchor DEM_FullPacket.
      *
      * @private
      * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
      * @returns {DemoPacketRaw}
      */
     _repackSnapshot(demoPacketRaw) {
+        const tables = this._plan.snapshotTables;
+
+        Assert.exists(tables, 'Unable to repack DEM_FullPacket: snapshot tables are missing');
+
         const fullPacket = this._codec.unpackDemoPacketRaw(demoPacketRaw);
 
-        const messagePacketsRaw = new MessagePacketRawExtractor(fullPacket.packet.data)
-            .all(type => type !== MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id);
+        fullPacket.stringTable = this._createStringTablesMessage(tables);
 
-        fullPacket.packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), fullPacket.packet);
+        return this._codec.repackDemoPacketRaw(demoPacketRaw, fullPacket);
     }
 
     /**
@@ -177,12 +210,7 @@ class DemoStreamCutEditor extends Transform {
 
         Assert.exists(tables, 'Unable to repack DEM_StringTables: snapshot tables are missing');
 
-        const message = this._codec.createDemoPacketMessage(
-            DemoPacketType.DEM_STRING_TABLES,
-            StringTableCodec.toDemoStringTables(tables)
-        );
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw, message);
+        return this._codec.repackDemoPacketRaw(demoPacketRaw, this._createStringTablesMessage(tables));
     }
 }
 

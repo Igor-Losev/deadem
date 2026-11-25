@@ -25,7 +25,11 @@ const START_TABLES = DemoCutAction.START_TABLES;
 const TYPES = [ HEADER, PACKET, FULL, PACKET, PACKET, FULL, PACKET, STOP, INFO ];
 const TICKS = [ -1, 1, 1, 2, 3, 3, 4, 4, 4 ];
 
-function plan(from, to, types = TYPES, ticks = TICKS, stringTables = new Map()) {
+function createEmptyTables(types) {
+    return new Map(types.flatMap((type, sequence) => type === FULL ? [ [ sequence, [ ] ] ] : [ ]));
+}
+
+function plan(from, to, types = TYPES, ticks = TICKS, stringTables = createEmptyTables(types)) {
     const demoCutPlan = new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks), stringTables).getPlan(from, to);
 
     return types.map((_type, sequence) => demoCutPlan.getAction(sequence));
@@ -55,11 +59,10 @@ describe('DemoCutIndex', () => {
         test('It should rewrite bootstrap DEM_StringTables only when the window starts from a snapshot', () => {
             const types = [ HEADER, STRING_TABLES, PACKET, FULL, PACKET, STOP, INFO ];
             const ticks = [ -1, -1, 1, 1, 2, 2, 2 ];
-            const tables = new Map([ [ 3, [ ] ] ]);
 
-            expect(plan(2, 2, types, ticks, tables)).toEqual([ KEEP, START_TABLES, KEEP, SNAPSHOT, KEEP, KEEP, FILE_INFO ]);
-            expect(plan(-100, 1, types, ticks, tables)).toEqual([ KEEP, KEEP, KEEP, KEEP, DROP, KEEP, FILE_INFO ]);
-            expect(() => plan(2, 2, types, ticks)).toThrow('string tables before snapshot [ 3 ] are missing');
+            expect(plan(2, 2, types, ticks)).toEqual([ KEEP, START_TABLES, KEEP, SNAPSHOT, KEEP, KEEP, FILE_INFO ]);
+            expect(plan(-100, 1, types, ticks)).toEqual([ KEEP, KEEP, KEEP, KEEP, DROP, KEEP, FILE_INFO ]);
+            expect(() => plan(2, 2, types, ticks, new Map())).toThrow('string tables before snapshot [ 3 ] are missing');
         });
 
         test('It should reject an invalid window', () => {

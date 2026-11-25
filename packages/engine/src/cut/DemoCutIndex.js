@@ -99,11 +99,11 @@ class DemoCutIndex {
         if (keyframe !== null) {
             snapshotTables = this._stringTables.get(keyframe) ?? null;
 
+            Assert.exists(snapshotTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
+
             // Find the DEM_STRING_TABLES
             for (let sequence = 0; sequence < this._bounds.first; sequence++) {
                 if (this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
-                    Assert.exists(snapshotTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
-
                     actions[sequence] = DemoCutAction.START_TABLES.id;
                 }
             }

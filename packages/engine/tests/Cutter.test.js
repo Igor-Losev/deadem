@@ -347,7 +347,7 @@ describe('Cutter', () => {
                 fileHeader,
                 first,
                 createPacket(2, [ FIRST_ENTITIES, NET_TICK ]),
-                createFullPacket(2, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ]),
+                createFullPacket(2, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
                 [ compressed[0], 3, ...compressed.slice(2) ],
                 [ third[0], 4, ...third.slice(2) ],
                 [ fullPacket[0], 4, ...fullPacket.slice(2) ],
@@ -367,7 +367,7 @@ describe('Cutter', () => {
                 createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(2, [ NET_TICK ]),
                 createPacket(3, [ ENTITIES, NET_TICK ]),
-                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
                 createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
@@ -398,7 +398,7 @@ describe('Cutter', () => {
                 [ RECOVERY, 2, 2, 8, 1 ],
                 createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(3, [ ENTITIES ]),
-                createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS ], [ ]),
                 [ PACKET, 4, 0 ],
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
@@ -428,7 +428,7 @@ describe('Cutter', () => {
                 createPacket(3, [ ]),
                 createPacket(3, [ ]),
                 createPacket(4, [ ENTITIES ]),
-                createFullPacket(4, [ ENTITIES ]),
+                createFullPacket(4, [ ENTITIES ], [ ]),
                 [ PACKET, 6, 0 ],
                 [ PACKET, 8, 0 ],
                 [ STOP, 8, 0 ],
@@ -478,17 +478,18 @@ describe('Cutter', () => {
             ];
 
             const [ fileHeader, , , first ] = packets;
+            const snapshotTables = [
+                [ 'instancebaseline', [ [ 'a', [ 2, 3 ] ], [ 'b', null ], [ 'c', [ 4 ] ] ] ]
+            ];
 
             expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
                 fileHeader,
                 signon,
-                createStartTables([
-                    [ 'instancebaseline', [ [ 'a', [ 2, 3 ] ], [ 'b', null ], [ 'c', [ 4 ] ] ] ]
-                ]),
+                createStartTables(snapshotTables),
                 first,
                 createPacket(2, [ NET_TICK, catchUpUpdate ]),
                 createPacket(3, [ ENTITIES ]),
-                fullPacket,
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS ], snapshotTables),
                 createPacket(4, [ windowUpdate ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
@@ -515,7 +516,7 @@ describe('Cutter', () => {
                 createPacket(2, [ NET_TICK, CONVAR ]),
                 createPacket(2, [ NET_TICK ]),
                 createPacket(3, [ ENTITIES, NET_TICK ]),
-                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
                 createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
