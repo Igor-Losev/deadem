@@ -1,6 +1,6 @@
 /** @import { Message } from '@bufbuild/protobuf' */
 /** @import DemoPacketRaw from '../../data/DemoPacketRaw.js' */
-/** @import StringTable from '../../data/tables/string/StringTable.js' */
+/** @import MessagePacketRaw from '../../data/MessagePacketRaw.js' */
 
 import Assert from '../../core/Assert.js';
 
@@ -21,17 +21,15 @@ import StringTableCodec from '../../schema/StringTableCodec.js';
 
 import MessagePacketRawWriter from '../../writers/MessagePacketRawWriter.js';
 
-const CATCH_UP_MESSAGE_PACKET_TYPE_IDS = new Set([
+const STATE_MESSAGE_PACKET_TYPE_IDS = new Set([
     MessagePacketType.NET_SET_CON_VAR.id,
     MessagePacketType.NET_SPAWN_GROUP_LOAD.id,
     MessagePacketType.NET_SPAWN_GROUP_MANIFEST_UPDATE.id,
-    MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK.id,
-    MessagePacketType.NET_TICK.id,
-    MessagePacketType.SVC_UPDATE_STRING_TABLE.id
+    MessagePacketType.NET_SPAWN_GROUP_SET_CREATION_TICK.id
 ]);
 
 /**
- * Edits the contents of the packets of a cut.
+ * Applies a {@link DemoCutPlan} to a stream of demo packets.
  */
 class DemoStreamCutEditor extends Transform {
     /** @private @type {PacketCodec} */
@@ -42,6 +40,9 @@ class DemoStreamCutEditor extends Transform {
 
     /** @private @type {DemoCutPlan} */
     _plan;
+
+    /** @private @type {{ messages: Array<MessagePacketRaw>, recoveries: Array<DemoPacketRaw> }} */
+    _state = { messages: [ ], recoveries: [ ] };
 
     /**
      * @public
@@ -57,38 +58,76 @@ class DemoStreamCutEditor extends Transform {
         Assert.isTrue(plan instanceof DemoCutPlan, 'Invalid plan: expected an instance of DemoCutPlan');
         Assert.isTrue(codec instanceof PacketCodec, 'Invalid codec: expected an instance of PacketCodec');
 
-        this._plan = plan;
         this._codec = codec;
+        this._plan = plan;
     }
 
     /**
      * @private
-     * @param {Array<StringTable>} tables
+     * @param {DemoPacketRaw} demoPacketRaw
+     * @returns {DemoPacketRaw}
+     */
+    _applyTick(demoPacketRaw) {
+        const tick = this._plan.getTick(demoPacketRaw.sequence);
+
+        return tick === demoPacketRaw.tick.value ? demoPacketRaw : demoPacketRaw.withTick(tick);
+    }
+
+    /**
+     * Collects state messages from DEM_Packet and buffers DEM_Recovery before the snapshot.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_Packet or DEM_Recovery.
+     */
+    _collectState(demoPacketRaw) {
+        if (demoPacketRaw.is(DemoPacketType.DEM_RECOVERY)) {
+            this._state.recoveries.push(demoPacketRaw);
+
+            return;
+        }
+
+        const packet = this._codec.unpackDemoPacketRaw(demoPacketRaw);
+
+        const messagePacketsRaw = new MessagePacketRawExtractor(packet.data)
+            .all(type => STATE_MESSAGE_PACKET_TYPE_IDS.has(type));
+
+        for (let i = 0; i < messagePacketsRaw.length; i++) {
+            this._state.messages.push(messagePacketsRaw[i]);
+        }
+    }
+
+    /**
+     * Builds the snapshot DEM_Packet from the anchor packet data, prepending collected state messages and dropping the user command keyframe.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
+     * @param {Uint8Array} data - Raw message bytes of the anchor packet.
+     * @returns {DemoPacketRaw}
+     */
+    _createSnapshotPacket(demoPacketRaw, data) {
+        const snapshotMessages = new MessagePacketRawExtractor(data)
+            .all(type => type !== MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id);
+
+        const message = this._codec.createDemoPacketMessage(DemoPacketType.DEM_PACKET, {
+            data: new MessagePacketRawWriter([ ...this._state.messages, ...snapshotMessages ]).all()
+        });
+
+        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), message);
+    }
+
+    /**
+     * @private
      * @returns {Message}
      */
-    _createStringTablesMessage(tables) {
+    _createStringTablesMessage() {
+        const tables = this._plan.stringTables;
+
+        Assert.exists(tables, 'Unable to write string tables: plan has no string tables');
+
         return this._codec.createDemoPacketMessage(
             DemoPacketType.DEM_STRING_TABLES,
             StringTableCodec.toDemoStringTables(tables)
         );
-    }
-
-    /**
-     * Receives DEM_FullPacket, extracts the DEM_Packet, without the keyframe of the user commands.
-     *
-     * @private
-     * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
-     * @returns {DemoPacketRaw}
-     */
-    _extractSnapshotPacket(demoPacketRaw) {
-        const fullPacket = this._codec.unpackDemoPacketRaw(demoPacketRaw);
-
-        const messagePacketsRaw = new MessagePacketRawExtractor(fullPacket.packet.data)
-            .all(type => type !== MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id);
-
-        fullPacket.packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_PACKET), fullPacket.packet);
     }
 
     /**
@@ -104,59 +143,64 @@ class DemoStreamCutEditor extends Transform {
     }
 
     /**
+     * Emits buffered recoveries, the snapshot DEM_Packet with collected state messages, and the repacked DEM_FullPacket.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
+     */
+    _forwardSnapshot(demoPacketRaw) {
+        const fullPacket = this._codec.unpackDemoPacketRaw(demoPacketRaw);
+
+        for (let i = 0; i < this._state.recoveries.length; i++) {
+            this._forward(this._state.recoveries[i].withTick(demoPacketRaw.tick.value));
+        }
+
+        this._forward(this._createSnapshotPacket(demoPacketRaw, fullPacket.packet.data));
+
+        fullPacket.stringTable = this._createStringTablesMessage();
+
+        this._forward(this._codec.repackDemoPacketRaw(demoPacketRaw, fullPacket));
+
+        this._state.messages.length = 0;
+        this._state.recoveries.length = 0;
+    }
+
+    /**
      * @protected
      * @param {DemoPacketRaw} demoPacketRaw
      * @returns {Promise<void>}
      */
     async _handle(demoPacketRaw) {
         switch (this._plan.getAction(demoPacketRaw.sequence)) {
-            case DemoCutAction.START_TABLES: {
-                this._forward(this._repackStartTables(demoPacketRaw));
+            case DemoCutAction.DROP: {
+                return;
+            }
+            case DemoCutAction.COLLECT_STATE: {
+                this._collectState(demoPacketRaw);
 
                 return;
             }
-            case DemoCutAction.CATCH_UP: {
-                this._forward(this._repackCatchUp(demoPacketRaw));
+            case DemoCutAction.START_TABLES: {
+                this._forward(this._repackStartTables(this._applyTick(demoPacketRaw)));
 
                 return;
             }
             case DemoCutAction.SNAPSHOT: {
-                this._forward(this._extractSnapshotPacket(demoPacketRaw));
-                this._forward(this._repackSnapshot(demoPacketRaw));
+                this._forwardSnapshot(this._applyTick(demoPacketRaw));
+
+                return;
+            }
+            case DemoCutAction.KEEP: {
+                this._forward(this._applyTick(demoPacketRaw));
 
                 return;
             }
             case DemoCutAction.FILE_INFO: {
-                this._forward(this._repackFileInfo(demoPacketRaw));
+                this._forward(this._repackFileInfo(this._applyTick(demoPacketRaw)));
 
                 return;
             }
-            default: {
-                this._forward(demoPacketRaw);
-            }
         }
-    }
-
-    /**
-     * Returns DEM_Packet with the string tables and the partial state only, DEM_Recovery as is.
-     *
-     * @private
-     * @param {DemoPacketRaw} demoPacketRaw - DEM_Packet or DEM_Recovery.
-     * @returns {DemoPacketRaw}
-     */
-    _repackCatchUp(demoPacketRaw) {
-        if (demoPacketRaw.is(DemoPacketType.DEM_RECOVERY)) {
-            return demoPacketRaw;
-        }
-
-        const packet = this._codec.unpackDemoPacketRaw(demoPacketRaw);
-
-        const messagePacketsRaw = new MessagePacketRawExtractor(packet.data)
-            .all(type => CATCH_UP_MESSAGE_PACKET_TYPE_IDS.has(type));
-
-        packet.data = new MessagePacketRawWriter(messagePacketsRaw).all();
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw, packet);
     }
 
     /**
@@ -180,25 +224,6 @@ class DemoStreamCutEditor extends Transform {
     }
 
     /**
-     * Writes the string tables of the plan into the anchor DEM_FullPacket.
-     *
-     * @private
-     * @param {DemoPacketRaw} demoPacketRaw - DEM_FullPacket.
-     * @returns {DemoPacketRaw}
-     */
-    _repackSnapshot(demoPacketRaw) {
-        const tables = this._plan.snapshotTables;
-
-        Assert.exists(tables, 'Unable to repack DEM_FullPacket: snapshot tables are missing');
-
-        const fullPacket = this._codec.unpackDemoPacketRaw(demoPacketRaw);
-
-        fullPacket.stringTable = this._createStringTablesMessage(tables);
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw, fullPacket);
-    }
-
-    /**
      * Writes the string tables of the plan into the bootstrap DEM_StringTables.
      *
      * @private
@@ -206,11 +231,7 @@ class DemoStreamCutEditor extends Transform {
      * @returns {DemoPacketRaw}
      */
     _repackStartTables(demoPacketRaw) {
-        const tables = this._plan.snapshotTables;
-
-        Assert.exists(tables, 'Unable to repack DEM_StringTables: snapshot tables are missing');
-
-        return this._codec.repackDemoPacketRaw(demoPacketRaw, this._createStringTablesMessage(tables));
+        return this._codec.repackDemoPacketRaw(demoPacketRaw, this._createStringTablesMessage());
     }
 }
 

@@ -52,14 +52,14 @@ class DemoCutAction {
     }
 
     /**
-     * String tables and state before the snapshot.
+     * State messages and DEM_Recovery carried into the snapshot.
      *
      * @public
      * @static
      * @returns {DemoCutAction}
      */
-    static get CATCH_UP() {
-        return catchUp;
+    static get COLLECT_STATE() {
+        return collectState;
     }
 
     /**
@@ -121,7 +121,7 @@ class DemoCutAction {
 const drop = new DemoCutAction('DROP', 0);
 const keep = new DemoCutAction('KEEP', 1);
 const snapshot = new DemoCutAction('SNAPSHOT', 2);
-const catchUp = new DemoCutAction('CATCH_UP', 3);
+const collectState = new DemoCutAction('COLLECT_STATE', 3);
 const fileInfo = new DemoCutAction('FILE_INFO', 4);
 const startTables = new DemoCutAction('START_TABLES', 5);
 

@@ -21,7 +21,6 @@ import DemoStreamPacketWriter from '../stream/DemoStreamPacketWriter.js';
 
 import DemoStreamCutEditor from '../stream/cut/DemoStreamCutEditor.js';
 import DemoStreamCutIndexer from '../stream/cut/DemoStreamCutIndexer.js';
-import DemoStreamPacketCutter from '../stream/cut/DemoStreamPacketCutter.js';
 
 class Cutter {
     /** @private @type {PacketCodec} */
@@ -75,7 +74,6 @@ class Cutter {
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),
             new DemoStreamPacketExtractor(this._configuration, this._diagnostics, DemoSource.REPLAY),
-            new DemoStreamPacketCutter(this._configuration, plan),
             new DemoStreamCutEditor(this._configuration, plan, this._codec)
         ];
 

@@ -39,6 +39,7 @@ const CONVAR = [ MessagePacketType.NET_SET_CON_VAR.id, [ 6 ] ];
 const ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 1, 2 ] ];
 const FIRST_ENTITIES = [ MessagePacketType.SVC_PACKET_ENTITIES.id, [ 9 ] ];
 const NET_TICK = [ MessagePacketType.NET_TICK.id, [ 8 ] ];
+const SPAWN_GROUP_LOAD = [ MessagePacketType.NET_SPAWN_GROUP_LOAD.id, [ 7 ] ];
 const USER_COMMANDS = [ MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, [ 3 ] ];
 
 const registry = new SchemaRegistry(createDescriptors({
@@ -96,7 +97,7 @@ registry.registerMessageType(MessagePacketType.SVC_UPDATE_STRING_TABLE);
  */
 const PACKETS = [
     [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 2, 10, 11 ],
-    createPacket(1, [ ]),
+    createPacket(1, [ SPAWN_GROUP_LOAD ]),
     createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ]),
     createPacket(2, [ NET_TICK, CONVAR, ENTITIES ], true),
     createPacket(3, [ NET_TICK, ENTITIES ]),
@@ -340,47 +341,43 @@ function encodeMessages(messages) {
 
 describe('Cutter', () => {
     describe('cut', () => {
-        test('It should play a window over the whole demo from the full packet of the first tick', async () => {
-            const [ fileHeader, first, , compressed, third, fullPacket, fourth ] = PACKETS;
+        test('It should play a window over the whole demo from the full packet of the first tick on original ticks', async () => {
+            const [ fileHeader, , , compressed, third, fullPacket, fourth ] = PACKETS;
 
             expect(await cut(createDemo(PACKETS), 1, 4)).toEqual(createDemo([
                 fileHeader,
-                first,
-                createPacket(2, [ FIRST_ENTITIES, NET_TICK ]),
-                createFullPacket(2, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
-                [ compressed[0], 3, ...compressed.slice(2) ],
-                [ third[0], 4, ...third.slice(2) ],
-                [ fullPacket[0], 4, ...fullPacket.slice(2) ],
-                [ fourth[0], 5, ...fourth.slice(2) ],
-                [ STOP, 5, 0 ],
-                [ SPAWN_GROUPS, 5, 0 ],
-                createFileInfo(5, 5, 5, 5 / 64)
+                createPacket(1, [ SPAWN_GROUP_LOAD, FIRST_ENTITIES, NET_TICK ]),
+                createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
+                compressed,
+                third,
+                fullPacket,
+                fourth,
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 4, 4 / 64)
             ]));
         });
 
-        test('It should play the window from the last full packet before it, after a catch-up on one tick', async () => {
-            const [ fileHeader, first ] = PACKETS;
+        test('It should carry state before the snapshot into the snapshot packet and keep original ticks', async () => {
+            const [ fileHeader ] = PACKETS;
 
             expect(await cut(createDemo(PACKETS), 4, 4)).toEqual(createDemo([
                 fileHeader,
-                first,
-                createPacket(2, [ NET_TICK, CONVAR ]),
-                createPacket(2, [ NET_TICK ]),
-                createPacket(3, [ ENTITIES, NET_TICK ]),
+                createPacket(3, [ SPAWN_GROUP_LOAD, CONVAR, ENTITIES, NET_TICK ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
                 createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 5, 4 / 64)
+                createFileInfo(4, 4, 2, 4 / 64)
             ]));
         });
 
-        test('It should keep DEM_Recovery whole in the catch-up', async () => {
+        test('It should flush DEM_Recovery from before the snapshot onto the snapshot tick before the snapshot packet', async () => {
             const packets = [
                 [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
                 [ PACKET, 1, 0 ],
                 createPacket(2, [ NET_TICK, ENTITIES ]),
-                [ RECOVERY, 3, 2, 8, 1 ],
+                [ RECOVERY, 2, 2, 8, 1 ],
                 createPacket(3, [ NET_TICK, CONVAR, ENTITIES ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS ]),
                 [ PACKET, 4, 0 ],
@@ -389,24 +386,21 @@ describe('Cutter', () => {
                 createFileInfo(4, 4, 4, 4 / 64)
             ];
 
-            const [ fileHeader, first ] = packets;
+            const [ fileHeader ] = packets;
 
             expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
                 fileHeader,
-                first,
-                createPacket(2, [ NET_TICK ]),
-                [ RECOVERY, 2, 2, 8, 1 ],
-                createPacket(2, [ NET_TICK, CONVAR ]),
-                createPacket(3, [ ENTITIES ]),
+                [ RECOVERY, 3, 2, 8, 1 ],
+                createPacket(3, [ CONVAR, ENTITIES ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS ], [ ]),
                 [ PACKET, 4, 0 ],
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 5, 4 / 64)
+                createFileInfo(4, 4, 2, 4 / 64)
             ]));
         });
 
-        test('It should keep the step of the demo after the full packet', async () => {
+        test('It should keep original ticks and clamp the tail to the last kept tick', async () => {
             const packets = [
                 [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
                 [ PACKET, 2, 0 ],
@@ -420,20 +414,16 @@ describe('Cutter', () => {
                 createFileInfo(10, 10, 5, 10 / 32)
             ];
 
-            const [ fileHeader, first ] = packets;
+            const [ fileHeader ] = packets;
 
-            expect(await cut(createDemo(packets), 8, 10)).toEqual(createDemo([
+            expect(await cut(createDemo(packets), 8, 8)).toEqual(createDemo([
                 fileHeader,
-                first,
-                createPacket(3, [ ]),
-                createPacket(3, [ ]),
-                createPacket(4, [ ENTITIES ]),
-                createFullPacket(4, [ ENTITIES ], [ ]),
-                [ PACKET, 6, 0 ],
+                createPacket(6, [ ENTITIES ]),
+                createFullPacket(6, [ ENTITIES ], [ ]),
                 [ PACKET, 8, 0 ],
                 [ STOP, 8, 0 ],
                 [ SPAWN_GROUPS, 8, 0 ],
-                createFileInfo(8, 8, 6, 8 / 32)
+                createFileInfo(8, 8, 2, 8 / 32)
             ]));
         });
 
@@ -457,7 +447,7 @@ describe('Cutter', () => {
                 [ 'instancebaseline', [ [ 'a', [ 1 ] ], [ 'b', null ] ] ]
             ]);
             const firstUpdate = createTableUpdate(0, [ [ 0, null, [ 2, 3 ] ] ]);
-            const catchUpUpdate = createTableUpdate(0, [ [ 2, 'c', [ 4 ] ] ]);
+            const secondUpdate = createTableUpdate(0, [ [ 2, 'c', [ 4 ] ] ]);
             const windowUpdate = createTableUpdate(0, [ [ 3, 'window', [ 5 ] ] ]);
 
             const fullPacket = createFullPacket(3, [ ENTITIES, USER_COMMANDS ], [
@@ -469,7 +459,7 @@ describe('Cutter', () => {
                 signon,
                 initialTables,
                 createPacket(1, [ firstUpdate ]),
-                createPacket(2, [ NET_TICK, catchUpUpdate, ENTITIES ]),
+                createPacket(2, [ NET_TICK, secondUpdate, ENTITIES ]),
                 fullPacket,
                 createPacket(4, [ windowUpdate ]),
                 [ STOP, 4, 0 ],
@@ -486,14 +476,12 @@ describe('Cutter', () => {
                 fileHeader,
                 signon,
                 createStartTables(snapshotTables),
-                first,
-                createPacket(2, [ NET_TICK, catchUpUpdate ]),
                 createPacket(3, [ ENTITIES ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS ], snapshotTables),
                 createPacket(4, [ windowUpdate ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 4, 4 / 64)
+                createFileInfo(4, 4, 2, 4 / 64)
             ]));
 
             expect(await cut(createDemo(packets), 1, 1)).toEqual(createDemo([
@@ -508,19 +496,16 @@ describe('Cutter', () => {
         });
 
         test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {
-            const [ fileHeader, first ] = PACKETS;
+            const [ fileHeader ] = PACKETS;
 
             expect(await cut(createDemo([ ...PACKETS.slice(0, -1), createFileInfo(4, 4, 4, 4 / 64, true) ]), 4, 4)).toEqual(createDemo([
                 fileHeader,
-                first,
-                createPacket(2, [ NET_TICK, CONVAR ]),
-                createPacket(2, [ NET_TICK ]),
-                createPacket(3, [ ENTITIES, NET_TICK ]),
+                createPacket(3, [ SPAWN_GROUP_LOAD, CONVAR, ENTITIES, NET_TICK ]),
                 createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
                 createPacket(4, [ ]),
                 [ STOP, 4, 0 ],
                 [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 5, 4 / 64)
+                createFileInfo(4, 4, 2, 4 / 64)
             ]));
         });
     });

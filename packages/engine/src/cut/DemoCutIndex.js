@@ -78,9 +78,10 @@ class DemoCutIndex {
 
         // Initial state - drop all
         const actions = new Uint8Array(this._typeIds.length).fill(DemoCutAction.DROP.id);
+        const ticks = new Int32Array(this._ticks);
 
         // Keep head and tail
-        actions.fill(DemoCutAction.KEEP.id, 0, this._bounds.first + 1);
+        actions.fill(DemoCutAction.KEEP.id, 0, this._bounds.first);
         actions.fill(DemoCutAction.KEEP.id, this._bounds.stop);
 
         // Find the FILE_INFO
@@ -94,12 +95,12 @@ class DemoCutIndex {
         const keyframe = this._getKeyframeBefore(from);
 
         /** @type {Array<StringTable>|null} */
-        let snapshotTables = null;
+        let stringTables = null;
 
         if (keyframe !== null) {
-            snapshotTables = this._stringTables.get(keyframe) ?? null;
+            stringTables = this._stringTables.get(keyframe) ?? null;
 
-            Assert.exists(snapshotTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
+            Assert.exists(stringTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
 
             // Find the DEM_STRING_TABLES
             for (let sequence = 0; sequence < this._bounds.first; sequence++) {
@@ -110,24 +111,36 @@ class DemoCutIndex {
 
             actions[keyframe] = DemoCutAction.SNAPSHOT.id;
 
-            // Catch up the tables and the state between the first packet and the snapshot
-            for (let sequence = this._bounds.first + 1; sequence < keyframe; sequence++) {
+            // Collect state before the snapshot
+            for (let sequence = this._bounds.first; sequence < keyframe; sequence++) {
                 if (this._typeIds[sequence] === DemoPacketType.DEM_PACKET.id || this._typeIds[sequence] === DemoPacketType.DEM_RECOVERY.id) {
-                    actions[sequence] = DemoCutAction.CATCH_UP.id;
+                    actions[sequence] = DemoCutAction.COLLECT_STATE.id;
                 }
             }
         }
 
-        const startSequence = keyframe === null ? this._bounds.first + 1 : keyframe + 1;
+        let startSequence;
+        let tailTick;
+
+        if (keyframe === null) {
+            startSequence = this._bounds.first;
+            tailTick = firstTick;
+        } else {
+            startSequence = keyframe + 1;
+            tailTick = this._ticks[keyframe];
+        }
 
         // Keep all between earlier snapshot and upper window bound
         for (let sequence = startSequence; sequence < this._bounds.stop; sequence++) {
             if (this._ticks[sequence] <= to) {
                 actions[sequence] = DemoCutAction.KEEP.id;
+                tailTick = this._ticks[sequence];
             }
         }
 
-        return new DemoCutPlan(actions, snapshotTables);
+        ticks.fill(tailTick, this._bounds.stop);
+
+        return new DemoCutPlan(actions, ticks, stringTables);
     }
 
     /**
