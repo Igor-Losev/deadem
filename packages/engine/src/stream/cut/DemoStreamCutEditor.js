@@ -143,6 +143,28 @@ class DemoStreamCutEditor extends Transform {
     }
 
     /**
+     * Emits any console commands scheduled after the packet.
+     *
+     * @private
+     * @param {DemoPacketRaw} demoPacketRaw
+     */
+    _forwardCommands(demoPacketRaw) {
+        const commands = this._plan.getCommands(demoPacketRaw.sequence);
+
+        if (commands === null) {
+            return;
+        }
+
+        const tick = Math.max(this._plan.getTick(demoPacketRaw.sequence), 0);
+
+        for (let i = 0; i < commands.length; i++) {
+            const message = this._codec.createDemoPacketMessage(DemoPacketType.DEM_CONSOLE_CMD, { cmdstring: commands[i] });
+
+            this._forward(this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_CONSOLE_CMD).withTick(tick), message));
+        }
+    }
+
+    /**
      * Emits buffered recoveries, the snapshot DEM_Packet with collected state messages, and the repacked DEM_FullPacket.
      *
      * @private
@@ -183,24 +205,26 @@ class DemoStreamCutEditor extends Transform {
             case DemoCutAction.START_TABLES: {
                 this._forward(this._repackStartTables(this._applyTick(demoPacketRaw)));
 
-                return;
+                break;
             }
             case DemoCutAction.SNAPSHOT: {
                 this._forwardSnapshot(this._applyTick(demoPacketRaw));
 
-                return;
+                break;
             }
             case DemoCutAction.KEEP: {
                 this._forward(this._applyTick(demoPacketRaw));
 
-                return;
+                break;
             }
             case DemoCutAction.FILE_INFO: {
                 this._forward(this._repackFileInfo(this._applyTick(demoPacketRaw)));
 
-                return;
+                break;
             }
         }
+
+        this._forwardCommands(demoPacketRaw);
     }
 
     /**

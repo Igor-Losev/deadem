@@ -23,6 +23,7 @@ import Cutter from '../src/cut/Cutter.js';
 
 import createDescriptors from './support/createDescriptors.js';
 
+const CONSOLE_CMD = DemoPacketType.DEM_CONSOLE_CMD.id;
 const FILE_INFO = DemoPacketType.DEM_FILE_INFO.id;
 const FULL_PACKET = DemoPacketType.DEM_FULL_PACKET.id;
 const PACKET = DemoPacketType.DEM_PACKET.id;
@@ -31,6 +32,7 @@ const SIGNON_PACKET = DemoPacketType.DEM_SIGNON_PACKET.id;
 const SPAWN_GROUPS = DemoPacketType.DEM_SPAWN_GROUPS.id;
 const STOP = DemoPacketType.DEM_STOP.id;
 const STRING_TABLES = DemoPacketType.DEM_STRING_TABLES.id;
+const SYNC_TICK = DemoPacketType.DEM_SYNC_TICK.id;
 
 /**
  * Messages: a type and a payload.
@@ -43,6 +45,9 @@ const SPAWN_GROUP_LOAD = [ MessagePacketType.NET_SPAWN_GROUP_LOAD.id, [ 7 ] ];
 const USER_COMMANDS = [ MessagePacketType.SVC_USER_COMMAND_KEYFRAME.id, [ 3 ] ];
 
 const registry = new SchemaRegistry(createDescriptors({
+    CDemoConsoleCmd: [
+        [ 'cmdstring', 1, 'string' ]
+    ],
     CDemoFileInfo: [
         [ 'playback_time', 1, 'float' ],
         [ 'playback_ticks', 2, 'int32' ],
@@ -84,6 +89,7 @@ const registry = new SchemaRegistry(createDescriptors({
     ]
 }));
 
+registry.registerDemoType(DemoPacketType.DEM_CONSOLE_CMD);
 registry.registerDemoType(DemoPacketType.DEM_FILE_INFO);
 registry.registerDemoType(DemoPacketType.DEM_FULL_PACKET);
 registry.registerDemoType(DemoPacketType.DEM_PACKET);
@@ -115,6 +121,17 @@ const PACKETS = [
  */
 function createBootstrapFrame(typeId, payload) {
     return [ typeId, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, payload.length, ...payload ];
+}
+
+/**
+ * @param {number} tick
+ * @param {string} cmdstring
+ * @returns {Array<number>}
+ */
+function createConsoleCmd(tick, cmdstring) {
+    const descriptor = registry.getDescriptor('CDemoConsoleCmd');
+
+    return createFrame(CONSOLE_CMD, tick, toBinary(descriptor, create(descriptor, { cmdstring })), false);
 }
 
 /**
@@ -492,6 +509,38 @@ describe('Cutter', () => {
                 [ STOP, 1, 0 ],
                 [ SPAWN_GROUPS, 1, 0 ],
                 createFileInfo(1, 1, 1, 1 / 64)
+            ]));
+        });
+
+        test('It should insert DEM_ConsoleCmd demo_gototick at tick 0 after DEM_SyncTick when starting past the first tick', async () => {
+            const syncTick = createBootstrapFrame(SYNC_TICK, new Uint8Array(0));
+            const packets = [ PACKETS[0], syncTick, ...PACKETS.slice(1) ];
+            const [ fileHeader, , , , compressed, third, fullPacket, fourth ] = packets;
+
+            expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
+                fileHeader,
+                syncTick,
+                createConsoleCmd(0, 'demo_gototick 4'),
+                createPacket(3, [ SPAWN_GROUP_LOAD, CONVAR, ENTITIES, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
+                fourth,
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 2, 4 / 64)
+            ]));
+
+            expect(await cut(createDemo(packets), 1, 4)).toEqual(createDemo([
+                fileHeader,
+                syncTick,
+                createPacket(1, [ SPAWN_GROUP_LOAD, FIRST_ENTITIES, NET_TICK ]),
+                createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
+                compressed,
+                third,
+                fullPacket,
+                fourth,
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 4, 4 / 64)
             ]));
         });
 

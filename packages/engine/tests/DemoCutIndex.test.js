@@ -11,6 +11,7 @@ const INFO = DemoPacketType.DEM_FILE_INFO.id;
 const PACKET = DemoPacketType.DEM_PACKET.id;
 const STOP = DemoPacketType.DEM_STOP.id;
 const STRING_TABLES = DemoPacketType.DEM_STRING_TABLES.id;
+const SYNC_TICK = DemoPacketType.DEM_SYNC_TICK.id;
 
 const COLLECT_STATE = DemoCutAction.COLLECT_STATE;
 const DROP = DemoCutAction.DROP;
@@ -75,6 +76,22 @@ describe('DemoCutIndex', () => {
             expect(plan(2, 2, types, ticks)).toEqual([ KEEP, START_TABLES, COLLECT_STATE, SNAPSHOT, KEEP, KEEP, FILE_INFO ]);
             expect(plan(-100, 1, types, ticks)).toEqual([ KEEP, KEEP, KEEP, KEEP, DROP, KEEP, FILE_INFO ]);
             expect(() => plan(2, 2, types, ticks, new Map())).toThrow('string tables before snapshot [ 3 ] are missing');
+        });
+
+        test('It should schedule demo_gototick after DEM_SyncTick only when a snapshot exists and from is past the first tick', () => {
+            const types = [ HEADER, SYNC_TICK, PACKET, FULL, PACKET, STOP, INFO ];
+            const ticks = [ -1, -1, 1, 1, 2, 2, 2 ];
+            const index = new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks), createEmptyTables(types));
+
+            expect(index.getPlan(2, 2).getCommands(1)).toEqual([ 'demo_gototick 2' ]);
+            expect(index.getPlan(1, 2).getCommands(1)).toBeNull();
+            expect(index.getPlan(-100, 1).getCommands(1)).toBeNull();
+
+            const noSnapshotTypes = [ HEADER, SYNC_TICK, PACKET, PACKET, STOP, INFO ];
+            const noSnapshotTicks = [ -1, -1, 1, 2, 2, 2 ];
+            const noSnapshotIndex = new DemoCutIndex(Uint8Array.from(noSnapshotTypes), Int32Array.from(noSnapshotTicks));
+
+            expect(noSnapshotIndex.getPlan(2, 2).getCommands(1)).toBeNull();
         });
 
         test('It should reject an invalid window', () => {

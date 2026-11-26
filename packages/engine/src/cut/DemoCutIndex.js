@@ -2,6 +2,7 @@
 
 import Assert from '../core/Assert.js';
 
+import ConsoleCommand from '../data/enums/ConsoleCommand.js';
 import DemoCutAction from '../data/enums/DemoCutAction.js';
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 
@@ -94,6 +95,9 @@ class DemoCutIndex {
         // First snapshot before the window
         const keyframe = this._getKeyframeBefore(from);
 
+        /** @type {Map<number, Array<string>>} */
+        const commands = new Map();
+
         /** @type {Array<StringTable>|null} */
         let stringTables = null;
 
@@ -102,10 +106,12 @@ class DemoCutIndex {
 
             Assert.exists(stringTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
 
-            // Find the DEM_STRING_TABLES
+            // Find the DEM_STRING_TABLES and DEM_SYNC_TICK
             for (let sequence = 0; sequence < this._bounds.first; sequence++) {
                 if (this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
                     actions[sequence] = DemoCutAction.START_TABLES.id;
+                } else if (from > firstTick && this._typeIds[sequence] === DemoPacketType.DEM_SYNC_TICK.id) {
+                    commands.set(sequence, [ ConsoleCommand.DEMO_GOTO_TICK.format(from) ]);
                 }
             }
 
@@ -140,7 +146,7 @@ class DemoCutIndex {
 
         ticks.fill(tailTick, this._bounds.stop);
 
-        return new DemoCutPlan(actions, ticks, stringTables);
+        return new DemoCutPlan(actions, ticks, stringTables, commands);
     }
 
     /**
