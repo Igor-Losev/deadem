@@ -140,6 +140,10 @@ HTTP broadcast:
 - [`301_broadcast_parse.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/301_broadcast_parse.js): parse a live broadcast.
 - [`302_broadcast_parse_file.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/302_broadcast_parse_file.js): parse a saved broadcast.
 
+Cutter:
+
+- [`400_cut.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/400_cut.js): cut a tick window from a replay and set the spectator camera.
+
 ## Compatibility
 
 - **Game builds:** Deadlock demos from build `6766` and below.

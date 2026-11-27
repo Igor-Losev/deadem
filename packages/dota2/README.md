@@ -133,6 +133,10 @@ Player:
 
 - [`200_play.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js): load, seek, play and pause a replay.
 
+Cutter:
+
+- [`400_cut.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/400_cut.js): cut a tick window from a replay and set the spectator camera.
+
 ## Compatibility
 
 - **Game patches:** Dota 2 demos from patch `7.41f` and below.

@@ -129,6 +129,10 @@ Player:
 
 - [`200_play.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/200_play.js): load, seek, play and pause a replay.
 
+Cutter:
+
+- [`400_cut.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-cs2/scripts/400_cut.js): cut a tick window from a replay and set the spectator camera.
+
 ## Compatibility
 
 - **Game builds:** Counter-Strike 2 demos from version `1.41.8.9` and below.
