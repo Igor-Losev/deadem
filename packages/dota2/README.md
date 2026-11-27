@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41f-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.42a-darkGreen" /></a>
 
 **@deademx/dota2** is a Source 2 demo toolkit (parser, player, cutter) for Dota 2 in Node.js, Deno, Bun and browsers.
 
@@ -139,7 +139,7 @@ Cutter:
 
 ## Compatibility
 
-- **Game patches:** Dota 2 demos from patch `7.41f` and below.
+- **Game patches:** Dota 2 demos from patch `7.42a` and below.
 - **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance

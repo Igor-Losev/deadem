@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.41.8.9-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Counter--Strike%202-1.42.0.1-darkGreen" /></a>
 
 **@deademx/cs2** is a Source 2 demo toolkit (parser, player, cutter) for Counter-Strike 2 in Node.js, Deno, Bun and browsers.
 
@@ -135,7 +135,7 @@ Cutter:
 
 ## Compatibility
 
-- **Game builds:** Counter-Strike 2 demos from version `1.41.8.9` and below.
+- **Game builds:** Counter-Strike 2 demos from version `1.42.0.1` and below.
 - **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance

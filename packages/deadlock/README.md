@@ -9,7 +9,7 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/deadlock" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdeadlock" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6766-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6868-darkGreen" /></a>
 
 **@deademx/deadlock** is a Source 2 demo toolkit (parser, player, cutter) for Deadlock in Node.js, Deno, Bun and browsers. Versions before 5.0.0 were published as [`deadem`](https://www.npmjs.com/package/deadem).
 
@@ -146,7 +146,7 @@ Cutter:
 
 ## Compatibility
 
-- **Game builds:** Deadlock demos from build `6766` and below.
+- **Game builds:** Deadlock demos from build `6868` and below.
 - **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance

@@ -17,7 +17,7 @@ deadem
 
 - `Parser`: reads `.dem` files and live HTTP broadcasts sequentially.
 - `Player`: seeks across snapshots, steps tick by tick and plays demos in real time.
-- `Cutter`: extracts tick windows into standalone `.dem` clips with spectator camera commands.
+- `Cutter`: cuts a tick window from a demo into a playable `.dem` clip.
 
 The packages depend only on:
 
