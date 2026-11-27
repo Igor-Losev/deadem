@@ -36,6 +36,9 @@ class Cutter {
     /** @private @type {DemoCutIndex|null} */
     _index = null;
 
+    /** @private @type {boolean} */
+    _indexing = false;
+
     /**
      * @public
      * @constructor
@@ -54,18 +57,20 @@ class Cutter {
     }
 
     /**
-     * Reads the loaded demo once more and writes the packets of the window into a new demo.
+     * Reads the indexed demo once more and writes the packets of the window into a new demo.
      *
      * @public
-     * @param {NodeReadable|ReadableStream} reader - The loaded demo.
+     * @param {NodeReadable|ReadableStream} reader - The indexed demo.
      * @param {number} from - The first tick of the window.
      * @param {number} to - The last tick of the window.
      * @param {Array<ConsoleCommand>} [commands=[ ]] - Console commands inserted at the start of the window.
      * @returns {Promise<Uint8Array>}
      */
     async cut(reader, from, to, commands = [ ]) {
+        Assert.exists(reader, 'Invalid reader: expected a readable stream');
+
         if (this._index === null) {
-            throw new Error('Unable to cut: cutter is not loaded');
+            throw new Error('Unable to cut: cutter is not indexed');
         }
 
         const plan = this._index.getPlan(from, to, commands);
@@ -103,13 +108,19 @@ class Cutter {
      * @param {DemoSource} [demoSource=DemoSource.REPLAY]
      * @returns {Promise<void>}
      */
-    async load(reader, demoSource = DemoSource.REPLAY) {
+    async index(reader, demoSource = DemoSource.REPLAY) {
+        Assert.exists(reader, 'Invalid reader: expected a readable stream');
+
         if (this._index !== null) {
-            throw new Error('Unable to load: cutter is already loaded');
+            throw new Error('Unable to index: cutter is already indexed');
+        }
+
+        if (this._indexing) {
+            throw new Error('Unable to index: cutter is already indexing');
         }
 
         if (demoSource !== DemoSource.REPLAY) {
-            throw new Error('Unable to load: unsupported demo source, only REPLAY is supported');
+            throw new Error('Unable to index: unsupported demo source, only REPLAY is supported');
         }
 
         const indexer = new DemoStreamCutIndexer(this._configuration, this._codec);
@@ -120,8 +131,10 @@ class Cutter {
             indexer
         ];
 
+        this._indexing = true;
+
         try {
-            this._diagnostics.logger.info('Extract started');
+            this._diagnostics.logger.info('Indexing started');
 
             this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
@@ -131,12 +144,14 @@ class Cutter {
 
             this._index = indexer.getIndex();
 
-            this._diagnostics.logger.info(`Extracted [ ${this._index.length} ] packets`);
+            this._diagnostics.logger.info(`Indexed [ ${this._index.length} ] packets`);
         } catch (error) {
-            this._diagnostics.logger.error('Extract failed', error);
+            this._diagnostics.logger.error('Indexing failed', error);
 
             throw error;
         } finally {
+            this._indexing = false;
+
             this._diagnostics.performance.end(PerformanceTrackerCategory.PARSER);
         }
     }

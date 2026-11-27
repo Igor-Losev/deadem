@@ -47,7 +47,7 @@ describe('DemoCutIndex', () => {
         });
 
         test('It should play the window from the first DEM_Packet when it starts at or before the first tick', () => {
-            expect(plan(-100, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
+            expect(plan(0, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
             expect(plan(1, 4)).toEqual([ KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, FILE_INFO ]);
         });
 
@@ -59,7 +59,7 @@ describe('DemoCutIndex', () => {
             const index = new DemoCutIndex(Uint8Array.from(TYPES), Int32Array.from(TICKS), createEmptyTables(TYPES));
 
             const cutAtThree = index.getPlan(3, 3);
-            const cutFromStart = index.getPlan(-100, 1);
+            const cutFromStart = index.getPlan(0, 1);
             const cutToEnd = index.getPlan(4, 100);
 
             expect(TYPES.map((_type, sequence) => cutAtThree.getTick(sequence))).toEqual([ -1, 1, 1, 2, 3, 3, 4, 3, 3 ]);
@@ -72,7 +72,7 @@ describe('DemoCutIndex', () => {
             const ticks = [ -1, -1, 1, 1, 2, 2, 2 ];
 
             expect(plan(2, 2, types, ticks)).toEqual([ KEEP, START_TABLES, COLLECT_STATE, SNAPSHOT, KEEP, KEEP, FILE_INFO ]);
-            expect(plan(-100, 1, types, ticks)).toEqual([ KEEP, KEEP, KEEP, KEEP, DROP, KEEP, FILE_INFO ]);
+            expect(plan(0, 1, types, ticks)).toEqual([ KEEP, KEEP, KEEP, KEEP, DROP, KEEP, FILE_INFO ]);
             expect(() => plan(2, 2, types, ticks, new Map())).toThrow('string tables before snapshot [ 3 ] are missing');
         });
 
@@ -83,7 +83,7 @@ describe('DemoCutIndex', () => {
 
             expect(index.getPlan(2, 2).getCommands(1)?.map(command => command.text)).toEqual([ 'demo_gototick 2' ]);
             expect(index.getPlan(1, 2).getCommands(1)).toBeNull();
-            expect(index.getPlan(-100, 1).getCommands(1)).toBeNull();
+            expect(index.getPlan(0, 1).getCommands(1)).toBeNull();
 
             const noSnapshotTypes = [ HEADER, SYNC_TICK, PACKET, PACKET, STOP, INFO ];
             const noSnapshotTicks = [ -1, -1, 1, 2, 2, 2 ];
@@ -100,13 +100,16 @@ describe('DemoCutIndex', () => {
             expect(index.getPlan(4, 4, [ command ]).getCommands(6)).toEqual([ command ]);
             expect(index.getPlan(3, 3, [ command ]).getCommands(5)).toEqual([ command ]);
             expect(() => index.getPlan(1, 4, /** @type {*} */ ([ 'spec_player 2' ]))).toThrow('expected an instance of ConsoleCommand');
+            expect(() => index.getPlan(1, 4, [ ConsoleCommandType.DEMO_GOTO_TICK.create(2) ])).toThrow('DEMO_GOTO_TICK is managed internally');
         });
 
         test('It should reject an invalid or empty window', () => {
             expect(() => plan(1.5, 2)).toThrow('ticks must be integers');
+            expect(() => plan(-1, 1)).toThrow('from must be non-negative');
             expect(() => plan(3, 2)).toThrow('from must not exceed to');
             expect(() => plan(5, 9)).toThrow('outside of the demo [ 1, 4 ]');
-            expect(() => plan(-9, 0)).toThrow('outside of the demo [ 1, 4 ]');
+            expect(() => plan(0, 0)).toThrow('outside of the demo [ 1, 4 ]');
+            expect(() => plan(0, 0, [ HEADER, PACKET, STOP, INFO ], [ -1, 0, 0, 0 ])).toThrow('window must end after tick 0');
             expect(() => plan(3, 3, [ HEADER, PACKET, PACKET, STOP, INFO ], [ -1, 2, 4, 4, 4 ])).toThrow('no packets in range');
         });
     });

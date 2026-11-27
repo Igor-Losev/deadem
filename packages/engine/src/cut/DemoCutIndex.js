@@ -77,12 +77,14 @@ class DemoCutIndex {
         const lastTick = this._ticks[this._bounds.stop - 1];
 
         Assert.isTrue(Number.isInteger(from) && Number.isInteger(to), `Invalid window [ ${from}, ${to} ]: ticks must be integers`);
+        Assert.isTrue(from >= 0, `Invalid window [ ${from}, ${to} ]: from must be non-negative`);
         Assert.isTrue(from <= to, `Invalid window [ ${from}, ${to} ]: from must not exceed to`);
         Assert.isTrue(from <= lastTick && to >= firstTick, `Invalid window [ ${from}, ${to} ]: outside of the demo [ ${firstTick}, ${lastTick} ]`);
         Assert.isTrue(Array.isArray(commands), 'Invalid commands: expected an array');
 
         for (let i = 0; i < commands.length; i++) {
             Assert.isTrue(commands[i] instanceof ConsoleCommand, `Invalid command at [ ${i} ]: expected an instance of ConsoleCommand`);
+            Assert.isTrue(commands[i].type !== ConsoleCommandType.DEMO_GOTO_TICK, `Invalid command at [ ${i} ]: DEMO_GOTO_TICK is managed internally`);
         }
 
         // Initial state - drop all
@@ -153,6 +155,7 @@ class DemoCutIndex {
         }
 
         Assert.isTrue(tailTick >= from, `Invalid window [ ${from}, ${to} ]: no packets in range`);
+        Assert.isTrue(tailTick > 0, `Invalid window [ ${from}, ${to} ]: window must end after tick 0`);
 
         if (commands.length > 0) {
             const sequence = this._getCommandSequence(startSequence, from, to, keyframe ?? this._bounds.first);

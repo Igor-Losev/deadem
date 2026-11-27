@@ -52,7 +52,7 @@ class DemoCutPlan {
      * @returns {DemoCutAction}
      */
     getAction(sequence) {
-        Assert.isTrue(sequence < this._actions.length, `Unable to cut: packet [ ${sequence} ] is beyond the loaded demo`);
+        Assert.isTrue(sequence < this._actions.length, `Unable to cut: packet [ ${sequence} ] is beyond the indexed demo`);
 
         return /** @type {DemoCutAction} */ (DemoCutAction.getById(this._actions[sequence]));
     }
@@ -72,7 +72,7 @@ class DemoCutPlan {
      * @returns {number}
      */
     getTick(sequence) {
-        Assert.isTrue(sequence < this._ticks.length, `Unable to cut: packet [ ${sequence} ] is beyond the loaded demo`);
+        Assert.isTrue(sequence < this._ticks.length, `Unable to cut: packet [ ${sequence} ] is beyond the indexed demo`);
 
         return this._ticks[sequence];
     }

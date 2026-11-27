@@ -46,6 +46,7 @@ class ConsoleCommandType {
     /**
      * Jumps replay playback to a tick.
      *
+     * @internal
      * @public
      * @static
      * @returns {ConsoleCommandType<(tick: number) => string>}

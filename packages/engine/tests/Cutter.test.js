@@ -306,7 +306,7 @@ function createTableUpdate(tableId, entries) {
 async function cut(demo, from, to, commands = [ ]) {
     const cutter = new Cutter(registry, CutterConfiguration.DEFAULT, Logger.NOOP);
 
-    await cutter.load(Readable.from([ demo ]));
+    await cutter.index(Readable.from([ demo ]));
 
     return cutter.cut(Readable.from([ demo ]), from, to, commands);
 }
@@ -434,7 +434,7 @@ describe('Cutter', () => {
             ]));
         });
 
-        test('It should fail on load when a string table message cannot be decoded', async () => {
+        test('It should fail on index when a string table message cannot be decoded', async () => {
             const packets = [
                 [ DemoPacketType.DEM_FILE_HEADER.id, 0xFF, 0xFF, 0xFF, 0xFF, 0x0F, 0 ],
                 createPacket(1, [ [ MessagePacketType.SVC_UPDATE_STRING_TABLE.id, [ 5 ] ] ]),
@@ -546,6 +546,24 @@ describe('Cutter', () => {
 
             expect(() => ConsoleCommandType.SPEC_PLAYER.create(0)).toThrow('positive integer');
             expect(() => ConsoleCommandType.SPEC_PLAYER.create(/** @type {*} */ ('m0NESY'))).toThrow('positive integer');
+        });
+
+        test('It should reject cutting before indexing and concurrent or repeated indexing', async () => {
+            const demo = createDemo(PACKETS);
+            const cutter = new Cutter(registry, CutterConfiguration.DEFAULT, Logger.NOOP);
+
+            await expect(cutter.cut(/** @type {*} */ (null), 1, 4)).rejects.toThrow('Invalid reader');
+            await expect(cutter.cut(Readable.from([ demo ]), 1, 4)).rejects.toThrow('not indexed');
+            await expect(cutter.index(/** @type {*} */ (null))).rejects.toThrow('Invalid reader');
+
+            const indexing = cutter.index(Readable.from([ demo ]));
+
+            await expect(cutter.index(Readable.from([ demo ]))).rejects.toThrow('already indexing');
+            await expect(cutter.cut(Readable.from([ demo ]), 1, 4)).rejects.toThrow('not indexed');
+
+            await indexing;
+
+            await expect(cutter.index(Readable.from([ demo ]))).rejects.toThrow('already indexed');
         });
 
         test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {
