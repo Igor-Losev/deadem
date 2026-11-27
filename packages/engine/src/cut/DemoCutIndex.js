@@ -101,7 +101,7 @@ class DemoCutIndex {
         }
 
         // First snapshot before the window
-        const keyframe = this._getKeyframeBefore(from);
+        const keyframe = from <= firstTick ? null : this._getKeyframeBefore(from);
 
         /** @type {Map<number, Array<ConsoleCommand>>} */
         const scheduledCommands = new Map();
@@ -114,15 +114,6 @@ class DemoCutIndex {
 
             Assert.exists(stringTables, `Unable to build cut plan: string tables before snapshot [ ${keyframe} ] are missing`);
 
-            // Find the DEM_STRING_TABLES and DEM_SYNC_TICK
-            for (let sequence = 0; sequence < this._bounds.first; sequence++) {
-                if (this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
-                    actions[sequence] = DemoCutAction.START_TABLES.id;
-                } else if (from > firstTick && this._typeIds[sequence] === DemoPacketType.DEM_SYNC_TICK.id) {
-                    scheduledCommands.set(sequence, [ ConsoleCommandType.DEMO_GOTO_TICK.create(from) ]);
-                }
-            }
-
             actions[keyframe] = DemoCutAction.SNAPSHOT.id;
 
             // Collect state before the snapshot
@@ -130,6 +121,15 @@ class DemoCutIndex {
                 if (this._typeIds[sequence] === DemoPacketType.DEM_PACKET.id || this._typeIds[sequence] === DemoPacketType.DEM_RECOVERY.id) {
                     actions[sequence] = DemoCutAction.COLLECT_STATE.id;
                 }
+            }
+        }
+
+        // Find the DEM_STRING_TABLES and DEM_SYNC_TICK
+        for (let sequence = 0; sequence < this._bounds.first; sequence++) {
+            if (keyframe !== null && this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
+                actions[sequence] = DemoCutAction.START_TABLES.id;
+            } else if (from > firstTick && this._typeIds[sequence] === DemoPacketType.DEM_SYNC_TICK.id) {
+                scheduledCommands.set(sequence, [ ConsoleCommandType.DEMO_GOTO_TICK.create(from) ]);
             }
         }
 
@@ -151,6 +151,8 @@ class DemoCutIndex {
                 tailTick = this._ticks[sequence];
             }
         }
+
+        Assert.isTrue(tailTick >= from, `Invalid window [ ${from}, ${to} ]: no packets in range`);
 
         if (commands.length > 0) {
             const sequence = this._getCommandSequence(startSequence, from, to, keyframe ?? this._bounds.first);

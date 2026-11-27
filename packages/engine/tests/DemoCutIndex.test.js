@@ -40,18 +40,15 @@ function plan(from, to, types = TYPES, ticks = TICKS, stringTables = createEmpty
 describe('DemoCutIndex', () => {
     describe('getPlan()', () => {
         test('It should play the window from the last full packet at or before its start, collecting state before it', () => {
-            expect(plan(1, 1)).toEqual([ KEEP, COLLECT_STATE, SNAPSHOT, DROP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
+            expect(plan(1, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
             expect(plan(2, 2)).toEqual([ KEEP, COLLECT_STATE, SNAPSHOT, KEEP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
             expect(plan(3, 3)).toEqual([ KEEP, COLLECT_STATE, DROP, COLLECT_STATE, COLLECT_STATE, SNAPSHOT, DROP, KEEP, FILE_INFO ]);
             expect(plan(4, 4)).toEqual([ KEEP, COLLECT_STATE, DROP, COLLECT_STATE, COLLECT_STATE, SNAPSHOT, KEEP, KEEP, FILE_INFO ]);
         });
 
-        test('It should play the window from the first DEM_Packet when no full packet comes before it', () => {
+        test('It should play the window from the first DEM_Packet when it starts at or before the first tick', () => {
             expect(plan(-100, 1)).toEqual([ KEEP, KEEP, KEEP, DROP, DROP, DROP, DROP, KEEP, FILE_INFO ]);
-        });
-
-        test('It should keep the whole body after the first full packet when the window covers the demo', () => {
-            expect(plan(1, 4)).toEqual([ KEEP, COLLECT_STATE, SNAPSHOT, KEEP, KEEP, KEEP, KEEP, KEEP, FILE_INFO ]);
+            expect(plan(1, 4)).toEqual([ KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, KEEP, FILE_INFO ]);
         });
 
         test('It should accept a window that reaches past the demo', () => {
@@ -79,7 +76,7 @@ describe('DemoCutIndex', () => {
             expect(() => plan(2, 2, types, ticks, new Map())).toThrow('string tables before snapshot [ 3 ] are missing');
         });
 
-        test('It should schedule demo_gototick after DEM_SyncTick only when a snapshot exists and from is past the first tick', () => {
+        test('It should schedule demo_gototick after DEM_SyncTick whenever from is past the first tick', () => {
             const types = [ HEADER, SYNC_TICK, PACKET, FULL, PACKET, STOP, INFO ];
             const ticks = [ -1, -1, 1, 1, 2, 2, 2 ];
             const index = new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks), createEmptyTables(types));
@@ -92,7 +89,7 @@ describe('DemoCutIndex', () => {
             const noSnapshotTicks = [ -1, -1, 1, 2, 2, 2 ];
             const noSnapshotIndex = new DemoCutIndex(Uint8Array.from(noSnapshotTypes), Int32Array.from(noSnapshotTicks));
 
-            expect(noSnapshotIndex.getPlan(2, 2).getCommands(1)).toBeNull();
+            expect(noSnapshotIndex.getPlan(2, 2).getCommands(1)?.map(command => command.text)).toEqual([ 'demo_gototick 2' ]);
         });
 
         test('It should schedule window commands on the first DEM_Packet in the window, falling back to the snapshot', () => {
@@ -105,11 +102,12 @@ describe('DemoCutIndex', () => {
             expect(() => index.getPlan(1, 4, /** @type {*} */ ([ 'spec_player 2' ]))).toThrow('expected an instance of ConsoleCommand');
         });
 
-        test('It should reject an invalid window', () => {
+        test('It should reject an invalid or empty window', () => {
             expect(() => plan(1.5, 2)).toThrow('ticks must be integers');
             expect(() => plan(3, 2)).toThrow('from must not exceed to');
             expect(() => plan(5, 9)).toThrow('outside of the demo [ 1, 4 ]');
             expect(() => plan(-9, 0)).toThrow('outside of the demo [ 1, 4 ]');
+            expect(() => plan(3, 3, [ HEADER, PACKET, PACKET, STOP, INFO ], [ -1, 2, 4, 4, 4 ])).toThrow('no packets in range');
         });
     });
 

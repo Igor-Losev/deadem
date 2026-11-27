@@ -36,9 +36,6 @@ class Cutter {
     /** @private @type {DemoCutIndex|null} */
     _index = null;
 
-    /** @private @type {Pipeline|null} */
-    _pipeline = null;
-
     /**
      * @public
      * @constructor
@@ -84,9 +81,9 @@ class Cutter {
         try {
             this._diagnostics.logger.info('Cut started');
 
-            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain, writer);
+            const pipeline = new Pipeline(/** @type {*} */ (reader), chain, writer);
 
-            await this._pipeline.ready();
+            await pipeline.ready();
 
             this._diagnostics.logger.info(`Cut [ ${writer.getBuffer().length} ] bytes`);
 
@@ -95,8 +92,6 @@ class Cutter {
             this._diagnostics.logger.error('Cut failed', error);
 
             throw error;
-        } finally {
-            this._pipeline = null;
         }
     }
 
@@ -130,9 +125,9 @@ class Cutter {
 
             this._diagnostics.performance.start(PerformanceTrackerCategory.PARSER);
 
-            this._pipeline = new Pipeline(/** @type {*} */ (reader), chain);
+            const pipeline = new Pipeline(/** @type {*} */ (reader), chain);
 
-            await this._pipeline.ready();
+            await pipeline.ready();
 
             this._index = indexer.getIndex();
 
@@ -143,8 +138,6 @@ class Cutter {
             throw error;
         } finally {
             this._diagnostics.performance.end(PerformanceTrackerCategory.PARSER);
-
-            this._pipeline = null;
         }
     }
 }

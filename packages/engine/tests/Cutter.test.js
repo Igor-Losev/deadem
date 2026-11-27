@@ -361,21 +361,8 @@ function encodeMessages(messages) {
 
 describe('Cutter', () => {
     describe('cut', () => {
-        test('It should play a window over the whole demo from the full packet of the first tick on original ticks', async () => {
-            const [ fileHeader, , , compressed, third, fullPacket, fourth ] = PACKETS;
-
-            expect(await cut(createDemo(PACKETS), 1, 4)).toEqual(createDemo([
-                fileHeader,
-                createPacket(1, [ SPAWN_GROUP_LOAD, FIRST_ENTITIES, NET_TICK ]),
-                createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
-                compressed,
-                third,
-                fullPacket,
-                fourth,
-                [ STOP, 4, 0 ],
-                [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 4, 4 / 64)
-            ]));
+        test('It should keep the whole demo intact when the window covers it from the first tick', async () => {
+            expect(await cut(createDemo(PACKETS), 1, 4)).toEqual(createDemo(PACKETS));
         });
 
         test('It should carry state before the snapshot into the snapshot packet and keep original ticks', async () => {
@@ -518,7 +505,7 @@ describe('Cutter', () => {
         test('It should insert DEM_ConsoleCmd demo_gototick at tick 0 after DEM_SyncTick when starting past the first tick', async () => {
             const syncTick = createBootstrapFrame(SYNC_TICK, new Uint8Array(0));
             const packets = [ PACKETS[0], syncTick, ...PACKETS.slice(1) ];
-            const [ fileHeader, , , , compressed, third, fullPacket, fourth ] = packets;
+            const [ fileHeader, , , , , , , fourth ] = packets;
 
             expect(await cut(createDemo(packets), 4, 4)).toEqual(createDemo([
                 fileHeader,
@@ -532,19 +519,7 @@ describe('Cutter', () => {
                 createFileInfo(4, 4, 2, 4 / 64)
             ]));
 
-            expect(await cut(createDemo(packets), 1, 4)).toEqual(createDemo([
-                fileHeader,
-                syncTick,
-                createPacket(1, [ SPAWN_GROUP_LOAD, FIRST_ENTITIES, NET_TICK ]),
-                createFullPacket(1, [ FIRST_ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
-                compressed,
-                third,
-                fullPacket,
-                fourth,
-                [ STOP, 4, 0 ],
-                [ SPAWN_GROUPS, 4, 0 ],
-                createFileInfo(4, 4, 4, 4 / 64)
-            ]));
+            expect(await cut(createDemo(packets), 1, 4)).toEqual(createDemo(packets));
         });
 
         test('It should insert user console commands after the first DEM_Packet in the window', async () => {
