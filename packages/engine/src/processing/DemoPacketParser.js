@@ -60,7 +60,7 @@ class DemoPacketParser {
     parse(demoPacketRaw) {
         this._performanceTracker.start(PerformanceTrackerCategory.DEMO_PACKET_PARSER);
 
-        const demoPacket = this._codec.parseDemoPacket(demoPacketRaw, this._messagePacketFilter);
+        const demoPacket = this._codec.decodeDemoPacketRaw(demoPacketRaw, this._messagePacketFilter);
 
         if (demoPacket === null) {
             this._packetTracker.handleDemoPacketRaw(demoPacketRaw);
@@ -78,18 +78,20 @@ class DemoPacketParser {
             /** @type {Array<*>} */
             const unparsed = [ ];
 
-            data.messagePackets.forEach((/** @type {*} */ messagePacketOrRaw) => {
-                if (messagePacketOrRaw instanceof MessagePacket) {
-                    parsed.push(messagePacketOrRaw);
+            for (let i = 0; i < data.messagePackets.length; i++) {
+                const messagePacket = data.messagePackets[i];
+
+                if (messagePacket instanceof MessagePacket) {
+                    parsed.push(messagePacket);
                 } else {
-                    unparsed.push(messagePacketOrRaw);
+                    unparsed.push(messagePacket);
                 }
-            });
+            }
 
             if (unparsed.length > 0) {
-                unparsed.forEach((messagePacketRaw) => {
-                    this._packetTracker.handleMessagePacketRaw(demoPacketRaw, messagePacketRaw);
-                });
+                for (let i = 0; i < unparsed.length; i++) {
+                    this._packetTracker.handleMessagePacketRaw(demoPacketRaw, unparsed[i]);
+                }
 
                 data.messagePackets = parsed;
             }

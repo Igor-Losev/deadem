@@ -82,6 +82,18 @@ class StringTable {
 
     /**
      * @public
+     * @returns {StringTable}
+     */
+    clone() {
+        const table = new StringTable(this._id, this._type, this._flags, this._instructions, this._decoder);
+
+        table._registry.entryById = new Map(this._registry.entryById);
+
+        return table;
+    }
+
+    /**
+     * @public
      * @returns {Array<StringTableEntry>}
      */
     getEntries() {
@@ -120,6 +132,18 @@ class StringTable {
      */
     is(type) {
         return this._type.code === type.code;
+    }
+
+    /**
+     * @internal
+     * @public
+     * @param {Array<StringTableEntry>} entries
+     * @returns {void}
+     */
+    registerEntries(entries) {
+        for (let i = 0; i < entries.length; i++) {
+            this.registerEntry(entries[i]);
+        }
     }
 
     /**

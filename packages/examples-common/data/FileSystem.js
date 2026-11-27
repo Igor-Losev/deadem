@@ -74,6 +74,17 @@ class FileSystem {
 
         return join(__dirname, path);
     }
+
+    /**
+     * @public
+     * @static
+     * @param {string} path
+     * @param {Uint8Array} data
+     * @returns {void}
+     */
+    static writeFile(path, data) {
+        fs.writeFileSync(path, data);
+    }
 }
 
 export default FileSystem;

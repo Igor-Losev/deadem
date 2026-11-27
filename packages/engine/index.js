@@ -20,6 +20,10 @@ export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastFragmentType } from './src/data/enums/BroadcastFragmentType.js';
 export { default as BroadcastGateway } from './src/broadcast/BroadcastGateway.js';
 export { default as Class } from './src/data/Class.js';
+export { default as ConsoleCommand } from './src/data/ConsoleCommand.js';
+export { default as ConsoleCommandType } from './src/data/enums/ConsoleCommandType.js';
+export { default as Cutter } from './src/cut/Cutter.js';
+export { default as CutterConfiguration } from './src/configurations/CutterConfiguration.js';
 export { default as Demo } from './src/data/Demo.js';
 export { default as DemoPacket } from './src/data/DemoPacket.js';
 export { default as DemoPacketType } from './src/data/enums/DemoPacketType.js';
@@ -30,6 +34,7 @@ export { default as EntityMutationEvent } from './src/data/entity/EntityMutation
 export { default as EntityOperation } from './src/data/enums/EntityOperation.js';
 export { default as FieldDecoderDescriptor } from './src/data/fields/decoding/FieldDecoderDescriptor.js';
 export { default as FieldDecoderType } from './src/data/enums/FieldDecoderType.js';
+export { default as FieldRuleRegistry } from './src/data/fields/FieldRuleRegistry.js';
 export { default as InterceptorStage } from './src/data/enums/InterceptorStage.js';
 export { default as Logger } from './src/core/Logger.js';
 export { default as MessagePacket } from './src/data/MessagePacket.js';

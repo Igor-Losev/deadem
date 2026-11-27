@@ -396,6 +396,37 @@ export declare type CCitadelUserMsg_MapLine = Message<"CCitadelUserMsg_MapLine">
 export declare const CCitadelUserMsg_MapLineSchema: GenMessage<CCitadelUserMsg_MapLine>;
 
 /**
+ * @generated from message CCitadelUserMsg_MapTargetingCursor
+ */
+export declare type CCitadelUserMsg_MapTargetingCursor = Message<"CCitadelUserMsg_MapTargetingCursor"> & {
+  /**
+   * @generated from field: optional int32 sender_player_slot = 1 [default = -1];
+   */
+  senderPlayerSlot: number;
+
+  /**
+   * @generated from field: optional int32 x = 2;
+   */
+  x: number;
+
+  /**
+   * @generated from field: optional int32 y = 3;
+   */
+  y: number;
+
+  /**
+   * @generated from field: optional bool active = 4;
+   */
+  active: boolean;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_MapTargetingCursor.
+ * Use `create(CCitadelUserMsg_MapTargetingCursorSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_MapTargetingCursorSchema: GenMessage<CCitadelUserMsg_MapTargetingCursor>;
+
+/**
  * @generated from message CCitadelUserMsg_TeamRewards
  */
 export declare type CCitadelUserMsg_TeamRewards = Message<"CCitadelUserMsg_TeamRewards"> & {
@@ -2595,6 +2626,37 @@ export declare type CCitadelUserMsg_SoulBagPickup = Message<"CCitadelUserMsg_Sou
  * Use `create(CCitadelUserMsg_SoulBagPickupSchema)` to create a new message.
  */
 export declare const CCitadelUserMsg_SoulBagPickupSchema: GenMessage<CCitadelUserMsg_SoulBagPickup>;
+
+/**
+ * @generated from message CCitadelUserMsg_ItemAcquired
+ */
+export declare type CCitadelUserMsg_ItemAcquired = Message<"CCitadelUserMsg_ItemAcquired"> & {
+  /**
+   * @generated from field: optional uint32 player = 1 [default = 16777215];
+   */
+  player: number;
+
+  /**
+   * @generated from field: optional uint32 ability_id = 2;
+   */
+  abilityId: number;
+
+  /**
+   * @generated from field: optional uint32 upgrade_bits = 3;
+   */
+  upgradeBits: number;
+
+  /**
+   * @generated from field: optional bool purchased = 4;
+   */
+  purchased: boolean;
+};
+
+/**
+ * Describes the message CCitadelUserMsg_ItemAcquired.
+ * Use `create(CCitadelUserMsg_ItemAcquiredSchema)` to create a new message.
+ */
+export declare const CCitadelUserMsg_ItemAcquiredSchema: GenMessage<CCitadelUserMsg_ItemAcquired>;
 
 /**
  * @generated from message CCitadelUserMsg_HeroReleaseVote

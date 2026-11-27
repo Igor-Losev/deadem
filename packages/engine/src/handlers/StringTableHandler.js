@@ -1,23 +1,18 @@
 import Assert from '../core/Assert.js';
 import Logger from '../core/Logger.js';
-import Snappy from '../core/Snappy.instance.js';
 
 import StringTableOperation from '../data/enums/StringTableOperation.js';
 import StringTableType from '../data/enums/StringTableType.js';
 
-import StringTableEntryExtractor from '../extractors/StringTableEntryExtractor.js';
-
-import SchemaRegistry from '../schema/SchemaRegistry.js';
-
-import StringTable from '../data/tables/string/StringTable.js';
 import StringTableContainer from '../data/tables/string/StringTableContainer.js';
-import StringTableEntry from '../data/tables/string/StringTableEntry.js';
-import StringTableInstructions from '../data/tables/string/StringTableInstructions.js';
 import StringTableMutationEvent from '../data/tables/string/StringTableMutationEvent.js';
 
+import SchemaRegistry from '../schema/SchemaRegistry.js';
+import StringTableCodec from '../schema/StringTableCodec.js';
+
 /**
- * Translates raw string-table protobuf payloads into
- * {@link StringTable} mutations on a {@link StringTableContainer}.
+ * Resolves string table types, builds {@link StringTableMutationEvent} via {@link StringTableCodec},
+ * and applies them to a {@link StringTableContainer}.
  */
 class StringTableHandler {
     /**
@@ -32,6 +27,8 @@ class StringTableHandler {
         Assert.isTrue(container instanceof StringTableContainer, 'Invalid container: expected an instance of StringTableContainer');
         Assert.isTrue(logger instanceof Logger, 'Invalid logger: expected an instance of Logger');
 
+        /** @private */
+        this._codec = new StringTableCodec(registry);
         /** @private */
         this._registry = registry;
         /** @private */
@@ -51,14 +48,14 @@ class StringTableHandler {
 
             switch (event.operation) {
                 case StringTableOperation.CREATE: {
-                    registerEntries(event.table, event.entries);
+                    event.table.registerEntries(event.entries);
 
                     this._container.register(event.table);
 
                     break;
                 }
                 case StringTableOperation.UPDATE: {
-                    registerEntries(event.table, event.entries);
+                    event.table.registerEntries(event.entries);
 
                     break;
                 }
@@ -87,26 +84,19 @@ class StringTableHandler {
             this._logger.warn(`StringTable [ ${stringTableType.name} ] exists in the registry. Overwriting`);
         }
 
-        const instructions = new StringTableInstructions(
-            createData.userDataSizeBits,
-            createData.userDataFixedSize,
-            createData.usingVarintBitcounts
-        );
+        let tableId;
 
-        const payload = createData.dataCompressed
-            ? Snappy.decompress(createData.stringData)
-            : createData.stringData;
+        if (existing !== null) {
+            tableId = existing.id;
+        } else {
+            tableId = this._container.size;
+        }
 
-        const tableId = existing !== null ? existing.id : this._container.size;
+        const { table, entries } = this._codec.decodeCreate(createData, tableId, stringTableType);
 
-        const stringTable = new StringTable(tableId, stringTableType, createData.flags, instructions,
-            this._registry.getStringTableDecoder(stringTableType));
+        this._logger.debug(`Registering StringTable: [ ${table.id} ] [ ${table.type.name} ]`);
 
-        const entries = Array.from(new StringTableEntryExtractor(payload, stringTable, createData.numEntries).retrieve());
-
-        this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
-
-        return [ new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries) ];
+        return [ new StringTableMutationEvent(StringTableOperation.CREATE, table, entries) ];
     }
 
     /**
@@ -122,29 +112,25 @@ class StringTableHandler {
 
         let created = 0;
 
-        instantiateData.tables.forEach((/** @type {*} */ tableData) => {
+        for (let i = 0; i < instantiateData.tables.length; i++) {
+            const tableData = instantiateData.tables[i];
             const stringTableType = this._resolveOrSynthesize(tableData.tableName);
-
             const existing = this._container.getByName(stringTableType.name);
 
-            let stringTable;
+            const table = existing !== null
+                ? this._codec.createTable(existing.id, stringTableType, existing.flags, existing.instructions)
+                : this._codec.createTable(this._container.size + created, stringTableType, tableData.tableFlags, null);
 
-            if (existing !== null) {
-                stringTable = new StringTable(existing.id, stringTableType, existing.flags, existing.instructions,
-                    this._registry.getStringTableDecoder(stringTableType));
-            } else {
-                stringTable = new StringTable(this._container.size + created, stringTableType, tableData.tableFlags, null,
-                    this._registry.getStringTableDecoder(stringTableType));
-
+            if (existing === null) {
                 created += 1;
             }
 
-            const entries = createEntries(stringTable, tableData.items);
+            const entries = this._codec.decodeItems(table, tableData.items);
 
-            this._logger.debug(`Registering StringTable: [ ${stringTable.id} ] [ ${stringTable.type.name} ]`);
+            this._logger.debug(`Registering StringTable: [ ${table.id} ] [ ${table.type.name} ]`);
 
-            events.push(new StringTableMutationEvent(StringTableOperation.CREATE, stringTable, entries));
-        });
+            events.push(new StringTableMutationEvent(StringTableOperation.CREATE, table, entries));
+        }
 
         return events;
     }
@@ -160,7 +146,8 @@ class StringTableHandler {
         /** @type {Array<StringTableMutationEvent>} */
         const events = [ ];
 
-        snapshotData.tables.forEach((/** @type {*} */ tableData) => {
+        for (let i = 0; i < snapshotData.tables.length; i++) {
+            const tableData = snapshotData.tables[i];
             const type = this._registry.resolveStringTableTypeByName(tableData.tableName);
 
             const existingTable = type !== null
@@ -170,13 +157,15 @@ class StringTableHandler {
             if (existingTable === null) {
                 this._logger.warn(`Unable to find a table [ ${tableData.tableName} ]`);
 
-                return;
+                continue;
             }
 
-            const entries = createEntries(existingTable, tableData.items);
-
-            events.push(new StringTableMutationEvent(StringTableOperation.UPDATE, existingTable, entries));
-        });
+            events.push(new StringTableMutationEvent(
+                StringTableOperation.UPDATE,
+                existingTable,
+                this._codec.decodeItems(existingTable, tableData.items)
+            ));
+        }
 
         return events;
     }
@@ -197,9 +186,11 @@ class StringTableHandler {
 
         this._logger.debug(`Updating StringTable: [ ${updateData.tableId} ] [ ${stringTable.type.name} ] [ ${updateData.numChangedEntries} ]`);
 
-        const entries = Array.from(new StringTableEntryExtractor(updateData.stringData, stringTable, updateData.numChangedEntries).retrieve());
-
-        return [ new StringTableMutationEvent(StringTableOperation.UPDATE, stringTable, entries) ];
+        return [ new StringTableMutationEvent(
+            StringTableOperation.UPDATE,
+            stringTable,
+            this._codec.decodeUpdate(stringTable, updateData)
+        ) ];
     }
 
     /**
@@ -232,41 +223,6 @@ class StringTableHandler {
 
         return type;
     }
-}
-
-/**
- * @param {StringTable} stringTable
- * @param {Array<*>} items
- * @returns {Array<StringTableEntry>}
- */
-function createEntries(stringTable, items) {
-    return items.map((item, index) => new StringTableEntry(stringTable, index, item.str, normalizeEntryData(item.data)));
-}
-
-/**
- * @param {StringTable} stringTable
- * @param {Array<StringTableEntry>} entries
- */
-function registerEntries(stringTable, entries) {
-    for (let i = 0; i < entries.length; i++) {
-        stringTable.registerEntry(entries[i]);
-    }
-}
-
-/**
- * @param {Uint8Array|null|undefined} data
- * @returns {Uint8Array|null}
- */
-function normalizeEntryData(data) {
-    if (!data) {
-        return null;
-    }
-
-    if (ArrayBuffer.isView(data) || Array.isArray(data)) {
-        return data.length > 0 ? data : null;
-    }
-
-    return data;
 }
 
 export default StringTableHandler;

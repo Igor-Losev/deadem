@@ -9,9 +9,9 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41f-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.42a-darkGreen" /></a>
 
-**@deademx/dota2** is a Dota 2 demo parser and replay player for Node.js, Deno, Bun and browsers.
+**@deademx/dota2** is a Source 2 demo toolkit (parser, player, cutter) for Dota 2 in Node.js, Deno, Bun and browsers.
 
 The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Dota 2: where its data lives, examples and performance.
 
@@ -43,10 +43,10 @@ npm install @deademx/dota2 --save
 ```
 
 ```js
-import { Parser, Player } from '@deademx/dota2';
+import { Cutter, Parser, Player } from '@deademx/dota2';
 ```
 
-The same import works in Node.js, Bun and in a browser app built with a bundler such as Vite or webpack.
+The same import works in Node.js, Deno, Bun and in a browser app built with a bundler such as Vite or webpack.
 
 ### CDN
 
@@ -55,7 +55,7 @@ The same import works in Node.js, Bun and in a browser app built with a bundler 
 ```
 
 ```js
-const { Parser, Player } = window.deadem.dota2;
+const { Cutter, Parser, Player } = window.deadem.dota2;
 ```
 
 ## Quick Start
@@ -133,9 +133,13 @@ Player:
 
 - [`200_play.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/200_play.js): load, seek, play and pause a replay.
 
+Cutter:
+
+- [`400_cut.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-dota2/scripts/400_cut.js): cut a tick window from a replay and set the spectator camera.
+
 ## Compatibility
 
-- **Game patches:** Dota 2 demos from patch `7.41f` and below.
+- **Game patches:** Dota 2 demos from patch `7.42a` and below.
 - **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance

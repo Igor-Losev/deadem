@@ -18,6 +18,9 @@
       "#core/stream/Transform.js": [
         "./packages/engine/src/core/stream/Transform.browser.js"
       ],
+      "#core/stream/Writable.js": [
+        "./packages/engine/src/core/stream/Writable.browser.js"
+      ],
       "#core/stream/WritableSink.js": [
         "./packages/engine/src/core/stream/WritableSink.browser.js"
       ],

@@ -1,6 +1,8 @@
-/** @import VarInt32 from './VarInt32.js' */
-
+/** @import DemoPacketType from './enums/DemoPacketType.js' */
 /** @import DemoSource from './enums/DemoSource.js' */
+
+import DemoFormat from './DemoFormat.js';
+import VarInt32 from './VarInt32.js';
 
 class DemoPacketRaw {
     /**
@@ -30,6 +32,13 @@ class DemoPacketRaw {
         /** @private */
         this._payload = payload;
     }
+
+    /**
+     * @public
+     * @static
+     * @returns {number}
+     */
+    static get COMPRESSED_FLAG() { return 64; }
 
     /**
      * @public
@@ -80,6 +89,7 @@ class DemoPacketRaw {
     }
 
     /**
+     * @deprecated Use payload.length.
      * @public
      * @returns {VarInt32}
      */
@@ -100,7 +110,7 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsCompressed() {
-        return (this._type.value & 64) === 64;
+        return (this._type.value & DemoPacketRaw.COMPRESSED_FLAG) === DemoPacketRaw.COMPRESSED_FLAG;
     }
 
     /**
@@ -110,15 +120,17 @@ class DemoPacketRaw {
      * @returns {boolean}
      */
     getIsInitial() {
-        return this._tick.value === -1;
+        return this._tick.value === DemoFormat.INITIAL_TICK;
     }
 
     /**
+     * Size in a replay file.
+     *
      * @public
      * @returns {number}
      */
     getSize() {
-        return this._type.size + this._tick.size + this._frame.size + this._payload.length;
+        return VarInt32.getSize(this._type.value) + VarInt32.getSize(this._tick.value) + VarInt32.getSize(this._payload.length) + this._payload.length;
     }
 
     /**
@@ -126,7 +138,38 @@ class DemoPacketRaw {
      * @returns {number}
      */
     getTypeId() {
-        return this._type.value & ~64;
+        return this._type.value & ~DemoPacketRaw.COMPRESSED_FLAG;
+    }
+
+    /**
+     * @public
+     * @param {DemoPacketType} type
+     * @returns {boolean}
+     */
+    is(type) {
+        return this.getTypeId() === type.id;
+    }
+
+    /**
+     * Returns a packet copy on another tick.
+     *
+     * @public
+     * @param {number} tick
+     * @returns {DemoPacketRaw}
+     */
+    withTick(tick) {
+        return new DemoPacketRaw(this._sequence, this._type, this._source, new VarInt32(tick), this._frame, this._payload);
+    }
+
+    /**
+     * Returns a packet copy of another type.
+     *
+     * @public
+     * @param {DemoPacketType} type
+     * @returns {DemoPacketRaw}
+     */
+    withType(type) {
+        return new DemoPacketRaw(this._sequence, new VarInt32(type.id), this._source, this._tick, this._frame, this._payload);
     }
 }
 

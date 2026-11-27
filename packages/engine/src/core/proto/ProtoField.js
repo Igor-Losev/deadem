@@ -1,4 +1,6 @@
 /** @import { DescField, DescMessage } from '@bufbuild/protobuf' */
+/** @import ProtoDecoder from './ProtoDecoder.js' */
+/** @import ProtoEncoder from './ProtoEncoder.js' */
 
 import { ScalarType } from '@bufbuild/protobuf';
 import { WireType } from '@bufbuild/protobuf/wire';
@@ -11,7 +13,7 @@ const EMPTY_BYTES = new Uint8Array(0);
 const EMPTY_LIST = Object.freeze([ ]);
 
 /**
- * A message field as {@link ProtoDecoder} reads it.
+ * A message field as {@link ProtoDecoder} reads it and {@link ProtoEncoder} writes it.
  */
 class ProtoField {
     /**
@@ -31,7 +33,11 @@ class ProtoField {
         /** @private */
         this._name = descriptor.localName;
         /** @private */
+        this._number = descriptor.number;
+        /** @private */
         this._repeated = descriptor.fieldKind === 'list';
+        /** @private */
+        this._packed = descriptor.fieldKind === 'list' && descriptor.packed;
         /** @private */
         this._message = message;
         /** @private */
@@ -54,10 +60,28 @@ class ProtoField {
 
     /**
      * @public
+     * @returns {number}
+     */
+    get number() {
+        return this._number;
+    }
+
+    /**
+     * @public
      * @returns {boolean}
      */
     get repeated() {
         return this._repeated;
+    }
+
+    /**
+     * Whether a repeated scalar goes into one length-delimited record.
+     *
+     * @public
+     * @returns {boolean}
+     */
+    get packed() {
+        return this._packed;
     }
 
     /**

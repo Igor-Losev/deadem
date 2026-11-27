@@ -1,8 +1,12 @@
+/** @import BitWriter from './BitWriter.js' */
+
 import Assert from './Assert.js';
 import VarInt32 from '../data/VarInt32.js';
 
 /**
  * A class for reading data at the bit level from {@link Uint8Array}.
+ *
+ * The counterpart of {@link BitWriter}.
  */
 class BitReader {
     /**

@@ -20,10 +20,11 @@
 /** @typedef {import('@deademx/engine').StringTableDecoderFn} StringTableDecoderFn */
 /** @typedef {import('@deademx/engine').SyncObject} SyncObject */
 
-/** @import { Logger, ParserConfiguration, PlayerConfiguration } from '@deademx/engine' */
+/** @import { CutterConfiguration, Logger, ParserConfiguration, PlayerConfiguration } from '@deademx/engine' */
 /** @import { Dota2Proto } from '@deademx/dota2/proto' */
 
 import {
+    Cutter as EngineCutter,
     DemoPacket as EngineDemoPacket,
     MessagePacket as EngineMessagePacket,
     Parser as EngineParser,
@@ -71,6 +72,20 @@ class Player extends EnginePlayer {
     }
 }
 
+/**
+ * @extends {EngineCutter}
+ */
+class Cutter extends EngineCutter {
+    /**
+     * @constructor
+     * @param {CutterConfiguration=} configuration
+     * @param {Logger=} logger
+     */
+    constructor(configuration, logger) {
+        super(createRegistry(), configuration, logger);
+    }
+}
+
 const DemoPacket = EngineDemoPacket;
 const MessagePacket = EngineMessagePacket;
 
@@ -79,6 +94,8 @@ export {
     BroadcastFragmentType,
     BroadcastGateway,
     Class,
+    ConsoleCommand,
+    CutterConfiguration,
     Demo,
     DemoPacketType,
     DemoSource,
@@ -103,7 +120,8 @@ export {
     UserCommandEvent
 } from '@deademx/engine';
 
+export { default as ConsoleCommandType } from './src/data/enums/ConsoleCommandType.js';
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
 
-export { DemoPacket, MessagePacket, Parser, Player };
+export { Cutter, DemoPacket, MessagePacket, Parser, Player };

@@ -98,7 +98,7 @@ class Player {
         this._codec = new PacketCodec(registry);
 
         const diagnostics = new ParserDiagnostics(registry, logger);
-        const interceptors = new InterceptorRegistry(registry.getUserCommandDecoder() !== null);
+        const interceptors = new InterceptorRegistry(registry.getIsUserCommandTypeRegistered());
 
         this._diagnostics = diagnostics;
         this._interceptors = interceptors;

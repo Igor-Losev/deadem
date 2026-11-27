@@ -1,7 +1,14 @@
+/** @import MessagePacketRawWriter from '../writers/MessagePacketRawWriter.js' */
+
 import BitReader from '../core/BitReader.js';
 
 import MessagePacketRaw from '../data/MessagePacketRaw.js';
 
+/**
+ * Extracts {@link MessagePacketRaw} from the data of a demo packet.
+ *
+ * The counterpart of {@link MessagePacketRawWriter}.
+ */
 class MessagePacketRawExtractor {
     /**
      * @constructor
@@ -14,12 +21,13 @@ class MessagePacketRawExtractor {
     }
 
     /**
-     * Extracts and returns all message packets (raw) from the buffer.
+     * Extracts the message packets (raw) the filter keeps.
      *
      * @public
+     * @param {((typeId: number) => boolean)|null} [filter=null]
      * @returns {Array<MessagePacketRaw>}
      */
-    all() {
+    all(filter = null) {
         const extracted = [ ];
 
         const bytes = Math.ceil(this._bitReader.getUnreadCount() / BitReader.BITS_PER_BYTE);
@@ -30,6 +38,12 @@ class MessagePacketRawExtractor {
         while (this._bitReader.getUnreadCount() >= BitReader.BITS_PER_BYTE) {
             const type = this._bitReader.readUVarInt();
             const size = this._bitReader.readUVarInt32();
+
+            if (filter !== null && !filter(type)) {
+                this._bitReader.move(size * BitReader.BITS_PER_BYTE);
+
+                continue;
+            }
 
             const payload = this._bitReader.readInBuffer(size * BitReader.BITS_PER_BYTE, buffer.subarray(bytesRead, bytesRead + size));
 

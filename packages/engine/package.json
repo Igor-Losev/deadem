@@ -1,7 +1,7 @@
 {
   "name": "@deademx/engine",
   "version": "5.0.0",
-  "description": "Shared Source 2 demo parsing and replay playback engine for Node.js and browsers",
+  "description": "Shared Source 2 demo toolkit (parser, player, cutter) for Node.js, Deno, Bun and browsers",
   "author": "Igor Losev",
   "license": "MIT",
   "bugs": "https://github.com/Igor-Losev/deadem/issues",
@@ -26,8 +26,11 @@
     "replay",
     "parser",
     "player",
+    "cutter",
     "demo-parser",
     "replay-parser",
+    "demo-cutter",
+    "replay-cutter",
     "nodejs",
     "browser",
     "deno",
@@ -95,6 +98,16 @@
       "node": "./src/core/stream/Transform.node.js",
       "browser": "./src/core/stream/Transform.browser.js",
       "default": "./src/core/stream/Transform.browser.js"
+    },
+    "#core/stream/Writable.js": {
+      "types": "./types/src/core/stream/Writable.node.d.ts",
+      "electron": {
+        "browser": "./src/core/stream/Writable.browser.js",
+        "default": "./src/core/stream/Writable.node.js"
+      },
+      "node": "./src/core/stream/Writable.node.js",
+      "browser": "./src/core/stream/Writable.browser.js",
+      "default": "./src/core/stream/Writable.browser.js"
     },
     "#core/stream/WritableSink.js": {
       "types": "./types/src/core/stream/WritableSink.node.d.ts",

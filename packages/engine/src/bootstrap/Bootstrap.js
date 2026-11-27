@@ -18,7 +18,7 @@ class Bootstrap {
         Bootstrap._registerDemoPacketTypes(registry);
         Bootstrap._registerFieldRules(registry);
 
-        registry.setSendTablesSerializerDecoder(registry.getDecoder(EmbeddedMessageType.SEND_TABLES_SERIALIZER.protoName));
+        registry.registerSendTablesSerializerType(EmbeddedMessageType.SEND_TABLES_SERIALIZER);
     }
 
     /**
@@ -38,61 +38,63 @@ class Bootstrap {
      * @param {SchemaRegistry} registry
      */
     static _registerFieldRules(registry) {
-        registry.registerFieldTypeDecoder('bool', FieldDecoderDescriptor.BOOLEAN);
-        registry.registerFieldTypeDecoder('CBodyComponent', FieldDecoderDescriptor.BOOLEAN);
-        registry.registerFieldTypeDecoder('CPhysicsComponent', FieldDecoderDescriptor.BOOLEAN);
-        registry.registerFieldTypeDecoder('CRenderComponent', FieldDecoderDescriptor.BOOLEAN);
+        const fieldRules = registry.getFieldRuleRegistry();
 
-        registry.registerFieldTypeDecoder('GameTime_t', FieldDecoderDescriptor.NO_SCALE);
+        fieldRules.registerFieldTypeDecoder('bool', FieldDecoderDescriptor.BOOLEAN);
+        fieldRules.registerFieldTypeDecoder('CBodyComponent', FieldDecoderDescriptor.BOOLEAN);
+        fieldRules.registerFieldTypeDecoder('CPhysicsComponent', FieldDecoderDescriptor.BOOLEAN);
+        fieldRules.registerFieldTypeDecoder('CRenderComponent', FieldDecoderDescriptor.BOOLEAN);
 
-        registry.registerFieldTypeDecoder('char', FieldDecoderDescriptor.STRING);
-        registry.registerFieldTypeDecoder('CUtlString', FieldDecoderDescriptor.STRING);
-        registry.registerFieldTypeDecoder('CUtlSymbolLarge', FieldDecoderDescriptor.STRING);
-        registry.registerFieldTypeDecoder('CGlobalSymbol', FieldDecoderDescriptor.STRING);
+        fieldRules.registerFieldTypeDecoder('GameTime_t', FieldDecoderDescriptor.NO_SCALE);
 
-        registry.registerFieldTypeDecoder('int8', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('int16', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('int32', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('int64', FieldDecoderDescriptor.VAR_INT_64);
+        fieldRules.registerFieldTypeDecoder('char', FieldDecoderDescriptor.STRING);
+        fieldRules.registerFieldTypeDecoder('CUtlString', FieldDecoderDescriptor.STRING);
+        fieldRules.registerFieldTypeDecoder('CUtlSymbolLarge', FieldDecoderDescriptor.STRING);
+        fieldRules.registerFieldTypeDecoder('CGlobalSymbol', FieldDecoderDescriptor.STRING);
 
-        registry.registerFieldTypeDecoder('CEntityIndex', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('CPlayerSlot', FieldDecoderDescriptor.VAR_INT_32);
-        registry.registerFieldTypeDecoder('GameTick_t', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('int8', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('int16', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('int32', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('int64', FieldDecoderDescriptor.VAR_INT_64);
 
-        registry.registerFieldTypeDecoder('HSequence', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
+        fieldRules.registerFieldTypeDecoder('CEntityIndex', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('CPlayerSlot', FieldDecoderDescriptor.VAR_INT_32);
+        fieldRules.registerFieldTypeDecoder('GameTick_t', FieldDecoderDescriptor.VAR_INT_32);
 
-        registry.registerFieldTypeDecoder('float32', FieldDecoderDescriptor.DYNAMIC_FLOAT_32);
+        fieldRules.registerFieldTypeDecoder('HSequence', FieldDecoderDescriptor.VAR_UINT_32_MINUS_ONE);
 
-        registry.registerFieldTypeDecoder('QAngle', FieldDecoderDescriptor.QANGLE);
+        fieldRules.registerFieldTypeDecoder('float32', FieldDecoderDescriptor.DYNAMIC_FLOAT_32);
 
-        registry.registerFieldTypeDecoder('CNetworkedQuantizedFloat', FieldDecoderDescriptor.QUANTIZED_FLOAT);
+        fieldRules.registerFieldTypeDecoder('QAngle', FieldDecoderDescriptor.QANGLE);
 
-        registry.registerFieldTypeDecoder('uint64', FieldDecoderDescriptor.DYNAMIC_UINT_64);
-        registry.registerFieldTypeDecoder('CStrongHandle', FieldDecoderDescriptor.DYNAMIC_UINT_64);
-        registry.registerFieldTypeDecoder('ResourceId_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        fieldRules.registerFieldTypeDecoder('CNetworkedQuantizedFloat', FieldDecoderDescriptor.QUANTIZED_FLOAT);
 
-        registry.registerFieldTypeDecoder('Vector2D', FieldDecoderDescriptor.createVector(2));
-        registry.registerFieldTypeDecoder('Vector', FieldDecoderDescriptor.createVector(3));
-        registry.registerFieldTypeDecoder('VectorWS', FieldDecoderDescriptor.createVector(3));
-        registry.registerFieldTypeDecoder('Vector4D', FieldDecoderDescriptor.createVector(4));
-        registry.registerFieldTypeDecoder('Quaternion', FieldDecoderDescriptor.createVector(4));
-        registry.registerFieldTypeDecoder('CTransform', FieldDecoderDescriptor.createVector(6));
+        fieldRules.registerFieldTypeDecoder('uint64', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        fieldRules.registerFieldTypeDecoder('CStrongHandle', FieldDecoderDescriptor.DYNAMIC_UINT_64);
+        fieldRules.registerFieldTypeDecoder('ResourceId_t', FieldDecoderDescriptor.DYNAMIC_UINT_64);
 
-        registry.registerFixedTableType('CBodyComponent');
-        registry.registerFixedTableType('CEntityComponent');
-        registry.registerFixedTableType('CEntityIdentity');
-        registry.registerFixedTableType('CEntityInstance');
-        registry.registerFixedTableType('CPhysicsComponent');
-        registry.registerFixedTableType('CPlayerLocalData');
-        registry.registerFixedTableType('CRenderComponent');
-        registry.registerFixedTableType('CScriptComponent');
+        fieldRules.registerFieldTypeDecoder('Vector2D', FieldDecoderDescriptor.createVector(2));
+        fieldRules.registerFieldTypeDecoder('Vector', FieldDecoderDescriptor.createVector(3));
+        fieldRules.registerFieldTypeDecoder('VectorWS', FieldDecoderDescriptor.createVector(3));
+        fieldRules.registerFieldTypeDecoder('Vector4D', FieldDecoderDescriptor.createVector(4));
+        fieldRules.registerFieldTypeDecoder('Quaternion', FieldDecoderDescriptor.createVector(4));
+        fieldRules.registerFieldTypeDecoder('CTransform', FieldDecoderDescriptor.createVector(6));
 
-        registry.registerVariableArrayType('CUtlVector');
-        registry.registerVariableArrayType('CUtlVectorEmbeddedNetworkVar');
-        registry.registerVariableArrayType('CNetworkUtlVectorBase');
+        fieldRules.registerFixedTableType('CBodyComponent');
+        fieldRules.registerFixedTableType('CEntityComponent');
+        fieldRules.registerFixedTableType('CEntityIdentity');
+        fieldRules.registerFixedTableType('CEntityInstance');
+        fieldRules.registerFixedTableType('CPhysicsComponent');
+        fieldRules.registerFixedTableType('CPlayerLocalData');
+        fieldRules.registerFixedTableType('CRenderComponent');
+        fieldRules.registerFixedTableType('CScriptComponent');
 
-        registry.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
-        registry.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
+        fieldRules.registerVariableArrayType('CUtlVector');
+        fieldRules.registerVariableArrayType('CUtlVectorEmbeddedNetworkVar');
+        fieldRules.registerVariableArrayType('CNetworkUtlVectorBase');
+
+        fieldRules.registerFieldEncoderOverride('m_flSimulationTime', 'simtime');
+        fieldRules.registerFieldEncoderOverride('m_flAnimTime', 'simtime');
     }
 }
 

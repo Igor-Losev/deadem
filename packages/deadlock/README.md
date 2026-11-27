@@ -9,9 +9,9 @@
 
 <a href="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml" alt=""><img src="https://github.com/Igor-Losev/deadem/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://www.npmjs.com/package/@deademx/deadlock" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdeadlock" /></a>
-<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6766-darkGreen" /></a>
+<a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Deadlock%20Game%20Build-6868-darkGreen" /></a>
 
-**@deademx/deadlock** is a Deadlock demo parser and replay player for Node.js, Deno, Bun and browsers. Versions before 5.0.0 were published as [`deadem`](https://www.npmjs.com/package/deadem).
+**@deademx/deadlock** is a Source 2 demo toolkit (parser, player, cutter) for Deadlock in Node.js, Deno, Bun and browsers. Versions before 5.0.0 were published as [`deadem`](https://www.npmjs.com/package/deadem).
 
 The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Deadlock: where its data lives, examples and performance.
 
@@ -43,7 +43,7 @@ npm install @deademx/deadlock --save
 ```
 
 ```js
-import { Parser, Player } from '@deademx/deadlock';
+import { Cutter, Parser, Player } from '@deademx/deadlock';
 ```
 
 The same import works in Node.js, Deno, Bun and in a browser app built with a bundler such as Vite or webpack.
@@ -55,7 +55,7 @@ The same import works in Node.js, Deno, Bun and in a browser app built with a bu
 ```
 
 ```js
-const { Parser, Player } = window.deadem.deadlock;
+const { Cutter, Parser, Player } = window.deadem.deadlock;
 ```
 
 ## Quick Start
@@ -140,9 +140,13 @@ HTTP broadcast:
 - [`301_broadcast_parse.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/301_broadcast_parse.js): parse a live broadcast.
 - [`302_broadcast_parse_file.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/302_broadcast_parse_file.js): parse a saved broadcast.
 
+Cutter:
+
+- [`400_cut.js`](https://github.com/Igor-Losev/deadem/blob/main/packages/examples-node-deadlock/scripts/400_cut.js): cut a tick window from a replay and set the spectator camera.
+
 ## Compatibility
 
-- **Game builds:** Deadlock demos from build `6766` and below.
+- **Game builds:** Deadlock demos from build `6868` and below.
 - **Runtimes:** Node.js 18 and later, Deno, Bun, and Chrome, Firefox, Safari and Edge.
 
 ## Performance

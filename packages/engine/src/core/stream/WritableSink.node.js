@@ -4,7 +4,7 @@ class WritableSinkNode extends Stream.Writable {
     /**
      * @public
      * @constructor
-     * @param {((chunk: *) => void)|null} [onWrite=null] - Optional callback invoked for each chunk.
+     * @param {((chunk: *) => *)|null} [onWrite=null] - Optional callback invoked for each chunk. A returned promise is awaited.
      */
     constructor(onWrite = null) {
         super({ objectMode: true });
@@ -19,8 +19,12 @@ class WritableSinkNode extends Stream.Writable {
      * @param {(error?: Error | null) => void} callback
      */
     _write(chunk, encoding, callback) {
-        if (this._onWrite !== null) {
-            this._onWrite(chunk);
+        const result = this._onWrite !== null ? this._onWrite(chunk) : undefined;
+
+        if (result instanceof Promise) {
+            result.then(() => callback(), callback);
+
+            return;
         }
 
         callback();

@@ -209,23 +209,20 @@ class PlayerPacketIndex {
 
         for (let i = 0; i < this._packets.length; i++) {
             const packet = this._packets[i];
-            const typeId = packet.getTypeId();
             const tick = packet.tick.value;
 
             if (this._codec.getIsBootstrap(packet)) {
                 this._bootstrap.push(i);
             }
 
-            if (typeId === DemoPacketType.DEM_FULL_PACKET.id) {
+            if (packet.is(DemoPacketType.DEM_FULL_PACKET)) {
                 this._keyframes.push(i);
 
-                const decoded = this._codec.decodeRaw(packet);
+                const fullPacket = this._codec.decodeDemoPacketRaw(packet);
 
-                if (decoded === null) {
-                    continue;
+                if (fullPacket !== null && fullPacket.is(DemoPacketType.DEM_FULL_PACKET)) {
+                    this._stringTableSnapshots.set(i, fullPacket.data.stringTables);
                 }
-
-                this._stringTableSnapshots.set(i, decoded.stringTable);
             }
 
             if (tick !== lastTick) {

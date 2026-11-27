@@ -1,9 +1,12 @@
+/** @import DemoStreamPacketWriter from './DemoStreamPacketWriter.js' */
+
 import Assert from '../core/Assert.js';
 
 import Transform from '#core/stream/Transform.js';
 
 import StreamConfiguration from '../configurations/StreamConfiguration.js';
 
+import DemoFormat from '../data/DemoFormat.js';
 import DemoSource from '../data/enums/DemoSource.js';
 import PerformanceTrackerCategory from '../data/enums/PerformanceTrackerCategory.js';
 
@@ -12,13 +15,14 @@ import ParserDiagnostics from '../diagnostics/ParserDiagnostics.js';
 import DemoPacketRawBroadcastExtractor from '../extractors/DemoPacketRawBroadcastExtractor.js';
 import DemoPacketRawReplayExtractor from '../extractors/DemoPacketRawReplayExtractor.js';
 
-const DEMO_REPLAY_HEADER_SIZE_BYTES = 16;
-
 /**
  * Extracts one or more {@link DemoPacketRaw} from a given buffer.
+ *
  * Packets may vary in size, so if a chunk doesn't contain the complete data,
  * the {@link DemoStreamPacketExtractor} will wait for subsequent chunks to complete
  * the extraction of the {@link DemoPacketRaw}.
+ *
+ * The counterpart of {@link DemoStreamPacketWriter}.
  */
 class DemoStreamPacketExtractor extends Transform {
     /** @private */
@@ -81,7 +85,7 @@ class DemoStreamPacketExtractor extends Transform {
         let buffer = chunk;
 
         if (this._source === DemoSource.REPLAY && this._counts.chunks === 0) {
-            buffer = chunk.subarray(DEMO_REPLAY_HEADER_SIZE_BYTES);
+            buffer = chunk.subarray(DemoFormat.REPLAY_HEADER_SIZE_BYTES);
         }
 
         if (this._tail.length !== 0) {

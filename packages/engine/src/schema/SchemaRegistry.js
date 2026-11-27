@@ -10,6 +10,9 @@
 import Assert from '../core/Assert.js';
 
 import ProtoDecoder from '../core/proto/ProtoDecoder.js';
+import ProtoEncoder from '../core/proto/ProtoEncoder.js';
+
+import EmbeddedMessageType from '../data/enums/EmbeddedMessageType.js';
 
 import FieldRuleRegistry from '../data/fields/FieldRuleRegistry.js';
 
@@ -26,13 +29,13 @@ class SchemaRegistry {
     /**
      * @public
      * @constructor
-     * @param {Registry} descriptors
+     * @param {Registry} protoRegistry
      */
-    constructor(descriptors) {
-        Assert.isTrue(typeof descriptors?.getMessage === 'function', 'Invalid descriptors: expected a @bufbuild/protobuf registry');
+    constructor(protoRegistry) {
+        Assert.isTrue(typeof protoRegistry?.getMessage === 'function', 'Invalid protoRegistry: expected a @bufbuild/protobuf registry');
 
         /** @private */
-        this._descriptors = descriptors;
+        this._protoRegistry = protoRegistry;
 
         /** @private @type {SchemaRegistryDecoders} */
         this._decoders = {
@@ -80,7 +83,7 @@ class SchemaRegistry {
      * @returns {DescMessage}
      */
     getDescriptor(protoName) {
-        const descriptor = this._descriptors.getMessage(protoName);
+        const descriptor = this._protoRegistry.getMessage(protoName);
 
         Assert.exists(descriptor, `Unknown message [ ${protoName} ]`);
 
@@ -89,10 +92,29 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @param {string} protoName
+     * @returns {ProtoEncoder}
+     */
+    getEncoder(protoName) {
+        return ProtoEncoder.fromDescriptor(this.getDescriptor(protoName));
+    }
+
+    /**
+     * @public
      * @returns {FieldRuleRegistry}
      */
     getFieldRuleRegistry() {
         return this._fieldRules;
+    }
+
+    /**
+     * Whether a user command type is registered.
+     *
+     * @public
+     * @returns {boolean}
+     */
+    getIsUserCommandTypeRegistered() {
+        return this._decoders.userCommand !== null;
     }
 
     /**
@@ -143,6 +165,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use getFieldRuleRegistry().registerFieldDecoderOverride().
      * @public
      * @param {string} name
      * @param {FieldDecoderDescriptor} descriptor
@@ -152,6 +175,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use getFieldRuleRegistry().registerFieldEncoderOverride().
      * @public
      * @param {string} name
      * @param {string} encoder
@@ -161,6 +185,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use getFieldRuleRegistry().registerFieldTypeDecoder().
      * @public
      * @param {string} baseType
      * @param {FieldDecoderDescriptor} descriptor
@@ -170,6 +195,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use getFieldRuleRegistry().registerFixedTableType().
      * @public
      * @param {string} baseType
      */
@@ -192,6 +218,16 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @param {EmbeddedMessageType} type
+     */
+    registerSendTablesSerializerType(type) {
+        Assert.isTrue(type instanceof EmbeddedMessageType, 'Invalid type: expected an instance of EmbeddedMessageType');
+
+        this._decoders.sendTables = this.getDecoder(type.protoName);
+    }
+
+    /**
+     * @public
      * @param {StringTableType} type
      */
     registerStringTableType(type) {
@@ -206,6 +242,17 @@ class SchemaRegistry {
 
     /**
      * @public
+     * @param {EmbeddedMessageType} type
+     */
+    registerUserCommandType(type) {
+        Assert.isTrue(type instanceof EmbeddedMessageType, 'Invalid type: expected an instance of EmbeddedMessageType');
+
+        this._decoders.userCommand = this.getDecoder(type.protoName);
+    }
+
+    /**
+     * @deprecated Use getFieldRuleRegistry().registerVariableArrayType(). Will be removed in the next major version.
+     * @public
      * @param {string} baseType
      */
     registerVariableArrayType(baseType) {
@@ -213,6 +260,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use {@link SchemaRegistry#registerSendTablesSerializerType}.
      * @public
      * @param {ProtoDecoder} decoder
      */
@@ -221,6 +269,7 @@ class SchemaRegistry {
     }
 
     /**
+     * @deprecated Use {@link SchemaRegistry#registerUserCommandType}.
      * @public
      * @param {ProtoDecoder} decoder
      */

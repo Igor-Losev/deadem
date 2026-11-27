@@ -1,4 +1,8 @@
+import Assert from '../core/Assert.js';
+
 const MAXIMUM_SIZE_BYTES = 5;
+const MAXIMUM_VALUE = 0xFFFFFFFF;
+const MINIMUM_VALUE = -(2 ** 31);
 
 /**
  * Represents a variable-length 32-bit integer
@@ -8,10 +12,10 @@ class VarInt32 {
     /**
      * @public
      * @constructor
-     * @param {number} value - The decoded unsigned integer value.
-     * @param {number} size - The number of bytes consumed during decoding.
+     * @param {number} value - The decoded signed integer value.
+     * @param {number} [size=VarInt32.getSize(value)] - The number of bytes consumed during decoding.
      */
-    constructor(value, size) {
+    constructor(value, size = VarInt32.getSize(value)) {
         /** @private */
         this._value = value;
         /** @private */
@@ -44,12 +48,32 @@ class VarInt32 {
     }
 
     /**
+     * Returns the encoded size. Negative values take five bytes.
+     *
+     * @public
+     * @static
+     * @param {number} value
+     * @returns {number}
+     */
+    static getSize(value) {
+        Assert.isTrue(Number.isInteger(value) && value >= MINIMUM_VALUE && value <= MAXIMUM_VALUE, `Invalid value [ ${value} ]: expected a 32-bit integer`);
+
+        let size = 1;
+
+        for (let remaining = value >>> 0; remaining >= 0x80; remaining >>>= 7) {
+            size += 1;
+        }
+
+        return size;
+    }
+
+    /**
      * Parses a {@link VarInt32} from the provided buffer.
      *
      * @public
      * @static
      * @param {Uint8Array} buffer - The buffer from which to parse the value.
-     * @returns {VarInt32|null} - The parsed {@link VarInt32} or null if parsing failed.
+     * @returns {VarInt32|null} - The parsed {@link VarInt32} or null when the buffer ends inside it.
      */
     static parse(buffer) {
         let continuation = true;
@@ -57,7 +81,7 @@ class VarInt32 {
         let value = 0;
 
         while (continuation && offset < MAXIMUM_SIZE_BYTES) {
-            if (continuation && offset >= buffer.length) {
+            if (offset >= buffer.length) {
                 return null;
             }
 
