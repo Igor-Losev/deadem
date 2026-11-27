@@ -348,6 +348,11 @@ export declare type CUserMsg_ParticleManager = Message<"CUserMsg_ParticleManager
    * @generated from field: optional CUserMsg_ParticleManager.SetOverrideTexture set_override_texture = 44;
    */
   setOverrideTexture?: CUserMsg_ParticleManager_SetOverrideTexture | undefined;
+
+  /**
+   * @generated from field: optional CUserMsg_ParticleManager.SetControlPointClientSnapshot set_control_point_client_snapshot = 45;
+   */
+  setControlPointClientSnapshot?: CUserMsg_ParticleManager_SetControlPointClientSnapshot | undefined;
 };
 
 /**
@@ -931,6 +936,27 @@ export declare type CUserMsg_ParticleManager_SetOverrideTexture = Message<"CUser
 export declare const CUserMsg_ParticleManager_SetOverrideTextureSchema: GenMessage<CUserMsg_ParticleManager_SetOverrideTexture>;
 
 /**
+ * @generated from message CUserMsg_ParticleManager.SetControlPointClientSnapshot
+ */
+export declare type CUserMsg_ParticleManager_SetControlPointClientSnapshot = Message<"CUserMsg_ParticleManager.SetControlPointClientSnapshot"> & {
+  /**
+   * @generated from field: optional int32 control_point = 1;
+   */
+  controlPoint: number;
+
+  /**
+   * @generated from field: optional string snapshot_name = 2;
+   */
+  snapshotName: string;
+};
+
+/**
+ * Describes the message CUserMsg_ParticleManager.SetControlPointClientSnapshot.
+ * Use `create(CUserMsg_ParticleManager_SetControlPointClientSnapshotSchema)` to create a new message.
+ */
+export declare const CUserMsg_ParticleManager_SetControlPointClientSnapshotSchema: GenMessage<CUserMsg_ParticleManager_SetControlPointClientSnapshot>;
+
+/**
  * @generated from message CUserMsg_ParticleManager.SetSceneObjectGenericFlag
  */
 export declare type CUserMsg_ParticleManager_SetSceneObjectGenericFlag = Message<"CUserMsg_ParticleManager.SetSceneObjectGenericFlag"> & {
@@ -1221,6 +1247,11 @@ export declare type CUserMsg_ParticleManager_CreatePhysicsSim = Message<"CUserMs
    * @generated from field: optional uint32 max_particle_count = 3;
    */
   maxParticleCount: number;
+
+  /**
+   * @generated from field: optional bool reuse_existing_sims = 4;
+   */
+  reuseExistingSims: boolean;
 };
 
 /**
@@ -1728,6 +1759,11 @@ export enum PARTICLE_MESSAGE {
    * @generated from enum value: GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE = 41;
    */
   GAME_PARTICLE_MANAGER_EVENT_SET_OVERRIDE_TEXTURE = 41,
+
+  /**
+   * @generated from enum value: GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_CLIENT_SNAPSHOT = 42;
+   */
+  GAME_PARTICLE_MANAGER_EVENT_SET_CONTROL_POINT_CLIENT_SNAPSHOT = 42,
 }
 
 /**

@@ -234,6 +234,11 @@ export declare type CDOTAModifierBuffTableEntry = Message<"CDOTAModifierBuffTabl
    * @generated from field: repeated float custom_float_values = 44;
    */
   customFloatValues: number[];
+
+  /**
+   * @generated from field: optional float effectiveness = 45;
+   */
+  effectiveness: number;
 };
 
 /**

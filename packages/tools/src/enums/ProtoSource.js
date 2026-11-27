@@ -139,6 +139,7 @@ const dota2 = new ProtoSource('DOTA2', Workspace.DOTA2, 'GameTracking-Dota2', [
     'dota_modifiers.proto',
     'dota_shared_enums.proto',
     'dota_usermessages.proto',
+    'event_gcmessages_common.proto',
     'events.proto',
     'gameevents.proto',
     'gcsdk_gcmessages.proto',

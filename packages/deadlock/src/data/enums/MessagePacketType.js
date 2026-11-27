@@ -69,6 +69,8 @@ class MessagePacketType extends EngineMessagePacketType {
     static get CITADEL_USER_MESSAGE_PLAYER_TYPING() { return citadelUserMessagePlayerTyping; }
     static get CITADEL_USER_MESSAGE_SOUL_BAG_PICKUP() { return citadelUserMessageSoulBagPickup; }
     static get CITADEL_USER_MESSAGE_HERO_RELEASE_VOTE() { return citadelUserMessageHeroReleaseVote; }
+    static get CITADEL_USER_MESSAGE_ITEM_ACQUIRED() { return citadelUserMessageItemAcquired; }
+    static get CITADEL_USER_MESSAGE_MAP_TARGETING_CURSOR() { return citadelUserMessageMapTargetingCursor; }
 
     static get GE_FIRE_BULLETS() { return GE_FireBullets; }
     static get GE_PLAYER_ANIM_EVENT() { return GE_PlayerAnimEvent; }
@@ -148,6 +150,8 @@ const citadelUserMessageCombatLogBulkData = new MessagePacketType('k_EUserMsg_Co
 const citadelUserMessagePlayerTyping = new MessagePacketType('k_EUserMsg_PlayerTyping', 369, 'CCitadelUserMsg_PlayerTyping');
 const citadelUserMessageSoulBagPickup = new MessagePacketType('k_EUserMsg_SoulBagPickup', 372, 'CCitadelUserMsg_SoulBagPickup');
 const citadelUserMessageHeroReleaseVote = new MessagePacketType('k_EUserMsg_HeroReleaseVote', 373, 'CCitadelUserMsg_HeroReleaseVote');
+const citadelUserMessageItemAcquired = new MessagePacketType('k_EUserMsg_ItemAcquired', 374, 'CCitadelUserMsg_ItemAcquired');
+const citadelUserMessageMapTargetingCursor = new MessagePacketType('k_EUserMsg_MapTargetingCursor', 375, 'CCitadelUserMsg_MapTargetingCursor');
 
 const GE_FireBullets = new MessagePacketType('GE_FireBullets', 450, 'CMsgFireBullets');
 const GE_PlayerAnimEvent = new MessagePacketType('GE_PlayerAnimEvent', 451, 'CMsgPlayerAnimEvent');

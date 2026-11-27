@@ -6313,6 +6313,11 @@ export enum DOTA_CHAT_MESSAGE {
    * @generated from enum value: CHAT_MESSAGE_SMOKE_ACTIVATED = 126;
    */
   CHAT_MESSAGE_SMOKE_ACTIVATED = 126,
+
+  /**
+   * @generated from enum value: CHAT_MESSAGE_HORN_OF_BATTLE_USED = 128;
+   */
+  CHAT_MESSAGE_HORN_OF_BATTLE_USED = 128,
 }
 
 /**
