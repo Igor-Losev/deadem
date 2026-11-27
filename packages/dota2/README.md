@@ -11,7 +11,7 @@
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2" /></a>
 <a href="https://github.com/Igor-Losev/deadem" alt=""><img src="https://img.shields.io/badge/Dota%202%20Patch-7.41f-darkGreen" /></a>
 
-**@deademx/dota2** is a Dota 2 demo parser and replay player for Node.js, Deno, Bun and browsers.
+**@deademx/dota2** is a Source 2 demo toolkit (parser, player, cutter) for Dota 2 in Node.js, Deno, Bun and browsers.
 
 The model and the API are described in the [`@deademx/engine` documentation](https://github.com/Igor-Losev/deadem/blob/main/packages/engine/README.md). This page covers Dota 2: where its data lives, examples and performance.
 
@@ -43,10 +43,10 @@ npm install @deademx/dota2 --save
 ```
 
 ```js
-import { Parser, Player } from '@deademx/dota2';
+import { Cutter, Parser, Player } from '@deademx/dota2';
 ```
 
-The same import works in Node.js, Bun and in a browser app built with a bundler such as Vite or webpack.
+The same import works in Node.js, Deno, Bun and in a browser app built with a bundler such as Vite or webpack.
 
 ### CDN
 
@@ -55,7 +55,7 @@ The same import works in Node.js, Bun and in a browser app built with a bundler 
 ```
 
 ```js
-const { Parser, Player } = window.deadem.dota2;
+const { Cutter, Parser, Player } = window.deadem.dota2;
 ```
 
 ## Quick Start

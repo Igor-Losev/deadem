@@ -509,10 +509,6 @@ const clip = await cutter.cut(createReadStream('./match.dem'), 154494, 157054, [
 writeFileSync('./clip.dem', clip);
 ```
 
-### Console Commands
-
-The optional fourth argument to `cut()` accepts console commands inserted at the start of the clip. Each game package provides commands on `ConsoleCommandType` for setting the spectator camera, documented in [`@deademx/deadlock`](https://github.com/Igor-Losev/deadem/blob/main/packages/deadlock/README.md), [`@deademx/cs2`](https://github.com/Igor-Losev/deadem/blob/main/packages/cs2/README.md) and [`@deademx/dota2`](https://github.com/Igor-Losev/deadem/blob/main/packages/dota2/README.md).
-
 ## Performance
 
 Entity decoding (`SVC_PACKET_ENTITIES`) accounts for most of the CPU and memory cost. `SVC_USER_COMMANDS` is a distant second. Everything else combined is minor.
