@@ -94,6 +94,7 @@ export {
     BroadcastFragmentType,
     BroadcastGateway,
     Class,
+    ConsoleCommand,
     CutterConfiguration,
     Demo,
     DemoPacketType,
@@ -119,6 +120,7 @@ export {
     UserCommandEvent
 } from '@deademx/engine';
 
+export { default as ConsoleCommandType } from './src/data/enums/ConsoleCommandType.js';
 export { default as MessagePacketType } from './src/data/enums/MessagePacketType.js';
 export { default as StringTableType } from './src/data/enums/StringTableType.js';
 

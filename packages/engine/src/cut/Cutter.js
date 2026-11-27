@@ -1,4 +1,5 @@
 /** @import { NodeReadable } from '#core/stream/Pipeline.js' */
+/** @import ConsoleCommand from '../data/ConsoleCommand.js' */
 /** @import DemoCutIndex from './DemoCutIndex.js' */
 /** @import SchemaRegistry from '../schema/SchemaRegistry.js' */
 
@@ -62,14 +63,15 @@ class Cutter {
      * @param {NodeReadable|ReadableStream} reader - The loaded demo.
      * @param {number} from - The first tick of the window.
      * @param {number} to - The last tick of the window.
+     * @param {Array<ConsoleCommand>} [commands=[ ]] - Console commands inserted at the start of the window.
      * @returns {Promise<Uint8Array>}
      */
-    async cut(reader, from, to) {
+    async cut(reader, from, to, commands = [ ]) {
         if (this._index === null) {
             throw new Error('Unable to cut: cutter is not loaded');
         }
 
-        const plan = this._index.getPlan(from, to);
+        const plan = this._index.getPlan(from, to, commands);
 
         const chain = [
             new DemoStreamBufferSplitter(this._configuration, this._diagnostics),

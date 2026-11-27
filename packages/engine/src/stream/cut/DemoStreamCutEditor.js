@@ -158,7 +158,7 @@ class DemoStreamCutEditor extends Transform {
         const tick = Math.max(this._plan.getTick(demoPacketRaw.sequence), 0);
 
         for (let i = 0; i < commands.length; i++) {
-            const message = this._codec.createDemoPacketMessage(DemoPacketType.DEM_CONSOLE_CMD, { cmdstring: commands[i] });
+            const message = this._codec.createDemoPacketMessage(DemoPacketType.DEM_CONSOLE_CMD, { cmdstring: commands[i].text });
 
             this._forward(this._codec.repackDemoPacketRaw(demoPacketRaw.withType(DemoPacketType.DEM_CONSOLE_CMD).withTick(tick), message));
         }

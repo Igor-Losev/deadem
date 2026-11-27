@@ -1,3 +1,4 @@
+/** @import ConsoleCommand from '../data/ConsoleCommand.js' */
 /** @import StringTable from '../data/tables/string/StringTable.js' */
 
 import Assert from '../core/Assert.js';
@@ -8,7 +9,7 @@ class DemoCutPlan {
     /** @private @type {Uint8Array} */
     _actions;
 
-    /** @private @type {Map<number, Array<string>>} */
+    /** @private @type {Map<number, Array<ConsoleCommand>>} */
     _commands;
 
     /** @private @type {Array<StringTable>|null} */
@@ -23,7 +24,7 @@ class DemoCutPlan {
      * @param {Uint8Array} actions - The id of a {@link DemoCutAction} for every packet, by sequence.
      * @param {Int32Array} ticks - The tick of every packet in the cut, by sequence.
      * @param {Array<StringTable>|null} [stringTables=null] - The string tables before the snapshot.
-     * @param {Map<number, Array<string>>} [commands=new Map()] - Console commands inserted after a packet, by sequence.
+     * @param {Map<number, Array<ConsoleCommand>>} [commands=new Map()] - Console commands inserted after a packet, by sequence.
      */
     constructor(actions, ticks, stringTables = null, commands = new Map()) {
         Assert.isTrue(actions instanceof Uint8Array && ticks instanceof Int32Array, 'Invalid arguments: expected typed arrays');
@@ -59,7 +60,7 @@ class DemoCutPlan {
     /**
      * @public
      * @param {number} sequence
-     * @returns {Array<string>|null}
+     * @returns {Array<ConsoleCommand>|null}
      */
     getCommands(sequence) {
         return this._commands.get(sequence) ?? null;

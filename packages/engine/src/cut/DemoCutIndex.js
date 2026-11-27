@@ -2,7 +2,9 @@
 
 import Assert from '../core/Assert.js';
 
-import ConsoleCommand from '../data/enums/ConsoleCommand.js';
+import ConsoleCommand from '../data/ConsoleCommand.js';
+
+import ConsoleCommandType from '../data/enums/ConsoleCommandType.js';
 import DemoCutAction from '../data/enums/DemoCutAction.js';
 import DemoPacketType from '../data/enums/DemoPacketType.js';
 
@@ -67,15 +69,21 @@ class DemoCutIndex {
      * @public
      * @param {number} from - The first tick of the window.
      * @param {number} to - The last tick of the window.
+     * @param {Array<ConsoleCommand>} [commands=[ ]] - Console commands inserted at the start of the window.
      * @returns {DemoCutPlan}
      */
-    getPlan(from, to) {
+    getPlan(from, to, commands = [ ]) {
         const firstTick = this._ticks[this._bounds.first];
         const lastTick = this._ticks[this._bounds.stop - 1];
 
         Assert.isTrue(Number.isInteger(from) && Number.isInteger(to), `Invalid window [ ${from}, ${to} ]: ticks must be integers`);
         Assert.isTrue(from <= to, `Invalid window [ ${from}, ${to} ]: from must not exceed to`);
         Assert.isTrue(from <= lastTick && to >= firstTick, `Invalid window [ ${from}, ${to} ]: outside of the demo [ ${firstTick}, ${lastTick} ]`);
+        Assert.isTrue(Array.isArray(commands), 'Invalid commands: expected an array');
+
+        for (let i = 0; i < commands.length; i++) {
+            Assert.isTrue(commands[i] instanceof ConsoleCommand, `Invalid command at [ ${i} ]: expected an instance of ConsoleCommand`);
+        }
 
         // Initial state - drop all
         const actions = new Uint8Array(this._typeIds.length).fill(DemoCutAction.DROP.id);
@@ -95,8 +103,8 @@ class DemoCutIndex {
         // First snapshot before the window
         const keyframe = this._getKeyframeBefore(from);
 
-        /** @type {Map<number, Array<string>>} */
-        const commands = new Map();
+        /** @type {Map<number, Array<ConsoleCommand>>} */
+        const scheduledCommands = new Map();
 
         /** @type {Array<StringTable>|null} */
         let stringTables = null;
@@ -111,7 +119,7 @@ class DemoCutIndex {
                 if (this._typeIds[sequence] === DemoPacketType.DEM_STRING_TABLES.id) {
                     actions[sequence] = DemoCutAction.START_TABLES.id;
                 } else if (from > firstTick && this._typeIds[sequence] === DemoPacketType.DEM_SYNC_TICK.id) {
-                    commands.set(sequence, [ ConsoleCommand.DEMO_GOTO_TICK.format(from) ]);
+                    scheduledCommands.set(sequence, [ ConsoleCommandType.DEMO_GOTO_TICK.create(from) ]);
                 }
             }
 
@@ -144,9 +152,35 @@ class DemoCutIndex {
             }
         }
 
+        if (commands.length > 0) {
+            const sequence = this._getCommandSequence(startSequence, from, to, keyframe ?? this._bounds.first);
+
+            scheduledCommands.set(sequence, commands.slice());
+        }
+
         ticks.fill(tailTick, this._bounds.stop);
 
-        return new DemoCutPlan(actions, ticks, stringTables, commands);
+        return new DemoCutPlan(actions, ticks, stringTables, scheduledCommands);
+    }
+
+    /**
+     * The sequence after which window commands are inserted: the first DEM_Packet in [ from, to ], or the fallback.
+     *
+     * @private
+     * @param {number} start
+     * @param {number} from
+     * @param {number} to
+     * @param {number} fallback
+     * @returns {number}
+     */
+    _getCommandSequence(start, from, to, fallback) {
+        for (let sequence = start; sequence < this._bounds.stop; sequence++) {
+            if (this._ticks[sequence] >= from && this._ticks[sequence] <= to && this._typeIds[sequence] === DemoPacketType.DEM_PACKET.id) {
+                return sequence;
+            }
+        }
+
+        return fallback;
     }
 
     /**

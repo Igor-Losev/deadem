@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import DemoCutIndex from '../src/cut/DemoCutIndex.js';
 
+import ConsoleCommandType from '../src/data/enums/ConsoleCommandType.js';
 import DemoCutAction from '../src/data/enums/DemoCutAction.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 
@@ -83,7 +84,7 @@ describe('DemoCutIndex', () => {
             const ticks = [ -1, -1, 1, 1, 2, 2, 2 ];
             const index = new DemoCutIndex(Uint8Array.from(types), Int32Array.from(ticks), createEmptyTables(types));
 
-            expect(index.getPlan(2, 2).getCommands(1)).toEqual([ 'demo_gototick 2' ]);
+            expect(index.getPlan(2, 2).getCommands(1)?.map(command => command.text)).toEqual([ 'demo_gototick 2' ]);
             expect(index.getPlan(1, 2).getCommands(1)).toBeNull();
             expect(index.getPlan(-100, 1).getCommands(1)).toBeNull();
 
@@ -92,6 +93,16 @@ describe('DemoCutIndex', () => {
             const noSnapshotIndex = new DemoCutIndex(Uint8Array.from(noSnapshotTypes), Int32Array.from(noSnapshotTicks));
 
             expect(noSnapshotIndex.getPlan(2, 2).getCommands(1)).toBeNull();
+        });
+
+        test('It should schedule window commands on the first DEM_Packet in the window, falling back to the snapshot', () => {
+            const index = new DemoCutIndex(Uint8Array.from(TYPES), Int32Array.from(TICKS), createEmptyTables(TYPES));
+            const command = ConsoleCommandType.SPEC_PLAYER.create(2);
+
+            expect(index.getPlan(2, 4, [ command ]).getCommands(3)).toEqual([ command ]);
+            expect(index.getPlan(4, 4, [ command ]).getCommands(6)).toEqual([ command ]);
+            expect(index.getPlan(3, 3, [ command ]).getCommands(5)).toEqual([ command ]);
+            expect(() => index.getPlan(1, 4, /** @type {*} */ ([ 'spec_player 2' ]))).toThrow('expected an instance of ConsoleCommand');
         });
 
         test('It should reject an invalid window', () => {

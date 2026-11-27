@@ -94,6 +94,8 @@ export {
     BroadcastFragmentType,
     BroadcastGateway,
     Class,
+    ConsoleCommand,
+    ConsoleCommandType,
     CutterConfiguration,
     Demo,
     DemoPacketType,

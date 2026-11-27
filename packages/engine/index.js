@@ -20,6 +20,8 @@ export { default as BroadcastAgent } from './src/broadcast/BroadcastAgent.js';
 export { default as BroadcastFragmentType } from './src/data/enums/BroadcastFragmentType.js';
 export { default as BroadcastGateway } from './src/broadcast/BroadcastGateway.js';
 export { default as Class } from './src/data/Class.js';
+export { default as ConsoleCommand } from './src/data/ConsoleCommand.js';
+export { default as ConsoleCommandType } from './src/data/enums/ConsoleCommandType.js';
 export { default as Cutter } from './src/cut/Cutter.js';
 export { default as CutterConfiguration } from './src/configurations/CutterConfiguration.js';
 export { default as Demo } from './src/data/Demo.js';

@@ -12,6 +12,8 @@ import CutterConfiguration from '../src/configurations/CutterConfiguration.js';
 import DemoFormat from '../src/data/DemoFormat.js';
 import DemoPacketRaw from '../src/data/DemoPacketRaw.js';
 import MessagePacketRaw from '../src/data/MessagePacketRaw.js';
+
+import ConsoleCommandType from '../src/data/enums/ConsoleCommandType.js';
 import DemoPacketType from '../src/data/enums/DemoPacketType.js';
 import MessagePacketType from '../src/data/enums/MessagePacketType.js';
 
@@ -298,14 +300,15 @@ function createTableUpdate(tableId, entries) {
  * @param {Uint8Array} demo
  * @param {number} from
  * @param {number} to
+ * @param {Array<*>} [commands=[ ]]
  * @returns {Promise<Uint8Array>}
  */
-async function cut(demo, from, to) {
+async function cut(demo, from, to, commands = [ ]) {
     const cutter = new Cutter(registry, CutterConfiguration.DEFAULT, Logger.NOOP);
 
     await cutter.load(Readable.from([ demo ]));
 
-    return cutter.cut(Readable.from([ demo ]), from, to);
+    return cutter.cut(Readable.from([ demo ]), from, to, commands);
 }
 
 /**
@@ -542,6 +545,32 @@ describe('Cutter', () => {
                 [ SPAWN_GROUPS, 4, 0 ],
                 createFileInfo(4, 4, 4, 4 / 64)
             ]));
+        });
+
+        test('It should insert user console commands after the first DEM_Packet in the window', async () => {
+            const syncTick = createBootstrapFrame(SYNC_TICK, new Uint8Array(0));
+            const packets = [ PACKETS[0], syncTick, ...PACKETS.slice(1) ];
+            const [ fileHeader, , , , , , , fourth ] = packets;
+
+            const firstCommand = ConsoleCommandType.SPEC_PLAYER.create(2);
+            const secondCommand = ConsoleCommandType.SPEC_PLAYER.create(13);
+
+            expect(await cut(createDemo(packets), 4, 4, [ firstCommand, secondCommand ])).toEqual(createDemo([
+                fileHeader,
+                syncTick,
+                createConsoleCmd(0, 'demo_gototick 4'),
+                createPacket(3, [ SPAWN_GROUP_LOAD, CONVAR, ENTITIES, NET_TICK ]),
+                createFullPacket(3, [ ENTITIES, USER_COMMANDS, NET_TICK ], [ ]),
+                fourth,
+                createConsoleCmd(4, 'spec_player 2'),
+                createConsoleCmd(4, 'spec_player 13'),
+                [ STOP, 4, 0 ],
+                [ SPAWN_GROUPS, 4, 0 ],
+                createFileInfo(4, 4, 2, 4 / 64)
+            ]));
+
+            expect(() => ConsoleCommandType.SPEC_PLAYER.create(0)).toThrow('positive integer');
+            expect(() => ConsoleCommandType.SPEC_PLAYER.create(/** @type {*} */ ('m0NESY'))).toThrow('positive integer');
         });
 
         test('It should write the length of the cut into a compressed DEM_FileInfo uncompressed', async () => {
