@@ -1,6 +1,6 @@
 {
   "name": "@deademx/cs2",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Source 2 demo toolkit (parser, player, cutter) for Counter-Strike 2 in Node.js, Deno, Bun and browsers",
   "author": "Igor Losev",
   "license": "MIT",
@@ -77,6 +77,6 @@
   ],
   "dependencies": {
     "@bufbuild/protobuf": "2.16.0",
-    "@deademx/engine": "^5.0.0"
+    "@deademx/engine": "^5.1.0"
   }
 }

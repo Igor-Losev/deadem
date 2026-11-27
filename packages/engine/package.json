@@ -1,6 +1,6 @@
 {
   "name": "@deademx/engine",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Shared Source 2 demo toolkit (parser, player, cutter) for Node.js, Deno, Bun and browsers",
   "author": "Igor Losev",
   "license": "MIT",
