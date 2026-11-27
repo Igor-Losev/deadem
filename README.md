@@ -13,7 +13,11 @@ deadem
 <a href="https://www.npmjs.com/package/@deademx/cs2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fcs2?label=%40deademx%2Fcs2" /></a>
 <a href="https://www.npmjs.com/package/@deademx/dota2" alt=""><img src="https://img.shields.io/npm/v/%40deademx%2Fdota2?label=%40deademx%2Fdota2" /></a>
 
-**deadem** is a collection of JavaScript packages for parsing and playing back Source 2 demos of Deadlock, Counter-Strike 2 and Dota 2 in Node.js, Deno, Bun and browsers.
+**deadem** is a Source 2 demo toolkit (parser, player, cutter) for Deadlock, Counter-Strike 2 and Dota 2 in Node.js, Deno, Bun and browsers. Web explorer: [deadem.com](https://deadem.com).
+
+- `Parser`: reads `.dem` files and live HTTP broadcasts sequentially.
+- `Player`: seeks across snapshots, steps tick by tick and plays demos in real time.
+- `Cutter`: extracts tick windows into standalone `.dem` clips with spectator camera commands.
 
 The packages depend only on:
 
@@ -26,7 +30,7 @@ The packages depend only on:
 
 | Package | Description |
 | --- | --- |
-| [`@deademx/engine`](./packages/engine/README.md) | Shared Source 2 engine: parser, replay player, interceptor pipeline, broadcast client, configuration. Its README describes the model and the API. |
+| [`@deademx/engine`](./packages/engine/README.md) | Shared Source 2 engine: parser, replay player, demo cutter, interceptor pipeline, broadcast client, configuration. Its README describes the model and the API. |
 | [`@deademx/deadlock`](./packages/deadlock/README.md) | Deadlock implementation built on top of `@deademx/engine`. |
 | [`@deademx/cs2`](./packages/cs2/README.md) | Counter-Strike 2 implementation built on top of `@deademx/engine`. |
 | [`@deademx/dota2`](./packages/dota2/README.md) | Dota 2 implementation built on top of `@deademx/engine`. |
@@ -50,7 +54,7 @@ npm install
 
 ### Example Scripts
 
-Scripts live under `packages/examples-node-<game>/scripts`. Missing demos are downloaded from [deadem.com](https://deadem.com). Pass `--demo=<path>` to parse a local `.dem` file:
+Scripts live under `packages/examples-node-<game>/scripts`. Missing demos are downloaded from [deadem.com](https://deadem.com). Pass `--demo=<path>` to use a local `.dem` file:
 
 ```bash
 node ./packages/examples-node-deadlock/scripts/100_parse.js --demo=./match.dem
